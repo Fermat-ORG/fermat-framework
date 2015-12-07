@@ -21,8 +21,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -264,6 +264,26 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                             //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
                         break;
+                    case DENIED:
+                        System.out.print("-----------------------\n" +
+                                "DENEGARON EL REQUEST!!!!!-----------------------\n" +
+                                "-----------------------\n NOTIFICAION: " + cpr);
+
+                        lauchNotification();
+
+                        try {
+
+                            actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
+
+                        } catch (CantUpdateRecordDataBaseException e) {
+                            e.printStackTrace();
+                        } catch (CantUpdateRecordException e) {
+                            e.printStackTrace();
+                        } catch (RequestNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
                 }
             }
 
@@ -347,6 +367,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
+                }else{
+                 // connectionFailure(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                   System.out.println("ENTRO EN ESTE ELSE");
                 }
             }
         } catch (Exception z) {

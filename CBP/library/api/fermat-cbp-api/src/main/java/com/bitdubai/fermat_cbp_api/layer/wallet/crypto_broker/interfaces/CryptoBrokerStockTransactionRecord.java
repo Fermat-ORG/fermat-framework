@@ -11,6 +11,7 @@ import java.util.UUID;
  * Created by Yordin Alayn on 02.10.15.
  */
 public interface CryptoBrokerStockTransactionRecord extends StockTransaction {
+    //TODO: Documentar
 
     float getRunningBookBalance();
 

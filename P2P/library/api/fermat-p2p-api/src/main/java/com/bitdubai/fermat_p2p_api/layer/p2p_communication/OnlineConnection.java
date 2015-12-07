@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 /**
  * Created by ciencias on 2/12/15.

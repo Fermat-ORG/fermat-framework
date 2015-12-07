@@ -17,11 +17,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.Iden
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database.AssetUserIdentityDao;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyRestockDataException;
@@ -83,6 +84,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_MEMO_COLUMN_NAME, cryptoMoneyTransaction.getMemo());
         record.setFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cryptoMoneyTransaction.getAmount());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cryptoMoneyTransaction.getTransactionStatus().getCode());
+        record.setFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cryptoMoneyTransaction.getPriceReference());
+        record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransaction().getCode());
 
         return record;
     }
@@ -121,6 +124,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         cryptoMoneyRestockTransaction.setTimeStamp(Timestamp.valueOf(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setMemo(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_MEMO_COLUMN_NAME));
         cryptoMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
+        cryptoMoneyRestockTransaction.setPriceReference(cryptoMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME));
+        cryptoMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
 
         return cryptoMoneyRestockTransaction;
     }

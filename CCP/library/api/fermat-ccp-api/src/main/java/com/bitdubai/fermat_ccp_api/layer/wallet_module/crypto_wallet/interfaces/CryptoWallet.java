@@ -342,6 +342,28 @@ public interface CryptoWallet extends Serializable {
                                                                                                                                         int offset) throws CantListTransactionsException;
 
     /**
+     * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor
+     * who have made transactions with the specified wallet.
+     *
+     * @param balanceType
+     * @param transactionType
+     * @param walletPublicKey
+     * @param actorPublicKey
+     * @param intraUserLoggedInPublicKey
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListTransactionsException
+     */
+    List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
+                                                                 TransactionType transactionType,
+                                                                 String walletPublicKey,
+                                                                 String actorPublicKey,
+                                                                 String intraUserLoggedInPublicKey,
+                                                                 int max,
+                                                                 int offset) throws CantListTransactionsException;
+
+    /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
      *
      * @param walletPublicKey public key of the wallet in where you're working.

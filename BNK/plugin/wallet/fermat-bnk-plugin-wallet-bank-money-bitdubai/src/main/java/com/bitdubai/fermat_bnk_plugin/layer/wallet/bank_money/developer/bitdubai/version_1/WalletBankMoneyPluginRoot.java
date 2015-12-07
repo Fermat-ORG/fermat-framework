@@ -2,47 +2,32 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitduba
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
+import com.bitdubai.fermat_api.layer.all_definition.developer.*;
+import com.bitdubai.fermat_api.layer.all_definition.enums.*;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.*;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.*;
-import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.database.BankMoneyWalletDao;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.database.BankMoneyWalletDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyWalletDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankMoneyWalletImpl;
-import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.ImplementBankMoney;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Pattern;
+
+//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 /**
  * Created by Yordin Alayn on 21.09.15.
  */
 
-public class WalletBankMoneyPluginRoot extends AbstractPlugin implements BankMoneyWalletManager {
+public class WalletBankMoneyPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, BankMoneyWalletManager {
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
@@ -55,9 +40,7 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements BankMon
     private PluginFileSystem pluginFileSystem;
 
 
-    private BankMoneyWalletDao bankMoneyWalletDao;
-
-    ImplementBankMoney implementBankMoney = new ImplementBankMoney();
+    BankMoneyWalletImpl bankMoneyWallet;
 
     public WalletBankMoneyPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -66,7 +49,9 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements BankMon
 
     @Override
     public void start() throws CantStartPluginException {
+        System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET");
         try {
+            bankMoneyWallet = new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem,this.errorManager);
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -79,20 +64,41 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements BankMon
     }
 
 
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        BankMoneyWalletDeveloperDatabaseFactory factory = new BankMoneyWalletDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return factory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        BankMoneyWalletDeveloperDatabaseFactory factory = new BankMoneyWalletDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return factory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        BankMoneyWalletDeveloperDatabaseFactory factory = new BankMoneyWalletDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> tableRecordList = null;
+        try {
+            factory.initializeDatabase();
+            tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch(CantInitializeBankMoneyWalletDatabaseException cantInitializeException) {
+            FermatException e = new CantInitializeBankMoneyWalletDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        return tableRecordList;
+    }
 
     @Override
     public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException {
-        BankMoneyWalletImpl bankMoneyWallet= new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem);
-        try {
-            bankMoneyWallet.initialize();
-        }catch (CantInitializeBankMoneyWalletDatabaseException e){
-            throw new CantLoadBankMoneyWalletException(CantInitializeBankMoneyWalletDatabaseException.DEFAULT_MESSAGE,e,"couldn't initialize bank wallet",null);
-        }
         return bankMoneyWallet;
     }
 
-    @Override
+    /*@Override
     public void createBankMoneyWallet(String walletPublicKey) throws CantCreateBankMoneyWalletException {
 
-    }
+    }*/
+
+
 }

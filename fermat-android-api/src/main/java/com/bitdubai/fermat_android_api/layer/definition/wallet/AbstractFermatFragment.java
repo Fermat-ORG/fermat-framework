@@ -8,17 +8,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
 
 /**
  * Created by mati on 2015.11.21..

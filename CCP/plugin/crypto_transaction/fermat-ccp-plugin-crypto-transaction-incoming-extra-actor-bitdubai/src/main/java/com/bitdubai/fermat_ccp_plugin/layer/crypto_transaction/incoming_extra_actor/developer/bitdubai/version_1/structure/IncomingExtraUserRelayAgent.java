@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
         private final IncomingExtraUserRegistry registry;
         private IncomingExtraUserTransactionHandler transactionHandler;
 
-        private static final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 10000;
 
         public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingExtraUserRegistry registry){
             this.bitcoinWalletManager = bitcoinWalletManager;

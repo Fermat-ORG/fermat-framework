@@ -96,7 +96,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param intraUserToRejectPublicKey the public key of the user to deny its connection request
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException
      */
-     void denyConnection(String intraUserToRejectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
+     void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 
     /**
      * The method <code>disconnectIntraUSer</code> disconnect an intra user from the list managed by this

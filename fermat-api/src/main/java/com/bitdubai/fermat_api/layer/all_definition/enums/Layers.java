@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Layers implements FermatEnum {
     /**
-     * In order to do make code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ACTOR                      ("ACT"),
     ACTOR_CONNECTION           ("ACC"),
@@ -22,6 +22,7 @@ public enum Layers implements FermatEnum {
     CASH_MONEY_TRANSACTION     ("CMT"),
     COMMUNICATION              ("COM"),
     CRYPTO_MODULE              ("CRM"),
+    CONTRACT                   ("CON"),
     CRYPTO_NETWORK             ("CRN"),
     CRYPTO_ROUTER              ("CRR"),
     CRYPTO_VAULT               ("CRV"),
@@ -61,10 +62,12 @@ public enum Layers implements FermatEnum {
             case "ACT":  return ACTOR;
             case "ACC":  return ACTOR_CONNECTION;
             case "ANS":  return ACTOR_NETWORK_SERVICE;
+            case "BMT":  return BANK_MONEY_TRANSACTION;
             case "BSW":  return BASIC_WALLET;
             case "BTX":  return BUSINESS_TRANSACTION;
             case "COM":  return COMMUNICATION;
             case "CRM":  return CRYPTO_MODULE;
+            case "CON":  return CONTRACT;
             case "CRN":  return CRYPTO_NETWORK;
             case "CRR":  return CRYPTO_ROUTER;
             case "CRV":  return CRYPTO_VAULT;

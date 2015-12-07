@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;

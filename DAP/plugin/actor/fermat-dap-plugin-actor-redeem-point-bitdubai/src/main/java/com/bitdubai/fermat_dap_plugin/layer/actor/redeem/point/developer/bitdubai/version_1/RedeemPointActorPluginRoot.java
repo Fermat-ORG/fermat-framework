@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -50,9 +50,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantUpdateRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorDao;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
              */
-            startMonitorAgent();
+//            startMonitorAgent();
 
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -188,6 +188,15 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             throw new CantCreateActorRedeemPointException("CAN'T GET ACTOR ASSET REDEEM POINT", FermatException.wrapException(e), "", "");
         } catch (Exception e) {
             throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    @Override
+    public void createActorAssetRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantCreateActorRedeemPointException {
+        try {
+            redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(actorAssetRedeemPoints);
+        } catch (CantAddPendingRedeemPointException e) {
+            throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT REGISTERED", e, "", "");
         }
     }
 

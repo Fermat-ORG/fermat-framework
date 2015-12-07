@@ -71,6 +71,9 @@ public class BusinessTransactionBankMoneyDestockDatabaseFactory {
             table.addColumn(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME,             DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_MEMO_COLUMN_NAME,                  DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
+            table.addColumn(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME,       DatabaseDataType.REAL, 0, Boolean.FALSE);
+            table.addColumn(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
+
 
             table.addIndex(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_FIRST_KEY_COLUMN);
 

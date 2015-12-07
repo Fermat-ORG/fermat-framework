@@ -32,4 +32,30 @@
     <string name="cbw_contract_history_action_no_filter_text">No filter</string>
     <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
     <string name="cbw_contract_history_action_filter_canceled_text">Canceled</string>
+
+    <string name="title_activity_broker_list">BrokerListActivity</string>
+    <string name="delivery_date_title">Delivery Date</string>
+    <string name="delivery_date_text">Delivery Date: </string>
+    <string name="notes">Notes</string>
+    <string name="exchange_rate_reference">Exchange Rate Reference</string>
+    <string name="suggested_exchange_rate">Suggested:</string>
+    <string name="market_text">Market: </string>
+    <string name="status_changed">CHANGED</string>
+    <string name="amount_to_sell">Amount to Sell</string>
+    <string name="selling_text">Selling: </string>
+    <string name="amount">Amount</string>
+    <string name="you_will_receive_amount">You will receive: </string>
+    <string name="merchandise_delivery_title">Merchandise Delivery</string>
+    <string name="delivery_type">Delivery Type: </string>
+    <string name="broker_locations_title">Broker Locations</string>
+    <string name="selected_location">Selected Location: </string>
+    <string name="status_confirm">CONFIRM</string>
+    <string name="status_accepted">ACCEPTED</string>
+    <string name="broker_bank_account_title">Broker Bank Accounts</string>
+    <string name="selected_bank_account">Selected Bank Account: </string>
+    <string name="customer_locations_title">Customer Locations</string>
+    <string name="customer_bank_account_title">Customer Bank Accounts</string>
+    <string name="payment_date_title">PAYMENT DATE</string>
+    <string name="payment_date">Payment Date: </string>
+    <string name="add_a_note_button">ADD A NOTE</string>
 </resources>

@@ -17,22 +17,19 @@ public class BankMoneyWalletBalanceImpl implements BankMoneyWalletBalance{
 
     BankMoneyWalletDao bankMoneyWalletDao;
 
-    Database database;
-
     BalanceType balanceType;
 
-    public BankMoneyWalletBalanceImpl(Database database,BalanceType balanceType) {
-        this.database = database;
+    public BankMoneyWalletBalanceImpl(BankMoneyWalletDao bankMoneyWalletDao,BalanceType balanceType) {
         this.balanceType = balanceType;
-        bankMoneyWalletDao = new BankMoneyWalletDao(this.database);
+        this.bankMoneyWalletDao = bankMoneyWalletDao;
     }
 
     @Override
-    public double getBalance() throws CantCalculateBalanceException {
+    public double getBalance(String accountNumber) throws CantCalculateBalanceException {
         switch (balanceType){
-            case AVAILABLE: return bankMoneyWalletDao.getAvailableBalance();
-            case BOOK: return bankMoneyWalletDao.getBookBalance();
-            default: return bankMoneyWalletDao.getAvailableBalance();
+            case AVAILABLE: return bankMoneyWalletDao.getAvailableBalance(accountNumber);
+            case BOOK: return bankMoneyWalletDao.getBookBalance(accountNumber);
+            default: return bankMoneyWalletDao.getAvailableBalance(accountNumber);
         }
     }
 

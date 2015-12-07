@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -28,16 +30,22 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletImpl;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDao;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantDeliveryDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantInitializeAssetUserWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,6 +85,10 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             loadAssetUserWallet("walletPublicKeyTest");
             System.out.println("Star Plugin AssetWalletUser");
             this.serviceStatus = ServiceStatus.STARTED;
+
+            //TODO testing code
+            testInsert();
+
         }catch(CantStartPluginException exception){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
@@ -85,6 +97,33 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
 
         }
+    }
+
+    private void testInsert() throws Exception {
+        DigitalAsset digitalAsset = new DigitalAsset();
+        digitalAsset.setPublicKey("digitalAssetPublicKey");
+        digitalAsset.setName("name");
+        digitalAsset.setDescription("description");
+
+        CryptoAddress cryptoAddress = new CryptoAddress();
+        cryptoAddress.setAddress("address");
+
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        cryptoTransaction.setAddressFrom(cryptoAddress);
+        cryptoTransaction.setAddressTo(cryptoAddress);
+        cryptoTransaction.setCryptoAmount(1);
+        cryptoTransaction.setTransactionHash("transactionHash");
+
+        AssetUserWalletTransactionRecord record = new AssetUserWalletTransactionRecordWrapper(
+                new DigitalAssetMetadata(digitalAsset), cryptoTransaction, "", ""
+        );
+
+        UUID internalAssetIssuerWalletId = walletUser.get("walletPublicKeyTest");
+        Database database = pluginDatabaseSystem.openDatabase(pluginId, internalAssetIssuerWalletId.toString());
+        AssetUserWalletDao assetUserWalletDao = new AssetUserWalletDao(database);
+        assetUserWalletDao.setPluginFileSystem(pluginFileSystem);
+        assetUserWalletDao.setPlugin(pluginId);
+        assetUserWalletDao.addCredit(record, BalanceType.AVAILABLE);
     }
 
     @Override

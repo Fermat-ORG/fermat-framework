@@ -8,25 +8,20 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.IntraUserIdentityInfoAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -39,14 +34,11 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
         implements FermatListItemListeners<IntraUserInformation> {
 
 
-
-
+    private static final int MAX = 15;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<IntraUserInformation> identityInformationList;
-
-    private static final int MAX = 15;
-    private int offset=0;
+    private int offset = 0;
 
 
     public static RequestConnectionsFragment newInstance() {
@@ -144,12 +136,12 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
         List<IntraUserInformation> data = new ArrayList<>();
         try {
             if (moduleManager != null) {
-                data = moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(),MAX, offset);
+                data = moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset);
                 offset = data.size();
             } else {
             }
 
-        }catch(CantGetIntraUsersListException e) {
+        } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
@@ -159,6 +151,9 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
+
+        //ConnectionOtherProfileFragment.newInstance();
+
         AcceptDialog acceptDialog = null;
         try {
             acceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession)subAppsSession,subAppResourcesProviderManager,data,moduleManager.getActiveIntraUserIdentity());

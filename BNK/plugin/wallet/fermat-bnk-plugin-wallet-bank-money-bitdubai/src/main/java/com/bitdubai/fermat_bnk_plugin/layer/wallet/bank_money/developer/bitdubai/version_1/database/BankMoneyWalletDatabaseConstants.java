@@ -20,11 +20,9 @@ public class BankMoneyWalletDatabaseConstants {
     /**
      * Bank Money database table definition.
      */
-    public static final String BANK_MONEY_TABLE_NAME = "bank_money";
+    public static final String BANK_MONEY_TRANSACTIONS_TABLE_NAME = "bank_money_transactions";
 
     public static final String BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME = "bank_transaction_id";
-    public static final String BANK_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME = "public_key_customer";
-    public static final String BANK_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
     public static final String BANK_MONEY_BALANCE_TYPE_COLUMN_NAME = "balance_type";
     public static final String BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
     public static final String BANK_MONEY_AMOUNT_COLUMN_NAME = "amount";
@@ -47,13 +45,13 @@ public class BankMoneyWalletDatabaseConstants {
      */
     public static final String BANK_MONEY_ACCOUNTS_TABLE_NAME = "bank_money_accounts";
 
-    public static final String BANK_MONEY_TOTAL_BALANCES_WALLET_KEY_BROKER_COLUMN_NAME = "wallet_key_broker";
-    public static final String BANK_MONEY_TOTAL_BALANCES_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
-    public static final String BANK_MONEY_TOTAL_BALANCES_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
-    public static final String BANK_MONEY_TOTAL_BALANCES_NAME_COLUMN_NAME = "name";
-    public static final String BANK_MONEY_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME = "description";
-    public static final String BANK_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
-    public static final String BANK_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME = "book_balance";
+    public static final String BANK_MONEY_ACCOUNTS_WALLET_KEY_COLUMN_NAME = "wallet_key_broker";
+    public static final String BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME = "public_key_broker";
+    public static final String BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
+    public static final String BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME = "alias";
+    public static final String BANK_MONEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME = "description";
+    public static final String BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
+    public static final String BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME = "book_balance";
 
     public static final String BANK_MONEY_TOTAL_BALANCES_FIRST_KEY_COLUMN = "wallet_key_broker";
 

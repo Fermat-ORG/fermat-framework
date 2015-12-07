@@ -50,7 +50,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
     @Override
     protected void bindHolder(final PaymentRequestItemViewHolder holder, final PaymentRequest data, final int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.profile_image);
+        holder.getContactIcon().setImageResource(R.drawable.profile_image_standard);
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
         holder.getTxt_amount().setTypeface(tf);

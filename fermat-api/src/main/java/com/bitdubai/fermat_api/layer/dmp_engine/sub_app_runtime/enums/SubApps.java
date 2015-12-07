@@ -27,7 +27,8 @@ public enum SubApps {
     DAP_ASSETS_COMMUNITY_REDEEM_POINT("DAPCRP"),
     DAP_ASSETS_IDENTITY_ISSUER("DAPAII"),
     DAP_ASSETS_IDENTITY_USER("DAPAIU"),
-    DAP_REDEEM_POINT_IDENTITY("DAPRPI");
+    DAP_REDEEM_POINT_IDENTITY("DAPRPI"),
+    Scanner("S");
 
 
     private final String code;
@@ -81,6 +82,8 @@ public enum SubApps {
                 return SubApps.DAP_ASSETS_IDENTITY_USER;
             case "DAPRPI":
                 return SubApps.DAP_REDEEM_POINT_IDENTITY;
+            case "S":
+                return Scanner;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 

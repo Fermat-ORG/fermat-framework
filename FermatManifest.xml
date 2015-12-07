@@ -234,19 +234,19 @@
 			<layer name="Actor Connection" language="java"></layer>
 			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
-			<!--<layer name="empty layer 2"></layer>
-			<layer super_layer="CER"></layer>-->
 			<layer name="empty layer 2"></layer>
-			<layer super_layer="P2P"></layer>
+			<layer super_layer="CER"></layer>
 			<layer name="empty layer 3"></layer>
-			<layer super_layer="BCH"></layer>
+			<layer super_layer="P2P"></layer>
 			<layer name="empty layer 4"></layer>
+			<layer super_layer="BCH"></layer>
+			<layer name="empty layer 5"></layer>
 			<layer name="License" language="java"></layer>
 			<layer name="Plugin" language="java"></layer>
 			<layer name="User" language="java"></layer>
 			<layer name="Hardware" language="java"></layer>
 			<layer name="Platform Service" language="java"></layer>
-			<layer name="empty layer 5"></layer>
+			<layer name="empty layer 6"></layer>
 			<layer super_layer="OSA"></layer>
 
 
@@ -4541,12 +4541,12 @@
 					<plugin	name="Deposit"
 						description=""
 						difficulty="6"
-						code-level="development"
-						>
+						code-level="qa">
+
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="guillermo20" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4556,12 +4556,11 @@
 					<plugin	name="Withdraw"
 						description=""
 						difficulty="6"
-						code-level="development"
-						>
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="guillermo20" scope="implementation" percentage="10"></author>
+							<author name="guillermo20" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4606,13 +4605,13 @@
 					<plugin name="Bank Money"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="laderuner" scope="implementation" percentage="10"></author>
-							<author name="guillermo20" scope="implementation" percentage="20"></author>
+							<author name="guillermo20" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5271,12 +5270,12 @@
 					<plugin	name="Open Contract"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="darkestpriest" scope="implementation" percentage="10"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -6737,6 +6736,43 @@
 
 	<super_layers>
 
+		<super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
+
+			<layer name="Provider" language="java">
+				<plugins>
+					<plugin	name="SurBitcoin"
+						description=""
+						difficulty="10"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Coinbase"
+						description=""
+						difficulty="10"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+		</super_layer>
+		
 		<super_layer code="P2P" name="Peer to Peer Network" dependsOn="OSA">
 
 			<layer name="Communication" language="java">
@@ -7300,43 +7336,6 @@
 
 		</super_layer>
 		
-		<!--<super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
-
-			<layer name="Provider" language="java">
-				<plugins>
-					<plugin	name="SurBitcoin"
-						description=""
-						difficulty="10"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin	name="Coinbase"
-						description=""
-						difficulty="10"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-		</super_layer>-->
-		
 	</super_layers>
 
 	<layers>
@@ -7372,7 +7371,7 @@
 		<layer name="Actor Network Service" language="java"></layer>
 		<layer name="Network Service" language="java"></layer>
 		<!-- separator or empty layer -->
-		<!--<layer name="Provider" language="java" super_layer="CER"></layer>-->
+		<layer name="Provider" language="java" super_layer="CER"></layer>
 		<!-- separator or empty layer -->
 		<layer name="Communication" language="java" super_layer="P2P"></layer>
 		<!-- separator or empty layer -->

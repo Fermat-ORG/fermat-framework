@@ -45,7 +45,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+       // System.out.println("CompleteComponentConnectionRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -74,7 +74,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         /*
          * Raise the event
          */
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
+        //System.out.println("CompleteComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

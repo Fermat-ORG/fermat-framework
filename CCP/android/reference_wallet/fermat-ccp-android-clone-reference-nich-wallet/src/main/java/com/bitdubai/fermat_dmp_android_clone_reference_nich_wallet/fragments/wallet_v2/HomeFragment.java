@@ -21,7 +21,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 import java.util.List;

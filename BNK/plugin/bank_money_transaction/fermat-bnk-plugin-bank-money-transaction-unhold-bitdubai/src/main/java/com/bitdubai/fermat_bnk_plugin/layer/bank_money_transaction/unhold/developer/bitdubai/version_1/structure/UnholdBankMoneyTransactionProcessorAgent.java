@@ -4,9 +4,11 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 
@@ -21,11 +23,12 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
 
     private final ErrorManager errorManager;
     private final UnholdBankMoneyTransactionManager unholdTransactionManager;
+    private final BankMoneyWalletManager bankMoneyWalletManager;
 
-    public UnholdBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final UnholdBankMoneyTransactionManager holdManager) {
+    public UnholdBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final UnholdBankMoneyTransactionManager holdManager,final BankMoneyWalletManager bankMoneyWalletManager) {
         this.errorManager = errorManager;
         this.unholdTransactionManager = holdManager;
-
+        this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.agentThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -78,7 +81,7 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
 
         try {
             transactionList = unholdTransactionManager.getAcknowledgedTransactionList();
-        } catch (CantGetHoldTransactionException e) {
+        } catch (CantGetUnholdTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
         }
@@ -91,16 +94,15 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
           * If not: Changes transaction status to Rejected.
          */
 
-        //TODO: try to get the CSH wallet manager, using transaction's wallet public key, and then try to get its available balance!!
-
-        long availableBalance;
+        double heldfunds;
         for(BankTransaction transaction : transactionList) {
 
-            //TODO: Kill this next mock line
-            availableBalance = 500;
+            //TODO: tomar los heldfunds de la wallet y compararlos contra el transaction amount para despues ejecutar el unhold
+            heldfunds = 0;
             try {
-                if(availableBalance >= transaction.getAmount()) {
-                    //TODO: wallet.debit(transaction.getAmount());
+                heldfunds = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getHeldFunds(transaction.getAccountNumber());
+                if(heldfunds >= transaction.getAmount()) {
+                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).unhold(new BankMoneyTransactionRecordImpl(transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.UNHOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.UNHOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVING.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode()));
                     unholdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 }
                 else {

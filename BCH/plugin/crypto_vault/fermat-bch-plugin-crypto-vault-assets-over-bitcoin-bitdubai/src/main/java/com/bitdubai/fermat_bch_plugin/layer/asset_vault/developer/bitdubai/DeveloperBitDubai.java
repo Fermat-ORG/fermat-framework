@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.PlatformCryptoVaultAssetsOverBitcoinPluginRoot;
 
 /**
  * Created by rodrigo on 8/31/15.
@@ -23,7 +23,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new CryptoVaultAssetsOverBitcoinPluginRoot());
+            this.registerVersion(new PlatformCryptoVaultAssetsOverBitcoinPluginRoot());
 
         } catch (CantRegisterVersionException e) {
 
