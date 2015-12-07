@@ -33,6 +33,7 @@ public final class FailureComponentConnectionRequestNotificationEventHandler imp
      */
     public FailureComponentConnectionRequestNotificationEventHandler(NetworkService networkService) {
         this.networkService = networkService;
+        System.out.println("FAILURE CONNECTION HANDLER STARTING FROM CRYTO PAYMENT");
     }
 
     /**
