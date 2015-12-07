@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +57,14 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
                     if (contact.profileImage.length > 0) {
                         contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), contact.profileImage));
                     } else
-                        contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
+                     //   contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
+                    Picasso.with(getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contact_profile_image);
                 } else
-                    contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
+                    Picasso.with(getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contact_profile_image);
+                    //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
             }catch (Exception e){
-                contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
+                Picasso.with(getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contact_profile_image);
+                //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
             }
         }
         return v;

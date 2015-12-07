@@ -122,8 +122,7 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
      * Change activity
      */
     protected final void changeActivity(String activityCode,String appPublicKey, Object... objectses) {
-        onDestroy();
-        System.gc();
+        destroy();
         ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey, objectses);
 
     }
@@ -165,10 +164,12 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
     }
 
     protected void selectSubApp(InstalledSubApp installedSubApp){
+        destroy();
         getFermatScreenSwapper().selectSubApp(installedSubApp);
     }
 
     protected void selectWallet(InstalledWallet installedWallet){
+        destroy();
         getFermatScreenSwapper().selectWallet(installedWallet);
     }
 

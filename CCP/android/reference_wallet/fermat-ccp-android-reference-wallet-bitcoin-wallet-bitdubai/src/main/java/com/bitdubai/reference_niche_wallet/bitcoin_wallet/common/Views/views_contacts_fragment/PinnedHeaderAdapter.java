@@ -17,6 +17,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -162,6 +163,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                                 holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), R.drawable.profile_image_standard));
                         }catch (Exception e){
                             e.printStackTrace();
+                            Toast.makeText(mContext,"Image database problem",Toast.LENGTH_SHORT).show();
                         }
                         text = walletContact.getActorName();
                         //contact image
