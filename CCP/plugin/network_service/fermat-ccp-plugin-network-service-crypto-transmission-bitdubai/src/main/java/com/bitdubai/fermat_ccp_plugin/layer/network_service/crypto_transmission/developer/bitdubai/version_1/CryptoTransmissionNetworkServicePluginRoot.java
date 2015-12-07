@@ -337,7 +337,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
-zz
+
         /*
          * Listen and handle VPN Connection Close Notification Event
          */
