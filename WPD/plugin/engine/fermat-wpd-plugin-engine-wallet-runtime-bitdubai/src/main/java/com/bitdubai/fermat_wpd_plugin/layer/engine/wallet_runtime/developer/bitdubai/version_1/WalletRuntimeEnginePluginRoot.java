@@ -405,6 +405,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         setNavigationStructureXml(runtimeWalletNavigationStructure);
 
         /**
+         * Banking Wallet
+         * */
+        runtimeWalletNavigationStructure = createBankMoneyWalletNavigationStructure();
+        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        /**
          * fin asset issuer
          */
         //try{
@@ -1819,17 +1824,17 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //Home Activity
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+        runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_HOME);
+        runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_HOME.getCode());
         runtimeActivity.setColor("#1189a5");
         //runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeWalletNavigationStructure.setStartActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+        runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
+        runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
 
         return runtimeWalletNavigationStructure;
     }

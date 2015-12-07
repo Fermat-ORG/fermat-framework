@@ -400,7 +400,21 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             item.setPosition(5);
             lstItemsWithIcon.add(item);
 
-
+            //Banking Wallet
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "crypto_customer",
+                    "Crypto Customer",
+                    "crypto_customer_wallet",
+                    "wallet_crypto_customer_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.crypto_customer);
+            item.setPosition(6);
+            lstItemsWithIcon.add(item);
 
             //subApps
 //            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
