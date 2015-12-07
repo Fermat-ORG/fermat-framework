@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.bottom_navigation;
+package com.bitdubai.android_core.app.common.version_1.provisory;
 
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
