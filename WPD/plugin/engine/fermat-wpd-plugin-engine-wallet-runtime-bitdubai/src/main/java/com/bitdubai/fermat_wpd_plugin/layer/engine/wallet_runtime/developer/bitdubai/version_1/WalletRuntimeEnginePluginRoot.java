@@ -1796,13 +1796,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     public WalletNavigationStructure createBankMoneyWalletNavigationStructure(){
         WalletNavigationStructure runtimeWalletNavigationStructure;
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
-        Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
-        Fragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 

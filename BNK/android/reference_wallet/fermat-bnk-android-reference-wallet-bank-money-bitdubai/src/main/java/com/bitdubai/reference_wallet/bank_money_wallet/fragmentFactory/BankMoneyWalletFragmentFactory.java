@@ -18,7 +18,8 @@ public class BankMoneyWalletFragmentFactory extends FermatWalletFragmentFactory<
             throw createFragmentNotFoundException(null);
         }
         switch (fragment) {
-            case BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST: return AccountsListFragment.newInstance();
+            case BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST:
+                return AccountsListFragment.newInstance();
             default: throw createFragmentNotFoundException(fragment);
         }
     }
