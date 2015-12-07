@@ -40,6 +40,8 @@ public interface NegotiationTransmission {
 
     void setNegotiationTransactionType(NegotiationTransactionType negotiationTransactionType);
 
+    void setTransmissionType(NegotiationTransmissionType negotiationTransmissionType);
+
     void setTransmissionState(NegotiationTransmissionState negotiationTransmissionState);
 
 }
