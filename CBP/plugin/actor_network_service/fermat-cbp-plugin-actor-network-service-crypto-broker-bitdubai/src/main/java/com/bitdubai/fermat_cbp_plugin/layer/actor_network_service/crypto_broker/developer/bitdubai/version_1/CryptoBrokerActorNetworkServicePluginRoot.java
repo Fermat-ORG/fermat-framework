@@ -646,8 +646,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     private void receiveInformation(final InformationMessage informationMessage) throws CantHandleNewMessagesException {
 
         try {
+// TODO CHANGE TO PROCESSING RECEIVE
 
-            final ProtocolState state = ProtocolState.PROCESSING_RECEIVE;
+            final ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
 
             switch (informationMessage.getAction()) {
                 case ACCEPT:
@@ -688,9 +689,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     private void receiveRequest(final RequestMessage requestMessage) throws CantHandleNewMessagesException {
 
         try {
-
-            final ProtocolState           state  = ProtocolState          .PROCESSING_RECEIVE;
-            final RequestType             type   = RequestType            .RECEIVED          ;
+// TODO CHANGE TO PROCESSING RECEIVE
+            final ProtocolState           state  = ProtocolState.PENDING_LOCAL_ACTION;
+            final RequestType             type   = RequestType  .RECEIVED            ;
 
             final CryptoBrokerConnectionInformation connectionInformation = new CryptoBrokerConnectionInformation(
                     requestMessage.getSenderPublicKey(),
