@@ -23,6 +23,7 @@ android {
         exclude 'lib/x86_64/freebsd/libscrypt.so'
         exclude 'lib/x86_64/linux/libscrypt.so'
         exclude 'org/bitcoinj/crypto/cacerts'
+
     }
 
     defaultConfig {
@@ -37,6 +38,7 @@ android {
     dexOptions {
         javaMaxHeapSize "7g"
         incremental true
+        preDexLibraries = false
     }
 
     sourceSets {
