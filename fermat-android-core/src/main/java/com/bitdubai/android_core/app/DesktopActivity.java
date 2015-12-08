@@ -190,6 +190,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
             intent.putExtra(WalletActivity.INSTALLED_WALLET, installedWallet);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            removecallbacks();
             finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

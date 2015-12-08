@@ -1105,7 +1105,6 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void resetThisActivity() {
 
         try {
-
             //clean page adapter
 
             ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -1127,6 +1126,23 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
+
+            removecallbacks();
+
+            onRestart();
+
+        } catch (Exception e) {
+
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+    }
+
+    protected void removecallbacks() {
+
+        try {
 
             this.getNotificationManager().deleteObserver(this);
 
@@ -1166,8 +1182,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
-            onRestart();
-
         } catch (Exception e) {
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -1176,7 +1190,6 @@ public abstract class FermatActivity extends AppCompatActivity
                     LENGTH_LONG).show();
         }
     }
-
 
     /**
      * Initialise the fragments to be paged
