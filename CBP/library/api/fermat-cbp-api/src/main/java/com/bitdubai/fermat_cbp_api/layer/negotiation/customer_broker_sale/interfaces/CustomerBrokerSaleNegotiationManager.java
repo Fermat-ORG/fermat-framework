@@ -1,14 +1,27 @@
 package com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationPaymentCurrency;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreatePaymentCurrencySaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeletePaymentCurrencySaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListBankAccountsSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListPaymentCurrencySaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetNextClauseTypeException;
 
 import java.util.Collection;
@@ -18,7 +31,7 @@ import java.util.UUID;
  * Created by jorge on 10-10-2015.
  * Update by Angel on 03/12/15
  */
-public interface CustomerBrokerSaleNegotiationManager {
+public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
 
     /**
      *
@@ -105,68 +118,79 @@ public interface CustomerBrokerSaleNegotiationManager {
     /**
      *
      * @param location
+     * @param uri
+     * @throws CantCreateLocationSaleException
      */
-    void createNewLocation(String location);
+    void createNewLocation(String location, String uri) throws CantCreateLocationSaleException;
 
     /**
      *
      * @param location
+     * @throws CantUpdateLocationSaleException
      */
-    void updateLocation(NegotiationLocations location);
+    void updateLocation(NegotiationLocations location) throws CantUpdateLocationSaleException;
 
     /**
      *
      * @param location
+     * @throws CantDeleteLocationSaleException
      */
-    void deleteLocation(NegotiationLocations location);
+    void deleteLocation(NegotiationLocations location) throws CantDeleteLocationSaleException;
 
     /**
      *
-     * @return a list with all Locations
+     * @return Collection<NegotiationLocations>
+     * @throws CantGetListLocationsSaleException
      */
-    Collection<NegotiationLocations> getAllLocations();
-
-    /**
-     *
-     * @param bankAccount
-     */
-    void createNewBankAccount(NegotiationBankAccount bankAccount);
+    Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsSaleException;
 
     /**
      *
      * @param bankAccount
+     * @throws CantCreateBankAccountSaleException
      */
-    void updateBankAccount(NegotiationBankAccount bankAccount);
+    void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException;
 
     /**
      *
      * @param bankAccount
+     * @throws CantUpdateBankAccountSaleException
      */
-    void deleteBankAccount(NegotiationBankAccount bankAccount);
+    void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountSaleException;
+
+    /**
+     *
+     * @param bankAccount
+     * @throws CantDeleteBankAccountSaleException
+     */
+    void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException;
 
     /**
      *
      * @param currency
-     * @return  a list BankAccount with data that match currency
+     * @return Collection<NegotiationBankAccount>
+     * @throws CantGetListBankAccountsSaleException
      */
-    Collection<NegotiationBankAccount> getBankAccountByCurrencyType(Currency currency);
+    Collection<NegotiationBankAccount> getBankAccountByCurrencyType(Currency currency) throws CantGetListBankAccountsSaleException;
 
     /**
      *
-     * @param currency
+     * @param paymentCurrency
+     * @throws CantCreatePaymentCurrencySaleException
      */
-    void createNewPaymentCurrency(Currency currency);
+    void createNewPaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantCreatePaymentCurrencySaleException;
 
     /**
      *
-     * @param currency
+     * @param paymentCurrency
+     * @throws CantDeletePaymentCurrencySaleException
      */
-    void deletePaymentCurrency(Currency currency);
+    void deletePaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantDeletePaymentCurrencySaleException;
 
     /**
      *
-     * @return a list with all PaymentCurrencies
+     * @return Collection<Currency>
+     * @throws CantGetListPaymentCurrencySaleException
      */
-    Collection<Currency> getAllPaymentCurrencies();
-
+    Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException;
 }
