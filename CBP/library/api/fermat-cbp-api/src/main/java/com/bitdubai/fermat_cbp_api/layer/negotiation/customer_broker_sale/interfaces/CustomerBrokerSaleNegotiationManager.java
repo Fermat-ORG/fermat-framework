@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -171,7 +171,7 @@ public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
      * @return Collection<NegotiationBankAccount>
      * @throws CantGetListBankAccountsSaleException
      */
-    Collection<NegotiationBankAccount> getBankAccountByCurrencyType(Currency currency) throws CantGetListBankAccountsSaleException;
+    Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsSaleException;
 
     /**
      *
