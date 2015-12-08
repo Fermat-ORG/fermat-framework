@@ -1,13 +1,24 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteLocationPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
@@ -82,8 +93,8 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByContractId(UUID negotiationId) throws CantGetListPurchaseNegotiationsException {
-            return this.customerBrokerPurchaseNegotiationDao.getNegotiationsByContractId(negotiationId);
+        public CustomerBrokerPurchaseNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListPurchaseNegotiationsException {
+            return this.customerBrokerPurchaseNegotiationDao.getNegotiationsByNegotiationId(negotiationId);
         }
 
         @Override
@@ -135,6 +146,46 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
                 default:
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
             }
+        }
+
+        @Override
+        public void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException {
+            this.customerBrokerPurchaseNegotiationDao.createNewLocation(location, uri);
+        }
+
+        @Override
+        public void updateLocation(NegotiationLocations location) throws CantUpdateLocationPurchaseException {
+            this.customerBrokerPurchaseNegotiationDao.updateLocation(location);
+        }
+
+        @Override
+        public void deleteLocation(NegotiationLocations location) throws CantDeleteLocationPurchaseException {
+            this.customerBrokerPurchaseNegotiationDao.deleteLocation(location);
+        }
+
+        @Override
+        public Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsPurchaseException {
+            return this.customerBrokerPurchaseNegotiationDao.getAllLocations();
+        }
+
+        @Override
+        public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException {
+            this.customerBrokerPurchaseNegotiationDao.createNewBankAccount(bankAccount);
+        }
+
+        @Override
+        public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException {
+            this.customerBrokerPurchaseNegotiationDao.updateBankAccount(bankAccount);
+        }
+
+        @Override
+        public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
+            this.customerBrokerPurchaseNegotiationDao.deleteBankAccount(bankAccount);
+        }
+
+        @Override
+        public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException {
+            return this.customerBrokerPurchaseNegotiationDao.getBankAccountByCurrencyType(currency);
         }
 
     /*
