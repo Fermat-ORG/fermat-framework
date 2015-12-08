@@ -59,6 +59,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletSettingSpreadImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletBalanceRecordImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.FiatIndexImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.QuoteImpl;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -126,73 +129,56 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     //TODO Implementar:
     public Quote getQuote(final FermatEnum merchandise, final float quantity, final FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
         //Debemos de conocer el valor AvailableBalance menos los congelado, de esa forma tengo lo que puedo vender
-        final float availableBalanceFroze = 0; //getAvailableBalance(FermatEnum merchandise)
-        //Buscar el Spread en el setting de la wallet
-        //CryptoBrokerWalletSettingSpread getSpread()
-        final float spread = 0;
-        //Determinar luego si ya se vendio o compro esa mercaderia para calcular el rate sobre el precio inicial y final
         //Tambien podemos determinar devolver segun la volatilidad del mercado
         //Determinar mediante el precio del mercado a como esta esa mercancia
-        final float priceReference = 0; //Precio en dolar devuelto al pedir el precio del mercado
-        final float priceRateSale = 0;
-        final float priceRatePurchase = 0;
-        final float priceSaleUp = 0; //(priceRateSale * ((spread / 2) / 100)) + priceRateSale
-        final float priceDown = 0;   //(priceRateSale * ((spread / 2) / 100)) - priceRateSale
-        final float pricePurchaseUp = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
-        final float pricePurchaseDown = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
+        float priceReference = 0;
+        float availableBalanceFroze = 0;
+        try {
+            availableBalanceFroze = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode()) - getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
+        } catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        }
 
-        Quote quote = new Quote() {
-            @Override
-            public FermatEnum getMerchandise() {
-                return merchandise;
-            }
+        QuoteImpl quote = new QuoteImpl(
+                merchandise,
+                payment,
+                priceReference,
+                availableBalanceFroze
+        );
 
-            @Override
-            public FiatCurrency getFiatCurrency() {
-                return payment;
-            }
-
-            @Override
-            public float getPriceReference() {
-                return priceReference;
-            }
-
-            @Override
-            public float getQuantity() {
-                return availableBalanceFroze;
-            }
-        };
         return quote;
     }
 
     //TODO Implementar:
     public FiatIndex getMarketRate(final FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
+        //Buscar el Spread en el setting de la wallet
+        float spread = 0;
+        try {
+            spread = getSpread();
+        } catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        }
         //Determinar luego si ya se vendio o compro esa mercaderia para calcular el rate sobre el precio inicial y final
         //Tambien podemos determinar devolver segun la volatilidad del mercado
         //Determinar mediante el precio del mercado a como esta esa mercancia
         final float priceReference = 0; //Precio en dolar devuelto al pedir el precio del mercado
         final float priceRateSale = 0;
         final float priceRatePurchase = 0;
-        final float priceSaleUp = 0; //(priceRateSale * ((spread / 2) / 100)) + priceRateSale
-        final float priceDown = 0;   //(priceRateSale * ((spread / 2) / 100)) - priceRateSale
-        final float pricePurchaseUp = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
-        final float pricePurchaseDown = 0; //(priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase
-        FiatIndex fiatIndex = new FiatIndex() {
-            @Override
-            public FermatEnum getMerchandise() {
-                return merchandise;
-            }
+        final float priceSaleUp = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
+        final float priceSaleDown = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
+        final float pricePurchaseUp = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
+        final float pricePurchaseDown = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
 
-            @Override
-            public float getSalePrice() {
-                return priceRateSale;
-            }
+        FiatIndexImpl fiatIndex = new FiatIndexImpl(
+                merchandise,
+                priceRateSale,
+                priceRatePurchase,
+                priceSaleUp,
+                priceSaleDown,
+                pricePurchaseUp,
+                pricePurchaseDown
+        );
 
-            @Override
-            public float getPurchasePrice() {
-                return priceRatePurchase;
-            }
-        };
         return fiatIndex;
     }
 
@@ -468,6 +454,41 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             throw new CantGetCryptoBrokerWalletSettingException("Invalid Parameter", e, "", "");
         }
         return cryptoBrokerWalletProviderSettings;
+    }
+
+    private float getBalanceFrozenByMerchandise(FermatEnum merchandise, CurrencyType currencyType, BalanceType balanceType, float priceReference) throws CantLoadTableToMemoryException
+    {
+        float rateFrozen    = 0;
+        long  countRecords  = 0;
+
+        //if (CurrencyType.CRYPTO_MONEY.getCode() != currencyType.getCode())
+        //{
+        DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
+        table.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, merchandise.getCode(), DatabaseFilterType.EQUAL);
+        table.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+        table.loadToMemory();
+
+        for (DatabaseTableRecord records : table.getRecords())
+        {
+            records.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME);
+
+            if (records.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME) >= priceReference)
+            {
+                rateFrozen+=records.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+                countRecords++;
+            }
+        }
+        //}
+        return rateFrozen / countRecords;
+    }
+    private float getSpread() throws CantLoadTableToMemoryException {
+        DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME);
+
+        table.loadToMemory();
+        float spread = table.getRecords().get(0).getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME);
+
+        return spread;
     }
 
     private CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(DatabaseTableRecord record) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
