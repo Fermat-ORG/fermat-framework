@@ -62,6 +62,9 @@ public enum EventType implements FermatEventEnum {
     INCOMING_NEW_CONTRACT_STATUS_UPDATE("INCSU") {
         public final FermatEvent getNewEvent() { return new IncomingNewContractStatusUpdate(this);}
     },
+    NEW_CONTRACT_CLOSED("NCCLOSED"){
+        public final FermatEvent getNewEvent() { return new NewContractOpened(this);}
+    },
     NEW_CONTRACT_OPENED("NCOPENED"){
         public final FermatEvent getNewEvent() { return new NewContractOpened(this);}
     },
