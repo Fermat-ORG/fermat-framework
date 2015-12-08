@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -33,9 +34,10 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 public class ConnectionOtherProfileFragment extends FermatFragment {
 
     private Resources res;
+    public static final String INTRA_USER_SELECTED = "intra_user";
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
-    private FermatRoundedImageView userProfileAvatar;
+    private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
     private IntraUserModuleManager moduleManager;
@@ -61,6 +63,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
 
         // setting up  module
         intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+        intraUserInformation = (IntraUserInformation)subAppsSession.getData(INTRA_USER_SELECTED);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = subAppsSession.getErrorManager();
         intraUserInformation = (IntraUserInformation) subAppsSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
@@ -72,7 +75,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.intra_user_other_profile, container, false);
-        userProfileAvatar = (FermatRoundedImageView) rootView.findViewById(R.id.img_user_avatar);
+        userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
         userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         connect = (ToggleButton) rootView.findViewById(R.id.btn_conect);

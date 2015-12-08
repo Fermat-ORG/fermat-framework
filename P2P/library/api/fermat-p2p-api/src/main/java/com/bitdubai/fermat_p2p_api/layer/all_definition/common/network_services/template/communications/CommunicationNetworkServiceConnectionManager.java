@@ -1,18 +1,19 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
+public class CommunicationNetworkServiceConnectionManager<NS extends AbstractNetworkService> implements NetworkServiceConnectionManager {
 
     /**
      * Represent the communicationsClientConnection
@@ -72,6 +73,11 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      */
     private ECCKeyPair identity;
 
+    /**
+     * Network service plugin root instance
+     */
+    private NS networkServicePluginRoot;
+
 
     /**
      * Constructor with parameters
@@ -79,7 +85,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * @param communicationsClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public CommunicationNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public CommunicationNetworkServiceConnectionManager(NS networkServicePluginRoot,PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.platformComponentProfile = platformComponentProfile;
         this.identity = identity;
@@ -90,6 +96,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
         this.communicationNetworkServiceLocalsCache = new HashMap<>();
         this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
+        this.networkServicePluginRoot = networkServicePluginRoot;
     }
 
 
@@ -138,8 +145,13 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
         //Remove the instance and stop his threads
-        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
+        if(communicationNetworkServiceRemoteAgentsCache.containsKey(remoteNetworkServicePublicKey)) {
             communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        }
+
+        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey)){
+            communicationNetworkServiceLocalsCache.remove(remoteNetworkServicePublicKey);
+        }
 
     }
 
@@ -151,9 +163,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public void closeAllConnection() {
 
         for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
-
-            //Remove the instance and stop his threads
-            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
+            closeConnection(key);
         }
 
     }
@@ -180,12 +190,12 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(),networkServicePluginRoot);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(networkServicePluginRoot,identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent

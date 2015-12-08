@@ -390,7 +390,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 mListItems,
                 mListSectionPos,
                 constrainStr,
-                this);
+                this,
+                errorManager);
 
         mListView.setAdapter(mPinnedHeaderAdapter);
 
