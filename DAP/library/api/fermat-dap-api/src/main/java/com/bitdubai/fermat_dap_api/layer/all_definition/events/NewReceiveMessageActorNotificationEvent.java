@@ -9,8 +9,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
  */
 public class NewReceiveMessageActorNotificationEvent extends AbstractDAPEvent {
 
-    private DAPActor actorAssetSender;
-    private DAPActor actorAssetDestination;
     private DAPMessage message;
 
     public NewReceiveMessageActorNotificationEvent(EventType eventType) {
@@ -18,20 +16,18 @@ public class NewReceiveMessageActorNotificationEvent extends AbstractDAPEvent {
     }
 
     public DAPActor getActorAssetSender() {
-        return actorAssetSender;
+        return message.getActorSender();
     }
 
     public DAPActor getActorAssetDestination() {
-        return actorAssetDestination;
+        return message.getActorReceiver();
     }
 
     public DAPMessage getMessage() {
         return message;
     }
 
-    public void setNewReceiveMessage(DAPActor actorAssetSender, DAPActor actorAssetDestination, DAPMessage message) {
-        this.actorAssetSender = actorAssetSender;
-        this.actorAssetDestination = actorAssetDestination;
+    public void setNewReceiveMessage(DAPMessage message) {
         this.message = message;
     }
 }

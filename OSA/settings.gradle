@@ -10,6 +10,14 @@
 include ':fermat-osa-android-core'
 project(':fermat-osa-android-core').projectDir = new File('OSA/library/core/fermat-osa-android-core')
 
+//include ':fermat-osa-addon-multi-os-database-system-bitdubai'
+//project(':fermat-osa-addon-multi-os-database-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai')
+
+//include ':fermat-osa-addon-multi-os-file-system-bitdubai'
+//project(':fermat-osa-addon-multi-os-file-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai')
+
+//include ':fermat-osa-linux-core'
+//project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
 
 include ':fermat-osa-addon-android-database-system-bitdubai'
 project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
