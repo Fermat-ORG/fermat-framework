@@ -26,7 +26,7 @@ public class BankMoneyWalletFragmentFactory extends FermatWalletFragmentFactory<
 
     @Override
     public BankMoneyWalletFragmentsEnumType getFermatFragmentEnumType(String key) {
-        return null;
+        return BankMoneyWalletFragmentsEnumType.getValue(key);
     }
     private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {
         String possibleReason, context;

@@ -406,9 +406,9 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
                     "crypto_customer",
-                    "Crypto Customer",
-                    "crypto_customer_wallet",
-                    "wallet_crypto_customer_platform_identifier",
+                    "Banking Wallet",
+                    "banking_wallet",
+                    "wallet_banking_platform_identifier",
                     new Version(1,0,0));
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
