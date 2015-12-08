@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.IncomingMessageDao;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.IncomingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
@@ -52,8 +52,8 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
     private final CommunicationsVPNConnection communicationsVPNConnection;
     private final ErrorManager                errorManager               ;
     private final EventManager                eventManager               ;
-    private final IncomingMessageDao          incomingMessageDao         ;
-    private final OutgoingMessageDao          outgoingMessageDao         ;
+    private final IncomingMessageDao incomingMessageDao         ;
+    private final OutgoingMessageDao outgoingMessageDao         ;
     private final EventSource                 eventSource                ;
     private final PluginVersionReference      pluginVersionReference     ;
 
@@ -293,8 +293,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                     }
 
                 } catch(CantUpdateRecordDataBaseException |
-                        CantReadRecordDataBaseException   |
-                        RecordNotFoundException           e) {
+                        CantReadRecordDataBaseException           e) {
 
                     errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }

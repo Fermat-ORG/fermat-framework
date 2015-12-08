@@ -5,8 +5,10 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -31,6 +33,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -226,8 +229,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         dao.setToSTCV(transaction);
 
                         //check if a request payment accept
-                        if(transaction.getRequestId() == null)
-                        {
+                        if(transaction.getRequestId() == null) {
                             this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
                                     transaction.getAddressTo().getCryptoCurrency(),
                                     transaction.getAmount(),
@@ -236,8 +238,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                     transaction.getTransactionHash(),
                                     transaction.getMemo());
                         }
-                        else
-                        {
+                        else {
                             this.cryptoTransmissionManager.acceptCryptoRequest(transaction.getTransactionId(),
                                     transaction.getRequestId(),
                                     transaction.getAddressTo().getCryptoCurrency(),
@@ -255,12 +256,11 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
-
+                            roolback(transaction);
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
                             reportUnexpectedException(e1);
-
                         } catch (Exception exception) {
                             reportUnexpectedException(FermatException.wrapException(exception));
                         }
@@ -337,5 +337,37 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     throw new OutgoingIntraActorWalletNotSupportedException("The wallet is not supported",null,"ReferenceWallet enum value: " + transaction.getReferenceWallet().toString() ,"Missing case in switch statement");
             }
         }
+
+        /**
+         *  bitcoin wallet and vault different states
+         *
+         * @param transaction
+         */
+        private void roolback(OutgoingIntraActorTransactionWrapper transaction){
+            try {
+                switch (transaction.getReferenceWallet()) {
+                    case BASIC_WALLET_BITCOIN_WALLET:
+                        bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).credit(transaction);
+                        break;
+                    default:
+                        throw new OutgoingIntraActorWalletNotSupportedException("Roolback", null, "ReferenceWallet enum value: " + transaction.getReferenceWallet().toString(), " Roolback");
+                }
+            }catch (CantLoadWalletException e) {
+                e.printStackTrace();
+            } catch (OutgoingIntraActorWalletNotSupportedException e) {
+                e.printStackTrace();
+            } catch (CantRegisterCreditException e) {
+                e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+//        private void roolback(){
+//            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
+//            IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
+//            incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
+//            eventManager.raiseEvent(incomingCryptoMetadataReceive);
+//        }
+
     }
 }

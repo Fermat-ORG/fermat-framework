@@ -225,7 +225,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 errorManager,
                 eventManager,
                 EVENT_SOURCE,
-                getPluginVersionReference());
+                getPluginVersionReference(),
+                this);
     }
 
 

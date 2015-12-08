@@ -155,6 +155,36 @@ public class WalletStatisticsNetworkServicePluginRoot extends AbstractPlugin imp
     }
 
     @Override
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
+
+    }
+
+    @Override
+    public void initializeCommunicationNetworkServiceConnectionManager() {
+
+    }
+
+    @Override
+    public String getIdentityPublicKey() {
+        return null;
+    }
+
+    @Override
+    public String getAlias() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getExtraData() {
+        return null;
+    }
+
+    @Override
     public WalletStatistics getWalletStatistics(UUID walletCatalogId) throws CantGetWalletStatisticsException{
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
