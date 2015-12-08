@@ -18,15 +18,9 @@ import java.util.List;
 public interface AssetUserWalletSubAppModuleManager extends ModuleManager {
     /**
      * (non-Javadoc)
-     * @see List <AssetUserWalletList>() getAssetIssuerWalletBalancesAvailable(String publicKey)
-     */
-    List<AssetUserWalletList> getAssetUserWalletBalancesAvailable(String publicKey) throws CantLoadWalletException;
-    /**
-     * (non-Javadoc)
      * @see List<AssetUserWalletList> getAssetIssuerWalletBalancesBook(String publicKey)
      */
-    List<AssetUserWalletList> getAssetUserWalletBalancesBook(String publicKey) throws CantLoadWalletException;
-
+    List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException;
 
     AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException;
 

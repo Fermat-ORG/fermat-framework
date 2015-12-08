@@ -206,7 +206,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(record.genesisTransaction())) {
                                 if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK) {
                                     AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
-                                    AssetUserWalletBalance balance = userWallet.getBookBalance(BalanceType.AVAILABLE);
+                                    AssetUserWalletBalance balance = userWallet.getBalance();
                                     AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
                                             cryptoTransaction,
                                             record.digitalAsset().getPublicKey(),
@@ -226,7 +226,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(record.genesisTransaction())) {
                                 if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
                                     AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
-                                    AssetUserWalletBalance balance = userWallet.getBookBalance(BalanceType.BOOK);
+                                    AssetUserWalletBalance balance = userWallet.getBalance();
                                     AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
                                             cryptoTransaction,
                                             record.digitalAsset().getPublicKey(),

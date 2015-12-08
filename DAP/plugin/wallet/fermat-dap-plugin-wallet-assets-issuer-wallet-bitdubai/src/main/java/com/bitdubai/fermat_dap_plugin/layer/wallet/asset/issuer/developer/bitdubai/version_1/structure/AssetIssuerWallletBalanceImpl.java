@@ -38,19 +38,11 @@ public class AssetIssuerWallletBalanceImpl implements com.bitdubai.fermat_dap_ap
     }
 
     @Override
-    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable() throws CantCalculateBalanceException {
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalances() throws CantCalculateBalanceException {
         assetIssuerWalletDao = new AssetIssuerWalletDao(database);
         assetIssuerWalletDao.setPlugin(plugin);
         assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-        return assetIssuerWalletDao.getAvailableBalanceByAsset();
-    }
-
-    @Override
-    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook() throws CantCalculateBalanceException {
-        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-        assetIssuerWalletDao.setPlugin(plugin);
-        assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-        return assetIssuerWalletDao.getBookBalanceByAssets();
+        return assetIssuerWalletDao.getBalanceByAssets();
     }
 
     @Override
