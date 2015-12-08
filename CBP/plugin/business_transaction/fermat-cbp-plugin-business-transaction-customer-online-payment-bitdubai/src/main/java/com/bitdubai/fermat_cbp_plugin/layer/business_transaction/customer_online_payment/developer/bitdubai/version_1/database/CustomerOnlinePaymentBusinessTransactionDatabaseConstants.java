@@ -11,6 +11,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_onlin
  * @since Java JDK 1.7
  */
 public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
+
+    public static final String DATABASE_NAME = "customer_online_payment_database";
     /**
      * Online Payment database table definition.
      */
@@ -25,5 +27,18 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
 
     public static final String ONLINE_PAYMENT_FIRST_KEY_COLUMN = "contract_hash";
+
+    /**
+     * Events recorded database table definition.
+     */
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME = "distribution_events_recorded";
+
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME = "event_id";
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME = "event";
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME = "source";
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME = "status";
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME = "timestamp";
+
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
 
 }

@@ -112,6 +112,19 @@ public class CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory im
         DeveloperDatabaseTable onlinePaymentTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME, onlinePaymentColumns);
         tables.add(onlinePaymentTable);
 
+        /**
+         * Events Recorder table
+         * */
+        List<String> eventsRecorderColumns = new ArrayList<String>();
+
+        eventsRecorderColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME);
+        eventsRecorderColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        eventsRecorderColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+        eventsRecorderColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME);
+        eventsRecorderColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
+        tables.add(eventsRecorderTable);
 
         return tables;
     }

@@ -259,6 +259,7 @@ public enum Plugins implements FermatEnum {
     OPEN_CONTRACT               ("OPC"),
     TRANSACTION_TRANSMISSION    ("TRTX"),
     CLOSE_CONTRACT              ("CLC"),
+    CUSTOMER_ONLINE_PAYMENT     ("CONP"),
 
     // End  new Plugins
 
@@ -363,6 +364,7 @@ public enum Plugins implements FermatEnum {
             case ("NGP"):   return NEGOTIATION_PURCHASE     ;
             case "OPC":     return OPEN_CONTRACT            ;
             case "CLC":     return CLOSE_CONTRACT           ;
+            case "CONP":     return CUSTOMER_ONLINE_PAYMENT ;
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

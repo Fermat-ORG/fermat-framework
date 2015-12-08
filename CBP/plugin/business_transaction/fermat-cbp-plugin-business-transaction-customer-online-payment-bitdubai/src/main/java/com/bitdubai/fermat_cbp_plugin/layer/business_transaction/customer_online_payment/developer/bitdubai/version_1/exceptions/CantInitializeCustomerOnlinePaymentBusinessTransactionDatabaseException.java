@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @since Java JDK 1.7
  */
 public class CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE CUSTOMER ONLINE PAYMENT BUSINESS TRANSACTION DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CUSTOMER ONLINE PAYMENT BUSINESS TRANSACTION DATABASE EXCEPTION";
     public CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }

@@ -53,7 +53,7 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseFactory implements 
             /**
              * I can not handle this situation.
              */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and I cannot create the database.");
         }
         /**
          * Next, I will add the needed tables.
@@ -81,6 +81,23 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseFactory implements 
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
+
+            eventsRecorderTable.addColumn(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+
+            eventsRecorderTable.addIndex(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, eventsRecorderTable);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
