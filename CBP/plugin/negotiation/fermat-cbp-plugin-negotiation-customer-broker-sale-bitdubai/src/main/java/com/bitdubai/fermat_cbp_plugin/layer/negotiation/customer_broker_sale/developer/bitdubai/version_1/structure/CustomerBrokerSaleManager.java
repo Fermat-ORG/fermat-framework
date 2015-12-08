@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -188,7 +188,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
     }
 
     @Override
-    public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(Currency currency) throws CantGetListBankAccountsSaleException {
+    public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsSaleException {
         return this.customerBrokerSaleNegotiationDao.getBankAccountByCurrencyType(currency);
     }
 
