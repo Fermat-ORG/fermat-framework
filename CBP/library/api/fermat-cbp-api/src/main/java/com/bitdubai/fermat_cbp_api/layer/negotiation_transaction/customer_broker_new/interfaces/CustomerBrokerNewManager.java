@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broke
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetListCustomerBrokerNewNegotiationTransactionException;
@@ -16,8 +17,10 @@ import java.util.UUID;
  * Created by Yordin Alayn on 23.11.15.
  */
 public interface CustomerBrokerNewManager {
+    //TODO NOTIFICAR A ANGEL EL CAMBIO DE LA INTERFACE Negotiation POR CustomerBrokerPurchaseNegotiation
+    void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerNewNegotiationTransactionException;
 
-    CustomerBrokerNew createCustomerBrokerNewNegotiationTranasction(Negotiation negotiation, Collection<Clause> clauses) throws CantCreateCustomerBrokerNewNegotiationTransactionException;
+    void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerNewNegotiationTransactionException;
 
     void updateStatusCustomerBrokerNewNegotiationTranasction(UUID transactionId, NegotiationStatus statusTransaction) throws CantUpdateStatusCustomerBrokerNewNegotiationTransactionException;
 
