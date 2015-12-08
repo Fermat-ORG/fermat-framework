@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
@@ -61,6 +62,9 @@ public enum EventType implements FermatEventEnum {
 
     INCOMING_NEW_CONTRACT_STATUS_UPDATE("INCSU") {
         public final FermatEvent getNewEvent() { return new IncomingNewContractStatusUpdate(this);}
+    },
+    NEW_CONTRACT_CLOSED("NCCLOSED"){
+        public final FermatEvent getNewEvent() { return new NewContractClosed(this);}
     },
     NEW_CONTRACT_OPENED("NCOPENED"){
         public final FermatEvent getNewEvent() { return new NewContractOpened(this);}
