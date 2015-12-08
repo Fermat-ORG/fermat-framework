@@ -127,7 +127,7 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
 
         LOG.info("Calling the method - start() ");
 
-          /*
+        /*
          * Validate required resources
          */
         validateInjectedResources();

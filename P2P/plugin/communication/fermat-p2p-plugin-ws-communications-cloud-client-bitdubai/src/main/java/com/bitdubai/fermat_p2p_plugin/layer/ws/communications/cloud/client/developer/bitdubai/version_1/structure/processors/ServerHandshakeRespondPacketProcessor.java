@@ -37,8 +37,8 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
     @Override
     public void processingPackage(final FermatPacket receiveFermatPacket) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("ServerHandshakeRespondPacketProcessor - processingPackage");
+        //System.out.println(" --------------------------------------------------------------------- ");
+        //System.out.println("ServerHandshakeRespondPacketProcessor - processingPackage");
 
         /* -----------------------------------------------------------------------------------------
          * IMPORTANT: This Message Content of this packet come encrypted with the temporal identity public key
@@ -64,7 +64,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         getWsCommunicationsCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.SERVER_IDENTITY).getAsString());
 
 
-        System.out.println("ServerHandshakeRespondPacketProcessor - ServerIdentity = "+ getWsCommunicationsCloudClientChannel().getServerIdentity());
+        //System.out.println("ServerHandshakeRespondPacketProcessor - ServerIdentity = "+ getWsCommunicationsCloudClientChannel().getServerIdentity());
 
         /*
          * Construct a Communications Cloud Client Profile for this component and send and fermat packet type FermatPacketType.COMPONENT_REGISTRATION_REQUEST

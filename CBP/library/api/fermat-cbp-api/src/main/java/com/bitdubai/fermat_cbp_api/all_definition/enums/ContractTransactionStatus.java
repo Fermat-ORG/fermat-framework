@@ -12,6 +12,7 @@ public enum ContractTransactionStatus implements FermatEnum {
     ACK_ONLINE_MERCHANDISE("ANM"),
     ACK_OFFLINE_PAYMENT("AFP"),
     ACK_ONLINE_PAYMENT("ANP"),
+    CHECKING_CLOSING_CONTRACT("CCC"),
     CHECKING_HASH("CHA"),
     CLOSING_CONTRACT("CLC"),
     CONTRACT_COMPLETED("CNC"),

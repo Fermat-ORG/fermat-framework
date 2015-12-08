@@ -72,7 +72,7 @@ public class MainFragment extends FermatWalletFragment
             @Override
             protected Object doInBackground() throws Exception {
                 if (manager == null)
-                    throw new NullPointerException("AssetUserWalletModuleManager is null");
+                    throw new NullPointerException("AssetRedeemPointWalletModuleManager is null");
                 assetRedeemPointWalletList = manager.getAssetRedeemPointWalletBalancesBook("walletPublicKeyTest");
                 if (assetRedeemPointWalletList != null && !assetRedeemPointWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
@@ -114,7 +114,7 @@ public class MainFragment extends FermatWalletFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.main_fragment, container, false);
+        rootView = inflater.inflate(R.layout.dap_wallet_asset_redeempoint_main_fragment, container, false);
         assetsView = (RecyclerView) rootView.findViewById(R.id.assets);
         assetsView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -126,7 +126,7 @@ public class MainFragment extends FermatWalletFragment
                 setAsset(project);
                 PopupMenu popupMenu = new PopupMenu(getActivity(), menuView);
                 MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.main, popupMenu.getMenu());
+                inflater.inflate(R.menu.dap_wallet_asset_redeempoint_main, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(MainFragment.this);
                 popupMenu.show();
             }
@@ -137,7 +137,7 @@ public class MainFragment extends FermatWalletFragment
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_appropriate) {
+        if (menuItem.getItemId() == R.id.action_new) {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Please wait...");
             dialog.setCancelable(false);
@@ -145,13 +145,7 @@ public class MainFragment extends FermatWalletFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-//                    manager.distributionAssets(
-//                            asset.getAssetPublicKey(),
-//                            asset.getWalletPublicKey(),
-//                            asset.getActorAssetUser()
-//                    );
                     //TODO implement work to do
-//                    manager.appropriateAsset();
                     return true;
                 }
             };
