@@ -182,6 +182,7 @@ public enum Fragments implements FermatFragments {
 
     //Bank Money Wallet
     BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST("BNKBMWAL"),
+    BNK_BANK_MONEY_WALLET_ACCOUNT_DETAIL("BNKBMWAD"),
 
     // CCP Identity
     CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CCPSACCIMF"),
