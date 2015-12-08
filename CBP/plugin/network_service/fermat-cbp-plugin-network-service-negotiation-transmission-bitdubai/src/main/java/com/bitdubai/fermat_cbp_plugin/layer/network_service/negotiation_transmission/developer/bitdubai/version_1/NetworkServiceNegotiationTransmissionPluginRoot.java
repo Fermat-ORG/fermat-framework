@@ -194,7 +194,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             }
 
             //Initialize DAO
-            databaseDao = new NegotiationTransmissionNetworkServiceDatabaseDao(pluginDatabaseSystem,pluginId);
+            databaseDao = new NegotiationTransmissionNetworkServiceDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
             databaseConnectionsDao = new NegotiationTransmissionNetworkServiceConnectionsDatabaseDao(pluginDatabaseSystem, pluginId);
 
             //List Network Service Register
@@ -526,6 +526,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 eventManager
             );
 
+            System.out.print("-----------------------\n" +
+                    "NEGOTIATION TRANSMISSION CALL AGENT  -----------------------\n" +
+                    "-----------------------\n TO: " + getName());
             //Start agent
             negotiationTransmissionAgent.start();
         }

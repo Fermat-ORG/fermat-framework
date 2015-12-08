@@ -155,10 +155,12 @@ public class NegotiationTransmissionAgent {
     public void start(){
         //Set to running
         this.running  = Boolean.TRUE;
+        System.out.println("NEGOTIATION TRANSMISSION AGEN");
         try {
             databaseDao.initialize();
         } catch (CantInitializeDatabaseException e) {
             e.printStackTrace();
+            System.out.println("ERROR NEGOTIATION TRANSMISSION AGEN, DATABASE DAO NOT STARTED");
         }
 
         //Start the Thread
