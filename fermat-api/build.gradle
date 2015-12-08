@@ -39,6 +39,9 @@ dependencies {
     compile('com.thoughtworks.xstream:xstream:1.4.7') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
+
+    compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
+
     compile 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
     testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
     testCompile 'junit:junit:4.11'
