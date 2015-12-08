@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -55,6 +56,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperI
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
+import org.bitcoinj.core.Wallet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +99,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
+    private FermatTextView txt_vault;
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -201,7 +205,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
-
 
 //        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams()
 //        balance_header.setLayoutParams();

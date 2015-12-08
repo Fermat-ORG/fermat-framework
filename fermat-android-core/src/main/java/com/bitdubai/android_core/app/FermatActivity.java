@@ -875,14 +875,14 @@ public abstract class FermatActivity extends AppCompatActivity
                         public void onDrawerOpened(View drawerView) {
                             super.onDrawerOpened(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
                         public void onDrawerClosed(View drawerView) {
                             super.onDrawerClosed(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
@@ -2157,7 +2157,14 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationView(NavigationViewPainter navigationViewPainter) {
         this.navigationViewPainter = navigationViewPainter;
-        invalidate();
+        if(activityType.equals(ActivityType.ACTIVITY_TYPE_WALLET)){
+            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+            Activity activity = walletNavigationStructure.getLastActivity();
+            paintSideMenu(activity,activity.getSideMenu());
+        }else{
+            invalidate();
+        }
+
     }
 
     /**
