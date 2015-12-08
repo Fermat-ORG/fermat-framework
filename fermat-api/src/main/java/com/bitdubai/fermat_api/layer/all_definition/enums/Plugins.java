@@ -225,6 +225,7 @@ public enum Plugins implements FermatEnum {
     WALLET_CONTACTS             ("WC"),
     WALLET_FACTORY              ("WF"),
     WALLET_MANAGER              ("WM"),
+    SUB_APP_MANAGER             ("SAM"),
     WALLET_PUBLISHER            ("WPU"),
     WALLET_RESOURCES            ("WRE"),
     WALLET_RUNTIME              ("WRU"),
@@ -328,6 +329,7 @@ public enum Plugins implements FermatEnum {
             case "WC"   :   return WALLET_CONTACTS          ;
             case "WF"   :   return WALLET_FACTORY           ;
             case "WM"   :   return WALLET_MANAGER           ;
+            case "SAM"  :   return SUB_APP_MANAGER          ;
             case "WPU"  :   return WALLET_PUBLISHER         ;
             case "WRE"  :   return WALLET_RESOURCES         ;
             case "WRU"  :   return WALLET_RUNTIME           ;

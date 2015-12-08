@@ -13,15 +13,17 @@ import android.view.animation.AnimationUtils;
 public class FermatAnimationsUtils {
 
     public static void showEmpty(Activity activity,boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(activity,
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
+        if(emptyView!=null) {
+            Animation anim = AnimationUtils.loadAnimation(activity,
+                    show ? android.R.anim.fade_in : android.R.anim.fade_out);
+            if (show &&
+                    (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+                emptyView.setAnimation(anim);
+                emptyView.setVisibility(View.VISIBLE);
+            } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+                emptyView.setAnimation(anim);
+                emptyView.setVisibility(View.GONE);
+            }
         }
     }
 }
