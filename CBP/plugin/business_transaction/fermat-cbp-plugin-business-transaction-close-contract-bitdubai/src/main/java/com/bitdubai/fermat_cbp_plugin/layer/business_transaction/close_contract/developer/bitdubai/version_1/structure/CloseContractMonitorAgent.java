@@ -3,6 +3,12 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -14,18 +20,25 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.CloseContractPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.CloseContractBusinessTransactionDao;
@@ -246,7 +259,6 @@ public class CloseContractMonitorAgent implements
                     closeContractBusinessTransactionDao.updateContractTransactionStatus(
                             hashToSubmit,
                             ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
-                    //TODO: submit new status with transaction transmission
                     contractType=closeContractBusinessTransactionDao.getContractType(hashToSubmit);
                     contractXML=closeContractBusinessTransactionDao.getContractXML(hashToSubmit);
                     transactionId=closeContractBusinessTransactionDao.getTransactionId(hashToSubmit);
@@ -259,7 +271,8 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId, ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                                    transactionId,
+                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
@@ -269,7 +282,44 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId, ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                                    transactionId,
+                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                            break;
+                    }
+                }
+
+                //TODO: check new closed contract
+                /**
+                 * Check if exists a new closed contract to confirm
+                 */
+                List<String> contractToConfirmList=closeContractBusinessTransactionDao.getClosingConfirmContractToCloseList();
+                for(String hashToSubmit : contractToConfirmList){
+                    closeContractBusinessTransactionDao.updateContractTransactionStatus(
+                            hashToSubmit,
+                            ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION);
+                    contractType=closeContractBusinessTransactionDao.getContractType(hashToSubmit);
+                    contractXML=closeContractBusinessTransactionDao.getContractXML(hashToSubmit);
+                    transactionId=closeContractBusinessTransactionDao.getTransactionId(hashToSubmit);
+                    switch(contractType){
+                        case PURCHASE:
+                            purchaseContract=(ContractPurchaseRecord) XMLParser.parseXML(
+                                    contractXML,
+                                    purchaseContract);
+                            transactionTransmissionManager.confirmNotificationReception(
+                                    purchaseContract.getPublicKeyCustomer(),
+                                    purchaseContract.getPublicKeyBroker(),
+                                    hashToSubmit,
+                                    transactionId);
+                            break;
+                        case SALE:
+                            saleContract=(ContractSaleRecord) XMLParser.parseXML(
+                                    contractXML,
+                                    saleContract);
+                            transactionTransmissionManager.confirmNotificationReception(
+                                    purchaseContract.getPublicKeyCustomer(),
+                                    purchaseContract.getPublicKeyBroker(),
+                                    hashToSubmit,
+                                    transactionId);
                             break;
                     }
                 }
@@ -279,7 +329,7 @@ public class CloseContractMonitorAgent implements
                  */
                 List<String> pendingEventsIdList=closeContractBusinessTransactionDao.getPendingEvents();
                 for(String eventId : pendingEventsIdList){
-                    checkPendingEvent("eventId");
+                    checkPendingEvent(eventId);
                 }
 
 
@@ -300,21 +350,92 @@ public class CloseContractMonitorAgent implements
                         "Error in Transaction Transmission Network Service");
             }*/ catch (CantSendContractNewStatusNotificationException e) {
                 e.printStackTrace();
+            } catch (CantConfirmNotificationReception cantConfirmNotificationReception) {
+                cantConfirmNotificationReception.printStackTrace();
             }
 
         }
 
-        private void raiseNewContractEvent(){
-            //TODO: to implement with the proper event
-            /*FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
-            NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
-            newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
-            eventManager.raiseEvent(newContractOpened);*/
+        private void raiseNewContractClosedEvent(){
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
+            NewContractClosed newContractOpened = (NewContractClosed) fermatEvent;
+            newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_CLOSE_CONTRACT);
+            eventManager.raiseEvent(newContractOpened);
         }
 
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
-            //TODO: To implement
+            try{
+                String eventTypeCode=closeContractBusinessTransactionDao.getEventType(eventId);
+                BusinessTransactionMetadata businessTransactionMetadata;
+                String contractHash;
+                ContractTransactionStatus contractTransactionStatus;
+                ContractType contractType;
+
+                if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
+                    //Check if contract is a closing contract
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
+                            transactionTransmissionManager.getPendingTransactions(
+                                    Specialist.UNKNOWN_SPECIALIST);
+                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+                        businessTransactionMetadata=record.getInformation();
+                        contractHash=businessTransactionMetadata.getContractHash();
+                        contractType=closeContractBusinessTransactionDao.getContractType(contractHash);
+                        contractTransactionStatus=closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                        if(contractTransactionStatus.getCode().equals(
+                                ContractTransactionStatus.CHECKING_CLOSING_CONTRACT)){
+                            switch (contractType){
+                                case PURCHASE:
+                                    customerBrokerContractPurchaseManager.
+                                            updateStatusCustomerBrokerPurchaseContractStatus(
+                                                    contractHash,
+                                                    ContractStatus.COMPLETED);
+                                    break;
+                                case SALE:
+                                    customerBrokerContractSaleManager.
+                                            updateStatusCustomerBrokerSaleContractStatus(
+                                                    contractHash,
+                                                    ContractStatus.COMPLETED);
+                                    break;
+                            }
+                            closeContractBusinessTransactionDao.updateContractTransactionStatus(
+                                    contractHash,
+                                    ContractTransactionStatus.CONFIRM_CLOSED_CONTRACT);
+                            transactionTransmissionManager.confirmReception(record.getTransactionID());
+                        }
+                    }
+                }
+                //TODO: check new confirmed closed contract... raise an event.
+                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
+                    //Check if contract is a closing contract
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
+                            transactionTransmissionManager.getPendingTransactions(
+                                    Specialist.UNKNOWN_SPECIALIST);
+                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+                        businessTransactionMetadata=record.getInformation();
+                        contractHash=businessTransactionMetadata.getContractHash();
+                        contractTransactionStatus=closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                        if(contractTransactionStatus.getCode().equals(
+                                ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION)){
+                            closeContractBusinessTransactionDao.updateContractTransactionStatus(
+                                    contractHash,
+                                    ContractTransactionStatus.CONTRACT_COMPLETED);
+                            raiseNewContractClosedEvent();
+                            transactionTransmissionManager.confirmReception(record.getTransactionID());
+                        }
+                    }
+                }
+            } catch (CantDeliverPendingTransactionsException e) {
+                e.printStackTrace();
+            } catch (CantupdateCustomerBrokerContractPurchaseException e) {
+                e.printStackTrace();
+            } catch (CantupdateCustomerBrokerContractSaleException e) {
+                e.printStackTrace();
+            } catch (CantUpdateRecordException e) {
+                e.printStackTrace();
+            } catch (CantConfirmTransactionException e) {
+                e.printStackTrace();
+            }
 
         }
 

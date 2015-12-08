@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.inte
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
@@ -448,6 +449,12 @@ public class OpenContractMonitorAgent implements
                                             updateStatusCustomerBrokerPurchaseContractStatus(
                                                     contractHash,
                                                     ContractStatus.PENDING_PAYMENT);
+                                    break;
+                                case SALE:
+                                    customerBrokerContractSaleManager.
+                                            updateStatusCustomerBrokerSaleContractStatus(
+                                                    contractHash,
+                                                    ContractStatus.PENDING_PAYMENT);
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             raiseNewContractEvent();
@@ -463,6 +470,8 @@ public class OpenContractMonitorAgent implements
             } catch (CantupdateCustomerBrokerContractPurchaseException e) {
                 e.printStackTrace();
             } catch (CantConfirmTransactionException e) {
+                e.printStackTrace();
+            } catch (CantupdateCustomerBrokerContractSaleException e) {
                 e.printStackTrace();
             }
 
