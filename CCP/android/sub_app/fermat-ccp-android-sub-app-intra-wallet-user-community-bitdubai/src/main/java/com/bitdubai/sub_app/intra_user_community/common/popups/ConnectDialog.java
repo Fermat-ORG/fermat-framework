@@ -97,6 +97,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
             dismiss();
         }else if( i == R.id.negative_button){
             dismiss();
