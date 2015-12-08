@@ -38,14 +38,15 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.appropriation_stats.exc
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.appropriation_stats.exceptions.CantStartAppropriationStatsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.appropriation_stats.interfaces.AppropriationStatsManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.developer_utils.AssetAppropriationStatsDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database.AppropriationStatsDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database.AssetAppropriationStatsDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database.AssetAppropriationStatsDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.events.AppropriationStatsMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.events.AppropriationStatsRecorderService;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Collections;
@@ -86,6 +87,9 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
+    private AssetIssuerWalletManager assetIssuerWalletManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     AppropriationStatsRecorderService recorderService;
@@ -118,9 +122,16 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
             if (!databaseFactory.isDatabaseCreated(pluginId)) {
                 databaseFactory.createDatabase(pluginId);
             }
-            recorderService = new AppropriationStatsRecorderService(pluginId, eventManager, pluginDatabaseSystem);
+            recorderService = new AppropriationStatsRecorderService(pluginId,
+                    eventManager,
+                    pluginDatabaseSystem);
             recorderService.start();
-            monitorAgent = new AppropriationStatsMonitorAgent(pluginDatabaseSystem, logManager, errorManager, pluginId, assetIssuerActorNetworkServiceManager);
+            monitorAgent = new AppropriationStatsMonitorAgent(pluginDatabaseSystem,
+                    logManager,
+                    errorManager,
+                    pluginId,
+                    assetIssuerActorNetworkServiceManager,
+                    assetIssuerWalletManager);
             monitorAgent.start();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
@@ -268,8 +279,8 @@ public class AppropriationStatsDigitalAssetTransactionPluginRoot extends Abstrac
             };
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
 //            String message = new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated).toString();
-            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated),actorAssetUser,actorAssetIssuer);
-            assetIssuerActorNetworkServiceManager.sendMessage(actorAssetUser, actorAssetIssuer, message); //FROM: USER. TO:ISSUER.
+            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, userThatAppropriated), actorAssetUser, actorAssetIssuer);
+            assetIssuerActorNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
         } catch (Exception e) {
             throw new CantStartAppropriationStatsException(FermatException.wrapException(e), context, null);
         }

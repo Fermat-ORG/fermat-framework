@@ -64,7 +64,13 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
             } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
 
                 throw new CantInitializeDatabaseException(cantCreateDatabaseException);
+            }catch (Exception ex) {
+
+                throw new CantInitializeDatabaseException(CantInitializeDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
             }
+        }catch (Exception e) {
+
+            throw new CantInitializeDatabaseException(CantInitializeDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 

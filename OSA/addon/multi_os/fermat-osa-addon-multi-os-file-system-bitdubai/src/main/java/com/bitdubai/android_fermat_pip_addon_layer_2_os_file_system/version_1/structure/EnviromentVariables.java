@@ -54,7 +54,7 @@ public class EnviromentVariables {
 
         //User home directory
         String home = System.getProperty("user.home");
-        File dir = new File(home+"/externalStorage/files/");
+        File dir = new File(home+"/internalStorage/files/");
         //FileObject myfolder = FileUtil.toFileObject(dir);
         dir.mkdir();
         /*if(myfolder == null){

@@ -23,6 +23,10 @@ public class CantSendMessageException extends DAPException {
         this(message, null);
     }
 
+    public CantSendMessageException(final String message, final Exception cause, final String context) {
+        this(message, cause, context, null);
+    }
+
     public CantSendMessageException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());

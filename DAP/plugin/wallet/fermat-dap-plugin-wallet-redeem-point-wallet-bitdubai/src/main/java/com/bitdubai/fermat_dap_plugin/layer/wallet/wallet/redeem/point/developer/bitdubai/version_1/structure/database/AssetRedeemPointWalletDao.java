@@ -129,6 +129,8 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
                 redeemPointIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
                 redeemPointIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
                 redeemPointIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
+                redeemPointIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
+                redeemPointIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
                 redeemPointWalletBalances.add(redeemPointIssuerWalletBalance);
             }
         }
@@ -141,6 +143,8 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
                 redeemPointIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
                 redeemPointIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
                 redeemPointIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
+                redeemPointIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
+                redeemPointIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
                 redeemPointWalletBalances.add(redeemPointIssuerWalletBalance);
             }
 
@@ -209,13 +213,13 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
 
     private void executeTransaction(final AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance, final long quantityAvailableRunningBalance, final long quantityBookRunningBalance) throws CantExecuteAssetRedeemPointTransactionException {
         try {
-            DatabaseTableRecord assetIssuerWalletRecord = constructAssetRdeemPointWalletRecord(assetRedeemPointWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);
+            DatabaseTableRecord assetRedeemPointWalletRecord = constructAssetRdeemPointWalletRecord(assetRedeemPointWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);
             DatabaseTableRecord assetBalanceRecord = constructAssetBalanceRecord(assetRedeemPointWalletTransactionRecord.getDigitalAsset(), availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
             DatabaseTransaction transaction = database.newTransaction();
-            transaction.addRecordToInsert(getAssetRedeemPointWalletTable(), assetIssuerWalletRecord);
+            transaction.addRecordToInsert(getAssetRedeemPointWalletTable(), assetRedeemPointWalletRecord);
 
             DatabaseTable databaseTable = getBalancesTable();
-            databaseTable.setStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey(), DatabaseFilterType.EQUAL );
+            databaseTable.setStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()){
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
