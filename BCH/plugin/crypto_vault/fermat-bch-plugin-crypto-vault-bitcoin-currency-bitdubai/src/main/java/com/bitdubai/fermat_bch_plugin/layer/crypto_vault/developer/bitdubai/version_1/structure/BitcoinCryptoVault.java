@@ -43,6 +43,7 @@ import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
@@ -56,6 +57,7 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.store.BlockStore;
@@ -188,7 +190,7 @@ public class BitcoinCryptoVault implements
 
         try{
             this.userPublicKey = userPublicKey;
-            this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
+            this.networkParameters = TestNet3Params.get();//BitcoinNetworkConfiguration.getNetworkConfiguration();
 
             this.vaultFileName = userPublicKey.toString() + ".vault";
             //todo this needs to be fixed. I need to find a better way to get the file
@@ -225,7 +227,8 @@ public class BitcoinCryptoVault implements
      * @throws CantCreateCryptoWalletException
      */
     private void createNewVault() throws CantCreateCryptoWalletException {
-        vault = new Wallet(networkParameters);
+        //TODO: esto lo hice para probar y funcionó, despues lo cambio porque no me corria lo otro
+        vault = new Wallet(Context.getOrCreate(TestNet3Params.get()));
         try {
             PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userPublicKey.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             vaultFile.persistToMedia();
@@ -238,6 +241,8 @@ public class BitcoinCryptoVault implements
             throw new CantCreateCryptoWalletException("There was an error trying to create a new Vault." ,cantCreateFileException, "Vault filename: " + vaultFileName, "Not enought space on disk?");
         } catch (CantPersistFileException e) {
             throw new CantCreateCryptoWalletException("There was an error trying to save the Vault into a file." ,e, "Vault filename: " + vaultFileName, "Not enought space on disk?");
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
