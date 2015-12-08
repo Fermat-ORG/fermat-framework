@@ -14,14 +14,9 @@ import java.util.List;
 public interface AssetRedeemPointWalletSubAppModule extends ModuleManager {
     /**
      * (non-Javadoc)
-     * @see List <AssetRedeemPointWalletList>() getAssetRedeemPointWalletBalancesAvailable(String publicKey)
-     */
-    List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesAvailable(String publicKey) throws CantLoadWalletException;
-    /**
-     * (non-Javadoc)
      * @see List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesBook(String publicKey)
      */
-    List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesBook(String publicKey) throws CantLoadWalletException;
+    List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalances(String publicKey) throws CantLoadWalletException;
 
     AssetRedeemPointWallet loadAssetRedeemPointWallet(String walletPublicKey) throws CantLoadWalletException;
 

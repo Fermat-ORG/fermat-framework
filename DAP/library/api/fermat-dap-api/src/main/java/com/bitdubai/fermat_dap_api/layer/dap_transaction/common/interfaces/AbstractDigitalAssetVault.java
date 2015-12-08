@@ -327,7 +327,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         }
         if (dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION.getCode())) {
             AssetUserWallet assetWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
-            AssetUserWalletBalance assetUserWalletBalance = assetWallet.getBookBalance(balanceType);
+            AssetUserWalletBalance assetUserWalletBalance = assetWallet.getBalance();
             actorToPublicKey = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
             System.out.println("ASSET RECEPTION Actor Issuer public key:" + actorToPublicKey);
             System.out.println("ASSET RECEPTION Transaction to deliver: " + genesisTransaction.getTransactionHash());

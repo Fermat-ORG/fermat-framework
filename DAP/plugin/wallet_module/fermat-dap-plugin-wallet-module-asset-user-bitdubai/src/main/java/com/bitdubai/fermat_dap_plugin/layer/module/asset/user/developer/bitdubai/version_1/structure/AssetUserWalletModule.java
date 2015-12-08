@@ -30,17 +30,9 @@ public class AssetUserWalletModule {
         this.userRedemptionManager = userRedemptionManager;
     }
 
-    public List<AssetUserWalletList> getAssetUserWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+    public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException {
         try {
-            return assetUserWalletManager.loadAssetUserWallet(publicKey).getBookBalance(BalanceType.AVAILABLE).getAssetUserWalletBalancesAvailable();
-        } catch (Exception exception) {
-            throw new CantLoadWalletException("Error load Wallet Balances Available", exception, "Method: getAssetUserWalletBalancesAvailable", "Class: AssetUserWalletModule");
-        }
-    }
-
-    public List<AssetUserWalletList> getAssetUserWalletBalancesBook(String publicKey) throws CantLoadWalletException {
-        try {
-            return assetUserWalletManager.loadAssetUserWallet(publicKey).getBookBalance(BalanceType.BOOK).getAssetUserWalletBalancesBook();
+            return assetUserWalletManager.loadAssetUserWallet(publicKey).getBalance().getAssetUserWalletBalances();
         } catch (Exception exception) {
             throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetUserWalletBalancesBook", "Class: AssetUserWalletModule");
         }
