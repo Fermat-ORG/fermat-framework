@@ -70,7 +70,7 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     }
 
     @Override
-    public List<BankAccountNumber> getAccounts(UUID walletPublicKey) {
+    public List<BankAccountNumber> getAccounts() {
         try {
             return bankMoneyWalletDao.getAccounts();
         }catch(CantGetAccountsException e){
