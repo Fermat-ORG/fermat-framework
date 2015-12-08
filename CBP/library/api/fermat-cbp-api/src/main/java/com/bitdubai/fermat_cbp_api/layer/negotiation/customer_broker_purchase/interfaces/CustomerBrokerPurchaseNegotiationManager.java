@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -16,7 +17,7 @@ import java.util.UUID;
  * Update by Angel on 29/11/2015
  */
 
-public interface CustomerBrokerPurchaseNegotiationManager {
+public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager {
     void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException;
     void updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
