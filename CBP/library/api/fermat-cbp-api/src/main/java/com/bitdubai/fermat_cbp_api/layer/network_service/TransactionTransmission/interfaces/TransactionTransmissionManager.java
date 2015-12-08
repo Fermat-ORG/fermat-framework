@@ -57,6 +57,6 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      *
      * @param transactionId
      */
-    void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String transactionId) throws CantConfirmNotificationReception;
+    void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String contractHash, String transactionId) throws CantConfirmNotificationReception;
 
 }

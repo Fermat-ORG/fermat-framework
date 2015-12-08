@@ -179,12 +179,13 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     @Override
     public void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey,
                                              String cryptoCustomerActorReceiverPublicKey,
+                                             String contractHash,
                                              String transactionId) throws CantConfirmNotificationReception {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
-                null,
+                contractHash,
                 null,
                 cryptoBrokerActorSenderPublicKey,
                 PlatformComponentType.NETWORK_SERVICE,
