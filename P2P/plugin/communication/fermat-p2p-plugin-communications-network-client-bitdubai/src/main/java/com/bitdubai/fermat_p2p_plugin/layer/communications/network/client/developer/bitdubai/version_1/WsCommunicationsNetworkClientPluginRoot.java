@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
@@ -94,6 +95,11 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
      * Represent the NetworkClientP2PDatabaseFactory of the client
      */
     private NetworkClientP2PDatabaseFactory networkClientP2PDatabaseFactory;
+
+    /*
+    * Represent the Device Location
+     */
+    private LocationManager locationManager;
 
     @Override
     public void setId(UUID pluginId) {
