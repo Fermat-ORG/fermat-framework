@@ -84,7 +84,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
     /*REGISTER NEW SEND NEGOTIATION TRANSMISSION*/
     public void registerSendNegotiatioTransmission(NegotiationTransmission negotiationTransmission) throws CantRegisterSendNegotiationTransmissionException{
         try {
-            DatabaseTable table = getDatabaseTable();
+            DatabaseTable table =  this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             loadRecordAsSendNegotiatioTransmission(record,negotiationTransmission);
             table.insertRecord(record);
@@ -105,7 +105,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
         try {
 
-            DatabaseTable table = getDatabaseTable();
+            DatabaseTable table =  this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             loadRecordAsSendNegotiatioTransmission(record,negotiationTransmission);
             DatabaseTransaction transaction = getDataBase().newTransaction();
@@ -157,7 +157,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
-            DatabaseTable table = getDatabaseTable();
+            DatabaseTable table =  this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             for (String key : filters.keySet()) {
                 DatabaseTableFilter newFilter = table.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
@@ -205,7 +205,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             NegotiationTransmission negotiationTransmission = getNegotiationTransmissionRecord(transmissionId);
             negotiationTransmission.setTransmissionState(negotiationTransmissionState);
 
-            DatabaseTable table = getDatabaseTable();
+            DatabaseTable table =  this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             
             //1- Create the record to the entity
@@ -234,7 +234,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
         try {
 
-            DatabaseTable table = getDatabaseTable();
+            DatabaseTable table =  this.database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             /*
              * 1- Create the record to the entity
