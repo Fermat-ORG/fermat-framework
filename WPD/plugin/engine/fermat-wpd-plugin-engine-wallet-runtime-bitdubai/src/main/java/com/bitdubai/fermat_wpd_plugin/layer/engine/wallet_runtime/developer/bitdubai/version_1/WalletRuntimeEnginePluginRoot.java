@@ -1827,14 +1827,32 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_HOME);
         runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_HOME.getCode());
         runtimeActivity.setColor("#1189a5");
-        //runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
+
+	    runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Banking Wallet");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+	    runtimeHeader = new Header();
+        runtimeHeader.setLabel("Accounts");
+        runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
         runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
+
+	    runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS);
+        runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS.getCode());
+        runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
+        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         return runtimeWalletNavigationStructure;
     }
