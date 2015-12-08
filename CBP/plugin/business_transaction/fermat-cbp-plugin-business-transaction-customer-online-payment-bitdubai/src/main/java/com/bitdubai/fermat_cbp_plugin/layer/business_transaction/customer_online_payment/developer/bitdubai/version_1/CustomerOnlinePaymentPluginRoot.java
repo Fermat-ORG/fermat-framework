@@ -1,44 +1,168 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 //import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentTransactionManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Created by Yordin Alayn on 16.09.15.
+ * Created by Manuel Perez on 08/12/2015
  */
 
-public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers {
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     ErrorManager errorManager;
 
-    UUID pluginId;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
+    private TransactionTransmissionManager transactionTransmissionManager;
+
+    //TODO: Need reference to contract plugin
+    private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+
+    /**
+     * Represents the plugin manager.
+     */
+    CustomerOnlinePaymentTransactionManager customerOnlinePaymentTransactionManager;
+
+    /**
+     * Represents the plugin database Dao.
+     */
+    CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
+
+    /**
+     * Represents the plugin CustomerOnlinePaymentBusinessTransactionDatabaseFactory
+     */
+    CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+
+    /**
+     * Represents the database
+     */
+    Database database;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    public CustomerOnlinePaymentPluginRoot(PluginVersionReference pluginVersionReference) {
+        super(new PluginVersionReference(new Version()));
+    }
 
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot");
         return returnedClasses;
+    }
+
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeDatabaseException
+     */
+    private void initializeDb() throws CantInitializeDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.database = this.pluginDatabaseSystem.openDatabase(
+                    pluginId,
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantOpenDatabaseException);
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CustomerOnlinePaymentBusinessTransactionDatabaseFactory customerOnlinePaymentBusinessTransactionDatabaseFactory =
+                    new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.database = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(
+                        pluginId,
+                        CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.OPEN_CONTRACT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        cantOpenDatabaseException);
+                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
     }
 
     @Override
@@ -53,28 +177,55 @@ public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsW
                 }
             }
         } catch (Exception exception) {
-            // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
         }
     }
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
 
     @Override
     public void start() throws CantStartPluginException {
         try {
+
+            /**
+             * Initialize database
+             */
+            initializeDb();
+
+            /*
+             * Initialize Developer Database Factory
+             */
+            customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory = new
+                    CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+                    pluginId);
+            customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
+
+            /**
+             * Initialize Dao
+             */
+            CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
+                    new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,
+                            pluginId,
+                            database);
+
+            /**
+             * Init the plugin manager
+             */
+            this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
+                    this.customerBrokerContractPurchaseManager,
+                    this.customerOnlinePaymentBusinessTransactionDao,
+                    this.transactionTransmissionManager);
+
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            System.out.println("Customer online payment starting");
+        } catch (CantInitializeDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -94,16 +245,6 @@ public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsW
     }
 
     @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
-    }
-
-    @Override
     public FermatManager getManager() {
         return null;
     }
@@ -119,4 +260,18 @@ public class CustomerOnlinePaymentPluginRoot implements  DealsWithErrors, DealsW
     }
 
 
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return null;
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return null;
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return null;
+    }
 }

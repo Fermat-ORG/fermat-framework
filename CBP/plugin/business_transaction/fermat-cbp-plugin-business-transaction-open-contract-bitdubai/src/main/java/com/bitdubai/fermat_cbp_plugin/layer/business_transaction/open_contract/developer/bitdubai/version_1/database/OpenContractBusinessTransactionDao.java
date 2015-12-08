@@ -39,13 +39,14 @@ public class OpenContractBusinessTransactionDao {
 
     private Database database;
 
-    public OpenContractBusinessTransactionDao(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                  final UUID                 pluginId           ,
-                                                  final Database database) {
+    public OpenContractBusinessTransactionDao(
+            final PluginDatabaseSystem pluginDatabaseSystem,
+            final UUID pluginId,
+            final Database database) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-        this.database = database;
+        this.pluginId             = pluginId;
+        this.database             = database;
     }
 
     public void initialize() throws CantInitializeOpenContractBusinessTransactionDatabaseException {

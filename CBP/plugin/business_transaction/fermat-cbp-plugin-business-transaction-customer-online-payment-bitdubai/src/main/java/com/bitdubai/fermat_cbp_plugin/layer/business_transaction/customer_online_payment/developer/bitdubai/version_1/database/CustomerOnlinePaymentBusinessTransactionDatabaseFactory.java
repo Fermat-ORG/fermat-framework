@@ -42,7 +42,7 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseFactory implements 
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
         /**
          * I will create the database where I am going to store the information of this wallet.
