@@ -412,7 +412,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     new Version(1,0,0));
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
-            item.setIconResource(R.drawable.crypto_customer);
+            item.setIconResource(R.drawable.fermat);
             item.setPosition(6);
             lstItemsWithIcon.add(item);
 
