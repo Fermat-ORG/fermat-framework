@@ -2021,11 +2021,11 @@
 					<plugin name="Hold"
 						description=""
 						difficulty="6"
-						code-level="development">
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2035,11 +2035,11 @@
 					<plugin name="Unhold"
 						description=""
 						difficulty="6"
-						code-level="development">
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
