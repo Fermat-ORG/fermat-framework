@@ -9,10 +9,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -55,6 +59,9 @@ public class CustomerBrokerNewAgent implements
     /*Represent the Negotiation Sale*/
     private CustomerBrokerSaleNegotiation       customerBrokerSaleNegotiation;
 
+
+    private MonitorAgent monitorAgent;
+
     public CustomerBrokerNewAgent(
             LogManager                          logManager,
             ErrorManager                        errorManager,
@@ -85,9 +92,9 @@ public class CustomerBrokerNewAgent implements
         ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
-        } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            ((MonitorAgent) this.monitorAgent).startAgent();
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         this.agentThread = new Thread(monitorAgent);
@@ -126,5 +133,73 @@ public class CustomerBrokerNewAgent implements
         this.pluginId=pluginId;
     }
 
+    /*INNER CLASSES*/
+    private class MonitorAgent implements Runnable {
+
+        private volatile boolean agentRunning;
+        private static final int WAIT_TIME = 5 * 1000; //SECONDS
+
+        public MonitorAgent() {
+            startAgent();
+        }
+
+        @Override
+        public void run() {
+            /*while (agentRunning) {
+                try {
+                    doTheMainTask();
+                    Thread.sleep(WAIT_TIME);
+                } catch (InterruptedException e) {
+                    //If this happen there's a chance that the information remains
+                    //in a corrupt state. That probably would be fixed in a next run.
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                }
+            }
+
+            latch.countDown();*/
+        }
+
+        private void doTheMainTask() {
+            /*try (CustomerBrokerNewNegotiationTransactionDatabaseDao dao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId)) {
+                for (String eventId : dao.getPendingIssuerNetworkServiceEvents()) {
+                    switch (dao.getEventTypeById(eventId)) {
+                        case NEW_RECEIVE_MESSAGE_ACTOR:
+                            for (DAPMessage message : assetIssuerActorNetworkServiceManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_APPROPRIATION)) {
+                                if (message.getMessageContent() instanceof AssetAppropriationContentMessage) { //Just a security measure, this SHOULD always be true.
+                                    AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) message.getMessageContent();
+                                    //TODO REMOVE HARDCODE.
+                                    AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
+                                    wallet.assetAppropriated(contentMessage.getDigitalAssetAppropriated().getPublicKey(), contentMessage.getUserThatAppropriate().getActorPublicKey());
+                                }
+                            }
+                            dao.notifyEvent(eventId);
+                            break;
+                        default:
+                            //I can't do anything with this event...
+                            dao.notifyEvent(eventId);
+                            break;
+                    }
+                }
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }*/
+        }
+
+        public boolean isAgentRunning() {
+            return agentRunning;
+        }
+
+        public void stopAgent() {
+            agentRunning = false;
+        }
+
+        public void startAgent() {
+            agentRunning = true;
+        }
+
+    }
 
 }

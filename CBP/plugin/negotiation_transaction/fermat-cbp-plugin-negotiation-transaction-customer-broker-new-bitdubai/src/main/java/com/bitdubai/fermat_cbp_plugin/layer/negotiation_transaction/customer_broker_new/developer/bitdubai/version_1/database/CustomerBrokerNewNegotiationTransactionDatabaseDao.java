@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
@@ -32,13 +31,10 @@ import java.util.UUID;
 public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    private PluginFileSystem pluginFileSystem;
-
     private UUID pluginId;
 
-    public CustomerBrokerNewNegotiationTransactionDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public CustomerBrokerNewNegotiationTransactionDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
 
