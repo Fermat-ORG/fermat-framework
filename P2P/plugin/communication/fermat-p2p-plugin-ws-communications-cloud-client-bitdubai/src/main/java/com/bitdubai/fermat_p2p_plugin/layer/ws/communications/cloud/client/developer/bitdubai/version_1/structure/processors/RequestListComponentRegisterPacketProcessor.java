@@ -43,15 +43,15 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
+        //System.out.println(" --------------------------------------------------------------------- ");
+        //System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
         /*
          * Get the platformComponentProfile from the message content and decrypt
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -69,7 +69,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - receivedList.size() = " + receivedList.size());
+        //System.out.println("RequestListComponentRegisterPacketProcessor - receivedList.size() = " + receivedList.size());
 
          /*
          * Create a new event whit the receivedlist
@@ -87,7 +87,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Raise the event
          */
-        System.out.println("RequestListComponentRegisterPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
+        //System.out.println("RequestListComponentRegisterPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
