@@ -78,11 +78,6 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
     CustomerOnlinePaymentTransactionManager customerOnlinePaymentTransactionManager;
 
     /**
-     * Represents the plugin database Dao.
-     */
-    CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
-
-    /**
      * Represents the plugin CustomerOnlinePaymentBusinessTransactionDatabaseFactory
      */
     CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
@@ -217,7 +212,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
              */
             this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
                     this.customerBrokerContractPurchaseManager,
-                    this.customerOnlinePaymentBusinessTransactionDao,
+                    customerOnlinePaymentBusinessTransactionDao,
                     this.transactionTransmissionManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -246,15 +241,21 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return customerOnlinePaymentTransactionManager;
     }
 
     public static LogLevel getLogLevelByClass(String className) {
-        try {
+        try{
+            /**
+             * sometimes the classname may be passed dynamically with an $moretext
+             * I need to ignore whats after this.
+             */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return CustomerOnlinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct logging level, then I will set it to minimal.
+             */
             return DEFAULT_LOG_LEVEL;
         }
     }
@@ -262,16 +263,16 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        return customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 }

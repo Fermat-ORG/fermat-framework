@@ -18,6 +18,7 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
      */
     public static final String ONLINE_PAYMENT_TABLE_NAME = "online_payment";
 
+
     public static final String ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME = "contract_hash";
     public static final String ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
     public static final String ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
@@ -25,8 +26,9 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ONLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
     public static final String ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
+    public static final String ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME = "timestamp";
 
-    public static final String ONLINE_PAYMENT_FIRST_KEY_COLUMN = "contract_hash";
+    public static final String ONLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
 
     /**
      * Events recorded database table definition.
