@@ -62,7 +62,6 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends FermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
-        ActionBar.OnNavigationListener,
         AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
@@ -390,26 +389,6 @@ Updates the count of notifications in the ActionBar.
         }
 
         return true;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(int position, long idItem) {
-        try {
-            IntraUserLoginIdentity intraUserLoginIdentity = moduleManager.showAvailableLoginIdentities().get(position);
-            moduleManager.login(intraUserLoginIdentity.getPublicKey());
-            //TODO: para despues
-            //adapter.changeDataSet(intraUserModuleManager.getAllIntraUsers());
-
-            //mientras tanto testeo
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-
-            return true;
-        } catch (CantShowLoginIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantLoginIntraUserException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 
