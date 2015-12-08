@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers;
+package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -7,10 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetUserActorPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointActorPluginRoot;
 
 import java.util.List;
 
@@ -22,28 +23,29 @@ import java.util.List;
  */
 public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
 
-    AssetUserActorPluginRoot assetActorUserPluginRoot;
+    RedeemPointActorPluginRoot redeemPointActorPluginRoot;
     CryptoAddressesManager cryptoAddressesNetworkServiceManager;
 
-    public CryptoAddressRequestedEventHandler(AssetUserActorPluginRoot assetActorUserPluginRoot, CryptoAddressesManager cryptoAddressesNetworkServiceManager){
-        this.assetActorUserPluginRoot = assetActorUserPluginRoot;
+    public CryptoAddressRequestedEventHandler(RedeemPointActorPluginRoot redeemPointActorPluginRoot, CryptoAddressesManager cryptoAddressesNetworkServiceManager){
+        this.redeemPointActorPluginRoot = redeemPointActorPluginRoot;
         this.cryptoAddressesNetworkServiceManager = cryptoAddressesNetworkServiceManager;
     }
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        if (this.assetActorUserPluginRoot.getStatus() == ServiceStatus.STARTED) {
+        if (this.redeemPointActorPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
             if (fermatEvent instanceof CryptoAddressesNewsEvent) {
                 final List<CryptoAddressRequest> list;
                 list = cryptoAddressesNetworkServiceManager.listAllPendingRequests();
 
                 for (final CryptoAddressRequest request : list) {
-                    if (request.getIdentityTypeResponding().equals(Actors.DAP_ASSET_USER)) {
-                        assetActorUserPluginRoot.handleCryptoAddressesNewsEvent();
+                    if (request.getIdentityTypeResponding().equals(Actors.DAP_ASSET_REDEEM_POINT)) {
+                        redeemPointActorPluginRoot.handleCryptoAddressesNewsEvent();
                     }
                 }
+
 
             } else {
                 EventType eventExpected = EventType.CRYPTO_ADDRESSES_NEWS;

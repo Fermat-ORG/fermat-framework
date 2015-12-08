@@ -97,6 +97,36 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.profileImage       = profileImage.clone()  ;
     }
 
+
+
+    public RedeemPointActorRecord(String actorPublicKey,
+                                  String name,
+                                  DAPConnectionState dapConnectionState,
+                                  Double locationLatitude,
+                                  Double locationLongitude,
+                                  CryptoAddress cryptoAddress,
+                                  Long registrationDate,
+                                  Long lastConnectionDate,
+                                  byte[] profileImage) {
+
+        this.actorPublicKey         =       actorPublicKey          ;
+        this.name                   =       name                    ;
+        this.dapConnectionState     =       dapConnectionState      ;
+
+        if (locationLatitude != null)
+            this.locationLatitude       = locationLatitude          ;
+        if(locationLongitude != null)
+            this.locationLongitude      = locationLongitude         ;
+
+        if(cryptoAddress != null)
+            this.cryptoAddress          = cryptoAddress             ;
+
+        this.registrationDate       =       registrationDate        ;
+        this.lastConnectionDate     =       lastConnectionDate      ;
+        this.profileImage           =       profileImage.clone()    ;
+
+    }
+
     public RedeemPointActorRecord(final String actorPublicKey,
                                   final String name,
                                   final DAPConnectionState dapConnectionState,

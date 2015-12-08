@@ -406,7 +406,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    //TODO al confirmarse el registro del Actor cambia su estado local a CONNECTED
     @Override
     public void handleCompleteClientAssetUserActorRegistrationNotificationEvent(ActorAssetUser actorAssetUser) {
         System.out.println("***************************************************************");
@@ -557,7 +556,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         listenersAdded.add(fermatEventListener);
 
         fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESSES_NEWS);
-        fermatEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this));
+        fermatEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressesNetworkServiceManager));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
     }
