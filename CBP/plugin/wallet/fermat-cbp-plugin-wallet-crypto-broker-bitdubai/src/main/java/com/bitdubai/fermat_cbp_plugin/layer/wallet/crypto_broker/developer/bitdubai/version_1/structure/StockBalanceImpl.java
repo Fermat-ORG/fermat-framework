@@ -45,17 +45,17 @@ public class StockBalanceImpl implements StockBalance {
     }
     @Override
     public float getBookedBalance(FermatEnum merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
-        return cryptoBrokerWalletDatabaseDao.getBookedBalance(null);
+        return cryptoBrokerWalletDatabaseDao.getBookedBalance(merchandise);
     }
 
     @Override
     public float getAvailableBalance(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        return cryptoBrokerWalletDatabaseDao.geAvailableBalance(null);
+        return cryptoBrokerWalletDatabaseDao.geAvailableBalance(merchandise);
     }
 
     @Override
     public float getAvailableBalanceFrozen(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(null);
+        return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(merchandise);
     }
 
     @Override

@@ -10,4 +10,9 @@ public interface FiatIndex {
     FermatEnum getMerchandise();
     float getSalePrice();
     float getPurchasePrice();
+    float getSalePriceUpSpread();
+    float getPurchasePriceDownSpread();
+    float getSalePurchaseUpSpread();
+    float getPurchasePurchaseDownSpread();
+
 }
