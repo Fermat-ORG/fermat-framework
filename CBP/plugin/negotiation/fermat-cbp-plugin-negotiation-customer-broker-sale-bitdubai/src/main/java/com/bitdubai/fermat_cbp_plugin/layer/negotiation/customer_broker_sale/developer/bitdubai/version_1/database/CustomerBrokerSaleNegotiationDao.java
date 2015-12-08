@@ -486,7 +486,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             }
         }
 
-        public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(Currency currency) throws CantGetListBankAccountsSaleException {
+        public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsSaleException {
             try {
                 DatabaseTable SaleBanksTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
 
