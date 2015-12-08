@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -53,7 +53,7 @@ public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPlug
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public DolartodayProviderDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public DollarTodayProviderDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -84,7 +84,7 @@ public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPlug
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            DolartodayProviderDatabaseFactory dolarTodayProviderDatabaseFactory = new DolartodayProviderDatabaseFactory(pluginDatabaseSystem);
+            DollarTodayProviderDatabaseFactory dolarTodayProviderDatabaseFactory = new DollarTodayProviderDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
@@ -119,16 +119,16 @@ public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPlug
          */
         List<String> queryHistoryColumns = new ArrayList<String>();
 
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+        queryHistoryColumns.add(DollarTodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
+        queryHistoryColumns.add(DollarTodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
+        queryHistoryColumns.add(DollarTodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
+        queryHistoryColumns.add(DollarTodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
+        queryHistoryColumns.add(DollarTodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
+        queryHistoryColumns.add(DollarTodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Query History addition.
          */
-        DeveloperDatabaseTable queryHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, queryHistoryColumns);
+        DeveloperDatabaseTable queryHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(DollarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, queryHistoryColumns);
         tables.add(queryHistoryTable);
 
 

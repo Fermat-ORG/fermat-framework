@@ -26,7 +26,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRat
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolartodayProviderDao;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolartodayProviderDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DollarTodayProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.CurrencyPairImpl;
@@ -217,19 +217,19 @@ public class ProviderDolartodayPluginRoot extends AbstractPlugin implements Data
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        DolartodayProviderDeveloperDatabaseFactory factory = new DolartodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        DollarTodayProviderDeveloperDatabaseFactory factory = new DollarTodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return factory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        DolartodayProviderDeveloperDatabaseFactory factory = new DolartodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        DollarTodayProviderDeveloperDatabaseFactory factory = new DollarTodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return factory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        DolartodayProviderDeveloperDatabaseFactory factory = new DolartodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        DollarTodayProviderDeveloperDatabaseFactory factory = new DollarTodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         List<DeveloperDatabaseTableRecord> tableRecordList = null;
         try {
             factory.initializeDatabase();
