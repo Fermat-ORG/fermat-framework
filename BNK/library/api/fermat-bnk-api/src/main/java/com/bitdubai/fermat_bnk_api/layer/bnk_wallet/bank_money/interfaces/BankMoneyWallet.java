@@ -27,7 +27,7 @@ public interface BankMoneyWallet {
 
     void unhold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterUnholdException;
 
-    List<BankAccountNumber> getAccounts(UUID walletPublicKey) ;
+    List<BankAccountNumber> getAccounts() ;
 
     void addNewAccount(BankAccountNumber bankAccountNumber,UUID walletPublicKey) throws CantAddNewAccountException;
 

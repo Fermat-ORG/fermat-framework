@@ -60,7 +60,7 @@ public class BankMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
     @Override
     public BankingWallet getBankingWallet() {
-        return new BankingWalletModuleImpl();
+        return new BankingWalletModuleImpl(bankMoneyWalletManager,depositManager,withdrawManager,holdManager,unholdManager);
     }
 
     @Override

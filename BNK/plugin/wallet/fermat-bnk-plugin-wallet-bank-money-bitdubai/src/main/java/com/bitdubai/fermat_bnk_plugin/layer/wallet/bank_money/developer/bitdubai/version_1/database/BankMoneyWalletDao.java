@@ -286,9 +286,9 @@ public class BankMoneyWalletDao {
         }
     }
 
-    public List<BankAccountNumber> getAccounts(String walletId) throws CantGetAccountsException {
+    public List<BankAccountNumber> getAccounts() throws CantGetAccountsException {
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
-        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME,walletId,DatabaseFilterType.EQUAL);
+        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME,pluginId.toString(),DatabaseFilterType.EQUAL);
         try {
         table.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
