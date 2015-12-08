@@ -47,11 +47,11 @@ public class DolartodayProviderDao {
 
     public void initialize() throws CantInitializeDolarTodayProviderDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
         } catch (DatabaseNotFoundException e) {
             DolartodayProviderDatabaseFactory databaseFactory = new DolartodayProviderDatabaseFactory(pluginDatabaseSystem);
             try {
-                database = databaseFactory.createDatabase(pluginId, DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeDolarTodayProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
