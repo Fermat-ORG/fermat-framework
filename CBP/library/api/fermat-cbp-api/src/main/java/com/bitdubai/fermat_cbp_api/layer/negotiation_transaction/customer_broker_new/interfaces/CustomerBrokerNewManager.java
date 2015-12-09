@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broke
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetCustomerBrokerNewNegotiationTransactionException;
@@ -17,10 +18,10 @@ import java.util.UUID;
 public interface CustomerBrokerNewManager {
 
     //CREATE THE NEW PURCHASE NEGOTIATION TRANSACTION
-    void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
+    void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     //CREATE THE NEW SALE NEGOTIATION TRANSACTION
-    void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException;
+    void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException;
 
     //GET THE NEW NEGOTIATION TRANSACTION FOR THE INDICATE ID
     CustomerBrokerNew getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException;

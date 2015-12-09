@@ -25,12 +25,6 @@ import java.util.UUID;
 
 public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
 
-    /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation                   customerBrokerPurchaseNegotiation;
-
-    /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation;
-
     /*Represent the Network Service*/
     private NegotiationTransmissionManager                      negotiationTransmissionManager;
 
@@ -44,28 +38,23 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     private CustomerBrokerNewSaleNegotiationTransaction         customerBrokerNewSaleNegotiationTransaction;
 
     public CustomerBrokerNewManagerImpl(
-        CustomerBrokerPurchaseNegotiation                   customerBrokerPurchaseNegotiation,
-        CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation,
         NegotiationTransmissionManager                      negotiationTransmissionManager,
         CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao
     ){
-        this.customerBrokerPurchaseNegotiation                  = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation                      = customerBrokerSaleNegotiation;
         this.negotiationTransmissionManager                     = negotiationTransmissionManager;
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
     }
 
     /*IMPLEMENTATION CustomerBrokerNewManager*/
     @Override
-    public void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiationPurchase) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
+    public void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
 
             customerBrokerNewPurchaseNegotiationTransaction = new CustomerBrokerNewPurchaseNegotiationTransaction(
-                    customerBrokerPurchaseNegotiation,
                     negotiationTransmissionManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao
             );
-            customerBrokerNewPurchaseNegotiationTransaction.newPurchaseNegotiationTranasction();
+            customerBrokerNewPurchaseNegotiationTransaction.newPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
         } catch (CantNewPurchaseNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -75,16 +64,15 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     }
 
     @Override
-    public void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException {
+    public void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException {
 
         try {
 
             customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                    customerBrokerSaleNegotiation,
                     negotiationTransmissionManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao
             );
-            customerBrokerNewSaleNegotiationTransaction.newSaleNegotiationTranasction();
+            customerBrokerNewSaleNegotiationTransaction.newSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
         } catch (CantNewSaleNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerNewSaleNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -130,7 +118,6 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
 
         return getTransactions;
     }
-
     /*END IMPLEMENTATION CustomerBrokerNewManager*/
 
 }

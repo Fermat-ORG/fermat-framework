@@ -12,7 +12,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 public class CustomerBrokerNewSaleNegotiationTransaction {
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation;
+//    private CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation;
 
     /*Represent the Network Service*/
     private NegotiationTransmissionManager                      negotiationTransmissionManager;
@@ -21,17 +21,17 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
     private CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
 
     public CustomerBrokerNewSaleNegotiationTransaction(
-            CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation,
+//            CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation,
             NegotiationTransmissionManager                      negotiationTransmissionManager,
             CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao
     ){
-        this.customerBrokerSaleNegotiation                      = customerBrokerSaleNegotiation;
+//        this.customerBrokerSaleNegotiation                      = customerBrokerSaleNegotiation;
         this.negotiationTransmissionManager                     = negotiationTransmissionManager;
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
     }
 
     //PROCESS THE NEW SALE NEGOTIATION TRANSACTION
-    public void newSaleNegotiationTranasction() throws CantNewSaleNegotiationTransactionException{
+    public void newSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantNewSaleNegotiationTransactionException{
 
     }
 }
