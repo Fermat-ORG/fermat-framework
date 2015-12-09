@@ -17,13 +17,19 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +44,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     private static final int TYPE_MAX_COUNT = TYPE_SECTION + 1;
     private static final int TOTAL_CONTACTS_SECTION_POSITION = 0;
     private final FermatListViewFragment contactsFragment;
+    private final ErrorManager errorManager;
 
     private String constrainStr = null;
 
@@ -67,12 +74,13 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
      * @param contactsFragment ContactsFragment who is calling
      */
     public PinnedHeaderAdapter(Context context, ArrayList<Object> listItems, ArrayList<Integer> listSectionPos,
-                               String constrainStr, FermatListViewFragment contactsFragment) {
+                               String constrainStr, FermatListViewFragment contactsFragment,ErrorManager errorManager) {
         this.mContext = context;
         this.mListItems = listItems;
         this.mListSectionPos = listSectionPos;
         this.contactsFragment = contactsFragment;
 
+        this.errorManager = errorManager;
         if (constrainStr != null) {
             if (!constrainStr.isEmpty()) {
                 this.constrainStr = constrainStr;
@@ -153,15 +161,13 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         contactPositionItem.put(position, walletContact);
                         try {
                             if (walletContact.getProfilePicture() != null) {
-                                if (walletContact.getProfilePicture().length > 0) {
-                                    holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
-                                } else {
-                                    holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), R.drawable.profile_image_standard));
-                                }
+                                holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
                             } else
-                                holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), R.drawable.profile_image_standard));
+                                Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
                         }catch (Exception e){
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                            Toast.makeText(mContext,"Image database problem",Toast.LENGTH_SHORT).show();
+                            Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
                         }
                         text = walletContact.getActorName();
                         //contact image

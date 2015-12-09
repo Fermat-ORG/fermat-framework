@@ -51,6 +51,7 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
         System.out.println("FailureComponentConnectionRequestNotificationEventListener - handleEvent platformEvent ="+platformEvent.getEventType() );
+        System.out.println("-------TRANSMISSION FAILURE CONNECTION------");
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 

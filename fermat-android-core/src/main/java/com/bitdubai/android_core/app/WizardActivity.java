@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -33,14 +32,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
-import com.bitdubai.sub_app.wallet_factory.ui.wizards.CreateWalletFragment;
-import com.bitdubai.sub_app.wallet_factory.ui.wizards.SetupNavigationFragment;
-import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectStep1;
-import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectStep2;
-import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectSummary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
