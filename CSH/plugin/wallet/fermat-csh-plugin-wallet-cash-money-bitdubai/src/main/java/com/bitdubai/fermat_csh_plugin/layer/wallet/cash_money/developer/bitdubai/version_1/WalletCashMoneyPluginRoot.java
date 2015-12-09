@@ -83,11 +83,11 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
 
         try {
             CashMoneyWallet wallet = loadCashMoneyWallet("publicKeyWalletMock");
-            wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 10000, "testMemo");
-            wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 8000, "testMemo");
+            wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 10000, "testCreditFromWallet");
+            wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 8000, "testDebitFromWallet");
 
-            wallet.getBookBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 4000, "testMemo");
-            wallet.getBookBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 2000, "testMemo");
+            wallet.getBookBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 4000, "testCreditFromWallet");
+            wallet.getBookBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 2000, "testDebitFromWallet");
 
         } catch (CantLoadCashMoneyWalletException e) {
             System.out.println("CASHWALLET - testCashWallet() - CantLoadCashMoneyWalletException");
