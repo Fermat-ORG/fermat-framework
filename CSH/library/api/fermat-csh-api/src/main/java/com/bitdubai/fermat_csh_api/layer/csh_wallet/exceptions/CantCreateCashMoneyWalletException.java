@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantCreateCashMoneyWalletException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "Cant get this wallet's held funds";
+    public static final String DEFAULT_MESSAGE = "Cant create Cash money Wallet";
 
     public CantCreateCashMoneyWalletException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

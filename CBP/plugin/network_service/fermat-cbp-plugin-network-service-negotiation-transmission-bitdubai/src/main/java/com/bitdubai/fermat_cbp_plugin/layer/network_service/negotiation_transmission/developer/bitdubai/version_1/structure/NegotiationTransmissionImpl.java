@@ -22,7 +22,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     private final PlatformComponentType actorSendType;
     private final String publicKeyActorReceive;
     private final PlatformComponentType actorReceiveType;
-    private final NegotiationTransmissionType transmissionType;
+    private NegotiationTransmissionType transmissionType;
     private NegotiationTransmissionState transmissionState;
     private final long timestamp;
     private boolean pendingFlag;
@@ -96,6 +96,8 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     @Override
     public void setNegotiationTransactionType(NegotiationTransactionType type){ this.negotiationTansactionType = type;}
 
+    @Override
+    public void setTransmissionType(NegotiationTransmissionType type){ this.transmissionType = type; }
     @Override
     public void setTransmissionState(NegotiationTransmissionState state){  this.transmissionState = state; }
 

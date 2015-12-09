@@ -5,6 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterUnholdException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantUpdateUnholdTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -22,10 +26,14 @@ public class CashMoneyTransactionUnholdProcessorAgent extends FermatAgent {
 
     private final ErrorManager errorManager;
     private final CashMoneyTransactionUnholdManager unholdTransactionManager;
+    private final CashMoneyWalletManager cashMoneyWalletManager;
+    private CashMoneyWallet cashMoneyWallet = null;
+    private String lastPublicKey = "";
 
-    public CashMoneyTransactionUnholdProcessorAgent(final ErrorManager errorManager, final CashMoneyTransactionUnholdManager unholdManager) {
+    public CashMoneyTransactionUnholdProcessorAgent(final ErrorManager errorManager, final CashMoneyTransactionUnholdManager unholdManager, CashMoneyWalletManager cashMoneyWalletManager) {
         this.errorManager = errorManager;
         this.unholdTransactionManager = unholdManager;
+        this.cashMoneyWalletManager = cashMoneyWalletManager;
 
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -93,28 +101,49 @@ public class CashMoneyTransactionUnholdProcessorAgent extends FermatAgent {
          * Tries to unhold funds in wallet
          * If successfull, changes transaction status to Confirmed
          * If not, changes transaction status to Rejected.
+         * Sends an event, notifying the calling plugin the status change
          */
 
 
         for(CashUnholdTransaction transaction : transactionList) {
 
+            //Cambiar el status de la transaccion a pending
             try {
-                //TODO: cashMoneyWalletManager.loadCashMoneyWallet.unhold(cashMoneyWalletTransaction);
+                unholdTransactionManager.setTransactionStatusToPending(transaction.getTransactionId());
+            } catch (CantUpdateUnholdTransactionException ex) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
+            }
+
+            //Abrir el cash wallet con el public key del transaction
+            if (cashMoneyWallet == null || transaction.getPublicKeyWallet() != lastPublicKey) {
+                try {
+                    //cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet(transaction.getPublicKeyWallet());
+                    cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet("publicKeyWalletMock");
+                } catch (CantLoadCashMoneyWalletException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                    continue;
+                }
+            }
+
+            //Intentar hacer el unhold en el cash wallet
+            try {
+                cashMoneyWallet.unhold(transaction.getTransactionId(), transaction.getPublicKeyActor(), transaction.getPublicKeyPlugin(), transaction.getAmount(), transaction.getMemo());
                 unholdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
-            /*} catch (CantCreateUnholdTransactionException e) {
+            } catch (CantRegisterUnholdException e) {         //Reject si no hay fondos
                 try {
                     unholdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
                 } catch (CantUpdateUnholdTransactionException ex) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
-                }*/
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
+                }
             } catch (CantUpdateUnholdTransactionException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             }
 
-            //TODO: Lanzar un evento al plugin que envio la transaccion para avisarle que se updateo el status de su transaccion.
+            //TODO: Lanzar un evento al plugin que envio la transaccion para avisarle que se actualizo el status de su transaccion.
         }
 
     }
+
     private void cleanResources() {
         /**
          * Disconnect from database and explicitly set all references to null.
