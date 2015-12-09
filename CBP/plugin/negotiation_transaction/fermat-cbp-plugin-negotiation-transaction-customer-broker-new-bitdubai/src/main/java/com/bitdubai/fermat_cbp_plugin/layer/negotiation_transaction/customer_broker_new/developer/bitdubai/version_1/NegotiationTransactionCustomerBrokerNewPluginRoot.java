@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -13,18 +14,23 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetListCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantUpdateStatusCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
@@ -40,7 +46,8 @@ import java.util.UUID;
  * Created by Yordin Alayn on 23.11.15.
  */
 
-public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
+public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -51,12 +58,20 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
+    private CustomerBrokerNewNegotiationTransactionDatabaseDao databaseDao;
+
+    /*Represent Negotiation Purchase Manager*/
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    /*Represent Network Service Negotiation Transmission*/
+    private NegotiationTransmissionManager negotiationTransmissionManager;
+
     public NegotiationTransactionCustomerBrokerNewPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-    /*
-    DatabaseManagerForDevelopers Interface implementation.
-    */
+
+    /*IMPLEMENTATION DATABASE MANAGER FOR DEVELOPERS.*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         return null;
@@ -71,5 +86,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return null;
     }
+    /*END IMPLEMENTATION DATABASE MANAGER FOR DEVELOPERS.*/
 
 }
