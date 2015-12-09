@@ -285,7 +285,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             String brokerCryptoAddress,
-            String walletPublicKey)
+            String walletPublicKey,
+            long cryptoAmount)
             throws CantInsertRecordException {
 
         DatabaseTable databaseTable=getDatabaseContractTable();
@@ -294,7 +295,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 databaseTableRecord,
                 customerBrokerContractPurchase,
                 brokerCryptoAddress,
-                walletPublicKey
+                walletPublicKey,
+                cryptoAmount
         );
         databaseTable.insertRecord(databaseTableRecord);
     }
@@ -341,9 +343,14 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             customerOnlinePaymentRecord.setCryptoAddress(brokerCryptoAddress);
-            customerOnlinePaymentRecord.setWalletPublicKey(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                    ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
-
+            customerOnlinePaymentRecord.setWalletPublicKey(
+                    record.getStringValue(
+                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                    ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
+            customerOnlinePaymentRecord.setCryptoAmount(
+                    record.getLongValue(
+                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                    ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
             return customerOnlinePaymentRecord;
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -369,7 +376,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             DatabaseTableRecord record,
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             String brokerCryptoAddress,
-            String walletPublicKey) {
+            String walletPublicKey,
+            long cryptoAmount) {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
