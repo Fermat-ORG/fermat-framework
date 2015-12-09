@@ -1,8 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,8 +57,18 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     }
 
     @Override
-    public Drawable addBodyBackground() {
-        return ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ccw_navigation_drawer_background);
+    public Bitmap addBodyBackground() {
+        Bitmap drawable = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = true;
+            options.inSampleSize = 5;
+            drawable = BitmapFactory.decodeResource(
+                    activity.getResources(), R.drawable.ccw_navigation_drawer_background,options);
+        }catch (OutOfMemoryError error){
+            error.printStackTrace();
+        }
+        return drawable;
     }
 
     @Override

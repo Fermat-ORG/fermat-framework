@@ -482,7 +482,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
                     if(relativeLayout!=null) {
                         if(navigationViewPainter.hasBodyBackground()){
-                            AsyncTask<Void, Void, Drawable> asyncTask = new AsyncTask<Void, Void, Drawable>() {
+                            AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
 
                                 WeakReference<ViewGroup> view;
 
@@ -492,14 +492,14 @@ public abstract class FermatActivity extends AppCompatActivity
                                 }
 
                                 @Override
-                                protected Drawable doInBackground(Void... params) {
+                                protected Bitmap doInBackground(Void... params) {
                                     return navigationViewPainter.addBodyBackground();
                                 }
 
                                 @Override
-                                protected void onPostExecute(Drawable drawable) {
+                                protected void onPostExecute(Bitmap drawable) {
                                     if (drawable!= null) {
-                                        view.get().setBackground(drawable);
+                                        view.get().setBackground(new BitmapDrawable(getResources(),drawable));
                                     }
                                 }
                             } ;
