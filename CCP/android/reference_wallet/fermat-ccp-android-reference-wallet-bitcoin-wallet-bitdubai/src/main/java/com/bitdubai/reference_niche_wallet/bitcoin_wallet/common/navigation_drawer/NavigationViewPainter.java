@@ -70,4 +70,9 @@ public class NavigationViewPainter implements com.bitdubai.fermat_android_api.en
     public RecyclerView.ItemDecoration addItemDecoration(){
         return null;
     }
+
+    @Override
+    public boolean hasBodyBackground() {
+        return true;
+    }
 }

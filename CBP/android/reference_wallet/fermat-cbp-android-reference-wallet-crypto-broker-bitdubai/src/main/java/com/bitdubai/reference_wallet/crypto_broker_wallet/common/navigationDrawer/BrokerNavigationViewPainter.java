@@ -68,4 +68,9 @@ public class BrokerNavigationViewPainter implements com.bitdubai.fermat_android_
     public RecyclerView.ItemDecoration addItemDecoration() {
         return null;
     }
+
+    @Override
+    public boolean hasBodyBackground() {
+        return true;
+    }
 }

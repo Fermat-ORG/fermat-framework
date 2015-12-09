@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +26,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -121,9 +121,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeMa
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -140,6 +137,7 @@ import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -481,21 +479,39 @@ public abstract class FermatActivity extends AppCompatActivity
                     /**
                      * Background color
                      */
-                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
+                    final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
                     if(relativeLayout!=null) {
-                        Drawable bodyBackgroundDrawable = navigationViewPainter.addBodyBackground();
-                        if (bodyBackgroundDrawable!= null) {
-                            relativeLayout.setBackground(bodyBackgroundDrawable);
-                        } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
+                        if(navigationViewPainter.hasBodyBackground()){
+                            AsyncTask<Void, Void, Drawable> asyncTask = new AsyncTask<Void, Void, Drawable>() {
+
+                                WeakReference<ViewGroup> view;
+
+                                @Override
+                                protected void onPreExecute() {
+                                    view = new WeakReference(relativeLayout) ;
+                                }
+
+                                @Override
+                                protected Drawable doInBackground(Void... params) {
+                                    return navigationViewPainter.addBodyBackground();
+                                }
+
+                                @Override
+                                protected void onPostExecute(Drawable drawable) {
+                                    if (drawable!= null) {
+                                        view.get().setBackground(drawable);
+                                    }
+                                }
+                            } ;
+                            asyncTask.execute();
+                        }
+
+                        if(navigationViewPainter.addBodyBackgroundColor() > 0) {
                             relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
                         }
                     }
-
-
-
-
-                    navigationView.invalidate();
-                }
+                    //navigationView.invalidate();
+            }
 
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -190,7 +191,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
     private void setUpDonut(LayoutInflater inflater){
-        RelativeLayout container_header_balance = getToolbarHeader();
+        final RelativeLayout container_header_balance = getToolbarHeader();
         try {
             container_header_balance.removeAllViews();
         }catch (Exception e){
@@ -199,10 +200,24 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         //container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header);
-        bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
-        container_header_balance.setBackground(new BitmapDrawable(getResources(), bitmap));
-
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header);
+                bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
+                final Bitmap finalBitmap = bitmap;
+                Runnable runnableHandler = new Runnable() {
+                    @Override
+                    public void run() {
+                        container_header_balance.setBackground(new BitmapDrawable(getResources(), finalBitmap));
+                    }
+                };
+                handler.post(runnableHandler);
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
 
         View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
 

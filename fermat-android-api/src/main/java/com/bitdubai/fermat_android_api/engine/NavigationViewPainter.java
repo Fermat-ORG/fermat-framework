@@ -24,4 +24,6 @@ public interface NavigationViewPainter {
     int addBodyBackgroundColor();
 
     RecyclerView.ItemDecoration addItemDecoration();
+
+    boolean hasBodyBackground();
 }

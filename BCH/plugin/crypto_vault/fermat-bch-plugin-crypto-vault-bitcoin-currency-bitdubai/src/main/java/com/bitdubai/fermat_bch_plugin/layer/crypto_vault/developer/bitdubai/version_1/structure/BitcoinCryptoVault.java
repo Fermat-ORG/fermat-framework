@@ -74,6 +74,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -190,7 +192,7 @@ public class BitcoinCryptoVault implements
 
         try{
             this.userPublicKey = userPublicKey;
-            this.networkParameters = TestNet3Params.get();//BitcoinNetworkConfiguration.getNetworkConfiguration();
+            this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
 
             this.vaultFileName = userPublicKey.toString() + ".vault";
             //todo this needs to be fixed. I need to find a better way to get the file
@@ -228,7 +230,7 @@ public class BitcoinCryptoVault implements
      */
     private void createNewVault() throws CantCreateCryptoWalletException {
         //TODO: esto lo hice para probar y funcionó, despues lo cambio porque no me corria lo otro
-        vault = new Wallet(Context.getOrCreate(TestNet3Params.get()));
+        vault = new Wallet(Context.getOrCreate(networkParameters));
         try {
             PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userPublicKey.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             vaultFile.persistToMedia();
@@ -357,7 +359,8 @@ public class BitcoinCryptoVault implements
         try{
             vault.autosaveToFile(vaultFile, 500, TimeUnit.MILLISECONDS, null);
             vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
-            vault.addEventListener(vaultEventListeners);
+            ExecutorService executor = Executors.newFixedThreadPool(3);
+            vault.addEventListener(vaultEventListeners,executor);
         }catch(Exception exception){
             throw new CantCreateCryptoWalletException(CantCreateCryptoWalletException.DEFAULT_MESSAGE,exception,null,"Unchecked exception, chech the cause");
         }

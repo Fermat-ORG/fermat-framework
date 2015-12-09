@@ -69,4 +69,9 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     public RecyclerView.ItemDecoration addItemDecoration() {
         return null;
     }
+
+    @Override
+    public boolean hasBodyBackground() {
+        return true;
+    }
 }
