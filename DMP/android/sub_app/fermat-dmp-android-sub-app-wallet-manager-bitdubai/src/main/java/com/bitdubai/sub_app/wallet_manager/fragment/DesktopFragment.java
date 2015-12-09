@@ -408,7 +408,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     "crypto_customer",
                     "Banking Wallet",
                     "banking_wallet",
-                    "wallet_cash_platform_identifier",
+                    "wallet_banking_platform_identifier",
                     new Version(1,0,0));
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
@@ -424,7 +424,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     "cash_wallet",
                     "Cash Wallet",
                     "cash_wallet",
-                    "wallet_banking_platform_identifier",
+                    "wallet_cash_platform_identifier",
                     new Version(1,0,0));
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);

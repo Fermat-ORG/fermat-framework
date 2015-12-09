@@ -121,6 +121,9 @@ public enum Activities {
     // Bank Money Wallet
     BNK_BANK_MONEY_WALLET_HOME("BNKBMWH"),
 
+    // Cas Money Wallet
+    CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
+
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI"),
@@ -402,6 +405,8 @@ public enum Activities {
                 return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS;
             case "BNKBMWH":
                 return BNK_BANK_MONEY_WALLET_HOME;
+            case "CSHCMWH":
+                return CSH_CASH_MONEY_WALLET_HOME;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

@@ -18,7 +18,7 @@ public class CashMoneyWalletFragmentFactory extends FermatWalletFragmentFactory<
             throw createFragmentNotFoundException(null);
         }
         switch (fragment) {
-            case CSH_CASH_MONEY_WALLET_MAIN_FRAGMENT:
+            case CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY:
                 return BalanceSummaryFragment.newInstance();
             default: throw createFragmentNotFoundException(fragment);
         }

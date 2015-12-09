@@ -6,8 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  * Created by Alejandro Bicelis on 12/9/2015.
  */
 public enum CashMoneyWalletFragmentsEnumType implements FermatFragmentsEnumType<CashMoneyWalletFragmentsEnumType> {
-    CSH_CASH_MONEY_WALLET_MAIN_FRAGMENT("CSHCMWMF");
-
+    CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY("CSHCMWBS");
 
     private String key;
 
