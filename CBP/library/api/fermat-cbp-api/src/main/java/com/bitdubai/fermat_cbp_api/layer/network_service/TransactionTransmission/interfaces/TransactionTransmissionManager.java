@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmissio
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 
@@ -41,7 +42,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      * @param transactionId
      * @param contractStatus
      */
-    void sendContractNewStatusNotification(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String transactionId, ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException;
+    void sendContractStatusNotificationToCryptoCustomer(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String transactionHash, String transactionId, ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException;
 
     /**
      * Method that send the a Contract New Status Notification
@@ -49,13 +50,13 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      * @param transactionId
      * @param contractStatus
      */
-    void sendTransactionNewStatusNotification(String cryptoCustomerActorSenderPublicKey, String cryptoCustomerBrokerReceiverPublicKey, String transactionId, ContractTransactionStatus contractStatus) throws CantSendBusinessTransactionHashException;
+    void sendContractStatusNotificationToCryptoBroker(String cryptoCustomerActorSenderPublicKey, String cryptoCustomerBrokerReceiverPublicKey, String transactionHash, String transactionId, ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException;
 
     /**
      * Method that send the Contract New Status Notification
      *
      * @param transactionId
      */
-    void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String transactionId) throws CantSendBusinessTransactionHashException;
+    void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey, String cryptoCustomerActorReceiverPublicKey, String contractHash, String transactionId) throws CantConfirmNotificationReception;
 
 }

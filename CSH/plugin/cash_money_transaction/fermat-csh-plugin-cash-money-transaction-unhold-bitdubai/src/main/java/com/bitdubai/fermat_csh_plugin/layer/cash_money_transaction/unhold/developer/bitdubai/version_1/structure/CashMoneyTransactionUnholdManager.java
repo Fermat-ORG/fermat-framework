@@ -10,6 +10,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.excep
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionParameters;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.database.UnholdCashMoneyTransactionDao;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdCashMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantUpdateUnholdTransactionException;
@@ -26,13 +27,16 @@ public class CashMoneyTransactionUnholdManager implements CashUnholdTransactionM
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private final ErrorManager errorManager;
+    private final CashMoneyWalletManager cashMoneyWalletManager;
 
     private UnholdCashMoneyTransactionDao dao;
 
-    public CashMoneyTransactionUnholdManager(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException{
+    public CashMoneyTransactionUnholdManager(final CashMoneyWalletManager cashMoneyWalletManager, final PluginDatabaseSystem pluginDatabaseSystem,
+                                           final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
+        this.cashMoneyWalletManager = cashMoneyWalletManager;
 
         this.dao = new UnholdCashMoneyTransactionDao(pluginDatabaseSystem, pluginId, errorManager);
         try {
