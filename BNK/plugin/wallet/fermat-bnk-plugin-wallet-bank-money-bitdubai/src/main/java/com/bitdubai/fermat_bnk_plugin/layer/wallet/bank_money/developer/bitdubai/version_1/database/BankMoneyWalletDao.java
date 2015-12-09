@@ -260,7 +260,7 @@ public class BankMoneyWalletDao {
             return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));
     }
 
-    public void addNewAccount(BankAccountNumber bankAccountNumber,UUID walletPublicKey) throws CantInsertRecordException{
+    public void addNewAccount(BankAccountNumber bankAccountNumber) throws CantInsertRecordException{
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
         DatabaseTableRecord record = table.getEmptyRecord();
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME,bankAccountNumber.getAccount());

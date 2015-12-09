@@ -29,6 +29,6 @@ public interface BankMoneyWallet {
 
     List<BankAccountNumber> getAccounts() ;
 
-    void addNewAccount(BankAccountNumber bankAccountNumber,UUID walletPublicKey) throws CantAddNewAccountException;
+    void addNewAccount(BankAccountNumber bankAccountNumber) throws CantAddNewAccountException;
 
 }

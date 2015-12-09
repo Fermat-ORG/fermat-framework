@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
@@ -33,8 +35,17 @@ public class BankingWalletModuleImpl implements BankingWallet {
         this.unholdManager = unholdManager;
     }
 
+    @Override
     public List<BankAccountNumber> getAccounts()throws CantLoadBankMoneyWalletException{
         return bankMoneyWalletManager.loadBankMoneyWallet(publicKey.toString()).getAccounts();
     }
 
+    @Override
+    public void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency) {
+        try {
+            bankMoneyWalletManager.loadBankMoneyWallet(publicKey.toString()).addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency));
+        }catch (Exception e){
+
+        }
+    }
 }

@@ -98,9 +98,9 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     }
 
     @Override
-    public void addNewAccount(BankAccountNumber bankAccountNumber, UUID walletPublicKey) throws CantAddNewAccountException {
+    public void addNewAccount(BankAccountNumber bankAccountNumber) throws CantAddNewAccountException {
         try {
-            bankMoneyWalletDao.addNewAccount(bankAccountNumber,walletPublicKey);
+            bankMoneyWalletDao.addNewAccount(bankAccountNumber);
         }catch (CantInsertRecordException e){
             throw new CantAddNewAccountException(CantInsertRecordException.DEFAULT_MESSAGE,e,null,null);
         }
