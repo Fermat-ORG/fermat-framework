@@ -18,7 +18,6 @@ import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -91,9 +90,11 @@ public abstract class AbstractOpenContract {
                     contractClause=createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
+                /*
                 case DATE_TIME_TO_MEET:
                     dayTime=Long.valueOf(clauseValue);
                     contractRecord.setDayTime(dayTime);
+                    */
             }
         }
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
@@ -168,9 +169,11 @@ public abstract class AbstractOpenContract {
                     contractClause=createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
+                /*
                 case DATE_TIME_TO_MEET:
                     dayTime=Long.valueOf(clauseValue);
                     contractRecord.setDayTime(dayTime);
+                    */
             }
         }
 

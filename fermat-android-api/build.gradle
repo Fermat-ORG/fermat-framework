@@ -37,6 +37,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile project(':fermat-dap-api')
     compile project(':fermat-cbp-api')
+    compile project(':fermat-bnk-api')
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile fileTree(include: ['*.jar'], dir: 'libs')
