@@ -19,7 +19,6 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.squareup.picasso.Picasso;
-
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -86,13 +85,20 @@ public class GrouperViewHolder extends ParentViewHolder {
     public void bind(int childCount,CryptoWalletTransaction cryptoWalletTransaction) {
 
         byte[] photo = null;
-            photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+        String contactName = "Uninformed";
+
+        //involved actor is not a wallet contact
+        if(cryptoWalletTransaction.getInvolvedActor() != null)
+            {
+                photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+                contactName = cryptoWalletTransaction.getInvolvedActor().getName();
+            }
 
         //TODO Ver porque se cae cuando el contacto tiene algunos bytes
         try {
             if (photo != null) {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon);
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon,res,true);
                 bitmapWorkerTask.execute(photo);
             } else
                 Picasso.with(contactIcon.getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contactIcon);
@@ -101,7 +107,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
         }
 
-        txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
+        txt_contactName.setText(contactName);
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());
@@ -114,38 +120,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         //txt_total_balance.setText();
     }
 
-    class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private byte[] data;
 
-        public BitmapWorkerTask(ImageView imageView) {
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            imageViewReference = new WeakReference<ImageView>(imageView);
-        }
-
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(byte[]... params) {
-            data = params[0];
-            return BitmapFactory.decodeByteArray(data,0,data.length);
-        }
-
-        // Once complete, see if ImageView is still around and set bitmap.
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if(imageViewReference != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (bitmap != null) {
-                    //if (imageView != null) {
-                    //imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(res,bitmap));
-                    imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
-                    //}
-                } else {
-                    Picasso.with(imageView.getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView);
-                }
-            }
-        }
-    }
 
     @Override
     @SuppressLint("NewApi")

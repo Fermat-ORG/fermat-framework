@@ -88,9 +88,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         }
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTypeface(tf);
+        holder.getTxt_amount().setTypeface(tf) ;
 
-        holder.getTxt_contactName().setText(data.getContact().getActorName());
+        if(data.getContact() != null)
+            holder.getTxt_contactName().setText(data.getContact().getActorName());
+        else
+            holder.getTxt_contactName().setText("Connection");
+
         holder.getTxt_contactName().setTypeface(tf);
 
         holder.getTxt_notes().setText(data.getReason());
