@@ -7346,6 +7346,7 @@
 		<layer name="Engine" language="java"></layer>
 		<layer name="Wallet Module" language="java"></layer>
 		<layer name="Sub App Module" language="java"></layer>
+		<layer name="Module" language="java"></layer>
 		<layer name="Desktop Module" language="java"></layer>
 		<layer name="Agent" language="java"></layer>
 		<layer name="Actor" language="java"></layer>
