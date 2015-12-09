@@ -156,6 +156,8 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
    //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
+        }catch (OutOfMemoryError outOfMemoryError){
+            outOfMemoryError.printStackTrace();
         }
 
 

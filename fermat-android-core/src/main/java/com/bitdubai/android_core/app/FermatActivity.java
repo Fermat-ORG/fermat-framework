@@ -1301,29 +1301,32 @@ public abstract class FermatActivity extends AppCompatActivity
             }
 
             if (pager.getBackground() == null) {
-                //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
-                //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
-                //pager.setBackground(d);
-                //getWindow().addFlags(WindowManager.LayoutParams.);
-                if(Build.VERSION.SDK_INT>20) {
-                    getWindow().setStatusBarColor(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    getWindow().setStatusBarColor(Color.TRANSPARENT);
+                if(ApplicationSession.applicationState==ApplicationSession.STATE_STARTED) {
+                    //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                    //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
+                    //pager.setBackground(d);
+                    //getWindow().addFlags(WindowManager.LayoutParams.);
+                    if (Build.VERSION.SDK_INT > 20) {
+                        getWindow().setStatusBarColor(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    }
+                    final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+                    Drawable wallpaperDrawable = null;
+                    if (Build.VERSION.SDK_INT > 19)
+                        wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
+
+                    Display display = getWindowManager().getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
+                            WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
+
+                    //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
+
+                    //getWindow().setBackgroundDrawable(scaleDrawable);
+                    ApplicationSession.applicationState = ApplicationSession.STATE_STARTED_DESKTOP;
                 }
-                final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-                Drawable wallpaperDrawable = null;
-                if(Build.VERSION.SDK_INT>19)
-                    wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
-
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
-                        WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-
-                //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
-
-                //getWindow().setBackgroundDrawable(scaleDrawable);
             }
 
 

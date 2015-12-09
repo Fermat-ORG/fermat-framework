@@ -230,7 +230,7 @@ public class BitcoinCryptoVault implements
      */
     private void createNewVault() throws CantCreateCryptoWalletException {
         //TODO: esto lo hice para probar y funcionó, despues lo cambio porque no me corria lo otro
-        vault = new Wallet(Context.getOrCreate(networkParameters));
+        vault = new Wallet(Context.getOrCreate(TestNet3Params.get()));
         try {
             PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userPublicKey.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             vaultFile.persistToMedia();
