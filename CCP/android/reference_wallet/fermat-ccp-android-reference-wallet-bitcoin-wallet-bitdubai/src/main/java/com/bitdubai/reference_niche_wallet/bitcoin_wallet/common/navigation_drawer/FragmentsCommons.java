@@ -32,7 +32,7 @@ public class FragmentsCommons {
                     if (intraUserLoginIdentity.getProfileImage().length > 0) {
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         options.inScaled = true;
-                        options.inSampleSize = 6;
+                        options.inSampleSize = 3;
                         Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
                         options.inBitmap = bitmap;
                         //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
