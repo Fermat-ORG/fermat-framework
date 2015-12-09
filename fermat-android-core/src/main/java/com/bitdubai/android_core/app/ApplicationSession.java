@@ -3,15 +3,13 @@ package com.bitdubai.android_core.app;
 
 import android.support.multidex.MultiDexApplication;
 
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
-import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_core.FermatSystem;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**

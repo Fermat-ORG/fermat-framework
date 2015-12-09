@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.Sessions;
+package com.bitdubai.android_core.app.common.version_1.sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;

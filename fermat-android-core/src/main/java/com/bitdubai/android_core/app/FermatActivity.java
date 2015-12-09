@@ -54,8 +54,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;

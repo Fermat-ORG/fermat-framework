@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.Sessions;
+package com.bitdubai.android_core.app.common.version_1.sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
