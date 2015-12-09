@@ -340,6 +340,30 @@ They are sessions that manage SubApp information, these inherit from WalletSessi
 - 
 ----------------------
 
+----------------------
+
+#### Header
+
+- Brief explanation of Header with examples
+- 
+----------------------
+
+----------------------
+
+#### Footer
+
+- Brief explanation of Footer with examples
+- 
+----------------------
+
+----------------------
+
+#### Navigation drawer
+
+- Brief explanation of Navigation drawer with examples
+- 
+----------------------
+
 ## Part IV: References
 
 <br>
