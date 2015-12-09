@@ -193,7 +193,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
                 receive_button.setTypeface(typeface);
                 send_button.setTypeface(typeface);
             }
-            if(cryptoWalletWalletContact.getActorType().equals(Actors.CCP_INTRA_WALLET_USER)){
+            if(cryptoWalletWalletContact.getActorType().equals(Actors.INTRA_USER)){
                 linear_layout_extra_user_receive.setVisibility(View.GONE);
             }
         }

@@ -1,7 +1,12 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +23,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -51,6 +57,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperI
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
+import org.bitcoinj.core.Wallet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +100,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
+    private FermatTextView txt_vault;
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -182,7 +191,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
     private void setUpDonut(LayoutInflater inflater){
-        RelativeLayout container_header_balance = getToolbarHeader();
+        final RelativeLayout container_header_balance = getToolbarHeader();
         try {
             container_header_balance.removeAllViews();
         }catch (Exception e){
@@ -191,11 +200,43 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
-        //container_header_balance.setBackgroundResource(R.drawable.header_back);
-        container_header_balance.setVisibility(View.VISIBLE);
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap = null;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inScaled = true;
+                options.inSampleSize = 6;
+                try {
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header,options);
+//                    bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
+                    final Bitmap finalBitmap = bitmap;
+                    if(finalBitmap!=null) {
+                        Runnable runnableHandler = new Runnable() {
+                            @Override
+                            public void run() {
+                                container_header_balance.setBackground(new BitmapDrawable(getResources(), finalBitmap));
+                            }
+                        };
+                        handler.post(runnableHandler);
+                    }
+                }catch (OutOfMemoryError e){
+                    e.printStackTrace();
+                    System.gc();
+                }
 
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
 
         View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
+
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams()
+//        balance_header.setLayoutParams();
+
+        container_header_balance.setVisibility(View.VISIBLE);
 
         CircularProgressBar circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 

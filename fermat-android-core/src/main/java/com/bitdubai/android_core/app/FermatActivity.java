@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +26,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -60,9 +60,10 @@ import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapte
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
-import com.bitdubai.android_core.app.common.version_1.bottom_navigation.ProvisoryData;
+import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
+import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -113,15 +114,13 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -138,6 +137,7 @@ import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -188,19 +188,23 @@ public abstract class FermatActivity extends AppCompatActivity
      * Activity type
      */
     private ActivityType activityType;
-
     protected ArrayList activePlatforms;
-
     protected boolean developMode;
 
-    private GestureDetectorCompat mDetector;
-
-    private DrawerLayout mDrawerLayout;
+    /**
+     * Constans
+     */
     private static final long DRAWER_CLOSE_DELAY_MS = 250;
     private static final String NAV_ITEM_ID = "navItemId";
 
+    /**
+     * Handlers
+     */
     private final Handler mDrawerActionHandler = new Handler();
 
+    /**
+     * UI
+     */
     private ActionBarDrawerToggle mDrawerToggle;
     private int mNavItemId;
     private Toolbar mToolbar;
@@ -210,7 +214,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ViewPager pagertabs;
     private CoordinatorLayout coordinatorLayout;
-    private boolean flag=false;
+    private DrawerLayout mDrawerLayout;
 
     /**
      * This code will be in a manager in the new core
@@ -241,13 +245,6 @@ public abstract class FermatActivity extends AppCompatActivity
             // need to create any new ones here.
         }
 
-
-        FermatGestureDetector fermatGestureDetector = new FermatGestureDetector(this);
-
-        mDetector = new GestureDetectorCompat(this, fermatGestureDetector);
-        // Set the gesture detector as the double tap
-        // listener.
-        mDetector.setOnDoubleTapListener(fermatGestureDetector);
 
         try {
 
@@ -482,26 +479,51 @@ public abstract class FermatActivity extends AppCompatActivity
                     /**
                      * Background color
                      */
-                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
+                    final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
                     if(relativeLayout!=null) {
-                        if (navigationViewPainter.addBodyBackground() != null) {
-                            relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
-                        } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
+                        if(navigationViewPainter.hasBodyBackground()){
+                            AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
+
+                                WeakReference<ViewGroup> view;
+
+                                @Override
+                                protected void onPreExecute() {
+                                    view = new WeakReference(relativeLayout) ;
+                                }
+
+                                @Override
+                                protected Bitmap doInBackground(Void... params) {
+                                    return navigationViewPainter.addBodyBackground();
+                                }
+
+                                @Override
+                                protected void onPostExecute(Bitmap drawable) {
+                                    if (drawable!= null) {
+                                        view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                                    }
+                                }
+                            } ;
+                            asyncTask.execute();
+                        }
+
+                        if(navigationViewPainter.addBodyBackgroundColor() > 0) {
                             relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
                         }
                     }
-
-
-
-
-                    navigationView.invalidate();
-                }
+                    //navigationView.invalidate();
+            }
 
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // Check if no view has focus:
+                        View view = getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
                         onBackPressed();
                     }
                 });
@@ -870,14 +892,14 @@ public abstract class FermatActivity extends AppCompatActivity
                         public void onDrawerOpened(View drawerView) {
                             super.onDrawerOpened(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
                         public void onDrawerClosed(View drawerView) {
                             super.onDrawerClosed(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
@@ -1100,7 +1122,6 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void resetThisActivity() {
 
         try {
-
             //clean page adapter
 
             ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -1122,6 +1143,23 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
+
+            removecallbacks();
+
+            onRestart();
+
+        } catch (Exception e) {
+
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+    }
+
+    protected void removecallbacks() {
+
+        try {
 
             this.getNotificationManager().deleteObserver(this);
 
@@ -1154,7 +1192,12 @@ public abstract class FermatActivity extends AppCompatActivity
             closeContextMenu();
             closeOptionsMenu();
 
-            onRestart();
+            // Check if no view has focus:
+            View view = getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
 
         } catch (Exception e) {
 
@@ -1164,7 +1207,6 @@ public abstract class FermatActivity extends AppCompatActivity
                     LENGTH_LONG).show();
         }
     }
-
 
     /**
      * Initialise the fragments to be paged
@@ -1428,6 +1470,42 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     /**
+     * Get WalletManager from the fermat platform
+     *
+     * @return reference of WalletManagerManager
+     */
+
+    public SubAppManager getSubAppManager() {
+
+        try {
+            return (SubAppManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.CRYPTO_CURRENCY_PLATFORM,
+                            Layers.DESKTOP_MODULE,
+                            Plugins.SUB_APP_MANAGER,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            //TODO: Provisory
+            return new SubAppManagerProvisory();
+
+//            System.out.println(e.getMessage());
+//            System.out.println(e.toString());
+
+//            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
+    }
+
+    /**
      * Get ErrorManager from the fermat platform
      *
      * @return reference of ErrorManager
@@ -1633,95 +1711,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Get IdentityAssetIssuerManager
-     */
-    public IdentityAssetIssuerManager getIdentityAssetIssuerManager() {
-/// TODO POINT TO THE REAL SUB-APP-MODULE PLEASE
-        try {
-            return (IdentityAssetIssuerManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.IDENTITY,
-                            Plugins.ASSET_ISSUER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Get IdentityAssetUserManager
-     */
-    public IdentityAssetUserManager getIdentityAssetUserManager() {
-/// TODO POINT TO THE REAL SUB-APP-MODULE PLEASE
-        try {
-            return (IdentityAssetUserManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.IDENTITY,
-                            Plugins.ASSET_USER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Get RedeemPointIdentityManager
-     */
-    public RedeemPointIdentityManager getIdentityRedeemPointManager() {
-    /// TODO POINT TO THE REAL SUB-APP-MODULE PLEASE
-        try {
-            return (RedeemPointIdentityManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.IDENTITY,
-                            Plugins.REDEEM_POINT,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
 
     /**
      * Assest Issuer Wallet Module
@@ -2185,7 +2174,14 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationView(NavigationViewPainter navigationViewPainter) {
         this.navigationViewPainter = navigationViewPainter;
-        invalidate();
+        if(activityType.equals(ActivityType.ACTIVITY_TYPE_WALLET)){
+            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+            Activity activity = walletNavigationStructure.getLastActivity();
+            paintSideMenu(activity,activity.getSideMenu());
+        }else{
+            invalidate();
+        }
+
     }
 
     /**

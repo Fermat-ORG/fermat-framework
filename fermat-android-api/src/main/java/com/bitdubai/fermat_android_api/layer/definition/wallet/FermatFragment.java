@@ -15,7 +15,7 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -122,13 +122,16 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
      * Change activity
      */
     protected final void changeActivity(String activityCode,String appPublicKey, Object... objectses) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey,objectses);
+        destroy();
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, appPublicKey, objectses);
+
     }
     /**
      * Change activity
      */
     @Deprecated
     protected final void changeActivity(String activityCode, Object... objectses) {
+        destroy();
         ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
     }
 
@@ -161,10 +164,12 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
     }
 
     protected void selectSubApp(InstalledSubApp installedSubApp){
+        destroy();
         getFermatScreenSwapper().selectSubApp(installedSubApp);
     }
 
     protected void selectWallet(InstalledWallet installedWallet){
+        destroy();
         getFermatScreenSwapper().selectWallet(installedWallet);
     }
 
@@ -173,6 +178,10 @@ public abstract class FermatFragment extends AbstractFermatFragment implements F
     }
 
 
+    private void destroy(){
+        onDestroy();
+        System.gc();
+    }
 
 }
 

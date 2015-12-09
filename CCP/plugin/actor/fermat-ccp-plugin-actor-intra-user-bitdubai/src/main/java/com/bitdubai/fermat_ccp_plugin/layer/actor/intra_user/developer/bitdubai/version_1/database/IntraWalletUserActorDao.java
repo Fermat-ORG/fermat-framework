@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -26,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraWalletUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUserActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUserActorProfileImageException;
@@ -33,8 +36,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserActorDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateConnectionException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
 
 import java.util.ArrayList;
@@ -98,17 +99,19 @@ public class IntraWalletUserActorDao {
         }
     }
 
-    public void createNewIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState) throws CantAddPendingIntraWalletUserException {
+    public void createNewIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState) throws CantAddPendingIntraWalletUserException,RequestAlreadySendException {
 
         try {
 
             /**
              * if intra user exist on table
-             * change status
+             * return error
              */
             if (intraUserExists(intraUserToAddPublicKey)) {
 
-                this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
+                throw new RequestAlreadySendException("CAN'T INSERT INTRA USER", null, "", "The request already sent to actor.");
+
+                //this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
 
             } else {
                 /**
@@ -133,7 +136,7 @@ public class IntraWalletUserActorDao {
                 /**
                  * Persist profile image on a file
                  */
-                if(profileImage!=null) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+                if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
             }
 
@@ -142,9 +145,6 @@ public class IntraWalletUserActorDao {
 
             throw new CantAddPendingIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant create new intra user, insert database problems.");
 
-        } catch (CantUpdateConnectionException e) {
-
-            throw new CantAddPendingIntraWalletUserException("CAN'T INSERT INTRA USER", FermatException.wrapException(e), "", "Cant update exist intra user state, unknown failure.");
 
         } catch (Exception e) {
             // Failure unknown.
@@ -190,7 +190,7 @@ public class IntraWalletUserActorDao {
                 /**
                  * Persist profile image on a file
                  */
-                if(profileImage!=null) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+                if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
             }
 

@@ -210,8 +210,11 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     walletPublicKey
             );
 
-        } catch (CantGetWalletContactException |
-                 WalletContactNotFoundException e){
+        } catch (WalletContactNotFoundException e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (CantGetWalletContactException  e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;

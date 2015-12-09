@@ -45,7 +45,6 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -63,10 +62,11 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends FermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
-        ActionBar.OnNavigationListener,
         AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
+
+    public static final String INTRA_USER_SELECTED = "intra_user";
 
     private static final int MAX = 20;
     /**
@@ -81,7 +81,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private SearchView mSearchView;
 
     private AppListAdapter adapter;
-    private boolean isStartList;
+    private boolean isStartList=false;
 
 
     private ProgressDialog mDialog;
@@ -119,7 +119,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
             setHasOptionsMenu(true);
             // setting up  module
             intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
-            moduleManager = intraUserSubAppSession.getIntraUserModuleManager();
+            moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = subAppsSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
@@ -162,13 +162,12 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
             onRefresh();
+
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
 
 
@@ -194,7 +193,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items
@@ -391,26 +390,6 @@ Updates the count of notifications in the ActionBar.
         return true;
     }
 
-    @Override
-    public boolean onNavigationItemSelected(int position, long idItem) {
-        try {
-            IntraUserLoginIdentity intraUserLoginIdentity = moduleManager.showAvailableLoginIdentities().get(position);
-            moduleManager.login(intraUserLoginIdentity.getPublicKey());
-            //TODO: para despues
-            //adapter.changeDataSet(intraUserModuleManager.getAllIntraUsers());
-
-            //mientras tanto testeo
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-
-            return true;
-        } catch (CantShowLoginIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantLoginIntraUserException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
@@ -429,15 +408,21 @@ Updates the count of notifications in the ActionBar.
         return dataSet;
     }
 
+
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-        ConnectDialog connectDialog = null;
+
+        subAppsSession.setData(INTRA_USER_SELECTED, data);
+        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), subAppsSession.getAppPublicKey());
+
+
+        /*ConnectDialog connectDialog = null;
         try {
             connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) subAppsSession, subAppResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
             connectDialog.show();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 

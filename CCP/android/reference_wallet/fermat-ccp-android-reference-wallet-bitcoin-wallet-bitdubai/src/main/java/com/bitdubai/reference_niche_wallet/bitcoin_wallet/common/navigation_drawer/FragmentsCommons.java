@@ -3,6 +3,9 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_dra
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,11 +30,17 @@ public class FragmentsCommons {
             if (intraUserLoginIdentity != null) {
                 if (intraUserLoginIdentity.getProfileImage() != null) {
                     if (intraUserLoginIdentity.getProfileImage().length > 0) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length);
-                        bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inScaled = true;
+                        options.inSampleSize = 3;
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
+                        options.inBitmap = bitmap;
+                        //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
+               //         Bitmap converted = bitmap.copy(Bitmap.Config.RGB_565, true);
+                        //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
                         imageView.setImageBitmap(bitmap);
                     } else
-                        Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                        Picasso.with(activity).load(R.drawable.profile_image_standard).fit().centerCrop().into(imageView);
                 }
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
@@ -42,5 +51,14 @@ public class FragmentsCommons {
             Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
         }
         return view;
+    }
+
+    private static Bitmap convert(Bitmap bitmap, Bitmap.Config config) {
+        Bitmap convertedBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), config);
+        Canvas canvas = new Canvas(convertedBitmap);
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        return convertedBitmap;
     }
 }

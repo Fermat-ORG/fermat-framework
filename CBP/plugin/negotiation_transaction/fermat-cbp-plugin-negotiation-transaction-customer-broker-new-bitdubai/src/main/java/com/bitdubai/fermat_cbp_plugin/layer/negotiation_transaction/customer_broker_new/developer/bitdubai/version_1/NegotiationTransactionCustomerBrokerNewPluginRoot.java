@@ -14,12 +14,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetListCustomerBrokerNewNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantReceiveCustomerBrokerNewNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantSendCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantUpdateStatusCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
@@ -117,6 +114,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot  extends Abstract
         return negotiationTransactions;
     }
 
+    /*
+
     public void sendCustomerBrokerNewNegotiationTranasction(CustomerBrokerNegotiation negotiation) throws CantSendCustomerBrokerNewNegotiationTransactionException{
 
     }
@@ -124,6 +123,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot  extends Abstract
     public void receiveCustomerBrokerNewNegotiationTranasction(CustomerBrokerNegotiation negotiation) throws CantReceiveCustomerBrokerNewNegotiationTransactionException{
 
     }
+    */
 
     /*Services Interface implementation.*/
     @Override

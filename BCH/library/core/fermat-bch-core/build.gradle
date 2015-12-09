@@ -18,12 +18,12 @@ dependencies {
     compile project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':fermat-bch-plugin-crypto-router-incoming-crypto-bitdubai')
+    compile project(':fermat-bch-plugin-crypto-module-crypto-address-book-bitdubai')
+    compile project(':fermat-bch-plugin-crypto-vault-bitcoin-currency-bitdubai')
 
     // TODO MOVE THE PROJECTS TO THEIR PLACE
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
