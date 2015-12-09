@@ -160,7 +160,9 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION       ("BBNKUMT"  ),
     BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION      ("BBNKDMT"  ),
     BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION     ("BBNKWMT"  ),
+    BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE       ("BBNKBMWM" ),
     BITDUBAI_BNK_BANK_MONEY_WALLET              ("BBNKBMW"  ),
+
     // End BNK Plugins
 
     //Init CSH Plugins
@@ -352,6 +354,7 @@ public enum Plugins implements FermatEnum {
             case "BBNKDMT": return BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION;
             case "BBNKWMT": return BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION;
             case "BBNKBMW": return BITDUBAI_BNK_BANK_MONEY_WALLET;
+            case "BBNKBMWM": return BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE;
             case "BCSHMTH": return BITDUBAI_CSH_MONEY_TRANSACTION_HOLD;
             case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
             case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;

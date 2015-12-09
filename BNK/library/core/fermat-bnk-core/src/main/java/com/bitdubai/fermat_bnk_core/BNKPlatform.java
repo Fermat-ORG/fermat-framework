@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bnk_core;
 
+import com.bitdubai.fermat_bnk_core.layer.wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
@@ -22,6 +23,7 @@ public class BNKPlatform extends AbstractPlatform {
         try {
             registerLayer(new BankMoneyTransactionLayer());
             registerLayer(new WalletLayer());
+            registerLayer(new WalletModuleLayer());
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(
