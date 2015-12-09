@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -45,17 +45,17 @@ public class StockBalanceImpl implements StockBalance {
     }
     @Override
     public float getBookedBalance(FermatEnum merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
-        return cryptoBrokerWalletDatabaseDao.getBookedBalance(null);
+        return cryptoBrokerWalletDatabaseDao.getBookedBalance(merchandise);
     }
 
     @Override
     public float getAvailableBalance(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        return cryptoBrokerWalletDatabaseDao.geAvailableBalance(null);
+        return cryptoBrokerWalletDatabaseDao.geAvailableBalance(merchandise);
     }
 
     @Override
     public float getAvailableBalanceFrozen(FermatEnum merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
-        return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(null);
+        return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(merchandise);
     }
 
     @Override
