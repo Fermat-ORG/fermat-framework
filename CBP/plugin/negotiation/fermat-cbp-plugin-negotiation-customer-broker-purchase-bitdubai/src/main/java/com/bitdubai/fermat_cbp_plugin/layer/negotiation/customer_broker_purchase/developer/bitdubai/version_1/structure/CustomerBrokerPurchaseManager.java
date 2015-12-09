@@ -114,12 +114,6 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
                 case CUSTOMER_CURRENCY_QUANTITY:
                     return ClauseType.CUSTOMER_PAYMENT_METHOD;
 
-                case CUSTOMER_BANK:
-                    return ClauseType.CUSTOMER_BANK_ACCOUNT;
-
-                case PLACE_TO_MEET:
-                    return ClauseType.DATE_TIME_TO_MEET;
-
                 case CUSTOMER_PLACE_TO_DELIVER:
                     return ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
 
@@ -135,10 +129,10 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
                     return ClauseType.CUSTOMER_CRYPTO_ADDRESS;
 
                 case BANK_MONEY:
-                    return ClauseType.CUSTOMER_BANK;
+                    return ClauseType.BROKER_BANK_ACCOUNT;
 
                 case CASH_ON_HAND_MONEY:
-                    return ClauseType.PLACE_TO_MEET;
+                    return ClauseType.CUSTOMER_PLACE_TO_DELIVER;
 
                 case CASH_DELIVERY_MONEY:
                     return ClauseType.CUSTOMER_PLACE_TO_DELIVER;
@@ -217,18 +211,15 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
             }
 
             if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
-                if(
-                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK) ) &&
-                                ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK_ACCOUNT) )
-                        ){
+                if( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK_ACCOUNT) ){
                     return false;
                 }
             }
 
             if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
                 if(
-                        ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
-                                ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
+                        ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PLACE_TO_DELIVER) ) &&
+                                ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) )
                         ){
                     return false;
                 }
