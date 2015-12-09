@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
@@ -9,24 +10,31 @@ import java.util.UUID;
 /**
  * Created by yordin on 23/11/15.
  */
-public class CustomerBrokerNewImpl implements CustomerBrokerNew{
+public class CustomerBrokerNewImpl implements CustomerBrokerNew {
 
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 4259;
-    private static final int HASH_PRIME_NUMBER_ADD = 3089;
+    private static final int HASH_PRIME_NUMBER_PRODUCT  = 4259;
+    private static final int HASH_PRIME_NUMBER_ADD      = 3089;
 
-    private UUID transactionId;
-    private UUID negotiationId;
-    private String publicKeyBroker;
-    private String publicKeyCustomer;
-    private NegotiationStatus status;
+    private UUID                            transactionId;
+    private UUID                            negotiationId;
+    private String                          publicKeyBroker;
+    private String                          publicKeyCustomer;
+    private NegotiationTransactionStatus    negotiationTransactionStatus;
     private long timestamp;
 
-    public CustomerBrokerNewImpl(UUID transactionId, UUID negotiationId, String publicKeyBroker, String publicKeyCustomer, NegotiationStatus status, long timestamp){
-        this.transactionId = transactionId;
-        this.negotiationId = negotiationId;
-        this.publicKeyBroker = publicKeyBroker;
-        this.publicKeyCustomer = publicKeyCustomer;
-        this.status = status;
+    public CustomerBrokerNewImpl(
+            UUID                            transactionId,
+            UUID                            negotiationId,
+            String                          publicKeyBroker,
+            String                          publicKeyCustomer,
+            NegotiationTransactionStatus    negotiationTransactionStatus,
+            long                            timestamp
+    ){
+        this.transactionId                  = transactionId;
+        this.negotiationId                  = negotiationId;
+        this.publicKeyBroker                = publicKeyBroker;
+        this.publicKeyCustomer              = publicKeyCustomer;
+        this.negotiationTransactionStatus   = negotiationTransactionStatus;
         this.timestamp = timestamp;
     }
 
@@ -38,7 +46,7 @@ public class CustomerBrokerNewImpl implements CustomerBrokerNew{
 
     public String getPublicKeyCustomer(){ return this.publicKeyCustomer; }
 
-    public NegotiationStatus getStatusTransaction(){ return this.status; }
+    public NegotiationTransactionStatus getStatusTransaction(){ return this.negotiationTransactionStatus; }
 
     public long getTimestamp(){ return this.timestamp; }
 
