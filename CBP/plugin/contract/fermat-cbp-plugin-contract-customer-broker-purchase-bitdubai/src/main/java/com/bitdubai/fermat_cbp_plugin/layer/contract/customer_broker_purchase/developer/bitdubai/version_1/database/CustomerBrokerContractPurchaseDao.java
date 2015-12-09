@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -108,24 +109,23 @@ public class CustomerBrokerContractPurchaseDao {
             }
         }
 
-        public List<CustomerBrokerContractPurchase> getAllCustomerBrokerPurchaseContractFromCurrentDeviceUser() throws CantGetListCustomerBrokerContractPurchaseException {
-            DatabaseTable ContractPurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
+        public Collection<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchase() throws CantGetListCustomerBrokerContractPurchaseException {
             try {
+                DatabaseTable ContractPurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
+                ContractPurchaseTable.setFilterOrder(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
                 ContractPurchaseTable.loadToMemory();
+                Collection<DatabaseTableRecord> records = ContractPurchaseTable.getRecords();
+                ContractPurchaseTable.clearAllFilters();
+                Collection<CustomerBrokerContractPurchase> Purchases = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                   Purchases.add(constructCustomerBrokerPurchaseContractFromRecord(record));
+                }
+                return Purchases;
             } catch (CantLoadTableToMemoryException e) {
                 throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
-            List<DatabaseTableRecord> records = ContractPurchaseTable.getRecords();
-            ContractPurchaseTable.clearAllFilters();
-            List<CustomerBrokerContractPurchase> Purchases = new ArrayList<>();
-            for (DatabaseTableRecord record : records) {
-                try {
-                    Purchases.add(constructCustomerBrokerPurchaseContractFromRecord(record));
-                } catch (InvalidParameterException e) {
-                    throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
-                }
-            }
-            return Purchases;
         }
 
         public CustomerBrokerContractPurchase getCustomerBrokerPurchaseContractForcontractID(String contractID) throws CantGetListCustomerBrokerContractPurchaseException {
@@ -147,6 +147,25 @@ public class CustomerBrokerContractPurchaseDao {
                 }
             }
             return Purchase;
+        }
+
+        public Collection<CustomerBrokerContractPurchase> getCustomerBrokerContractPurchaseForStatus(ContractStatus status) throws CantGetListCustomerBrokerContractPurchaseException {
+            DatabaseTable ContractPurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
+            ContractPurchaseTable.setStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            try {
+                ContractPurchaseTable.loadToMemory();
+                List<DatabaseTableRecord> records = ContractPurchaseTable.getRecords();
+                ContractPurchaseTable.clearAllFilters();
+                Collection<CustomerBrokerContractPurchase> Purchase = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                    Purchase.add(constructCustomerBrokerPurchaseContractFromRecord(record));
+                }
+                return Purchase;
+            } catch (InvalidParameterException e) {
+                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+            }
         }
 
     /*

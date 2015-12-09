@@ -118,12 +118,6 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
             case BROKER_CURRENCY_QUANTITY:
                 return ClauseType.BROKER_PAYMENT_METHOD;
 
-            case BROKER_BANK:
-                return ClauseType.BROKER_BANK_ACCOUNT;
-
-            case PLACE_TO_MEET:
-                return ClauseType.DATE_TIME_TO_MEET;
-
             case BROKER_PLACE_TO_DELIVER:
                 return ClauseType.BROKER_DATE_TIME_TO_DELIVER;
 
@@ -139,10 +133,10 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
                 return ClauseType.BROKER_CRYPTO_ADDRESS;
 
             case BANK_MONEY:
-                return ClauseType.BROKER_BANK;
+                return ClauseType.BROKER_BANK_ACCOUNT;
 
             case CASH_ON_HAND_MONEY:
-                return ClauseType.PLACE_TO_MEET;
+                return ClauseType.BROKER_PLACE_TO_DELIVER;
 
             case CASH_DELIVERY_MONEY:
                 return ClauseType.BROKER_PLACE_TO_DELIVER;
@@ -237,18 +231,15 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
         }
 
         if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
-            if(
-                    ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK) ) &&
-                            ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK_ACCOUNT) )
-                    ){
+            if( !clausesAgreed.containsKey(ClauseType.BROKER_BANK_ACCOUNT) ){
                 return false;
             }
         }
 
         if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
             if(
-                    ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
-                            ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_PLACE_TO_DELIVER) ) &&
+                            ( !clausesAgreed.containsKey(ClauseType.BROKER_DATE_TIME_TO_DELIVER) )
                     ){
                 return false;
             }
