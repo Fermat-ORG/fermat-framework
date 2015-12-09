@@ -1,6 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -58,7 +60,15 @@ public class NavigationViewPainter implements com.bitdubai.fermat_android_api.en
 
     @Override
     public Drawable addBodyBackground() {
-        return ContextCompat.getDrawable(activity.getApplicationContext(),R.drawable.bg_drawer_body);
+        Drawable drawable = null;
+        try {
+//            final Bitmap bitmap = BitmapFactory.decodeResource(
+//                    activity.getResources(), R.drawable.bg_drawer_body, 100, 100));
+            drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
+        }catch (OutOfMemoryError error){
+            error.printStackTrace();
+        }
+        return drawable;
     }
 
     @Override

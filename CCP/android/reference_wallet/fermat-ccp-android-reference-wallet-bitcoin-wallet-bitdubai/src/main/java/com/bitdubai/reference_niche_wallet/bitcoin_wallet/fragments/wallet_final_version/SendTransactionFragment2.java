@@ -199,21 +199,32 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
 
-        //container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
+        container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header);
-                bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
-                final Bitmap finalBitmap = bitmap;
-                Runnable runnableHandler = new Runnable() {
-                    @Override
-                    public void run() {
-                        container_header_balance.setBackground(new BitmapDrawable(getResources(), finalBitmap));
-                    }
-                };
-                handler.post(runnableHandler);
+                Bitmap bitmap = null;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                options.inScaled = true;
+                options.inSampleSize = 8;
+                try {
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header,options);
+//                    bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
+                    final Bitmap finalBitmap = bitmap;
+                    Runnable runnableHandler = new Runnable() {
+                        @Override
+                        public void run() {
+                            container_header_balance.setBackground(new BitmapDrawable(getResources(), finalBitmap));
+                        }
+                    };
+                    handler.post(runnableHandler);
+                }catch (OutOfMemoryError e){
+                    e.printStackTrace();
+                    System.gc();
+                }
+
             }
         };
         Thread thread = new Thread(runnable);
