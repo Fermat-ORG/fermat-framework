@@ -71,19 +71,18 @@ public abstract class ActorConnectionDatabaseFactory {
             /**
              * Create Actor Connections table.
              */
-            DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+            DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
 
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , DatabaseDataType.STRING      ,  36, Boolean.TRUE );
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , DatabaseDataType.STRING      ,  36, Boolean.TRUE );
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
 
-            table.addIndex(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_FIRST_KEY_COLUMN);
+            table.addIndex(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -93,7 +92,7 @@ public abstract class ActorConnectionDatabaseFactory {
 
                 throw new CantCreateDatabaseException(
                         e,
-                        "tableName: "+ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME,
+                        "tableName: "+ com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME,
                         "Exception not handled by the plugin, There is a problem and i cannot create the table."
                 );
             }
