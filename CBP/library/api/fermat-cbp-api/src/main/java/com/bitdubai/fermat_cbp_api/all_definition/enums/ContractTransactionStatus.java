@@ -22,6 +22,7 @@ public enum ContractTransactionStatus implements FermatEnum {
     CREATING_CONTRACT("CRC"),
     HASH_REJECTED("HRJ"),
     PENDING_CONFIRMATION("PEC"),
+    PENDING_PAYMENT("PEP"),
     PENDING_RESPONSE("PER"),
     PENDING_SUBMIT("PES"),
     SUBMIT_CLOSING_CONTRACT_CONFIRMATION("SCCC"),

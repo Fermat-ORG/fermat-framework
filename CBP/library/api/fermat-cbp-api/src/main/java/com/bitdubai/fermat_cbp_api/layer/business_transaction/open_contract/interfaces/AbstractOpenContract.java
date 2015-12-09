@@ -108,6 +108,10 @@ public abstract class AbstractOpenContract {
         contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
         //Sets the contractId (hash)
         contractRecord.generateContractHash();
+        //To avoid a null field I gonna set the dayTime to 0
+        //TODO: find the correct value, this was removed from negotiation clauses
+        dayTime=0;
+        contractRecord.setDayTime(dayTime);
         return contractRecord;
     }
 
