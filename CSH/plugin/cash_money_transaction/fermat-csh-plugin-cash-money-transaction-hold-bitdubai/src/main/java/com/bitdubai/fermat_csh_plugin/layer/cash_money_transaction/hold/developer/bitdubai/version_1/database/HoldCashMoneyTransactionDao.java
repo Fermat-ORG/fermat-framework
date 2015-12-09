@@ -139,7 +139,8 @@ public class HoldCashMoneyTransactionDao {
             if(status == CashTransactionStatus.CONFIRMED || status == CashTransactionStatus.REJECTED)
                 record.setLongValue(HoldCashMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, (new Date().getTime() / 1000));
 
-            DatabaseTable table = database.getTable(pluginId.toString());
+            DatabaseTable table = database.getTable(HoldCashMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
+            table.setStringFilter(HoldCashMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
             table.updateRecord(record);
 
         } catch (CantUpdateRecordException e){

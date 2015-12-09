@@ -18,7 +18,6 @@ import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -91,9 +90,11 @@ public abstract class AbstractOpenContract {
                     contractClause=createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
+                /*
                 case DATE_TIME_TO_MEET:
                     dayTime=Long.valueOf(clauseValue);
                     contractRecord.setDayTime(dayTime);
+                    */
             }
         }
         //TODO: I'm gonna set the dollar as reference currency for now, it can change in the future.
@@ -107,6 +108,10 @@ public abstract class AbstractOpenContract {
         contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
         //Sets the contractId (hash)
         contractRecord.generateContractHash();
+        //To avoid a null field I gonna set the dayTime to 0
+        //TODO: find the correct value, this was removed from negotiation clauses
+        dayTime=0;
+        contractRecord.setDayTime(dayTime);
         return contractRecord;
     }
 
@@ -168,9 +173,11 @@ public abstract class AbstractOpenContract {
                     contractClause=createContractClause(clauseValue);
                     contractClauses.add(contractClause);
                     break;
+                /*
                 case DATE_TIME_TO_MEET:
                     dayTime=Long.valueOf(clauseValue);
                     contractRecord.setDayTime(dayTime);
+                    */
             }
         }
 
