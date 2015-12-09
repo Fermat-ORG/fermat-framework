@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
@@ -542,6 +542,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     subAppType = (SubApps) bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION_TYPE);
                 }
             }
+
             ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
             if(installedSubApp!=null){
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {
@@ -555,9 +556,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         );
                 }
             }else {
+                installedSubApp = getSubAppManager().getSubApp(subAppType.getCode());
                 //TODO:deberiamos tener el subAppManager por eso va en null
                 subAppSession = getSubAppSessionManager().openSubAppSession(
-                        null,
+                        installedSubApp,
                         subAppType.getCode(),
                         getErrorManager(),
                         managerFactory.getModuleManagerFactory(subAppType)
@@ -601,6 +603,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
+
+
+
 
 
 }
