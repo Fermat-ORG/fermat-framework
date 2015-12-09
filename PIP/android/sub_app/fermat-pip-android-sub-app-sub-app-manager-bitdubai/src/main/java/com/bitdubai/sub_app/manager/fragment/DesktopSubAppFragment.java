@@ -151,6 +151,9 @@ public class DesktopSubAppFragment extends FermatFragment implements SearchView.
    //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
+        } catch (OutOfMemoryError error){
+            System.gc();
+            error.printStackTrace();
         }
 
 

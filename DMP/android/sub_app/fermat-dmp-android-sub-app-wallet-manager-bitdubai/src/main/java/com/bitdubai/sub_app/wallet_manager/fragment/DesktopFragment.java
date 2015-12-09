@@ -485,6 +485,15 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void onDestroy() {
+
+        adapter = null;
+        mItemTouchHelper = null;
+        super.onDestroy();
+    }
 }
 
 

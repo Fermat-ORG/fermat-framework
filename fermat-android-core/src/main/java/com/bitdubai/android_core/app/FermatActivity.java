@@ -483,8 +483,9 @@ public abstract class FermatActivity extends AppCompatActivity
                      */
                     RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
                     if(relativeLayout!=null) {
-                        if (navigationViewPainter.addBodyBackground() != null) {
-                            relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
+                        Drawable bodyBackgroundDrawable = navigationViewPainter.addBodyBackground();
+                        if (bodyBackgroundDrawable!= null) {
+                            relativeLayout.setBackground(bodyBackgroundDrawable);
                         } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
                             relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
                         }
@@ -875,14 +876,14 @@ public abstract class FermatActivity extends AppCompatActivity
                         public void onDrawerOpened(View drawerView) {
                             super.onDrawerOpened(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
                         public void onDrawerClosed(View drawerView) {
                             super.onDrawerClosed(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
@@ -1105,7 +1106,6 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void resetThisActivity() {
 
         try {
-
             //clean page adapter
 
             ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -1127,6 +1127,23 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
+
+            removecallbacks();
+
+            onRestart();
+
+        } catch (Exception e) {
+
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+    }
+
+    protected void removecallbacks() {
+
+        try {
 
             this.getNotificationManager().deleteObserver(this);
 
@@ -1166,8 +1183,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
-            onRestart();
-
         } catch (Exception e) {
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -1176,7 +1191,6 @@ public abstract class FermatActivity extends AppCompatActivity
                     LENGTH_LONG).show();
         }
     }
-
 
     /**
      * Initialise the fragments to be paged
@@ -2144,7 +2158,14 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationView(NavigationViewPainter navigationViewPainter) {
         this.navigationViewPainter = navigationViewPainter;
-        invalidate();
+        if(activityType.equals(ActivityType.ACTIVITY_TYPE_WALLET)){
+            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+            Activity activity = walletNavigationStructure.getLastActivity();
+            paintSideMenu(activity,activity.getSideMenu());
+        }else{
+            invalidate();
+        }
+
     }
 
     /**
