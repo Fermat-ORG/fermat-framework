@@ -336,7 +336,7 @@ They are sessions that manage SubApp information, these inherit from WalletSessi
 
 #### Settings
 
-- Brief explanation of settings with examples
+Brief explanation of settings with examples
 - 
 ----------------------
 
@@ -344,7 +344,7 @@ They are sessions that manage SubApp information, these inherit from WalletSessi
 
 #### Header
 
-- Brief explanation of Header with examples
+Brief explanation of Header with examples
 - 
 ----------------------
 
@@ -352,7 +352,7 @@ They are sessions that manage SubApp information, these inherit from WalletSessi
 
 #### Footer
 
-- Brief explanation of Footer with examples
+Brief explanation of Footer with examples
 - 
 ----------------------
 
@@ -360,7 +360,7 @@ They are sessions that manage SubApp information, these inherit from WalletSessi
 
 #### Navigation drawer
 
-- Brief explanation of Navigation drawer with examples
+Brief explanation of Navigation drawer with examples
 - 
 ----------------------
 
