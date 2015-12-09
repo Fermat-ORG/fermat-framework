@@ -468,10 +468,12 @@ public class RedeemPointActorDao implements Serializable {
                 }
 
                 if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
-                    if (dapConnectionState == DAPConnectionState.CONNECTED_ONLINE) {
-                        dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
-                    } else {
+                    if (dapConnectionState == DAPConnectionState.REGISTERED_OFFLINE) {
                         dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
+                    }
+                } else {
+                    if (dapConnectionState == DAPConnectionState.CONNECTED_OFFLINE) {
+                        dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
                     }
                 }
 
