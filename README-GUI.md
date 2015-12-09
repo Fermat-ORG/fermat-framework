@@ -1,4 +1,4 @@
-﻿![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 <br><br>
 
@@ -8,14 +8,11 @@ GUI Components are one of the three basic components that can be added into the 
 
 To accomplish its mission, a GUI component must have a wireframe.
 
-
 <br>
 
 ## Part I: Concepts
 
-Several new concepts are introduced...
-
-### Walllet
+### Walllet (concepto)
 
 A Wallet is a GUI Component that allows a user to carry out financial transactions like send and receive crypto currencies using different plug-ins that Fermat offers through Modules. Each Module Wallet has a partner, that is; there is a one on one relationship between a wallet and a module.
 
@@ -33,12 +30,10 @@ The sessions are created for every wallet or SubApp and management of such meeti
 
 Each GUI component folder has a intended session . Todas las clases que representen sesiones han de extender de `AbstractFermatSession`. 
 
-ejemplo 
+Ejemplo: 
 
 ```java
  public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,ProviderManager> implements WalletSession {
-
-
 ```
 La clase InstalledWallet es una instancia de wallet instalada.
 La clase CryptoWalletManager es el module que le corresponde a dicha wallet
@@ -46,8 +41,13 @@ El ProviderManager (que no se encuentra en uso en este momento) es nuestro equiv
 
 <br>
 
-### Fragment factory
+### Modules
+ 
+ A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface, is the one that has the following funtionalities:
+* Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
+* It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
 
+### Fragment factory
 Each GUI component has a folder designated to the fragment factory, that is in charge of connecting what is already developed in the Navigation Structure with the controlling fragments of such screens.
 
 Consta de dos elementos: los enums *Fragment Enum Types* y las clases *Fragment Factory*. Estos elementos se han de ubicar en la carpeta fragmentFactory del proyecto que representa tu app.
@@ -55,8 +55,6 @@ Consta de dos elementos: los enums *Fragment Enum Types* y las clases *Fragment 
 Los Fragment Enum Types representan identificadores para los fragmentos que conforman las apps. Cada app ha de tener su propio Fragment Enum Type y este ha de heredar de `FermatFragmentsEnumType` (link a ejemplo)
 
 Los Fragment Factory son clases que retornan instancias de los fragmentos identificados por su correspondiente Enum Type. Cada app ha de tener su propio Fragment Factory y este ha de heredar de `FermatWalletFragmentFactory` si los fragmentos representan una wallet o de `FermatSubAppFragmentFactory` si los fragmentos representan una subapp
-
-
 
 FermatFragmentsEnumType example:
 ```java
@@ -135,7 +133,8 @@ public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactor
 <br>
 
 ### Navigation Structure
- Fermat is an application different from other Android applications; it has its own navigation structure, that is based on screens and sub-screens that begin to “draw” from uploaded objects when executed, from files that deliver information about what it is needed to draw in each screen/sub-screen and in what order.
+
+Fermat is an application different from other Android applications; it has its own navigation structure, that is based on screens and sub-screens that begin to “draw” from uploaded objects when executed, from files that deliver information about what it is needed to draw in each screen/sub-screen and in what order.
 
 Permite definir el flujo de interacción entre las distintas pantallas de la aplicación que se encuentra en desarrollo. Se definen aspectos visuales como fondo,colores,tamaños.
 
@@ -143,7 +142,7 @@ También definen la existencia de  header,footer, navigation drawer, Tabs, Menus
 Para agregar una estructura de navegación se debe ir a DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai y agregar en el plugin root dicha estructura de navegación, 
 se encuentra provisoriamente en dicha carpeta, en un futuro como primer paso se deberá leer de un xml en el repositorio de fermat en github y como segundo paso debera poder obtenerse de los otros nodos de la red fermat.
 
-#### Navigation structure Concepts
+#### Elements of the Navigation Structure
 
 ##### Activity
 
@@ -151,7 +150,7 @@ Una actividad en el contexto de Fermat es un contenedor base el cual le dice al 
 
 Ejemplo de la Wallet user identity:
 
- ```java
+```java
 RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
 runtimeSubApp.setType(SubApps.CCP_INTRA_USER_IDENTITY);
 String intraUserIdentityPublicKey = "public_key_ccp_intra_user_identity";
@@ -185,13 +184,13 @@ runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_
 listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 ```
 
-### Add Header in your fragment
+##### Header
 
 Es posible agregar un header expandible y colapsable en una actividad de tu app. Esto se realiza en tres pasos:
 
-- Definir en la estructura de navegación que la actividad posee un header a traves del metodo setHeader(runtimeHeader).
-- Crear una Clase `<nombreScreen>HeaderViewPainter` que implemente `HeaderViewPainter` en la carpeta `commons/header/` Por ejemplo en la bitcoin wallet sería `commons/header/HomeHeaderViewPainter.java`
-  - El mismo debe incluirse en el metodo onActivityCreated pasando lo como parametro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
+Definir en la estructura de navegación que la actividad posee un header a traves del método setHeader(runtimeHeader).
+Crear una Clase `<nombreScreen>HeaderViewPainter` que implemente `HeaderViewPainter` en la carpeta `commons/header/` Por ejemplo en la bitcoin wallet sería commons/header/HomeHeaderViewPainter.java
+El mismo debe incluirse en el método onActivityCreated pasando lo como parámetro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
 
 Ejemplo: 
 
@@ -201,19 +200,24 @@ runtimeHeader.setLabel("Market rate");
 runtimeActivity.setHeader(runtimeHeader);
 ```
 
-### Add Footer in your fragment
+
+##### Footer
 
 Es posible agregar un footer deslizable, para esto se debe declarar una carpeta llamada footer en el plugin y hacer extender en dos pasos:
 
 Este está conformado por 2 miembros, el llamado “ViewSlider”, este elemento es el view del footer que se encuentra siempre visible para poder despl
 
-### Add Navigation drawer
+##### SideMenu (Navigation Drawer) and MenuItem
 
 Es posible agregar un Navigation drawer que te permita dirigirte a las diferentes pantallas de tu app. Esta se define en varios pasos
 
-- Crear en la estructura de navegación un objeto SideMenu que representa el Navigztion drawer en la estructura de navegacion y una serie de objetos MenuItem que representan los items de ese menu
-  - Cada uno de estos items se les asigna varios atributos, entre los que destaca `setLinkToActivity()` que vincula la actividad con el item
-  
+Crear en la estructura de navegación un objeto SideMenu que representa el Navigztion drawer en la estructura de navegacion y una serie de objetos MenuItem que representan los items de ese menu
+Cada uno de estos items se les asigna varios atributos, entre los que destaca `setLinkToActivity()` que vincula la actividad con el item
+Definir en la estructura de navegación que la actividad va a mostrar el side menu usando el metodo `runtimeActivity.setSideMenu(runtimeSideMenu);`
+Crear una Clase `<nombreApp>NavigationViewPainter` que implemente `NavigationViewPainter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java
+El mismo debe incluirse en el metodo onActivityCreated pasando lo como parametro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
+Crear una Clase `<nombreApp>NavigationViewAdapater` que implemente `FermatAdapter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería 
+
 Ejemplo:
 
 ```java
@@ -244,11 +248,14 @@ runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
 runtimeMenuItem.setAppLinkPublicKey(publicKey);
 runtimeSideMenu.addMenuItem(runtimeMenuItem);
 ```
-  
-- Definir en la estructura de navegación que la actividad va a mostrar el side menu usando el metodo `runtimeActivity.setSideMenu(runtimeSideMenu);`
-- Crear una Clase `<nombreApp>NavigationViewPainter` que implemente `NavigationViewPainter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java
-  - El mismo debe incluirse en el metodo onActivityCreated pasando lo como parametro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
-- Crear una Clase `<nombreApp>NavigationViewAdapater` que implemente `FermatAdapter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería 
+
+##### MainMenu
+##### Tabs and TabStrip
+##### TitleBar and StatusBar
+##### Wizard and WizardPage
+### Android api
+#### API Organitation
+#### FermatFragment Class
 
 ## Part II: Workflow
 
@@ -295,6 +302,7 @@ The mandatory initial structure is the following: (note: the word ISSUE it is no
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of its children and grand children are closed.
 
 <br>
+
 ##### ISSUE: '_Plugin Name_' - Analysis
 
 This is the Analysis root. It is closed whenever all analysis is done. This issue must be linked to the root of the issue structure.
@@ -343,8 +351,9 @@ It is expected to have here child issues in the form  '_Plugin Name_' Production
 
 <br>
 
-### Projects Structure
-----------------------
+## Part III: How To:
+
+### Project creation
 
 The GUI components are grouped in projects that could represent a Wallet, SubApp or a Desktop for a platform; For example CBP has 2 Wallets and 4 SubApps. 
 
@@ -494,29 +503,15 @@ project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File(
 
 <br>
 
-### Modules
- 
- A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface, is the one that has the following funtionalities:
-* Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
-* It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
-
-----------------------
-
-### Android api
-
- Fermat has a collection of libraries and packages developed specially to work on Android. Continue...
-
-----------------------
-
-
+### Create a Navigation Structure for your app 
+### Android Core Connection
 ### Android core connection
 
-#### Fragment Factory
+#### Connect a Fragment Factory
  Al momento de conectar el FragmentFactory respectivo al plugin desarrollado se debe agregar en el android core para que pueda tener referencia al mismo, se deben seguir los siguientes pasos:
 Incluir la dependencia al módulo en el build.gradle
 Ubicarse en el folder la ruta /android-core/common/version_1/fragment_factory/  aquí se encontrarán las clases de SubAppFragmentFactory y WalletFragmentFactory, las cuales son las encargadas de crear la instancia al fragmentFactory del modulo previamente creado y así es como el android core puede instanciarlo.
-
-#### Session Manager
+#### Connect to Session Manager
  Al momento de conectar la session respectiva al plugin desarrollado se debe agregar en el android core para que pueda tener referencia al mismo, se deben seguir los siguientes pasos:
 Incluir la dependencia al módulo en el build.gradle
 Ubicarse en el folder la ruta /android-core/common/version_1/sessions/  aquí se encontrarán las clases de SubAppSessionManager y WalletSessionManager, las cuales son las encargadas de crear la instancia al Session del modulo previamente creado y así es como el android core puede instanciarla.
@@ -524,4 +519,10 @@ Ubicarse en el folder la ruta /android-core/common/version_1/sessions/  aquí se
 #### Desktop
 En construcción…
 Provisionalmente se encuentra ubicado en la clase /android-core/common/version_1/ProvisoryData
-
+#### Connect a Module
+#### Connect a Desktop
+### GUI Components Creation and Interaction
+#### Add Header in your fragment
+#### Add Footer in your fragment
+#### Add Navigation Drawer
+#### Interacting with the Session and the FragmentFactory﻿
