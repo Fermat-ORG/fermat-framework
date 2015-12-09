@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by francisco on 04/12/15.
  */
-public class Providers implements IndexProvider{
+public class CryptoProvidersManager implements IndexProvider{
 
     BtceProvider btceProvider = new BtceProvider();
     BterProvider bterProvider = new BterProvider();
@@ -67,11 +67,11 @@ public class Providers implements IndexProvider{
             indexList.add(btceIndex);
             indexList.add(ccexIndex);
             indexList.add(cexioIndex);
-            indexList.add(cryptoCoinChartsIndex);
+           indexList.add(cryptoCoinChartsIndex);
 
             CryptoIndex index;
             index = CryptoIndexHelper.selectBestIndex(indexList);
-
+            return index;
         } catch (FiatCurrencyNotSupportedException e) {
             throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"CantGetIndexException BTC - USD","FiatCurrency Not Supported Exception");
         } catch (CryptoCurrencyNotSupportedException e) {
@@ -82,6 +82,6 @@ public class Providers implements IndexProvider{
             throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"CantGetIndexException BTC - USD","Cant Select Best Index Exception");
         }
 
-        return null;
+
     }
 }
