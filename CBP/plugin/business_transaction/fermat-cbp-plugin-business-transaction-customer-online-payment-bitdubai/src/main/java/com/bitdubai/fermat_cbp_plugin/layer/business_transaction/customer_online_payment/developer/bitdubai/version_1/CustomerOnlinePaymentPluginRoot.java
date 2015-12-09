@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -29,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
@@ -72,6 +72,9 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
     //TODO: Need reference to contract plugin
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
+    //TODO: Need reference to contract plugin
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
     /**
      * Represents the plugin manager.
      */
@@ -89,7 +92,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    public CustomerOnlinePaymentPluginRoot(PluginVersionReference pluginVersionReference) {
+    public CustomerOnlinePaymentPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -213,7 +216,8 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
                     this.customerBrokerContractPurchaseManager,
                     customerOnlinePaymentBusinessTransactionDao,
-                    this.transactionTransmissionManager);
+                    this.transactionTransmissionManager,
+                    this.customerBrokerPurchaseNegotiationManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Customer online payment starting");

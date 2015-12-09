@@ -16,7 +16,7 @@ public interface CustomerPaymentManager extends FermatManager {
      * @param contractHash
      * @throws CantSendPaymentException
      */
-    void sendPayment(String contractHash)throws CantSendPaymentException;
+    void sendPayment(String walletPublicKey, String contractHash)throws CantSendPaymentException;
 
     /**
      * This method returns the ContractTransactionStatus by contractHash

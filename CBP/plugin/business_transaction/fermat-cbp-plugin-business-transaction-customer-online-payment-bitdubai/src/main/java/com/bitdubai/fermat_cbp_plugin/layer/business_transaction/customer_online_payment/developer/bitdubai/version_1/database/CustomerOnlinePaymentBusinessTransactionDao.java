@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -15,12 +17,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -142,6 +148,78 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }
     }
 
+    public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            List<String> eventTypeList=new ArrayList<>();
+            String eventId;
+            databaseTable.setStringFilter(
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    EventStatus.PENDING.getCode(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return eventTypeList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                eventId=databaseTableRecord.getStringValue(
+                        CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME);
+                eventTypeList.add(eventId);
+            }
+            return eventTypeList;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetContractListException(e,
+                    "Getting events in EventStatus.PENDING",
+                    "Cannot load the table into memory");
+        }
+    }
+
+    public List<String> getPendingToSubmitCryptoList() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
+        return getStringList(
+                ContractTransactionStatus.PENDING_PAYMENT.getCode(),
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }
+
+    /**
+     * This method returns a List with the parameter in the arguments.
+     * @param key
+     * @param keyColumn
+     * @param valueColumn
+     * @return
+     */
+    private List<String> getStringList(
+            String key,
+            String keyColumn,
+            String valueColumn) throws CantGetContractListException {
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            List<String> contractHashList=new ArrayList<>();
+            String contractHash;
+            databaseTable.setStringFilter(
+                    keyColumn,
+                    key,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return contractHashList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                contractHash=databaseTableRecord.getStringValue(valueColumn);
+                contractHashList.add(contractHash);
+            }
+            return contractHashList;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetContractListException(e,
+                    "Getting "+valueColumn+" based on "+key,
+                    "Cannot load the table into memory");
+        }
+    }
+
     /**
      * This method returns a String value from parameters in database.
      * @param key
@@ -205,15 +283,78 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase)
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            String brokerCryptoAddress,
+            String walletPublicKey)
             throws CantInsertRecordException {
 
         DatabaseTable databaseTable=getDatabaseContractTable();
         DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
         databaseTableRecord=buildDatabaseRecord(
                 databaseTableRecord,
-                customerBrokerContractPurchase);
+                customerBrokerContractPurchase,
+                brokerCryptoAddress,
+                walletPublicKey
+        );
         databaseTable.insertRecord(databaseTableRecord);
+    }
+
+    public CustomerOnlinePaymentRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            ContractTransactionStatus contractTransactionStatus;
+            CryptoAddress brokerCryptoAddress;
+            String cryptoAddressString;
+            CustomerOnlinePaymentRecord customerOnlinePaymentRecord=new CustomerOnlinePaymentRecord();
+            databaseTable.setStringFilter(
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record = records.get(0);
+            customerOnlinePaymentRecord.setBrokerPublicKey(
+                    record.getStringValue(
+                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                                    ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME));
+            customerOnlinePaymentRecord.setContractHash(record.getStringValue(
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                            ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
+            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                            ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+            customerOnlinePaymentRecord.setContractTransactionStatus(contractTransactionStatus);
+            customerOnlinePaymentRecord.setCustomerPublicKey(
+                    record.getStringValue(
+                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                                    ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+            customerOnlinePaymentRecord.setTransactionHash(contractHash);
+            customerOnlinePaymentRecord.setTransactionId(
+                    record.getStringValue(
+                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                                    ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
+            cryptoAddressString=record.getStringValue(
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                            ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
+            //I going to set the money as bitcoin in this version
+            brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
+            customerOnlinePaymentRecord.setCryptoAddress(brokerCryptoAddress);
+            customerOnlinePaymentRecord.setWalletPublicKey(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                    ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
+
+            return customerOnlinePaymentRecord;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Invalid parameter in ContractTransactionStatus");
+        }
+
     }
 
     /**
@@ -226,7 +367,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      */
     private DatabaseTableRecord buildDatabaseRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractPurchase customerBrokerContractPurchase) {
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            String brokerCryptoAddress,
+            String walletPublicKey) {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
@@ -245,6 +388,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_PAYMENT.getCode());
+        record.setStringValue(
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
+                brokerCryptoAddress);
+        record.setStringValue(
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                walletPublicKey);
 
         return record;
     }
