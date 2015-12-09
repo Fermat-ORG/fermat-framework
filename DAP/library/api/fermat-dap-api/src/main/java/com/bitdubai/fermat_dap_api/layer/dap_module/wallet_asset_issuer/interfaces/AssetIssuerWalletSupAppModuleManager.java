@@ -8,7 +8,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupExcepcion;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
@@ -38,9 +38,9 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager {
 
     List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException;
 
-    List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupExcepcion;
+    List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupException;
 
-    List<ActorAssetUser> getListActorAssetUserByGroups(ActorAssetUserGroup group) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException;
 
     void toggleShowUsersOutsideTheirGroup();
 
@@ -53,7 +53,7 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager {
 
     void addAssetUserToGroup(ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException;
 
-    void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException, RecordsNotFoundException;
+    void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantDeleteAssetUserGroupException, RecordsNotFoundException;
 
     // ********************** ASSET DISTRIBUTION METHODS ************************************
 
