@@ -33,6 +33,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
     public static final int STATE_NOT_CREATED=0;
     public static final int STATE_STARTED=1;
+    public static final int STATE_STARTED_DESKTOP=2;
 
     /**
      *  Fermat platform
@@ -55,7 +56,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     /**
      *  Application state
      */
-    private int applicationState=STATE_NOT_CREATED;
+    public static int applicationState=STATE_NOT_CREATED;
 
     /**
      *  SubApps fragment factories
