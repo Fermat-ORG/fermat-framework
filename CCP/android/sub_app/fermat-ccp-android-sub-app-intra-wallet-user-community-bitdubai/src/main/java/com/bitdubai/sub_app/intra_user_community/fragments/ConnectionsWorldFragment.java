@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
@@ -33,14 +32,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
@@ -57,6 +53,7 @@ import static android.widget.Toast.makeText;
 
 /**
  * Created by Matias Furszyfer on 15/09/15.
+ * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
  */
 
 
@@ -145,7 +142,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
-
             rootView = inflater.inflate(R.layout.world_main, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
