@@ -469,11 +469,13 @@ public class AssetUserActorDao implements Serializable {
                 if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
                     if(dapConnectionState == DAPConnectionState.CONNECTING) {
                         dapConnectionState = DAPConnectionState.CONNECTING;
-                    } else if (dapConnectionState == DAPConnectionState.CONNECTED_ONLINE) {
-                        dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
-                    } else {
+                    }
+                    if (dapConnectionState == DAPConnectionState.REGISTERED_OFFLINE) {
                         dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
-
+                    }
+                } else {
+                    if (dapConnectionState == DAPConnectionState.CONNECTED_OFFLINE) {
+                        dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
                     }
                 }
 
