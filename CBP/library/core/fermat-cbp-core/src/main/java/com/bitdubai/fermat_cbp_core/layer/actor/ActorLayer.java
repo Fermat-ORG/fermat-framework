@@ -4,8 +4,8 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_cbp_core.layer.actor_connection.crypto_broker.CryptoBrokerPluginSubsystem;
-import com.bitdubai.fermat_cbp_core.layer.actor_connection.crypto_customer.CryptoCustomerPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.actor.crypto_broker.CryptoBrokerPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.actor.crypto_customer.CryptoCustomerPluginSubsystem;
 
 /**
  * Created by Yordin Alayn on 22.11/15.

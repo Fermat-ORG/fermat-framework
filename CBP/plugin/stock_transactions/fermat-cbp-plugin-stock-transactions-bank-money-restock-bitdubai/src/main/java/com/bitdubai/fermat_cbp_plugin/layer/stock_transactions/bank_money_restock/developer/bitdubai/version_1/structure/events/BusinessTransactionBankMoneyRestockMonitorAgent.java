@@ -10,15 +10,24 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.excepti
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantMakeHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.exceptions.MissingBankMoneyRestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyRestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.utils.BankTransactionParametersWrapper;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -137,28 +146,33 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent  implements Agent{
                         if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode())
                         {
 
-//                           try {
-//                                WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(bankMoneyTransaction.getTransactionId(),
-//                                                                                                                null,
-//                                                                                                                BalanceType.AVAILABLE,
-//                                                                                                                TransactionType.CREDIT,
-//                                                                                                                CurrencyType.BANK_MONEY,
-//                                                                                                                bankMoneyTransaction.getCbpWalletPublicKey(),
-//                                                                                                                bankMoneyTransaction.getActorPublicKey(),
-//                                                                                                                bankMoneyTransaction.getAmount(),
-//                                                                                                                new Date().getTime() / 1000,
-//                                                                                                                bankMoneyTransaction.getConcept());
-//
-//                               cryptoBrokerWalletManager.getCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).performTransaction(walletTransactionRecord);
-//
-//                               bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-//                               stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
-//
-//                           } catch (CantPerformTransactionException e) {
-//                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-//                            } catch (CryptoBrokerWalletNotFoundException e) {
-//                               errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-//                            }
+                            try {
+                                WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
+                                        bankMoneyTransaction.getTransactionId(),
+                                        null,
+                                        BalanceType.AVAILABLE,
+                                        TransactionType.CREDIT,
+                                        CurrencyType.BANK_MONEY,
+                                        bankMoneyTransaction.getCbpWalletPublicKey(),
+                                        bankMoneyTransaction.getActorPublicKey(),
+                                        bankMoneyTransaction.getAmount(),
+                                        new Date().getTime() / 1000,
+                                        bankMoneyTransaction.getConcept(),
+                                        bankMoneyTransaction.getPriceReference(),
+                                        bankMoneyTransaction.getOriginTransaction());
+
+                                cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
+                                cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                                bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
+                                stockTransactionBankMoneyRestockManager.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
+
+                            } catch (CryptoBrokerWalletNotFoundException e) {
+                                errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+                            } catch (CantGetStockCryptoBrokerWalletException e) {
+                                errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+                            } catch (CantAddDebitCryptoBrokerWalletException e) {
+                                errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+                            }
                         }
 
                         break;

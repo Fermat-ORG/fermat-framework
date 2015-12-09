@@ -88,6 +88,9 @@ public class TransactionTransmissionConnectionsDAO {
         } catch (CantInsertRecordException e) {
 
             throw new CantUpdateRecordDataBaseException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        }catch (Exception e) {
+
+            throw new CantUpdateRecordDataBaseException(CantInitializeDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -121,6 +124,9 @@ public class TransactionTransmissionConnectionsDAO {
         } catch (InvalidParameterException exception) {
 
             throw new CantGetTransactionTransmissionException("",exception , "Check the cause." ,""                                                                              );
+        }catch (Exception e) {
+
+            throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 

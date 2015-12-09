@@ -12,7 +12,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionS
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
@@ -26,8 +25,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -82,7 +81,7 @@ public class NegotiationTransmissionAgent {
     private Thread toReceive;
 
     //Cache de metadata con conexions leidas anteriormente. ActorPublicKey, metadata de respuesta
-    Map<String, TransactionTransmissionStates> cacheResponseMetadataFromRemotes;
+    Map<String, NegotiationTransmissionState> cacheResponseMetadataFromRemotes;
 
     //Map contains publicKey from componentProfile to connect and the number of connections intents.
     Map<String,Integer> connectionsCounters;
@@ -126,7 +125,7 @@ public class NegotiationTransmissionAgent {
         this.eventManager = eventManager;
 
 
-        cacheResponseMetadataFromRemotes = new HashMap<String, TransactionTransmissionStates>();
+        cacheResponseMetadataFromRemotes = new HashMap<String, NegotiationTransmissionState>();
         waitingPlatformComponentProfile = new HashMap<>();
 
 
@@ -181,6 +180,7 @@ public class NegotiationTransmissionAgent {
         //Stop the Thread
         toSend.interrupt();
         toReceive.interrupt();
+        this.running  = Boolean.FALSE;
         //Disconnect from the service
     }
     /*END SERVICE*/
@@ -295,7 +295,7 @@ public class NegotiationTransmissionAgent {
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(negotiationTransmission.getPublicKeyActorSend());
                 if(communicationNetworkServiceLocal!=null){
                     System.out.print("-----------------------\n" +
-                            "RECEIVING BUSINESS TRANSACTION-----------------------\n" +
+                            "RECEIVING NEGOTIATION TRANSACTION-----------------------\n" +
                             "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
                     // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
                     // if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
@@ -303,20 +303,19 @@ public class NegotiationTransmissionAgent {
                         switch (negotiationTransmission.getTransmissionState()) {
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
 
-                                //TODO: revisar que se puede hacer acá
-                                System.out.println("Transaction Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
+                                System.out.println("Negotiation Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
                                 break;
 
                             case CONFIRM_RESPONSE:
 
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_RESPONSE");
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Negotiation Transmission CONFIRM_RESPONSE");
                                 launchNotification();
                                 this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
                                 break;
 
                             case CONFIRM_NEGOTIATION:
 
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Transaction Transmission CONFIRM_CONTRACT");
+                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Negotiation Transmission CONFIRM_NEGOTIATION");
                                 //this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getReceiverId());
                                 launchNotification();
                                 this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
@@ -326,7 +325,7 @@ public class NegotiationTransmissionAgent {
                             case SENT:
 
                                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SEEN_BY_OWN_NETWORK_SERVICE);
-                                negotiationTransmission.setNegotiationTransactionType(negotiationTransmission.getNegotiationTransactionType());
+                                negotiationTransmission.setTransmissionType(negotiationTransmission.getTransmissionType());
                                 databaseDao.updateRegisterSendNegotiatioTransmission(negotiationTransmission);
 
                                 System.out.print("-----------------------\n" +
@@ -368,7 +367,7 @@ public class NegotiationTransmissionAgent {
     private void launchNotification(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_UPDATE);
         IncomingNegotiationTransmissionUpdateEvent incomingNegotiationTransmissionUpdateEvent = (IncomingNegotiationTransmissionUpdateEvent) fermatEvent;
-        incomingNegotiationTransmissionUpdateEvent.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        incomingNegotiationTransmissionUpdateEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
         eventManager.raiseEvent(incomingNegotiationTransmissionUpdateEvent);
     }
 

@@ -10,9 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.CustomerBrokerSaleNegotiationPluginRoot;
 
+
 /**
- * Created by jorge on 12-10-2015.
- * Update by Angel on 28-11-2015
+ * Created by Alejandro Bicelis on 11/17/2015
  */
 
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
@@ -24,8 +24,11 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
         try {
+
             this.registerVersion(new CustomerBrokerSaleNegotiationPluginRoot());
+
         } catch (CantRegisterVersionException e) {
+
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }
     }
@@ -42,11 +45,12 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
     @Override
     public String getAddress() {
-        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
+
 }
