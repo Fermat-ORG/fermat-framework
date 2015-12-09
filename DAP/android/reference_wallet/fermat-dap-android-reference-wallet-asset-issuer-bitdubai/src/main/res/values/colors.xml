@@ -5,4 +5,8 @@
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="black">#000</color>
     <color name="gray">#797979</color>
+
+
+    <color name="dap_wallet_asset_issuer_gradient_start_color">#a60f7f</color>
+    <color name="dap_wallet_asset_issuer_gradient_end_color">#492781</color>
 </resources>
