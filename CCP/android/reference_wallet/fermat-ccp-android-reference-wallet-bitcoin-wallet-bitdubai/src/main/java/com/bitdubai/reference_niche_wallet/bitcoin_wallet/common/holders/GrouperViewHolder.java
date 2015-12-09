@@ -85,7 +85,14 @@ public class GrouperViewHolder extends ParentViewHolder {
     public void bind(int childCount,CryptoWalletTransaction cryptoWalletTransaction) {
 
         byte[] photo = null;
-            photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+        String contactName = "Uninformed";
+
+        //involved actor is not a wallet contact
+        if(cryptoWalletTransaction.getInvolvedActor() != null)
+            {
+                photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+                contactName = cryptoWalletTransaction.getInvolvedActor().getName();
+            }
 
         //TODO Ver porque se cae cuando el contacto tiene algunos bytes
         try {
@@ -100,7 +107,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
         }
 
-        txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
+        txt_contactName.setText(contactName);
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());
