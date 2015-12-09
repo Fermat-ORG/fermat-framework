@@ -20,13 +20,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,7 +46,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
     /**
      * Represent the logger instance
      */
-    private Logger LOG = LoggerFactory.getLogger(ClassUtils.getShortClassName(ComponentRegisteredListWebService.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ComponentRegisteredListWebService.class));
 
     /**
      * Represent the wsCommunicationCloudServer

@@ -56,15 +56,6 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
 
 public class StartActivity extends FragmentActivity implements FermatWorkerCallBack{
 
-    static {
-
-        final LogConfigurator logConfigurator = new LogConfigurator();
-        logConfigurator.setRootLevel(Level.INFO);
-        // Set log level of a specific logger
-        logConfigurator.setLevel("org.apache", Level.ERROR);
-        logConfigurator.configure();
-    }
-
 
     public static final String START_ACTIVITY_INIT = "Init";
     public static final String ACTIVE_PLATFORMS = "active";

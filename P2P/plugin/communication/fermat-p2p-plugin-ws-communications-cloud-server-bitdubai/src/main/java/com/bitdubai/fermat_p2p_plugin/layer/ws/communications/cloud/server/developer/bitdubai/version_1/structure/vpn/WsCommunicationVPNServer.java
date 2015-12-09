@@ -23,13 +23,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -53,7 +53,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     /**
      * Represent the logger instance
      */
-    private Logger LOG = LoggerFactory.getLogger(ClassUtils.getShortClassName(WsCommunicationVPNServer.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationVPNServer.class));
 
     /**
      * Represent the WS_PROTOCOL

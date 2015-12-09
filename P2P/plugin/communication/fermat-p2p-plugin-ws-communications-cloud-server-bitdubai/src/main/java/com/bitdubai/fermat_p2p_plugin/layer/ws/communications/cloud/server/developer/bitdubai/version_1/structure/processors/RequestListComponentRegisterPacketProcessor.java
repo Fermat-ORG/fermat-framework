@@ -26,9 +26,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,7 +50,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     /**
      * Represent the logger instance
      */
-    private Logger LOG = LoggerFactory.getLogger(ClassUtils.getShortClassName(RequestListComponentRegisterPacketProcessor.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(RequestListComponentRegisterPacketProcessor.class));
 
     /**
      * Represent the gson

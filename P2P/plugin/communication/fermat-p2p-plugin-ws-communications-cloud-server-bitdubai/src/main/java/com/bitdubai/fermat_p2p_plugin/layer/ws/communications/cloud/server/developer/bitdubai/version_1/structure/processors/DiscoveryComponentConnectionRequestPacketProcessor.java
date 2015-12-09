@@ -23,9 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
     /**
      * Represent the logger instance
      */
-    private Logger LOG = LoggerFactory.getLogger(ClassUtils.getShortClassName(DiscoveryComponentConnectionRequestPacketProcessor.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(DiscoveryComponentConnectionRequestPacketProcessor.class));
 
     /**
      * Represent the gson

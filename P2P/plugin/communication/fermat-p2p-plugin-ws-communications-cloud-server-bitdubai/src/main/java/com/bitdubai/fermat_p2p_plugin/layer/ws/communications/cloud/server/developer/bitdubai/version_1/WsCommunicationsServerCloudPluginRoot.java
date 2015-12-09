@@ -33,9 +33,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocketImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -65,7 +64,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
     /**
      * Represent the logger instance
      */
-    private Logger LOG = LoggerFactory.getLogger(ClassUtils.getShortClassName(WsCommunicationsServerCloudPluginRoot.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationsServerCloudPluginRoot.class));
 
     /**
      * Represents the value of DISABLE_SERVER
