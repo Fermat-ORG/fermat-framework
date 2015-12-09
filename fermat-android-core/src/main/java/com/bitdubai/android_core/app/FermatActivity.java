@@ -483,8 +483,9 @@ public abstract class FermatActivity extends AppCompatActivity
                      */
                     RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
                     if(relativeLayout!=null) {
-                        if (navigationViewPainter.addBodyBackground() != null) {
-                            relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
+                        Drawable bodyBackgroundDrawable = navigationViewPainter.addBodyBackground();
+                        if (bodyBackgroundDrawable!= null) {
+                            relativeLayout.setBackground(bodyBackgroundDrawable);
                         } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
                             relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
                         }
