@@ -175,6 +175,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         DAPConnectionState.REGISTERED_LOCALLY,
                         locationLatitude,
                         locationLongitude,
+                        null,
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
                         assetUserActorprofileImage);

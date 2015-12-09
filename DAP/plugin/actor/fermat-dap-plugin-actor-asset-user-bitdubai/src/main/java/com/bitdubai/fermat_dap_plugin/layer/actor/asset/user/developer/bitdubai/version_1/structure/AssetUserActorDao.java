@@ -323,7 +323,7 @@ public class AssetUserActorDao implements Serializable {
 
                 if (compareRegisterTables(actorAssetUser)) {
                     if (assetUserRegisteredExists(actorAssetUser.getActorPublicKey())) {
-                        this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), actorAssetUser.getDapConnectionState(), actorAssetUser.getCryptoAddress());
+                        this.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), null, actorAssetUser.getCryptoAddress());
                     } else {
                         /**
                          * Get actual date
@@ -467,10 +467,18 @@ public class AssetUserActorDao implements Serializable {
                 }
 
                 if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
-                    dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
+                    if(dapConnectionState == DAPConnectionState.CONNECTING) {
+                        dapConnectionState = DAPConnectionState.CONNECTING;
+                    } else if (dapConnectionState == DAPConnectionState.CONNECTED_ONLINE) {
+                        dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
+                    } else {
+                        dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
+
+                    }
                 }
 
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
+                if(dapConnectionState != null)
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
 
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
