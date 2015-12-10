@@ -1,8 +1,12 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
+import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +19,26 @@ import java.util.List;
  */
 public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends ActorConnection<Z>> {
 
-    protected List<String>          aliasList          ;
-    protected List<Actors>          actorTypeList      ;
-    protected List<ConnectionState> connectionStateList;
+    protected final Z                        actorIdentity;
+    protected final ActorConnectionDao<Z, T> dao          ;
+    protected       DatabaseTable            databaseTable;
 
-    protected final Z actorIdentity;
-
-    public ActorConnectionSearch(final Z actorIdentity) {
+    public ActorConnectionSearch(final Z                        actorIdentity,
+                                 final ActorConnectionDao<Z, T> dao          ) {
 
         this.actorIdentity = actorIdentity;
+        this.dao           = dao;
+
+        this.resetFilters();
+    }
+
+    /**
+     * Through the method <code>resetFilters</code> you can reset the filters set,
+     */
+    public final void resetFilters() {
+
+        this.databaseTable = dao.getActorConnectionsTable();
+        databaseTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -33,11 +48,8 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
      */
     public final void addAlias(final String alias) {
 
-        if (aliasList == null)
-            aliasList = new ArrayList<>();
-
-        aliasList.add(alias);
-
+        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME;
+        databaseTable.setStringFilter(field, alias, DatabaseFilterType.LIKE);
     }
 
     /**
@@ -47,10 +59,8 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
      */
     public final void addActorType(final Actors actorType){
 
-        if (actorTypeList == null)
-            actorTypeList = new ArrayList<>();
-
-        actorTypeList.add(actorType);
+        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME;
+        databaseTable.setFermatEnumFilter(field, actorType, DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -60,10 +70,8 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
      */
     public final void addConnectionState(final ConnectionState connectionState) {
 
-        if (connectionStateList == null)
-            connectionStateList = new ArrayList<>();
-
-        connectionStateList.add(connectionState);
+        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME;
+        databaseTable.setFermatEnumFilter(field, connectionState, DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -75,7 +83,10 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
      *
      * @throws CantListActorConnectionsException  if something goes wrong.
      */
-    public abstract List<T> getResult() throws CantListActorConnectionsException;
+    public List<T> getResult() throws CantListActorConnectionsException {
+
+        return dao.listActorConnections(databaseTable);
+    }
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
@@ -90,17 +101,13 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
      *
      * @throws CantListActorConnectionsException  if something goes wrong.
      */
-    public abstract List<T> getResult(final Integer max   ,
-                                      final Integer offset) throws CantListActorConnectionsException;
+    public List<T> getResult(final Integer max   ,
+                             final Integer offset) throws CantListActorConnectionsException {
 
-    /**
-     * Through the method <code>resetFilters</code> you can reset the filters set,
-     */
-    public final void resetFilters() {
+        databaseTable.setFilterTop(max.toString());
+        databaseTable.setFilterOffSet(offset.toString());
 
-        this.aliasList           = null;
-        this.actorTypeList       = null;
-        this.connectionStateList = null;
+        return dao.listActorConnections(databaseTable);
     }
 
 }

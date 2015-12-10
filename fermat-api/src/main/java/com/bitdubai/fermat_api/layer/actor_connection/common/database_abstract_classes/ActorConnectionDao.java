@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorCon
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorIdentity;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -99,6 +101,11 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
     protected abstract ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory();
 
+    public final DatabaseTable getActorConnectionsTable() {
+
+        return database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+    }
+
     public final T registerActorConnection(final T               actorConnection,
                                            final ConnectionState connectionState) throws CantRegisterActorConnectionException  ,
                                                                                          ActorConnectionAlreadyExistsException {
@@ -113,7 +120,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
                         "The connection already exists..."
                 );
 
-            final DatabaseTable actorConnectionsTable = database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
             DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
 
@@ -156,7 +163,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
         try {
 
-            final DatabaseTable actorConnectionsTable = database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
             actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
             actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
@@ -212,7 +219,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
         try {
 
-            final DatabaseTable actorConnectionsTable = database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
             actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
             actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
@@ -230,6 +237,34 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
                     e,
                     "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public List<T> listActorConnections(final DatabaseTable actorConnectionsTable) throws CantListActorConnectionsException {
+
+        try {
+
+            actorConnectionsTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+            List<T> actorConnectionRecordsList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                actorConnectionRecordsList.add(buildActorConnectionNewRecord(record));
+            }
+
+            return actorConnectionRecordsList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListActorConnectionsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantListActorConnectionsException(exception," ", "Invalid data, we can't get the information for an element of any of the enums used.");
+        } catch (Exception exception) {
+
+            throw new CantListActorConnectionsException(exception," ", "Unhandled Error");
         }
     }
 

@@ -26,7 +26,8 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
 
     @Override
     public CryptoBrokerActorConnectionSearch getSearch(CryptoBrokerActorIdentity actorIdentitySearching) {
-        return null;
+
+        return new ActorConnectionSearch(actorIdentitySearching, null);
     }
 
     @Override
