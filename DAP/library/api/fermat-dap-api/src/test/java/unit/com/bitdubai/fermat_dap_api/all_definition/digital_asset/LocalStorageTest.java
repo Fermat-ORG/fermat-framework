@@ -161,7 +161,7 @@ public class LocalStorageTest {
             }
 
             @Override
-            public String getPublicKey() {
+            public String getActorPublicKey() {
                 return new ECCKeyPair().getPublicKey();
             }
 

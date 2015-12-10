@@ -5,18 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 
 import java.text.DecimalFormat;
@@ -111,8 +105,8 @@ public class WalletUtils {
         alertDialog.show();
     }
 
-    public static void setNavigatitDrawer(PaintActivtyFeactures paintActivtyFeactures,IntraUserLoginIdentity intraUserInformation){
-        Context context =(Context)paintActivtyFeactures;
+    public static void setNavigatitDrawer(PaintActivityFeatures paintActivityFeatures,IntraUserLoginIdentity intraUserInformation){
+        Context context =(Context) paintActivityFeatures;
         List<String> list = new ArrayList<>();
         list.add("profile_image");
         list.add("Home");
@@ -120,6 +114,6 @@ public class WalletUtils {
         list.add("Payment request");
         list.add("Settings");
         list.add("Logout");
-       // paintActivtyFeactures.changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(context, list,intraUserInformation));
+       // paintActivityFeatures.changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(context, list,intraUserInformation));
     }
 }

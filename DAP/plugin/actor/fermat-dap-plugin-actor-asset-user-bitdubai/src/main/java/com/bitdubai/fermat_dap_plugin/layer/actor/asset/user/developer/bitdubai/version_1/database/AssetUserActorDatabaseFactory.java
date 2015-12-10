@@ -103,6 +103,40 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             }
 
             /**
+             * Create Asset User GROUP database Associate table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
+
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            /**
+             * Create Asset User GROUP MEMBER database Associate table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME);
+
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+
+            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME);
+            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+            /**
              * Create Asset User relation Asset Issuer Associate table.
              */
 //            table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ASSET_ISSUER_TABLE_NAME);
@@ -137,6 +171,9 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", "There is a problem with the ownerId of the database.");
+        }
+        catch (Exception exception) {
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", exception.getMessage());
         }
 
         return database;

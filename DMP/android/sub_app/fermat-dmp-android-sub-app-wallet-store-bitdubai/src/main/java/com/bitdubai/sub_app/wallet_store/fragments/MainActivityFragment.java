@@ -13,6 +13,7 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -21,12 +22,10 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogue;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.interfaces.WalletStoreItemPopupMenuListener;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
@@ -40,7 +39,6 @@ import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -96,8 +94,8 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            moduleManager = ((WalletStoreSubAppSession) subAppsSession).getWalletStoreModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((WalletStoreSubAppSession) appSession).getWalletStoreModuleManager();
+            errorManager = appSession.getErrorManager();
             catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -152,22 +150,30 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     public ArrayList<WalletStoreListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<WalletStoreListItem> data;
 
-        try {
-            WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
-            List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
-
-            data = new ArrayList<>();
-            for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
-                WalletStoreListItem item = new WalletStoreListItem(catalogItem, getResources());
-                data.add(item);
-            }
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
+        Object walletList = appSession.getData(WalletStoreSubAppSession.WALLET_LIST);
+        if (walletList != null) {
+            data = (ArrayList<WalletStoreListItem>) walletList;
+        } else {
             data = WalletStoreListItem.getTestData(getResources());
+            appSession.setData(WalletStoreSubAppSession.WALLET_LIST, data);
         }
+
+//        try {
+//            WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
+//            List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
+//
+//            data = new ArrayList<>();
+//            for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
+//                WalletStoreListItem item = new WalletStoreListItem(catalogItem, getResources());
+//                data.add(item);
+//            }
+//
+//        } catch (Exception e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//
+//            data = WalletStoreListItem.getTestData(getResources());
+//        }
 
         return data;
     }
@@ -189,9 +195,11 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                catalogueItemList = (ArrayList) result[0];
-                if (adapter != null)
-                    adapter.changeDataSet(catalogueItemList);
+                if (!WalletStoreListItem.started) {
+                    catalogueItemList = (ArrayList) result[0];
+                    if (adapter != null)
+                        adapter.changeDataSet(catalogueItemList);
+                }
             }
         }
     }
@@ -237,7 +245,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 dialog = UtilsFuncs.INSTANCE.showProgressDialog(dialog, getActivity(), R.string.installing_message, R.string.wait_please_message);
 
                 InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager, dialog);
-                InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, subAppsSession);
+                InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, (SubAppsSession) appSession);
                 if (executor != null)
                     executor.shutdownNow();
                 executor = installWalletWorker.execute();
@@ -245,7 +253,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
             @Override
             public void onErrorOccurred(Exception ex) {
-                final ErrorManager errorManager = subAppsSession.getErrorManager();
+                final ErrorManager errorManager = appSession.getErrorManager();
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 
@@ -253,32 +261,38 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             }
         };
 
-        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
+        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (SubAppsSession) appSession, item, activity, callBack);
         worker.execute();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        WalletStoreListItem.started = false;
     }
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {
 
-        if(item.isTestData()){
-            subAppsSession.setData(DEVELOPER_NAME, "developerAlias");
-            subAppsSession.setData(LANGUAGE_ID, new UUID(0, 0));
-            subAppsSession.setData(WALLET_VERSION, new Version(1, 0, 0));
-            subAppsSession.setData(SKIN_ID, new UUID(0, 0));
-            subAppsSession.setData(PREVIEW_IMGS, null);
-            subAppsSession.setData(BASIC_DATA, item);
+        if (item.isTestData()) {
+            appSession.setData(DEVELOPER_NAME, "developerAlias");
+            appSession.setData(LANGUAGE_ID, new UUID(0, 0));
+            appSession.setData(WALLET_VERSION, new Version(1, 0, 0));
+            appSession.setData(SKIN_ID, new UUID(0, 0));
+            appSession.setData(PREVIEW_IMGS, item.getScreenshots());
+            appSession.setData(BASIC_DATA, item);
 
-            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode());
+            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode(), appSession.getAppPublicKey());
 
-        }else{
+        } else {
             final Activity activity = getActivity();
             FermatWorkerCallBack callBack = new FermatWorkerCallBack() {
                 @Override
                 public void onPostExecute(Object... result) {
 
                     final DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
-                    fragment.setSubAppsSession(subAppsSession);
-                    fragment.setSubAppSettings(subAppSettings);
-                    fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+                    fragment.setAppSession(appSession);
+                    fragment.setAppSettings(appSettings);
+                    fragment.setAppResourcesProviderManager(appResourcesProviderManager);
 
                     changeActivity(WalletStoreFragmentsEnumType.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
                 }
@@ -286,7 +300,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 @Override
                 public void onErrorOccurred(Exception ex) {
 
-                    final ErrorManager errorManager = subAppsSession.getErrorManager();
+                    final ErrorManager errorManager = appSession.getErrorManager();
                     errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                             UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 
@@ -295,7 +309,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 }
             };
 
-            final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
+            final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (SubAppsSession) appSession, item, activity, callBack);
             worker.execute();
         }
     }

@@ -21,8 +21,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -148,7 +148,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     case ACCEPTED:
                     case DISCONNECTED:
                     case RECEIVED:
-
+                    case DENIED:
                         sendMessageToActor(
                                 cpr
                         );
@@ -179,7 +179,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
             if(actorNetworkServicePluginRoot.isRegister()) {
 
-                // function to process and send the rigth message to the counterparts.
+                // function to process and send the right message to the counterparts.
                 processReceive();
             }
 
@@ -264,6 +264,26 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                             //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
                         break;
+                    case DENIED:
+                        System.out.print("-----------------------\n" +
+                                "DENEGARON EL REQUEST!!!!!-----------------------\n" +
+                                "-----------------------\n NOTIFICAION: " + cpr);
+
+                        lauchNotification();
+
+                        try {
+
+                            actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
+
+                        } catch (CantUpdateRecordDataBaseException e) {
+                            e.printStackTrace();
+                        } catch (CantUpdateRecordException e) {
+                            e.printStackTrace();
+                        } catch (RequestNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
                 }
             }
 
@@ -297,7 +317,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                     remoteParticipant
                             );
 
-                            // i put the actor in the pool of connections waiting for response-
+                            // I put the actor in the pool of connections waiting for response-
                             poolConnectionsWaitingForResponse.put(actorNetworkServiceRecord.getActorDestinationPublicKey(), actorNetworkServiceRecord);
                         }
 
@@ -347,6 +367,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
+                }else{
+                 // connectionFailure(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                   System.out.println("ENTRO EN ESTE ELSE");
                 }
             }
         } catch (Exception z) {
@@ -370,15 +393,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
 
-    private void toPendingAction(UUID requestId){ //throws CantChangeRequestProtocolStateException,
-           // RequestNotFoundException {
-
-        //actorNetworkServiceDao.changeProtocolState(requestId, ActorProtocolState.PENDING_ACTION);
-    }
-
-//    private void toWaitingResponse(UUID notificationId,DAO dao) throws CantUpdateRecordDataBaseException, RequestNotFoundException, CantUpdateRecordException {
-//        //dao.changeProtocolState(notificationId, ActorProtocolState.WAITING_RESPONSE);
-//    }
 
     private void raiseEvent(final EventType eventType,
                             final UUID      requestId) {

@@ -20,7 +20,7 @@ public class CommunityUserFragmentFactory extends FermatSubAppFragmentFactory<As
                 return HomeFragment.newInstance();
             default:
                 throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
-                        new Exception(), "fermat-dap-android-wallet-asset-user", "fragment not found");
+                        new Exception(), "fermat-dap-android-sub-app-asset-user-community", "fragment not found");
         }
     }
 

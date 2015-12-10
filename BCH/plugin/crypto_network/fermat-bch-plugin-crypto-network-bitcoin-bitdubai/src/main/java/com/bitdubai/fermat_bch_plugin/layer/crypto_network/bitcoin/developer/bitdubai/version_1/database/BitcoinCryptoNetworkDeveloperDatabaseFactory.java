@@ -122,6 +122,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
 
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME);
+        transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
         transactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
@@ -146,11 +147,30 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         cryptoVaults_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_STATS_CRYPTO_VAULT_COLUMN_NAME);
         cryptoVaults_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_STATS_LAST_CONNECTION_REQUEST_COLUMN_NAME);
         cryptoVaults_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_STATS_MONITORED_PUBLICKEYS_COLUMN_NAME);
+
+
         /**
          * Table CryptoVaults_Stats addition.
          */
         DeveloperDatabaseTable cryptoVaults_StatsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_STATS_TABLE_NAME, cryptoVaults_StatsColumns);
         tables.add(cryptoVaults_StatsTable);
+
+        /**
+         * Table CryptoVaults_Detailed_Stats columns.
+         */
+        List<String> cryptoVaults_Detailed_StatsColumns = new ArrayList<String>();
+
+        cryptoVaults_Detailed_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME);
+        cryptoVaults_Detailed_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME);
+        cryptoVaults_Detailed_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_ORDER_COLUMN_NAME);
+        cryptoVaults_Detailed_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_PUBLICKEYS_COLUMN_NAME);
+        cryptoVaults_Detailed_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME);
+
+        /**
+         * Table CryptoVaults_Detailed_Stats addition.
+         */
+        DeveloperDatabaseTable cryptoVaults_Detailed_StatsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME, cryptoVaults_Detailed_StatsColumns);
+        tables.add(cryptoVaults_Detailed_StatsTable);
 
         /**
          * Table EventAgent_Stats columns.

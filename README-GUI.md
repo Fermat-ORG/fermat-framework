@@ -4,9 +4,9 @@
 
 ## Introduction
 
-GUI Components are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and Plugins. Each GUI component has a well defined responsibility within the system at usually collaborate from within one or more workflows in which it participates.  
+GUI Components are one of the three basic components that can be added into the Fermat Framework. The two others are Add-ons, and Plug-ins. Each GUI component has a well defined responsibility within the system and usually collaborates from within one or more workflows in which it participates.  
 
-To accomplish it's mission, a GUI component must have a wireframe.
+To accomplish its mission, a GUI component must have a wireframe.
 
 
 <br>
@@ -17,11 +17,11 @@ Several new concepts are introduced...
 
 ### Walllet
 
-Una Wallet es un GUI Component que le permite a un usuario poder llevar acabo operaciones financieras como enviar y recibir bitcoins haciendo uso de los diferentes plugins que ofrece Fermat a travez Modules. Cada Wallet tiene un Module asociado, es decir, existe una relacion 1 a 1 entre una wallet y un modulo.
+A Wallet is a GUI Component that allows a user to carry out financial transactions like send and receive bitcoins using different plug-ins that Fermat offers through Modules. Each Module Wallet has a partner, that is; there is a one on one relationship between a wallet and a module.
 
 ### Sub-App
 
-Una Wallet es un GUI Component que le permite a un usuario poder llevar acabo operaciones no financieras, tales como creacion de identidades dentro de la plataforma, tareas administrativas, etc haciendo uso de los diferentes plugins que ofrece Fermat a travez de Modules. Suelen servir para complementar la funcionalidad de las wallets. Cada Sub-App tiene un Module asociado, es decir, existe una relacion 1 a 1 entre una Sub-App y un Module.
+A SubApp is a GUI Component that allows a user to carry out non-financial operations , such as creating identities within the platform , administrative tasks , etc. using the various plug-ins that Fermat offers through Modules. Generally they serve to complement the functionality of the wallets . Each SubApp has an associated Module, there is a one on one relationship between SubApps and Modules.
 
 <br>
 
@@ -51,7 +51,7 @@ All of them separated by " - ".
 
 ##### Linking to parent Issue
 
-Issues that needs to be linked to it's parent must have their first line starting with "Parent: " + http link to parent issue. 
+Issues that needs to be linked to its parent must have their first line starting with "Parent: " + http link to parent issue. 
 
 ##### Tagging the team leader
 
@@ -67,7 +67,7 @@ The mandatory initial structure is the following: (note: the word ISSUE it is no
 <br>
 ##### ISSUE: '_Plugin Name_' - Plug-In
 
-This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
+This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of its children and grand children are closed.
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Analysis
@@ -77,12 +77,12 @@ This is the Analysis root. It is closed whenever all analysis is done. This issu
 <br>
 1 - ISSUE: **'_Plugin Name_' - Module - prototype**
 
-This is the hardcoded module. Used for make the GUI prototype without use the fermat platform. This issue must be linked to the root of the issue structure.
+This is the hardcoded module. Used for making the GUI prototype without use the fermat platform. This issue must be linked to the root of the issue structure.
 
 <br>
 2 - ISSUE: **'_Plugin Name_' - Module - connection**
 
-This is the module connected with fermat platform. Used for make the GUI using the fermat platform. This issue must be linked to the root of the issue structure.
+This is the module connected with fermat platform. Used for making the GUI using the fermat platform. This issue must be linked to the root of the issue structure.
 
 <br>
 3 - ISSUE: **'_Plugin Name_' - GUI - screen - <screen_name>**
@@ -121,11 +121,11 @@ It is expected to have here child issues in the form  '_Plugin Name_' Production
 ### Projects Structure
 ----------------------
 
-Los componentes de GUI se agrupan en proyectos que pueden representar una Wallet, una SubApp o un Desktop para una plataforma, por ejemplo: la plataforma CBP tiene 2 Wallets y 4 SubApps. 
+The GUI components are grouped in projects that could represent a Wallet, SubApp or a Desktop for a platform; For example CBP has 2 Wallets and 4 SubApps. 
 
 #### Where to put your projects
  
-Cuando desees crear una nueva Wallet o Subapp o Desktop debes crear el proyecto que contendrá los componentes GUI en alguno de tres directorios que se muestran abajo siguiendo esta estructura:
+Whenever you wish you create a new Wallet, SubApp or Desktop, you must create the project that will hold the GUI components in any of the three directories that are shown below following this structure: 
     
     + Platform_Name
       + Client_Type (actualmente android)
@@ -142,15 +142,15 @@ Cuando desees crear una nueva Wallet o Subapp o Desktop debes crear el proyecto 
           - sub_app_project_name_3
           - sub_app_project_name_n
 
-Donde:
+Where:
 
-- **Platform_Name**: se refiere a la plataforma done vas a crear tus componentes. 
-- **Client_Type**: se refiere a que dispositivo donde se va a crear el cliente, llamese Android, IPhone, una aplicacion Web, una aplicacion Desktop, etc, donde actualmente el ciente que estamos usando es Android por lo que el nombre de esta carpeta es "android".
-- **desktop**: aqui colocas los proyectos que para los desktops de las subapps y las wallets.
-- **reference_wallet**: aqui vas a crear los proyectos que representen wallets los cuales van a tener sus componentes GUI.
-- **sub_app**: aqui vas a crear los proyectos que representen SubApps los cuales van a tener sus componentes GUI. 
+- **Platform_Name**: Refers to the platform where you’re going to create your components. 
+- **Client_Type**: Refers to the device where the client is going to create, either Android, IPhone, a web or desktop application, etc. At the moment the client we are using is Android, therefore the name of this folder is “android”
+- **desktop**: You place desktop, SubApps and Wallets projects here.
+- **reference_wallet**: Here you will create the projects that have their GUI components that represent Wallets.
+- **sub_app**: Here you will create the projects that have their GUI components that represent SubApps. 
    
-He aqui un ejemplo:
+Here’s an example:
 
     + CBP
       + android
@@ -166,33 +166,33 @@ He aqui un ejemplo:
           - fermat-cbp-android-sub-app-crypto-customer-community-bitdubai
           - fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai
 
-Esto quiere decir que tengo un total de 8 proyectos que albergan componentes GUI, de los cuales 2 son Desktops, 2 son Wallets y 4 son SubApps.
+This means that i have a total of 8 projects that hold GUI components, from which 2 are Desktops, 2 are Wallets and 4 are SubApps.
 
 
 #### Project Names Conventions
 
-Los nombres de los proyectos siguen el siguiente patron:
+The name of the projects follow this pattern:
 
     fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
 
-Donde:                                                                               
+Where:                                                                               
 
-- **platform_Name**: se refiere a la plataforma done vas a crear tus componentes.
-- **client_type**: se refiere a que dispositivo donde se va a crear el cliente, llamese Android, IPhone, una aplicacion Web, una aplicacion Desktop, etc, donde actualmente el ciente que estamos usando es Android por lo que el nombre de esta carpeta es "android".
-- **project_type**: se refiere al tipo de proyecto para los que vas a crear los componentes GUI. Pueden ser **desktop**, **reference-wallet** o **sub-app**.  
-- **name_of_the_project**: este es el nombre del proyecto. Por ejemplo: si tu proyecto se llama **Crypto Broker Community** entonces has de colocar **crypto-broker-community**.
-- **org_name**: este es el nombre de la organicacion desarrollador o empresa que esta creando el proyecto, por ejemplo: **bitdubai**.  
+- **platform_Name**: Refers to the platform where you will create your components.
+- **client_type**: Refers to the device where the client is going to create, either Android, IPhone, a web or desktop application, etc. At the moment the client we are using is Android, therefore the name of this folder is “android”.
+- **project_type**: Refers to the type of project you’re goint to create GUI components for. They could be **desktop**, **reference-wallet** or **sub-app**.  
+- **name_of_the_project**: This is the name of the project. For example: if your project is named **Crypto Broker Community** then you have to name it **crypto-broker-community**.
+- **org_name**: This is the name of the developer organization o company that is creating the project, for example: **bitdubai**.  
  
-He aqui un ejemplo: 
+Here’s an example:
 
     fermat-cbp-android-sub-app-crypto-broker-community-bitdubai
 
-Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es el tipo de proyecto, **crypto-broker-community** es el nombre del proyecto y **bitdubai** es la organizacion resposable de los componentes de este proyecto. Esto quiere decir que el proyecto es una SubApp llamada Crypto Broker Community desarrollada para dispositivos Android y creada por BitDubai para la plataforma CBP.
+Where: **cbp** is the platform, **android** is the device, **sub-app** is the type of project, **crypto-broker-community** es is the name of the project and **bitdubai** is the organization responsible for the components of this project. This means that the project is a SubApp called Crypto Broker Community developed for Android devices and created by BitDubai for the CBP platform.
 
 
 #### What's Inside an Android GUI Components Project
 
-Un proyecto GUI Component para Android en fermat tiene la siguiente estructura basica (Leyenda: **+** carpeta, **>** paquete, **-** archivo):
+A GUI component project for Android in Fermat has the following basic structure (Label: **+** folder, **>** package, **-** file):
 
     + fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
       - .gitignore
@@ -215,25 +215,25 @@ Un proyecto GUI Component para Android en fermat tiene la siguiente estructura b
           + java
             > unit.com.bitdubai.[project_type].[name_of_the_project]
 
-Donde:
+Where:
 
-- Todo lo que va en la carpeta `src` son archivos y recursos que vas a necesitar para desarrollar tu wallet/subapp/desktop en android
-- Dentro de `src/main/java` se encuentra el paquete donde vas a colocar archivos Java (clases, intefaces, enums..) con tu codigo android. El mismo tiene los siguientes paquetes basicos: **fragmentFactory**, **fragments**, **preference_settings** y **session**. Cada uno de ellos explica en detalle mas adelante en este README.
-- Dentro de `src/main/res` se encuentran archivos `xml` que representan *layouts, menus, colores, strings, tamaños* asi como archivos de imagenes y otros que representan los recursos visuales con los que van a interactuar las clases Java que tienen la logica android.
-- Todo lo que va en la carpeta `test` es codigo que se utiliza para hacer Unit Testing sobre la funcionalidades que desarrolles en `src`
-- Los Unit Test se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]` en `test/java`
-- El archivo `build.gradle` es donde defines las dependencias del proyecto con otros de la plataforma o con librerias de terceros y aquellas que ofrece Android pero no por default (las Support Libraries por ejemplo). Tambien se define la version minima del S.O. sobre la que va a correr la app asi como la version del Android SDK que se va a usar, entre otras cosas (para mas informacion revisa [este enlace](http://developer.android.com/tools/building/configuring-gradle.html))
-- El archivo `proguard-rules.pro` configura la herramienta Proguard. (para mas informacion revisa [este enlace](http://developer.android.com/guide/developing/tools/proguard.html)). **NOTA:** *Actualmente no cofiguramos este archivo, por lo que esta vacio*
+- Everything that goes in the `src` folder are files and resources you will need to develop your Wallet/SubApp/Desktop in Android.
+- Inside `src/main/java` you will find the package where you will place java files (classes, intefaces, enums..) with your Android code. It has the following basic packages: **fragmentFactory**, **fragments**, **preference_settings** and **session**. Each one of them explained in detail later on in this README.
+- Inside `src/main/res` there are `xml` files found that represent *layouts, menus, colors, strings and sizes* as well as image files and others that represent visual resources with which you’re going to interact the java classes that have an Android logic.
+- Everything that goes in the `test` folder is code that is used to make Unit Testing on the funtionalities you’re developing in `src`.
+- The Unit Test are created inside the package `unit.com.bitdubai.[project_type].[name_of_the_project]` in `test/java`
+- The file `build.gradle` is where you define the dependencies of the project with others of the platforms or with third party libraries and those that Android offers but not as default (the Support Libraries for example). Also the minimal version of the OS is defined where the app is going to run like the SDK Android version that is going to be used among other things (for more information see [this link](http://developer.android.com/tools/building/configuring-gradle.html))
+- The file `proguard-rules.pro` configures the Proguard tool. (for more information see  [this link](http://developer.android.com/guide/developing/tools/proguard.html)). **NOTE:** *we do not configure this file at the moment, therefore it is empty*
 
-### Agregardo tu proyecto el archivo settings.gradle
+### Add to your project the file settings.gradle
 
-cuando creas tu proyecto android para desarrollar tu wallet/subapp/desktop en un principio no va a ser reconocido como tal en la estructura de dependencias del proyecto raiz (fermat) y se va a mostrar como un directorio mas. Para que tu proyecto sea incluido en la estructura de dependencias es necesario agregar las siguientes lineas en el archivo `settings.gradle` que se encuentra en la carpeta de la plataforma done vas a trabajar:
+At the beginning when you create your Android project to develop your Wallet/SubApp/Desktop, it won’t be recognized as such in the dependencies structure of the root project (Fermat) and it will show like one more directory. So your project is included in dependencies structure it is necessary to add the following lines in the file `settings.gradle` that is found in the folder of the platform where you’re going to work:
 
 ```Gradle
 include ':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]'
 project(':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]').projectDir = new File('platform_name/client_type/project_type/fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]')
 ```
-He aqui un ejemplo de parte del archivo `settings.gradle` de la plataforma CBP (`fermat/CBP/settings.gradle`):
+Here's an example of part of the file `settings.gradle` of the CBP platform (`fermat/CBP/settings.gradle`):
 
 ```Gradle
 ...
@@ -262,7 +262,7 @@ project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').project
 include ':fermat-cbp-android-sub-app-customers-bitdubai'
 project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
 
-//PLUGINS
+//PLUG-INS
 ...
 
 ```
@@ -271,73 +271,72 @@ project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File(
 
 ### Modules
  
- Un componente GUI en fermat se encuentra dividido en dos plugins, las interfaces gráficas y el module de dicha interfaz, este es el que posee las siguientes funcionalidades:
-* Sirve de conexión entre los plugins de la plataforma, consumiendo los servicios que ellas proveen.
-* Encapsula la lógica de presentación, recogiendo, ordenando y agrupando datos de los plugins.
+ A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface, is the one that has the following funtionalities:
+* Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
+* It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
 
 ----------------------
 
 
 ### Navigation structure
  
- -- estructura de navegación con ejemplos..
+ -- Navigation structure with examples..
  
-  Fermat es una aplicación distinta al resto de las aplicaciones android; esta posee su porpia estructura de navegación, la cual se basa en pantallas y sub-pantallas que se van "pintando" desde objetos cargados en tiempo de ejecución, desde archivos que entregan la información sobre que es lo que se necesita dibujar en cada pantalla/sub pantalla y en que orden
+  Fermat is an application different from other Android applications; it has its own surfing structure, that is based on screens and sub-screens that begin to “paint” from uploaded objects when executed, from files that deliver information about what it is needed to draw in each screen/sub-screen and in what order.
 
 ----------------------
 
 ### Android api
 
- Fermat posse un conjunto de librerías y paquetes desarrollados especialmente para trabajar sobre android.
-Seguir...
+ Fermat has a collection of libraries and packages developed specially to work on Android. Continue...
 
 ----------------------
 
 ### Fragments
 
-- Hay que mostrar la forma en la cual se crean los fragmentos y que todos extienden de FermatFragment.
+- You have to show the way in which the fragments are created and that all extend FermatFragment.
 
 ----------------------
 
 ### Fragment factory
 
-- Hay que explicar el fragment factory, para que sirve y como se usa.
+- You have to explain the fragment factory, what does it work for and how it is used.
 
-Cada GUI component posee un folder destinado al fragnent factory, el cual se encarga de conectar lo desarrollado en la estructura de navegación con los fragmentos controladores de dichas pantallas.
-Seguir..
+Each GUI component has a folder designated to the fragment factory, that is in charge of connecting what is already developed in the surfing structure with the controlling fragments of such screens.
+Continue..
 
 ----------------------
 
 ### Sessions
 
-- Hay que darle una brebe explicación de las sesiones.
+- You have to give a brief explanation of the sessions.
 
-Uno de los problemas encontrados es la persistencia de datos en memoria ya que el ciclo de vida un fragmento al no estar visible se elimina y se vuelve a crear al llamarlo nuevamente. Estos datos deben estar guardados en algún lugar en caso de que el usuario quiera cambiar de wallet y dejar la sesion abierta. 
+One of the problems is the persistance of memory data since in a life cycle, a fragment is eliminated when not visible, and its re-created when looked for again. These data must be saved in some place just in case a user wants to change Wallet and leave the session open. 
 
-Para resolver esto existen las Sessions: son objetos que permiten persisitir en memoria y compartir entre los diferentes fragmentos que pueda tener una wallet o subapp informacion tal como la referencia al module de la wallet o subapp, referencia al Error Mananger (objeto que administra las excepciones generadas en la plataforma Fermat) y cualquier otra data que necesite tracender entre estos fragmentos dentro de un Map que trabaja con una key y el objeto que se necesite guardar.
+To resolve this, there exists something called Sessions : These are objects that allow to persist in memory and share between the different fragments that a wallet or SubApp may have, information such as the reference to the module of the wallet or SubApp , reference to Error Mananger (object that handles the exceptions Fermat generated in the platform) and any other data you need to trascend between these fragments within a Map that works with a key and the object that needs saving.
 
-Las sesiones se crean por cada wallet o subapp y la gestión de dichas sesiones es llevada a cabo a travez de un Wallet Manager y un Subapp Manager, teniendo así la posibilidad de regresar al momento en el que se encontraba el usuario al cambiar de pantalla.
+The sessions are created for every wallet or SubApp and management of such meetings is held through a Wallet Manager and SubApp Manager , thus having the opportunity to return to the time when the user was when switching screens.
 
-Cada GUI component posee un folder destinado a la session. Que dependiendo del tipo de componente que se esté desarrollando puede ser una clase que herede de WalletSession o SubAppSession.
-Seguir...
+Each GUI component folder has a intended session . Depending on the type of component that is being developed it could be a class that inherits from WalletSession or SubAppSession.
+Continue...
 
 ----------------------
 
 #### Wallet session
 
-Son sesiones que manejan informacion de una wallet, estas heredan de WalletSession
+They are sessions that manage Wallet information, these inherit from WalletSession.
 
 ----------------------
 
 #### Sub app session
 
-Son sesiones que manejan informacion de una subapp, estas heredan de WalletSession
+They are sessions that manage SubApp information, these inherit from WalletSession.
 
 ----------------------
 
 #### Settings
 
-- Brebe explicación de los settings con ejemplos
+- Brief explanation of settings with examples
 - 
 ----------------------
 

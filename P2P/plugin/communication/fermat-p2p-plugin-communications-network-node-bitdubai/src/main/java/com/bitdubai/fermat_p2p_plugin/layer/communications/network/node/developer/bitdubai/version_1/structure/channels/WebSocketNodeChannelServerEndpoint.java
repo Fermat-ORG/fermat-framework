@@ -14,9 +14,8 @@ import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.server.ServerEndpoint;
-
 import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketNodeChannelServerEndpoint</code>
@@ -26,14 +25,13 @@ import javax.websocket.Session;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@ServerEndpoint("/fermat/node-channel")
+@ServerEndpoint("/node-channel")
 public class WebSocketNodeChannelServerEndpoint {
 
     /**
      * Represent the LOG
      */
     private final Logger LOG = Logger.getLogger(WebSocketNodeChannelServerEndpoint.class.getName());
-
 
     @OnOpen
     public void onConnect(Session session) throws IOException {
@@ -43,7 +41,7 @@ public class WebSocketNodeChannelServerEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) {
 
-        LOG.info("Closed connection: " + session.getId() + " message = " + message + ")");
+        LOG.info("On Message: " + session.getId() + " message = " + message + ")");
 
         for (Session s : session.getOpenSessions()) {
             s.getAsyncRemote().sendText(message);

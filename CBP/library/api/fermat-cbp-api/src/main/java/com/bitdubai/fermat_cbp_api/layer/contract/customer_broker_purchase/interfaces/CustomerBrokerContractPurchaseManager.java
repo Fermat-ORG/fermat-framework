@@ -1,0 +1,71 @@
+package com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
+
+import java.util.Collection;
+
+/**
+ * Created by angel on 16/9/15.
+ */
+
+public interface CustomerBrokerContractPurchaseManager extends FermatManager{
+
+    /**
+     *
+     * @return  a list of all contracts
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    Collection<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchase() throws CantGetListCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param ContractId
+     * @return a CustomerBrokerContractPurchase with information of contract with ContractId
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(final String ContractId) throws CantGetListCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param status
+     * @return an Collection of CustomerBrokerContractPurchase with information of contract with status
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    Collection<CustomerBrokerContractPurchase> getCustomerBrokerContractPurchaseForStatus(final ContractStatus status) throws CantGetListCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @return an ListsForStatus with separate lists and sorted by status
+     */
+    ListsForStatus getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param contract
+     * @return a CustomerBrokerContractPurchase with information of contract created
+     * @throws CantCreateCustomerBrokerContractPurchaseException
+     */
+    CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param contractId
+     * @param status
+     * @throws CantupdateCustomerBrokerContractPurchaseException
+     */
+    void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param contractId
+     * @param clause
+     * @throws CantupdateCustomerBrokerContractPurchaseException
+     */
+    void updateStatusCustomerBrokerPurchaseContractClauseStatus(String contractId, ContractClause clause) throws CantupdateCustomerBrokerContractPurchaseException;
+
+}

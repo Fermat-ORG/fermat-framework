@@ -2,7 +2,9 @@ package com.bitdubai.fermat_android_api.engine;
 
 import android.app.Fragment;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
@@ -15,7 +17,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
  */
 public abstract class FermatWalletFragmentFactory <S extends WalletSession,J extends WalletSettings,F extends FermatFragmentsEnumType> implements WalletFragmentFactory<S,J> {
 
-    protected FermatWalletFragment fermatFragment;
+    protected AbstractFermatFragment fermatFragment;
 
     /**
      * This method takes a reference (string) to a fragment and returns the corresponding fragment.
@@ -31,13 +33,13 @@ public abstract class FermatWalletFragmentFactory <S extends WalletSession,J ext
 
         fermatFragment = getFermatFragment(fragments);
 
-        fermatFragment.setWalletSession(walletSession);
-        fermatFragment.setWalletSettings(walletSettings);
-        fermatFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
+        fermatFragment.setAppSession(walletSession);
+        fermatFragment.setAppSettings(walletSettings);
+        fermatFragment.setAppResourcesProviderManager(walletResourcesProviderManager);
         return fermatFragment;
     }
 
-    public abstract FermatWalletFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
+    public abstract AbstractFermatFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
 
     public abstract F getFermatFragmentEnumType(String key);
 

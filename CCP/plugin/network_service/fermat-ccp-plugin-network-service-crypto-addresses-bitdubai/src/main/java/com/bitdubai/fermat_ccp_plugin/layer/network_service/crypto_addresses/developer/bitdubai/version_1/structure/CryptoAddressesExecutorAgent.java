@@ -24,8 +24,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.DenyMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -334,11 +334,12 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         switch (type) {
 
-            case INTRA_USER           : return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case CCM_INTRA_WALLET_USER: return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case CCP_INTRA_WALLET_USER: return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case DAP_ASSET_ISSUER     : return PlatformComponentType.ACTOR_ASSET_ISSUER;
-            case DAP_ASSET_USER       : return PlatformComponentType.ACTOR_ASSET_USER  ;
+            case INTRA_USER            : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case CCM_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case CCP_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case DAP_ASSET_ISSUER      : return PlatformComponentType.ACTOR_ASSET_ISSUER        ;
+            case DAP_ASSET_USER        : return PlatformComponentType.ACTOR_ASSET_USER          ;
+            case DAP_ASSET_REDEEM_POINT: return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT  ;
 
             default: throw new InvalidParameterException(
                   " actor type: "+type.name()+"  type-code: "+type.getCode(),

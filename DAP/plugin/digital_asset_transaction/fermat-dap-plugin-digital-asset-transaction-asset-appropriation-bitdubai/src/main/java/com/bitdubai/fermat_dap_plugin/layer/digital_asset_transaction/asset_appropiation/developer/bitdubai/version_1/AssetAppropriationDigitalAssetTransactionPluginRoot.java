@@ -28,8 +28,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
@@ -48,8 +48,8 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appr
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationRecorderService;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -168,6 +168,8 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
             monitorAgent.start();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
+        } finally {
+            this.serviceStatus = ServiceStatus.STOPPED;
         }
 
 
@@ -178,14 +180,14 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 //            e.printStackTrace();
 //        }
 
-        this.serviceStatus = ServiceStatus.STARTED;
+        super.start();
     }
 
     @Override
     public void stop() {
         monitorAgent.stop();
         recorderService.stop();
-        this.serviceStatus = ServiceStatus.STOPPED;
+        super.stop();
     }
 
     //TODO DELETE THIS METHOD AND ALL ITS USAGES.

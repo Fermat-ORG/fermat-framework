@@ -14,9 +14,7 @@ public interface AssetRedeemPointWalletBalance {
     //TODO: Documentar
     long getBalance()  throws CantCalculateBalanceException;
 
-    List<AssetRedeemPointWalletList> getAssetIssuerWalletBalancesAvailable() throws CantCalculateBalanceException;
-
-    List<AssetRedeemPointWalletList> getAssetIssuerWalletBalancesBook() throws CantCalculateBalanceException;
+    List<AssetRedeemPointWalletList> getAssetIssuerWalletBalances() throws CantCalculateBalanceException;
 
     void debit(AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException; //TODO: Debemos de definir la estructura de la transaccion
 

@@ -9,7 +9,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * Created by mati on 2015.08.24..
@@ -35,7 +35,7 @@ public abstract class FermatSubAppFragmentFactory <S extends SubAppsSession,J ex
         fermatFragment = getFermatFragment(fragments);
 
         fermatFragment.setSubAppsSession(subAppsSession);
-        fermatFragment.setSubAppSettings(subAppSettingsManager);
+        fermatFragment.setAppSettings(subAppSettingsManager);
         fermatFragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
         return fermatFragment;
     }

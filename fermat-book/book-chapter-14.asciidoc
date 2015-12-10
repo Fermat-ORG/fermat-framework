@@ -1,4 +1,4 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Coins/BNP.jpg[FermatBNP]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Coins/BNP.jpg[FermatBNP]
 == Chapter 14: Fermat Bank Notes Platform
 
 This platform introduces the connection to the physical representation of fiat money, the _bank notes_. + 
@@ -30,7 +30,7 @@ Bank Notes Wallet :: +
 === _Reference Wallet layer_
 Bank Notes Wallet :: +
 ////
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
 ==== _Continue reading ..._
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]

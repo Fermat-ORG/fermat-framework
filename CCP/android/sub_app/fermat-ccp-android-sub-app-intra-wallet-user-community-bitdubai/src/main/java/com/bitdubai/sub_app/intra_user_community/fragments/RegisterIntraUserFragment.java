@@ -31,8 +31,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import com.bitdubai.sub_app.intra_user_community.common.Views.RoundedDrawable;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
@@ -134,7 +134,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try{
-            intraUserSubAppSession = (IntraUserSubAppSession)subAppsSession;
+            intraUserSubAppSession = (IntraUserSubAppSession) appSession;
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             errorManager = intraUserSubAppSession.getErrorManager();
         }catch (Exception e){
@@ -295,11 +295,11 @@ public class RegisterIntraUserFragment extends FermatFragment {
 
             //thread.start();
 
-            intraUserSubAppSession.getIntraUserModuleManager().createIntraUser(editContactName.getText().toString(),identityImage);
+            intraUserSubAppSession.getModuleManager().createIntraUser(editContactName.getText().toString(),identityImage);
 
             Toast.makeText(getActivity(), "Identity sucessfully created", Toast.LENGTH_SHORT).show();
 
-            ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_INTRA_USER_ACTIVITY.getCode(),subAppsSession.getAppPublicKey());
+            ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_INTRA_USER_ACTIVITY.getCode(), appSession.getAppPublicKey());
 
             //CryptoAddress validAddress = validateAddress(address.getText().toString(), cryptoWallet);
 

@@ -74,4 +74,11 @@ public class CompleteComponentRegistrationNotificationEvent extends AbstractP2PF
         this.networkServiceTypeApplicant = networkServiceTypeApplicant;
     }
 
+    @Override
+    public String toString() {
+        return "CompleteComponentRegistrationNotificationEvent{" +
+                "networkServiceTypeApplicant=" + networkServiceTypeApplicant +
+                ", platformComponentProfileRegistered=" + platformComponentProfileRegistered +
+                '}';
+    }
 }

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.I
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewTransactionStatusNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -42,15 +42,15 @@ public class UserRedemptionRecorderService implements DealsWithEvents, AssetTran
             userRedemptionDao(userRedemptionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            throw new CantStartServiceException(exception, "Cannot set the asset distribution database handler","The database handler is null");
+            throw new CantStartServiceException(exception, "Cannot set the asset distribution database handler", "The database handler is null");
         }
     }
 
-    private void userRedemptionDao(UserRedemptionDao userRedemptionDao)throws CantSetObjectException{
-        if(userRedemptionDao==null){
+    private void userRedemptionDao(UserRedemptionDao userRedemptionDao) throws CantSetObjectException {
+        if (userRedemptionDao == null) {
             throw new CantSetObjectException("The AssetIssuingDao is null");
         }
-        this.userRedemptionDao=userRedemptionDao;
+        this.userRedemptionDao = userRedemptionDao;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class UserRedemptionRecorderService implements DealsWithEvents, AssetTran
         //LOG.info("CHECK THE DATABASE");
     }
 
-    public void receivedNewDigitalAssetMetadataNotificationrEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
+    public void receivedNewTransactionStatusNotificationEvent(ReceivedNewTransactionStatusNotificationEvent event) throws CantSaveEventException {
         Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.userRedemptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
@@ -130,9 +130,9 @@ public class UserRedemptionRecorderService implements DealsWithEvents, AssetTran
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-            fermatEventHandler = new ReceivedNewDigitalAssetMetadataNotificationEventHandler();
-            ((ReceivedNewDigitalAssetMetadataNotificationEventHandler) fermatEventHandler).setUserRedemptionRecorderService(this);
+            fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+            fermatEventHandler = new ReceivedNewTransactionStatusNotificationEventHandler();
+            ((ReceivedNewTransactionStatusNotificationEventHandler) fermatEventHandler).setUserRedemptionRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
@@ -140,8 +140,8 @@ public class UserRedemptionRecorderService implements DealsWithEvents, AssetTran
             //Logger LOG = Logger.getGlobal();
             //LOG.info("ASSET ISSUING EVENT RECORDER STARTED");
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the UserRedemptionRecorderService", "The UserRedemptionRecorderService is probably null");
+        } catch (CantSetObjectException exception) {
+            throw new CantStartServiceException(exception, "Starting the UserRedemptionRecorderService", "The UserRedemptionRecorderService is probably null");
         }
 
     }
@@ -152,7 +152,7 @@ public class UserRedemptionRecorderService implements DealsWithEvents, AssetTran
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    private void removeRegisteredListeners(){
+    private void removeRegisteredListeners() {
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);
         }

@@ -2,4 +2,16 @@
     <string name="app_name">fermat-dap-android-sub-app-asset-factory-bitdubai</string>
     <string name="asset_factory_main_publish_menu">Publish</string>
     <string name="asset_factory_main_edit_menu">Edit</string>
+    <string name="home_asset_state_editable">Editable</string>
+    <string name="app_unnamed">No name given&#8230;</string>
+    <string name="home_row_asset_amount">Amount: %1$d</string>
+    <string name="home_row_asset_bitcoins">BitCoins: %1$d BTC</string>
+    <string name="home_asset_state_publishing">Publishing</string>
+    <string name="home_asset_state_published">Published</string>
+    <string name="dap_asset_factory_delete_menu_item">Delete</string>
+    <string name="dap_asset_factory_editor_name_hint">Name</string>
+    <string name="dap_asset_factory_editor_description_hint">Description</string>
+    <string name="dap_asset_factory_editor_quantity_hint">Quantity</string>
+    <string name="dap_asset_factory_editor_bitcoin_price_hint">BitCoins Price</string>
+    <string name="dap_asset_factory_editor_expiration_date_hint">Expiration Date</string>
 </resources>

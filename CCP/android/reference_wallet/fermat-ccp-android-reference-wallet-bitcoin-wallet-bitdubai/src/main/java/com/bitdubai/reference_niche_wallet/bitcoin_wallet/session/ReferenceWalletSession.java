@@ -3,7 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -12,11 +12,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.07.20..
@@ -28,11 +25,9 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
 
 
     private String accountName;
-
     /**
      * Navigation Estructure
      */
-
     /**
      * Intra User Module
      */
@@ -62,7 +57,7 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     private CryptoWalletWalletContact lastContactSelected;
 
     private PaymentRequest paymentRequest;
-
+    private String communityConnection;
 
 
     public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager){//,EventManager eventManager){
@@ -129,6 +124,12 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         return this.walletSettings;
     }
 
+    @Override
+    public String getIdentityConnection() {
+        //return searchConnectionPublicKey(SubApps.CWP_INTRA_USER_IDENTITY.getCode());
+        return "public_key_ccp_intra_user_identity";
+    }
+
 
     public CryptoWalletWalletContact getLastContactSelected() {
         return lastContactSelected;
@@ -143,4 +144,17 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     }
 
 
+    public String getCommunityConnection() {
+        //return searchConnectionPublicKey(SubApps.CCP_INTRA_USER_COMMUNITY.getCode());
+        return "public_key_intra_user_commmunity";
+    }
+
+    private String searchConnectionPublicKey(String code){
+        for(FermatApp fermatApp : getPosibleConnections()){
+            if(fermatApp.getAppName().equals(code)){
+                return fermatApp.getAppPublicKey();
+            }
+        }
+        return null;
+    }
 }

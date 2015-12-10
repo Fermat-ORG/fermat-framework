@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 
 /**
  * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao</code>
- * haves all the methods that interact with the database.
+ * contains all the methods that interact with the database.
  * Manages the addresses exchange requests by storing them on a Database Table.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/09/2015.
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CryptoAddressesNetworkServiceDao {
+public final class CryptoAddressesNetworkServiceDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID                 pluginId            ;

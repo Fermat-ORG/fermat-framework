@@ -8,11 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Lists all the Genders for intra User Wallet and Aseet Issuer.
  * User, Redeem Point can be assigned.
  * <p/>
- * Updated by PatricioGesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
+ * Updated by pmgesualdi - (pmgesualdi@hotmail.com) on 18/11/2015.
  */
 public enum Genders implements FermatEnum {
     /**
-     * In order to make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     FEMALE      ("F"),
     INDEFINITE  ("I"),

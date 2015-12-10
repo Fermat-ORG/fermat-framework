@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class ActorAdapter extends FermatAdapter<Actor, ActorViewHolder> {
 
-
     private AdapterChangeListener<Actor> adapterChangeListener;
 
     public ActorAdapter(Context context) {
@@ -42,7 +41,11 @@ public class ActorAdapter extends FermatAdapter<Actor, ActorViewHolder> {
     @Override
     protected void bindHolder(final ActorViewHolder holder, final Actor data, final int position) {
         try {
-            holder.name.setText(data.getName());
+            if(data.getCryptoAddress() != null)
+                holder.name.setText(String.format("%s %s %s", data.getName(), data.getDapConnectionState(), data.getCryptoAddress().getAddress()));
+            else
+                holder.name.setText(String.format("%s %s", data.getName(), data.getDapConnectionState()));
+
             holder.connect.setChecked(data.selected);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -53,11 +56,11 @@ public class ActorAdapter extends FermatAdapter<Actor, ActorViewHolder> {
                         adapterChangeListener.onDataSetChanged(dataSet);
                 }
             });
+            //TODO: chamo esto te va a tirar error si es nula la imagen :p, el leght no lo va a poder sacar
             if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
                 holder.thumbnail.setImageDrawable(new BitmapDrawable(context.getResources(),
                         BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length)));
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }

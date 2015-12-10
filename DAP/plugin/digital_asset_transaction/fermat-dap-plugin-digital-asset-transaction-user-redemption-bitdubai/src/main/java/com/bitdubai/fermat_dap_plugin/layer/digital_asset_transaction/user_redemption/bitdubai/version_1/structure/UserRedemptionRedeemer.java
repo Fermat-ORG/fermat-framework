@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -29,7 +29,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -128,7 +128,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
     public void deliverDigitalAssetToRemoteDevice(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRedeemDigitalAssetException {
         try{
             //First, I going to persist in database the basic information about digitalAssetMetadata
-            System.out.println("ASSET USER REDEMPTION begins for "+actorAssetRedeemPoint.getPublicKey());
+            System.out.println("ASSET USER REDEMPTION begins for "+actorAssetRedeemPoint.getActorPublicKey());
             persistDigitalAsset(digitalAssetMetadata, actorAssetRedeemPoint);
             System.out.println("ASSET USER REDEMPTION begins for persisted");
             //Now, I'll check is Hash wasn't modified
@@ -220,7 +220,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 digitalAssetMetadata.getGenesisTransaction(),
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
-                actorAssetRedeemPoint.getPublicKey(),
+                actorAssetRedeemPoint.getActorPublicKey(),
                 actorAddress);
         System.out.println("ASSET USER REDEMPTION registered in database");
         persistInLocalStorage(digitalAssetMetadata);
@@ -262,7 +262,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 ActorAssetUser actorAssetUser=entry.getValue();
                 //Deliver one DigitalAsset
                 System.out.println("ASSET USER REDEMPTION DAM-Hash:"+digitalAssetMetadata.getDigitalAssetHash());
-                System.out.println("ASSET USER REDEMPTION ActorAssetUser - PublicKey:"+actorAssetUser.getPublicKey());
+                System.out.println("ASSET USER REDEMPTION ActorAssetUser - PublicKey:"+actorAssetUser.getActorPublicKey());
                 System.out.println("ASSET USER REDEMPTION ActorAssetUser - Name:"+actorAssetUser.getName());
                 deliverDigitalAssetToRemoteDevice(digitalAssetMetadata, actorAssetUser);
             }

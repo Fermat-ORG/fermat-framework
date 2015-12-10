@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 
@@ -8,7 +9,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
  */
-public interface WalletSettingsManager {
+public interface WalletSettingsManager extends FermatManager {
 
     /**
      * This method gives us the settings of a wallet

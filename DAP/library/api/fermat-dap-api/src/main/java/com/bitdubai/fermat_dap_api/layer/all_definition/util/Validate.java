@@ -55,6 +55,7 @@ public final class Validate {
      */
     public static final long MAX_DATE = 253402318799999L; //31/12/9999 23:59:59.999
 
+    public static final int MAX_SIZE_STRING_COLUMN = 1000000000; //Even when the max size for a string column is 2147483647 the default implementation is 1000000000.
     /*
      *
      * DEFAULT VALUES

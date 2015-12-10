@@ -8,13 +8,21 @@
 include ':fermat-csh-api'
 project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api')
 
+include ':fermat-csh-core'
+project(':fermat-csh-core').projectDir = new File('CSH/library/core/fermat-csh-core')
+
 //Cash Money Transaction
-include ':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai'
-project(':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai')
 include ':fermat-csh-plugin-cash-money-transaction-hold-bitdubai'
 project(':fermat-csh-plugin-cash-money-transaction-hold-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-hold-bitdubai')
 include ':fermat-csh-plugin-cash-money-transaction-unhold-bitdubai'
 project(':fermat-csh-plugin-cash-money-transaction-unhold-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-unhold-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-deposit-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-deposit-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-deposit-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-withdrawal-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-withdrawal-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-withdrawal-bitdubai')
+
+include ':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai')
 include ':fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai'
 project(':fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai')
 include ':fermat-csh-plugin-cash-money-transaction-receive-cash-on-hand-bitdubai'

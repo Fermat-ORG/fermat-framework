@@ -6,12 +6,12 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
@@ -43,15 +43,15 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
+        //System.out.println(" --------------------------------------------------------------------- ");
+        //System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
         /*
          * Get the platformComponentProfile from the message content and decrypt
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -69,7 +69,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - receivedList.size() = " + receivedList.size());
+        //System.out.println("RequestListComponentRegisterPacketProcessor - receivedList.size() = " + receivedList.size());
 
          /*
          * Create a new event whit the receivedlist
@@ -87,7 +87,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Raise the event
          */
-        System.out.println("RequestListComponentRegisterPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
+        //System.out.println("RequestListComponentRegisterPacketProcessor - Raised a event = P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

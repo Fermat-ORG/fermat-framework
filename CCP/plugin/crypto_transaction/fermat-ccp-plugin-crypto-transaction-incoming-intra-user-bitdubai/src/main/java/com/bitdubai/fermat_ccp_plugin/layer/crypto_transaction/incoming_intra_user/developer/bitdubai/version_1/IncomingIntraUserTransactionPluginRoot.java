@@ -38,10 +38,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_us
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserMetadataMonitorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserRegistry;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserRelayAgent;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ import java.util.List;
 
 public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-        IncomingIntraUserManager {
+       IncomingIntraUserManager {
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
@@ -80,6 +80,8 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     private CryptoAddressBookManager cryptoAddressBookManager;
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+
+
     /*
      * Incoming Intra User member variables
      */
@@ -88,6 +90,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     private IncomingIntraUserCryptoMonitorAgent cryptoMonitorAgent;
     private IncomingIntraUserMetadataMonitorAgent metadataMonitorAgent;
     private IncomingIntraUserEventRecorderService eventRecorderService;
+
     public IncomingIntraUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -167,7 +170,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         }
 
         try {
-            this.relayAgent = new IncomingIntraUserRelayAgent(this.errorManager, this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry);
+            this.relayAgent = new IncomingIntraUserRelayAgent(this.errorManager, this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoTransmissionNetworkServiceManager);
             this.relayAgent.start();
         } catch (CantStartIncomingIntraUserRelayAgentException e) {
             this.eventRecorderService.stop();

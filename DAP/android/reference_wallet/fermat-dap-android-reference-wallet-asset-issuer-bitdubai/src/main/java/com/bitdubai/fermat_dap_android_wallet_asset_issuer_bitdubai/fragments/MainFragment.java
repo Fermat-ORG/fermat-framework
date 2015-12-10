@@ -59,7 +59,7 @@ public class MainFragment extends FermatWalletFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((AssetIssuerSession) walletSession).getManager();
+            manager = ((AssetIssuerSession) appSession).getManager();
         } catch (Exception ex) {
             CommonLogger.exception(this.getClass().getName(), ex.getMessage(), ex);
         }
@@ -73,7 +73,7 @@ public class MainFragment extends FermatWalletFragment
             protected Object doInBackground() throws Exception {
                 if (manager == null)
                     throw new NullPointerException("AssetIssuerWalletModuleManager is null");
-                assetIssuerWalletList = manager.getAssetIssuerWalletBalancesBook("walletPublicKeyTest");
+                assetIssuerWalletList = manager.getAssetIssuerWalletBalances("walletPublicKeyTest");
                 if (assetIssuerWalletList != null && !assetIssuerWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetIssuerWalletList assetIssuerWallet : assetIssuerWalletList) {
@@ -151,7 +151,7 @@ public class MainFragment extends FermatWalletFragment
 //                            asset.getActorAssetUser()
 //                    );
                     //TODO: Solo para la prueba del Distribution
-                    manager.distributionAssets(asset.getAssetPublicKey(), null, null);
+                    manager.distributionAssets(asset.getAssetPublicKey(), null);
                     return true;
                 }
             };

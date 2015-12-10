@@ -3,16 +3,18 @@ package com.bitdubai.fermat_bnp_plugin.layer.network_service.bank_notes.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -172,6 +174,45 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 
     }
 
+
+    /**
+     * Handles the events VPNConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+       /* if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                if(communicationNetworkServiceConnectionManager != null)
+                 communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }*/
+
+    }
+
+    /**
+     * Handles the events ClientConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+       /* if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+
+            if(communicationNetworkServiceConnectionManager != null)
+                communicationNetworkServiceConnectionManager.closeAllConnection();
+        }*/
+
+    }
+
     @Override
     public boolean isRegister() {
         return false;
@@ -211,5 +252,10 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return null;
     }
 }

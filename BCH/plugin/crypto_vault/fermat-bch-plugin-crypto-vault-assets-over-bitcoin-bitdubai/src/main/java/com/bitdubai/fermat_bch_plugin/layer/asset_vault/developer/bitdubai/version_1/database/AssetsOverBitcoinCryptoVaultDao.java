@@ -1,11 +1,13 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -13,9 +15,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.HierarchyAccount;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+
+import org.bitcoinj.core.ECKey;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -535,4 +542,91 @@ public class AssetsOverBitcoinCryptoVaultDao {
 
         return networkTypes;
     }
+
+    /**
+     * Insert new public keys into the detailed monitor table
+     * @param accountId
+     * @param keys
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void updateDetailMaintainerStats(int accountId, List<ECKey> keys, int currentGeneratedKeys) throws CantExecuteDatabaseOperationException {
+        /**
+         * If we are not allowed to save detailed information then we will exit.
+         */
+        if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
+            return;
+
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        DatabaseTransaction transaction = database.newTransaction();
+
+
+
+        /**
+         * I will insert each key. Since I don't want to repeat inserting keys, I will only insert the keys
+         * which position is after currentGeneratedKeys value
+         */
+        int i=1;
+        for (ECKey key : keys){
+            if (i >= currentGeneratedKeys){
+                DatabaseTableRecord record = databaseTable.getEmptyRecord();
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME, i);
+                record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, key.getPublicKeyAsHex());
+                transaction.addRecordToInsert(databaseTable, record);
+            }
+            i++;
+        }
+
+        /**
+         * once I collected all records, I will insert them in a single transaction
+         */
+        try {
+            database.executeTransaction(transaction);
+        } catch (DatabaseTransactionFailedException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error inserting records in transaction.", null);
+        }
+    }
+
+    /**
+     * Updates the Key detailed table for this account and key, with the passed addres
+     * @param hierarchyAccountId
+     * @param ecKey
+     * @param cryptoAddress
+     */
+    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
+        /**
+         * If we are not allowed to save detailed information then we will exit
+         */
+        if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
+            return;
+
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
+        }
+
+        if (databaseTable.getRecords().size() == 0){
+            StringBuilder output = new StringBuilder("The key " + ecKey.toString());
+            output.append(System.lineSeparator());
+            output.append("which generated the address " + cryptoAddress.getAddress());
+            output.append(System.lineSeparator());
+            output.append("is not a key derived from the vault.");
+
+            throw new UnexpectedResultReturnedFromDatabaseException(null, output.toString(), "Vault derivation miss match");
+        }
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error updating record", "database issue");
+        }
+    }
+
 }

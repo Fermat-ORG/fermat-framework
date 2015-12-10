@@ -29,12 +29,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
@@ -91,8 +91,8 @@ public class LogToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession)super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
         }
 
 
@@ -119,11 +119,8 @@ public class LogToolsFragment extends FermatFragment {
     }
 
 
-    private void changeLogLevel(String pluginKey, LogLevel logLevel, String resource) {
+    private void changeLogLevel(PluginVersionReference plugin, LogLevel logLevel, String resource) {
         try {
-            //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
-            Plugins plugin = Plugins.getByCode(pluginKey);
-
 
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
@@ -151,11 +148,11 @@ public class LogToolsFragment extends FermatFragment {
             List<PluginVersionReference> plugins = logTool.getAvailablePluginList();
             List<AddonVersionReference> addons = logTool.getAvailableAddonList();
 
-            List<String> list = new ArrayList<>();
+            List<PluginVersionReference> list = new ArrayList<>();
 
             for (PluginVersionReference plugin : plugins) {
 
-                list.add(plugin.toKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
+                list.add(plugin); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
                 /**
                  * I will get the list of the available classes on the plug in
                  */
@@ -173,35 +170,15 @@ public class LogToolsFragment extends FermatFragment {
                     log.type = Loggers.TYPE_PLUGIN;
                     log.classHierarchyLevels = classes;
                     log.picture = "plugin";
-                    log.pluginKey = plugin.toKey();
+                    log.pluginVersionReference = plugin;
                     //log.logLevel=classes.
                     lstLoggers.add(log);
                 }
 
             }
-
-            for (AddonVersionReference addon : addons) {
-
-                //list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
-                /**
-                 * I will get the list of the available classes on the plug in
-                 */
-
-                List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
-                //esto es sacar con getClassesHierarchy
-                for (ClassHierarchyLevels classes : logTool.getClassesHierarchyAddons(addon)) {
-                    //loading de loggers class
-
-                    Loggers log = new Loggers();
-                    log.type = Loggers.TYPE_ADDON;
-                    log.picture = "addon";
-                    log.pluginKey = addon.toKey();
-                    log.classHierarchyLevels = classes;
-                    lstLoggers.add(log);
-                }
-
-
-            }
+            /**
+             * TODO add addons
+             */
 
 
             Configuration config = getResources().getConfiguration();
@@ -286,7 +263,7 @@ public class LogToolsFragment extends FermatFragment {
                     @Override
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
-                        CustomDialogClass cdd = new CustomDialogClass(getActivity(), item, item.pluginKey);
+                        CustomDialogClass cdd = new CustomDialogClass(getActivity(), item, item.pluginVersionReference);
                         cdd.show();
                         return true;
                     }
@@ -342,7 +319,7 @@ public class LogToolsFragment extends FermatFragment {
 
 
         private Loggers logger;
-        private String pluginKey;
+        private PluginVersionReference pluginKey;
         public Activity c;
         public Dialog d;
 
@@ -363,7 +340,7 @@ public class LogToolsFragment extends FermatFragment {
                 0
         };
 
-        public CustomDialogClass(Activity a, Loggers loggers, String pluginKey) {
+        public CustomDialogClass(Activity a, Loggers loggers, PluginVersionReference pluginKey) {
             super(a);
             this.logger = loggers;
             this.pluginKey = pluginKey;

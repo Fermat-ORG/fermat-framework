@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -401,6 +402,21 @@ public class AndroidDatabaseTable implements DatabaseTable {
         filter.setType(type);
 
         this.tableFilter.add(filter);
+    }
+
+    @Override
+    public void setFermatEnumFilter(String columName, FermatEnum value, DatabaseFilterType type) {
+
+        if (this.tableFilter == null)
+            this.tableFilter = new ArrayList<>();
+
+        this.tableFilter.add(
+                new AndroidDatabaseTableFilter(
+                        columName,
+                        type,
+                        value.getCode()
+                )
+        );
     }
 
     /**

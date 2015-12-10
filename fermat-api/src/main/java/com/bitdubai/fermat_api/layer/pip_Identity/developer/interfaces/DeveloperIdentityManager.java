@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces;
 
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public interface DeveloperIdentityManager {
      * This method will give us a list of all the developers associated to the actual Device User logged in
      *
      * @return the list of Developers associated to the current logged in Device User.
-     * @throws CantGetUserDeveloperIdentitiesException
+     * @throws com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException
      */
     List<DeveloperIdentity> getDevelopersFromCurrentDeviceUser() throws CantGetUserDeveloperIdentitiesException;
 
@@ -30,8 +29,8 @@ public interface DeveloperIdentityManager {
      *
      * @param alias the alias that the user choose as developer identity
      * @return the new developer just created
-     * @throws CantCreateNewDeveloperException
+     * @throws com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException
      */
-    DeveloperIdentity createNewDeveloper(String alias) throws CantCreateNewDeveloperException;
+    DeveloperIdentity createNewDeveloper(String alias) throws com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 
 }

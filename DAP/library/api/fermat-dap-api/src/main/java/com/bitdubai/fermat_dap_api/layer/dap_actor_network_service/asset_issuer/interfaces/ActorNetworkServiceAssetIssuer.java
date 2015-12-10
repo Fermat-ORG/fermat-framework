@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces;
 
 
-import com.bitdubai.fermat_api.NetworkService;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 import java.util.List;

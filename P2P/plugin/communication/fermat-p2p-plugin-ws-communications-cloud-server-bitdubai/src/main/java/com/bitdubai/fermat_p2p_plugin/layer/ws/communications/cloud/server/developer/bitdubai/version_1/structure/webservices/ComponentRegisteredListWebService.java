@@ -19,11 +19,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import org.restlet.data.MediaType;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
@@ -44,6 +44,11 @@ import java.util.TreeMap;
 public class ComponentRegisteredListWebService extends ServerResource {
 
     /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ComponentRegisteredListWebService.class));
+
+    /**
      * Represent the wsCommunicationCloudServer
      */
     private WsCommunicationCloudServer wsCommunicationCloudServer;
@@ -62,14 +67,15 @@ public class ComponentRegisteredListWebService extends ServerResource {
     }
 
     @Post("application/json")
-    public Representation getList(Representation entity){
+    public String getList(Representation entity){
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("ComponentRegisteredListWebService - Starting getList");
+        LOG.info(" --------------------------------------------------------------------- ");
+        LOG.info("ComponentRegisteredListWebService - Starting getList");
         JsonObject jsonObjectRespond = new JsonObject();
 
         try{
 
+            LOG.info("entity = " + entity);
             wsCommunicationCloudServer = (WsCommunicationCloudServer) getContext().getAttributes().get(WebServicesApplication.PLUGIN_ROOT_ATT_NAME);
 
             /*
@@ -77,7 +83,6 @@ public class ComponentRegisteredListWebService extends ServerResource {
              */
             JSONObject requestParametersJsonObject = (new JsonRepresentation(entity)).getJsonObject();
 
-            System.out.println("ComponentRegisteredListWebService - requestParametersJsonObject = "+requestParametersJsonObject);
 
             String clientIdentityPublicKey = requestParametersJsonObject.getString(JsonAttNamesConstants.NAME_IDENTITY);
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(requestParametersJsonObject.getString(JsonAttNamesConstants.DISCOVERY_PARAM));
@@ -98,7 +103,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
             }
 
-            System.out.println("ComponentRegisteredListWebService - filteredLis.size() ="+resultList.size());
+            LOG.info("filteredLis.size() =" + resultList.size());
 
             /*
              * Convert the list to json representation
@@ -113,16 +118,19 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
         }catch (Exception e){
 
-            System.out.println("ComponentRegisteredListWebService - requested list is not available");
+            LOG.info("requested list is not available");
             jsonObjectRespond.addProperty(JsonAttNamesConstants.FAILURE, "Requested list is not available");
             e.printStackTrace();
         }
 
         String jsonString = gson.toJson(jsonObjectRespond);
-        System.out.println("ComponentRegisteredListWebService - json response length ="+jsonString.length());
 
-        return  new StringRepresentation(jsonString, MediaType.APPLICATION_JSON);
-        //return new org.restlet.engine.application.EncodeRepresentation(org.restlet.data.Encoding.ZIP, (new StringRepresentation(jsonString, MediaType.APPLICATION_JSON)));
+        JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(jsonString.trim());
+
+        LOG.info("jsonString.length() = " + jsonString.length());
+        LOG.info("jsonRepresentationRespond.getSize() = " + jsonRepresentationRespond.getSize());
+
+        return  jsonString;
     }
 
     /**
@@ -179,10 +187,11 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentityPublicKey)){
-                System.out.println("ComponentRegisteredListWebService - removing ="+platformComponentProfileRegistered.getName());
+                LOG.info("removing =" + platformComponentProfileRegistered.getName());
                 iterator.remove();
             }
         }
+
 
         return list;
     }
@@ -202,7 +211,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
         List<PlatformComponentProfile>  list = getPrimaryFilteredListFromCache(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), clientIdentityPublicKey);
         List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
 
-        System.out.println("ComponentRegisteredListWebService - totalFilterToApply    = "+totalFilterToApply);
+        LOG.info("totalFilterToApply    = " + totalFilterToApply);
 
         if (totalFilterToApply > 0){
 
@@ -338,7 +347,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
      */
     private  List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) {
 
-        System.out.println("ComponentRegisteredListWebService - applyDiscoveryQueryParametersFromOtherComponent    = ");
+        LOG.info("applyDiscoveryQueryParametersFromOtherComponent    = ");
 
         List<PlatformComponentProfile>  filteredListFromOtherComponentType = new ArrayList<>();
 
@@ -346,7 +355,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
          * Get the list from the cache that match with the other componet
          */
         List<PlatformComponentProfile> otherComponentList = (List<PlatformComponentProfile>) new ArrayList<>(searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey())).clone();
-        System.out.println("ComponentRegisteredListWebService - otherComponentList  = " + otherComponentList.size());
+        LOG.info("otherComponentList  = " + otherComponentList.size());
 
         /*
          * Find the other component that match with the identity
@@ -368,14 +377,14 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentityPublicKey)){
-                System.out.println("ComponentRegisteredListWebService - removing ="+platformComponentProfileRegistered.getName());
+                LOG.info("removing =" + platformComponentProfileRegistered.getName());
                 iterator.remove();
             }
         }
 
 
 
-        System.out.println("ComponentRegisteredListWebService - filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
+        LOG.info("filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
 
 
         return filteredListFromOtherComponentType;

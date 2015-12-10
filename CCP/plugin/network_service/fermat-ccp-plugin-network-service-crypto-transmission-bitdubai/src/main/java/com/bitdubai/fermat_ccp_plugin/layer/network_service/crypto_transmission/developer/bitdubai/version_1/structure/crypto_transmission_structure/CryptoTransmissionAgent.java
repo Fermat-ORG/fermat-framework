@@ -3,31 +3,26 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.events.IncomingCryptoMetadataReceive;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -278,12 +273,15 @@ public class CryptoTransmissionAgent {
                 discountWaitTime();
             }
 
-            //Sleep for a time
-            toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
+            if(toSend.isInterrupted() == Boolean.FALSE){
+                //Sleep for a time
+                toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
+            }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        }
+            toSend.interrupt();
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            return;        }
 
     }
 
@@ -304,26 +302,13 @@ public class CryptoTransmissionAgent {
 
 
                     if(!poolConnectionsWaitingForResponse.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())) {
-
-                        //TODO: hacer un filtro por aquellas que se encuentran conectadas
-
-//                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory()
-//                PlatformComponentProfile platformComponentProfile = new Pl
-
                         if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey()) == null) {
-
-
-                            if (wsCommunicationsCloudClientManager != null) {
-
-                                if (platformComponentProfile != null) {
-
+                            if (wsCommunicationsCloudClientManager != null && platformComponentProfile != null) {
                                     PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(cryptoTransmissionMetadata.getSenderPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
                                     PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(cryptoTransmissionMetadata.getDestinationPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
                                     communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
-
                                     // pass the metada to a pool wainting for the response of the other peer or server failure
                                     poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata);
-                                }
 
                             }
                         }
@@ -505,12 +490,15 @@ public class CryptoTransmissionAgent {
         try {
             // function to process metadata received
             processReceive();
-            //Sleep for a time
-            toSend.sleep(CryptoTransmissionAgent.RECEIVE_SLEEP_TIME);
+
+            if(toReceive.isInterrupted() == Boolean.FALSE){
+                toReceive.sleep(CryptoTransmissionAgent.RECEIVE_SLEEP_TIME);
+            }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        }
+            toReceive.interrupt();
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            return;        }
 
     }
 
@@ -544,6 +532,7 @@ public class CryptoTransmissionAgent {
                         try {
                             // lo cambio directo porque la metadata viene con un mensaje de estado distinto, actualizado
 
+
                             switch (cryptoTransmissionMetadata.getCryptoTransmissionStates()) {
 
                                 case SEEN_BY_DESTINATION_NETWORK_SERVICE:
@@ -564,7 +553,14 @@ public class CryptoTransmissionAgent {
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
-                                    //registerEvent(EventType.INCOMING_CRYPTO_METADATA, new IncomingCryptoMetadataEventHandler(this));
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
+                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                    cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+
+                                    System.out.print("-----------------------\n" +
+                                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+
                                     lauchNotification();
                                     break;
 
@@ -574,6 +570,17 @@ public class CryptoTransmissionAgent {
                                             "ACA DEBERIA LANZAR EVENTO NO CREO -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     // deberia ver si tengo que lanzar un evento acá
+                                    //para el outgoing intra user
+
+                                  //  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                  //  cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
+                                  //  cryptoTransmissionMetadataDAO.update(cryptoTransmissionMetadata);
+
+                                    System.out.print("-----------------------\n" +
+                                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+
+
                                     System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
                                     this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                                     break;
@@ -595,7 +602,6 @@ public class CryptoTransmissionAgent {
                                             cryptoTransmissionMetadata.getTransactionId(),
                                             CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
                                             CryptoTransmissionMetadataType.METADATA_SEND);
-
                                     Gson gson = new Gson();
 
                                     String message = gson.toJson(cryptoTransmissionResponseMessage);

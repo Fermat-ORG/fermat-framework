@@ -78,7 +78,7 @@ public class WithdrawBankMoneyTransactionDatabaseFactory implements DealsWithPlu
             table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_PLUGIN_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

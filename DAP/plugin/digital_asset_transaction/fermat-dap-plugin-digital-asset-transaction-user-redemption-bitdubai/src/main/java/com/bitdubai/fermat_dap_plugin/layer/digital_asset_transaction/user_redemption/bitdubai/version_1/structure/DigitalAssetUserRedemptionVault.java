@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -42,14 +42,14 @@ public class DigitalAssetUserRedemptionVault extends AbstractDigitalAssetVault {
 
     public void setDigitalAssetMetadataAssetIssuerWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         AssetUserWallet assetUserWallet=this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
-        AssetUserWalletBalance assetUserWalletBalance= assetUserWallet.getBookBalance(balanceType);
+        AssetUserWalletBalance assetUserWalletBalance= assetUserWallet.getBalance();
         ActorAssetUser actorAssetUser=this.actorAssetUserManager.getActorAssetUser();
         String actorFromPublicKey;
         if(actorAssetUser==null){
             System.out.println("USER REDEMPTION Actor user is null");
             actorFromPublicKey="UNDEFINED";
         }else{
-            actorFromPublicKey=actorAssetUser.getPublicKey();
+            actorFromPublicKey=actorAssetUser.getActorPublicKey();
         }
         System.out.println("USER REDEMPTION Actor user public key:"+actorFromPublicKey);
         AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper=new AssetUserWalletTransactionRecordWrapper(

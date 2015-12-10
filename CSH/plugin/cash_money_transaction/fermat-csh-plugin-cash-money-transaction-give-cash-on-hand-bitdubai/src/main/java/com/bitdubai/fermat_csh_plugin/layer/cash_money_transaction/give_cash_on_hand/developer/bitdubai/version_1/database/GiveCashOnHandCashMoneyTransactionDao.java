@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.give_cash_on_hand.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -16,7 +17,6 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.give_cash_on_hand.interfaces.GiveCashOnHand;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.give_cash_on_hand.developer.bitdubai.version_1.exceptions.GiveCashOnHandCashMoneyTransactionInconsistentTableStateException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.give_cash_on_hand.developer.bitdubai.version_1.exceptions.CantInitializeGiveCashOnHandCashMoneyTransactionDatabaseException;
@@ -183,7 +183,7 @@ public class GiveCashOnHandCashMoneyTransactionDao {
         BalanceType             balanceType         = BalanceType.getByCode(record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_BALANCE_TYPE_COLUMN_NAME));
         TransactionType         transactionType     = TransactionType.getByCode(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_TRANSACTION_TYPE_COLUMN_NAME);
         float                   amount              = record.getFloatValue(record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_AMOUNT_COLUMN_NAME));
-        CashCurrencyType        cashCurrencyType    = CashCurrencyType.getByCode(record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_CURRENCY_TYPE_COLUMN_NAME));
+        CashCurrencyType        cashCurrencyType    = null; //CashCurrencyType.getByCode(record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_CURRENCY_TYPE_COLUMN_NAME));
         long                    timeStamp           = record.getLongValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_TIMESTAMP_COLUMN_NAME);
         String                  cashReference       = record.getStringValue(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_REFERENCE_COLUMN_NAME);
         CashTransactionStatus   transactionStatus = CashTransactionStatus.ACKNOWLEDGED;

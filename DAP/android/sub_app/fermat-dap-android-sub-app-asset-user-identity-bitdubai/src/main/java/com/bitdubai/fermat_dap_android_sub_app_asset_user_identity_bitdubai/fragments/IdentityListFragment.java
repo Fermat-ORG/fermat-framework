@@ -20,7 +20,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.sess
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetUser>
 
         try {
             // setting up  module
-            moduleManager = ((UserIdentitySubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((UserIdentitySubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -66,7 +66,7 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetUser>
             newIdentityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    changeActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+                    changeActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
                 }
             });
 

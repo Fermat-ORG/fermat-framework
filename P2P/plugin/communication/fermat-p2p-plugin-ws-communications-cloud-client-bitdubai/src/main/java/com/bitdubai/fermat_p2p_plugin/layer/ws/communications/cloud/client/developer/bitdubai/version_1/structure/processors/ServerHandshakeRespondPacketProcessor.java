@@ -6,10 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
@@ -37,8 +37,8 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
     @Override
     public void processingPackage(final FermatPacket receiveFermatPacket) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("ServerHandshakeRespondPacketProcessor - processingPackage");
+        //System.out.println(" --------------------------------------------------------------------- ");
+        //System.out.println("ServerHandshakeRespondPacketProcessor - processingPackage");
 
         /* -----------------------------------------------------------------------------------------
          * IMPORTANT: This Message Content of this packet come encrypted with the temporal identity public key
@@ -64,7 +64,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         getWsCommunicationsCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.SERVER_IDENTITY).getAsString());
 
 
-        System.out.println("ServerHandshakeRespondPacketProcessor - ServerIdentity = "+ getWsCommunicationsCloudClientChannel().getServerIdentity());
+        //System.out.println("ServerHandshakeRespondPacketProcessor - ServerIdentity = "+ getWsCommunicationsCloudClientChannel().getServerIdentity());
 
         /*
          * Construct a Communications Cloud Client Profile for this component and send and fermat packet type FermatPacketType.COMPONENT_REGISTRATION_REQUEST

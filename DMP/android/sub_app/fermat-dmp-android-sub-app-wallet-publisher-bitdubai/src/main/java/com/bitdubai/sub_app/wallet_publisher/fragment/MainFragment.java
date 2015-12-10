@@ -31,7 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.sub_app.wallet_publisher.R;
@@ -102,7 +102,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
             /*
              * Get the module instance
              */
-            walletPublisherModuleManager = ((WalletPublisherSubAppSession) subAppsSession).getWalletPublisherManager();
+            walletPublisherModuleManager = ((WalletPublisherSubAppSession) appSession).getWalletPublisherManager();
             /*Getting WFP */
             //projects = (ArrayList<WalletFactoryProject>) walletPublisherModuleManager.getProjectsReadyToPublish();
         } catch (Exception ex) {
@@ -204,7 +204,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 && project != null) {
             //Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
             /* Starting Wizard to Publish this Project */
-            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, subAppsSession, subAppSettings, subAppResourcesProviderManager, project);
+            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT.getKey(), appSession, appSettings, appResourcesProviderManager, project);
             return true;
         }
         Toast.makeText(getActivity(), "Starting wizard to publish...", Toast.LENGTH_SHORT).show();

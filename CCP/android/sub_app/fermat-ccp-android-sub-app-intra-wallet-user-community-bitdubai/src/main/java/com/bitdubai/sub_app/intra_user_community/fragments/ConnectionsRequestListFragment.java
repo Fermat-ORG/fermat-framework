@@ -24,7 +24,7 @@ import android.widget.ListPopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -43,9 +43,10 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
 import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
@@ -53,7 +54,6 @@ import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnec
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
-import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +82,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
     private int mNotificationsCount=0;
 
     public static ConnectionsRequestListFragment newInstance(){
-        ConnectionsRequestListFragment fragment = new ConnectionsRequestListFragment();
-        return fragment;
+        return new ConnectionsRequestListFragment();
     }
 
     @Override
@@ -91,8 +90,8 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            intraUserModuleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            intraUserModuleManager = ((IntraUserSubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
             intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
             isStartList = true;
 
@@ -145,7 +144,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
 
             // Esto podria ser un enum de item menu que correspondan a otro menu
             if(itemTitle.equals("New Identity")){
-                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(),subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), appSession.getAppPublicKey());
 
             }
 
@@ -201,7 +200,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
             ListAdapter listAdapter = new ListAdapter(getActivity(),R.layout.itemlistrow,lstCheckBox);
 
 
-            ((PaintActivtyFeactures) getActivity()).paintComboBoxInActionBar(listAdapter, this);
+            ((PaintActivityFeatures) getActivity()).paintComboBoxInActionBar(listAdapter, this);
         } catch (CantShowLoginIdentitiesException e) {
             e.printStackTrace();
         }
@@ -402,25 +401,6 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         return false;
     }
 
-    /*
-    Sample AsyncTask to fetch the notifications count
-    */
-    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            // example count. This is where you'd
-            // query your data store for the actual count.
-            return mNotificationsCount;
-        }
-
-        @Override
-        public void onPostExecute(Integer count) {
-            updateNotificationsBadge(count);
-        }
-    }
-
-
     // Call this when you want to show the ListPopupWindow
     private void showListMenu(View anchor,List<IntraUserInformation> lstIntraUserRequestWaiting) {
         ListPopupWindow popupWindow = new ListPopupWindow(getActivity());
@@ -444,11 +424,30 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                changeActivity(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY.getCode(),subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY.getCode(), appSession.getAppPublicKey());
             }
         }); // the callback for when a list item is selected
         popupWindow.show();
     }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
     public class CustomListAdapter extends ArrayAdapter<IntraUserInformation> {
 
         private final Activity context;
@@ -494,8 +493,10 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
                 @Override
                 public void onClick(View view) {
                     try {
-                        intraUserModuleManager.denyConnection(intraUser.getPublicKey());
+                        intraUserModuleManager.denyConnection(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),intraUser.getPublicKey());
                     } catch (IntraUserConectionDenegationFailedException e) {
+                        e.printStackTrace();
+                    } catch (CantGetActiveLoginIdentityException e) {
                         e.printStackTrace();
                     }
                 }

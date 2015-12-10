@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -22,8 +21,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -186,12 +185,15 @@ public class AssetUserActorNetworkServiceAgent {
                 processMetadata();
             }
 
-            //Sleep for a time
-            toSend.sleep(AssetUserActorNetworkServiceAgent.SLEEP_TIME);
+            if(toSend.isInterrupted() == Boolean.FALSE){
+                //Sleep for a time
+                Thread.sleep(AssetUserActorNetworkServiceAgent.SLEEP_TIME);
+            }
 
         }catch(InterruptedException e) {
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            toSend.interrupt();
+            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            return;
         }
 
     }
@@ -215,12 +217,20 @@ public class AssetUserActorNetworkServiceAgent {
                             /*
                             * Create the sender basic profile
                             */
-                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getSender(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_USER);
 
                             /*
                              * Create the receiver basic profile
                              */
-                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                        constructBasicPlatformComponentProfileFactory(
+                                                fm.getReceiver(),
+                                                NetworkServiceType.UNDEFINED,
+                                                PlatformComponentType.ACTOR_ASSET_USER);
 
 
                             try {

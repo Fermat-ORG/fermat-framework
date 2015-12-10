@@ -19,7 +19,7 @@ public class MockActorAssetUserForTesting implements ActorAssetUser {
     }
 
     @Override
-    public String getPublicKey() {
+    public String getActorPublicKey() {
         return new ECCKeyPair().getPublicKey();
     }
 

@@ -7,34 +7,39 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest> {
 
     /**
      * MANAGERS
@@ -62,6 +67,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     String walletPublicKey = "reference_wallet";
     private View rootView;
+    private LinearLayout empty;
 
     /**
      * Create a new instance of this fragment
@@ -69,7 +75,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      * @return InstalledFragment instance object
      */
     public static RequestReceiveHistoryFragment newInstance() {
-        RequestReceiveHistoryFragment requestPaymentFragment = new RequestReceiveHistoryFragment();
         return new RequestReceiveHistoryFragment();
     }
 
@@ -78,13 +83,14 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-            lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -93,20 +99,15 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        lstPaymentRequest = new ArrayList<PaymentRequest>();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             rootView = super.onCreateView(inflater, container, savedInstanceState);
-            setUpScreen(inflater);
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
+            empty = (LinearLayout) rootView.findViewById(R.id.empty);
+
             return rootView;
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -114,17 +115,19 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         return container;
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-        setNavigationDrawer(navigationViewAdapter);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        try {
+            super.onActivityCreated(savedInstanceState);
+            lstPaymentRequest = new ArrayList<PaymentRequest>();
+            getPaintActivtyFeactures().addNavigationView(new NavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        } catch (CantGetActiveLoginIdentityException e) {
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        } catch (Exception e){
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
 
@@ -159,8 +162,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
+
         }
         return adapter;
     }
@@ -178,6 +182,10 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
+            //when refresh offset set 0
+            if(refreshType.equals(FermatRefreshTypes.NEW))
+                offset = 0;
+
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey,10,offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {
@@ -192,6 +200,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     @Override
     public void onItemClickListener(PaymentRequest item, int position) {
         selectedItem = item;
+
         //showDetailsActivityFragment(selectedItem);
     }
 
@@ -216,6 +225,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                 lstPaymentRequest = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(lstPaymentRequest);
+                if(lstPaymentRequest.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(),true,empty);
+                else FermatAnimationsUtils.showEmpty(getActivity(),false,empty);
+
             }
         }
     }
@@ -235,10 +247,10 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         this.referenceWalletSession = referenceWalletSession;
     }
 
-    @Override
-    public void onClick(View v) {
+   /* @Override
+   public void onClick(View v) {
         try {
-            PaymentRequest paymentRequest = referenceWalletSession.getLastRequestSelected();
+            PaymentRequest paymentRequest = selectedItem;
             int id = v.getId();
             if(id == R.id.btn_refuse_request){
 
@@ -246,7 +258,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                 Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId());
+
+                cryptoWallet.approveRequest(paymentRequest.getRequestId()
+                        , referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 
@@ -254,7 +268,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         {
             showMessage(getActivity(), "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
         }
-    }
+    }*/
 
 
 }

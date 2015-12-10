@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
 /**
  * Created by nelson on 05/11/15.

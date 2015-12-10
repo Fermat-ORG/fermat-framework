@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -18,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_community.interfaces.WalletCommunityManager;
@@ -77,6 +78,24 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
         fermatEventListener.setEventHandler(fermatEventHandler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+         /*
+         * Listen and handle VPN Connection Close Notification Event
+         */
+     //   fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+     //   fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
+      //  eventManager.addListener(fermatEventListener);
+      //  listenersAdded.add(fermatEventListener);
+
+              /*
+         * Listen and handle Client Connection Close Notification Event
+         */
+      //  fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+      //  fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
+      //  eventManager.addListener(fermatEventListener);
+      //  listenersAdded.add(fermatEventListener);
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -163,8 +182,77 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
 
     }
 
+
+    /**
+     * Handles the events VPNConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+       /* if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                 if(communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        } */
+
+    }
+
+    /**
+     * Handles the events ClientConnectionCloseNotificationEvent
+     * @param fermatEvent
+     */
+    @Override
+    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
+
+      /*  if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+            this.register = false;
+             if(communicationNetworkServiceConnectionManager != null)
+            communicationNetworkServiceConnectionManager.closeAllConnection();
+        }
+        */
+
+    }
+
     @Override
     public boolean isRegister() {
         return false;
+    }
+
+    @Override
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
+
+    }
+
+    @Override
+    public void initializeCommunicationNetworkServiceConnectionManager() {
+
+    }
+
+    @Override
+    public String getIdentityPublicKey() {
+        return null;
+    }
+
+    @Override
+    public String getAlias() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getExtraData() {
+        return null;
     }
 }

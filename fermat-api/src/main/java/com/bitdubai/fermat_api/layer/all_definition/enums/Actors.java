@@ -3,47 +3,68 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+/**
+ * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Actors</code>
+ * Lists all the Actors available on Fermat.
+ * <p/>
+ * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
+ */
+
 public enum Actors implements FermatEnum {
 
-    DEVICE_USER("DUS"),
-    INTRA_USER("IUS"),
-    EXTRA_USER("EUS"),
-    SHOP("SHP"),
-    DAP_ASSET_ISSUER("DAPASIS"),
-    DAP_ASSET_USER("DAPASUS"),
-    DAP_ASSET_REDEEM_POINT("DAPARP"),
-    CCP_INTRA_WALLET_USER("CCPIU"),
-    CCM_INTRA_WALLET_USER("CCMIU"),
+    /**
+     * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
+     */
+    DEVICE_USER             ("DUS"),
+    EXTRA_USER              ("EUS"),
+    INTRA_USER              ("IUS"),
+    SHOP                    ("SHP"),
+
+    CBP_CRYPTO_BROKER       ("CBPCRBR"),
+    CBP_CRYPTO_CUSTOMER     ("CBPCRCU"),
+
+    CCM_INTRA_WALLET_USER   ("CCMIU"),
+    CCP_INTRA_WALLET_USER   ("CCPIU"),
+
+    DAP_ASSET_ISSUER        ("DAPASIS"),
+    DAP_ASSET_REDEEM_POINT  ("DAPARP"),
+    DAP_ASSET_USER          ("DAPASUS"),
+
     ;
 
-    private String code;
+    private final String code;
 
-    Actors(String code) {
+    Actors(final String code) {
         this.code = code;
     }
 
-    public String getCode() {
-        return this.code;
-    }
-
-    public static Actors getByCode(String code)/*throws InvalidParameterException*/ {
+    public static Actors getByCode(String code) throws IllegalArgumentException {
 
         switch (code) {
-            case "DUS":     return Actors.DEVICE_USER;
-            case "IUS":     return Actors.INTRA_USER;
-            case "EUS":     return Actors.EXTRA_USER;
-            case "SHP":     return Actors.SHOP;
-            case "DAPASIS": return Actors.DAP_ASSET_ISSUER;
-            case "DAPASUS": return Actors.DAP_ASSET_USER;
-            case "DAPARP":  return Actors.DAP_ASSET_REDEEM_POINT;
-            case "CCPIU":   return Actors.CCP_INTRA_WALLET_USER;
-            case "CCMIU":   return Actors.CCM_INTRA_WALLET_USER;
-            //Modified by Manuel Perez on 03/08/2015
-            //default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Actors enum");
+            case "DUS":     return DEVICE_USER;
+            case "EUS":     return EXTRA_USER;
+            case "IUS":     return INTRA_USER;
+            case "SHP":     return SHOP;
+
+            case "CBPCRBR": return CBP_CRYPTO_BROKER;
+            case "CBPCRCU": return CBP_CRYPTO_CUSTOMER;
+
+            case "CCMIU":   return CCM_INTRA_WALLET_USER;
+            case "CCPIU":   return CCP_INTRA_WALLET_USER;
+
+            case "DAPASIS": return DAP_ASSET_ISSUER;
+            case "DAPARP":  return DAP_ASSET_REDEEM_POINT;
+            case "DAPASUS": return DAP_ASSET_USER;
+
+            default:
+                throw new IllegalArgumentException(
+                        "The code"+code+" is not valid for the Actors enum."
+                );
         }
-        /**
-         * Return by default.
-         */
-        return Actors.DEVICE_USER;
+    }
+
+    @Override
+    public String getCode() {
+        return this.code;
     }
 }

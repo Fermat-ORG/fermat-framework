@@ -3,13 +3,12 @@ package com.bitdubai.sub_app.intra_user_community.fragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionConnectionsListFragment;
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionSettingsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsFragment;
-import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsRequestListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
-
-
-
 import com.bitdubai.sub_app.intra_user_community.fragments.RegisterIntraUserFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.RequestConnectionsFragment;
 import com.bitdubai.sub_app.intra_user_community.preference_settings.IntraUserPreferenceSettings;
@@ -18,6 +17,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 /**
  * Created by Matias Furszyfer on 31/8/2015.
+ * Modify by Jose Manuel De Sousa Dos Santos on 08/12/2015.
  */
 
 public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraUserSubAppSession, IntraUserPreferenceSettings, IntraUserFragmentsEnumType> {
@@ -56,6 +56,21 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT:
                 currentFragment = null;
+                break;
+            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT:
+                currentFragment = ConnectionNotificationsFragment.newInstance();
+                break;
+            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT:
+                currentFragment = ConnectionOtherProfileFragment.newInstance();
+                break;
+            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT:
+                currentFragment = ConnectionsWorldFragment.newInstance();
+                break;
+            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT:
+                currentFragment = ConnectionConnectionsListFragment.newInstance();
+                break;
+            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENT:
+                currentFragment = ConnectionSettingsFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");

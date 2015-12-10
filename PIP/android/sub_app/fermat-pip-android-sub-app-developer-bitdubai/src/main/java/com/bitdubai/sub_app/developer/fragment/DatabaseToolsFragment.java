@@ -18,13 +18,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Resource;
@@ -73,8 +74,8 @@ public class DatabaseToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (super.subAppsSession != null) {
-            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if (super.appSession != null) {
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
         }
 
         errorManager = developerSubAppSession.getErrorManager();
@@ -108,7 +109,7 @@ public class DatabaseToolsFragment extends FermatFragment {
             List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
             List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
 
-            mlist = new ArrayList<Resource>();
+            mlist = new ArrayList<>();
 
             for (int i = 0; i < plugins.size(); i++) {
 
@@ -116,13 +117,13 @@ public class DatabaseToolsFragment extends FermatFragment {
 
                 String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().getCode()+" "+
                         pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
-                        pvr.getPluginDeveloperReference().getPluginReference().getPlugin().name();
+                        ((Plugins)pvr.getPluginDeveloperReference().getPluginReference().getPlugin()).name();
 
                 mlist.add(
                         new Resource(
                                 "plugin",
                                 label.replaceAll("_", " "),
-                                pvr.toKey(),
+                                pvr,
                                 pvr.getPluginDeveloperReference().getDeveloper().name(),
                                 Resource.TYPE_PLUGIN
                         )

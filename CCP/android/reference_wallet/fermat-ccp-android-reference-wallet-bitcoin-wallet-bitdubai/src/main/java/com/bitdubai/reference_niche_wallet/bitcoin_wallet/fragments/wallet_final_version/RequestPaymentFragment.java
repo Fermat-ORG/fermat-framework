@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragmentNew;
@@ -16,7 +15,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestPendingAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -70,7 +69,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         super.onCreate(savedInstanceState);
         try {
@@ -119,7 +118,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
     public FermatAdapterNew getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestPendingAdapter(getActivity(), lstPaymentRequest, viewInflater,(ReferenceWalletSession)walletSession);
+            adapter = new PaymentRequestPendingAdapter(getActivity(), lstPaymentRequest, viewInflater,(ReferenceWalletSession)appSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -219,7 +218,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
 //                Toast.makeText(getActivity(), "Installing...", Toast.LENGTH_SHORT).show();
 //
 //                InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager);
-//                InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, subAppsSession);
+//                InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, appSession);
 //                if (executor != null)
 //                    executor.shutdownNow();
 //                executor = installWalletWorker.execute();
@@ -227,7 +226,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
 //
 //            @Override
 //            public void onErrorOccurred(Exception ex) {
-//                final ErrorManager errorManager = subAppsSession.getErrorManager();
+//                final ErrorManager errorManager = appSession.getErrorManager();
 //                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
 //                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 //
@@ -235,7 +234,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
 //            }
 //        };
 //
-//        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
+//        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, appSession, item, activity, callBack);
 //        worker.execute();
 //    }
 
@@ -247,9 +246,9 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
 //            public void onPostExecute(Object... result) {
 //
 //                final DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
-//                fragment.setSubAppsSession(subAppsSession);
-//                fragment.setSubAppSettings(subAppSettings);
-//                fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+//                fragment.setAppSession(appSession);
+//                fragment.setAppSettings(appSettings);
+//                fragment.setAppResourcesProviderManager(appResourcesProviderManager);
 //
 //                final FragmentTransaction FT = activity.getFragmentManager().beginTransaction();
 //                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -260,7 +259,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
 //
 //            @Override
 //            public void onErrorOccurred(Exception ex) {
-//                final ErrorManager errorManager = subAppsSession.getErrorManager();
+//                final ErrorManager errorManager = appSession.getErrorManager();
 //                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
 //                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 //
@@ -268,7 +267,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
 //            }
 //        };
 //
-//        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
+//        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, appSession, item, activity, callBack);
 //        worker.execute();
 //    }
 

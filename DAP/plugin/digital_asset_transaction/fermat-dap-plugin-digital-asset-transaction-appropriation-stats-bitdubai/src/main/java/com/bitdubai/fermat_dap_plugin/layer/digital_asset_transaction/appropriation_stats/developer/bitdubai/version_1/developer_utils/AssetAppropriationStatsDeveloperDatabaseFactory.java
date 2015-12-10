@@ -108,6 +108,16 @@ public class AssetAppropriationStatsDeveloperDatabaseFactory implements DealsWit
         DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
         tables.add(eventsRecorderTable);
 
+        List<String> assetAppropriatedColumns = new ArrayList<>();
+
+        assetAppropriatedColumns.add(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ID_COLUMN_NAME);
+        assetAppropriatedColumns.add(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ASSET_COLUMN_NAME);
+        assetAppropriatedColumns.add(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_USER_COLUMN_NAME);
+        assetAppropriatedColumns.add(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TABLE_NAME);
+
+        DeveloperDatabaseTable assetAppropriatedTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TABLE_NAME, assetAppropriatedColumns);
+        tables.add(assetAppropriatedTable);
+
         return tables;
     }
 

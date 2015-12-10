@@ -29,8 +29,8 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -44,9 +44,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHomeAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
@@ -129,7 +129,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
 
@@ -338,7 +338,8 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                                     new CryptoAddress(walletContact.address, CryptoCurrency.BITCOIN),
                                     txt_notes.getText().toString(),
                                     Long.valueOf(editTextAmount.getText().toString()),
-                                    BlockchainNetworkType.DEFAULT
+                                    BlockchainNetworkType.DEFAULT,
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
                             );
                         }
 
@@ -418,7 +419,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHomeAdapter(getActivity(), lstPaymentRequest, cryptoWallet,(ReferenceWalletSession)walletSession);
+            adapter = new PaymentRequestHomeAdapter(getActivity(), lstPaymentRequest, cryptoWallet,(ReferenceWalletSession)appSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;

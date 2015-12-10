@@ -29,8 +29,8 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.sess
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import java.io.ByteArrayOutputStream;
 
@@ -70,8 +70,8 @@ public class CreateIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((UserIdentitySubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((UserIdentitySubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -116,7 +116,7 @@ public class CreateIdentityFragment extends FermatFragment {
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY.getCode());
+                        changeActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();

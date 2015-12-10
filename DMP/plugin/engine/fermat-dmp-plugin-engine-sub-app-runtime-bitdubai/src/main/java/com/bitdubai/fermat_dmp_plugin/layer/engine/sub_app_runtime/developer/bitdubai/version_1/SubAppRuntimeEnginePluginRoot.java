@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -45,30 +44,26 @@ import java.util.Map;
 /**
  * The App Runtime is the module in charge of the UI navigation structure. A user is always at a certain point in this
  * structure.
- *
+ * <p/>
  * A Navigation stack is maintained by this plugin to allow the user to go back all the stack down to the root if necessary.
- *
+ * <p/>
  * Created by Matias Furszyfer 24/07/15
  */
 public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements SubAppRuntimeManager {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
 
     /**
      * SubAppRuntimeManager Interface member variables.
      */
     List<FermatEventListener> listenersAdded = new ArrayList<>();
-
     /**
      * Map connect sub app public key - sub app
      */
 
     Map<String, SubApp> listSubApp = new HashMap<>();
-
     String lastSubapPublicKey;
-
     RuntimeSubApp homeScreen;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     public SubAppRuntimeEnginePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -193,13 +188,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //wallet factory app
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
-            runtimeSubApp.setPublicKey("public_key_factory");
+            String factory_public_key = "public_key_factory";
+            runtimeSubApp.setPublicKey(factory_public_key);
             runtimeApp.addSubApp(runtimeSubApp);
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setBackPublicKey(factory_public_key);
             runtimeSubApp.setStartActivity(Activities.CWP_WALLET_FACTORY_MAIN);
             //runtimeActivity.setStatusBarColor("");
 
@@ -251,7 +248,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_FACTORY_CREATE_STEP_2);
             runtimeWizard.addPage(runtimeWizardPage);
             /* Adding wizard */
-            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT, runtimeWizard);
+            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT.getKey(), runtimeWizard);
 
             /**
              *  Edit Activity
@@ -259,7 +256,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_EDIT_WALLET);
             runtimeActivity.setColor("#b46a54");
-
+            runtimeActivity.setBackPublicKey(factory_public_key);
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
             statusBar.setColor("#b46a54");
 
@@ -288,7 +285,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTabStrip.setDividerColor(0x72af9c);
             //runtimeTabStrip.setBackgroundColor("#72af9c");
             runtimeActivity.setTabStrip(runtimeTabStrip);
-
+            runtimeActivity.setBackPublicKey(factory_public_key);
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
@@ -334,7 +331,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_3);
             runtimeWizard.addPage(runtimeWizardPage);
 
-            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, runtimeWizard);
+            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT.getKey(), runtimeWizard);
 
             runtimeSideMenu = new SideMenu();
             runtimeMenuItem = new MenuItem();
@@ -508,88 +505,26 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             /**
              * WALLET STORE
              */
-            runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
-            runtimeSubApp.setPublicKey("public_key_store");
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
-            //Activity 1
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-            runtimeActivity.setColor("#B46A54");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
 
-            statusBar = new StatusBar();
-            statusBar.setColor("#B4573C");
-            runtimeActivity.setStatusBar(statusBar);
+            createWalletStoreNavigationStructure();
 
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Wallet Store");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
-
-            //Activity 2
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
-            runtimeActivity.setColor("#B46A54");
-            runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-            runtimeSubApp.addActivity(runtimeActivity);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#B4573C");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setLabel("Wallet Details");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
-
-            //Activity 3
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY);
-            runtimeActivity.setColor("#B46A54");
-            runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
-            runtimeSubApp.addActivity(runtimeActivity);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#B4573C");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Wallet Store more detail");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
 
             /**
-             * Start Intra user community sub app
+             * CCP Intra User Community SubApp
              */
             RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
             subAppIntraUser.setType(SubApps.CCP_INTRA_USER_COMMUNITY);
             String communityPublicKey = "public_key_intra_user_commmunity";
             subAppIntraUser.setPublicKey(communityPublicKey);
-            listSubApp.put( subAppIntraUser.getPublicKey(),subAppIntraUser);
+            listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
 
-
-
-            //Activity 1
+            //Activity Explore
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_INTRA_USER_ACTIVITY);
-            subAppIntraUser.setStartActivity(Activities.CWP_INTRA_USER_ACTIVITY);
-            //runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
+            subAppIntraUser.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeActivity.setColor("#FF0B46F0");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -597,26 +532,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("World");
-            runtimeTitleBar.setColor("#FF0B46F0");
-            runtimeTitleBar.setIconName("world");
-
-            //RuntimeFernatComboBox comboBox = new RuntimeFernatComboBox();
-            //comboBox.addValue("Mati");
-
-            //runtimeTitleBar.setComboBox(comboBox);
+            runtimeTitleBar.setLabel("Explore");
+            runtimeTitleBar.setLabelSize(20);
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#0072bb");
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
-//            runtimeTabStrip = new TabStrip();
-//            runtimeTabStrip.setTabsColor("#d07b62");
-//            runtimeTabStrip.setTabsTextColor("#FFFFFF");
-//            runtimeTabStrip.setTabsIndicateColor("#b46a54");
-            //mati
-            SearchView runtimeSearchView = new SearchView();
-            runtimeSearchView.setLabel("Search");
-            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
-
-            //runtimeActivity.setTitleBar(runtimeTitleBar);
 
             runtimeMainMenu = new MainMenu();
             runtimeMenuItem = new MenuItem();
@@ -626,224 +548,252 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setMainMenu(runtimeMainMenu);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
 
 
             runtimeSideMenu = new SideMenu();
-
+            runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLabel("Your connections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Notifications");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
 
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
-            subAppIntraUser.setStartActivity(Activities.CWP_INTRA_USER_ACTIVITY);
 
-
-            //Activity 3
+            // Activity: Connection
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
-            subAppIntraUser.addActivity(runtimeActivity);
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
+
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Connections Request");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeSearchView = new SearchView();
-            runtimeSearchView.setLabel("Search");
-            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
-
-            // Activity: Connections
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS.getCode());
-            runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
-            runtimeActivity.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Connections");
-            runtimeTitleBar.setColor("#FF0B46F0");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#0072bb");
+            runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT.getKey());
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey());
 
             runtimeSideMenu = new SideMenu();
-
+            runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLabel("Your connections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Notifications");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-
             runtimeActivity.setSideMenu(runtimeSideMenu);
-
             subAppIntraUser.addActivity(runtimeActivity);
 
-            // Activity: List of irequest
+            // Activity: Notifications
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
-            runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Request list");
-            runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setLabel("Notifications");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#0072bb");
+            runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
 
             runtimeSideMenu = new SideMenu();
-
+            runtimeSideMenu.setBackgroundColor("#0072bb");
+            runtimeSideMenu.setHasFooter(false);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLabel("Your connections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Notifications");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-
             runtimeActivity.setSideMenu(runtimeSideMenu);
+
             subAppIntraUser.addActivity(runtimeActivity);
 
-            // Activity: Connection detail
+            // Activity: Settings
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL.getCode());
-            runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
             runtimeActivity.setColor("#FF0B46F0");
 
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Connection detail");
-            runtimeTitleBar.setColor("#FF0B46F0");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setLabel("Settings");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#0072bb");
+            runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT.getKey());
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENTS.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENTS.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENTS.getKey());
 
             runtimeSideMenu = new SideMenu();
-
+            runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Explore");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-            runtimeMenuItem.setLinkToActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLabel("Your connections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Notifications");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
 
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
 
+            // Activity: Other Profile
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+            runtimeActivity.setBackPublicKey(communityPublicKey);
+            runtimeActivity.setColor("#FF0B46F0");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Profile");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#0072bb");
+            runtimeTitleBar.setLabelSize(20);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0072bb");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+
+            subAppIntraUser.addActivity(runtimeActivity);
             /**
              * End of community intra user CCP
              */
@@ -856,29 +806,55 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_MAIN);
-            runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setColor("#1d1d25");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("DAP factory");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey());
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey(), runtimeFragment);
+            statusBar.setColor("#1d1d25");
 
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Asset Factory");
+            runtimeTitleBar.setColor("#1d1d25");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeTabStrip = new TabStrip();
+            runtimeTabStrip.setTabsColor("#1d1d25");
+            runtimeTabStrip.setTabsIndicateColor("#ffffff");
+            runtimeTabStrip.setTabsTextColor("#ffffff");
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Editable");
+            runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT);
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Published");
+            runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT);
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey(), runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey(), runtimeFragment);
 
             dapFactory.addActivity(runtimeActivity);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
-            runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setBackActivity(Activities.DAP_MAIN);
+            runtimeActivity.setColor("#1d1d25");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#1d1d25");
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Asset Editor");
+            runtimeTitleBar.setColor("#1d1d25");
+
             runtimeActivity.setTitleBar(runtimeTitleBar);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
 
@@ -988,7 +964,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
-            String intraUserIdentityPublicKey ="public_key_ccp_intra_user_identity";
+            String intraUserIdentityPublicKey = "public_key_ccp_intra_user_identity";
             runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
 
             // Activity: List of identities
@@ -998,16 +974,18 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setBackActivity(null);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Intra user Identity");
-            runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
+            statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
@@ -1019,18 +997,21 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New Identity");
-            runtimeTitleBar.setColor("#FFFFFF");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setLabel("Identity Manager");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
+            statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
@@ -1106,7 +1087,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_USER);
-            runtimeSubApp.setPublicKey("public_key_dap_assets_user_identity");
+            runtimeSubApp.setPublicKey("public_key_dap_asset_user_identity");
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1225,6 +1206,94 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
     }
 
+    private void createWalletStoreNavigationStructure() {
+        RuntimeSubApp runtimeSubApp;
+        Activity runtimeActivity;
+        StatusBar statusBar;
+        TitleBar runtimeTitleBar;
+        Fragment runtimeFragment;
+
+        String publicKey = "public_key_store";
+
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
+        runtimeSubApp.setPublicKey(publicKey);
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+        //List of wallets
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY.getCode());
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#B4573C");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Wallet Store");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#B46A54");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
+
+        //Wallet Details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#B4573C");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setLabel("Wallet Details");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#B46A54");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
+
+        //More Details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY);
+        runtimeActivity.setColor("#FFFFFF");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#AAAAAA");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("More Details");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#222222");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
+    }
+
     private void createCryptoCustomerIdentitySubAppNavigationStructure() {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
@@ -1234,7 +1303,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeSubApp.setPublicKey("public_key_cbp_customer_identity");
+        runtimeSubApp.setPublicKey("sub_app_crypto_customer_identity");
 
         // Activity: List of identities
         runtimeActivity = new Activity();
@@ -1317,7 +1386,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
-        runtimeSubApp.setPublicKey("public_key_cbp_broker_identity");
+        runtimeSubApp.setPublicKey("sub_app_crypto_broker_identity");
 
         // Activity: List of identities
         runtimeActivity = new Activity();

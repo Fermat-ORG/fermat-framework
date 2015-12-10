@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -20,7 +21,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.Unexp
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
 import java.util.List;
@@ -37,12 +38,16 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     //String digitalAssetMetadataFileStoragePath;
     AssetReceptionDao assetReceptionDao;
     DistributionStatus distributionStatus;
+    BitcoinNetworkManager bitcoinNetworkManager;
 
     DigitalAssetReceptionVault digitalAssetReceptionVault;
     //AssetVaultManager assetVaultManager;
 
-    public DigitalAssetReceptor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetReceptor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
         super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.setBitcoinCryptoNetworkManager(this.bitcoinNetworkManager);
+
         this.errorManager=errorManager;
     }
 
@@ -147,7 +152,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
-        //this.assetDistributionDao.persistDigitalAsset(digitalAssetMetadata.getGenesisTransaction(), this.digitalAssetFileStoragePath, digitalAssetMetadata.getDigitalAssetHash(), actorAssetUser.getPublicKey());
+        //this.assetDistributionDao.persistDigitalAsset(digitalAssetMetadata.getGenesisTransaction(), this.digitalAssetFileStoragePath, digitalAssetMetadata.getDigitalAssetHash(), actorAssetUser.getActorPublicKey());
         persistInLocalStorage(digitalAssetMetadata);
     }
 

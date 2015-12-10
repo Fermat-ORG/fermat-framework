@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +11,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,20 +29,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -52,8 +48,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.IndexBarView;
@@ -61,12 +57,9 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_con
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -165,11 +158,11 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession =(ReferenceWalletSession) walletSession;
+        referenceWalletSession =(ReferenceWalletSession) appSession;
         setRetainInstance(true);
         setHasOptionsMenu(false);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
-        errorManager = walletSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         cryptoWalletManager = referenceWalletSession.getModuleManager();
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -188,7 +181,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             rootView = inflater.inflate(R.layout.main_act, container, false);
             setupViews(rootView);
             setUpFAB();
-            setUpScreen(inflater);
             walletContactRecords = new ArrayList<>();
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
@@ -196,9 +188,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             onRefresh();
             return rootView;
 
-        } catch (CantGetActiveLoginIdentityException e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -215,7 +204,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         frameLayout.setLayoutParams(lbs);
 
         ImageView icon = new ImageView(getActivity()); // Create an icon
-        icon.setImageResource(R.drawable.ic_contact_newcontact);
+        //icon.setImageResource(R.drawable.ic_contact_newcontact);
 
         frameLayout.addView(icon);
 
@@ -254,17 +243,18 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-        setNavigationDrawer(navigationViewAdapter);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        try {
+            super.onActivityCreated(savedInstanceState);
+            getPaintActivtyFeactures().addNavigationView(new NavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+        } catch (CantGetActiveLoginIdentityException e) {
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        } catch (Exception e){
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
 
@@ -400,7 +390,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 mListItems,
                 mListSectionPos,
                 constrainStr,
-                this);
+                this,
+                errorManager);
 
         mListView.setAdapter(mPinnedHeaderAdapter);
 
@@ -495,8 +486,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(ReferenceWalletSession walletSession) {
-        this.walletSession = walletSession;
+    public void setWalletSession(ReferenceWalletSession appSession) {
+        this.appSession = appSession;
     }
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
@@ -673,21 +664,21 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         private void showLoading(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.GONE);
             loadingView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            FermatAnimationsUtils.showEmpty(getActivity(),false,emptyView);
         }
 
 
         private void showContent(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.VISIBLE);
             loadingView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.GONE);
+            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyView);
         }
 
 
         private void showEmptyText(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
         }
 
 

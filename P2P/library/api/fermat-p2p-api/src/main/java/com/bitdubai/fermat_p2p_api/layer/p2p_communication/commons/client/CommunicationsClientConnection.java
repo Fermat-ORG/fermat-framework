@@ -107,6 +107,16 @@ public interface CommunicationsClientConnection {
     public List<PlatformComponentProfile> requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
 
     /**
+     * Method that request to the communication cloud server the list of component registered that match
+     * whit the discovery query params
+     *
+     * @param discoveryQueryParameters
+     * @throws CantRequestListException this exception means the list receive is empty or a internal error
+     */
+    public List<PlatformComponentProfile> requestListComponentRegisteredSocket(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
+
+
+    /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and
      * the remote destination component to send message
      *

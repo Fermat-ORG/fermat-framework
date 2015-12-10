@@ -12,12 +12,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 public class TestActivity extends Activity implements WizardConfiguration {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void showWizard(String key, Object... args) {
+
     }
 
     @Override
-    public void showWizard(WizardTypes key, Object... args) {
-        // DO NOTHING...
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 }

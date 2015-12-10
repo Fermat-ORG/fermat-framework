@@ -25,8 +25,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
@@ -437,9 +437,9 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         if (data != null) {
             /*setting up fragment instance*/
 //            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0);
-//            fragment.setSubAppsSession(subAppsSession);
-//            fragment.setSubAppSettings(subAppSettings);
-//            fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+//            fragment.setAppSession(appSession);
+//            fragment.setAppSettings(appSettings);
+//            fragment.setAppResourcesProviderManager(appResourcesProviderManager);
 //            /*transactions*/
 //            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
 //            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -465,7 +465,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            //ErrorManager errorManager = subAppsSession.getErrorManager();
+            //ErrorManager errorManager = appSession.getErrorManager();
             //ArrayList<Item> data = CatalogueItemDao.getTestData(getResources());
             // lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());

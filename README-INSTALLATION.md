@@ -6,7 +6,7 @@
 <br>
 ## Introduction
 
-Currently Fermat is targeting the Android OS. Once working there we are going to move fordward to other OS. You will notice this guide covers everything you need to do to set up the environmet and start hacking Fermat.
+Currently Fermat is targeting the Android OS, once there we are going to move fordward to other OS. You will notice that this guide covers everything you need to do to set up the environmet and start using Fermat.
 
 <br>
 ## Part I: Setting up the Environment
@@ -23,7 +23,7 @@ You will need the following tools in order to develop in Fermat
 * **Android build-tools 23.01**
 * **Android Development Studio or IntelliJ IDEA**
 
-Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment
+Although there are many ways to configure these tools, we'll provide a recommended configuration for your development environment.
 
 <br>
 ### Working on Linux
@@ -33,7 +33,7 @@ Most Fermat developers are on Linux since compilation is faster there than in Wi
 <br>
 #### Installing Git
 
-Fortunately, `git` is part of the common set of tools that you can find in any Distro of Linux.
+Fortunately, `git` is part of the common set of tools that you will find in any Distro of Linux.
 
 You can install it in most of the Debian-type distros using the `apt` service
 
@@ -45,9 +45,9 @@ sudo apt-get install git
 <br>
 #### Installing the JDK 7
 
-You can get a running OpenJDK in most distros, but it's advised that we use the oficial Oracle JVM when we're going to code in Fermat.
+You can get a running OpenJDK in most distros, but it's advised that we use the oficial Oracle JVM when coding in Fermat.
 
-IMPORTANT: As Android does not yet include support for the JDK 8, it's important that we use the JDK 7 version for our compilation.
+IMPORTANT: Since Android doesn't include any support for the JDK 8 yet, it's important that we use the JDK 7 version for our compilation.
 
 We can find the JDK  [in this page](http://www.oracle.com/technetwork/es/java/javase/downloads/jdk7-downloads-1880260.html)
 
@@ -63,7 +63,7 @@ sudo mv jdk* /opt/java
 <br>
 #### Installing Gradle
 
-We can also install Gradle using the `apt` service, although the version we'll get might be out of date, so we recommend that you download one available in [gradle.org](http://gradle.org/)
+We can also install Gradle using the `apt` service, although the version might be out of date, we recommend that you download the one available in [gradle.org](http://gradle.org/)
 
 This is a *zip* file that you must extract using the `unzip` commmand, then we move it to the **/opt** folder
 
@@ -75,7 +75,7 @@ sudo mv gradle-2.8/ /opt/gradle
 <br>
 #### Installing Android SDK Tools
 
-We can obtain the Android SDK Tools directly through [this link](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
+We can obtain the Android SDK Tools directly from [this link](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
 
 This will download a *tar.gz* file that we must decompress and then we move it to the **/opt** folder
 
@@ -89,7 +89,7 @@ sudo mv android-sdk-linux/ /opt/android-sdk
 
 We recommend that you configure your environment to recognize the tools you've downloaded and placed inside **/opt** as a part of the *bash profile*.
 
-This can be done in several ways but we recommend adding a file to **/etc/profile.d** called **fermatenv.sh** with the folliwng content
+This can be done in several ways but we recommend adding a file to **/etc/profile.d** called **fermatenv.sh** with the following content
 
 ```bash
 export JAVA_HOME=/opt/java
@@ -100,14 +100,14 @@ export PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin:$ANDROID_HOME/platform-tools:$
 
 This will allow you to invoke all the commands of the Java Development Kit, Gradle and the Android SDK through the command line.
 
-IMPORTANT: For these changes to set effect you should log out of your current session and log back in
+IMPORTANT: For these changes to be in effect you should log out of your current session and log back in
 
-TIP: You can verify that these variables are properly using the command `env`
+TIP: You can verify that these variables are proper by using the command `env`
 
 <br>
 #### Downloading the Android SDKs and Build Tools
 
-Before you can compile Fermat properly, you need to download the SDKs and build tools that Gradle will use to build Fermat.
+Before you're able to compile Fermat properly, you need to download the SDKs and build tools that Gradle will use to build Fermat.
 
 Currently the target SDK version is the **21**, due to this the Build Tools we are using are the version **21.1.2**.
 
@@ -128,7 +128,7 @@ In either case you must import the project as a Gradle Project and select the se
 
 This will import all the subprojects and configure the IDE to start developing in Fermat.
 
-If this is your first execution of the IDE, it might ask you to point to where Java and Gradle are configured as part of the initial settings they need to assemble the *.idea* folder; you must point them to the */opt/java* and */opt/gradle* folder respectively.
+If this is your first execution of the IDE, it might ask you to point to where Java and Gradle are configured, as part of the initial settings they need to assemble the *.idea* folder; you must point them to the */opt/java* and */opt/gradle* folder respectively.
 
 You can also modify these values after the project is imported; you can change the JDK location in the *__File->Project Structure__* menu, and the Gradle location through the *__File->Settings__* menu.
 
@@ -138,7 +138,7 @@ TIP: Android Developer Studio incorporates an SDK Tools package inside of its in
 
 <br>
 
-IMPORTANT: If you running an Ubuntu 64 bits System, you must execute below command BEFORE run Android Studio for first time.
+IMPORTANT: If you are running an Ubuntu 64 bits System, you must execute the command below BEFORE running Android Studio for the first time.
 
 ```bash
 sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
@@ -164,7 +164,7 @@ This will enable 64-bit linux distros to run 32-bit applications like adb and aa
 
 **Explain what it is**
 
-#### How enable your Plug-in on the Developer Sub App
+#### How to enable your Plug-in on the Developer Sub App
 
 **Explain how step by step with code samples**
 

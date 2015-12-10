@@ -10,11 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
@@ -65,7 +62,7 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
          */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        System.out.println("FailureComponentRegistrationRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object
@@ -74,7 +71,7 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
         PlatformComponentProfile networkServiceApplicant  = gson.fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfile.class);
         PlatformComponentProfile platformComponentProfile = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
 
-        System.out.println("FailureComponentRegistrationRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant);
+        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant);
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
@@ -91,7 +88,7 @@ public class FailureComponentRegistrationRequestPacketProcessor extends FermatPa
         /*
          * Raise the event
          */
-        System.out.println("FailureComponentRegistrationRequestPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION");
+        //System.out.println("FailureComponentRegistrationRequestPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

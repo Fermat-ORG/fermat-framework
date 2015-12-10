@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -33,10 +34,14 @@ import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
+
+import org.apache.log4j.Level;
 
 import java.util.ArrayList;
+
+import de.mindpipe.android.logging.log4j.LogConfigurator;
 
 
 /**
@@ -176,6 +181,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
         Intent intent = new Intent(this, DesktopActivity.class);
         intent.putExtra(ACTIVE_PLATFORMS,activePlatforms);
         intent.putExtra(START_ACTIVITY_INIT, "init");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         return true;

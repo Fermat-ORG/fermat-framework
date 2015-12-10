@@ -342,6 +342,28 @@ public interface CryptoWallet extends Serializable {
                                                                                                                                         int offset) throws CantListTransactionsException;
 
     /**
+     * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor
+     * who have made transactions with the specified wallet.
+     *
+     * @param balanceType
+     * @param transactionType
+     * @param walletPublicKey
+     * @param actorPublicKey
+     * @param intraUserLoggedInPublicKey
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListTransactionsException
+     */
+    List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
+                                                                 TransactionType transactionType,
+                                                                 String walletPublicKey,
+                                                                 String actorPublicKey,
+                                                                 String intraUserLoggedInPublicKey,
+                                                                 int max,
+                                                                 int offset) throws CantListTransactionsException;
+
+    /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
      *
      * @param walletPublicKey public key of the wallet in where you're working.
@@ -393,12 +415,13 @@ public interface CryptoWallet extends Serializable {
     /**
      * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
      * @param requestId
+     * @param intraUserLoggedInPublicKey
      * @throws CantApproveCryptoPaymentRequestException
      * @throws CryptoPaymentRequestNotFoundException
      * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
      */
 
-    void approveRequest(UUID requestId) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
+    void approveRequest(UUID requestId,String intraUserLoggedInPublicKey) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
 
     /**
      *
@@ -433,6 +456,7 @@ public interface CryptoWallet extends Serializable {
                                    final CryptoAddress         cryptoAddress    ,
                                    final String                description      ,
                                    final long                  amount           ,
-                                   final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException;
+                                   final BlockchainNetworkType networkType      ,
+                                   final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException;
 
 }

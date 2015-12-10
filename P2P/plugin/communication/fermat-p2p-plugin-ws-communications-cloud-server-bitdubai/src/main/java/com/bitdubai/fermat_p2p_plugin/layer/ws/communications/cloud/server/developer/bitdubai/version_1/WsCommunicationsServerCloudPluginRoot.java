@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -26,11 +27,13 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices.RestletCommunicationCloudServer;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocketImpl;
 
 import java.net.Inet6Address;
@@ -57,6 +60,11 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationsServerCloudPluginRoot.class));
 
     /**
      * Represents the value of DISABLE_SERVER
@@ -150,7 +158,8 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("errorManager: " + errorManager);
 
-            System.out.println("WsCommunicationsServerCloudPluginRoot - contextBuffer = "+contextBuffer);
+            LOG.error("No all required resource are injected");
+            LOG.error("contextBuffer = "+contextBuffer);
 
             String context = contextBuffer.toString();
             String possibleCause = "No all required resource are injected";
@@ -163,6 +172,10 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
 
     }
 
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 
     /**
      * (non-Javadoc)
@@ -180,11 +193,11 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
            // validateInjectedResources();
 
             if (disableServerFlag) {
-                System.out.println("WsCommunicationsServerCloudPluginRoot - Local Server is Disable, no started");
+                LOG.info("Local Server is Disable, no started");
                 return;
             }
 
-            System.out.println("WsCommunicationsServerCloudPluginRoot - Starting plugin");
+            LOG.info("Starting plugin");
 
             /*
              * Get all network interfaces of the device
@@ -232,10 +245,10 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                         wsCommunicationsCloudServerPingAgent = new WsCommunicationsCloudServerPingAgent(wsCommunicationCloudServer);
                         wsCommunicationsCloudServerPingAgent.start();
 
-                        System.out.println("New CommunicationChannelAddress linked on " + networkInterface.getName());
-                        System.out.println("Host = " + inetSocketAddress.getHostString());
-                        System.out.println("Port = "     + inetSocketAddress.getPort());
-                        System.out.println("Communication Service Manager on " + networkInterface.getName() + " started.");
+                        LOG.info("New CommunicationChannelAddress linked on " + networkInterface.getName());
+                        LOG.info("Host = " + inetSocketAddress.getHostString());
+                        LOG.info("Port = "     + inetSocketAddress.getPort());
+                        LOG.info("Communication Service Manager on " + networkInterface.getName() + " started.");
 
                         break;
 
@@ -245,14 +258,16 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
 
             }
 
-
-
-
             /*
              * Create and start the restlet server
              */
             RestletCommunicationCloudServer rlCommunicationCloudServer = new RestletCommunicationCloudServer(wsCommunicationCloudServer);
             rlCommunicationCloudServer.start();
+
+            /*
+             * Start the socket to handle the request of Component Registered List
+             */
+           // SocketServerInitialization socketServerInitialization =new SocketServerInitialization(wsCommunicationCloudServer);
 
         } catch (Exception e) {
             e.printStackTrace();

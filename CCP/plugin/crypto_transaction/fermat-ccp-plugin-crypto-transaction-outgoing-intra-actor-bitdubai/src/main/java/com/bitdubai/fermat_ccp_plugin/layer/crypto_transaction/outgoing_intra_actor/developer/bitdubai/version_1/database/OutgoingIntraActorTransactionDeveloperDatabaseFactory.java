@@ -126,6 +126,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
         List<String> outgoingIntraUserColumns = new ArrayList<String>();
 
         outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME);
         outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
         outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME);
         outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_FROM_COLUMN_NAME);

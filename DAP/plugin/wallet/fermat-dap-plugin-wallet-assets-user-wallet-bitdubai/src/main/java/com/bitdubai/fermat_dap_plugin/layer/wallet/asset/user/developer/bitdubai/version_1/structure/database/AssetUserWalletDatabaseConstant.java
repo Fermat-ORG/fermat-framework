@@ -32,7 +32,6 @@ public class AssetUserWalletDatabaseConstant {
     // tabla nueva movimientos del resumen de los Assets - balance y book balance, id
 
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_NAME = "AssetUserWalletTotalBalances";
-    //public static final String ASSET_WALLET_ISSUER_BALANCE_TABLE_ID_COLUMN_NAME = "Id";
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME = "assetPublicKey";
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_NAME_COLUMN_NAME = "name";
     public static final String ASSET_WALLET_USER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME = "description";

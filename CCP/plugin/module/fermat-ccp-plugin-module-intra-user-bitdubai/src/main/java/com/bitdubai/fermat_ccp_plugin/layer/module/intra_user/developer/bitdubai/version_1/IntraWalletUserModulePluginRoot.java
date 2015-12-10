@@ -2,7 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
+import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -60,9 +61,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -323,6 +324,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         {
             throw new CantStartRequestException("",e,"","");
         }
+        catch(RequestAlreadySendException e)
+        {
+            throw new CantStartRequestException("",e,"","Intra user request already send");
+        }
+
         catch(Exception e)
         {
             throw new CantStartRequestException("CAN'T ASK INTRA USER CONNECTION",FermatException.wrapException(e),"","unknown exception");
@@ -372,19 +378,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws IntraUserConectionDenegationFailedException
      */
     @Override
-    public void denyConnection(String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
+    public void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
         try
         {
             /**
              *Call Actor Intra User to denied request connection
              */
 
-           this.intraWalletUserManager.denyConnection(this.intraUserLoggedPublicKey, intraUserToRejectPublicKey);
+           this.intraWalletUserManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
 
             /**
              *Call Network Service Intra User to denied request connection
              */
-            this.intraUserNertwokServiceManager.denyConnection(this.intraUserLoggedPublicKey, intraUserToRejectPublicKey);
+            this.intraUserNertwokServiceManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
 
         }
         catch(CantDenyConnectionException e)

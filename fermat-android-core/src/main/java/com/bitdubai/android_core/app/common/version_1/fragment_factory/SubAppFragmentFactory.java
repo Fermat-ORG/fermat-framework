@@ -14,7 +14,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerI
 import com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentFactory;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
-import com.bitdubai.sub_app.intra_user_identity.fragmentFactory.IntraUserIdentityFragmentFactory;
+import com.bitdubai.sub_app.intra_user_identity.fragment_factory.IntraUserIdentityFragmentFactory;
 import com.bitdubai.sub_app.wallet_factory.factory.WalletFactoryFragmentFactory;
 import com.bitdubai.sub_app.wallet_publisher.FragmentFactory.WalletPublisherFragmentFactory;
 import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentFactory;

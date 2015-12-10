@@ -32,7 +32,7 @@ public class AppropriationStatsEventHandler implements FermatEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (fermatEvent == null)
-            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
+            throw new CantSaveEventException(null, "Handling an Appropriation Stats Event", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
 
         System.out.println("VAMM: ASSET APPROPRIATION RECEIVED A NEW EVENT!");
         System.out.println("VAMM: Type: " + fermatEvent.getEventType() + " - Source: " + fermatEvent.getSource());

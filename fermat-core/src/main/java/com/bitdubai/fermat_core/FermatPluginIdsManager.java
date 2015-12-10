@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetPluginIdException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginIdsManagerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -62,7 +62,7 @@ public final class FermatPluginIdsManager {
                         try {
 
                             pluginIdsMap.put(
-                                    PluginVersionReference.getByKey(pluginIdPair[0]),
+                                    FermatPluginVersionReferenceBuilder.getByKey(pluginIdPair[0]),
                                     UUID.fromString(pluginIdPair[1])
                             );
                         } catch (InvalidParameterException e) {
@@ -154,7 +154,7 @@ public final class FermatPluginIdsManager {
 
         String fileContent = "";
         for (final Map.Entry<PluginVersionReference, UUID> plugin : pluginIdsMap.entrySet())
-            fileContent = fileContent + plugin.getKey().toKey() + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
+            fileContent = fileContent + FermatPluginVersionReferenceBuilder.toKey(plugin.getKey()) + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
 
         platformTextFile.setContent(fileContent);
         platformTextFile.persistToMedia();

@@ -46,8 +46,12 @@ public interface FermatActivity extends Serializable{
 
     public FermatHeader getHeader();
 
+    public FermatFooter getFooter();
+
     public String getBackAppPublicKey();
 
     public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException;
+
+    public FermatWizard getWizard(String wizardCode);
 
 }

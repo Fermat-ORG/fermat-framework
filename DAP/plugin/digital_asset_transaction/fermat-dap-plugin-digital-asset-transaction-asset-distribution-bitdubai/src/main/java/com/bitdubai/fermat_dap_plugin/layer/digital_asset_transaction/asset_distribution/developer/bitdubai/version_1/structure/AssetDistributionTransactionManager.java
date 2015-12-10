@@ -14,7 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exce
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantGetActorAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -37,7 +37,8 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
                                                ErrorManager errorManager,
                                                UUID pluginId,
                                                PluginDatabaseSystem pluginDatabaseSystem,
-                                               PluginFileSystem pluginFileSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                               PluginFileSystem pluginFileSystem,
+                                               BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         setAssetVaultManager(assetVaultManager);
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -45,7 +46,8 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.digitalAssetDistributor=new DigitalAssetDistributor(/*assetVaultManager,*/
                 errorManager,
                 pluginId,
-                pluginFileSystem);
+                pluginFileSystem,
+                bitcoinNetworkManager);
         this.digitalAssetDistributor.setAssetVaultManager(assetVaultManager);
     }
 

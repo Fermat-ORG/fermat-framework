@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.common.models.WalletStoreListItem;
 
 
@@ -63,9 +63,9 @@ public class DetailedCatalogItemLoader extends AsyncTask<Void, Void, Boolean> {
 //                }
 //            }
 //
-//            subAppsSession.setData(IntraUserSubAppSession.BASIC_DATA, data);
-//            subAppsSession.setData(IntraUserSubAppSession.DEVELOPER_NAME, developerAlias);
-//            subAppsSession.setData(IntraUserSubAppSession.PREVIEW_IMGS, previewImageDrawableList);
+//            appSession.setData(IntraUserSubAppSession.BASIC_DATA, data);
+//            appSession.setData(IntraUserSubAppSession.DEVELOPER_NAME, developerAlias);
+//            appSession.setData(IntraUserSubAppSession.PREVIEW_IMGS, previewImageDrawableList);
 //
 //        } catch (Exception e) {
 //            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,

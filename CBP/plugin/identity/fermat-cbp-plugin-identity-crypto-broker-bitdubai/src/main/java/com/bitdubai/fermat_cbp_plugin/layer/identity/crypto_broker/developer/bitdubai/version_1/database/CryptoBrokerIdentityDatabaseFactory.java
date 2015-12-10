@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -18,24 +17,20 @@ import java.util.UUID;
  * <p/>
  *
  * Created by Jorge Gonzalez - (jorgeejgonzalez@gmail.com) on 28/09/15.
+ * Updated by lnacosta (laion.cj91@gmail.com) on 25/11/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoBrokerIdentityDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public final class CryptoBrokerIdentityDatabaseFactory {
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * Constructor with parameters to instantiate class
-     * .
-     *
-     * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
+     * Constructor with parameters to instantiate class.
      */
-    public CryptoBrokerIdentityDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public CryptoBrokerIdentityDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -47,25 +42,13 @@ public class CryptoBrokerIdentityDatabaseFactory implements DealsWithPluginDatab
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
-        Database database;
+    protected Database createDatabase(final UUID   ownerId     ,
+                                      final String databaseName) throws CantCreateDatabaseException {
 
-        /**
-         * I will create the database where I am going to store the information of this wallet.
-         */
         try {
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-        }
 
-        /**
-         * Next, I will add the needed tables.
-         */
-        try {
+            Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
+
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
@@ -74,33 +57,34 @@ public class CryptoBrokerIdentityDatabaseFactory implements DealsWithPluginDatab
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME,DatabaseDataType.INTEGER,2, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME            , DatabaseDataType.STRING, 130, Boolean.TRUE );
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME                 , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME        , DatabaseDataType.STRING,  10, Boolean.FALSE);
+
             table.addIndex(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            } catch (CantCreateTableException e) {
+                throw new CantCreateDatabaseException(e, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
-        } catch (InvalidOwnerIdException invalidOwnerId) {
+
+            return database;
+
+        } catch (final CantCreateDatabaseException e) {
+            /**
+             * I can not handle this situation.
+             */
+            throw new CantCreateDatabaseException(e, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+        } catch (final InvalidOwnerIdException e) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+            throw new CantCreateDatabaseException(e, "", "There is a problem with the ownerId of the database.");
         }
-        return database;
-    }
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }

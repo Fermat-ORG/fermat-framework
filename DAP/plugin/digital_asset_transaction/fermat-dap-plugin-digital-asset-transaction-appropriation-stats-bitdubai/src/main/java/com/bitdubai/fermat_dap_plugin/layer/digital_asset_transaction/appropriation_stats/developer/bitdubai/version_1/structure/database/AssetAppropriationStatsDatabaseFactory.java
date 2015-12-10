@@ -76,6 +76,24 @@ public class AssetAppropriationStatsDatabaseFactory implements DealsWithPluginDa
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            /**
+             * Create Asset Appropriated database table.
+             */
+            DatabaseTableFactory assetAppropriated = databaseFactory.newTableFactory(ownerId, AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TABLE_NAME);
+
+            assetAppropriated.addColumn(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            assetAppropriated.addColumn(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_ASSET_COLUMN_NAME, DatabaseDataType.STRING, Validate.MAX_SIZE_STRING_COLUMN, Boolean.FALSE);
+            assetAppropriated.addColumn(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_USER_COLUMN_NAME, DatabaseDataType.STRING, Validate.MAX_SIZE_STRING_COLUMN, Boolean.FALSE);
+            assetAppropriated.addColumn(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_APPROPRIATED_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+
+            assetAppropriated.addIndex(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, assetAppropriated);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
         } catch (InvalidOwnerIdException e) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "UUID : " + ownerId, "Invalid Owner. Cannot create the table...");
         }

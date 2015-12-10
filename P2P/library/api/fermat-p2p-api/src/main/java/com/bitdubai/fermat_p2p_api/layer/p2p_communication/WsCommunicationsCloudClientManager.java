@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -16,7 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WsCommunicationsCloudClientManager {
+public interface WsCommunicationsCloudClientManager extends FermatManager {
 
     /**
      * Get the CommunicationsClientConnection

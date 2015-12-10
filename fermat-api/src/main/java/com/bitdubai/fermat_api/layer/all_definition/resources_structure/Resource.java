@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.*;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatResource;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 
 import java.io.File;
 import java.io.Serializable;

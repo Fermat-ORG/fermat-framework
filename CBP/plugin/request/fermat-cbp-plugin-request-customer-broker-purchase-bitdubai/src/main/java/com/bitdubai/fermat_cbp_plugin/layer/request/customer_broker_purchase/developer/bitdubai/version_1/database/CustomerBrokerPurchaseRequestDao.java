@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -13,12 +14,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantGetRequestListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.RequestPurchaseRejectFailedException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.RequestUnexpectedErrorException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.interfaces.RequestCustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.CantGetRequestListException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.RequestPurchaseRejectFailedException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.RequestUnexpectedErrorException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.interfaces.RequestCustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseRequestDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseRequest;
 

@@ -170,6 +170,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
 
             Activity activity = new Activity();
+            activity.setFullScreen(true);
             /**
              * set type home
              */

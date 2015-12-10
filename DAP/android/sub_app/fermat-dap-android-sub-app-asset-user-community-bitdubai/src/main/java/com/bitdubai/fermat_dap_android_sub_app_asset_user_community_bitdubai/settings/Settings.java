@@ -15,7 +15,6 @@ import java.util.UUID;
  */
 public class Settings implements SubAppSettings {
 
-
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
         return null;

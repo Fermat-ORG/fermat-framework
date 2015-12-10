@@ -1,6 +1,6 @@
 # Fermat CBP Plugin Actor Network Service Crypto Customer
 
-Handles the communication between Customers and Brokers.
+Handles the communication with Customers.
 
 ## Features
 * Contains all the logic for communicating with a Crypto Customer.

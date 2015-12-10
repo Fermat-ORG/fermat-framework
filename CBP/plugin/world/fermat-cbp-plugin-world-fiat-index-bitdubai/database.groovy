@@ -10,13 +10,21 @@ List databaseTables = []
 // Los tipos de datos son valores del enum DatabaseDataType, esta en el fermat-api
 // Table Definition Example
 databaseTables << [
-        name: "Fiat Index",
+        name: "Hold",
         columns: [
-                ["Crypto Broker Public Key", "STRING", "100", "true"],
-                ["Alias", "STRING", "100", "false"],
-                ["Device User Public Key", "STRING", "100", "false"]
+                ["Transaction ID", "STRING", "100", "true"],
+                ["Wallet Public Key", "STRING", "100", "false"],
+                ["Actor Public Key", "STRING", "100", "false"],
+                ["Plugin Public Key", "STRING", "100", "false"],
+                ["Amount", "MONEY", "100", "false"],
+                ["Currency", "STRING", "100", "false"],
+                ["Memo", "STRING", "100", "false"],
+                ["Timestamp Acknowledge", "LONG_INTEGER", "100", "false"],
+                ["Timestamp Confirm Reject", "LONG_INTEGER", "100", "false"],
+                ["Status", "STRING", "20", "false"]
+
         ],
-        firstKey:"Crypto Broker Public Key"
+        firstKey:"Transaction ID"
 ]
 
 /**

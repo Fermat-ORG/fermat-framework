@@ -7,10 +7,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetClasessHierarchyAddonsException;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetClasessHierarchyPluginsException;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyAddonsException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyPluginsException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +98,7 @@ public class DeveloperModuleLogTool implements LogTool {
             for (String myClass : classes) {
                 String[] packages = myClass.split(Pattern.quote("."));
                 ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                classesAndPackages.setLevel0(plugin.toKey());
+                classesAndPackages.setLevel0(plugin.toString());
                 classesAndPackages.setFullPath(myClass);
                 if (packages.length == minPackages) {
                     /**
@@ -229,7 +229,7 @@ public class DeveloperModuleLogTool implements LogTool {
      * @param newLogLevelInClass
      */
     @Override
-    public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass) {
+    public void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass) {
         ((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
     }
 

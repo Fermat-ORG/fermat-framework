@@ -1,16 +1,23 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.AppropriationStatsDigitalAssetTransactionPluginRoot;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.appropriation_stats.developer.bitdubai.version_1.structure.database.AppropriationStatsDAO;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -31,6 +38,8 @@ public class AppropriationStatsMonitorAgent implements Agent {
     private final LogManager logManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
+    private final AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
+    private final AssetIssuerWalletManager assetIssuerWalletManager;
     private volatile CountDownLatch latch;
 
     private StatsAgent statsAgent;
@@ -39,12 +48,15 @@ public class AppropriationStatsMonitorAgent implements Agent {
     public AppropriationStatsMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                           LogManager logManager,
                                           ErrorManager errorManager,
-                                          UUID pluginId) throws CantSetObjectException {
+                                          UUID pluginId,
+                                          AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
+                                          AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
-
+        this.assetIssuerActorNetworkServiceManager = Validate.verifySetter(assetIssuerActorNetworkServiceManager, "assetIssuerActorNetworkServiceManager is null");
+        this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
     }
 
     //PUBLIC METHODS
@@ -118,6 +130,32 @@ public class AppropriationStatsMonitorAgent implements Agent {
         }
 
         private void doTheMainTask() {
+            try (AppropriationStatsDAO dao = new AppropriationStatsDAO(pluginDatabaseSystem, pluginId)) {
+
+                for (String eventId : dao.getPendingIssuerNetworkServiceEvents()) {
+                    switch (dao.getEventTypeById(eventId)) {
+                        case NEW_RECEIVE_MESSAGE_ACTOR:
+                            for (DAPMessage message : assetIssuerActorNetworkServiceManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_APPROPRIATION)) {
+                                if (message.getMessageContent() instanceof AssetAppropriationContentMessage) { //Just a security measure, this SHOULD always be true.
+                                    AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) message.getMessageContent();
+                                    //TODO REMOVE HARDCODE.
+                                    AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
+                                    wallet.assetAppropriated(contentMessage.getDigitalAssetAppropriated().getPublicKey(), contentMessage.getUserThatAppropriate().getActorPublicKey());
+                                }
+                            }
+                            dao.notifyEvent(eventId);
+                            break;
+                        default:
+                            //I can't do anything with this event...
+                            dao.notifyEvent(eventId);
+                            break;
+                    }
+
+                }
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+
         }
 
 

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.world.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
 
 import java.util.UUID;
@@ -25,6 +25,7 @@ public class CashHoldTransactionParametersImpl implements CashHoldTransactionPar
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
         this.publicKeyActor = publicKeyActor;
+        this.publicKeyPlugin = publicKeyPlugin;
         this.amount = amount;
         this.currency = currency;
         this.memo = memo;
