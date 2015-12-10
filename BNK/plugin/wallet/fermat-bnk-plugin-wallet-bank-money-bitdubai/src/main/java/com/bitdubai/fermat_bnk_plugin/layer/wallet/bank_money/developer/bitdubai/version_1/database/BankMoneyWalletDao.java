@@ -44,7 +44,7 @@ public class BankMoneyWalletDao {
     Database database;
     UUID pluginId;
     ErrorManager errorManager;
-
+    String publicKey;
     public BankMoneyWalletDao(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
@@ -54,10 +54,11 @@ public class BankMoneyWalletDao {
         this.database = database;
     }
 
-    public BankMoneyWalletDao(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager) {
+    public BankMoneyWalletDao(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager,String publicKey) {
         this.pluginId=pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
+        this.publicKey = publicKey;
     }
 
 
@@ -65,8 +66,9 @@ public class BankMoneyWalletDao {
         try{
             this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId,this.pluginId.toString());
         }catch (DatabaseNotFoundException e) {
+            BankMoneyWalletDatabaseFactory factory = new BankMoneyWalletDatabaseFactory(pluginDatabaseSystem);
             try{
-            this.database = this.pluginDatabaseSystem.createDatabase(this.pluginId, this.pluginId.toString());
+            this.database = factory.createDatabase(this.pluginId, this.pluginId.toString());
             }catch (CantCreateDatabaseException f){
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, f);
                 throw new CantInitializeBankMoneyWalletDatabaseException("Database could not be opened", f, "Database Name: " + pluginId.toString(), "");

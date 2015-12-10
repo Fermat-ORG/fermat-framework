@@ -58,7 +58,7 @@ public class AccountsListFragment extends FermatWalletExpandableListFragment<Gro
 
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
-
+	return null;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class AccountsListFragment extends FermatWalletExpandableListFragment<Gro
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_accounts_list;;
+        return R.layout.fragment_accounts_list;
     }
 
     @Override

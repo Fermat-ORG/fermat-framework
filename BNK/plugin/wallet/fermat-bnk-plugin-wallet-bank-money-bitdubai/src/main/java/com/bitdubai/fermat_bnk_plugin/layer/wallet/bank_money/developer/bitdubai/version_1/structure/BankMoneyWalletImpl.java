@@ -29,12 +29,14 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     PluginDatabaseSystem pluginDatabaseSystem;
 
     BankMoneyWalletDao bankMoneyWalletDao;
+    String publicKey;
 
-    public BankMoneyWalletImpl(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem,ErrorManager errorManager) throws CantStartPluginException  {
+    public BankMoneyWalletImpl(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem,ErrorManager errorManager,String publicKey) throws CantStartPluginException  {
         this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
-        this.bankMoneyWalletDao = new BankMoneyWalletDao(this.pluginId,this.pluginDatabaseSystem,this.errorManager);
+        this.publicKey = publicKey;
+        this.bankMoneyWalletDao = new BankMoneyWalletDao(this.pluginId,this.pluginDatabaseSystem,this.errorManager,publicKey);
         try {
             this.bankMoneyWalletDao.initialize();
         } catch (CantInitializeBankMoneyWalletDatabaseException e) {

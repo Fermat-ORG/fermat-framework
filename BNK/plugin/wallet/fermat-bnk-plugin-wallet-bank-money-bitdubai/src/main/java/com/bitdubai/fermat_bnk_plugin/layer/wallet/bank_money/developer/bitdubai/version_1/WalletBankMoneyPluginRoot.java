@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
@@ -53,12 +54,11 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
     public void start() throws CantStartPluginException {
         System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET");
         try {
-            bankMoneyWallet = new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem,this.errorManager);
-            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("User Account","1234567887654321",FiatCurrency.EURO, BankAccountType.SAVING));
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
+        test();
     }
 
     @Override
@@ -95,9 +95,26 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
 
     @Override
     public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException {
+        try {
+            bankMoneyWallet = new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem,this.errorManager,walletPublicKey);
+        } catch (Exception exception) {
+            FermatException e = new CantInitializeBankMoneyWalletDatabaseException("Database cannot be initialized", exception, "CashMoneyTransactionHoldPluginRoot", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
         return bankMoneyWallet;
     }
 
+    public void test(){
+        try {
+            BankMoneyWallet bankMoneyWallet = loadBankMoneyWallet("testbankwallet");
+            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("guillermo account","1234567887654321",FiatCurrency.EURO,BankAccountType.SAVING));
+        }catch (CantLoadBankMoneyWalletException e){
+            System.out.println("bank_wallet "+ e.getMessage());
+        }catch (CantAddNewAccountException e){
+            System.out.println("bank_wallet "+ e.getMessage());
+        }
+
+    }
     /*@Override
     public void createBankMoneyWallet(String walletPublicKey) throws CantCreateBankMoneyWalletException {
 
