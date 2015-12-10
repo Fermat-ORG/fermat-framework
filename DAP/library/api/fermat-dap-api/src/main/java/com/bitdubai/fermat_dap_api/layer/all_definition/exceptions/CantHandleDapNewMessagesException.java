@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.exceptions;
 
-import com.bitdubai.fermat_api.layer.DAPException;
-
 /**
  * Created by Nerio on 23/11/15.
  */
