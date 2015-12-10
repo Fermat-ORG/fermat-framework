@@ -84,6 +84,10 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
         return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
     }
 
+    public List<String> getPendingCryptoRouterEvents() throws CantLoadAssetRedemptionEventListException {
+        return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
+    }
+
     public EventType getEventTypeById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
         return EventType.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
