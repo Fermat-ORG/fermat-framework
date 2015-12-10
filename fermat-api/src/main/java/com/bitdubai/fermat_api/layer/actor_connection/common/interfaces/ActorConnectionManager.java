@@ -21,6 +21,10 @@ import java.util.UUID;
  * represents all the basic functionality of an actor connection plug-in.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public interface ActorConnectionManager<T extends ActorIdentity, Z extends ActorConnection<T>, M extends ActorConnectionSearch<T, Z>> extends FermatManager {
 
