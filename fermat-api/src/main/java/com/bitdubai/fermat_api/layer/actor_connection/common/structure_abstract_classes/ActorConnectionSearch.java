@@ -16,6 +16,10 @@ import java.util.List;
  * contains all the methods to search an Actor Connection.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends ActorConnection<Z>> {
 
