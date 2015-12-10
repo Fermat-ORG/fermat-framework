@@ -151,7 +151,21 @@ Donde:
 
 Aqui un ejemplo:
 
-
+ + DAP
+  + plugin
+    + actor
+    + actor_network_services
+      - fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai
+      - fermat-dap-plugin-actor-network-service-asset-user-bitdubai
+      - fermat-dap-plugin-actor-network-service-redeem-point-bitdubai
+    + digital_asset_transaction
+    + identity
+    + middleware
+    + network_services
+      - fermat-dap-plugin-network-service-asset-transmission-bitdubai
+    + sub_app_module
+    + wallet
+    + wallet_module
 
 Como podemos observar en la imagen la plataforma "Digital Asset Plataform (DAP)" cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
 
