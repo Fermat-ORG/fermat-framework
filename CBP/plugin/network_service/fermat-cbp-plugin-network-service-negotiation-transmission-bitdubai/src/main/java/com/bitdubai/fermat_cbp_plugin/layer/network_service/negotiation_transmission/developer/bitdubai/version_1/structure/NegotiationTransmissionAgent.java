@@ -14,7 +14,7 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
@@ -192,7 +192,7 @@ public class NegotiationTransmissionAgent {
 
         try {
             Map<String, Object> filters = new HashMap<>();
-            filters.put(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
+            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
 
             //Read all pending NegotiationTransmission from database
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
@@ -289,7 +289,7 @@ public class NegotiationTransmissionAgent {
         try {
             //communicationNetworkServiceConnectionManager.
             Map<String, Object> filters = new HashMap<>();
-            filters.put(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
+            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
 
             //Read all pending CryptoTransmissionMetadata from database
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);

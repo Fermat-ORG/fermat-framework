@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
@@ -10,7 +10,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationNetworkServiceDatabaseConstants {
+public class NegotiationTransmissionNetworkServiceDatabaseConstants {
 
     public static final String DATA_BASE_NAME  = "negotiation_transmission_data_base";
 
@@ -60,7 +60,7 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_SEND_TYPE_COLUMN_NAME = "actor_send_type";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PUBLIC_KEY_ACTOR_RECEIVE_COLUMN_NAME = "public_key_actor_receive";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME = "actor_receive_type";
-    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME = "transmission_Type";
+    public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME = "transmission_type";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME = "transmission_state";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME = "pending_flag";
     public static final String NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME = "timestamp";
