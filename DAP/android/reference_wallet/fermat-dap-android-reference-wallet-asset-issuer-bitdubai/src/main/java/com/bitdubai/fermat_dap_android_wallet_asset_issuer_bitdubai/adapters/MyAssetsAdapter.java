@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders.DigitalAssetViewHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders.MyAssetsViewHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
@@ -26,7 +27,7 @@ public class MyAssetsAdapter extends FermatAdapter<DigitalAsset, MyAssetsViewHol
 
     @Override
     protected int getCardViewResource() {
-        return 0; //TODO return resource (return R.layout.ccw_broker_list_item;)
+        return R.layout.dap_walletasset_issuer_asset_item;
     }
 
     @Override

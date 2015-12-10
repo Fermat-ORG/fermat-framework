@@ -1832,33 +1832,38 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("My Assets");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_WALLET_MY_ASSETS);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         // Activity: Home
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_WALLET_MY_ASSETS);
-        runtimeActivity.setActivityType(Activities.DAP_ASSET_ISSUER_WALLET_MY_ASSETS.getCode());
+        runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
         runtimeActivity.setColor("#1189a5");
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(Activities.DAP_ASSET_ISSUER_WALLET_MY_ASSETS);
+        runtimeWalletNavigationStructure.setStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
-        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor(statusBarColor);
-        runtimeActivity.setStatusBar(runtimeStatusBar);
+//        runtimeStatusBar = new StatusBar();
+//        runtimeStatusBar.setColor(statusBarColor);
+//        runtimeActivity.setStatusBar(runtimeStatusBar);
+//
+//        runtimeHeader = new Header();
+//        runtimeHeader.setLabel("Header");
+//        runtimeActivity.setHeader(runtimeHeader);
 
-        runtimeHeader = new Header();
-        runtimeHeader.setLabel("Header");
-        runtimeActivity.setHeader(runtimeHeader);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
 
         return runtimeWalletNavigationStructure;
     }

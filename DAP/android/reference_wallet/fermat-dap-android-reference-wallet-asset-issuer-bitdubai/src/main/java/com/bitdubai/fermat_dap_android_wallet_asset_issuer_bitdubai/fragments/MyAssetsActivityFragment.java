@@ -17,19 +17,25 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.navigation_drawer.IssuerWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,6 +91,14 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        try {
+            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity());
+            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+        } catch (Exception e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
     private void configureToolbar() {
@@ -184,24 +198,24 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     public List<DigitalAsset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         //TODO load more assets
-//        if (moduleManager != null) {
-//            try {
-//                data.addAll(walletManager.getListOfConnectedBrokersAndTheirMerchandises("customer_1"));
-//
-//            } catch (Exception ex) {
-//                CommonLogger.exception(TAG, ex.getMessage(), ex);
-//                if (errorManager != null)
-//                    errorManager.reportUnexpectedWalletException(
-//                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-//                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-//                            ex);
-//            }
-//        } else {
-//            Toast.makeText(getActivity(),
-//                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
-//                    Toast.LENGTH_SHORT).
-//                    show();
-//        }
+        if (moduleManager != null) {
+            try {
+                digitalAssets = Data.getAllDigitalAssets(moduleManager);
+
+            } catch (Exception ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+            }
+        } else {
+            Toast.makeText(getActivity(),
+                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    Toast.LENGTH_SHORT).
+                    show();
+        }
         return digitalAssets;
     }
 
