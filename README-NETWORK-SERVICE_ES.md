@@ -148,10 +148,10 @@ Cada vez que usted desea crear una nueva carpeta, SubApp o de escritorio, debe c
 
 Donde:
 
-- ** PLATFORM_NAME **: Se refiere a la plataforma en la que vas a crear sus componentes.
-- ** plugin: Se refiere directorio o paguete donde van los componentes de tipo plugin.
-- ** actor_network_services **: Se refiere directorio o paguete donde van los network services especializado para los actores.
-- ** ** network_services: Se refiere directorio o paguete donde van los network services de tipo generales.
+- **PLATFORM_NAME**: Se refiere a la plataforma en la que vas a crear sus componentes.
+- **plugin**: Se refiere directorio o paguete donde van los componentes de tipo plugin.
+- **actor_network_services**: Se refiere directorio o paguete donde van los network services especializado para los actores.
+- **network_services**: Se refiere directorio o paguete donde van los network services de tipo generales.
 
 Aqui un ejemplo:
 
@@ -171,7 +171,7 @@ Aqui un ejemplo:
         + wallet
         + wallet_module
 
-Como podemos observar en la estructura de la plataforma "Digital Asset Plataform (DAP)" cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
+Como podemos observar en la estructura de la plataforma **"Digital Asset Plataform (DAP)"** cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
 
 #### Convenciones para Nombres del Proyecto
 
@@ -220,7 +220,7 @@ Un proyecto de componentes de Network Service en Fermat tiene la siguiente estru
 Donde:
 
 - El archivo `build.gradle` es donde se definen las dependencias del proyecto con otras de las plataformas o con bibliotecas de terceros, pero no por defecto (las bibliotecas de soporte, por ejemplo).
-- El archivo `Proguard-rules.pro` configura la herramienta Proguard. (para más información ver [este enlace] (http://developer.android.com/guide/developing/tools/proguard.html)). ** NOTA: ** * no configuramos este archivo en el momento, por lo tanto, está vacía *
+- El archivo `Proguard-rules.pro` configura la herramienta Proguard. (para más información ver [este enlace] (http://developer.android.com/guide/developing/tools/proguard.html)). **NOTA:** no configuramos este archivo en el momento, por lo tanto, está vacía *
 - Dentro de la carpeta `src/main/java` se encuentra el paquete donde colocar los archivos de Java (clases, intefaces, enumeraciones ..)
 - Dentro de la carpeta `test` va el código que se utiliza para hacer pruebas unitarias en las funcionalidades que usted está en desarrollo en la carpeta `src`.
 - Dentro del paquete `structure` se encuentra bien organizado dentro de otros paquetes las clases que component el plug-in que se esta desarrollando.
@@ -262,7 +262,7 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 <br>
 
 
-## Part III: Implementación
+## Parte III: Implementación
 
 <br>
 
@@ -270,7 +270,7 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 
 <br><br><br><br><br><br><br>
 
-## Part IV: Servidor Local de Pruebas
+## Parte IV: Servidor Local de Pruebas
 
 Es posible la ejecución de un servidor local para realizar pruebas de funcionamiento de un Plugin Network Service, esto permite agilizar el proceso de depuración del código fuente del plugin, así como el proceso de detección de errores del mismo.
 
