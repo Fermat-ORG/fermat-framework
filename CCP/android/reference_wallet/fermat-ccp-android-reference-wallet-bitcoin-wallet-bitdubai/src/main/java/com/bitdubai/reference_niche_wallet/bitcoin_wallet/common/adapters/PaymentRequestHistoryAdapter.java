@@ -142,13 +142,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     @Override
                     public void onClick(View view) {
                         try {
-                            int id = view.getId();
-                           if ( id == R.id.btn_accept_request){
-
-                                cryptoWallet.approveRequest(data.getRequestId()
+                             cryptoWallet.approveRequest(data.getRequestId()
                                         ,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
                                 Toast.makeText(context,"Aceptado",Toast.LENGTH_SHORT).show();
-                            }
 
                         } catch (Exception e)
                         {
@@ -161,15 +157,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             @Override
             public void onClick(View view) {
                 try {
-
-                    int id = view.getId();
-                    if(id == R.id.btn_refuse_request){
-
-                        cryptoWallet.refuseRequest(data.getRequestId());
+                     cryptoWallet.refuseRequest(data.getRequestId());
                         Toast.makeText(context,"Denegado",Toast.LENGTH_SHORT).show();
-                    }
-
-
                 } catch (Exception e)
                 {
                     showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
