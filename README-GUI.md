@@ -318,14 +318,19 @@ runtimeSideMenu.addMenuItem(runtimeMenuItem);
 ...
 ```
 
-Es posible agregar un Navigation drawer que te permita dirigirte a las diferentes pantallas de tu app. Esta se define en varios pasos
+Es posible agregar un *Navigation Drawer* (o Side Menu) que te permita dirigirte a las diferentes pantallas de tu app. Esta se define en varios pasos
 
- - Crear en la estructura de navegación un objeto SideMenu que representa el Navigztion drawer en la estructura de navegacion y una serie de objetos MenuItem que representan los items de ese menu
-- Cada uno de estos items se les asigna varios atributos, entre los que destaca `setLinkToActivity()` que vincula la actividad con el item
-- Definir en la estructura de navegación que la actividad va a mostrar el side menu usando el metodo `runtimeActivity.setSideMenu(runtimeSideMenu);`
-- Crear una Clase `<nombreApp>NavigationViewPainter` que implemente `NavigationViewPainter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java
-- El mismo debe incluirse en el metodo onActivityCreated pasando lo como parametro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
-- Crear una Clase `<nombreApp>NavigationViewAdapater` que implemente `FermatAdapter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería 
+- Definir en la estructura de navegacion que la actividad posee un *Side Menu* que este ultimo posee una serie de *Menu Items*
+
+- Crear una Clase `<nombreApp>NavigationViewAdapater` (con su View Holder) que implemente `FermatAdapter` en la carpeta `commons/navigationView/`. Por ejemplo en la bitcoin wallet sería `commons/navigationDrawer/BitcoinWalletNavigationViewAdapter.java`. Este adapter representa los items que se han de mostrar en el navigation drawer y tienen relacion con los definidos en la estructura de navegacion
+
+- Crear una Clase `<nombreApp>NavigationViewPainter` que implemente `NavigationViewPainter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería `commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java`. Esta clase contiene los elementos que conforman el *Navigation Drawer*:
+  - *Header*: un View que representa el header del Navigation Drawer. Se suele colocar la imagen de la persona logueada
+  - *Adapter*: una instancia de `<nombreApp>NavigationViewAdapater` y representa los items del menu
+  - *Content*: un View que se dibuja despues de los items del menu y se puede colocar cualquier cosa, como por ejemplo un footer para mostrar mas informacion 
+  
+- Dentro del metodo `onActivityCreated` del fragmento que va a contener el *Navigation Drawer*, se debe pasar como parametro a `getPaintActivtyFeactures().addNavigationView()` una instancia de `<nombreApp>NavigationViewPainter`
+
 
 ##### MainMenu
 ##### Tabs and TabStrip
