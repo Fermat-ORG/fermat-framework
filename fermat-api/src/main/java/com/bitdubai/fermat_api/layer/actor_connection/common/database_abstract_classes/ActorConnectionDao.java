@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionAlreadyExistsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
@@ -63,14 +64,14 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
             database = this.pluginDatabaseSystem.openDatabase(
                     pluginId,
-                    com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
             );
 
         } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
 
             throw new CantInitializeActorConnectionDatabaseException(
                     cantOpenDatabaseException,
-                    "databaseName: "+ com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                    "databaseName: "+ ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                     "There was an error trying to open database."
             );
 
@@ -82,14 +83,14 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
                 database = actorConnectionActorConnectionDatabaseFactory.createDatabase(
                         pluginId,
-                        com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
+                        ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
                 );
 
             } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
 
                 throw new CantInitializeActorConnectionDatabaseException(
                         cantCreateDatabaseException,
-                        "databaseName: "+ com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                        "databaseName: "+ ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                         "There was an error trying to create database."
                 );
             }
@@ -112,7 +113,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
                         "The connection already exists..."
                 );
 
-            final DatabaseTable actorConnectionsTable = database.getTable(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+            final DatabaseTable actorConnectionsTable = database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
 
             DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
 
@@ -155,11 +156,11 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
         try {
 
-            final DatabaseTable actorConnectionsTable = database.getTable(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+            final DatabaseTable actorConnectionsTable = database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
 
-            actorConnectionsTable.setStringFilter    (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setStringFilter    (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setFermatEnumFilter(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.setFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -169,7 +170,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
                 final DatabaseTableRecord record = records.get(0);
 
-                record.setFermatEnum(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
+                record.setFermatEnum(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
 
                 actorConnectionsTable.updateRecord(record);
 
@@ -211,11 +212,11 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
         try {
 
-            final DatabaseTable actorConnectionsTable = database.getTable(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
+            final DatabaseTable actorConnectionsTable = database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
 
-            actorConnectionsTable.setStringFilter    (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setStringFilter    (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setFermatEnumFilter(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.setFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -235,14 +236,14 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
     protected DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord record         ,
                                                       final ActorConnection     actorConnection) {
 
-        record.setUUIDValue  (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , actorConnection.getConnectionId()                  );
-        record.setStringValue(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity() .getPublicKey());
-        record.setStringValue(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , actorConnection.getPublicKey()                     );
-        record.setFermatEnum (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorConnection.getActorType()                     );
-        record.setStringValue(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                         );
-        record.setFermatEnum (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , actorConnection.getConnectionState()               );
-        record.setLongValue  (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                  );
-        record.setLongValue  (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                    );
+        record.setUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, actorConnection.getConnectionId());
+        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity().getPublicKey());
+        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , actorConnection.getPublicKey()                     );
+        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorConnection.getActorType()                     );
+        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                         );
+        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , actorConnection.getConnectionState()               );
+        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                  );
+        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                    );
 
         return record;
     }
@@ -251,14 +252,14 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
                                                       final ActorConnection     actorConnection,
                                                       final ConnectionState     connectionState) {
 
-        record.setUUIDValue  (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , actorConnection.getConnectionId()                  );
-        record.setStringValue(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity() .getPublicKey());
-        record.setStringValue(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , actorConnection.getPublicKey()                     );
-        record.setFermatEnum (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorConnection.getActorType()                     );
-        record.setStringValue(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                         );
-        record.setFermatEnum (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , connectionState                                    );
-        record.setLongValue  (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                  );
-        record.setLongValue  (com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                    );
+        record.setUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, actorConnection.getConnectionId());
+        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity().getPublicKey());
+        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , actorConnection.getPublicKey()                     );
+        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorConnection.getActorType()                     );
+        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                         );
+        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , connectionState                                    );
+        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                  );
+        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                    );
 
         return record;
     }
