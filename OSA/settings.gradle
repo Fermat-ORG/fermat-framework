@@ -38,3 +38,6 @@ project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat
 
 include ':fermat-osa-addon-linux-file-system-bitdubai'
 project(':fermat-osa-addon-linux-file-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-file-system-bitdubai')
+
+include ':fermat-osa-addon-linux-database-system-bitdubai'
+project(':fermat-osa-addon-linux-database-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-database-system-bitdubai')
