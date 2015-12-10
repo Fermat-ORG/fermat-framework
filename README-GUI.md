@@ -254,7 +254,6 @@ public enum Activities {
 }
 ```
 
-
 ##### Fragment
 
 ```java
@@ -298,7 +297,6 @@ public enum Fragments implements FermatFragments {
 }
 ```
 
-
 ##### Header
 
 ```java
@@ -319,7 +317,6 @@ Es posible agregar un header expandible y colapsable en una actividad de tu app.
 - Crear una Clase `<nombreScreen>HeaderViewPainter` que implemente `HeaderViewPainter` en la carpeta `commons/headers/` de tu proyecto GUI. Por ejemplo en la bitcoin wallet sería `commons/headers/HomeHeaderViewPainter.java`. Esta clase contiene la vista que se quiere mostrar como un header
 
 - Dentro del metodo `onActivityCreated` del fragmento que va a contener el header, se debe pasar como parametro a `getPaintActivtyFeactures().addHeaderView()` una instancia de `<nombreScreen>HeaderViewPainter`
-
 
 ##### Footer
 
@@ -353,7 +350,6 @@ Es posible agregar un *Footer* deslizable en una actividad de tu app. Esto se re
   - `footer_container` es el View del *Footer* que representa su contenido, y se mustra cuando el *Footer* despliega
 
 - Dentro del metodo `onActivityCreated` del fragmento que va a contener el *Footer*, se debe pasar como parametro a `getPaintActivtyFeactures().addFooterView()` una instancia de `<nombreScreen>FooterViewPainter`
-
 
 ##### SideMenu (Navigation Drawer) and MenuItem
 
@@ -411,7 +407,68 @@ Es posible agregar un *Navigation Drawer* (o Side Menu) que te permita dirigirte
 #### API Organitation
 #### FermatFragment Class
 
-En tu proyecto GUI debes crear los fragmentos que defines en la estructura de navegacion, creando clases que hereden de `FermatFragment` y colocandolas dentro de la carpeta `fragments` de tu proyecto. `FermatFragment` tiene referencias a la `Session` de tu Wallet o SubApp, asi como a los `Settings` y al `ProviderManager`
+En tu proyecto GUI debes crear los fragmentos que defines en la estructura de navegacion, creando clases que hereden de `FermatFragment` y colocandolas dentro de la carpeta `fragments` de tu proyecto. `FermatFragment` tiene referencias a la `Session` de tu Wallet o SubApp, asi como a los `Settings` y al `ProviderManager`. Existen varias subclases en `fermat-api` que extienden `FermatFragment` y facilitan ciertos trabajos, como es el caso de manejar listas y cosas mas especializadas como listas desplegables, wirzards, etc:
+
+- `FermatExpandableListFragment`
+- `FermatListFragment`
+- `FermatWalletExpandableListFragment`
+- `FermatWalletListFragment`
+- `FermatWizardPageFragment`
+
+Para mas informacion sobre estos u otros fragmentos por favor revisa el proyecto `fermat-api`. 
+
+Aqui tenemos un ejemplo de un fragmento basico extendiendo de `FermatFragment` donde obtiene referencia a a la `Session` de la app a la que pertenece, su `Module` y su `Error Manager`:
+
+```java
+public class SettingsActivityFragment extends FermatFragment {
+
+    // Constants
+    private static final String TAG = "SettingsActivityFragment";
+
+    // Fermat Managers
+    private CryptoBrokerWalletModuleManager moduleManager;
+    private ErrorManager errorManager;
+
+
+    public static SettingsActivityFragment newInstance() {
+        return new SettingsActivityFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        try {
+            moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
+            errorManager = walletSession.getErrorManager();
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        try {
+            BrokerNavigationViewPainter navigationViewPainter = new BrokerNavigationViewPainter(getActivity(), null);
+            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+        } catch (Exception e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
+    }
+}
+```
 
 <br>
 
