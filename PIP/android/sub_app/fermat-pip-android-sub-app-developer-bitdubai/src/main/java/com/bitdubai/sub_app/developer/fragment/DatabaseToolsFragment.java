@@ -109,7 +109,7 @@ public class DatabaseToolsFragment extends FermatFragment {
             List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
             List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
 
-            mlist = new ArrayList<Resource>();
+            mlist = new ArrayList<>();
 
             for (int i = 0; i < plugins.size(); i++) {
 
@@ -123,7 +123,7 @@ public class DatabaseToolsFragment extends FermatFragment {
                         new Resource(
                                 "plugin",
                                 label.replaceAll("_", " "),
-                                pvr.toKey(),
+                                pvr,
                                 pvr.getPluginDeveloperReference().getDeveloper().name(),
                                 Resource.TYPE_PLUGIN
                         )
