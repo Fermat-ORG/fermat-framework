@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -43,6 +44,8 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionContract;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantHandleNotificationEventException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
@@ -67,8 +70,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPN
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -217,16 +220,40 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
      */
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                platformComponentProfilePluginRoot,
-                identity,
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
-                database,
-                errorManager,
-                eventManager,
-                EVENT_SOURCE,
-                getPluginVersionReference(),
-                this);
+
+        try{
+
+            this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+                    platformComponentProfilePluginRoot,
+                    identity,
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
+                    database,
+                    errorManager,
+                    eventManager,
+                    EVENT_SOURCE,
+                    getPluginVersionReference(),
+                    this
+            );
+
+        }catch(Exception ex){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "BAD ARGUMENTS";
+
+            CantInitializeCommunicationNetworkServiceConnectionManagerException communicationNetworkServiceConnectionManagerException = new CantInitializeCommunicationNetworkServiceConnectionManagerException(CantInitializeCommunicationNetworkServiceConnectionManagerException.DEFAULT_MESSAGE, ex, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, communicationNetworkServiceConnectionManagerException);
+
+        }
     }
 
 
@@ -275,6 +302,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
+        } catch (Exception exception){
+            throw new CantInitializeDatabaseException(CantInitializeDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
 
     }
@@ -372,7 +401,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
+
+        }catch (Exception e) {
+            FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e,"","I can't List the resquest");
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
 
         }
 
@@ -400,42 +434,62 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TRANSACTION_TRANSMISSION &&
-                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
+        try{
+            if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
+                    platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TRANSACTION_TRANSMISSION &&
+                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
-            /*
-             * Mark as register
-             */
-            this.register = Boolean.TRUE;
+                /*
+                 * Mark as register
+                 */
+                this.register = Boolean.TRUE;
 
-            System.out.print("-----------------------\n" +
-                    "TRANSACTION TRANSMISSION REGISTERED  -----------------------\n" +
-                    "-----------------------\n TO: " + getName());
+                System.out.print("-----------------------\n" +
+                        "TRANSACTION TRANSMISSION REGISTERED  -----------------------\n" +
+                        "-----------------------\n TO: " + getName());
 
-            /**
-             * Initialize the main agent
-             */
-        //TODO implement the agent first
-            transactionTransmissionAgent = new TransactionTransmissionAgent(
-                    this,
-                    transactionTransmissionConnectionsDAO,
-                    transactionTransmissionContractHashDao,
-                    communicationNetworkServiceConnectionManager,
-                    wsCommunicationsCloudClientManager,
-                    platformComponentProfileRegistered,
-                    errorManager,
-                    new ArrayList<PlatformComponentProfile>(),
-                    identity,
-                    eventManager
-            );
+                /**
+                 * Initialize the main agent
+                 */
+            //TODO implement the agent first
+                transactionTransmissionAgent = new TransactionTransmissionAgent(
+                        this,
+                        transactionTransmissionConnectionsDAO,
+                        transactionTransmissionContractHashDao,
+                        communicationNetworkServiceConnectionManager,
+                        wsCommunicationsCloudClientManager,
+                        platformComponentProfileRegistered,
+                        errorManager,
+                        new ArrayList<PlatformComponentProfile>(),
+                        identity,
+                        eventManager
+                );
 
-            // Initialize messages handlers
-            initializeMessagesListeners();
+                // Initialize messages handlers
+                initializeMessagesListeners();
 
-            // start main threads
-            transactionTransmissionAgent.start();
+                // start main threads
+                transactionTransmissionAgent.start();
 
+
+            }
+        }catch(Exception e){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
 
         }
     }
@@ -443,7 +497,27 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService) {
 
-        transactionTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
+        try {
+            transactionTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
+        }catch(Exception e){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE FAILURE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+
+        }
     }
 
     @Override
@@ -457,9 +531,29 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         /*
          * save into the cache
          */
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
+        try{
+            remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
 
-        transactionTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+            transactionTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+        }catch(Exception e){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE COMPLETE REQUEST LIST COMPONENT REGISTERED NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+
+        }
     }
 
     @Override
@@ -476,12 +570,32 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
 
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
+            try{
+                remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
 
 
-            System.out.print("-----------------------\n" +
-                    "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
-                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
+                System.out.print("-----------------------\n" +
+                        "TRANSACTION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
+                        "-----------------------\n A: " + remoteComponentProfile.getAlias());
+            }catch(Exception e){
+                StringBuffer contextBuffer = new StringBuffer();
+                contextBuffer.append("Plugin ID: " + pluginId);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("errorManager: " + errorManager);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("eventManager: " + eventManager);
+
+                String context = contextBuffer.toString();
+                String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT CONNECTION REQUEST NOTIFICATION EVENT";
+
+                CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+                errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+
+            }
         }
     }
 
@@ -509,16 +623,36 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if (fermatEvent instanceof VPNConnectionCloseNotificationEvent) {
+        try{
+            if (fermatEvent instanceof VPNConnectionCloseNotificationEvent) {
 
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+                VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
 
-            if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()) {
+                if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()) {
 
-                if (communicationNetworkServiceConnectionManager != null)
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                    if (communicationNetworkServiceConnectionManager != null)
+                        communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+                }
 
             }
+        }catch(Exception e){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE VPN CONNECTION CLOSE NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
 
         }
     }
@@ -526,11 +660,31 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
-            this.register = false;
+        try{
+            if (fermatEvent instanceof ClientConnectionCloseNotificationEvent) {
+                this.register = false;
 
-            if (communicationNetworkServiceConnectionManager != null)
-                communicationNetworkServiceConnectionManager.closeAllConnection();
+                if (communicationNetworkServiceConnectionManager != null)
+                    communicationNetworkServiceConnectionManager.closeAllConnection();
+            }
+        }catch(Exception e){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE CLIENT CONENCTION CLOSE NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+
         }
     /*public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
@@ -646,6 +800,12 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
+        }catch (Exception exception){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            String context = contextBuffer.toString();
+            String possibleCause = "The plugin was unable to start";
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), context, possibleCause);
         }
     }
 

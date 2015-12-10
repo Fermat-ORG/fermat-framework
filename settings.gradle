@@ -10,6 +10,7 @@ apply from: 'CBP/settings.gradle'
 apply from: 'CCM/settings.gradle'
 apply from: 'CCP/settings.gradle'
 apply from: 'CSH/settings.gradle'
+apply from: 'CER/settings.gradle'
 apply from: 'DAP/settings.gradle'
 apply from: 'OSA/settings.gradle'
 apply from: 'P2P/settings.gradle'
@@ -21,6 +22,8 @@ include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
+
+include ':fermat_linux_core'
 
 
 include ':fermat-cry-api'
