@@ -270,3 +270,45 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 
 <br><br><br><br><br><br><br>
 
+## Part V: Servidor Local de Pruebas
+
+Es posible la ejecución de un servidor local para realizar pruebas de funcionamiento de un Plugin Network Service, esto permite agilizar el proceso de depuración del código fuente del plugin, así como el proceso de detección de errores del mismo.
+
+Para la ejecución del servidor en un ambiente local de desarrollo se deben seguir los siguientes pasos:
+
+* Se debe ingresar a la carpeta principal donde está guardado el proyecto en el disco duro.
+```Shell
+cd $PATH_TO_FERMAT_REPO/fermat
+```
+* Luego se ejecuta el comando que ejecuta la compilación:
+ ```Shell
+cd $PATH_TO_gradle/gradle fatjar
+```
+* Ahora se ingresa a la carpeta en la cual se encuentra el archivo ejecutable, producto de la compilación anterior:
+ ```Shell
+P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/
+```
+* Se debe verificar el contenido de la carpeta anterior, para ello se usa el comando:
+```Shell
+ls
+```
+* Una vez obtenida la lista de archivos contenidos en **_P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/_** se debe copiar el nombre del archivo JAR que contenga en su nombre **with dependencies**
+* Para la ejecución del servidor, se debe ejecutar el siguiente comando:
+```Shell
+java -jar $NOMBRE_DEL_ARCHIVO_OBTENIDO_EN_EL_PASO_ANTERIOR -jar
+```
+* Cuando se esté ejecutando el servidor se deben observar los mensajes impresos en la consola, entre los cuales se imprime la dirección IP que está usando el servidor local, esta dirección debe ser copiada y usada para configurar al cliente local de comunicaciones. El cliente local de comunicaciones se encuentra en **_com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf_**.
+* La dirección IP obtenida en el paso anterior se debe usar en la siguiente variable de configuración:
+```Java
+    /**
+     * Represent the SERVER_IP in the local environment
+     */
+    public static final String SERVER_IP_DEVELOPER_LOCAL = "<LOCAL IP SERVER>";
+```
+* Una vez configurada la dirección IP se debe ejecutar la aplicación, cuando esta inicie, si el Plugin Network Service se está ejecutando y registrando de forma correcta debería obtener en la consola del servidor un texto como el que se muestra a continuación:
+```Shell
+ComponentRegistrationRequestPacketProcessor - processingPackage
+ComponentRegistrationRequestPacketProcessor - packetContentJsonStringRepresentation = {"ns-t":"TESTING PLUGIN","pr":"{\"alias\":\"testingpluginnetworkservice\",\"communicationCloudClientIdentity\":\"048B5A003C40B82563BCC002A08D2F6F5257D2B1A0487BCDD11CED7E2845918D57F5998FEF38900A9B665A27235BDEF2A5E6D6BE9AFBA4CED545045F00C14FCDBF\",\"identityPublicKey\":\"04DC8F6915AE276E602EEAA29155EA094A072F876C86B9E9C3A75E6F3FD46B2FA0846BC1C445CDA77C1C07DA0AA566541810FDDD0B28340BE3D99A83F945D526F6\",\"name\":\"Testing Plugin Network Service\",\"networkServiceType\":\"TESTING_PLUGIN\",\"platformComponentType\":\"NETWORK_SERVICE\"}"}
+ComponentRegistrationRequestPacketProcessor - registerNetworkServiceComponent
+ComponentRegistrationRequestPacketProcessor - Total Network Service Component Registered (TESTING_PLUGIN) = 1
+```
