@@ -1,30 +1,31 @@
 /*
- * @#MessageContentType.java - 2015
+ * @#MessagesStatus.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.MessageContentType</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum MessageContentType {
+public enum MessageStatus {
 
     /**
      * The enum values
      */
-    TEXT  ("TXT"),
-    BYTE  ("BYTE"),
-    IMAGE ("IMG"),
-    VIDEO ("VIDEO");
+    PENDING_TO_SEND ("PTS"),
+    SENT            ("S"),
+    DELIVERED       ("D"),
+    NEW_RECEIVED    ("NR"),
+    READ            ("R");
 
     /**
      * Represent the code of the message status
@@ -36,7 +37,7 @@ public enum MessageContentType {
      *
      * @param code the valid code
      */
-    MessageContentType(String code) {
+    MessageStatus(String code) {
         this.code = code;
     }
 
@@ -51,27 +52,29 @@ public enum MessageContentType {
      * Return the enum by the code
      *
      * @param code the valid code
-     * @return MessagesTypes enum
+     * @return MessageStatus enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static MessageContentType getByCode(String code) throws InvalidParameterException {
+    public static MessageStatus getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "TXT":
-                return MessageContentType.TEXT;
-            case "BYTE":
-                return MessageContentType.BYTE;
-            case "IMG":
-                return MessageContentType.IMAGE;
-            case "VIDEO":
-                return MessageContentType.VIDEO;
+            case "PTS":
+                return MessageStatus.PENDING_TO_SEND;
+            case "S":
+                return MessageStatus.SENT;
+            case "D":
+                return MessageStatus.DELIVERED;
+            case "NR":
+                return MessageStatus.NEW_RECEIVED;
+            case "R":
+                return MessageStatus.READ;
         }
 
         /**
          * If we try to convert am invalid string.
          */
         throw new InvalidParameterException(code);
-    }
+    };
 
     /**
      * (non-Javadoc)

@@ -44,8 +44,8 @@ import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantDeliveryDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantInitializeAssetUserWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,6 +76,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
 
     private static final String WALLET_USER_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletUser = new HashMap<>();
+    public static final String PATH_DIRECTORY = "asset-user-swap/";
 
     @Override
     public void start() throws CantStartPluginException {

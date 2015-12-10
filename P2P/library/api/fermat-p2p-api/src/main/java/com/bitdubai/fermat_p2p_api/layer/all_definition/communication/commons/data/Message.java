@@ -6,6 +6,9 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -64,7 +67,7 @@ public class Message implements Serializable{
     /**
      * Represent the status
      */
-    private MessagesStatus messagesStatus;
+    private MessageStatus messageStatus;
 
     /**
      * Represent the fermatMessageContentType
@@ -77,17 +80,17 @@ public class Message implements Serializable{
      * @param content
      * @param deliveryTimestamp
      * @param messageContentType
-     * @param messagesStatus
+     * @param messageStatus
      * @param receiver
      * @param sender
      * @param shippingTimestamp
      * @param signature
      */
-    protected Message(String content, Timestamp deliveryTimestamp, MessageContentType messageContentType, MessagesStatus messagesStatus, String receiver, String sender, Timestamp shippingTimestamp, String signature) {
+    public Message(String content, Timestamp deliveryTimestamp, MessageContentType messageContentType, MessageStatus messageStatus, String receiver, String sender, Timestamp shippingTimestamp, String signature) {
         this.content = content;
         this.deliveryTimestamp = deliveryTimestamp;
         this.messageContentType = messageContentType;
-        this.messagesStatus = messagesStatus;
+        this.messageStatus = messageStatus;
         this.id = UUID.randomUUID();
         this.receiver = receiver;
         this.sender = sender;
@@ -154,7 +157,7 @@ public class Message implements Serializable{
      *
      * @return messageContentType
      */
-    public MessageContentType getMessageContentType() {
+    public com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType getMessageContentType() {
         return messageContentType;
     }
 
@@ -163,26 +166,26 @@ public class Message implements Serializable{
      *
      * @param messageContentType to set
      */
-    public void setMessageContentType(MessageContentType messageContentType) {
+    public void setMessageContentType(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType messageContentType) {
         this.messageContentType = messageContentType;
     }
 
     /**
-     * Gets the value of messagesStatus and returns
+     * Gets the value of messageStatus and returns
      *
-     * @return messagesStatus
+     * @return messageStatus
      */
-    public MessagesStatus getMessagesStatus() {
-        return messagesStatus;
+    public MessageStatus getMessageStatus() {
+        return messageStatus;
     }
 
     /**
-     * Sets the messagesStatus
+     * Sets the messageStatus
      *
-     * @param messagesStatus to set
+     * @param messageStatus to set
      */
-    public void setMessagesStatus(MessagesStatus messagesStatus) {
-        this.messagesStatus = messagesStatus;
+    public void setMessageStatus(MessageStatus messageStatus) {
+        this.messageStatus = messageStatus;
     }
 
     /**
@@ -266,4 +269,19 @@ public class Message implements Serializable{
         this.signature = signature;
     }
 
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "content='" + content + '\'' +
+                ", id=" + id +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", shippingTimestamp=" + shippingTimestamp +
+                ", deliveryTimestamp=" + deliveryTimestamp +
+                ", signature='" + signature + '\'' +
+                ", messageStatus=" + messageStatus +
+                ", messageContentType=" + messageContentType +
+                '}';
+    }
 }
