@@ -45,14 +45,13 @@ public class BankMoneyWalletDatabaseConstants {
      */
     public static final String BANK_MONEY_ACCOUNTS_TABLE_NAME = "accounts";
 
-    public static final String BANK_MONEY_ACCOUNTS_WALLET_KEY_COLUMN_NAME = "wallet_key";
     public static final String BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME = "public_key";
     public static final String BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
     public static final String BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME = "alias";
-    public static final String BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME = "description";
+    public static final String BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME = "account_type";
     public static final String BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
     public static final String BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME = "book_balance";
 
-    public static final String BANK_MONEY_TOTAL_BALANCES_FIRST_KEY_COLUMN = "wallet_key";
+    public static final String BANK_MONEY_ACCOUNTS_FIRST_KEY_COLUMN = "public_key";
 
 }

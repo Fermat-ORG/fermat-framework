@@ -266,6 +266,7 @@ public class BankMoneyWalletDao {
     public void addNewAccount(BankAccountNumber bankAccountNumber) throws CantInsertRecordException{
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
         DatabaseTableRecord record = table.getEmptyRecord();
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME,this.publicKey);
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME,bankAccountNumber.getAccount());
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME,bankAccountNumber.getCurrencyType().getCode());
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME,bankAccountNumber.getAlias());
