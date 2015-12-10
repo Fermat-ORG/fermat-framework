@@ -51,7 +51,6 @@ import java.util.UUID;
  * Created by franklin on 16/11/15.
  */
 public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin  implements
-        //TODO: Implementar DealsWiths de los modulos BNK y la Wallet CBP
         CashMoneyDestockManager,
         DatabaseManagerForDevelopers {
 
@@ -73,8 +72,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    //TODO:Descomentar luego que esten arrancados estos Plugines: plugin = Plugins.CRYPTO_WALLET, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD)

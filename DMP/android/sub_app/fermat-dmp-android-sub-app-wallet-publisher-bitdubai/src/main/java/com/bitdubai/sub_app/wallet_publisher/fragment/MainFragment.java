@@ -102,7 +102,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
             /*
              * Get the module instance
              */
-            walletPublisherModuleManager = ((WalletPublisherSubAppSession) subAppsSession).getWalletPublisherManager();
+            walletPublisherModuleManager = ((WalletPublisherSubAppSession) appSession).getWalletPublisherManager();
             /*Getting WFP */
             //projects = (ArrayList<WalletFactoryProject>) walletPublisherModuleManager.getProjectsReadyToPublish();
         } catch (Exception ex) {
@@ -204,7 +204,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 && project != null) {
             //Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
             /* Starting Wizard to Publish this Project */
-            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT.getKey(), subAppsSession, subAppSettings, subAppResourcesProviderManager, project);
+            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT.getKey(), appSession, appSettings, appResourcesProviderManager, project);
             return true;
         }
         Toast.makeText(getActivity(), "Starting wizard to publish...", Toast.LENGTH_SHORT).show();

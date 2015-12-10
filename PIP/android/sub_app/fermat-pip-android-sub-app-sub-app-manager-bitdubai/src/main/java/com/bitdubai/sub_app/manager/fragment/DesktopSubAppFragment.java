@@ -110,9 +110,9 @@ public class DesktopSubAppFragment extends FermatFragment implements SearchView.
         try {
 
             // setting up  module
-            //desktopSession = ((DesktopSession) subAppsSession);
+            //desktopSession = ((DesktopSession) appSession);
             //moduleManager = desktopSession.getModuleManager();
-            //errorManager = subAppsSession.getErrorManager();
+            //errorManager = appSession.getErrorManager();
 
 //            //get search name if
 //            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();

@@ -33,7 +33,7 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
     PluginDatabaseSystem pluginDatabaseSystem;
     //CryptoIndexHelper cryptoIndexHelper;
     /**
-     * Get Historical ExchangeRate From Providers
+     * Get Historical ExchangeRate From CryptoProvidersManager
      * @param cryptoCurrency
      * @param fiatCurrency
      * @param time

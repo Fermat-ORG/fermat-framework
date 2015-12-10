@@ -1,0 +1,28 @@
+package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces;
+
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCreateCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetListCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantUpdateStateCustomerBrokerCloseNegotiationTransactionException;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Created by Yordin Alayn on 23.11.15.
+ */
+public interface CustomerBrokerCloseManager {
+
+    CustomerBrokerClose createCustomerBrokerCloseNegotiationTranasction(Negotiation negotiation, Collection<Clause> clauses) throws CantCreateCustomerBrokerCloseNegotiationTransactionException;
+
+    void updateStatusCustomerBrokerCloseNegotiationTranasction(UUID transactionId, NegotiationStatus statusTransaction) throws CantUpdateStateCustomerBrokerCloseNegotiationTransactionException;
+
+    CustomerBrokerClose getCustomerBrokerCloseNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerCloseNegotiationTransactionException;
+
+    List<CustomerBrokerClose> getAllCustomerBrokerCloseNegotiationTranasction() throws CantGetListCustomerBrokerCloseNegotiationTransactionException;
+
+}

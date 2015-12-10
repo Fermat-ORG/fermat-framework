@@ -65,7 +65,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View layout = inflater.inflate(R.layout.fragment_more_details_wallet, container, false);
-        final WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
+        final WalletStoreListItem catalogItem = (WalletStoreListItem) appSession.getData(BASIC_DATA);
 
         ActionBar actionBar = getActivity().getActionBar();
         if (actionBar != null) {
@@ -90,7 +90,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
     }
 
     private void setDataInViews(WalletStoreListItem catalogItem) {
-        final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
+        final String developerAlias = (String) appSession.getData(DEVELOPER_NAME);
 
         elevatorPitch.setText("Elevator Pitch de la Wallet.\nElevetor Pitch de la Wallet Linea 2.");
         description.setText(catalogItem.getDescription());

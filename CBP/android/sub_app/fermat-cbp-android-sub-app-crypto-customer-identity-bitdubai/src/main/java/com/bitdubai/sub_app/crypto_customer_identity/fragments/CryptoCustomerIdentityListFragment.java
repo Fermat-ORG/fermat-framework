@@ -62,8 +62,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
         try {
             // setting up  module
-            moduleManager = ((CryptoCustomerIdentitySubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((CryptoCustomerIdentitySubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -99,7 +99,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
         newIdentityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+               changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
             }
         });
 
@@ -182,8 +182,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
     @Override
     public void onItemClickListener(CryptoCustomerIdentityInformation data, int position) {
-        subAppsSession.setData(IDENTITY_INFO, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+        appSession.setData(IDENTITY_INFO, data);
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

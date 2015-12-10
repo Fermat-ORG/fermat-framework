@@ -102,7 +102,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
 
         try {
