@@ -73,8 +73,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
 
             resource = (Resource)developerSubAppSession.getData("resource");
             developerDatabaseTable = (DeveloperDatabaseTable)developerSubAppSession.getData("databaseTable");

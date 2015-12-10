@@ -24,6 +24,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetInt
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
@@ -75,10 +76,10 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
-        intraUserInformation = (IntraUserInformation) subAppsSession.getData(INTRA_USER_SELECTED);
+        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
+        intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
         moduleManager = intraUserSubAppSession.getModuleManager();
-        errorManager = subAppsSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
     }
 
@@ -214,7 +215,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
             moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, subAppResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
             notificationAcceptDialog.show();
         } catch (CantAcceptRequestException | CantGetActiveLoginIdentityException e) {
             e.printStackTrace();

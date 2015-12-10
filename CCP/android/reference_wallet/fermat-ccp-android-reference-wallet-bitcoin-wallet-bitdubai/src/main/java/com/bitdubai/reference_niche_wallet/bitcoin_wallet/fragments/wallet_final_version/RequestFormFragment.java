@@ -79,7 +79,7 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
@@ -210,7 +210,7 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
                         Platforms.CRYPTO_CURRENCY_PLATFORM,
                         VaultType.CRYPTO_CURRENCY_VAULT,
                         CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                        walletSession.getAppPublicKey(),
+                        appSession.getAppPublicKey(),
                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
                         );
                 cryptoWallet.sendCryptoPaymentRequest(

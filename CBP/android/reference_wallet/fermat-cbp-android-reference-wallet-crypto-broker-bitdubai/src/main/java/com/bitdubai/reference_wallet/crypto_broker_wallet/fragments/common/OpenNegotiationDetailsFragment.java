@@ -102,10 +102,10 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
+            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
 
-            errorManager = walletSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -279,7 +279,7 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, walletSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
             }
         });
     }
@@ -297,7 +297,7 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
     }
 
     private void bindData() {
-        CryptoBrokerWalletSession session = (CryptoBrokerWalletSession) walletSession;
+        CryptoBrokerWalletSession session = (CryptoBrokerWalletSession) appSession;
         CustomerBrokerNegotiationInformation data = (CustomerBrokerNegotiationInformation) session.getData(CryptoBrokerWalletSession.NEGOTIATION_DATA);
 
         ActorIdentity customer = data.getCustomer();

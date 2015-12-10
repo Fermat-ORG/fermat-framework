@@ -18,18 +18,17 @@ public abstract class FermatFragmentFactory  <S extends AbstractFermatSession,J 
 
     protected AbstractFermatFragment<S,J,R> fermatFragment;
 
-
     @Override
     public Fragment getFragment(String code, S AppsSession, J settingsManager, R resourceProviderManager) throws FragmentNotFoundException {
         F fragments = getFermatFragmentEnumType(code);
         fermatFragment = getFermatFragment(fragments);
-        fermatFragment.setSubAppsSession(AppsSession);
-        fermatFragment.setSubAppSettings(settingsManager);
-        fermatFragment.setSubAppResourcesProviderManager(resourceProviderManager);
+        fermatFragment.setAppSession(AppsSession);
+        fermatFragment.setAppSettings(settingsManager);
+        fermatFragment.setAppResourcesProviderManager(resourceProviderManager);
         return fermatFragment;
     }
 
-    public abstract FermatFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
+    public abstract AbstractFermatFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
 
     public abstract F getFermatFragmentEnumType(String key);
 

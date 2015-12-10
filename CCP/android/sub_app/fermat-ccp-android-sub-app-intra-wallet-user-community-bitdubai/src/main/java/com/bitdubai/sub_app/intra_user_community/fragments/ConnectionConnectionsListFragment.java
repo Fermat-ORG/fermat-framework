@@ -64,9 +64,9 @@ public class ConnectionConnectionsListFragment extends FermatFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
-        errorManager = subAppsSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
     }
 
@@ -183,8 +183,8 @@ public class ConnectionConnectionsListFragment extends FermatFragment implements
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-        subAppsSession.setData(INTRA_USER_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), subAppsSession.getAppPublicKey());
+        appSession.setData(INTRA_USER_SELECTED, data);
+        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

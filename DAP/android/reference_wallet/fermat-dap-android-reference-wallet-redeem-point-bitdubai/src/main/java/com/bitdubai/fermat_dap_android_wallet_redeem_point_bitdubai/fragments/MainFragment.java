@@ -59,7 +59,7 @@ public class MainFragment extends FermatWalletFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((RedeemPointSession) walletSession).getRedeemManager();
+            manager = ((RedeemPointSession) appSession).getRedeemManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

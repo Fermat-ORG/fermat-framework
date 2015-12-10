@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
@@ -39,7 +40,7 @@ public class CreateBrokerIdentityExecutor {
         identity = null;
     }
 
-    public CreateBrokerIdentityExecutor(SubAppsSession session, String identityName, byte[] imageInBytes) {
+    public CreateBrokerIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) {
         this(imageInBytes, identityName);
         identity = null;
 

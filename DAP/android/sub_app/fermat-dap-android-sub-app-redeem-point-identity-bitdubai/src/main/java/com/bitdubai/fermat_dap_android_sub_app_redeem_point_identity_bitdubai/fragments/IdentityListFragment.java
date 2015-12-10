@@ -49,8 +49,8 @@ public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity
 
         try {
             // setting up  module
-            moduleManager = ((RedeemPointIdentitySubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((RedeemPointIdentitySubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -67,7 +67,7 @@ public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity
             newIdentityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    changeActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
                 }
             });
 
