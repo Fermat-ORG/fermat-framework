@@ -58,7 +58,7 @@ Each GUI component has a folder designated to the fragment factory, that is in c
 
 Un Fragment Factory consta de dos elementos: un enum *Fragments Enum Type* y una clase *Fragment Factory*. Estos elementos se han de ubicar en la carpeta `fragmentFactory` del proyecto que representa tu app.
 
-Los *Fragments Enum Type* representan identificadores para los fragmentos que conforman tu Wallet o SubApp. estos enums han de heredar de `FermatFragmentsEnumType` como se demuestra en el siguiente ejemplo:
+- Los *Fragments Enum Type* representan identificadores para los fragmentos que conforman tu Wallet o SubApp. estos enums han de heredar de `FermatFragmentsEnumType` como se demuestra en el siguiente ejemplo:
 
 ```java
 public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumType<IntraUserIdentityFragmentsEnumType> {
@@ -88,7 +88,7 @@ public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumTyp
 }
 ```
 
-Los *Fragment Factory* son clases que retornan instancias de los fragmentos identificados por su correspondiente *Fragments Enum Type*. Cada app ha de tener su propio *Fragment Factory* y este ha de heredar de `FermatWalletFragmentFactory` si los fragmentos forman parde te una Wallet o de `FermatSubAppFragmentFactory` si los fragmentos forman parte de una SubApp, tal como se demuestra en este ejemplo:
+- Los *Fragment Factory* son clases que retornan instancias de los fragmentos identificados por su correspondiente *Fragments Enum Type*. Cada app ha de tener su propio *Fragment Factory* y este ha de heredar de `FermatWalletFragmentFactory` si los fragmentos forman parde te una Wallet o de `FermatSubAppFragmentFactory` si los fragmentos forman parte de una SubApp, tal como se demuestra en este ejemplo:
 
 ```java
 public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactory<IntraUserIdentitySubAppSession, IntraUserIdentityPreferenceSettings, IntraUserIdentityFragmentsEnumType> {
@@ -218,13 +218,85 @@ runtimeActivity.setColor("#03A9F4");
 
 // Adding the Activity in the Navigation Structure 
 runtimeSubApp.addActivity(runtimeActivity);
-// Seting the fragment has a Start Fragment (is going to show first for this activiy)
+// Seting the Activity has a Start Activity (is going to show first for this app)
 runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
 
 ...
 ```
 
 Una actividad en el contexto de Fermat es un contenedor base el cual le dice al core de android como va a estar diseñada la pantalla, cual va a ser su flujo y que elementos la componen. (Esto se realiza de esta forma para que en un futuro no desarrolladores puedan integrarse a Fermat). Un developer al contrario de android no debe desarrollar la clase Activity de android para poder correr sus fragmentos, si no que con declararlos en el runtime bajo un objeto Activity (FermatActivity) es suficiente para que se dibujen en pantalla.
+
+Los identificadores de las actividades se deben crear en el enum `Activities` del paquete `com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums`
+
+```java
+public enum Activities {
+
+    CWP_SHELL_LOGIN("CSL"),
+    CWP_SHOP_MANAGER_MAIN("CSMM"),
+    CWP_WALLET_MANAGER_MAIN("CWMM"),
+    CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN("CWRWAKAB1M"),
+
+    // Reference wallet
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN("CWRWBWBV1M"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS("CWRWBWBV1T"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST("CWRWBWBV1PR"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS("CWRWBWBV1C"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS("CWRWBWBV1S"),
+
+    CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY("CCPBWSFA"),
+    CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY("CCPBWRFA"),
+    CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY("CCPBWCDA"),
+    CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY("CCPBWSA"),
+    CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
+    CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY("CCPBWNIA"),
+    
+    ...
+}
+```
+
+
+##### Fragment
+
+```java
+...
+
+// Fragment for this activity
+runtimeFragment = new Fragment();
+runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+// Adding the Fragment in the Activity 
+// and seting it has a Start Fragment (is going to show first for this activiy)
+runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+...
+```
+
+Un fragmento en Fermat tiene el mismo significado que en [Android](http://developer.android.com/intl/es/training/basics/fragments/index.html), y tiene una representacion en la Estructura de Navegacion para ser asignada a una actividad o a un Tab. 
+
+Los identificadores de los fragmentos se deben crear en el enum `Fragments` del paquete `com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.`
+
+```java
+public enum Fragments implements FermatFragments {
+    CWP_SHELL_LOGIN("CSL"),
+    CWP_WALLET_MANAGER_MAIN("CWMM"),
+    CWP_SUB_APP_DEVELOPER("CSAD"),
+    CWP_WALLET_MANAGER_SHOP("CWMS"),
+    CWP_SHOP_MANAGER_MAIN("CSMM"),
+    CWP_SHOP_MANAGER_FREE("CSMF"),
+    CWP_SHOP_MANAGER_PAID("CSMP"),
+    CWP_SHOP_MANAGER_ACCEPTED_NEARBY("CSMAN"),
+
+    CWP_WALLET_PUBLISHER_MAIN_FRAGMENT("CWPMF"),
+
+    // Wallet Store
+    CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
+    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWPWSDA"),
+    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWPWSMDA"),
+    
+    ...
+}
+```
 
 
 ##### Header
@@ -331,14 +403,17 @@ Es posible agregar un *Navigation Drawer* (o Side Menu) que te permita dirigirte
   
 - Dentro del metodo `onActivityCreated` del fragmento que va a contener el *Navigation Drawer*, se debe pasar como parametro a `getPaintActivtyFeactures().addNavigationView()` una instancia de `<nombreApp>NavigationViewPainter`
 
-
-##### MainMenu
 ##### Tabs and TabStrip
 ##### TitleBar and StatusBar
 ##### Wizard and WizardPage
+
 ### Android api
 #### API Organitation
 #### FermatFragment Class
+
+En tu proyecto GUI debes crear los fragmentos que defines en la estructura de navegacion, creando clases que hereden de `FermatFragment` y colocandolas dentro de la carpeta `fragments` de tu proyecto. `FermatFragment` tiene referencias a la `Session` de tu Wallet o SubApp, asi como a los `Settings` y al `ProviderManager`
+
+<br>
 
 ## Part II: Workflow
 
