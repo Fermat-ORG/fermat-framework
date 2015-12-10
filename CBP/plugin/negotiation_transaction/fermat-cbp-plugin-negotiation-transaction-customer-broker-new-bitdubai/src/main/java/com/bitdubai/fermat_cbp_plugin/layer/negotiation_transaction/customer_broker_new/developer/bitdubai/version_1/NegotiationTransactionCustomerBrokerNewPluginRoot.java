@@ -26,16 +26,15 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler.CustomerBrokerNewServiceEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewPurchaseNegotiationTransaction;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewSaleNegotiationTransaction;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -48,7 +47,6 @@ import java.util.List;
  */
 
 public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractPlugin implements
-//        CustomerBrokerNewManager,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
@@ -69,16 +67,16 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*Represent the dataBase*/
     private Database                                                        dataBase;
 
-    /**/
+    /*Represent DeveloperDatabaseFactory*/
     private CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
     private CustomerBrokerNewNegotiationTransactionDatabaseDao              customerBrokerNewNegotiationTransactionDatabaseDao;
 
-    /**/
+    /*Represent Customer Broker New Manager*/
     private CustomerBrokerNewManagerImpl                                    customerBrokerNewManagerImpl;
 
-    /**/
+    /*Represent Agent*/
     private CustomerBrokerNewAgent                                          customerBrokerNewAgent;
 
     /*Represent Network Service Negotiation Transmission*/
@@ -102,53 +100,54 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*Represent the Negotiation Sale*/
     private CustomerBrokerSaleNegotiation                                   customerBrokerSaleNegotiation;
 
+    /**/
+    private CustomerBrokerNewServiceEventHandler                            customerBrokerNewServiceEventHandler;
+
     public NegotiationTransactionCustomerBrokerNewPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
     
     /*IMPLEMENTATION Service.*/
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
 
         try {
-        //Initialize database
-        initializeDb();
 
-        //Initialize Developer Database Factory
-        customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory = new CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
+            //Initialize database
+            initializeDb();
 
-        //Initialize Dao
-        customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+            //Initialize Developer Database Factory
+            customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory = new CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
-        //Initialize manager
-        customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(customerBrokerNewNegotiationTransactionDatabaseDao);
+            //Initialize Dao
+            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
 
-        //Init event recorder service.
+            //Initialize manager
+            customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(customerBrokerNewNegotiationTransactionDatabaseDao);
 
+            //Init event recorder service.
+            customerBrokerNewServiceEventHandler = new CustomerBrokerNewServiceEventHandler(customerBrokerNewNegotiationTransactionDatabaseDao,eventManager);
+            customerBrokerNewServiceEventHandler.start();
 
-        //Init monitor Agent
-        customerBrokerNewAgent = new CustomerBrokerNewAgent(
-                pluginDatabaseSystem,
-                logManager,
-                errorManager,
-                eventManager,
-                pluginId,
-                negotiationTransmissionManager,
-                customerBrokerPurchaseNegotiation,
-                customerBrokerSaleNegotiation
-        );
-        customerBrokerNewAgent.start();
+            //Init monitor Agent
+            customerBrokerNewAgent = new CustomerBrokerNewAgent(
+                    pluginDatabaseSystem,
+                    logManager,
+                    errorManager,
+                    eventManager,
+                    pluginId,
+                    negotiationTransmissionManager,
+                    customerBrokerPurchaseNegotiation,
+                    customerBrokerSaleNegotiation
+            );
+            customerBrokerNewAgent.start();
 
-        //Startes Service
-        this.serviceStatus = ServiceStatus.STARTED;
+            //Startes Service
+            this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (Exception exception) {
-            throw new CantStartPluginException(
-                    CantStartPluginException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(exception),
-                    "Starting open contract plugin",
-                    "Unexpected Exception");
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Error Starting Customer Broker New PluginRoot","Unexpected Exception");
         }
     }
     
@@ -167,83 +166,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         this.serviceStatus = ServiceStatus.STOPPED;
     }
     /*END IMPLEMENTATION Service.*/
-
-
-    /*IMPLEMENTATION CustomerBrokerNewManager*/
-    /*
-    @Override
-    public void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
-        try {
-
-            customerBrokerNewPurchaseNegotiationTransaction = new CustomerBrokerNewPurchaseNegotiationTransaction(
-                    customerBrokerPurchaseNegotiationManager,
-                    customerBrokerNewNegotiationTransactionDatabaseDao
-            );
-            customerBrokerNewPurchaseNegotiationTransaction.newPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
-
-        } catch (CantNewPurchaseNegotiationTransactionException e){
-            throw new CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        } catch (Exception e){
-            throw new CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        }
-    }
-
-    @Override
-    public void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException {
-
-        try {
-
-            customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                    customerBrokerSaleNegotiationManager,
-                    customerBrokerNewNegotiationTransactionDatabaseDao
-            );
-            customerBrokerNewSaleNegotiationTransaction.newSaleNegotiationTranasction(customerBrokerSaleNegotiation);
-
-        } catch (CantNewSaleNegotiationTransactionException e){
-            throw new CantCreateCustomerBrokerNewSaleNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        } catch (Exception e){
-            throw new CantCreateCustomerBrokerNewSaleNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        }
-
-    }
-
-    @Override
-    public CustomerBrokerNew getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException {
-
-        CustomerBrokerNew customerBrokerNew = null;
-
-        try {
-
-            customerBrokerNew = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
-
-        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
-            throw new CantGetCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, CantGetCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER NEW NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        } catch (Exception e){
-            throw new CantGetCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER NEW NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        }
-
-        return customerBrokerNew;
-
-    }
-
-    @Override
-    public List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerNewNegotiationTransactionException {
-
-        List<CustomerBrokerNew> getTransactions = null;
-
-        try{
-
-            getTransactions = customerBrokerNewNegotiationTransactionDatabaseDao.getAllRegisterCustomerBrokerNewNegotiationTranasction();
-
-        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
-            throw new CantGetListCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, CantGetListCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET LIST CUSTOMER BROKER NEW NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        } catch (Exception e){
-            throw new CantGetListCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantGetListCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET LIST CUSTOMER BROKER NEW NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
-        }
-
-        return getTransactions;
-    }*/
-    /*END IMPLEMENTATION CustomerBrokerNewManager*/
 
     /*IMPLEMENTATION DatabaseManagerForDevelopers.*/
     @Override
