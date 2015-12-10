@@ -141,7 +141,63 @@ Dependiendo de si quieres crear una SubApp o una Wallet, has de agregar tu estru
 - `SubAppRuntimeEnginePluginRoot` ubicada en `DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/` en el caso de una SuApp
 - `WalletRuntimeEnginePluginRoot` ubicada en `DMP/plugin/engine/fermat-dmp-plugin-engine-wallet-runtime-bitdubai/` en el caso de una Wallet 
 
-**NOTA:** Para ver un ejemplo completo de una estructura de navegacion puedes revisar el metodo `private WalletNavigationStructure createCryptoBrokerWalletNavigationStructure()` en el caso una wallet y `private void createWalletStoreNavigationStructure()` en el caso de una SubApp
+Este es un ejemplo simple de como crear la estructura de navegacion para una subapp:
+
+```java
+private void factoryReset(){
+    ...
+    
+    // Creating the Navigation Structure for the Intra User Identity SubApp
+    RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
+    runtimeSubApp.setType(SubApps.CCP_INTRA_USER_IDENTITY);
+    String intraUserIdentityPublicKey = "public_key_ccp_intra_user_identity";
+    runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
+    
+    // Creating a Activity. Screen: Create New Identity
+    runtimeActivity = new Activity();
+    runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+    runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+    runtimeActivity.setColor("#03A9F4");
+    
+    // Adding the Activity in the Navigation Structure
+    runtimeSubApp.addActivity(runtimeActivity);
+    runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+    
+    // Title Bar (a.k.a Action Bar) of the Activity
+    runtimeTitleBar = new TitleBar();
+    runtimeTitleBar.setLabel("Identity Manager");
+    runtimeTitleBar.setColor("#1189a4");
+    runtimeTitleBar.setTitleColor("#ffffff");
+    runtimeTitleBar.setLabelSize(18);
+    runtimeTitleBar.setIsTitleTextStatic(true);
+    
+    // Adding the Title Bar in the Activity
+    runtimeActivity.setTitleBar(runtimeTitleBar);
+    
+    // Status Bar of the Activity
+    statusBar = new StatusBar();
+    statusBar.setColor("#1189a4");
+    
+    // Adding the Status Bar in the Activity
+    runtimeActivity.setStatusBar(statusBar);
+    
+    // Fragment for this activity
+    runtimeFragment = new Fragment();
+    runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+    
+    // Adding the Fragment in the Activity 
+    // and seting it has a Start Fragment (is going to show first for this activiy)
+    runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+    runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+    
+    // Adding the Navigation Structure in the plataform
+    listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    
+    ...
+}
+```
+
+**NOTA:** Para ver un ejemplos mas completos de estructuras de navegacion puedes revisar el metodo `private WalletNavigationStructure createCryptoBrokerWalletNavigationStructure()` en el caso de una wallet y `private void createWalletStoreNavigationStructure()` en el caso de una SubApp
 
 La ubicacion de las estructuras de navegacion en estos archivos es provisoria; en un futuro como primer paso se deberá leer de un XML en el repositorio de Fermat en github y como segundo paso debera poder obtenerse de los otros nodos de la red fermat.
 
@@ -151,81 +207,87 @@ Como se indico en el punto anterior, Fermat ofrece una serie de objetos armar la
 
 ##### Activity
 
-Una actividad en el contexto de Fermat es un contenedor base el cual le dice al core de android como va a estar diseñada la pantalla, cual va a ser su flujo y que elementos la componen. (Esto se realiza de esta forma para que en un futuro no desarrolladores puedan integrarse a Fermat). Un developer al contrario de android no debe desarrollar la clase Activity de android para poder correr sus fragmentos, si no que con declararlos en el runtime bajo un objeto Activity (FermatActivity) es suficiente para que se dibujen en pantalla.
-
-Ejemplo de la Wallet user identity:
-
 ```java
-RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
-runtimeSubApp.setType(SubApps.CCP_INTRA_USER_IDENTITY);
-String intraUserIdentityPublicKey = "public_key_ccp_intra_user_identity";
-runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
-
-// Screen: Create New Identity
+...
+ 
+// Creating a Activity. Screen: Create New Identity
 runtimeActivity = new Activity();
 runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
 runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
 runtimeActivity.setColor("#03A9F4");
+
+// Adding the Activity in the Navigation Structure 
 runtimeSubApp.addActivity(runtimeActivity);
+// Seting the fragment has a Start Fragment (is going to show first for this activiy)
 runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
 
-runtimeTitleBar = new TitleBar();
-runtimeTitleBar.setLabel("Identity Manager");
-runtimeTitleBar.setColor("#1189a4");
-runtimeTitleBar.setTitleColor("#ffffff");
-runtimeTitleBar.setLabelSize(18);
-runtimeTitleBar.setIsTitleTextStatic(true);
-runtimeActivity.setTitleBar(runtimeTitleBar);
-
-statusBar = new StatusBar();
-statusBar.setColor("#1189a4");
-runtimeActivity.setStatusBar(statusBar);
-
-runtimeFragment = new Fragment();
-runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
-listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+...
 ```
+
+Una actividad en el contexto de Fermat es un contenedor base el cual le dice al core de android como va a estar diseñada la pantalla, cual va a ser su flujo y que elementos la componen. (Esto se realiza de esta forma para que en un futuro no desarrolladores puedan integrarse a Fermat). Un developer al contrario de android no debe desarrollar la clase Activity de android para poder correr sus fragmentos, si no que con declararlos en el runtime bajo un objeto Activity (FermatActivity) es suficiente para que se dibujen en pantalla.
+
 
 ##### Header
 
-Es posible agregar un header expandible y colapsable en una actividad de tu app. Esto se realiza en tres pasos:
-
-Definir en la estructura de navegación que la actividad posee un header a traves del método setHeader(runtimeHeader).
-Crear una Clase `<nombreScreen>HeaderViewPainter` que implemente `HeaderViewPainter` en la carpeta `commons/header/` Por ejemplo en la bitcoin wallet sería commons/header/HomeHeaderViewPainter.java
-El mismo debe incluirse en el método onActivityCreated pasando lo como parámetro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
-
-Ejemplo: 
-
 ```java
+...
+// Createting a Header
 runtimeHeader = new Header();
 runtimeHeader.setLabel("Market rate");
+
+// Seting the Header in the Activity
 runtimeActivity.setHeader(runtimeHeader);
+...
 ```
+  
+Es posible agregar un header expandible y colapsable en una actividad de tu app. Esto se realiza en varios pasos:
+
+- Definir en la estructura de navegación que la actividad posee un header:
+ 
+- Crear una Clase `<nombreScreen>HeaderViewPainter` que implemente `HeaderViewPainter` en la carpeta `commons/headers/` de tu proyecto GUI. Por ejemplo en la bitcoin wallet sería `commons/headers/HomeHeaderViewPainter.java`. Esta clase contiene la vista que se quiere mostrar como un header
+
+- Dentro del metodo `onActivityCreated` del fragmento que va a contener el header, se debe pasar como parametro a `getPaintActivtyFeactures().addHeaderView()` una instancia de `<nombreScreen>HeaderViewPainter`
 
 
 ##### Footer
 
-Es posible agregar un footer deslizable, para esto se debe declarar una carpeta llamada footer en el plugin y hacer extender en dos pasos:
+```java
+...
 
-Este está conformado por 2 miembros, el llamado “ViewSlider”, este elemento es el view del footer que se encuentra siempre visible para poder despl
+// Creating a Footer
+Footer runtimeFooter = new Footer();
+runtimeFooter.setBackgroundColor("#AAAAAA");
+
+// Creating the Fragment for the Footer
+runtimeFragment = new Fragment();
+runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
+
+// Associating the Fragment with the Footer
+runtimeFooter.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+
+// Associating the Footer with the Activity
+runtimeActivity.setFooter(runtimeFooter);
+
+...
+```
+
+Es posible agregar un *Footer* deslizable en una actividad de tu app. Esto se realiza en varios pasos:
+
+- Definir en la estructura de navegación que la actividad posee un *Footer* y asignarle un fragmento
+ 
+- Crear una Clase `<nombreScreen>FooterViewPainter` que implemente `FooterViewPainter` en la carpeta `commons/footers/` de tu proyecto GUI; por ejemplo en la Crypto Boroker Wallet sería `commons/footers/HomeFooterViewPainter.java`. Esta clase contiene la vistas que conforman el *Footer*:
+  - `slide_container` es el View del *Footer* que se encuentra siempre visible para poder desplegar el contenido
+  - `footer_container` es el View del *Footer* que representa su contenido, y se mustra cuando el *Footer* despliega
+
+- Dentro del metodo `onActivityCreated` del fragmento que va a contener el *Footer*, se debe pasar como parametro a `getPaintActivtyFeactures().addFooterView()` una instancia de `<nombreScreen>FooterViewPainter`
+
 
 ##### SideMenu (Navigation Drawer) and MenuItem
 
-Es posible agregar un Navigation drawer que te permita dirigirte a las diferentes pantallas de tu app. Esta se define en varios pasos
-
-Crear en la estructura de navegación un objeto SideMenu que representa el Navigztion drawer en la estructura de navegacion y una serie de objetos MenuItem que representan los items de ese menu
-Cada uno de estos items se les asigna varios atributos, entre los que destaca `setLinkToActivity()` que vincula la actividad con el item
-Definir en la estructura de navegación que la actividad va a mostrar el side menu usando el metodo `runtimeActivity.setSideMenu(runtimeSideMenu);`
-Crear una Clase `<nombreApp>NavigationViewPainter` que implemente `NavigationViewPainter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java
-El mismo debe incluirse en el metodo onActivityCreated pasando lo como parametro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
-Crear una Clase `<nombreApp>NavigationViewAdapater` que implemente `FermatAdapter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería 
-
-Ejemplo:
-
 ```java
+...
+
 // Side Menu
 runtimeSideMenu = new SideMenu();
 
@@ -252,7 +314,18 @@ runtimeMenuItem.setLabel("Settings");
 runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
 runtimeMenuItem.setAppLinkPublicKey(publicKey);
 runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+...
 ```
+
+Es posible agregar un Navigation drawer que te permita dirigirte a las diferentes pantallas de tu app. Esta se define en varios pasos
+
+ - Crear en la estructura de navegación un objeto SideMenu que representa el Navigztion drawer en la estructura de navegacion y una serie de objetos MenuItem que representan los items de ese menu
+- Cada uno de estos items se les asigna varios atributos, entre los que destaca `setLinkToActivity()` que vincula la actividad con el item
+- Definir en la estructura de navegación que la actividad va a mostrar el side menu usando el metodo `runtimeActivity.setSideMenu(runtimeSideMenu);`
+- Crear una Clase `<nombreApp>NavigationViewPainter` que implemente `NavigationViewPainter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java
+- El mismo debe incluirse en el metodo onActivityCreated pasando lo como parametro a `getPaintActivtyFeactures().addHeaderView()` del fragmento que va a contener el header
+- Crear una Clase `<nombreApp>NavigationViewAdapater` que implemente `FermatAdapter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería 
 
 ##### MainMenu
 ##### Tabs and TabStrip
