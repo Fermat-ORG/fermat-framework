@@ -8,13 +8,11 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.websocket.ClientEndpointConfig;
-import org.jboss.logging.Logger;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator</code>
@@ -25,11 +23,6 @@ import org.jboss.logging.Logger;
  * @since Java JDK 1.7
  */
 public class ClientChannelConfigurator extends ClientEndpointConfig.Configurator {
-
-    /**
-     * Represent the LOG
-     */
-    private final Logger LOG = Logger.getLogger(ClientChannelConfigurator.class.getName());
 
     /**
      * Represent the clientIdentity
@@ -45,7 +38,7 @@ public class ClientChannelConfigurator extends ClientEndpointConfig.Configurator
 
         List<String> values = new ArrayList<String>();
         values.add(clientIdentity.getPublicKey());
-        LOG.info("Client Public Key = " + clientIdentity.getPublicKey());
+        System.out.println("Client Public Key = " + clientIdentity.getPublicKey());
         headers.put(HeadersAttName.CPKI_ATT_HEADER_NAME,values);
     }
 

@@ -12,9 +12,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageEncoder;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
-import org.jboss.logging.Logger;
-
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -37,12 +34,6 @@ import javax.websocket.Session;
         decoders = {MessageDecoder.class}
 )
 public class CommunicationsNetworkClientChannel {
-
-    /**
-     * Represent the LOG
-     */
-    private final Logger LOG = Logger.getLogger(CommunicationsNetworkClientChannel.class.getName());
-
 
     /**
      * Represent if the client is register with the server
@@ -82,8 +73,8 @@ public class CommunicationsNetworkClientChannel {
 
     @OnMessage
     public void onMessage(Message message, Session session){
-        LOG.info("New message Received");
-        LOG.info("session: " + session.getId() + " message = " + message + "");
+        System.out.println("New message Received");
+        System.out.println("session: " + session.getId() + " message = " + message + "");
 
 
     }
@@ -91,7 +82,7 @@ public class CommunicationsNetworkClientChannel {
     @OnClose
     public void onClose(Session session, CloseReason closeReason){
 
-        LOG.info("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
+        System.out.println("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
 
     }
 

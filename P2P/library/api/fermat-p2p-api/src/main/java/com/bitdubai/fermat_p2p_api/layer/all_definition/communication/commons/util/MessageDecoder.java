@@ -10,7 +10,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
-import org.jboss.logging.Logger;
+//import org.jboss.logging.Logger;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
@@ -30,7 +30,7 @@ public class MessageDecoder implements Decoder.Text<Message>{
     /**
      * Represent the LOG
      */
-    private static final Logger LOG = Logger.getLogger(Decoder.class.getName());
+    //private static final Logger LOG = Logger.getLogger(Decoder.class.getName());
 
     /**
      * Represent the gson instance
@@ -48,7 +48,7 @@ public class MessageDecoder implements Decoder.Text<Message>{
      */
     @Override
     public Message decode(String s) throws DecodeException {
-        LOG.debug("Execute the decode method");
+      //  LOG.debug("Execute the decode method");
         return gson.fromJson(s, Message.class);
     }
 
@@ -58,7 +58,7 @@ public class MessageDecoder implements Decoder.Text<Message>{
      */
     @Override
     public boolean willDecode(String s) {
-        LOG.debug("Execute the willDecode method");
+        //LOG.debug("Execute the willDecode method");
 
         try{
 
@@ -67,7 +67,7 @@ public class MessageDecoder implements Decoder.Text<Message>{
 
         }catch (Exception ex){
 
-            LOG.error("Invalid json string");
+          //  LOG.error("Invalid json string");
             return false;
         }
     }
@@ -78,7 +78,7 @@ public class MessageDecoder implements Decoder.Text<Message>{
      */
     @Override
     public void init(EndpointConfig config) {
-        LOG.debug("Execute the init method");
+       // LOG.debug("Execute the init method");
         gson = new Gson();
         parser = new JsonParser();
     }
@@ -89,7 +89,7 @@ public class MessageDecoder implements Decoder.Text<Message>{
      */
     @Override
     public void destroy() {
-        LOG.debug("Execute the destroy method");
+       // LOG.debug("Execute the destroy method");
         gson = null;
         parser = null;
     }

@@ -36,8 +36,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import org.jboss.logging.Logger;
 
+import java.lang.System;
 import java.util.UUID;
 
 /**
@@ -51,10 +51,6 @@ import java.util.UUID;
 public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem {
 
 
-    /**
-     * Represent the LOG
-     */
-    private static final Logger LOG = Logger.getLogger(WsCommunicationsNetworkClientPluginRoot.class.getName());
 
     /**
      * ErrorManager references definition.
@@ -135,7 +131,7 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
     @Override
     public void start() throws CantStartPluginException {
 
-        LOG.info("Calling the method - start() in WsCommunicationsNetworkClientPluginRoot");
+        System.out.println("Calling the method - start() in WsCommunicationsNetworkClientPluginRoot");
 
         /*
          * Validate required resources

@@ -9,7 +9,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.u
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
 import com.google.gson.Gson;
 
-import org.jboss.logging.Logger;
+//import org.jboss.logging.Logger;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
@@ -29,7 +29,7 @@ public class MessageEncoder implements Encoder.Text<Message>{
     /**
      * Represent the LOG
      */
-    private static final Logger LOG = Logger.getLogger(MessageEncoder.class.getName());
+  //  private static final Logger LOG = Logger.getLogger(MessageEncoder.class.getName());
 
     /**
      * Represent the gson instance
@@ -42,7 +42,7 @@ public class MessageEncoder implements Encoder.Text<Message>{
      */
     @Override
     public String encode(Message message) throws EncodeException {
-        LOG.debug("Execute the encode method");
+       // LOG.debug("Execute the encode method");
         return gson.toJson(message);
     }
 
@@ -52,7 +52,7 @@ public class MessageEncoder implements Encoder.Text<Message>{
      */
     @Override
     public void init(EndpointConfig config) {
-        LOG.debug("Execute the init method");
+       // LOG.debug("Execute the init method");
         gson = new Gson();
     }
 
@@ -62,7 +62,7 @@ public class MessageEncoder implements Encoder.Text<Message>{
      */
     @Override
     public void destroy() {
-        LOG.debug("Execute the destroy method");
+       // LOG.debug("Execute the destroy method");
         gson = null;
     }
 }
