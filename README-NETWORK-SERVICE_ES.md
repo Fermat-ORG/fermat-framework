@@ -31,6 +31,10 @@ Los Servicios de Red también tienen  la responsabilidad de definir un protocolo
 
 Es un servicio de red que pretende definir el protocolo y comportamiento para la comunicación entre los componentes de una plataforma que se ejecuta dentro del Fermat Framework. 
 
+* **Servicios de Red para Actores**, que son los encargados de gestionar las actividades reaccionadas con las identidades (Actores) que se encuentra dentro de la plataforma.
+
+* **Servicios de Red** generales que son los encargados de gestionar lógicas de negocio u protocolos de transferencia de información.
+
 ### Conexiones
 
 Son los canales establecidos por la capa de comunicaciones para que los servicio de red envíen y reciban sus mensajes.
@@ -74,54 +78,54 @@ Los jefes de equipo etiquetados en la segunda línea con el fin de pedirles que 
 
 "@ líder de usuario Nombre del equipo, por favor asigne este tema para mí."
 
-<br>
-#### Plug-in Estructura de la emisión
+#### Plug-in Issue Structure
 
 La estructura inicial obligatoria es el siguiente: (nota: la palabra ISSUE no es parte del nombre)
 
-<br>
-##### ISSUE: '_Plugin name_' - Plug-In
+##### ISSUE: '_Plugin Name_' - Plug-In
 
 Esta es la raíz de la estructura de su problema y debe ser etiquetado como _SUPER ISSUE_. Está cerrado sólo cuando todos sus hijos y nietos están cerrados.
 
-<br>
-##### ISSUE: '_Plugin name_' - Análisis
+##### ISSUE: '_Plugin Name_' - Analysis
 
-Esta es la raíz para el Análisis. Está cerrado cada vez que se lleven a cabo todos los análisis. Este problema debe estar vinculado a la raíz de la estructura de tema.
+Esta es la raíz para el Análisis. Está cerrado cada vez que se lleven a cabo todos los análisis. Este Issue debe estar vinculado a la raíz de la estructura de tema.
 
-<br>
-1 - ISSUE: ** '_ Plugin name_' - Caso de Usos **
+1 - ISSUE: **'_ Plugin name_' - Caso de Usos**
 
 Este es donde se especifica cada uno de los posibles casos de usos para cubrir el problema.
 
-<br>
+##### ISSUE: '_Plugin Name_' - Implementation
+
+Esta es la raíz para la implemtación. Está cerrado cada vez que se lleven a cabo todos las implemntaciones. Este Issue debe estar vinculado a la raíz de la estructura de tema.
 
 <br>
+1 - ISSUE: **'_ Plugin name_' - Interfaces**
+
+Este es donde se especifica cada uno de los posibles interfaces a implementar.
+
+2 - ISSUE: **'_ Plugin name_' - Data Base**
+
+Este es donde se especifica cada una de las componenetes de base de datos.
+
 ##### ISSUE: '_Plugin name_' - Pruebas
 
 Esta es la raíz de pruebas. Está cerrado cada vez que se lleva a cabo todas las pruebas. Este ISSUE debe estar vinculado a la raíz de la estructura de tema.
 
-* ISSUE: ** '_ Plugin name_' - Pruebas - Pruebas Unitarias **
+* ISSUE: **'_ Plugin name_' - Pruebas - Pruebas Unitarias**
 
-* ISSUE: '_Plugin name_' - Pruebas - Pruebas de Integración
- 
- 
-<br>
+* ISSUE: **'_Plugin name_' - Pruebas - Pruebas de Integración**
+
 ##### ISSUE: '_Plugin name_' - QA
  
-
 Esta es la raíz de control de calidad. Es cerrado cuando se pasan las pruebas de control de calidad. Este problema debe estar vinculado a la raíz de la estructura de tema.
 
 Se espera que tenga aquí Issues hijos en la forma '_Plugin name_' QA - Bug Fix n, donde n es el número y el nombre de error.
 
-<br>
 ##### ISSUE: '_Plugin name_' - Producción
 
 Esta es la raíz de Producción. Se cierra cada vez que el plug-in alcanza producción. Se puede volver a abrir si se encuentran problemas de bugs en producción y cerrados de nuevo una vez que son solventados. Este Issue debe estar vinculado a la raíz de la estructura de tema.
 
 Se espera que tenga aquí Issues hijos en la forma '_Plugin name_' Producción - Bug Fix n, donde n es el número y el nombre de error.
-
-<br>
 
 ### Estructura Proyectos
 ----------------------
@@ -169,32 +173,31 @@ Aqui un ejemplo:
 
 Como podemos observar en la estructura de la plataforma "Digital Asset Plataform (DAP)" cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
 
-#### Project Names Conventions
+#### Convenciones para Nombres del Proyecto
 
-The name of the projects follow this pattern:
+El nombre de los proyectos siguen este patrón:
 
-    fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
+    fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]
 
 Where:                                                                               
 
-- **platform_Name**: Refers to the platform where you will create your components.
-- **client_type**: Refers to the device where the client is going to create, either Android, IPhone, a web or desktop application, etc. At the moment the client we are using is Android, therefore the name of this folder is “android”.
-- **project_type**: Refers to the type of project you’re goint to create GUI components for. They could be **desktop**, **reference-wallet** or **sub-app**.  
-- **name_of_the_project**: This is the name of the project. For example: if your project is named **Crypto Broker Community** then you have to name it **crypto-broker-community**.
-- **org_name**: This is the name of the developer organization o company that is creating the project, for example: **bitdubai**.  
+- **platform_Name**: Se refiere a la plataforma en la que va a crear sus componentes.
+- **network_service_type**: Se refiere al tipo de network service que se va a crear, Si es un para un actor o no.  
+- **name_of_the_project**: Este es el nombre del proyecto.
+- **org_name**: Este es el nombre de la empresa o organización promotora que está creando el proyecto, por ejemplo: ** bitdubai **.
  
-Here’s an example:
+He aquí un ejemplo:
 
-    fermat-cbp-android-sub-app-crypto-broker-community-bitdubai
+    fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai
+    
+    Dónde: **DAP ** es la plataforma, **plugin** es el tipo de componente, **actor-network-service** es el tipo de network service, **asset-issuer** es el nombre del proyecto y ** bitdubai ** es la organización responsable de los componentes de este proyecto. Esto significa que el proyecto es un plugin llamado Asset Issuer desarrollado  por BitDubai para la plataforma de la DAP.
 
-Where: **cbp** is the platform, **android** is the device, **sub-app** is the type of project, **crypto-broker-community** es is the name of the project and **bitdubai** is the organization responsible for the components of this project. This means that the project is a SubApp called Crypto Broker Community developed for Android devices and created by BitDubai for the CBP platform.
 
+#### ¿Qué hay dentro de un proyecto de componete Network Service?
 
-#### What's Inside an Android GUI Components Project
+Un proyecto de componentes de Network Service en Fermat tiene la siguiente estructura básica (Etiquetas: **+** carpeta, **>** paquete, **-** archivo):
 
-A GUI component project for Android in Fermat has the following basic structure (Label: **+** folder, **>** package, **-** file):
-
-    + fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
+    + fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]
       - .gitignore
       - build.gradle
       - proguard-rules.pro
@@ -202,73 +205,61 @@ A GUI component project for Android in Fermat has the following basic structure 
         + main
           + java
             > com.bitdubai.[project_type].[name_of_the_project]
-              > fragmentFactory
-              > fragments
-              > preference_settings
-              > session
-          + res
-            + drawable
-            + layout
-            + menu
-            + values
+              > structure
+                > version_1
+                  > structure
+                    > communications
+                    > database
+                    > event_handlers
+                    > exceptions
+                - Developer.java
         + test
           + java
             > unit.com.bitdubai.[project_type].[name_of_the_project]
 
-Where:
+Donde:
 
-- Everything that goes in the `src` folder are files and resources you will need to develop your Wallet/SubApp/Desktop in Android.
-- Inside `src/main/java` you will find the package where you will place java files (classes, intefaces, enums..) with your Android code. It has the following basic packages: **fragmentFactory**, **fragments**, **preference_settings** and **session**. Each one of them explained in detail later on in this README.
-- Inside `src/main/res` there are `xml` files found that represent *layouts, menus, colors, strings and sizes* as well as image files and others that represent visual resources with which you’re going to interact the java classes that have an Android logic.
-- Everything that goes in the `test` folder is code that is used to make Unit Testing on the funtionalities you’re developing in `src`.
-- The Unit Test are created inside the package `unit.com.bitdubai.[project_type].[name_of_the_project]` in `test/java`
-- The file `build.gradle` is where you define the dependencies of the project with others of the platforms or with third party libraries and those that Android offers but not as default (the Support Libraries for example). Also the minimal version of the OS is defined where the app is going to run like the SDK Android version that is going to be used among other things (for more information see [this link](http://developer.android.com/tools/building/configuring-gradle.html))
-- The file `proguard-rules.pro` configures the Proguard tool. (for more information see  [this link](http://developer.android.com/guide/developing/tools/proguard.html)). **NOTE:** *we do not configure this file at the moment, therefore it is empty*
+- Dentro de la carpeta `src/main/java` se encuentra el paquete donde colocar los archivos de Java (clases, intefaces, enumeraciones ..)
+- Dentro de la carpeta `test` va el código que se utiliza para hacer pruebas unitarias en las funcionalidades que usted está en desarrollo en la carpeta `src`.
+- Las Pruebas unitarias se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]` en el directorio `test/java`
+- El archivo `build.gradle` es donde se definen las dependencias del proyecto con otras de las plataformas o con bibliotecas de terceros, pero no por defecto (las bibliotecas de soporte, por ejemplo).
+- El archivo `Proguard-rules.pro` configura la herramienta Proguard. (para más información ver [este enlace] (http://developer.android.com/guide/developing/tools/proguard.html)). ** NOTA: ** * no configuramos este archivo en el momento, por lo tanto, está vacía *
 
-### Add to your project the file settings.gradle
+### Añadir su proyecto el archivo settings.gradle
 
-At the beginning when you create your Android project to develop your Wallet/SubApp/Desktop, it won’t be recognized as such in the dependencies structure of the root project (Fermat) and it will show like one more directory. So your project is included in dependencies structure it is necessary to add the following lines in the file `settings.gradle` that is found in the folder of the platform where you’re going to work:
+Al principio, cuando se crea el proyecto, no será reconocido como tal en la estructura de dependencias del proyecto raíz (Fermat) y se mostrará como un directorio más. Por lo que su proyecto debe ser incluido en la estructura de dependencias, es necesario añadir las siguientes líneas en el archivo `settings.gradle` que se encuentra en la carpeta de la plataforma en la que vas a trabajar:
 
+<br>
 ```Gradle
-include ':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]'
-project(':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]').projectDir = new File('platform_name/client_type/project_type/fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]')
+include ':fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]'
+project(':fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]').projectDir = new File('platform_name/plugin/project_type/fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]')
 ```
-Here's an example of part of the file `settings.gradle` of the CBP platform (`fermat/CBP/settings.gradle`):
 
+<br>
+He aquí un ejemplo de una parte del archivo `settings.gradle` para la plataforma DAP (`fermat/DAP/settings.gradle`):
+<br>
 ```Gradle
 ...
 
-//Desktop
-include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
-project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
-include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
-project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
+// actor network service
+include ':fermat-dap-plugin-actor-network-service-asset-user-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
 
-//Reference Wallet
-include ':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai'
-project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
-include ':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai'
-project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
+include ':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
 
-//Sub App
-include ':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
-include ':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
-include ':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
-include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
-include ':fermat-cbp-android-sub-app-customers-bitdubai'
-project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
+include ':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
 
-//PLUG-INS
+// network-service
+include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
+project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
+
 ...
 
 ```
 
 <br>
-
 
 
 ## Part IV: Implementación
