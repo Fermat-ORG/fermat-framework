@@ -100,7 +100,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*Represent the Negotiation Sale*/
     private CustomerBrokerSaleNegotiation                                   customerBrokerSaleNegotiation;
 
-    /**/
+    /*Represent Service Event Handler*/
     private CustomerBrokerNewServiceEventHandler                            customerBrokerNewServiceEventHandler;
 
     public NegotiationTransactionCustomerBrokerNewPluginRoot() {
