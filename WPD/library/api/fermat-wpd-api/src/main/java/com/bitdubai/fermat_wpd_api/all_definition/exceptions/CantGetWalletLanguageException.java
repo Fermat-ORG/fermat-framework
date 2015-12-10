@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions;
+package com.bitdubai.fermat_wpd_api.all_definition.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
