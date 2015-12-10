@@ -6,6 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
 
 /**
+ * This interface must be used to create manager interface in BrokerAckOnlinePayment and
+ * BrokerAckOfflinePayment plugins.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/12/15.
  */
 public interface BrokerAckPaymentManager extends FermatManager {
