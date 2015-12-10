@@ -109,15 +109,9 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey) throws CantLoadWalletException {
         // TODO MAKE USER OF ERROR MANAGER
-        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesAvailable(publicKey);
-    }
-
-    @Override
-    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException {
-        // TODO MAKE USER OF ERROR MANAGER
-        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesBook(publicKey);
+        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalances(publicKey);
     }
 
     @Override
