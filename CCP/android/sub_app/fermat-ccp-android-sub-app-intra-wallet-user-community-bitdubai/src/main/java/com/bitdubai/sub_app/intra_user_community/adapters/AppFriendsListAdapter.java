@@ -51,6 +51,7 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
         } catch (Exception ex) {
 
         }
+
     }
 
     public int getSize() {

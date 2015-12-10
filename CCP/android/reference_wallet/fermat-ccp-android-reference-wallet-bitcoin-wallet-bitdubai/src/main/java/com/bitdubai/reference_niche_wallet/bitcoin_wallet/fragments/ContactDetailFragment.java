@@ -97,12 +97,12 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (ReferenceWalletSession) walletSession;
+            referenceWalletSession = (ReferenceWalletSession) appSession;
 
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             cryptoWalletManager = referenceWalletSession.getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -193,7 +193,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
                 receive_button.setTypeface(typeface);
                 send_button.setTypeface(typeface);
             }
-            if(cryptoWalletWalletContact.getActorType().equals(Actors.CCP_INTRA_WALLET_USER)){
+            if(cryptoWalletWalletContact.getActorType().equals(Actors.INTRA_USER)){
                 linear_layout_extra_user_receive.setVisibility(View.GONE);
             }
         }
@@ -231,10 +231,10 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
     /**
      * Set Wallet Session
      *
-     * @param walletSession session
+     * @param appSession session
      */
-    public void setWalletSession(ReferenceWalletSession walletSession) {
-        this.walletSession = walletSession;
+    public void setWalletSession(ReferenceWalletSession appSession) {
+        this.appSession = appSession;
     }
     /**
      * Bitmap to byte[]

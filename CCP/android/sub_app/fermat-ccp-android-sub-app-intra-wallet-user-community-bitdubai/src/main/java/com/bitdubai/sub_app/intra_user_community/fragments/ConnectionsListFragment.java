@@ -103,8 +103,8 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            intraUserModuleManager = ((IntraUserSubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            intraUserModuleManager = ((IntraUserSubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
             //intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
             isStartList = true;
 
@@ -221,7 +221,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
             // Esto podria ser un enum de item menu que correspondan a otro menu
             if(itemTitle.equals("New Identity")){
-                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(),subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), appSession.getAppPublicKey());
 
             }
 //            if(id == R.id.action_connection_request){
@@ -502,7 +502,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                changeActivity(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY.getCode(),subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY.getCode(), appSession.getAppPublicKey());
             }
         }); // the callback for when a list item is selected
         popupWindow.show();

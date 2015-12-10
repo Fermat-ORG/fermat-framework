@@ -119,9 +119,9 @@ public class DetailsActivityFragment extends FermatFragment {
     }
 
     private void setupDataInViews() {
-        final List screenshotList = (List) subAppsSession.getData(PREVIEW_IMGS);
-        final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
-        catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
+        final List screenshotList = (List) appSession.getData(PREVIEW_IMGS);
+        final String developerAlias = (String) appSession.getData(DEVELOPER_NAME);
+        catalogItem = (WalletStoreListItem) appSession.getData(BASIC_DATA);
 
 
         walletName.setText(catalogItem.getWalletName());
@@ -135,7 +135,7 @@ public class DetailsActivityFragment extends FermatFragment {
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode(), subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode(), appSession.getAppPublicKey());
             }
         });
 
@@ -192,7 +192,7 @@ public class DetailsActivityFragment extends FermatFragment {
                 getActivity(), errorManager, dialog, installButton, uninstallButton);
 
         InstallWalletWorker installWalletWorker = new InstallWalletWorker(
-                getActivity(), callback, moduleManager, subAppsSession);
+                getActivity(), callback, moduleManager, (SubAppsSession) appSession);
 
         if (executor != null) {
             executor.shutdownNow();
