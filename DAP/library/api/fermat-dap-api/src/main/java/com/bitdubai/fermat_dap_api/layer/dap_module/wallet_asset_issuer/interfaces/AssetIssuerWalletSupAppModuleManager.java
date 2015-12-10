@@ -30,9 +30,7 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager {
 
     //TODO DOCUMENT ALL THESE METHODS WHEN THEY'RE IMPLEMENTED.
 
-    List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException;
-
-    List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException;
+    List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey) throws CantLoadWalletException;
 
     // ********************** USER LIST METHODS ************************************
 

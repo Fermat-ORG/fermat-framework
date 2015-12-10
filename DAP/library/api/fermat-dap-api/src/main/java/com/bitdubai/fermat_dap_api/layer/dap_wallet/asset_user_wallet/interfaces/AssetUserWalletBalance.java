@@ -15,10 +15,7 @@ public interface AssetUserWalletBalance {
 
     //TODO: Documentar
     long getBalance()  throws CantCalculateBalanceException;
-
-    List<AssetUserWalletList> getAssetUserWalletBalancesAvailable() throws CantCalculateBalanceException;
-
-    List<AssetUserWalletList> getAssetUserWalletBalancesBook() throws CantCalculateBalanceException;
+    List<AssetUserWalletList> getAssetUserWalletBalances() throws CantCalculateBalanceException;
 
     void debit(AssetUserWalletTransactionRecord assetUserWalletTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException; //TODO: Debemos de definir la estructura de la transaccion
 

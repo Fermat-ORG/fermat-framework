@@ -24,7 +24,7 @@ public interface LogTool {
 
     List<ClassHierarchyLevels> getClassesHierarchyAddons(AddonVersionReference addon) throws CantGetClasessHierarchyAddonsException;
 
-    void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass);
+    void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass);
 
 
 }

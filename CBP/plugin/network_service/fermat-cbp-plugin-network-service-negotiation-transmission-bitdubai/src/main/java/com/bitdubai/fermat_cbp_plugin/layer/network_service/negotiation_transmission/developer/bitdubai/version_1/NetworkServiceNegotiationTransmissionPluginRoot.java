@@ -424,7 +424,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             errorManager,
             eventManager,
             this.getEventSource(),
-            getPluginVersionReference()
+            getPluginVersionReference(),
+                this
         );
     }
 
