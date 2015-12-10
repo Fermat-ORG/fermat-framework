@@ -597,10 +597,6 @@ Ubicarse en el folder la ruta /android-core/common/version_1/sessions/  aquí se
 #### Desktop
 En construcción…
 Provisionalmente se encuentra ubicado en la clase /android-core/common/version_1/ProvisoryData
-#### Connect a Module
-#### Connect a Desktop
-### GUI Components Creation and Interaction
-#### Add Header in your fragment
-#### Add Footer in your fragment
-#### Add Navigation Drawer
+#### Connect Module
+#### Put an Icon from your app in the Main screen
 #### Interacting with the Session and the FragmentFactory﻿
