@@ -1876,6 +1876,21 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(Activities.CSH_CASH_MONEY_WALLET_HOME);
 
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Cash Wallet");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        /*runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(runtimeStatusBar);*/
+
+        /*runtimeHeader = new Header();
+        runtimeHeader.setLabel("Market rate");
+        runtimeActivity.setHeader(runtimeHeader);*/
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
         runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey(), runtimeFragment);
