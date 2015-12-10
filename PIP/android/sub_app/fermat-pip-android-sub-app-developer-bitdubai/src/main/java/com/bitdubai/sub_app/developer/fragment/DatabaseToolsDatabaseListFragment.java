@@ -72,8 +72,8 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
 
            resource = (Resource)developerSubAppSession.getData("resource");
         }
@@ -81,14 +81,14 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
         //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
 
         try {
-            ToolManager toolManager = ((DeveloperSubAppSession) subAppsSession).getToolManager();
+            ToolManager toolManager = ((DeveloperSubAppSession) appSession).getToolManager();
 
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
-            subAppsSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            subAppsSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -132,7 +132,7 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
             gridView.setAdapter(adapter);
 
         } catch (Exception e) {
-            subAppsSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }

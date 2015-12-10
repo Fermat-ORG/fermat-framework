@@ -15,7 +15,7 @@ import java.util.UUID;
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
  */
-public interface WalletSettings {
+public interface WalletSettings extends FermatSettings{
     /**
      * This method let us know the default language of a wallet
      *

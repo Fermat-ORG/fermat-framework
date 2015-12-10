@@ -121,6 +121,8 @@ public class TransactionTransmissionContractHashDao {
         } catch (CantInsertRecordException e) {
 
             throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
+        } catch (Exception e){
+            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
         }
     }
 
@@ -188,6 +190,9 @@ public class TransactionTransmissionContractHashDao {
             e.printStackTrace();
         } catch (CantGetTransactionTransmissionException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot update the record.","");
         }
 
     }
@@ -221,6 +226,9 @@ public class TransactionTransmissionContractHashDao {
         } catch (InvalidParameterException exception) {
 
             throw new CantGetTransactionTransmissionException("",exception, "Check the cause.","");
+        }catch (Exception e){
+
+            throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }
     }
 
@@ -282,6 +290,12 @@ public class TransactionTransmissionContractHashDao {
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
+        }catch(CantGetTransactionTransmissionException e){
+            CantGetTransactionTransmissionException cantGetTransactionTransmissionException = new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE, e, "", "Exception that the plugin was unable to handle");
+            throw cantGetTransactionTransmissionException;
+        }catch (Exception e){
+
+            throw new CantGetTransactionTransmissionException(CantGetTransactionTransmissionException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }
     }
 
@@ -311,6 +325,9 @@ public class TransactionTransmissionContractHashDao {
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
+        } catch (Exception e){
+
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }
 
     }
@@ -375,6 +392,9 @@ public class TransactionTransmissionContractHashDao {
         } catch (InvalidParameterException e) {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "invalid parameter");
             throw cantReadRecordDataBaseException;
+        } catch (Exception e){
+
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }
 
         return list;
@@ -412,6 +432,9 @@ public class TransactionTransmissionContractHashDao {
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
+        } catch (Exception e){
+
+            throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }
 
     }

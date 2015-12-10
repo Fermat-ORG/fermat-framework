@@ -82,7 +82,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {

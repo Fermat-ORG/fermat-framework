@@ -54,8 +54,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
@@ -70,6 +70,7 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -118,6 +119,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
@@ -686,7 +688,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Method used from a Wallet to paint tabs
      */
-    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, WalletSession walletSession) {
+    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, AbstractFermatSession walletSession) {
 
         //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
         //pagerSlidingTabStrip.setShouldExpand(true);
@@ -707,6 +709,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     getResources());
             pagertabs.setAdapter(adapterWithIcons);
         } else {
+
             adapter = new TabsPagerAdapter(getFragmentManager(),
                     getApplicationContext(),
                     WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
@@ -1840,6 +1843,32 @@ public abstract class FermatActivity extends AppCompatActivity
                             Platforms.CRYPTO_BROKER_PLATFORM,
                             Layers.WALLET_MODULE,
                             Plugins.CRYPTO_CUSTOMER,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
+    }
+
+    public BankMoneyWalletModuleManager getBankMoneyWalletModuleManager() {
+        try {
+            return (BankMoneyWalletModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.BANKING_PLATFORM,
+                            Layers.WALLET_MODULE,
+                            Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE,
                             Developers.BITDUBAI,
                             new Version()
                     )

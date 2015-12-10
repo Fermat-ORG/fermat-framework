@@ -76,8 +76,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -208,7 +208,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
+                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
@@ -242,7 +242,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
+                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
                 data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies());
 
             } catch (CantGetCryptoBrokerWalletException | CantGetCurrentIndexSummaryForStockCurrenciesException ex) {
@@ -266,8 +266,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        walletSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, data);
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, walletSession.getAppPublicKey());
+        appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, data);
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override

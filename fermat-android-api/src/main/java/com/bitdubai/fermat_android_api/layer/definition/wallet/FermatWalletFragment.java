@@ -31,88 +31,8 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.26.21..
  */
-public class FermatWalletFragment<M extends ModuleManager> extends Fragment implements FermatFragments {
+public class FermatWalletFragment extends AbstractFermatFragment implements FermatFragments {
 
-    /**
-     * FLAGS
-     */
-    protected boolean isAttached;
-
-    /**
-     * Platform
-     */
-    protected WalletSession walletSession;
-    protected WalletSettings walletSettings;
-    protected WalletResourcesProviderManager walletResourcesProviderManager;
-
-
-    /**
-     * Inflater
-     */
-    protected ViewInflater viewInflater;
-
-    /**
-     * REFERENCES
-     */
-    protected WizardConfiguration context;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        try {
-            context = (WizardConfiguration) getActivity();
-            viewInflater = new ViewInflater(getActivity(), walletResourcesProviderManager);
-        } catch (Exception ex) {
-            throw new ClassCastException("cannot convert the current context to FermatActivity");
-        }
-    }
-
-    /**
-     * Start a configuration Wizard
-     *
-     * @param key  Enum Wizard registered type
-     * @param args Object[] where you're be able to passing arguments like session, settings, resources, module, etc...
-     */
-    protected void startWizard(String key, Object... args) {
-        if (context != null && isAttached) {
-            context.showWizard(key, args);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        isAttached = true;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        isAttached = true;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        isAttached = false;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
-
-    public void setWalletSession(WalletSession walletSession) {
-        this.walletSession = walletSession;
-    }
-
-    public void setWalletSettings(WalletSettings walletSettings) {
-        this.walletSettings = walletSettings;
-    }
-
-    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
-        this.walletResourcesProviderManager = walletResourcesProviderManager;
-    }
 
     /**
      * Change activity
@@ -127,7 +47,7 @@ public class FermatWalletFragment<M extends ModuleManager> extends Fragment impl
      */
     protected final void changeActivity(Activities activity) {
         destroy();
-        getFermatScreenSwapper().changeActivity(activity.getCode(), walletSession.getAppPublicKey());
+        getFermatScreenSwapper().changeActivity(activity.getCode(), appSession.getAppPublicKey());
     }
 
     /**

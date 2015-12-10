@@ -12,3 +12,4 @@ public interface CryptoIndex extends Index<CryptoCurrency> {
      * Contiene funcionalidad particular del CryptoIndex, que no tenga un Index.
      */
 }
+

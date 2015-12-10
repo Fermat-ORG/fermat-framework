@@ -139,7 +139,8 @@ public class UnholdCashMoneyTransactionDao {
             if(status == CashTransactionStatus.CONFIRMED || status == CashTransactionStatus.REJECTED)
                 record.setLongValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, (new Date().getTime() / 1000));
 
-            DatabaseTable table = database.getTable(pluginId.toString());
+            DatabaseTable table = database.getTable(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
+            table.setStringFilter(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
             table.updateRecord(record);
 
         } catch (CantUpdateRecordException e){

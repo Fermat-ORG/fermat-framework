@@ -59,7 +59,7 @@ public class MainFragment extends FermatWalletFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((AssetIssuerSession) walletSession).getManager();
+            manager = ((AssetIssuerSession) appSession).getManager();
         } catch (Exception ex) {
             CommonLogger.exception(this.getClass().getName(), ex.getMessage(), ex);
         }

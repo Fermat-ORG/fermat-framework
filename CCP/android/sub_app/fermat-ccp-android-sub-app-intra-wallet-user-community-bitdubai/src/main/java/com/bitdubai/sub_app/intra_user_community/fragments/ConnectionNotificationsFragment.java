@@ -22,11 +22,14 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAccept
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -39,6 +42,7 @@ import java.util.List;
  */
 public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
+    public static final String INTRA_USER_SELECTED = "intra_user";
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
     private RecyclerView recyclerView;
@@ -53,7 +57,9 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
+    private IntraUserInformation intraUserInformation;
     private List<IntraUserInformation> lstIntraUserInformations;
+    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
 
     /**
@@ -70,9 +76,10 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
+        intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
         moduleManager = intraUserSubAppSession.getModuleManager();
-        errorManager = subAppsSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
     }
 
@@ -150,6 +157,10 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+            notificationsProgressDialog.setMessage("Loading Notifications");
+            notificationsProgressDialog.setCancelable(false);
+            notificationsProgressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -161,6 +172,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
+                    notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -181,6 +193,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
+                    notificationsProgressDialog.dismiss();
                     try {
                         isRefreshing = false;
                         if (swipeRefresh != null)
@@ -201,11 +214,10 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
-            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(),data.getName(),data.getPublicKey(),data.getProfileImage());
-            Toast.makeText(getActivity(),"Aceptado,\njose esto lo hice porque me lo dejaste mal y tengo que probar lo mio",Toast.LENGTH_SHORT).show();
-        } catch (CantAcceptRequestException e) {
-            e.printStackTrace();
-        } catch (CantGetActiveLoginIdentityException e) {
+            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            notificationAcceptDialog.show();
+        } catch (CantAcceptRequestException | CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
     }

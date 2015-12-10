@@ -82,8 +82,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -184,7 +184,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_start_negotiation) {
-            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST, walletSession.getAppPublicKey());
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST, appSession.getAppPublicKey());
         }
 
         return true;
@@ -289,8 +289,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        walletSession.setData("negotiation_data", data);
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS, walletSession.getAppPublicKey());
+        appSession.setData("negotiation_data", data);
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override

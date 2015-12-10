@@ -118,6 +118,8 @@ public enum Activities {
     CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS("CBPCCWOCD"),
     CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS("CBPCCWCCD"),
 
+    // Bank Money Wallet
+    BNK_BANK_MONEY_WALLET_HOME("BNKBMWH"),
 
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
@@ -398,6 +400,8 @@ public enum Activities {
                 return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS;
             case "CCPSAIUCCS":
                 return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS;
+            case "BNKBMWH":
+                return BNK_BANK_MONEY_WALLET_HOME;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

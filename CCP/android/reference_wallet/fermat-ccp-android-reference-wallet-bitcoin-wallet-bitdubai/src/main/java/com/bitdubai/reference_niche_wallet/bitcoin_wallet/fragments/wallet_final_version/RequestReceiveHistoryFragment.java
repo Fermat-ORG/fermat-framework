@@ -83,7 +83,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
@@ -260,7 +260,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             else if ( id == R.id.btn_accept_request){
 
                 cryptoWallet.approveRequest(paymentRequest.getRequestId()
-                        ,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+                        , referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 

@@ -92,7 +92,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
     public static ReceiveFragment newInstance(int position) {
         ReceiveFragment f = new ReceiveFragment();
-        f.setReferenceWalletSession((ReferenceWalletSession) f.walletSession);
+        f.setReferenceWalletSession((ReferenceWalletSession) f.appSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

@@ -63,7 +63,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -170,12 +170,12 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
         String customerNameText = mCustomerName.getText().toString();
         byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
 
-        CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(subAppsSession, customerNameText, imgInBytes);
+        CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, imgInBytes);
         int resultKey = executor.execute();
 
         switch (resultKey) {
             case SUCCESS:
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), appSession.getAppPublicKey());
                 break;
             case EXCEPTION_THROWN:
                 Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
