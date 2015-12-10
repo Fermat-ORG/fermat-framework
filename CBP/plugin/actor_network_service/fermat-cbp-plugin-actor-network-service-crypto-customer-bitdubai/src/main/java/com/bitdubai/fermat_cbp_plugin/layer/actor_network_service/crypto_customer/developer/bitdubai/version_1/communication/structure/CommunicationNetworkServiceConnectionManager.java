@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -27,9 +28,11 @@ public final class CommunicationNetworkServiceConnectionManager extends Abstract
                                                         final ErrorManager errorManager,
                                                         final EventManager eventManager,
                                                         final EventSource eventSource,
-                                                        final PluginVersionReference pluginVersionReference) {
+                                                        final PluginVersionReference pluginVersionReference,
+                                                        AbstractNetworkService abstractNetworkService) {
 
         super(
+                abstractNetworkService,
                 platformComponentProfile      ,
                 identity                      ,
                 communicationsClientConnection,

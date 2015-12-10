@@ -17,6 +17,7 @@ public final class FailureComponentConnectionRequestNotificationEventHandler ext
     public FailureComponentConnectionRequestNotificationEventHandler(final AbstractNetworkService networkService) {
 
         super(networkService);
+        System.out.println("FAILURE CONNECTION HANDLER STARTING FROM CRYTO ADDRESS");
     }
 
 }

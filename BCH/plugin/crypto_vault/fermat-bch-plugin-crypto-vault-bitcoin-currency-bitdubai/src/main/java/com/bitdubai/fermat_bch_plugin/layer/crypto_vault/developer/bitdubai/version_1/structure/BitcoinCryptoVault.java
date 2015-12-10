@@ -216,6 +216,10 @@ public class BitcoinCryptoVault implements
         }
     }
 
+    public void isVaultLoaded(){
+
+    }
+
     /**
      * creates a new vault.
      * @throws CantCreateCryptoWalletException
@@ -432,6 +436,17 @@ public class BitcoinCryptoVault implements
             Transaction transaction = request.tx;
             System.out.println("Timelocked " + transaction.isTimeLocked());
             System.out.println("locktime: " + transaction.getLockTime());
+
+
+            System.out.println("------------------------------------------------------------\n");
+            System.out.println("Vault AVAILABLE: " + vault.getBalance(Wallet.BalanceType.AVAILABLE)+"\n");
+            System.out.println("Vault SPENDABLE: " + vault.getBalance(Wallet.BalanceType.AVAILABLE_SPENDABLE)+"\n");
+            System.out.println("------------------------------------------------------------"+"\n");
+            System.out.println("Tratando de enviar: " + Coin.valueOf(amount)+"\n");
+            System.out.println("------------------------------------------------------------"+"\n");
+
+
+
             vault.completeTx(request);
             vault.commitTx(request.tx);
             /**

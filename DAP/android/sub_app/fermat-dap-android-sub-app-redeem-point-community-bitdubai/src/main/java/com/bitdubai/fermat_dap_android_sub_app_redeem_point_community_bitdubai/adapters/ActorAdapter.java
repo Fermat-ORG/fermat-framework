@@ -42,7 +42,11 @@ public class ActorAdapter extends FermatAdapter<Actor, ActorViewHolder> {
     @Override
     protected void bindHolder(final ActorViewHolder holder, final Actor data, final int position) {
         try {
-            holder.name.setText(data.getName());
+            if(data.getCryptoAddress() != null)
+                holder.name.setText(String.format("%s %s CryptoAddress: YES ", data.getName(), data.getDapConnectionState()));
+            else
+                holder.name.setText(String.format("%s %s", data.getName(), data.getDapConnectionState()));
+
             holder.connect.setChecked(data.selected);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

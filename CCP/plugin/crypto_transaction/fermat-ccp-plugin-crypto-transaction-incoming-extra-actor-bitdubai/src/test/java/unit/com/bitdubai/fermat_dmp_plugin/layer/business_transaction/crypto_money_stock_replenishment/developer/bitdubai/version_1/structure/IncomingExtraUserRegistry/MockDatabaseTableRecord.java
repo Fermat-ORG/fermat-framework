@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
