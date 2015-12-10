@@ -153,7 +153,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
-            DatabaseTable table =  database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             for (String key : filters.keySet()) {
                 DatabaseTableFilter newFilter = table.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
@@ -161,8 +161,8 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
                 newFilter.setValue((String) filters.get(key));
                 filtersTable.add(newFilter);
             }
-
             table.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+//            table.setStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, "23", DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
 

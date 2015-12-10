@@ -192,6 +192,7 @@ public class NegotiationTransmissionAgent {
 
         try {
             Map<String, Object> filters = new HashMap<>();
+//            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, "23");
             filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
 
             //Read all pending NegotiationTransmission from database
