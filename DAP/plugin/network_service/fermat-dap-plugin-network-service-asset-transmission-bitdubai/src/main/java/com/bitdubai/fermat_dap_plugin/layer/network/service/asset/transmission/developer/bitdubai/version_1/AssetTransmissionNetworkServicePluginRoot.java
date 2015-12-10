@@ -350,7 +350,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                 eventManager == null) {
 
 
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
@@ -491,7 +491,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         } catch (CantInitializeAssetTransmissionNetworkServiceDatabaseException exception) {
 
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
@@ -586,7 +586,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         } catch (CantRequestListException e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
@@ -945,7 +945,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         } catch (Exception e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
@@ -1087,7 +1087,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         } catch (Exception e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
@@ -1176,7 +1176,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         } catch (Exception e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
@@ -1242,7 +1242,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             digitalAssetMetaDataTransactionDao.update(digitalAssetMetadataTransaction);
 
         } catch (Exception e) {
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
@@ -1288,7 +1288,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
         } catch (CantReadRecordDataBaseException e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
+            StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
