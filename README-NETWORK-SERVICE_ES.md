@@ -39,7 +39,7 @@ Es un servicio de red que pretende definir el protocolo y comportamiento para la
 
 Son los canales establecidos por la capa de comunicaciones para que los servicio de red envíen y reciban sus mensajes.
 
-### Menssajes
+### Mensajes
 
 Está definido como la información que el emisor envía al receptor a través de un canal de comunicación determinado, y el mismo tiene un sentido unico.
 
