@@ -12,51 +12,54 @@ To accomplish its mission, a GUI component must have a wireframe.
 
 ## Part I: Concepts
 
-### Walllet (concepto)
+### Walllet
 
-A Wallet is a GUI Component that allows a user to carry out financial transactions like send and receive crypto currencies using different plug-ins that Fermat offers through Modules. Each Module Wallet has a partner, that is; there is a one on one relationship between a wallet and a module.
+A Wallet is a GUI Component that allows a user to carry out financial transactions like send and receive crypto currencies using different plug-ins that Fermat offers through Modules. Each Module Wallet has an associated Module, there is a one on one relationship between a Wallet and a Module.
 
 ### Sub-App
 
-A SubApp is a GUI Component that allows a user to carry out non-financial operations , such as creating identities within the platform , administrative tasks , etc. using the various plug-ins that Fermat offers through Modules. Generally they serve to complement the functionality of the wallets . Each SubApp has an associated Module, there is a one on one relationship between SubApps and Modules.
+A SubApp is a GUI Component that allows a user to carry out non-financial operations , such as creating identities within the platform , administrative tasks , etc. using the various plug-ins that Fermat offers through Modules. Generally they serve to complement the functionality of the wallets . Each SubApp has an associated Module, there is a one on one relationship between a SubApp and a Module.
+
+### Modules
+ 
+A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface. This last one have the following funtionalities:
+
+- Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
+- It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
+
+For more information about how to create a Module refer to [this documentation](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md)
 
 ### Session
 
 One of the problems is the share of information in a fermat app life cycle, a fragment is eliminated when not visible, and its re-created when looked for again. These data must be saved in some place just in case a user wants to change Wallet and leave the session open. 
 
-To resolve this, there exists something called Sessions : These objects works like share memory between the different screens that a wallet or SubApp may have. Information such as the Module of the wallet or SubApp , reference to Error Mananger (object that handles fermat exceptions generated in the platform) and any other data you need to share between fragments within a Map that works with a key and the object that needs saving.
+To resolve this, there exists something called Sessions: objects that works like Share Memory between the different screens that your Wallet or SubApp may have. This apps must have its own session object to share only what the need, however, there is data that any session always share, such as as the Module of the App (Wallet or SubApp), its Public Key, a reference to the Error Mananger (object that handles exceptions generated in the platform) and a Map (<Key,Value> pair object) that let you hold any other data you need to share.
 
-The sessions are created for every wallet or SubApp and management of such meetings is held through a Wallet Manager and SubApp Manager , thus having the opportunity to return to the time when the user was when switching screens.
+The management of the sessions in the plataform is held through a Wallet Manager and SubApp Manager, thus having the opportunity to return to the time when the user was when switching screens.
 
-Each GUI component folder has a intended session . Todas las clases que representen sesiones han de extender de `AbstractFermatSession`. 
-
-Ejemplo: 
+Todas las clases que representen sesiones han de extender de `AbstractFermatSession`. Aqui tenemos un Ejemplo: 
 
 ```java
- public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,ProviderManager> implements WalletSession {
+
+public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,ProviderManager> implements WalletSession {
+    ...
+ 
 ```
-La clase InstalledWallet es una instancia de wallet instalada.
-La clase CryptoWalletManager es el module que le corresponde a dicha wallet
-El ProviderManager (que no se encuentra en uso en este momento) es nuestro equivalente a la clase R a android.
+
+Donde:
+- La clase `InstalledWallet` es una instancia de wallet instalada.
+- La clase `CryptoWalletManager` es el module que le corresponde a dicha wallet
+- El `ProviderManager` (que no se encuentra en uso en este momento) es nuestro equivalente a la clase R a android.
 
 <br>
-
-### Modules
- 
- A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface, is the one that has the following funtionalities:
-* Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
-* It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
 
 ### Fragment factory
 Each GUI component has a folder designated to the fragment factory, that is in charge of connecting what is already developed in the Navigation Structure with the controlling fragments of such screens.
 
-Consta de dos elementos: los enums *Fragment Enum Types* y las clases *Fragment Factory*. Estos elementos se han de ubicar en la carpeta fragmentFactory del proyecto que representa tu app.
+Un Fragment Factory consta de dos elementos: un enum *Fragments Enum Type* y una clase *Fragment Factory*. Estos elementos se han de ubicar en la carpeta `fragmentFactory` del proyecto que representa tu app.
 
-Los Fragment Enum Types representan identificadores para los fragmentos que conforman las apps. Cada app ha de tener su propio Fragment Enum Type y este ha de heredar de `FermatFragmentsEnumType` (link a ejemplo)
+Los *Fragments Enum Type* representan identificadores para los fragmentos que conforman tu Wallet o SubApp. estos enums han de heredar de `FermatFragmentsEnumType` como se demuestra en el siguiente ejemplo:
 
-Los Fragment Factory son clases que retornan instancias de los fragmentos identificados por su correspondiente Enum Type. Cada app ha de tener su propio Fragment Factory y este ha de heredar de `FermatWalletFragmentFactory` si los fragmentos representan una wallet o de `FermatSubAppFragmentFactory` si los fragmentos representan una subapp
-
-FermatFragmentsEnumType example:
 ```java
 public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumType<IntraUserIdentityFragmentsEnumType> {
 
@@ -66,20 +69,13 @@ public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumTyp
 
    private String key;
 
-   IntraUserIdentityFragmentsEnumType(String key) {
-       this.key = key;
-   }
+   IntraUserIdentityFragmentsEnumType(String key) { this.key = key; }
 
    @Override
-   public String getKey() {
-       return this.key;
-   }
-
+   public String getKey() { return this.key; }
 
    @Override
-   public String toString() {
-       return key;
-   }
+   public String toString() { return key; }
 
    public static IntraUserIdentityFragmentsEnumType getValue(String name) {
        for (IntraUserIdentityFragmentsEnumType fragments : IntraUserIdentityFragmentsEnumType.values()) {
@@ -91,10 +87,11 @@ public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumTyp
    }
 }
 ```
-FermatSubAppFragmentFactory
+
+Los *Fragment Factory* son clases que retornan instancias de los fragmentos identificados por su correspondiente *Fragments Enum Type*. Cada app ha de tener su propio *Fragment Factory* y este ha de heredar de `FermatWalletFragmentFactory` si los fragmentos forman parde te una Wallet o de `FermatSubAppFragmentFactory` si los fragmentos forman parte de una SubApp, tal como se demuestra en este ejemplo:
+
 ```java
 public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactory<IntraUserIdentitySubAppSession, IntraUserIdentityPreferenceSettings, IntraUserIdentityFragmentsEnumType> {
-
 
    @Override
    public FermatFragment getFermatFragment(IntraUserIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
@@ -104,7 +101,6 @@ public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactor
 
        if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT))
            return CreateIntraUserIdentityFragment.newInstance();
-
 
        throw createFragmentNotFoundException(fragments);
    }
@@ -134,19 +130,28 @@ public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactor
 
 ### Navigation Structure
 
-Fermat is an application different from other Android applications; it has its own navigation structure, that is based on screens and sub-screens that begin to “draw” from uploaded objects when executed, from files that deliver information about what it is needed to draw in each screen/sub-screen and in what order.
+Fermat is an application different from other Android applications; it has its own navigation structure, that is based on screens and sub-screens that begin to “draw” from uploaded objects when executed based on files that deliver information about what it is needed to draw in each screen/sub-screen and in what order.
 
-Permite definir el flujo de interacción entre las distintas pantallas de la aplicación que se encuentra en desarrollo. Se definen aspectos visuales como fondo,colores,tamaños.
+Permite definir el flujo de interacción entre las distintas pantallas de la aplicación, asi como ciertos aspectos visuales de estas pantallas tales como fondos, colores, y tamaños.
 
-También definen la existencia de  header,footer, navigation drawer, Tabs, Menus, entre otros objetos al mejor estilo wordpress.
-Para agregar una estructura de navegación se debe ir a DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai y agregar en el plugin root dicha estructura de navegación, 
-se encuentra provisoriamente en dicha carpeta, en un futuro como primer paso se deberá leer de un xml en el repositorio de fermat en github y como segundo paso debera poder obtenerse de los otros nodos de la red fermat.
+También permite definir para las pantallas la existencia de Headers, Footers, Navigation Drawers, Tabs y TabStrips, Menus, entre otros elementos siguiendo un estilo similar a *WordPress*.
+
+Dependiendo de si quieres crear una SubApp o una Wallet, has de agregar tu estructura de navegacion en el metodo `void factoryReset()` de alguna de estas dos clases:
+
+- `SubAppRuntimeEnginePluginRoot` ubicada en `DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/` en el caso de una SuApp
+- `WalletRuntimeEnginePluginRoot` ubicada en `DMP/plugin/engine/fermat-dmp-plugin-engine-wallet-runtime-bitdubai/` en el caso de una Wallet 
+
+**NOTA:** Para ver un ejemplo completo de una estructura de navegacion puedes revisar el metodo `private WalletNavigationStructure createCryptoBrokerWalletNavigationStructure()` en el caso una wallet y `private void createWalletStoreNavigationStructure()` en el caso de una SubApp
+
+La ubicacion de las estructuras de navegacion en estos archivos es provisoria; en un futuro como primer paso se deberá leer de un XML en el repositorio de Fermat en github y como segundo paso debera poder obtenerse de los otros nodos de la red fermat.
 
 #### Elements of the Navigation Structure
 
+Como se indico en el punto anterior, Fermat ofrece una serie de objetos armar la estructura de navegacion de wallet o subapp,. siguiendo un estilo similar al de WordPress. En estos siguientes apartados hablamos un poco mas en detalle sobre los diferentes objetos que se proveen y un ejemplo de como usarlo.
+
 ##### Activity
 
-Una actividad en el contexto de Fermat es un contenedor base el cual le dice al core de android como va a estar diseñada la pantalla, cual va a ser su flujo , que elementos la componen. (Esto se realiza de esta forma para que en un futuro no desarrolladores puedan integrarse a Fermat), Un developer al contrario de android no debe desarrollar la clase Activity de android para poder correr sus fragmentos, si no que con declararlos en el runtime bajo un objeto Activity(FermatActivity) es suficiente para que se pinten en la pantalla.
+Una actividad en el contexto de Fermat es un contenedor base el cual le dice al core de android como va a estar diseñada la pantalla, cual va a ser su flujo y que elementos la componen. (Esto se realiza de esta forma para que en un futuro no desarrolladores puedan integrarse a Fermat). Un developer al contrario de android no debe desarrollar la clase Activity de android para poder correr sus fragmentos, si no que con declararlos en el runtime bajo un objeto Activity (FermatActivity) es suficiente para que se dibujen en pantalla.
 
 Ejemplo de la Wallet user identity:
 
