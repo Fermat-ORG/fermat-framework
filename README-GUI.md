@@ -588,8 +588,6 @@ project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File(
 
 ### Create a Navigation Structure for your app 
 ### Android Core Connection
-### Android core connection
-
 #### Connect a Fragment Factory
  Al momento de conectar el FragmentFactory respectivo al plugin desarrollado se debe agregar en el android core para que pueda tener referencia al mismo, se deben seguir los siguientes pasos:
 Incluir la dependencia al módulo en el build.gradle
