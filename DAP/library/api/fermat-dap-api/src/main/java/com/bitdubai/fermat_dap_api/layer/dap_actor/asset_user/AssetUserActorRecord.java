@@ -63,37 +63,37 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-    public AssetUserActorRecord(String actorPublicKey,
-                                String name,
-                                String age,
-                                Genders genders,
-                                DAPConnectionState dapConnectionState,
-                                Double locationLatitude,
-                                Double locationLongitude,
-                                CryptoAddress cryptoAddress,
-                                Long registrationDate,
-                                Long lastConnectionDate,
-                                byte[] profileImage){
-
-        this.actorPublicKey             = actorPublicKey        ;
-        this.name                       = name                  ;
-        this.age                        = age                   ;
-        this.genders                    = genders               ;
-        this.dapConnectionState         = dapConnectionState    ;
-
-        if(cryptoAddress != null)
-            this.cryptoAddress          = cryptoAddress         ;
-
-        if (locationLatitude != null)
-            this.locationLatitude       = locationLatitude      ;
-        if(locationLongitude != null)
-            this.locationLongitude      = locationLongitude     ;
-
-        this.registrationDate           = registrationDate      ;
-        this.lastConnectionDate         = lastConnectionDate    ;
-        this.profileImage               = profileImage.clone()  ;
-
-    }
+//    public AssetUserActorRecord(String actorPublicKey,
+//                                String name,
+//                                String age,
+//                                Genders genders,
+//                                DAPConnectionState dapConnectionState,
+//                                Double locationLatitude,
+//                                Double locationLongitude,
+//                                CryptoAddress cryptoAddress,
+//                                Long registrationDate,
+//                                Long lastConnectionDate,
+//                                byte[] profileImage){
+//
+//        this.actorPublicKey             = actorPublicKey        ;
+//        this.name                       = name                  ;
+//        this.age                        = age                   ;
+//        this.genders                    = genders               ;
+//        this.dapConnectionState         = dapConnectionState    ;
+//
+//        if(cryptoAddress != null)
+//            this.cryptoAddress          = cryptoAddress         ;
+//
+//        if (locationLatitude != null)
+//            this.locationLatitude       = locationLatitude      ;
+//        if(locationLongitude != null)
+//            this.locationLongitude      = locationLongitude     ;
+//
+//        this.registrationDate           = registrationDate      ;
+//        this.lastConnectionDate         = lastConnectionDate    ;
+//        this.profileImage               = profileImage.clone()  ;
+//
+//    }
 
     public AssetUserActorRecord(final String actorPublicKey,
                                 final String name,
@@ -102,6 +102,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 final DAPConnectionState dapConnectionState,
                                 final Double locationLatitude,
                                 final Double locationLongitude,
+                                final CryptoAddress cryptoAddress,
                                 final Long registrationDate,
                                 final Long lastConnectionDate,
                                 final byte[] profileImage) {
@@ -111,8 +112,14 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.age                    =       age                     ;
         this.genders                =       genders                 ;
         this.dapConnectionState     =       dapConnectionState      ;
-        this.locationLatitude       =       locationLatitude        ;
-        this.locationLongitude      =       locationLongitude       ;
+
+        if (locationLatitude != null)
+            this.locationLatitude       = locationLatitude          ;
+        if(locationLongitude != null)
+            this.locationLongitude      = locationLongitude         ;
+
+        if(cryptoAddress != null)
+            this.cryptoAddress          = cryptoAddress             ;
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;

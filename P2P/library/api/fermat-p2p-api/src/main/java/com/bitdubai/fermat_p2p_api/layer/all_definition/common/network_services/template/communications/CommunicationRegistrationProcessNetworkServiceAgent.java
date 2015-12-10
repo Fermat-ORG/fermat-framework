@@ -4,10 +4,11 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
@@ -19,7 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
+public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends AbstractNetworkService> extends Thread {
 
     /*
      * Represent the sleep time for the read or send (5000 milliseconds)
@@ -30,7 +31,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the networkService
      */
-    private CryptoTransmissionNetworkServicePluginRoot networkService;
+    private NS networkService;
 
     /**
      * Represent the communicationsClientConnection
@@ -47,7 +48,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(CryptoTransmissionNetworkServicePluginRoot networkService, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(NS networkService, CommunicationsClientConnection communicationsClientConnection) {
         this.networkService = networkService;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -68,15 +69,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Construct my profile and register me
                      */
-
-
-                    System.out.print("CRYPTO TRANSMISSION - Construct my profile and register me ----------------------- ");
-
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
                                                                                                                                                  networkService.getAlias().toLowerCase(),
                                                                                                                                                  networkService.getName(),
-
-                    networkService.getNetworkServiceType(),
+                                                                                                                                                 networkService.getNetworkServiceType(),
                                                                                                                                                  networkService.getPlatformComponentType(),
                                                                                                                                                  networkService.getExtraData());
 

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by eze on 2015.07.29..
