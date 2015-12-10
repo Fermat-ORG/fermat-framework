@@ -167,7 +167,7 @@ Aqui un ejemplo:
     + wallet
     + wallet_module
 
-Como podemos observar en la imagen la plataforma "Digital Asset Plataform (DAP)" cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
+Como podemos observar en la estructura de la plataforma "Digital Asset Plataform (DAP)" cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
 
 #### Project Names Conventions
 
