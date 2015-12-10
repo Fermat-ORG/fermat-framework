@@ -1,4 +1,4 @@
-﻿![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 <br><br>
 
@@ -8,20 +8,467 @@ GUI Components are one of the three basic components that can be added into the 
 
 To accomplish its mission, a GUI component must have a wireframe.
 
-
 <br>
 
 ## Part I: Concepts
 
-Several new concepts are introduced...
-
 ### Walllet
 
-A Wallet is a GUI Component that allows a user to carry out financial transactions like send and receive bitcoins using different plug-ins that Fermat offers through Modules. Each Module Wallet has a partner, that is; there is a one on one relationship between a wallet and a module.
+A Wallet is a GUI Component that allows a user to carry out financial transactions like send and receive crypto currencies using different plug-ins that Fermat offers through Modules. Each Module Wallet has an associated Module, there is a one on one relationship between a Wallet and a Module.
 
 ### Sub-App
 
-A SubApp is a GUI Component that allows a user to carry out non-financial operations , such as creating identities within the platform , administrative tasks , etc. using the various plug-ins that Fermat offers through Modules. Generally they serve to complement the functionality of the wallets . Each SubApp has an associated Module, there is a one on one relationship between SubApps and Modules.
+A SubApp is a GUI Component that allows a user to carry out non-financial operations , such as creating identities within the platform , administrative tasks , etc. using the various plug-ins that Fermat offers through Modules. Generally they serve to complement the functionality of the wallets . Each SubApp has an associated Module, there is a one on one relationship between a SubApp and a Module.
+
+### Modules
+ 
+A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface. This last one have the following funtionalities:
+
+- Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
+- It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
+
+For more information about how to create a Module refer to [this documentation](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md)
+
+### Session
+
+One of the problems is the share of information in a fermat app life cycle, a fragment is eliminated when not visible, and its re-created when looked for again. These data must be saved in some place just in case a user wants to change Wallet and leave the session open. 
+
+To resolve this, there exists something called Sessions: objects that works like Share Memory between the different screens that your Wallet or SubApp may have. This apps must have its own session object to share only what the need, however, there is data that any session always share, such as as the Module of the App (Wallet or SubApp), its Public Key, a reference to the Error Mananger (object that handles exceptions generated in the platform) and a Map (<Key,Value> pair object) that let you hold any other data you need to share.
+
+The management of the sessions in the plataform is held through a Wallet Manager and SubApp Manager, thus having the opportunity to return to the time when the user was when switching screens.
+
+Todas las clases que representen sesiones han de extender de `AbstractFermatSession`. Aqui tenemos un Ejemplo: 
+
+```java
+
+public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWalletManager,ProviderManager> implements WalletSession {
+    ...
+ 
+```
+
+Donde:
+- La clase `InstalledWallet` es una instancia de wallet instalada.
+- La clase `CryptoWalletManager` es el module que le corresponde a dicha wallet
+- El `ProviderManager` (que no se encuentra en uso en este momento) es nuestro equivalente a la clase R a android.
+
+<br>
+
+### Fragment factory
+Each GUI component has a folder designated to the fragment factory, that is in charge of connecting what is already developed in the Navigation Structure with the controlling fragments of such screens.
+
+Un Fragment Factory consta de dos elementos: un enum *Fragments Enum Type* y una clase *Fragment Factory*. Estos elementos se han de ubicar en la carpeta `fragmentFactory` del proyecto que representa tu app.
+
+- Los *Fragments Enum Type* representan identificadores para los fragmentos que conforman tu Wallet o SubApp. estos enums han de heredar de `FermatFragmentsEnumType` como se demuestra en el siguiente ejemplo:
+
+```java
+public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumType<IntraUserIdentityFragmentsEnumType> {
+
+   CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CCPSACCIMF"),
+   CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT("CCPSACCICIF")
+   ;
+
+   private String key;
+
+   IntraUserIdentityFragmentsEnumType(String key) { this.key = key; }
+
+   @Override
+   public String getKey() { return this.key; }
+
+   @Override
+   public String toString() { return key; }
+
+   public static IntraUserIdentityFragmentsEnumType getValue(String name) {
+       for (IntraUserIdentityFragmentsEnumType fragments : IntraUserIdentityFragmentsEnumType.values()) {
+           if (fragments.key.equals(name)) {
+               return fragments;
+           }
+       }
+       return null;
+   }
+}
+```
+
+- Los *Fragment Factory* son clases que retornan instancias de los fragmentos identificados por su correspondiente *Fragments Enum Type*. Cada app ha de tener su propio *Fragment Factory* y este ha de heredar de `FermatWalletFragmentFactory` si los fragmentos forman parde te una Wallet o de `FermatSubAppFragmentFactory` si los fragmentos forman parte de una SubApp, tal como se demuestra en este ejemplo:
+
+```java
+public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactory<IntraUserIdentitySubAppSession, IntraUserIdentityPreferenceSettings, IntraUserIdentityFragmentsEnumType> {
+
+   @Override
+   public FermatFragment getFermatFragment(IntraUserIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
+
+       if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT))
+           return IntraUserIdentityListFragment.newInstance();
+
+       if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT))
+           return CreateIntraUserIdentityFragment.newInstance();
+
+       throw createFragmentNotFoundException(fragments);
+   }
+
+   @Override
+   public IntraUserIdentityFragmentsEnumType getFermatFragmentEnumType(String key) {
+       return IntraUserIdentityFragmentsEnumType.getValue(key);
+   }
+
+   private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {
+       String possibleReason, context;
+
+       if (fragments == null) {
+           possibleReason = "The parameter 'fragments' is NULL";
+           context = "Null Value";
+       } else {
+           possibleReason = "Not found in switch block";
+           context = fragments.toString();
+       }
+
+       return new FragmentNotFoundException("Fragment not found", new Exception(), context, possibleReason);
+   }
+}
+```
+
+<br>
+
+### Navigation Structure
+
+Fermat is an application different from other Android applications; it has its own navigation structure, that is based on screens and sub-screens that begin to “draw” from uploaded objects when executed based on files that deliver information about what it is needed to draw in each screen/sub-screen and in what order.
+
+Permite definir el flujo de interacción entre las distintas pantallas de la aplicación, asi como ciertos aspectos visuales de estas pantallas tales como fondos, colores, y tamaños.
+
+También permite definir para las pantallas la existencia de Headers, Footers, Navigation Drawers, Tabs y TabStrips, Menus, entre otros elementos siguiendo un estilo similar a *WordPress*.
+
+Dependiendo de si quieres crear una SubApp o una Wallet, has de agregar tu estructura de navegacion en el metodo `void factoryReset()` de alguna de estas dos clases:
+
+- `SubAppRuntimeEnginePluginRoot` ubicada en `DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/` en el caso de una SuApp
+- `WalletRuntimeEnginePluginRoot` ubicada en `DMP/plugin/engine/fermat-dmp-plugin-engine-wallet-runtime-bitdubai/` en el caso de una Wallet 
+
+Este es un ejemplo simple de como crear la estructura de navegacion para una subapp:
+
+```java
+private void factoryReset(){
+    ...
+    
+    // Creating the Navigation Structure for the Intra User Identity SubApp
+    RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
+    runtimeSubApp.setType(SubApps.CCP_INTRA_USER_IDENTITY);
+    String intraUserIdentityPublicKey = "public_key_ccp_intra_user_identity";
+    runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
+    
+    // Creating a Activity. Screen: Create New Identity
+    runtimeActivity = new Activity();
+    runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+    runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+    runtimeActivity.setColor("#03A9F4");
+    
+    // Adding the Activity in the Navigation Structure
+    runtimeSubApp.addActivity(runtimeActivity);
+    runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+    
+    // Title Bar (a.k.a Action Bar) of the Activity
+    runtimeTitleBar = new TitleBar();
+    runtimeTitleBar.setLabel("Identity Manager");
+    runtimeTitleBar.setColor("#1189a4");
+    runtimeTitleBar.setTitleColor("#ffffff");
+    runtimeTitleBar.setLabelSize(18);
+    runtimeTitleBar.setIsTitleTextStatic(true);
+    
+    // Adding the Title Bar in the Activity
+    runtimeActivity.setTitleBar(runtimeTitleBar);
+    
+    // Status Bar of the Activity
+    statusBar = new StatusBar();
+    statusBar.setColor("#1189a4");
+    
+    // Adding the Status Bar in the Activity
+    runtimeActivity.setStatusBar(statusBar);
+    
+    // Fragment for this activity
+    runtimeFragment = new Fragment();
+    runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+    
+    // Adding the Fragment in the Activity 
+    // and seting it has a Start Fragment (is going to show first for this activiy)
+    runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+    runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+    
+    // Adding the Navigation Structure in the plataform
+    listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    
+    ...
+}
+```
+
+**NOTA:** Para ver un ejemplos mas completos de estructuras de navegacion puedes revisar el metodo `private WalletNavigationStructure createCryptoBrokerWalletNavigationStructure()` en el caso de una wallet y `private void createWalletStoreNavigationStructure()` en el caso de una SubApp
+
+La ubicacion de las estructuras de navegacion en estos archivos es provisoria; en un futuro como primer paso se deberá leer de un XML en el repositorio de Fermat en github y como segundo paso debera poder obtenerse de los otros nodos de la red fermat.
+
+#### Elements of the Navigation Structure
+
+Como se indico en el punto anterior, Fermat ofrece una serie de objetos armar la estructura de navegacion de wallet o subapp,. siguiendo un estilo similar al de WordPress. En estos siguientes apartados hablamos un poco mas en detalle sobre los diferentes objetos que se proveen y un ejemplo de como usarlo.
+
+##### Activity
+
+```java
+...
+ 
+// Creating a Activity. Screen: Create New Identity
+runtimeActivity = new Activity();
+runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+runtimeActivity.setColor("#03A9F4");
+
+// Adding the Activity in the Navigation Structure 
+runtimeSubApp.addActivity(runtimeActivity);
+// Seting the Activity has a Start Activity (is going to show first for this app)
+runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+
+...
+```
+
+Una actividad en el contexto de Fermat es un contenedor base el cual le dice al core de android como va a estar diseñada la pantalla, cual va a ser su flujo y que elementos la componen. (Esto se realiza de esta forma para que en un futuro no desarrolladores puedan integrarse a Fermat). Un developer al contrario de android no debe desarrollar la clase Activity de android para poder correr sus fragmentos, si no que con declararlos en el runtime bajo un objeto Activity (FermatActivity) es suficiente para que se dibujen en pantalla.
+
+Los identificadores de las actividades se deben crear en el enum `Activities` del paquete `com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums`
+
+```java
+public enum Activities {
+
+    CWP_SHELL_LOGIN("CSL"),
+    CWP_SHOP_MANAGER_MAIN("CSMM"),
+    CWP_WALLET_MANAGER_MAIN("CWMM"),
+    CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN("CWRWAKAB1M"),
+
+    // Reference wallet
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN("CWRWBWBV1M"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS("CWRWBWBV1T"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST("CWRWBWBV1PR"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS("CWRWBWBV1C"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS("CWRWBWBV1S"),
+
+    CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY("CCPBWSFA"),
+    CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY("CCPBWRFA"),
+    CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY("CCPBWCDA"),
+    CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY("CCPBWSA"),
+    CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
+    CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY("CCPBWNIA"),
+    
+    ...
+}
+```
+
+##### Fragment
+
+```java
+...
+
+// Fragment for this activity
+runtimeFragment = new Fragment();
+runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+// Adding the Fragment in the Activity 
+// and seting it has a Start Fragment (is going to show first for this activiy)
+runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+...
+```
+
+Un fragmento en Fermat tiene el mismo significado que en [Android](http://developer.android.com/intl/es/training/basics/fragments/index.html), y tiene una representacion en la Estructura de Navegacion para ser asignada a una actividad o a un Tab. 
+
+Los identificadores de los fragmentos se deben crear en el enum `Fragments` del paquete `com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.`
+
+```java
+public enum Fragments implements FermatFragments {
+    CWP_SHELL_LOGIN("CSL"),
+    CWP_WALLET_MANAGER_MAIN("CWMM"),
+    CWP_SUB_APP_DEVELOPER("CSAD"),
+    CWP_WALLET_MANAGER_SHOP("CWMS"),
+    CWP_SHOP_MANAGER_MAIN("CSMM"),
+    CWP_SHOP_MANAGER_FREE("CSMF"),
+    CWP_SHOP_MANAGER_PAID("CSMP"),
+    CWP_SHOP_MANAGER_ACCEPTED_NEARBY("CSMAN"),
+
+    CWP_WALLET_PUBLISHER_MAIN_FRAGMENT("CWPMF"),
+
+    // Wallet Store
+    CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
+    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWPWSDA"),
+    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWPWSMDA"),
+    
+    ...
+}
+```
+
+##### Header
+
+```java
+...
+// Createting a Header
+runtimeHeader = new Header();
+runtimeHeader.setLabel("Market rate");
+
+// Seting the Header in the Activity
+runtimeActivity.setHeader(runtimeHeader);
+...
+```
+  
+Es posible agregar un header expandible y colapsable en una actividad de tu app. Esto se realiza en varios pasos:
+
+- Definir en la estructura de navegación que la actividad posee un header:
+ 
+- Crear una Clase `<nombreScreen>HeaderViewPainter` que implemente `HeaderViewPainter` en la carpeta `commons/headers/` de tu proyecto GUI. Por ejemplo en la bitcoin wallet sería `commons/headers/HomeHeaderViewPainter.java`. Esta clase contiene la vista que se quiere mostrar como un header
+
+- Dentro del metodo `onActivityCreated` del fragmento que va a contener el header, se debe pasar como parametro a `getPaintActivtyFeactures().addHeaderView()` una instancia de `<nombreScreen>HeaderViewPainter`
+
+##### Footer
+
+```java
+...
+
+// Creating a Footer
+Footer runtimeFooter = new Footer();
+runtimeFooter.setBackgroundColor("#AAAAAA");
+
+// Creating the Fragment for the Footer
+runtimeFragment = new Fragment();
+runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
+
+// Associating the Fragment with the Footer
+runtimeFooter.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+
+// Associating the Footer with the Activity
+runtimeActivity.setFooter(runtimeFooter);
+
+...
+```
+
+Es posible agregar un *Footer* deslizable en una actividad de tu app. Esto se realiza en varios pasos:
+
+- Definir en la estructura de navegación que la actividad posee un *Footer* y asignarle un fragmento
+ 
+- Crear una Clase `<nombreScreen>FooterViewPainter` que implemente `FooterViewPainter` en la carpeta `commons/footers/` de tu proyecto GUI; por ejemplo en la Crypto Boroker Wallet sería `commons/footers/HomeFooterViewPainter.java`. Esta clase contiene la vistas que conforman el *Footer*:
+  - `slide_container` es el View del *Footer* que se encuentra siempre visible para poder desplegar el contenido
+  - `footer_container` es el View del *Footer* que representa su contenido, y se mustra cuando el *Footer* despliega
+
+- Dentro del metodo `onActivityCreated` del fragmento que va a contener el *Footer*, se debe pasar como parametro a `getPaintActivtyFeactures().addFooterView()` una instancia de `<nombreScreen>FooterViewPainter`
+
+##### SideMenu (Navigation Drawer) and MenuItem
+
+```java
+...
+
+// Side Menu
+runtimeSideMenu = new SideMenu();
+
+runtimeMenuItem = new MenuItem();
+runtimeMenuItem.setLabel("Home");
+runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+runtimeMenuItem.setAppLinkPublicKey(publicKey);
+runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+runtimeMenuItem = new MenuItem();
+runtimeMenuItem.setLabel("Contracts History");
+runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+runtimeMenuItem.setAppLinkPublicKey(publicKey);
+runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+runtimeMenuItem = new MenuItem();
+runtimeMenuItem.setLabel("Earnings");
+runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
+runtimeMenuItem.setAppLinkPublicKey(publicKey);
+runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+runtimeMenuItem = new MenuItem();
+runtimeMenuItem.setLabel("Settings");
+runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
+runtimeMenuItem.setAppLinkPublicKey(publicKey);
+runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+...
+```
+
+Es posible agregar un *Navigation Drawer* (o Side Menu) que te permita dirigirte a las diferentes pantallas de tu app. Esta se define en varios pasos
+
+- Definir en la estructura de navegacion que la actividad posee un *Side Menu* que este ultimo posee una serie de *Menu Items*
+
+- Crear una Clase `<nombreApp>NavigationViewAdapater` (con su View Holder) que implemente `FermatAdapter` en la carpeta `commons/navigationView/`. Por ejemplo en la bitcoin wallet sería `commons/navigationDrawer/BitcoinWalletNavigationViewAdapter.java`. Este adapter representa los items que se han de mostrar en el navigation drawer y tienen relacion con los definidos en la estructura de navegacion
+
+- Crear una Clase `<nombreApp>NavigationViewPainter` que implemente `NavigationViewPainter` en la carpeta `commons/navigationView/` Por ejemplo en la bitcoin wallet sería `commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java`. Esta clase contiene los elementos que conforman el *Navigation Drawer*:
+  - *Header*: un View que representa el header del Navigation Drawer. Se suele colocar la imagen de la persona logueada
+  - *Adapter*: una instancia de `<nombreApp>NavigationViewAdapater` y representa los items del menu
+  - *Content*: un View que se dibuja despues de los items del menu y se puede colocar cualquier cosa, como por ejemplo un footer para mostrar mas informacion 
+  
+- Dentro del metodo `onActivityCreated` del fragmento que va a contener el *Navigation Drawer*, se debe pasar como parametro a `getPaintActivtyFeactures().addNavigationView()` una instancia de `<nombreApp>NavigationViewPainter`
+
+##### Tabs and TabStrip
+##### TitleBar and StatusBar
+##### Wizard and WizardPage
+
+### Android api
+#### API Organitation
+#### FermatFragment Class
+
+En tu proyecto GUI debes crear los fragmentos que defines en la estructura de navegacion, creando clases que hereden de `FermatFragment` y colocandolas dentro de la carpeta `fragments` de tu proyecto. `FermatFragment` tiene referencias a la `Session` de tu Wallet o SubApp, asi como a los `Settings` y al `ProviderManager`. Existen varias subclases en `fermat-api` que extienden `FermatFragment` y facilitan ciertos trabajos, como es el caso de manejar listas y cosas mas especializadas como listas desplegables, wirzards, etc:
+
+- `FermatExpandableListFragment`
+- `FermatListFragment`
+- `FermatWalletExpandableListFragment`
+- `FermatWalletListFragment`
+- `FermatWizardPageFragment`
+
+Para mas informacion sobre estos u otros fragmentos por favor revisa el proyecto `fermat-api`. 
+
+Aqui tenemos un ejemplo de un fragmento basico extendiendo de `FermatFragment` donde obtiene referencia a a la `Session` de la app a la que pertenece, su `Module` y su `Error Manager`:
+
+```java
+public class SettingsActivityFragment extends FermatFragment {
+
+    // Constants
+    private static final String TAG = "SettingsActivityFragment";
+
+    // Fermat Managers
+    private CryptoBrokerWalletModuleManager moduleManager;
+    private ErrorManager errorManager;
+
+
+    public static SettingsActivityFragment newInstance() {
+        return new SettingsActivityFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        try {
+            moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
+            errorManager = walletSession.getErrorManager();
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        try {
+            BrokerNavigationViewPainter navigationViewPainter = new BrokerNavigationViewPainter(getActivity(), null);
+            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+        } catch (Exception e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
+    }
+}
+```
 
 <br>
 
@@ -70,6 +517,7 @@ The mandatory initial structure is the following: (note: the word ISSUE it is no
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of its children and grand children are closed.
 
 <br>
+
 ##### ISSUE: '_Plugin Name_' - Analysis
 
 This is the Analysis root. It is closed whenever all analysis is done. This issue must be linked to the root of the issue structure.
@@ -118,8 +566,9 @@ It is expected to have here child issues in the form  '_Plugin Name_' Production
 
 <br>
 
-### Projects Structure
-----------------------
+## Part III: How To:
+
+### Project creation
 
 The GUI components are grouped in projects that could represent a Wallet, SubApp or a Desktop for a platform; For example CBP has 2 Wallets and 4 SubApps. 
 
@@ -269,82 +718,20 @@ project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File(
 
 <br>
 
-### Modules
- 
- A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface, is the one that has the following funtionalities:
-* Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
-* It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
+### Create a Navigation Structure for your app 
+### Android Core Connection
+#### Connect a Fragment Factory
+ Al momento de conectar el FragmentFactory respectivo al plugin desarrollado se debe agregar en el android core para que pueda tener referencia al mismo, se deben seguir los siguientes pasos:
+Incluir la dependencia al módulo en el build.gradle
+Ubicarse en el folder la ruta /android-core/common/version_1/fragment_factory/  aquí se encontrarán las clases de SubAppFragmentFactory y WalletFragmentFactory, las cuales son las encargadas de crear la instancia al fragmentFactory del modulo previamente creado y así es como el android core puede instanciarlo.
+#### Connect to Session Manager
+ Al momento de conectar la session respectiva al plugin desarrollado se debe agregar en el android core para que pueda tener referencia al mismo, se deben seguir los siguientes pasos:
+Incluir la dependencia al módulo en el build.gradle
+Ubicarse en el folder la ruta /android-core/common/version_1/sessions/  aquí se encontrarán las clases de SubAppSessionManager y WalletSessionManager, las cuales son las encargadas de crear la instancia al Session del modulo previamente creado y así es como el android core puede instanciarla.
 
-----------------------
-
-
-### Navigation structure
- 
- -- Navigation structure with examples..
- 
-  Fermat is an application different from other Android applications; it has its own surfing structure, that is based on screens and sub-screens that begin to “paint” from uploaded objects when executed, from files that deliver information about what it is needed to draw in each screen/sub-screen and in what order.
-
-----------------------
-
-### Android api
-
- Fermat has a collection of libraries and packages developed specially to work on Android. Continue...
-
-----------------------
-
-### Fragments
-
-- You have to show the way in which the fragments are created and that all extend FermatFragment.
-
-----------------------
-
-### Fragment factory
-
-- You have to explain the fragment factory, what does it work for and how it is used.
-
-Each GUI component has a folder designated to the fragment factory, that is in charge of connecting what is already developed in the surfing structure with the controlling fragments of such screens.
-Continue..
-
-----------------------
-
-### Sessions
-
-- You have to give a brief explanation of the sessions.
-
-One of the problems is the persistance of memory data since in a life cycle, a fragment is eliminated when not visible, and its re-created when looked for again. These data must be saved in some place just in case a user wants to change Wallet and leave the session open. 
-
-To resolve this, there exists something called Sessions : These are objects that allow to persist in memory and share between the different fragments that a wallet or SubApp may have, information such as the reference to the module of the wallet or SubApp , reference to Error Mananger (object that handles the exceptions Fermat generated in the platform) and any other data you need to trascend between these fragments within a Map that works with a key and the object that needs saving.
-
-The sessions are created for every wallet or SubApp and management of such meetings is held through a Wallet Manager and SubApp Manager , thus having the opportunity to return to the time when the user was when switching screens.
-
-Each GUI component folder has a intended session . Depending on the type of component that is being developed it could be a class that inherits from WalletSession or SubAppSession.
-Continue...
-
-----------------------
-
-#### Wallet session
-
-They are sessions that manage Wallet information, these inherit from WalletSession.
-
-----------------------
-
-#### Sub app session
-
-They are sessions that manage SubApp information, these inherit from WalletSession.
-
-----------------------
-
-#### Settings
-
-- Brief explanation of settings with examples
-- 
-----------------------
-
-## Part IV: References
-
-<br>
-
-
-
-<br><br><br><br><br><br><br>
-
+#### Desktop
+En construcción…
+Provisionalmente se encuentra ubicado en la clase /android-core/common/version_1/ProvisoryData
+#### Connect Module
+#### Put an Icon from your app in the Main screen
+#### Interacting with the Session and the FragmentFactory﻿

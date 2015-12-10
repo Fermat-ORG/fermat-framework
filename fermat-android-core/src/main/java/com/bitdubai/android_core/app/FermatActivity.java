@@ -67,6 +67,7 @@ import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerPro
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -224,7 +225,9 @@ public abstract class FermatActivity extends AppCompatActivity
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private NavigationViewPainter navigationViewPainter;
     private FooterViewPainter footerViewPainter;
+    private HeaderViewPainter headerViewPainter;
     private BottomNavigation bottomNavigation;
+
 
     /**
      * Called when the activity is first created
@@ -380,9 +383,11 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
-            paintSideMenu(activity,sideMenu);
+            paintSideMenu(activity, sideMenu);
 
             paintFooter(activity.getFooter());
+
+            pantHeader(activity.getHeader());
 
             setScreen(activity);
         } catch (Exception e) {
@@ -401,6 +406,15 @@ public abstract class FermatActivity extends AppCompatActivity
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+        }
+    }
+
+    private void pantHeader(FermatHeader header) {
+        if(header!=null){
+            if(header.hasExpandable()){
+                headerViewPainter.addExpandableHeader(getToolbarHeader());
+            }
+
         }
     }
 

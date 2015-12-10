@@ -32,6 +32,8 @@ public class ClientConnectionCloseNotificationEventHandler implements FermatEven
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
+        System.out.println("CLIENT CONNECTION CLOSED NOTIFICATION EVENT HANDLER");
+        System.out.println("SENDIG FERMAT-EVENT TO HANDLER");
         this.networkServiceRecieved.handleClientConnectionCloseNotificationEvent(fermatEvent);
 
     }
