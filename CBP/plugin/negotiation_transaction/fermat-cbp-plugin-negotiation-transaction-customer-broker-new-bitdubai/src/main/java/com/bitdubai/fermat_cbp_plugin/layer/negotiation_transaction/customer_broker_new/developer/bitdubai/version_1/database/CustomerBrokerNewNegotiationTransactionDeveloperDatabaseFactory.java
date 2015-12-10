@@ -135,7 +135,19 @@ public class CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory imp
         DeveloperDatabaseTable customerBrokerNewTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME, customerBrokerNewColumns);
         tables.add(customerBrokerNewTable);
 
+        /**
+         * Events Recorder table
+         * */
+        List<String> eventsColumns = new ArrayList<String>();
 
+        eventsColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME);
+        eventsColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME);
+        eventsColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_SOURCE_COLUMN_NAME);
+        eventsColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME);
+        eventsColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable eventsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME, eventsColumns);
+        tables.add(eventsTable);
 
         return tables;
     }

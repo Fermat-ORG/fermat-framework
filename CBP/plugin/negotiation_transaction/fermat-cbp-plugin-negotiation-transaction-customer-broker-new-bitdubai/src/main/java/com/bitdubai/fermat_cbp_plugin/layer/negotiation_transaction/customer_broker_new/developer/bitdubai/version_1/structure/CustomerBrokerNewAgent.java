@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by Yordin Alayn on 08.12.15.
+ * Based On OpenContractMonitorAgent Create by Manuel Perez.
  */
 public class CustomerBrokerNewAgent implements
         CBPTransactionAgent,
@@ -36,7 +37,6 @@ public class CustomerBrokerNewAgent implements
         DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity{
-
 
     private Thread                              agentThread;
 
@@ -63,6 +63,7 @@ public class CustomerBrokerNewAgent implements
     private MonitorAgent monitorAgent;
 
     public CustomerBrokerNewAgent(
+            PluginDatabaseSystem                pluginDatabaseSystem,
             LogManager                          logManager,
             ErrorManager                        errorManager,
             EventManager                        eventManager,
@@ -71,6 +72,7 @@ public class CustomerBrokerNewAgent implements
             CustomerBrokerPurchaseNegotiation   customerBrokerPurchaseNegotiation,
             CustomerBrokerSaleNegotiation       customerBrokerSaleNegotiation
     ){
+        this.pluginDatabaseSystem               = pluginDatabaseSystem;
         this.logManager                         = logManager;
         this.errorManager                       = errorManager;
         this.eventManager                       = eventManager;

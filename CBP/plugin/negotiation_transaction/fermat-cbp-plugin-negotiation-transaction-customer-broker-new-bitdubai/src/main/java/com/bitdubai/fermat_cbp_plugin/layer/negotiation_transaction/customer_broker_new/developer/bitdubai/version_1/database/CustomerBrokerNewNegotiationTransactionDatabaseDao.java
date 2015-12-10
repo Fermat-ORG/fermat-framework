@@ -17,8 +17,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
@@ -126,9 +128,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         CustomerBrokerNew getTransaction = null;
 
         try {
-            DatabaseTable table;
+            
             List<DatabaseTableRecord> record;
-            table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
             }
@@ -156,9 +158,8 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         List<CustomerBrokerNew> getTransactions = null;
 
         try {
-            DatabaseTable table;
             List<DatabaseTableRecord> record;
-            table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
             }
@@ -180,7 +181,31 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         return getTransactions;
     }
 
-    //PRIVATE
+    /*PUBLIC METHOD*/
+    public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
+        try {
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            DatabaseTableRecord eventRecord = table.getEmptyRecord();
+            UUID eventRecordID = UUID.randomUUID();
+            long unixTime = System.currentTimeMillis();
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("Distribution DAO:\nUUID:" + eventRecordID + "\n" + unixTime);
+            eventRecord.setUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventRecordID);
+            eventRecord.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME, eventType);
+            eventRecord.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_SOURCE_COLUMN_NAME, eventSource);
+            eventRecord.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+            eventRecord.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME, unixTime);
+            table.insertRecord(eventRecord);
+
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+        } catch(Exception exception){
+            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+        }
+    }
+    /*END PUBLIC METHOD*/
+    
+    /*PRIVATE METHOD*/
     private boolean transactionExists(UUID transactionId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
         try {
             DatabaseTable table;

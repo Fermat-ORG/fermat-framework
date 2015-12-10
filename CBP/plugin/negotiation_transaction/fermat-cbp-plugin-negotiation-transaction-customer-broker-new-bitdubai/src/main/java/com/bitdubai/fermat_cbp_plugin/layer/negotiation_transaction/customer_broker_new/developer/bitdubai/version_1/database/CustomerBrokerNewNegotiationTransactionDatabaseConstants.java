@@ -30,4 +30,17 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseConstants {
 
     static final String CUSTOMER_BROKER_NEW_FIRST_KEY_COLUMN = "transaction_id";
 
+    /**
+     * Events recorded database table definition.
+     */
+    public static final String CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME = "customer_broker_new_event";
+
+    public static final String CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME = "event_id";
+    public static final String CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME = "event";
+    public static final String CUSTOMER_BROKER_NEW_EVENT_SOURCE_COLUMN_NAME = "source";
+    public static final String CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME = "status";
+    public static final String CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME = "timestamp";
+
+    public static final String CUSTOMER_BROKER_NEW_EVENT_FIRST_KEY_COLUMN = "event_id";
+
 }
