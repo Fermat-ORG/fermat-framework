@@ -153,7 +153,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     }
               });
 
-        holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
+        holder.getBtn_refuse_request().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
