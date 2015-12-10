@@ -15,12 +15,12 @@ Network Services fall into the category of plug-in components defined types that
 
 As network services are intermediaries, and are the only interact directly with the communications layer, they are responsible for all tasks and encapsulate logic necessary for this interaction, and among these basic tasks are the following:
 
- * Request the communications layer recording with other components Server Cloud (Cloud Server).
- * Request the communications layer discovery and search for other registered components, and are running on another device.
- * Request the communications layer to establish a new communication channel with another specific component and can send and receive messages.
- * Keep an administration established channels.
- * Receive and store incoming messages.
- * Send and store outgoing messages.
+* Request the communications layer recording with other components Server Cloud (Cloud Server).
+* Request the communications layer discovery and search for other registered components, and are running on another device.
+* Request the communications layer to establish a new communication channel with another specific component and can send and receive messages.
+* Keep an administration established channels.
+* Receive and store incoming messages.
+* Send and store outgoing messages.
 
 Network Services also have the responsibility of defining a communications protocol for message-based placement with other network services running on another device running the system Fermat. An important point to consider in terms of network services point is that they can only be interaction or communication with other network service of the same type to run in another device, so that the same send and receive messages according to the defined protocol and can be understood.
 
@@ -31,15 +31,15 @@ Network Services also have the responsibility of defining a communications proto
 
 It is a network service that aims to define the behavior and protocol for communication between the components of a platform that runs within the Framework Fermat.
 
-* Network Services ** ** Actors who are responsible for managing the activities reacted with identities (Actors) located within the platform.
+* **Actors Network Services**  who are responsible for managing the activities reacted with identities (Actors) located within the platform.
 
-* ** ** Network Services generals who are responsible for managing business logic or data transfer protocols.
+* **Network Services**  generals who are responsible for managing business logic or data transfer protocols.
 
 ### Connections
 
 They are the channels established by the communication layer to the network service to send and receive messages.
 
-### Menssajes
+### Messages
 
 It is defined as information that the sender sends the receiver through a certain communication channel, and it has a unique meaning.
 
@@ -90,7 +90,7 @@ This is the root of the structure of the problem and must be labeled _SUPER ISSU
 
 This is the root for analysis. It is closed every time you carry out all analyzes. This Issue should be linked to the root of the structure of matter.
 
-1 - ISSUE: ** '_ Plugin name_' - Case Uses **
+1 - ISSUE: **'_ Plugin name_' - Case Uses**
 
 This is where you specify each potential use cases to cover the problem.
 
@@ -99,11 +99,11 @@ This is where you specify each potential use cases to cover the problem.
 This is the root for example's implementation. It is closed every time you carry out all implemntaciones. This Issue should be linked to the root of the structure of matter.
 
 <br>
-1 - ISSUE: ** '_ Plugin name_' - Interfaces **
+1 - ISSUE: **'_ Plugin name_' - Interfaces**
 
 This is where you specify each of the possible interfaces to implement.
 
-2 - ISSUE: ** '_ Plugin name_' - Data Base **
+2 - ISSUE: **'_ Plugin name_' - Data Base**
 
 This is where specified componenetes each database.
 
@@ -111,9 +111,9 @@ This is where specified componenetes each database.
 
 This is the root of evidence. It is closed whenever all tests performed. ISSUE This must be linked to the root of the structure of matter.
 
-* ISSUE: ** '_ Plugin name_' - Testing - Unit Testing **
+* ISSUE: **'_ Plugin name_' - Testing - Unit Testing**
 
-* ISSUE: ** '_ Plugin name_' - Testing - Integration Test **
+* ISSUE: **'_ Plugin name_' - Testing - Integration Test**
 
 ##### ISSUE: '_Plugin name_' - QA
 
@@ -183,9 +183,9 @@ The project names follow this pattern:
 Where:
 
 - **PLATFORM_NAME**: Refers to the platform that will create its components.
-- **Network_service_type**: Refers to the type of network service that is to be created, if it is for an actor or not.
-- **Name_of_the_project**: This is the name of the project.
-- **Org_name**: This is the name of the company or organization promoting the project you are creating, for example: **bitdubai**.
+- **network_service_type**: Refers to the type of network service that is to be created, if it is for an actor or not.
+- **name_of_the_project**: This is the name of the project.
+- **org_name**: This is the name of the company or organization promoting the project you are creating, for example: **bitdubai**.
  
 Here's an example:
 
