@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/12/15.
@@ -16,7 +16,7 @@ public class IncomingNewContractStatusUpdateEventHandler extends AbstractCustome
         if(this.customerOnlinePaymentRecorderService.getStatus()== ServiceStatus.STARTED) {
 
             try {
-                this.customerOnlinePaymentRecorderService.incomingNewContractStatusUpdateEventHandler((IncomingNewContractStatusUpdateEventHandler) fermatEvent);
+                this.customerOnlinePaymentRecorderService.incomingNewContractStatusUpdateEventHandler((IncomingNewContractStatusUpdate) fermatEvent);
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the incomingNewContractStatusUpdate", "Check the cause");
             } catch(ClassCastException exception){
