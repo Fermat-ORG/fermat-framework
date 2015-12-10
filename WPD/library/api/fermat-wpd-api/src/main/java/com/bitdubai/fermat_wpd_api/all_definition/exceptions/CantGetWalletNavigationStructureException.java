@@ -1,18 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions;
+package com.bitdubai.fermat_wpd_api.all_definition.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Exception <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.CantAddLanguageStringException</code>
- * is thrown when a we cannot add a language string.
- * <p/>
- *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 29/07/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by Manuel Perez on 14/08/15.
  */
-public class CantGetWalletLanguageException extends FermatException {
+public class CantGetWalletNavigationStructureException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -21,7 +14,7 @@ public class CantGetWalletLanguageException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetWalletLanguageException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetWalletNavigationStructureException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

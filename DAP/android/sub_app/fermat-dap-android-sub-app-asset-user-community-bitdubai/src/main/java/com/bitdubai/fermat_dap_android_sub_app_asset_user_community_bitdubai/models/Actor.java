@@ -24,6 +24,7 @@ public class Actor extends AssetUserActorRecord
                 record.getDapConnectionState(),
                 record.getLocationLatitude(),
                 record.getLocationLongitude(),
+                record.getCryptoAddress(),
                 record.getRegistrationDate(),
                 record.getLastConnectionDate(),
                 record.getProfileImage()
