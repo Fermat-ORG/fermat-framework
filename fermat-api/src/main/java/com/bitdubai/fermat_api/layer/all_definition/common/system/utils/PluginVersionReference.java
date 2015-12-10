@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
@@ -39,7 +40,7 @@ public class PluginVersionReference {
 
     public PluginVersionReference(final Platforms platform,
                                   final Layers layer,
-                                  final Plugins pluginEnum,
+                                  final FermatPluginsEnum pluginEnum,
                                   final Developers developer,
                                   final Version version) {
 
@@ -82,7 +83,7 @@ public class PluginVersionReference {
 
         Platforms platform = platformReference.getPlatform();
         Layers layer = layerReference.getLayer();
-        Plugins plugin = pluginReference.getPlugin();
+        FermatPluginsEnum plugin = pluginReference.getPlugin();
         Developers developer = pluginDeveloperReference.getDeveloper();
 
         return platform.getCode() + KEY_SEPARATOR +

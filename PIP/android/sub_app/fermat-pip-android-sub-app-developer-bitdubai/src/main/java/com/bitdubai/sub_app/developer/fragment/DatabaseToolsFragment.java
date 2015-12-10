@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
@@ -116,7 +117,7 @@ public class DatabaseToolsFragment extends FermatFragment {
 
                 String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().getCode()+" "+
                         pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
-                        pvr.getPluginDeveloperReference().getPluginReference().getPlugin().name();
+                        ((Plugins)pvr.getPluginDeveloperReference().getPluginReference().getPlugin()).name();
 
                 mlist.add(
                         new Resource(
