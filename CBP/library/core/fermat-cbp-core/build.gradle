@@ -35,8 +35,9 @@ dependencies {
     compile project(':fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai')
 
     //Business Transaction
-    compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
+    compile project(':fermat-cbp-plugin-business-transaction-customer-online-payment-bitdubai')
+    compile project(':fermat-cbp-plugin-business-transaction-open-contract-bitdubai')
 
     //Negotiation Transaction
     compile project(':fermat-cbp-plugin-negotiation-transaction-customer-broker-new-bitdubai')

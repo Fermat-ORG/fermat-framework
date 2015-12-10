@@ -180,6 +180,7 @@ public class NegotiationTransmissionAgent {
         //Stop the Thread
         toSend.interrupt();
         toReceive.interrupt();
+        this.running  = Boolean.FALSE;
         //Disconnect from the service
     }
     /*END SERVICE*/
@@ -302,7 +303,6 @@ public class NegotiationTransmissionAgent {
                         switch (negotiationTransmission.getTransmissionState()) {
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
 
-                                //TODO: revisar que se puede hacer acá
                                 System.out.println("Negotiation Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
                                 break;
 

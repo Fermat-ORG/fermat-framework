@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
@@ -114,6 +116,13 @@ public class CloseContractBusinessTransactionDao {
                 CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
     }
 
+    public List<String> getClosingConfirmContractToCloseList() throws CantGetContractListException {
+        return getStringList(
+                ContractTransactionStatus.CONFIRM_CLOSED_CONTRACT.getCode(),
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+    }
+
     public ContractType getContractType(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
 
         try {
@@ -131,6 +140,14 @@ public class CloseContractBusinessTransactionDao {
 
     }
 
+    public String getContractXML(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        return getValue(
+                contractHash,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_XML_COLUMN_NAME);
+
+    }
+
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
         try{
@@ -145,6 +162,41 @@ public class CloseContractBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         }
+    }
+
+    public String getEventType(String eventId)
+            throws
+            UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            databaseTable.setStringFilter(
+                    CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            String value=records
+                    .get(0)
+                    .getStringValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+            return value;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        }
+
+    }
+
+
+    public String getTransactionId(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        String transactionId= getValue(
+                contractHash,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
+        //return UUID.fromString(transactionId);
+        return transactionId;
+
     }
 
     /**
@@ -346,6 +398,33 @@ public class CloseContractBusinessTransactionDao {
         recordsSize=records.size();
         if(recordsSize>VALID_RESULTS_NUMBER){
             throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
+        }
+    }
+
+    /**
+     * This method save an incoming new event in database.
+     * @param eventType
+     * @param eventSource
+     * @throws CantSaveEventException
+     */
+    public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
+            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+            UUID eventRecordID = UUID.randomUUID();
+            long unixTime = System.currentTimeMillis();
+            eventRecord.setUUIDValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
+            eventRecord.setStringValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+            eventRecord.setStringValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+            eventRecord.setStringValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+            eventRecord.setLongValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+            databaseTable.insertRecord(eventRecord);
+
+
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+        } catch(Exception exception){
+            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
         }
     }
 
