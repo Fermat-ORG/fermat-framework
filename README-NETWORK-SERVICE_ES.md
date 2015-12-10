@@ -219,16 +219,16 @@ Un proyecto de componentes de Network Service en Fermat tiene la siguiente estru
 
 Donde:
 
-- Dentro de la carpeta `src/main/java` se encuentra el paquete donde colocar los archivos de Java (clases, intefaces, enumeraciones ..)
-- Dentro de la carpeta `test` va el código que se utiliza para hacer pruebas unitarias en las funcionalidades que usted está en desarrollo en la carpeta `src`.
-- Las Pruebas unitarias se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]` en el directorio `test/java`
 - El archivo `build.gradle` es donde se definen las dependencias del proyecto con otras de las plataformas o con bibliotecas de terceros, pero no por defecto (las bibliotecas de soporte, por ejemplo).
 - El archivo `Proguard-rules.pro` configura la herramienta Proguard. (para más información ver [este enlace] (http://developer.android.com/guide/developing/tools/proguard.html)). ** NOTA: ** * no configuramos este archivo en el momento, por lo tanto, está vacía *
+- Dentro de la carpeta `src/main/java` se encuentra el paquete donde colocar los archivos de Java (clases, intefaces, enumeraciones ..)
+- Dentro de la carpeta `test` va el código que se utiliza para hacer pruebas unitarias en las funcionalidades que usted está en desarrollo en la carpeta `src`.
+- Dentro del paquete `structure` se encuentra bien organizado dentro de otros paquetes las clases que component el plug-in que se esta desarrollando.
+- Las Pruebas unitarias se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]` en el directorio `test/java`
 
 ### Añadir su proyecto el archivo settings.gradle
 
 Al principio, cuando se crea el proyecto, no será reconocido como tal en la estructura de dependencias del proyecto raíz (Fermat) y se mostrará como un directorio más. Por lo que su proyecto debe ser incluido en la estructura de dependencias, es necesario añadir las siguientes líneas en el archivo `settings.gradle` que se encuentra en la carpeta de la plataforma en la que vas a trabajar:
-
 <br>
 ```Gradle
 include ':fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]'
@@ -262,7 +262,7 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 <br>
 
 
-## Part IV: Implementación
+## Part III: Implementación
 
 <br>
 
@@ -270,7 +270,7 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 
 <br><br><br><br><br><br><br>
 
-## Part V: Servidor Local de Pruebas
+## Part IV: Servidor Local de Pruebas
 
 Es posible la ejecución de un servidor local para realizar pruebas de funcionamiento de un Plugin Network Service, esto permite agilizar el proceso de depuración del código fuente del plugin, así como el proceso de detección de errores del mismo.
 
