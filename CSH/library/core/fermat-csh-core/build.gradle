@@ -24,6 +24,8 @@ dependencies {
 
     compile project(':fermat-csh-plugin-cash-money-transaction-hold-bitdubai')
     compile project(':fermat-csh-plugin-cash-money-transaction-unhold-bitdubai')
+    compile project(':fermat-csh-plugin-cash-money-transaction-deposit-bitdubai')
+    compile project(':fermat-csh-plugin-cash-money-transaction-withdrawal-bitdubai')
 
     compile project(':fermat-csh-plugin-wallet-cash-money-bitdubai')
 

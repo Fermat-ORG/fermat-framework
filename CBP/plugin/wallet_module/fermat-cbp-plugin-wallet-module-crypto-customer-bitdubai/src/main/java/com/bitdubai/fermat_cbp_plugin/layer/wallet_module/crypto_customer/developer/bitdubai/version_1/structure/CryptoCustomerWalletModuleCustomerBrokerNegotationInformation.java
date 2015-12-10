@@ -61,8 +61,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotationInformation imple
         clauses = new HashSet<>();
         clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty, ClauseStatus.DRAFT));
         clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, merchandise, ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_BANK, "Banesco", ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, "2165645454654", ClauseStatus.DRAFT));
+        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, "Banesco\n2165645454654", ClauseStatus.DRAFT));
         clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, paymentCurrency, ClauseStatus.DRAFT));
         clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod, ClauseStatus.DRAFT));
         clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
