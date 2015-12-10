@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.GrouperItem;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
@@ -56,12 +58,15 @@ public class AccountsListFragment extends FermatWalletExpandableListFragment<Gro
 
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
-        return null;
+
     }
 
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
-        return null;
+        if (layoutManager == null)
+            layoutManager = new LinearLayoutManager(getActivity());
+
+        return layoutManager;
     }
 
     @Override
@@ -108,12 +113,12 @@ public class AccountsListFragment extends FermatWalletExpandableListFragment<Gro
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;
+        return R.id.swipe_refresh;
     }
 
     @Override
     protected int getLayoutResource() {
-        return 0;
+        return R.layout.fragment_accounts_list;;
     }
 
     @Override
