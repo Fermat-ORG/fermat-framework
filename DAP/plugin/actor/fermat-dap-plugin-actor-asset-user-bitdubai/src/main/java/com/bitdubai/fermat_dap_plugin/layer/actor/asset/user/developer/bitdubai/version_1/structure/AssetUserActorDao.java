@@ -55,6 +55,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -467,13 +468,15 @@ public class AssetUserActorDao implements Serializable {
                 }
 
                 if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
-                    if(dapConnectionState == DAPConnectionState.CONNECTING) {
-                        dapConnectionState = DAPConnectionState.CONNECTING;
-                    } else if (dapConnectionState == DAPConnectionState.CONNECTED_ONLINE) {
-                        dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
-                    } else {
+//                    if(dapConnectionState == DAPConnectionState.CONNECTING) {
+//                        dapConnectionState = DAPConnectionState.CONNECTING;
+//                    }
+                    if (Objects.equals(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.REGISTERED_OFFLINE.getCode())) {
                         dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
-
+                    }
+                } else {
+                    if (Objects.equals(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.CONNECTED_OFFLINE.getCode())) {
+                        dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
                     }
                 }
 
