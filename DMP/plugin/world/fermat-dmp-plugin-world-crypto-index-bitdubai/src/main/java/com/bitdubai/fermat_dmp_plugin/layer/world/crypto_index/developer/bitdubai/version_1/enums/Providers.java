@@ -7,8 +7,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.CryptoCoinChartsProvider;
 
 /**
- * The enum <code>com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.enums.Providers</code>
- * contains the Crypto Index Providers.<p/>
+ * The enum <code>com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.enums.CryptoProvidersManager</code>
+ * contains the Crypto Index CryptoProvidersManager.<p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  *

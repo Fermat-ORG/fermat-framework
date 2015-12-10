@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.d
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,19 +16,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerContractPurchaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseContractDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +30,7 @@ import java.util.List;
 /**
  * Created by angel on 02/11/15.
  */
-public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin implements CustomerBrokerContractPurchaseManager, DatabaseManagerForDevelopers {
+public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -72,6 +67,11 @@ public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin imp
             }
         }
 
+        @Override
+        public FermatManager getManager() {
+            return new CustomerBrokerPurchaseManager(this.CustomerBrokerContractPurchaseDao);
+        }
+
     /*
         DatabaseManagerForDevelopers Interface implementation.
     */
@@ -100,32 +100,4 @@ public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin imp
             return new ArrayList<>();
         }
 
-    /*
-        CustomerBrokerContractPurchase Interface implementation.
-    */
-
-        @Override
-        public List<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerContractPurchaseException {
-            return this.CustomerBrokerContractPurchaseDao.getAllCustomerBrokerPurchaseContractFromCurrentDeviceUser();
-        }
-
-        @Override
-        public CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(String ContractId) throws CantGetListCustomerBrokerContractPurchaseException {
-            return this.CustomerBrokerContractPurchaseDao.getCustomerBrokerPurchaseContractForcontractID(ContractId);
-        }
-
-        @Override
-        public CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException {
-            return this.CustomerBrokerContractPurchaseDao.createCustomerBrokerPurchaseContract(contract);
-        }
-
-        @Override
-        public void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException {
-            this.CustomerBrokerContractPurchaseDao.updateStatusCustomerBrokerPurchaseContract(contractId, status);
-        }
-
-        @Override
-        public void updateStatusCustomerBrokerPurchaseContractClauseStatus(String contractId, ContractClause clause) throws CantupdateCustomerBrokerContractPurchaseException {
-            this.CustomerBrokerContractPurchaseDao.updateStatusCustomerBrokerPurchaseContractClauseStatus(contractId, clause);
-        }
 }

@@ -22,6 +22,7 @@ public class Actor extends RedeemPointActorRecord
                 record.getDapConnectionState(),
                 record.getLocationLatitude(),
                 record.getLocationLongitude(),
+                record.getCryptoAddress(),
                 record.getRegistrationDate(),
                 record.getLastConnectionDate(),
                 record.getProfileImage()

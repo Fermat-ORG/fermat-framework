@@ -32,6 +32,7 @@ public enum Country implements FermatEnum {
     SWITZERLAND                 ("CH", "Switzerland"),
     UNITED_STATES_OF_AMERICA    ("US", "United States of America"),
     VENEZUELA                   ("VE", "Venezuela"),
+    NONE                        ("NONE", "NONE"),
 
     ;
 
@@ -61,6 +62,7 @@ public enum Country implements FermatEnum {
             case "CH": return Country.SWITZERLAND;
             case "US": return Country.UNITED_STATES_OF_AMERICA;
             case "VE": return Country.VENEZUELA;
+            case "NONE": return Country.NONE;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
