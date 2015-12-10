@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -14,10 +15,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewImpl;
@@ -62,14 +67,17 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }
 
     //CREATE NEW NEGOTIATION TRANSACTION
-    public CustomerBrokerNew createRegisterCustomerBrokerNewNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
-//    public CustomerBrokerNew createRegisterCustomerBrokerNewNegotiationTranasction(String publicKeyCustomer, String publicKeyBroker, UUID negotiationId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+    public void createRegisterCustomerBrokerNewNegotiationTranasction(Negotiation negotiation, NegotiationType negotiationType) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+
         UUID transactionId = UUID.randomUUID();
         Date time = new Date();
         long timestamp = time.getTime();
-        NegotiationTransactionStatus status = NegotiationTransactionStatus.PENDING_SUBMIT;
+        NegotiationTransactionStatus statusTransaction = NegotiationTransactionStatus.PENDING_SUBMIT;
+        NegotiationTransmissionState stateTransmission = NegotiationTransmissionState.PROCESSING_SEND;
+        String negotiationXML = XMLParser.parseObject(negotiation);
 
         try {
+
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
 
@@ -77,17 +85,21 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             record.setUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId());
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME, negotiation.getBrokerPublicKey());
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, negotiation.getCustomerPublicKey());
-            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME, status.getCode());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME, statusTransaction.getCode());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME, negotiation.getStatus().getCode());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATE_TRANSMISSION_COLUMN_NAME, stateTransmission.getCode());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME, negotiationType.getCode());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME, negotiationXML);
             record.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME, timestamp);
 
             table.insertRecord(record);
+
         } catch (CantInsertRecordException e){
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException (e.getMessage(), e, "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, insert database problems.");
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException (e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, unknown failure.");
         }
 
-        return new CustomerBrokerNewImpl(transactionId, negotiation.getNegotiationId(), negotiation.getBrokerPublicKey(), negotiation.getCustomerPublicKey(), status, timestamp);
     }
 
     //UPDATE STATUS NEW NEGOTIATION TRANSACTION

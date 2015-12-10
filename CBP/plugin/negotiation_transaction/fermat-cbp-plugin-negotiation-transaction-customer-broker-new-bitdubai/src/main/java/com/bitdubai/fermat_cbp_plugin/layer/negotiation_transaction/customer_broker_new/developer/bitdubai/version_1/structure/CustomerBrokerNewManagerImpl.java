@@ -3,7 +3,9 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantGetCustomerBrokerNewNegotiationTransactionException;
@@ -25,9 +27,6 @@ import java.util.UUID;
 
 public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
 
-    /*Represent the Network Service*/
-    private NegotiationTransmissionManager                      negotiationTransmissionManager;
-
     /*Represent the Transaction database DAO */
     private CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
 
@@ -37,11 +36,16 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     /*Represent the Transaction Negotiation Sale*/
     private CustomerBrokerNewSaleNegotiationTransaction         customerBrokerNewSaleNegotiationTransaction;
 
+    /*Represent the Negotiation Purchase*/
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    /*Represent the Negotiation Sale*/
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+
     public CustomerBrokerNewManagerImpl(
-        NegotiationTransmissionManager                      negotiationTransmissionManager,
         CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao
     ){
-        this.negotiationTransmissionManager                     = negotiationTransmissionManager;
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
     }
 
@@ -51,7 +55,7 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
         try {
 
             customerBrokerNewPurchaseNegotiationTransaction = new CustomerBrokerNewPurchaseNegotiationTransaction(
-                    negotiationTransmissionManager,
+                    customerBrokerPurchaseNegotiationManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao
             );
             customerBrokerNewPurchaseNegotiationTransaction.newPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
@@ -69,7 +73,7 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
         try {
 
             customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                    negotiationTransmissionManager,
+                    customerBrokerSaleNegotiationManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao
             );
             customerBrokerNewSaleNegotiationTransaction.newSaleNegotiationTranasction(customerBrokerSaleNegotiation);

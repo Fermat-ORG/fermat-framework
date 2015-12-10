@@ -165,7 +165,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         this.listenersAdded=new ArrayList<>();
     }
 
-    /*IMPLEMENTATION SERVICE*/
+    /*IMPLEMENTATION Service*/
     @Override
     public void start() throws CantStartPluginException{
 
@@ -254,9 +254,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
 
-    /*END IMPLEMENTATION SERVICE*/
+    /*END IMPLEMENTATION Service*/
 
-    /*IMPLEMENTATION NEGOTIATION TRANSMISSION MANAGER*/
+    /*IMPLEMENTATION NegotiationTransmissionManager*/
     public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
 
         try{
@@ -347,9 +347,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         }
     }
-    /*END IMPLEMENTATION NEGOTIATION TRANSMISSION MANAGER*/
+    /*END IMPLEMENTATION NegotiationTransmissionManager*/
 
-    /*IMPLEMENTATION DATABASE MANAGER FOR DEVELOPERS.*/
+    /*IMPLEMENTATION DatabaseManagerForDevelopers.*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
@@ -369,9 +369,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             return new ArrayList<>();
         }
     }
-    /*END IMPLEMENTATION DATABASE MANAGER FOR DEVELOPERS*/
+    /*END IMPLEMENTATION DatabaseManagerForDevelopers*/
 
-    /*IMPLEMENTATION LOG MANAGER FOR DEVELOPERS*/
+    /*IMPLEMENTATION LogManagerForDevelopers*/
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
@@ -406,9 +406,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             return DEFAULT_LOG_LEVEL;
         }
     }
-    /*END IMPLEMENTATION LOG MANAGER FOR DEVELOPERS*/
+    /*END IMPLEMENTATION LogManagerForDevelopers*/
 
-    /*PUBLIC*/
+    /*PUBLIC METHOD*/
     @Override
     public String getIdentityPublicKey() {
         return this.identity.getPublicKey();
@@ -644,9 +644,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
     }
-    /*END PUBLIC*/
+    /*END PUBLIC METHOD*/
 
-    /*PRIVATE*/
+    /*PRIVATE METHOD*/
     //This method validate is all required resource are injected into the plugin root by the platform
     private void validateInjectedResources() throws CantStartPluginException {
         //If all resources are inject
@@ -781,5 +781,5 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         }
         return negotiationTransmission;
     }
-    /*END PRIVATE*/
+    /*END PRIVATE METHOD*/
 }
