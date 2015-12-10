@@ -24,7 +24,7 @@ public class BankAccountNumberImpl implements BankAccountNumber {
 
     @Override
     public String getBankName() {
-        return null;
+        return "Test bank name";
     }
 
     @Override

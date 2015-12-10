@@ -99,6 +99,7 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
 
     @Override
     public void addNewAccount(BankAccountNumber bankAccountNumber) throws CantAddNewAccountException {
+        System.out.println("registrando bankAccountNumber = "+bankAccountNumber.getAccount());
         try {
             bankMoneyWalletDao.addNewAccount(bankAccountNumber);
         }catch (CantInsertRecordException e){

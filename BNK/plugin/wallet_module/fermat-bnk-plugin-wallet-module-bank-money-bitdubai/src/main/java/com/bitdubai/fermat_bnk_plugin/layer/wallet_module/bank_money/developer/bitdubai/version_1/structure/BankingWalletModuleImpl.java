@@ -25,7 +25,7 @@ public class BankingWalletModuleImpl implements BankingWallet {
     private final HoldManager holdManager;
     private final UnholdManager unholdManager;
 
-    private UUID publicKey = UUID.fromString("banking_wallet");
+    private UUID publicKey = UUID.fromString("bankingwallet");
 
     public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
