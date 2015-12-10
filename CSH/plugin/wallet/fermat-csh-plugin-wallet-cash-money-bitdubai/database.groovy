@@ -29,6 +29,7 @@ databaseTables << [
                 ["Actor Public Key", "STRING", "100", "false"],
                 ["Plugin Public Key", "STRING", "100", "false"],
                 ["Transaction Type", "STRING", "100", "false"],
+                ["Balance Type", "STRING", "100", "false"],
                 ["Amount", "MONEY", "100", "false"],
                 ["Memo", "STRING", "100", "false"],
                 ["Timestamp", "LONG_INTEGER", "100", "false"],

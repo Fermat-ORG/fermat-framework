@@ -53,7 +53,7 @@ public class IntraUserActorRecord implements Actor {
 
     @Override
     public byte[] getPhoto() {
-        return this.photo.clone();
+        return this.photo;
     }
 
     @Override

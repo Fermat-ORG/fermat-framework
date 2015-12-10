@@ -1,8 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,17 +56,32 @@ public class BrokerNavigationViewPainter implements com.bitdubai.fermat_android_
     }
 
     @Override
-    public Drawable addBodyBackground() {
-        return null; // ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
+    public Bitmap addBodyBackground() {
+        Bitmap drawable = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = true;
+            options.inSampleSize = 5;
+            drawable = BitmapFactory.decodeResource(
+                    activity.getResources(), R.drawable.cbw_navigation_drawer_background,options);
+        }catch (OutOfMemoryError error){
+            error.printStackTrace();
+        }
+        return drawable;
     }
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return Color.parseColor("#1375a7");
     }
 
     @Override
     public RecyclerView.ItemDecoration addItemDecoration() {
         return null;
+    }
+
+    @Override
+    public boolean hasBodyBackground() {
+        return true;
     }
 }

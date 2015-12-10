@@ -3,15 +3,13 @@ package com.bitdubai.android_core.app;
 
 import android.support.multidex.MultiDexApplication;
 
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
-import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_core.FermatSystem;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -33,6 +31,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
     public static final int STATE_NOT_CREATED=0;
     public static final int STATE_STARTED=1;
+    public static final int STATE_STARTED_DESKTOP=2;
 
     /**
      *  Fermat platform
@@ -55,7 +54,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     /**
      *  Application state
      */
-    private int applicationState=STATE_NOT_CREATED;
+    public static int applicationState=STATE_NOT_CREATED;
 
     /**
      *  SubApps fragment factories

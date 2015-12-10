@@ -129,7 +129,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
 
@@ -419,7 +419,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHomeAdapter(getActivity(), lstPaymentRequest, cryptoWallet,(ReferenceWalletSession)walletSession);
+            adapter = new PaymentRequestHomeAdapter(getActivity(), lstPaymentRequest, cryptoWallet,(ReferenceWalletSession)appSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;

@@ -1,48 +1,57 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexInterface;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndex;
+
 
 /**
- * Created by francisco on 11/09/15.
- * TODO add a little explanation of the class
+ * Created by francisco on 04/12/15.
  */
-public class CryptoIndexImp implements CryptoIndexInterface {
+public class CryptoIndexImp implements CryptoIndex {
 
-    private String cryptoCurrency;
-    private String fiatCurrency;
-    private String time;
-    private double rateExchange;
+    private CryptoCurrency currency;
+    private CryptoCurrency referenceCurrency;
+    double salePrice;
+    double purchasePrice;
+    long timestamp;
+    String providerDescription;
 
-    /**
-     * @param cryptoCurrency
-     * @param fiatCurrency
-     * @param time
-     * @param rateExchange
-     */
-    public CryptoIndexImp(String cryptoCurrency, String fiatCurrency, String time, double rateExchange) {
-        this.cryptoCurrency = cryptoCurrency;
-        this.fiatCurrency = fiatCurrency;
-        this.time = time;
-        this.rateExchange = rateExchange;
+    public CryptoIndexImp(CryptoCurrency currency, CryptoCurrency referenceCurrency, double salePrice, double purchasePrice, long timestamp, String providerDescription) {
+        this.currency = currency;
+        this.referenceCurrency = referenceCurrency;
+        this.salePrice = salePrice;
+        this.purchasePrice = purchasePrice;
+        this.timestamp = timestamp;
+        this.providerDescription = providerDescription;
     }
 
     @Override
-    public String getCryptyCurrency() {
-        return cryptoCurrency;
+    public CryptoCurrency getCurrency() {
+        return currency;
     }
 
     @Override
-    public String getFiatCurrency() {
-        return fiatCurrency;
+    public CryptoCurrency getReferenceCurrency() {
+        return referenceCurrency;
     }
 
     @Override
-    public String getTime() {
-        return time;
+    public double getSalePrice() {
+        return salePrice;
     }
 
     @Override
-    public double getRateExchange() {
-        return rateExchange;
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public String getProviderDescription() {
+        return providerDescription;
     }
 }

@@ -58,6 +58,11 @@ public class DesktopRecord implements DatabaseRecord {
         return this.recordChange;
     }
 
+    @Override
+    public boolean getUseValueofVariable() {
+        return false;
+    }
+
     /**
      * Set the field record name
      * @param name field name
@@ -84,5 +89,10 @@ public class DesktopRecord implements DatabaseRecord {
     @Override
     public void setChange (boolean change){
         this.recordChange = change;
+    }
+
+    @Override
+    public void setUseValueofVariable(boolean ifvariable) {
+
     }
 }

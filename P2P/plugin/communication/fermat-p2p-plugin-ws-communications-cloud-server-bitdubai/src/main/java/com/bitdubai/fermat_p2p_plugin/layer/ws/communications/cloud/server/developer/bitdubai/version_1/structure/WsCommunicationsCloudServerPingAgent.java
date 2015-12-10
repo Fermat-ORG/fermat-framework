@@ -7,7 +7,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure;
 
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
 import org.java_websocket.WebSocket;
+
 
 import java.util.Iterator;
 
@@ -20,6 +23,11 @@ import java.util.Iterator;
  * @since Java JDK 1.7
  */
 public class WsCommunicationsCloudServerPingAgent extends Thread {
+
+    /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WsCommunicationsCloudServerPingAgent.class));
 
     /*
      * Represent the sleep time for send new ping (10000 milliseconds)
@@ -59,7 +67,7 @@ public class WsCommunicationsCloudServerPingAgent extends Thread {
 
                     WebSocket connection = iterator.next();
 
-                    System.out.println(" WsCommunicationsCloudServerPingAgent - running");
+                    LOG.debug("Running");
 
                     if (connection.isOpen()){
 
@@ -77,8 +85,8 @@ public class WsCommunicationsCloudServerPingAgent extends Thread {
 
                         }catch (RuntimeException ex){
 
-                            System.out.println(" WsCommunicationsCloudServerPingAgent - Error occurred sending ping to the node, or pending pong message not received");
-                            System.out.println(" WsCommunicationsCloudServerPingAgent - Pending pong message = "+wsCommunicationCloudServer.getPendingPongMessageByConnection().containsKey(connection.hashCode()));
+                            LOG.error("Error occurred sending ping to the node, or pending pong message not received");
+                            LOG.error("Pending pong message = "+wsCommunicationCloudServer.getPendingPongMessageByConnection().containsKey(connection.hashCode()));
 
                             wsCommunicationCloudServer.onClose(connection, 1000, " - Connection no alive", true);
                             wsCommunicationCloudServer.getPendingPongMessageByConnection().remove(connection.hashCode());

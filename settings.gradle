@@ -10,6 +10,7 @@ apply from: 'CBP/settings.gradle'
 apply from: 'CCM/settings.gradle'
 apply from: 'CCP/settings.gradle'
 apply from: 'CSH/settings.gradle'
+apply from: 'CER/settings.gradle'
 apply from: 'DAP/settings.gradle'
 apply from: 'OSA/settings.gradle'
 apply from: 'P2P/settings.gradle'
@@ -21,6 +22,8 @@ include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
+
+include ':fermat_linux_core'
 
 
 include ':fermat-cry-api'
@@ -34,20 +37,8 @@ project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = n
 // CRY Projects
 
 // Milestone 1 project:
-include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
-project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-
-// Milestone 1 project:
 include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-
-// Milestone 1 project:
-include ':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai'
-project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai').projectDir = new File('CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai')
-
-// Milestone 1 project:
-include ':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
-project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir = new File('CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
 //CCM Projects
 

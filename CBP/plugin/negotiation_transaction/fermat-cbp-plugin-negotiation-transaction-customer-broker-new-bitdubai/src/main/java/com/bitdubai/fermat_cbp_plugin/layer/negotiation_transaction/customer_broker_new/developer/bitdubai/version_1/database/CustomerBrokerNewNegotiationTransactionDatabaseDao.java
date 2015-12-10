@@ -14,8 +14,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
@@ -64,7 +65,8 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }
 
     //CREATE NEW NEGOTIATION TRANSACTION
-    public CustomerBrokerNew createRegisterCustomerBrokerNewNegotiationTranasction(String publicKeyCustomer, String publicKeyBroker, UUID negotiationId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+    public CustomerBrokerNew createRegisterCustomerBrokerNewNegotiationTranasction(CustomerBrokerPurchaseNegotiation negotiation) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+//    public CustomerBrokerNew createRegisterCustomerBrokerNewNegotiationTranasction(String publicKeyCustomer, String publicKeyBroker, UUID negotiationId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
         UUID transactionId = UUID.randomUUID();
         Date time = new Date();
         long timestamp = time.getTime();
@@ -75,9 +77,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             DatabaseTableRecord record = table.getEmptyRecord();
 
             record.setUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId);
-            record.setUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
-            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME, publicKeyBroker);
-            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, publicKeyCustomer);
+            record.setUUIDValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME, negotiation.getBrokerPublicKey());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, negotiation.getCustomerPublicKey());
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_COLUMN_NAME, status.getCode());
             record.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME, timestamp);
 
@@ -88,7 +90,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException (e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, unknown failure.");
         }
 
-        return new CustomerBrokerNewImpl(transactionId, negotiationId, publicKeyBroker, publicKeyCustomer, status, timestamp);
+        return new CustomerBrokerNewImpl(transactionId, negotiation.getNegotiationId(), negotiation.getBrokerPublicKey(), negotiation.getCustomerPublicKey(), status, timestamp);
     }
 
     //UPDATE STATUS NEW NEGOTIATION TRANSACTION
