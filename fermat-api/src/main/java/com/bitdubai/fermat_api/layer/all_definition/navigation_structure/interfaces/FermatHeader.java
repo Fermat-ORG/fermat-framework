@@ -11,5 +11,5 @@ public interface FermatHeader extends Serializable {
     public String getLabel();
 
 
-
+    boolean hasExpandable();
 }

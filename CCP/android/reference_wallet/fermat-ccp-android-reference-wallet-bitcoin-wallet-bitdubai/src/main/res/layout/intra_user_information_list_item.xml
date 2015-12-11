@@ -7,6 +7,7 @@
     android:paddingBottom="7dp"
     android:layout_marginBottom="16dp"
     android:layout_marginTop="16dp"
+    android:id="@+id/container_data"
     >
 
     <FrameLayout
@@ -44,12 +45,11 @@
         tools:text="Mati was here" />
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/ic_contact_new_added"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-
-
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="7dp"
         />
 </RelativeLayout>

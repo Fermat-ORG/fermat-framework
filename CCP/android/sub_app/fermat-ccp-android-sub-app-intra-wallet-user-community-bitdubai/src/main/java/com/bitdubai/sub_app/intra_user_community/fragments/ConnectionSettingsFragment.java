@@ -44,9 +44,9 @@ public class ConnectionSettingsFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
-        errorManager = subAppsSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
     }
 
     @Nullable

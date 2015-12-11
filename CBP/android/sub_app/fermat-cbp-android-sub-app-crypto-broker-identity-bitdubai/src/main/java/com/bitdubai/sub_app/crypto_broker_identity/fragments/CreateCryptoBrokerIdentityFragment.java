@@ -65,7 +65,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -177,12 +177,12 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         if (cryptoBrokerBitmap != null)
             imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
 
-        CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(subAppsSession, brokerNameText, imgInBytes);
+        CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
         int resultKey = executor.execute();
 
         switch (resultKey) {
             case SUCCESS:
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
                 break;
             case EXCEPTION_THROWN:
                 Toast.makeText(getActivity(), "Error creating identity.", Toast.LENGTH_LONG).show();

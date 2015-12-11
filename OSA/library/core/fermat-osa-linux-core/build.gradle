@@ -11,6 +11,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-api')
     compile project(':fermat-core')
-    compile project(':fermat-osa-addon-multi-os-database-system-bitdubai')
-    compile project(':fermat-osa-addon-multi-os-file-system-bitdubai')
+    compile project(':fermat-osa-addon-linux-file-system-bitdubai')
 }

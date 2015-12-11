@@ -50,8 +50,8 @@ public class SettingsActivityFragment extends FermatWalletFragment {
         setHasOptionsMenu(false);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

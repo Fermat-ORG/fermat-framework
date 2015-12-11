@@ -50,8 +50,8 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
         try {
             // setting up  module
-            moduleManager = ((IntraUserSubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((IntraUserSubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -155,7 +155,7 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
         /*AcceptDialog acceptDialog = null;
         try {
-            acceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession)subAppsSession,subAppResourcesProviderManager,data,moduleManager.getActiveIntraUserIdentity());
+            acceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession)appSession,appResourcesProviderManager,data,moduleManager.getActiveIntraUserIdentity());
             acceptDialog.show();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();

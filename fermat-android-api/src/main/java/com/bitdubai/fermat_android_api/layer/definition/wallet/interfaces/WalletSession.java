@@ -7,7 +7,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface WalletSession{
+public interface WalletSession extends FermatSession{
 
 
     /**
@@ -20,9 +20,6 @@ public interface WalletSession{
      */
     ErrorManager getErrorManager();
 
-    String getAppPublicKey();
-
-    void setData(String key,Object value);
 
     String getIdentityConnection();
 
