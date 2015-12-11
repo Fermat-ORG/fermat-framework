@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,8 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -34,9 +37,10 @@ import java.util.List;
 /**
  * Creado por Jose manuel De Sousa el 30/11/2015
  */
-public class ConnectionFriendListFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
+public class ConnectionConnectionsListFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
-
+    public static final String INTRA_USER_SELECTED = "intra_user";
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
     private int offset = 0;
@@ -53,31 +57,22 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
     private ErrorManager errorManager;
     private List<IntraUserInformation> lstIntraUserInformations;
 
-    /**
-     * Create a new instance of this fragment
-     *
-     * @return InstalledFragment instance object
-     */
-    public static ConnectionFriendListFragment newInstance() {
-        return new ConnectionFriendListFragment();
+    public static ConnectionConnectionsListFragment newInstance() {
+        return new ConnectionConnectionsListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
-        errorManager = subAppsSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         try {
-
             rootView = inflater.inflate(R.layout.intra_user_connection_friend_list, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
@@ -87,31 +82,19 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
             recyclerView.setHasFixedSize(true);
             adapter = new AppFriendsListAdapter(getActivity(), lstIntraUserInformations);
             recyclerView.setAdapter(adapter);
-
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             onRefresh();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
-
         return rootView;
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
         addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
         setNavigationDrawer(navigationViewAdapter);
     }
@@ -120,6 +103,10 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
+            connectionsProgressDialog.setMessage("Loading Connections");
+            connectionsProgressDialog.setCancelable(false);
+            connectionsProgressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -131,6 +118,7 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
+                    connectionsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -151,6 +139,7 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
+                    connectionsProgressDialog.dismiss();
                     try {
                         isRefreshing = false;
                         if (swipeRefresh != null)
@@ -169,18 +158,9 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-
         try {
-
             dataSet.addAll(moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-            //offset = dataSet.size();
-//
-//            lstIntraUserInformations.addAll(moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-//            adapter.notifyDataSetChanged();
-
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (CantGetIntraUsersListException | CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
 
@@ -199,5 +179,16 @@ public class ConnectionFriendListFragment extends FermatFragment implements Swip
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onItemClickListener(IntraUserInformation data, int position) {
+        appSession.setData(INTRA_USER_SELECTED, data);
+        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+    }
+
+    @Override
+    public void onLongItemClickListener(IntraUserInformation data, int position) {
+
     }
 }

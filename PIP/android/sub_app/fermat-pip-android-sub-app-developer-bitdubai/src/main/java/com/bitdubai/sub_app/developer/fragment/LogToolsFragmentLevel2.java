@@ -3,8 +3,6 @@ package com.bitdubai.sub_app.developer.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-
-
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,8 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +25,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -40,9 +34,10 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;import com.bitdubai.sub_app.developer.R;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
+import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
@@ -92,8 +87,8 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession)super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
             lstLoggers = (ArrayListLoggers)developerSubAppSession.getData("list");
         }
         errorManager = developerSubAppSession.getErrorManager();
@@ -114,19 +109,15 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
 
 
 
-    private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
+    private void changeLogLevel(PluginVersionReference pluginKey,LogLevel logLevel, String resource) {
         try {
-            //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
-            Plugins plugin = Plugins.getByCode(pluginKey);
 
-
-            //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
             data.put(resource, logLevel);
-            logTool.setNewLogLevelInClass(plugin, data);
+            logTool.setNewLogLevelInClass(pluginKey, data);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -326,7 +317,7 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
 
                         //popupMenu.show();
 
-                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginVersionReference);
                         cdd.show();
 
                         return true;
@@ -438,7 +429,7 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
 
 
         private Loggers logger;
-        private String pluginKey;
+        private PluginVersionReference pluginKey;
         public Activity c;
         public Dialog d;
 
@@ -459,7 +450,7 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
                 0
         };
 
-        public CustomDialogClass(Activity a,Loggers loggers,String pluginKey) {
+        public CustomDialogClass(Activity a,Loggers loggers,PluginVersionReference pluginKey) {
             super(a);
             this.logger=loggers;
             this.pluginKey=pluginKey;

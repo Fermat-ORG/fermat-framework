@@ -437,9 +437,9 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         if (data != null) {
             /*setting up fragment instance*/
 //            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0);
-//            fragment.setSubAppsSession(subAppsSession);
-//            fragment.setSubAppSettings(subAppSettings);
-//            fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+//            fragment.setAppSession(appSession);
+//            fragment.setAppSettings(appSettings);
+//            fragment.setAppResourcesProviderManager(appResourcesProviderManager);
 //            /*transactions*/
 //            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
 //            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -465,7 +465,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            //ErrorManager errorManager = subAppsSession.getErrorManager();
+            //ErrorManager errorManager = appSession.getErrorManager();
             //ArrayList<Item> data = CatalogueItemDao.getTestData(getResources());
             // lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());

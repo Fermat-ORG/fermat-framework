@@ -73,8 +73,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
 
             resource = (Resource)developerSubAppSession.getData("resource");
             developerDatabaseTable = (DeveloperDatabaseTable)developerSubAppSession.getData("databaseTable");
@@ -106,8 +106,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
                 AddonVersionReference addon = AddonVersionReference.getByKey(resource.code);
                 this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
             } else if (resource.type== Databases.TYPE_PLUGIN) {
-                PluginVersionReference plugin = PluginVersionReference.getByKey(resource.code);
-                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
+                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(resource.pluginVersionReference, developerDatabase, developerDatabaseTable);
             }
 
             columnNames = developerDatabaseTable.getFieldNames();

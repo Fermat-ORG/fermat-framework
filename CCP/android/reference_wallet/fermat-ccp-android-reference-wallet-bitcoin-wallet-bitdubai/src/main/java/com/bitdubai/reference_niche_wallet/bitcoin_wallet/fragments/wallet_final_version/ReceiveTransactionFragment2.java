@@ -103,9 +103,9 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         lstCryptoWalletTransactionsBook = new ArrayList<>();
 
         try {
-            referenceWalletSession = (ReferenceWalletSession) walletSession;
+            referenceWalletSession = (ReferenceWalletSession) appSession;
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
-            errorManager = walletSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
@@ -164,7 +164,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             int id = item.getItemId();
 
             if (id == BitcoinWalletConstants.IC_ACTION_SEND) {
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,walletSession.getAppPublicKey());
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                     return true;
                 }
 
@@ -319,7 +319,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
 
         try {
-            if (((ReferenceWalletSession)walletSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+            if (((ReferenceWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
                 //txt_balance_amount.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
                 txt_type_balance.setText(R.string.book_balance);
