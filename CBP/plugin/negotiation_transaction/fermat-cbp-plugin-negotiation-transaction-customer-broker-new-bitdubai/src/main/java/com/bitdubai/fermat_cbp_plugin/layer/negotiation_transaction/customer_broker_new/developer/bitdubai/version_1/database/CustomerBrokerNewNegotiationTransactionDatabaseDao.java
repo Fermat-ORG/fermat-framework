@@ -242,6 +242,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     }
 
+    //GET LIST PENDING EVENT
     public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
         try{
 
@@ -268,6 +269,30 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting events in EventStatus.PENDING","Cannot load the table into memory");
         }
+    }
+
+    //
+    public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            table.setStringFilter(
+                    CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records
+                    .get(0)
+                    .getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME);
+            return value;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        }
+
     }
 
     /*PUBLIC METHOD*/

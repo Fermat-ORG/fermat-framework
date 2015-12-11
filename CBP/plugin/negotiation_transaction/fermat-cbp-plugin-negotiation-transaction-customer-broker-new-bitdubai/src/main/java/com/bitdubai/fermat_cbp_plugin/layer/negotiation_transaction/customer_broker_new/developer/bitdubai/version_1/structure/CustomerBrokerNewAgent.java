@@ -5,10 +5,17 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
@@ -30,9 +37,13 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerNewPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -57,6 +68,8 @@ public class CustomerBrokerNewAgent implements
         DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity{
+
+    private Database                            database;
 
     private Thread                              agentThread;
 
@@ -159,6 +172,7 @@ public class CustomerBrokerNewAgent implements
     private class MonitorAgent implements Runnable {
 
         private volatile boolean agentRunning;
+        PluginDatabaseSystem pluginDatabaseSystem;
         private CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
         public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
@@ -195,7 +209,25 @@ public class CustomerBrokerNewAgent implements
         }
         
         public void Initialize() throws CantInitializeCBPAgent {
-            
+            try {
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            }
+            catch (DatabaseNotFoundException databaseNotFoundException) {
+
+                Logger LOG = Logger.getGlobal();
+                LOG.info("Database in Open Contract monitor agent doesn't exists");
+                CustomerBrokerNewNegotiationTransactionDatabaseFactory customerBrokerNewNegotiationTransactionDatabaseFactory=new CustomerBrokerNewNegotiationTransactionDatabaseFactory(this.pluginDatabaseSystem);
+                try {
+                    database = customerBrokerNewNegotiationTransactionDatabaseFactory.createDatabase(pluginId,pluginId.toString());
+                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
+                    throw new CantInitializeCBPAgent(cantCreateDatabaseException,"Customer Broker New Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
+                }
+
+            } catch (CantOpenDatabaseException exception) {
+                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+                throw new CantInitializeCBPAgent(exception,"Customer Broker New Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
+            }
         }
 
         public void stopAgent() { agentRunning = false; }
@@ -234,7 +266,7 @@ public class CustomerBrokerNewAgent implements
 
                         switch (negotiationType){
                             case PURCHASE:
-                                //PASAR LA NEGOCIACION
+                                //PASAR LA NEGOCIACION, AGREGAR AL NegotiationPurchaseRecord EL ToString
                                 purchaseNegotiation = (CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML, purchaseNegotiation);
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 break;
@@ -308,7 +340,34 @@ public class CustomerBrokerNewAgent implements
         }
 
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
-            
+        /*
+            try {
+                NegotiationTransmission negotiationTransmission;
+                String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
+
+                //EVENT TRANSACTION
+                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSACTION.getCode())) {
+                    //evaluar si es transmission o transaction
+                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+//                    for(Transaction<NegotiationTransmission> record : pendingTransactionList){
+//                        negotiationTransmission = record.getInformation();
+//                    }
+                }
+
+                //EVENT CONFIRM NEGOTIATION
+                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION.getCode())) {
+
+                }
+
+                //EVENT CONFIRM RESPONSE
+                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE.getCode())) {
+
+                }
+
+            } catch (CantDeliverPendingTransactionsException e){
+                e.printStackTrace();
+            }
+            */
         }
         
         /*END INNER CLASS PRIVATE METHOD*/
