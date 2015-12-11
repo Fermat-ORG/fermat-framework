@@ -1113,6 +1113,98 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
         }
     }
 
+    @Override
+    public void sendTransactionNewStatusNotification(String actorSenderPublicKey,
+                                                     PlatformComponentType senderType,
+                                                     String actorReceiverPublicKey,
+                                                     PlatformComponentType receiverType,
+                                                     String transactionId,
+                                                     DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException {
+        try {
+
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Actor Sender: PK : " + actorSenderPublicKey + " - Type: " + senderType.getCode());
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Actor Receiver: PK : " + actorReceiverPublicKey + " - Type: " + receiverType.getCode());
+
+            /*
+             * ask for a previous connection
+             */
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorReceiverPublicKey);
+
+            /*
+             * Construct the message content in json format
+             */
+            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(transactionId, newDistributionStatus, senderType, receiverType);
+
+            /*
+             * If not null
+             */
+            if (communicationNetworkServiceLocal != null) {
+
+                //Send the message
+                communicationNetworkServiceLocal.sendMessage(actorSenderPublicKey, actorReceiverPublicKey, msjContent);
+
+            } else {
+
+                /*
+                 * Created the message
+                 */
+                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorSenderPublicKey,//Sender
+                        actorReceiverPublicKey, //Receiver
+                        msjContent, //Message Content
+                        FermatMessageContentType.TEXT);//Type
+                /*
+                 * Configure the correct status
+                 */
+                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+
+                /*
+                 * Save to the data base table
+                 */
+                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+                outgoingMessageDao.create(fermatMessage);
+
+                /*
+                 * Create the sender basic profile
+                 */
+                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorSenderPublicKey, NetworkServiceType.UNDEFINED, senderType);
+
+                /*
+                 * Create the receiver basic profile
+                 */
+                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorReceiverPublicKey, NetworkServiceType.UNDEFINED, receiverType);
+
+                /*
+                 * Ask the client to connect
+                 */
+                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
+
+            }
+
+        } catch (Exception e) {
+
+            StringBuilder contextBuffer = new StringBuilder();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantSendTransactionNewStatusNotificationException pluginStartException = new CantSendTransactionNewStatusNotificationException(CantSendTransactionNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
+
+    }
+
     /**
      * (non-Javadoc)
      *
@@ -1194,7 +1286,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantSendTransactionNewStatusNotificationException pluginStartException = new CantSendTransactionNewStatusNotificationException(CantSendTransactionNewStatusNotificationException.DEFAULT_MESSAGE, null, context, possibleCause);
+            CantSendTransactionNewStatusNotificationException pluginStartException = new CantSendTransactionNewStatusNotificationException(CantSendTransactionNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
