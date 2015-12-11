@@ -122,6 +122,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
@@ -1834,6 +1835,32 @@ public abstract class FermatActivity extends AppCompatActivity
                             Platforms.BANKING_PLATFORM,
                             Layers.WALLET_MODULE,
                             Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
+    }
+
+    public CashMoneyWalletModuleManager getCashMoneyWalletModuleManager() {
+        try {
+            return (CashMoneyWalletModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.CASH_PLATFORM,
+                            Layers.WALLET_MODULE,
+                            Plugins.BITDUBAI_CSH_MONEY_WALLET_MODULE,
                             Developers.BITDUBAI,
                             new Version()
                     )
