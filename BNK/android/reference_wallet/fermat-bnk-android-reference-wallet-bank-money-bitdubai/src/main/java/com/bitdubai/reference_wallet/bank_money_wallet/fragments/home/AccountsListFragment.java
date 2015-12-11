@@ -3,9 +3,12 @@ package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -14,7 +17,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.common.GrouperItem;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 
@@ -25,13 +28,13 @@ import java.util.List;
 /**
  * Created by guillermo on 04/12/15.
  */
-public class AccountsListFragment extends FermatWalletExpandableListFragment<GrouperItem> implements FermatListItemListeners<BankAccountNumber>{
+public class AccountsListFragment extends FermatWalletListFragment<GrouperItem> implements FermatListItemListeners<BankAccountNumber>{
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<GrouperItem<BankAccountNumber>> accountsList;
 
-
+    private static final String TAG = "AccountListActivityFragment";
     public AccountsListFragment() {
     }
 
@@ -55,10 +58,57 @@ public class AccountsListFragment extends FermatWalletExpandableListFragment<Gro
         }
         accountsList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
+    /*@Override
+    protected void initViews(View layout) {
+        TODO: iniciar views
+    }*/
 
     @Override
-    public ExpandableRecyclerAdapter getAdapter() {
-	return null;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        //todo: añadir el navigationdrawer
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        //inflater.inflate(R.menu.cbw_contract_history_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /*if (item.getItemId() == R.id.action_no_filter) {
+            filterContractStatus = null;
+            swipeRefreshLayout.setRefreshing(true);
+            onRefresh();
+            return true;
+        }
+
+        if (item.getItemId() == R.id.action_filter_succeed) {
+            filterContractStatus = ContractStatus.COMPLETED;
+            swipeRefreshLayout.setRefreshing(true);
+            onRefresh();
+            return true;
+        }
+
+        if (item.getItemId() == R.id.action_filter_cancel) {
+            filterContractStatus = ContractStatus.CANCELLED;
+            swipeRefreshLayout.setRefreshing(true);
+            onRefresh();
+            return true;
+        }*/
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return false;
+    }
+
+    @Override
+    public FermatAdapter getAdapter() {
+	    //TODO: obtener el adapter
+        return null;
     }
 
     @Override
@@ -70,8 +120,33 @@ public class AccountsListFragment extends FermatWalletExpandableListFragment<Gro
     }
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_accounts_list;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+    @Override
     protected int getRecyclerLayoutId() {
         return 0;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public void onItemClickListener(BankAccountNumber data, int position) {
+        walletSession.setData("contract_data", data);
+        changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, walletSession.getAppPublicKey());
+    }
+
+    @Override
+    public void onLongItemClickListener(BankAccountNumber data, int position) {
     }
 
     @Override
@@ -94,36 +169,6 @@ public class AccountsListFragment extends FermatWalletExpandableListFragment<Gro
             }
         }
         return data;
-    }
-
-    @Override
-    public void onItemClickListener(BankAccountNumber data, int position) {
-        walletSession.setData("contract_data", data);
-        changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, walletSession.getAppPublicKey());
-    }
-
-    @Override
-    public void onLongItemClickListener(BankAccountNumber data, int position) {
-    }
-
-    @Override
-    protected boolean recyclerHasFixedSize() {
-        return false;
-    }
-
-    @Override
-    protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
-    }
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_accounts_list;
-    }
-
-    @Override
-    protected boolean hasMenu() {
-        return false;
     }
 
     @Override
