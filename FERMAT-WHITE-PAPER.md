@@ -95,15 +95,15 @@ The core framework is in charge of initializing Add-ons and Plug-ins and managin
 <br>
 ## Fermat Application Tokens
 
-Fermat generates its tokens, the fermats, with a predetermined algorithm that cannot be changed, and those tokens are necessary for Fermat to function. Fermat miners are rewarded with fermats for their contributions in running the Fermat network.
+Fermat generates its tokens, the _fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for Fermat to function. Fermat miners are rewarded with _fermats_ for their contributions in running the Fermat network.
 
-These application token are native to the Fermat system and are necessary for access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the Plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
+These application tokens are native to the Fermat system and are necessary for access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the Plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg "Fermat Application Token")
 
 ### Token Records
 
-Fermat's tokens data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat nodes.
+Fermat's tokens data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat Nodes.
 
 ### Token Generation & Distribution
 
@@ -111,7 +111,7 @@ Fermat implement three different mechanisms for token generation and distributio
 
 #### Fund-raising Mechanism
 
-With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the Fermat system. The funds collected are used to fund the development of the core of the Fermat system (core libriaries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
+With the fund-raising mechanism, tokens are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libriaries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded as the genesis transaction of the Fermat's blockchain.
 
 #### Development Mechanism
 
@@ -121,7 +121,7 @@ With the development mechanism, tokens are generated using a predefined mechanis
 
 The Fermat Protocol generates tokens according to a standard crytptographic algorithm acting as a proof of the value nodes are contributing to the application (Fermat uses a kind of Proof of Work Algorithm designed for the particular services Fermat nodes are providing).
 
-With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, fermats are distributed through a predetermined algorithm to the miners that connect clients between each other and allow clients to talk through them.
+With the mining mechanism, tokens are distributed to those who contribute most work to the operation of the Fermat Network. In this case, _fermats_ are distributed through a predetermined algorithm to the miners that connect clients between each other and allow clients to talk through them.
 
 ### Token Issuing
 
@@ -172,7 +172,7 @@ Each block within the blockchain:
 <br>
 ## Mining
 
-Mining is the process by which new fermats are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidh to the Fermat network in exchange for the opportunity to be rewarded fermats.
+Mining is the process by which new _fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidh to the Extended Fermat Network in exchange for the opportunity to be rewarded fermats.
 
 Miners inter-connect devices and acts as a bridge relaying everything from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximatelly 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
 
@@ -247,8 +247,8 @@ We call a _Fermat Genesis Transaction_ to each coinbase transaction recorded on 
 | Input # | Contains | Output # | Contains |
 |:-------:|:--------:|:--------:|:--------:|
 | 1 | bitcoins | 1 | fermats |
-| 2 | bitcoins | 1 | fermats |
-| 3 | bitcoins | 1 | fermats |
+| 2 | bitcoins | 2 | fermats |
+| 3 | bitcoins | 3 | fermats |
 | ... | ........ | ... | ....... |
 | n | bitcoins | m - 1 | bitcoins |
 |   |  | m | OP_RETURN |
