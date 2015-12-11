@@ -12,6 +12,10 @@ import org.apache.commons.lang.Validate;
  *
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public abstract class ActorIdentity {
 
