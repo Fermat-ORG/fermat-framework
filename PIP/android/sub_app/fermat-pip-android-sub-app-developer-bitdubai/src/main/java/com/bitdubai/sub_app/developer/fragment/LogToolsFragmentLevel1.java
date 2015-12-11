@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -113,19 +114,16 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
 
 
 
-    private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
+    private void changeLogLevel(PluginVersionReference pluginKey,LogLevel logLevel, String resource) {
+
         try {
-            //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
-            Plugins plugin = Plugins.getByCode(pluginKey);
 
-
-            //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
             data.put(resource, logLevel);
-            logTool.setNewLogLevelInClass(plugin, data);
+            logTool.setNewLogLevelInClass(pluginKey, data);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -269,7 +267,7 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
 
-                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginVersionReference);
                         cdd.show();
 
                         return true;
@@ -378,7 +376,7 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
 
 
         private Loggers logger;
-        private String pluginKey;
+        private PluginVersionReference pluginKey;
         public Activity c;
         public Dialog d;
 
@@ -399,7 +397,7 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
                 0
         };
 
-        public CustomDialogClass(Activity a,Loggers loggers,String pluginKey) {
+        public CustomDialogClass(Activity a,Loggers loggers,PluginVersionReference pluginKey) {
             super(a);
             this.logger=loggers;
             this.pluginKey=pluginKey;
