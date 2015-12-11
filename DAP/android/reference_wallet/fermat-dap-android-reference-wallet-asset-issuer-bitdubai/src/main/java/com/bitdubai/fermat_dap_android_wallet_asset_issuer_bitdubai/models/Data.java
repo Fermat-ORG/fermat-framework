@@ -17,6 +17,7 @@ public class Data {
         DigitalAsset digitalAsset;
         for (AssetIssuerWalletList asset : assets) {
             digitalAsset = new DigitalAsset();
+            digitalAsset.setAssetPublicKey(asset.getAssetPublicKey());
             digitalAsset.setName(asset.getName());
             digitalAsset.setAvailableBalance(asset.getQuantityAvailableBalance());
             digitalAsset.setBookBalance(asset.getQuantityBookBalance());
