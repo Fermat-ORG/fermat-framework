@@ -96,7 +96,10 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
         }
     }
 
-    protected abstract ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory();
+    protected ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory() {
+
+        return new ActorConnectionDatabaseFactory(pluginDatabaseSystem);
+    }
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- * The abstract class <code>com.bitdubai.fermat_api.layer.actor_connection.common.database.ActorConnectionDatabaseFactory</code>
+ * The class <code>com.bitdubai.fermat_api.layer.actor_connection.common.database.ActorConnectionDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
@@ -25,7 +25,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnectionDatabaseFactory {
+public class ActorConnectionDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
 

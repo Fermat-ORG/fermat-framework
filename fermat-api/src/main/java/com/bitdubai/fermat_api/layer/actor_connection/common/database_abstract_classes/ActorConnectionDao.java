@@ -101,7 +101,10 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
         }
     }
 
-    protected abstract ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory();
+    protected ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory() {
+
+        return new ActorConnectionDatabaseFactory(pluginDatabaseSystem);
+    }
 
     public final DatabaseTable getActorConnectionsTable() {
 
