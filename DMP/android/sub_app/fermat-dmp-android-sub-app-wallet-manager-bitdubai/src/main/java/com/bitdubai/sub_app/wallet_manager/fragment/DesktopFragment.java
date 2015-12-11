@@ -405,7 +405,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     WalletType.REFERENCE,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
-                    "crypto_customer",
+                    "banking_wallet",
                     "Banking Wallet",
                     "banking_wallet",
                     "wallet_banking_platform_identifier",
