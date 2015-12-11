@@ -72,9 +72,9 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(walletSession.getAppPublicKey());
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            errorManager = appSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -207,8 +207,8 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        walletSession.setData("contract_data", data);
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS, walletSession.getAppPublicKey());
+        appSession.setData("contract_data", data);
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override

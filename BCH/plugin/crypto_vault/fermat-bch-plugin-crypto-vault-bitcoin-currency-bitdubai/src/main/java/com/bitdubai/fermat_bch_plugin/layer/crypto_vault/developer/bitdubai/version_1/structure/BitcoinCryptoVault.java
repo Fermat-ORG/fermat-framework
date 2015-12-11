@@ -43,6 +43,7 @@ import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
@@ -56,6 +57,7 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.store.BlockStore;
@@ -72,6 +74,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -225,6 +229,7 @@ public class BitcoinCryptoVault implements
      * @throws CantCreateCryptoWalletException
      */
     private void createNewVault() throws CantCreateCryptoWalletException {
+        //TODO: esto lo hice para probar y funcionó, despues lo cambio porque no me corria lo otro
         vault = new Wallet(networkParameters);
         try {
             PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userPublicKey.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
@@ -238,6 +243,8 @@ public class BitcoinCryptoVault implements
             throw new CantCreateCryptoWalletException("There was an error trying to create a new Vault." ,cantCreateFileException, "Vault filename: " + vaultFileName, "Not enought space on disk?");
         } catch (CantPersistFileException e) {
             throw new CantCreateCryptoWalletException("There was an error trying to save the Vault into a file." ,e, "Vault filename: " + vaultFileName, "Not enought space on disk?");
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -352,7 +359,8 @@ public class BitcoinCryptoVault implements
         try{
             vault.autosaveToFile(vaultFile, 500, TimeUnit.MILLISECONDS, null);
             vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
-            vault.addEventListener(vaultEventListeners);
+            ExecutorService executor = Executors.newFixedThreadPool(3);
+            vault.addEventListener(vaultEventListeners,executor);
         }catch(Exception exception){
             throw new CantCreateCryptoWalletException(CantCreateCryptoWalletException.DEFAULT_MESSAGE,exception,null,"Unchecked exception, chech the cause");
         }

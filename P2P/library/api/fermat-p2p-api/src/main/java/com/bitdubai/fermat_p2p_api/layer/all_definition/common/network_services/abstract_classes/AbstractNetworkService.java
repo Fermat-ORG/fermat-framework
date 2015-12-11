@@ -64,6 +64,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         return register;
     }
 
+    public void setRegister(boolean register) {
+        this.register = register;
+    }
+
     public abstract String getIdentityPublicKey();
 
     public final String getName() {

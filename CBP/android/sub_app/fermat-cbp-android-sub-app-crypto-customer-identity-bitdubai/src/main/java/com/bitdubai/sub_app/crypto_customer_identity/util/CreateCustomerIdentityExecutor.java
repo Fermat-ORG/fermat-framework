@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.crypto_customer_identity.util;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
@@ -37,7 +38,7 @@ public class CreateCustomerIdentityExecutor {
         identity = null;
     }
 
-    public CreateCustomerIdentityExecutor(SubAppsSession session, String identityName, byte[] imageInBytes) {
+    public CreateCustomerIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) {
         this(imageInBytes, identityName);
         identity = null;
 

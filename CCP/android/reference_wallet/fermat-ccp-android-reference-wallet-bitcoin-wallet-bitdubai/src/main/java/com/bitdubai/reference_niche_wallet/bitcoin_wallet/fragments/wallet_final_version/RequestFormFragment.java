@@ -23,8 +23,12 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -75,7 +79,7 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
@@ -196,19 +200,34 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
             } else if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
                 Toast.makeText(getActivity(), "We can't find an address for the contact yet.", Toast.LENGTH_LONG).show();
             } else {
-                cryptoWallet.sendCryptoPaymentRequest(
-                        cryptoWalletWalletContact.getWalletPublicKey(),
-                        intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
+                String identityPublicKey = intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey();
+
+                CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+                        identityPublicKey,
                         Actors.INTRA_USER,
                         cryptoWalletWalletContact.getActorPublicKey(),
                         cryptoWalletWalletContact.getActorType(),
-                        cryptoWalletWalletContact.getReceivedCryptoAddress().get(0),
+                        Platforms.CRYPTO_CURRENCY_PLATFORM,
+                        VaultType.CRYPTO_CURRENCY_VAULT,
+                        CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                        appSession.getAppPublicKey(),
+                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                        );
+                cryptoWallet.sendCryptoPaymentRequest(
+                        cryptoWalletWalletContact.getWalletPublicKey(),
+                        identityPublicKey,
+                        Actors.INTRA_USER,
+                        cryptoWalletWalletContact.getActorPublicKey(),
+                        cryptoWalletWalletContact.getActorType(),
+                        cryptoAddress,
                         txt_notes.getText().toString(),
                         Long.valueOf(editTextAmount.getText().toString()),
                         BlockchainNetworkType.DEFAULT,
                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
 
                 );
+
+
             }
 
         } catch (Exception e) {

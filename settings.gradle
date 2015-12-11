@@ -23,6 +23,8 @@ include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
 
+include ':fermat_linux_core'
+
 
 include ':fermat-cry-api'
 project(':fermat-cry-api').projectDir = new File('CRY/library/api/fermat-cry-api')

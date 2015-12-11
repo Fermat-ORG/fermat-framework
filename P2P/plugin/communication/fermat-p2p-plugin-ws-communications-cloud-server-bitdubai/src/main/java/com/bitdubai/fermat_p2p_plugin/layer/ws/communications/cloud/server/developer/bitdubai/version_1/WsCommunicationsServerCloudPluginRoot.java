@@ -34,7 +34,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 import org.java_websocket.WebSocketImpl;
 
 import java.net.Inet6Address;

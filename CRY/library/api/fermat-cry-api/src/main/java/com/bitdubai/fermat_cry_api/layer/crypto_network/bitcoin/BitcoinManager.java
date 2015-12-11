@@ -45,4 +45,5 @@ public interface BitcoinManager extends FermatManager {
 
 
 
+
 }

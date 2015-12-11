@@ -71,6 +71,8 @@ public class BottomNavigation implements  OnStartDragListener {
     }
 
     public void reset(){
+        recyclerView.clearOnChildAttachStateChangeListeners();
+        recyclerView.clearOnScrollListeners();
         adapter =null;
         desktopHolderClickCallback = null;
         activity = null;

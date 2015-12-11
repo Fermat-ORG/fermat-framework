@@ -267,6 +267,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (InvalidSendToAddressException | CouldNotSendMoneyException e) {
                         try {
                             dao.cancelTransaction(transaction);
+                            roolback(transaction);
                             reportUnexpectedException(e);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
                             reportUnexpectedException(e1);

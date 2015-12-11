@@ -114,7 +114,7 @@ public class AvailableProjectsFragment extends FermatFragment
         super.onCreate(savedInstanceState);
         try {
             // setting up wallet manager
-            setManager(((WalletFactorySubAppSession) subAppsSession).getWalletFactoryManager());
+            setManager(((WalletFactorySubAppSession) appSession).getWalletFactoryManager());
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
