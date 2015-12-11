@@ -11,23 +11,23 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeDolartodayProviderDatabaseException extends FermatException {
+public class CantInitializeDollarTodayProviderDatabaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE DOLARTODAY PROVIDER DATABASE EXCEPTION";
 
-    public CantInitializeDolartodayProviderDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantInitializeDollarTodayProviderDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantInitializeDolartodayProviderDatabaseException(final String message, final Exception cause) {
+    public CantInitializeDollarTodayProviderDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantInitializeDolartodayProviderDatabaseException(final String message) {
+    public CantInitializeDollarTodayProviderDatabaseException(final String message) {
         this(message, null);
     }
 
-    public CantInitializeDolartodayProviderDatabaseException() {
+    public CantInitializeDollarTodayProviderDatabaseException() {
         this(DEFAULT_MESSAGE);
     }
 }

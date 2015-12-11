@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolartodayProviderDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDollarTodayProviderDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -53,7 +53,7 @@ public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPlug
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public DolartodayProviderDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public DollarTodayProviderDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -61,9 +61,9 @@ public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPlug
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeDolartodayProviderDatabaseException
+     * @throws CantInitializeDollarTodayProviderDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeDolartodayProviderDatabaseException {
+    public void initializeDatabase() throws CantInitializeDollarTodayProviderDatabaseException {
         try {
 
              /*
@@ -76,7 +76,7 @@ public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPlug
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeDolartodayProviderDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeDollarTodayProviderDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -95,7 +95,7 @@ public class DolartodayProviderDeveloperDatabaseFactory implements DealsWithPlug
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeDolartodayProviderDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeDollarTodayProviderDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }

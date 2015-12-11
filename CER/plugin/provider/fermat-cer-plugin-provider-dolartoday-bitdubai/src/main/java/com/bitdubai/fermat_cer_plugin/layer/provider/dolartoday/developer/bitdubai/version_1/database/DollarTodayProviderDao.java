@@ -16,7 +16,7 @@ import com.bitdubai.fermat_cer_api.all_definition.enums.Currency;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantCreateExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolartodayProviderDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDollarTodayProviderDatabaseException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.ExchangeRateImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/7/2015.
  */
-public class DolartodayProviderDao {
+public class DollarTodayProviderDao {
 
 
     private final ErrorManager errorManager;
@@ -38,14 +38,14 @@ public class DolartodayProviderDao {
 
     private Database database;
 
-    public DolartodayProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
+    public DollarTodayProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
     }
 
 
-    public void initialize() throws CantInitializeDolartodayProviderDatabaseException {
+    public void initialize() throws CantInitializeDollarTodayProviderDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
         } catch (DatabaseNotFoundException e) {
@@ -54,14 +54,14 @@ public class DolartodayProviderDao {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeDolartodayProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+                throw new CantInitializeDollarTodayProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
             }
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeDolartodayProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+            throw new CantInitializeDollarTodayProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeDolartodayProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+            throw new CantInitializeDollarTodayProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         }
     }
 
