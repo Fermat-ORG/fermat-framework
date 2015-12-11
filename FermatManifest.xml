@@ -7711,7 +7711,7 @@
 					platform="CCP"
 					superlayer=""
 					layer="Reference Wallet"
-					name="Reference Bitcoin Wallet"
+					name="Bitcoin Wallet"
 					>
 					<next>
 						<step id="1" type="direct call"></step>
@@ -7725,7 +7725,7 @@
 					superlayer=""
 					component="Plugin"
 					layer="Wallet Module"
-					name="Crypto Wallet Module"
+					name="Crypto Wallet"
 					>
 					<next>
 						<step id="2" type="direct call"></step>
@@ -7751,6 +7751,7 @@
 					description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network."
 					platform="CCP"
 					superlayer=""
+					component="Plugin"
 					layer="Network Service"
 					name="Crypto Payment Request"
 					>
@@ -7777,8 +7778,9 @@
 					description="The network service receives the payment request and informs that to Request Crypto Payment Plugin."
 					platform="CCP"
 					superlayer=""
+					component="Plugin"
 					layer="Network Service"
-					name="Crypto Payment Request network services"
+					name="Crypto Payment Request"
 					>
 					<next>
 						<step id="5" type="event"></step>
@@ -7790,8 +7792,9 @@
 					description="The payment request is saved with the type received and associated to intra user actor ."
 					platform="CCP"
 					superlayer=""
+					component="Plugin"
 					layer="Request"
-					name="Crypto Payment Request"
+					name="Crypto Payment"
 					>
 					<next>
 						<step id="6" type="direct call"></step>
@@ -7799,16 +7802,28 @@
 				</step>
 				<step id="6"
 					type="activity"
+					title="Return payment request list"
+					description="The module returns the payement request receive list."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Wallet Module"
+					name="Crypto Wallet"
+					>
+					<next>
+						<step id="7" type="direct call"></step>
+					</next>
+				</step>
+				<step id="6"
+					type="end"
 					title="List Received Payment Request"
 					description="The wallet's user go to Payment Request menu and list payment request receive."
 					platform="CCP"
 					superlayer=""
 					layer="Reference Wallet"
-					name="Reference Bitcoin Wallet"
+					name="Bitcoin Wallet"
 					>
-					<next>
-						<step id="7" type="event"></step>
-					</next>
+
 				</step>
 
 			</steps>
