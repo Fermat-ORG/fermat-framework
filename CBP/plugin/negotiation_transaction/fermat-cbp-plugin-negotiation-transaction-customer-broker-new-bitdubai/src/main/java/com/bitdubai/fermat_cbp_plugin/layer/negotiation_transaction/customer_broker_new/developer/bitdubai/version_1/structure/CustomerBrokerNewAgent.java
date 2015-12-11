@@ -2,27 +2,47 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.events.NewNegotiationTransactionNewEvent;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantSendConfirmationNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantSendCustomerBrokerNewNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.NegotiationPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.NegotiationSaleRecord;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerNewPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -139,69 +159,161 @@ public class CustomerBrokerNewAgent implements
     private class MonitorAgent implements Runnable {
 
         private volatile boolean agentRunning;
-        private static final int WAIT_TIME = 5 * 1000; //SECONDS
-
+        private CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
+        public final int SLEEP_TIME = 5000;
+        int iterationNumber = 0;
+        boolean threadWorking;
         public MonitorAgent() {
             startAgent();
         }
-
+        
+        /*INNER CLASS PUBLIC METHOD*/
         @Override
         public void run() {
-            /*while (agentRunning) {
+            
+            threadWorking=true;
+            logManager.log(NegotiationTransactionCustomerBrokerNewPluginRoot.getLogLevelByClass(this.getClass().getName()),
+                    "Customer Broker New Monitor Agent: running...", null, null);
+            while(threadWorking){
+                //Increase the iteration counter
+                iterationNumber++;
                 try {
+                    Thread.sleep(SLEEP_TIME);
+                } catch (InterruptedException interruptedException) {
+                    return;
+                }
+
+                //now I will check if there are pending transactions to raise the event
+                try {
+                    logManager.log(NegotiationTransactionCustomerBrokerNewPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                    Thread.sleep(WAIT_TIME);
-                } catch (InterruptedException e) {
-                    //If this happen there's a chance that the information remains
-                    //in a corrupt state. That probably would be fixed in a next run.
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } catch (CantSendCustomerBrokerNewNegotiationTransactionException | CantSendConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
+
             }
-
-            latch.countDown();*/
+        }
+        
+        public void Initialize() throws CantInitializeCBPAgent {
+            
         }
 
-        private void doTheMainTask() {
-            /*try (CustomerBrokerNewNegotiationTransactionDatabaseDao dao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId)) {
-                for (String eventId : dao.getPendingIssuerNetworkServiceEvents()) {
-                    switch (dao.getEventTypeById(eventId)) {
-                        case NEW_RECEIVE_MESSAGE_ACTOR:
-                            for (DAPMessage message : assetIssuerActorNetworkServiceManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_APPROPRIATION)) {
-                                if (message.getMessageContent() instanceof AssetAppropriationContentMessage) { //Just a security measure, this SHOULD always be true.
-                                    AssetAppropriationContentMessage contentMessage = (AssetAppropriationContentMessage) message.getMessageContent();
-                                    //TODO REMOVE HARDCODE.
-                                    AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
-                                    wallet.assetAppropriated(contentMessage.getDigitalAssetAppropriated().getPublicKey(), contentMessage.getUserThatAppropriate().getActorPublicKey());
-                                }
-                            }
-                            dao.notifyEvent(eventId);
-                            break;
-                        default:
-                            //I can't do anything with this event...
-                            dao.notifyEvent(eventId);
-                            break;
+        public void stopAgent() { agentRunning = false; }
+
+        public void startAgent() { agentRunning = true; }
+
+        public boolean isAgentRunning() { return agentRunning; }
+        /*END INNER CLASS PUBLIC METHOD*/
+        
+        /*INNER CLASS PRIVATE METHOD*/
+        private void doTheMainTask() throws
+                CantSendCustomerBrokerNewNegotiationTransactionException,
+                CantSendConfirmationNegotiationTransactionException,
+                CantUpdateRecordException
+        {
+            try{
+                
+                //Check if exist in database new contracts to send
+                String                  negotiationXML;
+                NegotiationType         negotiationType;
+                UUID                    transactionId;
+                NegotiationTransaction negotiationTransaction;
+                CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation      saleNegotiation     = new NegotiationSaleRecord();
+
+                List<String> negotiationPendingToSubmitList    = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
+                
+                if(!negotiationPendingToSubmitList.isEmpty()){
+                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
+                        System.out.println("Customer Broker New - Negotiation to submit:\n"+negotiationToSubmit);
+
+                        negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getContractXML(negotiationToSubmit);
+                        negotiationType         = customerBrokerNewNegotiationTransactionDatabaseDao.getContractType(negotiationToSubmit);
+                        transactionId           = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
+                        negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+
+                        switch (negotiationType){
+                            case PURCHASE:
+                                //PASAR LA NEGOCIACION
+                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                break;
+                            case SALE:
+                                saleNegotiation = (CustomerBrokerSaleNegotiation)XMLParser.parseXML(negotiationXML,saleNegotiation);
+                                negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                break;
+                        }
+                        
+                        //Update the NegotiationTransactionStatus
+                        customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
                     }
+
                 }
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }*/
+                
+                //Check if pending contract to confirm
+                List<String> contractPendingToConfirmList   = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
+                
+                if(!contractPendingToConfirmList.isEmpty()){
+                    for(String negotiationToSubmit: negotiationPendingToSubmitList){
+                        
+                        System.out.println("Customer Broker New - Negotiation to confirm:\n"+negotiationToSubmit);
+                        
+                        negotiationXML  = customerBrokerNewNegotiationTransactionDatabaseDao.getContractXML(negotiationToSubmit);
+                        negotiationType = customerBrokerNewNegotiationTransactionDatabaseDao.getContractType(negotiationToSubmit);
+                        transactionId   = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
+                        negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+
+                        switch (negotiationType){
+                            case PURCHASE:
+                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
+                                negotiationTransmissionManager.confirmNegotiation(negotiationTransaction,NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                break;
+                            case SALE:
+                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
+                                negotiationTransmissionManager.confirmNegotiation(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                break;
+                        }
+                        //Update the ContractTransactionStatus
+                        customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                    }
+
+                }
+                
+                //Check if pending events
+                List<String> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+                for(String eventId : pendingEventsIdList){
+                    checkPendingEvent(eventId);
+                }
+                
+            } catch (CantGetNegotiationTransactionListException e) {
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot get the Negotiation list from database");
+            } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
+                throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot Update State the Negotiation from database");
+            } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Unexpected result in database");
+            } catch (CantSendNegotiationToCryptoBrokerException e) {
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Error in Negotiation Transmission Network Service");
+            } catch (CantSendNegotiationToCryptoCustomerException e) {
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Error in Negotiation Transmission Network Service");
+            } catch (CantConfirmNegotiationException e) {
+                throw new CantSendConfirmationNegotiationTransactionException(CantSendConfirmationNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Error in Negotiation Transmission Network Service");
+            }
+        }
+        
+        private void raiseNewContractEvent(){
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NEGOTIATION_TRANSACTION_NEW);
+            NewNegotiationTransactionNewEvent newNegotiationTransactionNewEvent = (NewNegotiationTransactionNewEvent) fermatEvent;
+            newNegotiationTransactionNewEvent.setSource(EventSource.NEGOTIATION_TRANSACTION_NEW);
+            eventManager.raiseEvent(newNegotiationTransactionNewEvent);
         }
 
-        public boolean isAgentRunning() {
-            return agentRunning;
+        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+            
         }
-
-        public void stopAgent() {
-            agentRunning = false;
-        }
-
-        public void startAgent() {
-            agentRunning = true;
-        }
+        
+        /*END INNER CLASS PRIVATE METHOD*/
 
     }
+    /*END INNER CLASS*/
 
 }

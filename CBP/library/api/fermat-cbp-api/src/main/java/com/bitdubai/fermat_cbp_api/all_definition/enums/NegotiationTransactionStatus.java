@@ -10,6 +10,8 @@ public enum NegotiationTransactionStatus implements FermatEnum {
     PENDING_CONFIRMATION    ("PEC"),
     PENDING_RESPONSE        ("PER"),
     PENDING_SUBMIT          ("PES"),
+    SENDING_NEGOTIATION     ("SDN"),
+    CONFIRM_NEGOTIATION     ("CFN")
     ;
 
     private String code;
@@ -28,6 +30,8 @@ public enum NegotiationTransactionStatus implements FermatEnum {
             case "PEC": return NegotiationTransactionStatus.PENDING_CONFIRMATION;
             case "PER": return NegotiationTransactionStatus.PENDING_RESPONSE;
             case "PES": return NegotiationTransactionStatus.PENDING_SUBMIT;
+            case "SDN": return NegotiationTransactionStatus.SENDING_NEGOTIATION;
+            case "CFN": return NegotiationTransactionStatus.CONFIRM_NEGOTIATION;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NegotiationTransactionStatus enum");
         }
     }

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -40,14 +42,18 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by Yordin Alayn on 23.11.15.
  */
 
 public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractPlugin implements
-        DatabaseManagerForDevelopers {
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -102,6 +108,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
     /*Represent Service Event Handler*/
     private CustomerBrokerNewServiceEventHandler                            customerBrokerNewServiceEventHandler;
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     public NegotiationTransactionCustomerBrokerNewPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -188,6 +196,44 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         }
     }
     /*END IMPLEMENTATION DatabaseManagerForDevelopers.*/
+
+    /*IMPLEMENTATION LogManagerForDevelopers*/
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerNewPluginRoot");
+        return returnedClasses;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+
+        //I will check the current values and update the LogLevel in those which is different
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+
+            //if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+            if (NegotiationTransactionCustomerBrokerNewPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                NegotiationTransactionCustomerBrokerNewPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                NegotiationTransactionCustomerBrokerNewPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                NegotiationTransactionCustomerBrokerNewPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+    }
+
+    public static LogLevel getLogLevelByClass(String className) {
+        try{
+            //sometimes the classname may be passed dynamically with an $moretext. I need to ignore whats after this.
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return NegotiationTransactionCustomerBrokerNewPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            //If I couldn't get the correct logging level, then I will set it to minimal.
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+
+    /*END IMPLEMENTATION LogManagerForDevelopers*/
 
     /*PUBLIC METHOD*/
     private void initializeDb() throws CantInitializeDatabaseException {
