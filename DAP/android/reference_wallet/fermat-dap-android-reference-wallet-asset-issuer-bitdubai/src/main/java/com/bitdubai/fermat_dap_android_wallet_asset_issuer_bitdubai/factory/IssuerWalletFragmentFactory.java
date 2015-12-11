@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory;
 
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
@@ -8,10 +9,10 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.Ma
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 
-
-public class IssuerWalletFragmentFactory extends FermatWalletFragmentFactory<AssetIssuerSession, WalletSettings, WalletAssetIssuerFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
+public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssuerSession, WalletSettings,WalletResourcesProviderManager, WalletAssetIssuerFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
 
 
     @Override

@@ -48,8 +48,8 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetIssuer
 
         try {
             // setting up  module
-            moduleManager = ((IssuerIdentitySubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((IssuerIdentitySubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -66,7 +66,7 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetIssuer
             newIdentityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    changeActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
                 }
             });
 

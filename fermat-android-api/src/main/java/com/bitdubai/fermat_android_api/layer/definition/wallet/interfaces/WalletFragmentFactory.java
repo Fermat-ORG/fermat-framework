@@ -13,7 +13,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
  *
  * @author Matias Furszyfer
  */
-public interface WalletFragmentFactory<S extends WalletSession,J extends WalletSettings> {
+public interface WalletFragmentFactory<S extends FermatSession,J extends WalletSettings> {
 
     /**
      * This method takes a reference (string) to a fragment and returns the corresponding fragment.

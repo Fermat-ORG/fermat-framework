@@ -16,7 +16,7 @@ import java.util.Locale;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
- * Created by nelson on 28/10/15.
+ * Created by Matias Furszyfer on 28/10/15.
  */
 public class TransactionViewHolder extends ChildViewHolder {
 

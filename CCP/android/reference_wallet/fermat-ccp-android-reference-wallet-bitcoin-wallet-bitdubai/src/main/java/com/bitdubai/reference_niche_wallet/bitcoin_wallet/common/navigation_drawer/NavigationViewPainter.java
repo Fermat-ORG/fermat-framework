@@ -1,8 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
@@ -57,8 +56,19 @@ public class NavigationViewPainter implements com.bitdubai.fermat_android_api.en
     }
 
     @Override
-    public Drawable addBodyBackground() {
-        return ContextCompat.getDrawable(activity.getApplicationContext(),R.drawable.bg_drawer_body);
+    public Bitmap addBodyBackground() {
+        Bitmap drawable = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = true;
+            options.inSampleSize = 5;
+            drawable = BitmapFactory.decodeResource(
+                    activity.getResources(), R.drawable.bg_drawer_body,options);
+            //drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
+        }catch (OutOfMemoryError error){
+            error.printStackTrace();
+        }
+        return drawable;
     }
 
     @Override
@@ -69,5 +79,10 @@ public class NavigationViewPainter implements com.bitdubai.fermat_android_api.en
     @Override
     public RecyclerView.ItemDecoration addItemDecoration(){
         return null;
+    }
+
+    @Override
+    public boolean hasBodyBackground() {
+        return true;
     }
 }

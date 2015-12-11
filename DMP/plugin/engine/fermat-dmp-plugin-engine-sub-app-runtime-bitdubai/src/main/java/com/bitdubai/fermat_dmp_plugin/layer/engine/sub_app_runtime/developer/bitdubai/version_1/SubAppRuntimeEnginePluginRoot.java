@@ -563,7 +563,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
+            runtimeMenuItem.setLabel("Your connections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -584,7 +584,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             subAppIntraUser.addActivity(runtimeActivity);
 
-            // Activity: Connection friend list
+            // Activity: Connection
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
@@ -597,7 +597,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Friend List");
+            runtimeTitleBar.setLabel("Connections");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#0072bb");
@@ -623,7 +623,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
+            runtimeMenuItem.setLabel("Your connections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -683,7 +683,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
+            runtimeMenuItem.setLabel("Your connections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -743,7 +743,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Your conections");
+            runtimeMenuItem.setLabel("Your connections");
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);

@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +26,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -54,8 +54,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
@@ -67,9 +67,11 @@ import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerPro
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -122,9 +124,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -141,6 +140,7 @@ import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -225,7 +225,9 @@ public abstract class FermatActivity extends AppCompatActivity
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private NavigationViewPainter navigationViewPainter;
     private FooterViewPainter footerViewPainter;
+    private HeaderViewPainter headerViewPainter;
     private BottomNavigation bottomNavigation;
+
 
     /**
      * Called when the activity is first created
@@ -381,9 +383,11 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
-            paintSideMenu(activity,sideMenu);
+            paintSideMenu(activity, sideMenu);
 
             paintFooter(activity.getFooter());
+
+            pantHeader(activity.getHeader());
 
             setScreen(activity);
         } catch (Exception e) {
@@ -402,6 +406,15 @@ public abstract class FermatActivity extends AppCompatActivity
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+        }
+    }
+
+    private void pantHeader(FermatHeader header) {
+        if(header!=null){
+            if(header.hasExpandable()){
+                headerViewPainter.addExpandableHeader(getToolbarHeader());
+            }
+
         }
     }
 
@@ -482,20 +495,39 @@ public abstract class FermatActivity extends AppCompatActivity
                     /**
                      * Background color
                      */
-                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
+                    final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
                     if(relativeLayout!=null) {
-                        if (navigationViewPainter.addBodyBackground() != null) {
-                            relativeLayout.setBackground(navigationViewPainter.addBodyBackground());
-                        } else if (navigationViewPainter.addBodyBackgroundColor() > 0) {
+                        if(navigationViewPainter.hasBodyBackground()){
+                            AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
+
+                                WeakReference<ViewGroup> view;
+
+                                @Override
+                                protected void onPreExecute() {
+                                    view = new WeakReference(relativeLayout) ;
+                                }
+
+                                @Override
+                                protected Bitmap doInBackground(Void... params) {
+                                    return navigationViewPainter.addBodyBackground();
+                                }
+
+                                @Override
+                                protected void onPostExecute(Bitmap drawable) {
+                                    if (drawable!= null) {
+                                        view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                                    }
+                                }
+                            } ;
+                            asyncTask.execute();
+                        }
+
+                        if(navigationViewPainter.addBodyBackgroundColor() > 0) {
                             relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
                         }
                     }
-
-
-
-
-                    navigationView.invalidate();
-                }
+                    //navigationView.invalidate();
+            }
 
             } else {
                 mToolbar.setNavigationIcon(R.drawable.ic_action_back);
@@ -670,7 +702,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Method used from a Wallet to paint tabs
      */
-    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, WalletSession walletSession) {
+    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, AbstractFermatSession walletSession) {
 
         //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
         //pagerSlidingTabStrip.setShouldExpand(true);
@@ -691,6 +723,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     getResources());
             pagertabs.setAdapter(adapterWithIcons);
         } else {
+
             adapter = new TabsPagerAdapter(getFragmentManager(),
                     getApplicationContext(),
                     WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
@@ -876,14 +909,14 @@ public abstract class FermatActivity extends AppCompatActivity
                         public void onDrawerOpened(View drawerView) {
                             super.onDrawerOpened(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
                         public void onDrawerClosed(View drawerView) {
                             super.onDrawerClosed(drawerView);
                             //setTitle(mTitle);
-                            invalidateOptionsMenu();
+                            //invalidateOptionsMenu();
                         }
 
                         @Override
@@ -1106,7 +1139,6 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void resetThisActivity() {
 
         try {
-
             //clean page adapter
 
             ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -1128,6 +1160,23 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
+
+            removecallbacks();
+
+            onRestart();
+
+        } catch (Exception e) {
+
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+    }
+
+    protected void removecallbacks() {
+
+        try {
 
             this.getNotificationManager().deleteObserver(this);
 
@@ -1167,8 +1216,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
-            onRestart();
-
         } catch (Exception e) {
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -1177,7 +1224,6 @@ public abstract class FermatActivity extends AppCompatActivity
                     LENGTH_LONG).show();
         }
     }
-
 
     /**
      * Initialise the fragments to be paged
@@ -1272,29 +1318,32 @@ public abstract class FermatActivity extends AppCompatActivity
             }
 
             if (pager.getBackground() == null) {
-                //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
-                //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
-                //pager.setBackground(d);
-                //getWindow().addFlags(WindowManager.LayoutParams.);
-                if(Build.VERSION.SDK_INT>20) {
-                    getWindow().setStatusBarColor(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    getWindow().setStatusBarColor(Color.TRANSPARENT);
+                if(ApplicationSession.applicationState==ApplicationSession.STATE_STARTED) {
+                    //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                    //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
+                    //pager.setBackground(d);
+                    //getWindow().addFlags(WindowManager.LayoutParams.);
+                    if (Build.VERSION.SDK_INT > 20) {
+                        getWindow().setStatusBarColor(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    }
+                    final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+                    Drawable wallpaperDrawable = null;
+                    if (Build.VERSION.SDK_INT > 19)
+                        wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
+
+                    Display display = getWindowManager().getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
+                            WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
+
+                    //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
+
+                    //getWindow().setBackgroundDrawable(scaleDrawable);
+                    ApplicationSession.applicationState = ApplicationSession.STATE_STARTED_DESKTOP;
                 }
-                final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-                Drawable wallpaperDrawable = null;
-                if(Build.VERSION.SDK_INT>19)
-                    wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
-
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
-                        WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-
-                //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
-
-                //getWindow().setBackgroundDrawable(scaleDrawable);
             }
 
 
@@ -2171,7 +2220,14 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     public void addNavigationView(NavigationViewPainter navigationViewPainter) {
         this.navigationViewPainter = navigationViewPainter;
-        invalidate();
+        if(activityType.equals(ActivityType.ACTIVITY_TYPE_WALLET)){
+            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+            Activity activity = walletNavigationStructure.getLastActivity();
+            paintSideMenu(activity,activity.getSideMenu());
+        }else{
+            invalidate();
+        }
+
     }
 
     /**
