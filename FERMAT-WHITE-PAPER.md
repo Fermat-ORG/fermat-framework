@@ -76,7 +76,7 @@ Each node interconnects clients between each other in order to let them freely t
 
 #### Maintain the Fermat Blockchain
 
-Each node maintains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new fermats. This role is ruled by the Fermat Consensus Protocol.
+Each node maintains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new _fermats_, the native token of the Fermat System. This role is ruled by the Fermat Consensus Protocol.
 
 ### Fermat Clients
 
