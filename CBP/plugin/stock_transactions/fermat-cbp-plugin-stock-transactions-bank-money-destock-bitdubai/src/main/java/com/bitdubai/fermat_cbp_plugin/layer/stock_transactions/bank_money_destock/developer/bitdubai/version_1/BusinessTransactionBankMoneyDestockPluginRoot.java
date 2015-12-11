@@ -81,7 +81,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
     @Override
     public void start() throws CantStartPluginException {
-
+        stockTransactionBankMoneyDestockManager = new StockTransactionBankMoneyDestockManager(pluginDatabaseSystem, pluginId);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
 
@@ -116,7 +116,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
     @Override
     public FermatManager getManager() {
-        return new StockTransactionBankMoneyDestockManager(pluginDatabaseSystem, pluginId);
+        return stockTransactionBankMoneyDestockManager;
     }
 
     @Override

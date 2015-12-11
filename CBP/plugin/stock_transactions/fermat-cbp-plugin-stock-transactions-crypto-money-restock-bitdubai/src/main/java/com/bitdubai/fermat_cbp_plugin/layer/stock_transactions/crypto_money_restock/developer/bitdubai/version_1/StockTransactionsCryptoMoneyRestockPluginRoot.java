@@ -82,7 +82,7 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
 
     @Override
     public void start() throws CantStartPluginException {
-
+        stockTransactionCryptoMoneyRestockManager = new StockTransactionCryptoMoneyRestockManager(pluginDatabaseSystem, pluginId);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_DATABASE_NAME);
 
@@ -118,7 +118,7 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
 
     @Override
     public FermatManager getManager() {
-        return new StockTransactionCryptoMoneyRestockManager(pluginDatabaseSystem, pluginId);
+        return stockTransactionCryptoMoneyRestockManager;
     }
 
     @Override

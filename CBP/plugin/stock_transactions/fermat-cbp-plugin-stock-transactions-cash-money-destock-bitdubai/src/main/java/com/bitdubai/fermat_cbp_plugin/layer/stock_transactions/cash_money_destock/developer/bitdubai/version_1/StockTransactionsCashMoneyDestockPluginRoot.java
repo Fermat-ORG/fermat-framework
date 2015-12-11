@@ -81,7 +81,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
     @Override
     public void start() throws CantStartPluginException {
-
+        stockTransactionCashMoneyDestockManager = new StockTransactionCashMoneyDestockManager(pluginDatabaseSystem, pluginId);
        try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
 
@@ -117,7 +117,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
     @Override
     public FermatManager getManager() {
-        return new StockTransactionCashMoneyDestockManager(pluginDatabaseSystem, pluginId);
+        return stockTransactionCashMoneyDestockManager;
     }
 
     @Override
