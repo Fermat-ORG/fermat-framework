@@ -251,7 +251,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 //get transactions from actor public key to send me btc
                 for (CryptoWalletTransaction cryptoWalletTransaction : list) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
-                    lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorFromPublicKey(), intraUserPk,MAX_TRANSACTIONS, 0);
+                    lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk,MAX_TRANSACTIONS, 0);
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
                 }
