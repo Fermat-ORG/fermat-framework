@@ -28,6 +28,8 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -292,13 +294,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
 
-    public void confirmReception(UUID transmissionId) throws CantConfirmReceptionException {
+    public void confirmReception(UUID transmissionId) throws CantConfirmTransactionException {
         try{
             databaseDao.confirmReception(transmissionId);
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantConfirmReceptionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
+            throw new CantConfirmTransactionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
         } catch (Exception e){
-            throw new CantConfirmReceptionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", "ERROR SEND CONFIRM THE RECEPTION, UNKNOWN FAILURE.");
+            throw new CantConfirmTransactionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", "ERROR SEND CONFIRM THE RECEPTION, UNKNOWN FAILURE.");
         }
     }
 
@@ -319,7 +321,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
 
-    public List<Transaction<NegotiationTransmission>> getPendingTransactions(Specialist specialist) throws CantGetPendingTransactionException{
+    public List<Transaction<NegotiationTransmission>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         List<Transaction<NegotiationTransmission>> pendingTransaction=new ArrayList<>();
         try {
 
@@ -341,9 +343,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             return pendingTransaction;
 
         } catch (CantReadRecordDataBaseException e) {
-            throw new CantGetPendingTransactionException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
+            throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
         } catch (Exception e) {
-            throw new CantGetPendingTransactionException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
+            throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING NOTIFICATIONS",e, "Negotiation Transmission network service", "database error");
 
         }
     }
