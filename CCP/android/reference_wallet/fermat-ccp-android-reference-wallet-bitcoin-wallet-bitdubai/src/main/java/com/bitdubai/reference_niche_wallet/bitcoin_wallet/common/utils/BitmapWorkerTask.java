@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 
-class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
+public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
 
     private final WeakReference<ImageView> imageViewReference;
     private final Resources res;

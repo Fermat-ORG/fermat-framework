@@ -1,11 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.view.View;
 import android.view.animation.RotateAnimation;
@@ -18,8 +15,9 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 import com.squareup.picasso.Picasso;
-import java.lang.ref.WeakReference;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
