@@ -175,7 +175,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     public void onItemClickListener(CryptoWalletIntraUserActor data, int position) {
         //intraUserIdentitySubAppSession.setData(SessionConstants.IDENTITY_SELECTED,data);
         //changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-
+        data.setSelected(!data.isSelected());
+        adapter.notifyDataSetChanged();
 
     }
 

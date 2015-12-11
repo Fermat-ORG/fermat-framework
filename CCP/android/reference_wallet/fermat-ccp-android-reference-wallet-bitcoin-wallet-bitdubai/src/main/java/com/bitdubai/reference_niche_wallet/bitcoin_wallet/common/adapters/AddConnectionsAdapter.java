@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.View;
 
@@ -51,5 +52,13 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
         }
 
         holder.getThumbnail().setImageBitmap(roundedBitmap.getBitmap());
+
+        if(data.isSelected()){
+            holder.getContainer_data().setBackgroundColor(Color.parseColor("#dcf6f7"));
+        }else{
+            holder.getContainer_data().setBackgroundColor(Color.parseColor("#ffffff"));
+
+        }
     }
+
 }
