@@ -120,6 +120,8 @@ dependencies {
     compile project(':fermat-dap-android-sub-app-redeem-point-identity-bitdubai')
     //BNK wallets
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
+    //CSH wallet
+    compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
 //    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:appcompat-v7:21.0.3'

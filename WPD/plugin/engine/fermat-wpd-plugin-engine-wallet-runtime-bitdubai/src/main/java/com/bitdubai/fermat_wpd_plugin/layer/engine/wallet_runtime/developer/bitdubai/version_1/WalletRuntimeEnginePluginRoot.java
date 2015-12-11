@@ -409,6 +409,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
          * */
         runtimeWalletNavigationStructure = createBankMoneyWalletNavigationStructure();
         setNavigationStructureXml(runtimeWalletNavigationStructure);
+
+        /**
+         * Cash Wallet
+         * */
+        runtimeWalletNavigationStructure = createCashMoneyWalletNavigationStructure();
+        setNavigationStructureXml(runtimeWalletNavigationStructure);
         /**
          * fin asset issuer
          */
@@ -1839,6 +1845,60 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
         runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
+
+        return runtimeWalletNavigationStructure;
+    }
+
+    public WalletNavigationStructure createCashMoneyWalletNavigationStructure(){
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+        TitleBar runtimeTitleBar;
+        StatusBar runtimeStatusBar;
+        Header runtimeHeader;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+
+        final String publicKey = "cash_wallet";
+        final String statusBarColor = "#990c75";
+        final String titleBarLabelColor = "#ffffff";
+        final int titleBarLabelSize = 16;
+
+
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+
+        //Home Activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_HOME);
+        runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_HOME.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(Activities.CSH_CASH_MONEY_WALLET_HOME);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Cash Wallet");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        /*runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(runtimeStatusBar);*/
+
+        /*runtimeHeader = new Header();
+        runtimeHeader.setLabel("Market rate");
+        runtimeActivity.setHeader(runtimeHeader);*/
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
+        runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
 
         return runtimeWalletNavigationStructure;
     }
