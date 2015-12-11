@@ -7,6 +7,6 @@
     <color name="gray">#797979</color>
 
 
-    <color name="dap_wallet_asset_issuer_gradient_start_color">#a60f7f</color>
-    <color name="dap_wallet_asset_issuer_gradient_end_color">#492781</color>
+    <color name="dap_wallet_asset_issuer_gradient_start_color">#2D2733</color>
+    <color name="dap_wallet_asset_issuer_gradient_end_color">#657386</color>
 </resources>

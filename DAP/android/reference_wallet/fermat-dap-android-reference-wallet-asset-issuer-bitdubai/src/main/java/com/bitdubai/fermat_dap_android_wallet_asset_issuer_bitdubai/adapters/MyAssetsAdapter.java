@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders.DigitalAssetViewHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders.MyAssetsViewHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 import java.util.List;
 
@@ -16,13 +17,16 @@ import java.util.List;
  */
 public class MyAssetsAdapter extends FermatAdapter<DigitalAsset, MyAssetsViewHolder> {
 
-    public MyAssetsAdapter(Context context, List<DigitalAsset> digitalAssets) {
+    private AssetIssuerWalletSupAppModuleManager manager;
+
+    public MyAssetsAdapter(Context context, List<DigitalAsset> digitalAssets, AssetIssuerWalletSupAppModuleManager manager) {
         super(context, digitalAssets);
+        this.manager = manager;
     }
 
     @Override
     protected MyAssetsViewHolder createHolder(View itemView, int type) {
-        return new MyAssetsViewHolder(itemView);
+        return new MyAssetsViewHolder(itemView, manager, context);
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,6 +110,11 @@ public class DigitalAsset {
 
     public Date getExpDate() {
         return expDate;
+    }
+
+    public String getFormattedExpDate() {
+        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+        return df.format(expDate);
     }
 
     public void setExpDate(Date expDate) {

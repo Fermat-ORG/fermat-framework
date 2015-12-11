@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -44,7 +46,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
-    private static final String TAG = "MyAssetsActivityFragment1";
+    private static final String TAG = "MyAssetsActivityFragment";
 
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
@@ -93,7 +95,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         super.onActivityCreated(savedInstanceState);
 
         try {
-            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity());
+            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity(), null);
             getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -103,18 +105,23 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
+        if (toolbar != null) {
+//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setBackgroundColor(Color.TRANSPARENT);
+            toolbar.setBottom(Color.WHITE);
+//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+//                Window window = getActivity().getWindow();
+//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
+//            }
+            Drawable drawable = null;
+            //TODO uncomment
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
+            else
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
 
-        Drawable drawable = null;
-        //TODO uncomment
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
-        else
-            drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-
-        toolbar.setBackground(drawable);
-
-        if (toolbar.getMenu() != null) {
-            toolbar.getMenu().clear();
+            toolbar.setBackground(drawable);
         }
     }
 
@@ -170,7 +177,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new MyAssetsAdapter(getActivity(), digitalAssets);
+            adapter = new MyAssetsAdapter(getActivity(), digitalAssets, moduleManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -187,7 +194,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         walletSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, walletSession.getAppPublicKey());
+//        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, walletSession.getAppPublicKey());
     }
 
     @Override

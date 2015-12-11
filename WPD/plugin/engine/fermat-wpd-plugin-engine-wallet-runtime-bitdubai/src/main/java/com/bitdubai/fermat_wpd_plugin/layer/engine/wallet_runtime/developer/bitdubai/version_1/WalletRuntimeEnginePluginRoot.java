@@ -1086,45 +1086,46 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     }
 
-    private WalletNavigationStructure createAssetIssuerWalletNavigationStructure1() {
-        /**
-         * Asset issuer
-         */
-        WalletNavigationStructure runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
-        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        String publicKey = "asset_issuer";
-        runtimeWalletNavigationStructure.setPublicKey(publicKey);
-        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-
-
-        Activity runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeActivity.setColor("#8bba9e");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
-
-        TitleBar runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("asset issuer wallet");
-        runtimeTitleBar.setLabelSize(16);
-
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
-
-        StatusBar runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-
-        Fragment runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
-        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment("DWAIMA");
-
-        return runtimeWalletNavigationStructure;
-    }
+    //TODO remove this method
+//    private WalletNavigationStructure createAssetIssuerWalletNavigationStructure1() {
+//        /**
+//         * Asset issuer
+//         */
+//        WalletNavigationStructure runtimeWalletNavigationStructure = new WalletNavigationStructure();
+//        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+//        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+//        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+//        String publicKey = "asset_issuer";
+//        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+//        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
+//
+//
+//        Activity runtimeActivity = new Activity();
+//        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+//        runtimeActivity.setColor("#8bba9e");
+//        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+//        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+//
+//        TitleBar runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setLabel("asset issuer wallet");
+//        runtimeTitleBar.setLabelSize(16);
+//
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
+//        runtimeActivity.setColor("#72af9c");
+//
+//        StatusBar runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+//        runtimeStatusBar.setColor("#72af9c");
+//
+//        runtimeActivity.setStatusBar(runtimeStatusBar);
+//
+//
+//        Fragment runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
+//        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment("DWAIMA");
+//
+//        return runtimeWalletNavigationStructure;
+//    }
 
     private WalletNavigationStructure createAssetUserWalletNavigationStructure() {
         /**
@@ -1840,7 +1841,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
-        runtimeActivity.setColor("#1189a5");
+//        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
@@ -1848,14 +1849,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
-        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+//        runtimeTitleBar.setTitleColor(titleBarLabelColor);
 //        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
 //        runtimeStatusBar = new StatusBar();
 //        runtimeStatusBar.setColor(statusBarColor);
 //        runtimeActivity.setStatusBar(runtimeStatusBar);
-//
+
 //        runtimeHeader = new Header();
 //        runtimeHeader.setLabel("Header");
 //        runtimeActivity.setHeader(runtimeHeader);
