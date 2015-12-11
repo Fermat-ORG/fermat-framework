@@ -29,7 +29,7 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME = "timestamp";
     public static final String ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
     public static final String ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
-    //TODO: include crypto amount
+    public static final String ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
 
     public static final String ONLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
 
