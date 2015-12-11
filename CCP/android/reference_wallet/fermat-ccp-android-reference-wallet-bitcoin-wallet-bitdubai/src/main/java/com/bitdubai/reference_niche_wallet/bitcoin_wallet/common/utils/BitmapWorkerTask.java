@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -42,10 +43,13 @@ public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
                 if (bitmap != null) {
                     //if (imageView != null) {
                     //imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(res,bitmap));
-                    imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
+                    imageView.setImageDrawable((isCircle) ? ImagesUtils.getRoundedBitmap(res, bitmap) : new BitmapDrawable(res,bitmap));
                     //}
                 } else {
+                    if(isCircle)
                     Picasso.with(imageView.getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView);
+                    else Picasso.with(imageView.getContext()).load(R.drawable.profile_image_standard).into(imageView);
+
                 }
             }
         }

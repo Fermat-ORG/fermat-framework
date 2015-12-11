@@ -28,7 +28,7 @@ public class IntraWalletUserActor implements com.bitdubai.fermat_ccp_api.layer.a
 
         this.name             = name                ;
         this.publicKey        = publicKey           ;
-        this.profileImage     = (profileImage!=null) ? profileImage.clone(): null;
+        this.profileImage     = (profileImage!=null) ? profileImage: new byte[0];
         this.registrationDate = registrationDate    ;
         this.contactState     = contactState        ;
 
@@ -51,7 +51,7 @@ public class IntraWalletUserActor implements com.bitdubai.fermat_ccp_api.layer.a
 
     @Override
     public byte[] getProfileImage() {
-        return (profileImage!=null) ? this.profileImage.clone() : null;
+        return (profileImage!=null) ? this.profileImage : new byte[0];
 
     }
 

@@ -207,14 +207,16 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
         image_view_profile = (ImageView) mFragmentView.findViewById(R.id.image_view_profile);
         if (cryptoWalletWalletContact != null) {
             if(image_view_profile!=null){
-                if(cryptoWalletWalletContact.getProfilePicture().length>0) {
-                    if(image_view_profile.getWidth() >0 && image_view_profile.getHeight()>0) {
-                        Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
-                        bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
-                        image_view_profile.setImageBitmap(bitmapDrawable);
-                    }
-                }else
-                    Picasso.with(getActivity()).load(R.drawable.celine_profile_picture).into(image_view_profile);
+                try {
+                    if (cryptoWalletWalletContact.getProfilePicture().length > 0) {
+                            Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
+                            bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
+                            image_view_profile.setImageBitmap(bitmapDrawable);
+                    } else
+                        Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                }catch (Exception e){
+                    Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                }
             }
             if (edit_text_name != null)
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
@@ -224,18 +226,6 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
         }
     }
 
-    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
-        this.walletResourcesProviderManager = walletResourcesProviderManager;
-    }
-
-    /**
-     * Set Wallet Session
-     *
-     * @param appSession session
-     */
-    public void setWalletSession(ReferenceWalletSession appSession) {
-        this.appSession = appSession;
-    }
     /**
      * Bitmap to byte[]
      *
