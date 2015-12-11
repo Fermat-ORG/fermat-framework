@@ -30,7 +30,7 @@ Currently we are a small team dedicated to the development of a communications l
     
 * **Hendry Rodriguez**<br/>
 ---
-      Email:   
+      Email:   elnegroevaristo@gmail.com
       Skype:   Hendry19901990
       Github:  https://github.com/hendry19901990
       Country: Venezuela  
