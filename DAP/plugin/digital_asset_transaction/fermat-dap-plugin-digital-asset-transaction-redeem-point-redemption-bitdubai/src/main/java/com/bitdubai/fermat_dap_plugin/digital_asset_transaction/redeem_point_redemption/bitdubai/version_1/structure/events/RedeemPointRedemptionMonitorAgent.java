@@ -183,6 +183,12 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                     DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                     String transactionId = assetMetadataTransaction.getGenesisTransaction();
 
+                                    //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
+                                    String actorSender = assetMetadataTransaction.getReceiverId(); //now I am the sender.
+                                    PlatformComponentType senderType = assetMetadataTransaction.getReceiverType();
+                                    String actorReceiver = assetMetadataTransaction.getSenderId(); //And the one that sends me this message is the receiver.
+                                    PlatformComponentType receiverType = assetMetadataTransaction.getSenderType();
+
 
                                     //PERSIST METADATA
                                     debug("persisting metadata");
@@ -194,7 +200,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                     boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
                                     if (!hashValid) {
                                         dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_HASH, transactionId);
-                                        //TODO: SEND MESSAGE.
+                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_HASH);
                                         debug("hash rejected");
                                     }
                                     debug("hash checked.");
@@ -205,7 +211,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                     boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
                                     if (!contractValid) {
                                         dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, transactionId);
-                                        //TODO: SEND MESSAGE.
+                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_CONTRACT);
                                         debug("contract rejected");
                                     }
                                     debug("contract checked");
@@ -213,6 +219,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
 
                                     //EVERYTHING WENT OK.
+                                    assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_ACCEPTED);
                                     dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
                                     dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
                                     //UPDATE EVENT STATUS
