@@ -1,13 +1,19 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.database.BusinessTransactionBankMoneyDestockDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.MissingBankMoneyDestockDataException;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +23,7 @@ import java.util.UUID;
  *
  * Created by franklin on 17/11/15.
  */
-public class StockTransactionBankMoneyDestockManager {
+public class StockTransactionBankMoneyDestockManager implements BankMoneyDestockManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
 
@@ -33,12 +39,53 @@ public class StockTransactionBankMoneyDestockManager {
         this.pluginId             = pluginId            ;
     }
 
-    private BusinessTransactionBankMoneyDestockDatabaseDao getStockTransactionBankMoneyDestockDao() {
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param bankWalletPublicKey
+     * @param bankAccount
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateBankMoneyDestockException
+     */
+    @Override
+    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyDestockException {
+        java.util.Date date = new java.util.Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        BankMoneyDestockTransactionImpl bankMoneyRestockTransaction = new BankMoneyDestockTransactionImpl(
+                UUID.randomUUID(),
+                publicKeyActor,
+                fiatCurrency,
+                cbpWalletPublicKey,
+                bankWalletPublicKey,
+                memo,
+                "INIT TRANSACTION",
+                bankAccount,
+                amount,
+                timestamp,
+                TransactionStatusRestockDestock.INIT_TRANSACTION,
+                priceReference,
+                originTransaction);
 
+        try {
+            saveBankMoneyDestockTransactionData(bankMoneyRestockTransaction);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        } catch (MissingBankMoneyDestockDataException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private BusinessTransactionBankMoneyDestockDatabaseDao getStockTransactionBankMoneyDestockDao() {
         return new BusinessTransactionBankMoneyDestockDatabaseDao(pluginDatabaseSystem, pluginId);
     }
 
-    public void saveBankMoneyDestockTransactionData(BankMoneyTransaction bankMoneyTransaction) throws DatabaseOperationException, MissingBankMoneyDestockDataException {
+    private void saveBankMoneyDestockTransactionData(BankMoneyTransaction bankMoneyTransaction) throws DatabaseOperationException, MissingBankMoneyDestockDataException {
         getStockTransactionBankMoneyDestockDao().saveBankMoneyDestockTransactionData(bankMoneyTransaction);
     }
 
