@@ -121,7 +121,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
                     + "Receiver Public Key: " + receiverId
                     + "CryptoStatus: " + cryptoStatus.getCode();
 
-            DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
             DatabaseTableRecord metadataRecord = databaseTable.getEmptyRecord();
 
             metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId);
