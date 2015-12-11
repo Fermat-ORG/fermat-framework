@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Updated by lnacosta (laion.cj91@gmail.com) on 18/11/2015.
  * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 01/12/2015. *
  */
-public enum Plugins implements FermatEnum {
+public enum Plugins implements FermatPluginsEnum {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
@@ -262,6 +263,7 @@ public enum Plugins implements FermatEnum {
     OPEN_CONTRACT               ("OPC"),
     TRANSACTION_TRANSMISSION    ("TRTX"),
     CLOSE_CONTRACT              ("CLC"),
+    CUSTOMER_ONLINE_PAYMENT     ("CONP"),
 
     // End  new Plugins
 
@@ -368,6 +370,7 @@ public enum Plugins implements FermatEnum {
             case ("NGP"):   return NEGOTIATION_PURCHASE     ;
             case "OPC":     return OPEN_CONTRACT            ;
             case "CLC":     return CLOSE_CONTRACT           ;
+            case "CONP":     return CUSTOMER_ONLINE_PAYMENT ;
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -327,7 +327,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         }
         if (dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION.getCode())) {
             AssetUserWallet assetWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
-            AssetUserWalletBalance assetUserWalletBalance = assetWallet.getBookBalance(balanceType);
+            AssetUserWalletBalance assetUserWalletBalance = assetWallet.getBalance();
             actorToPublicKey = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
             System.out.println("ASSET RECEPTION Actor Issuer public key:" + actorToPublicKey);
             System.out.println("ASSET RECEPTION Transaction to deliver: " + genesisTransaction.getTransactionHash());

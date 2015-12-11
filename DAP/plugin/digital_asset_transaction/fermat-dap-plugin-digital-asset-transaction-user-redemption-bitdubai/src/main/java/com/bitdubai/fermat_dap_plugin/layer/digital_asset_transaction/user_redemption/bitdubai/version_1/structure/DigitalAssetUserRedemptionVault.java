@@ -42,7 +42,7 @@ public class DigitalAssetUserRedemptionVault extends AbstractDigitalAssetVault {
 
     public void setDigitalAssetMetadataAssetIssuerWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         AssetUserWallet assetUserWallet=this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
-        AssetUserWalletBalance assetUserWalletBalance= assetUserWallet.getBookBalance(balanceType);
+        AssetUserWalletBalance assetUserWalletBalance= assetUserWallet.getBalance();
         ActorAssetUser actorAssetUser=this.actorAssetUserManager.getActorAssetUser();
         String actorFromPublicKey;
         if(actorAssetUser==null){

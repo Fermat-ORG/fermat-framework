@@ -16,19 +16,11 @@ public class AssetRedeemPointWalletModuleManager {
         this.assetRedeemPointWalletManager = assetRedeemPointWalletManager;
     }
 
-    public List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+    public List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalances(String publicKey) throws CantLoadWalletException {
         try{
-            return assetRedeemPointWalletManager.loadAssetRedeemPointWallet(publicKey).getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
+            return assetRedeemPointWalletManager.loadAssetRedeemPointWallet(publicKey).getBalance().getAssetIssuerWalletBalances();
         }catch (Exception exception){
             throw new CantLoadWalletException("Error load Wallet Balances Available", exception, "Method: getAssetIssuerWalletBalancesAvailable", "Class: AssetIssuerWalletModuleManager");
-        }
-    }
-
-    public List<AssetRedeemPointWalletList>  getAssetRedeemPointWalletBalancesBook(String publicKey) throws CantLoadWalletException{
-        try{
-            return assetRedeemPointWalletManager.loadAssetRedeemPointWallet(publicKey).getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesBook();
-        }catch (Exception exception){
-            throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetIssuerWalletBalancesBook", "Class: AssetIssuerWalletModuleManager");
         }
     }
 }

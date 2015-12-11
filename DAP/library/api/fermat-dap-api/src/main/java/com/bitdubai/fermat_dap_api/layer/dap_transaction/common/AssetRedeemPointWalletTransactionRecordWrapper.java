@@ -40,24 +40,10 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.memo = "Digital Asset Redeemed at:  " + sdf.format(new Date(timeStamp));
     }
 
-    private final String digitalAssetMetadataHash;
     private final String transactionId;
+    private final DigitalAssetMetadata digitalAssetMetadata;
 
     //CONSTRUCTORS
-    public AssetRedeemPointWalletTransactionRecordWrapper(DigitalAsset digitalAsset, String name, String description, CryptoAddress addressFrom, CryptoAddress addressTo, String actorFromPublicKey, String actorToPublicKey, Actors actorFromType, Actors actorToType, long amount, long timeStamp, String memo, String digitalAssetMetadataHash, String transactionId) {
-        this.digitalAsset = digitalAsset;
-        this.name = name;
-        this.description = description;
-        this.addressFrom = addressFrom;
-        this.addressTo = addressTo;
-        this.actorFromPublicKey = actorFromPublicKey;
-        this.actorToPublicKey = actorToPublicKey;
-        this.actorFromType = actorFromType;
-        this.actorToType = actorToType;
-        this.amount = amount;
-        this.digitalAssetMetadataHash = digitalAssetMetadataHash;
-        this.transactionId = transactionId;
-    }
 
     public AssetRedeemPointWalletTransactionRecordWrapper(DigitalAssetMetadataTransaction assetMetadataTransaction,
                                                           CryptoAddress addressFrom,
@@ -74,7 +60,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
         this.amount = asset.getGenesisAmount();
-        this.digitalAssetMetadataHash = assetMetadataTransaction.getDigitalAssetMetadata().getDigitalAssetHash();
+        this.digitalAssetMetadata = assetMetadataTransaction.getDigitalAssetMetadata();
     }
 
 
@@ -96,7 +82,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
         this.amount = asset.getGenesisAmount();
-        this.digitalAssetMetadataHash = assetMetadata.getDigitalAssetHash();
+        this.digitalAssetMetadata = assetMetadata;
     }
 
 
@@ -116,7 +102,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
         this.actorFromType = Actors.DAP_ASSET_USER;
         this.actorToType = Actors.DAP_ASSET_REDEEM_POINT;
         this.amount = asset.getGenesisAmount();
-        this.digitalAssetMetadataHash = assetMetadata.getDigitalAssetHash();
+        this.digitalAssetMetadata = assetMetadata;
     }
     //PUBLIC METHODS
 
@@ -196,7 +182,12 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
 
     @Override
     public String getDigitalAssetMetadataHash() {
-        return digitalAssetMetadataHash;
+        return digitalAssetMetadata.getDigitalAssetHash();
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata() {
+        return digitalAssetMetadata;
     }
     //INNER CLASSES
 }
