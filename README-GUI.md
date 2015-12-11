@@ -4,7 +4,7 @@
 
 ## Introduction
 
-GUI Components are one of the three basic components that can be added into the Fermat Framework. The two others are Add-ons, and Plug-ins. Each GUI component has a well defined responsibility within the system and usually collaborates from within one or more workflows in which it participates.  
+GUI Components are one of three basic components that can be added to the Fermat Framework. The two others are Add-ons and Plug-ins. Each GUI component has a well defined responsibility within the system, and usually collaborates from within one or more workflows in which it participates.  
 
 To accomplish its mission, a GUI component must have a wireframe.
 
@@ -12,32 +12,35 @@ To accomplish its mission, a GUI component must have a wireframe.
 
 ## Part I: Concepts
 
-### Walllet
+### Wallet
 
-A Wallet is a GUI Component that allows a user to carry out financial transactions like send and receive crypto currencies using different plug-ins that Fermat offers through Modules. Each Module Wallet has an associated Module, there is a one on one relationship between a Wallet and a Module.
+A Wallet is a GUI Component that allows a user to carry out financial transactions, like sending and receiving crypto currencies, using different plug-ins that Fermat offers through Modules. Each Module Wallet has an associated Module, thus, there is a one-on-one relationship between a Wallet and its Module.
 
 ### Sub-App
 
-A SubApp is a GUI Component that allows a user to carry out non-financial operations , such as creating identities within the platform , administrative tasks , etc. using the various plug-ins that Fermat offers through Modules. Generally they serve to complement the functionality of the wallets . Each SubApp has an associated Module, there is a one on one relationship between a SubApp and a Module.
+A SubApp is a GUI Component that allows a user to carry out non-financial operations, such as creating identities within the platform, administrative tasks, among others. All of this, using various plug-ins that Fermat offers through Modules. Sub-Apps serve generally to complement the functionality of a wallet. Just like Wallets, each Sub-App has an associated Module (there is also a one-on-one relationship between a SubApp and a Module).
 
 ### Modules
  
-A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface. This last one have the following funtionalities:
+A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface. This last one has the following funtionalities:
 
 - Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
 - It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
 
 For more information about how to create a Module refer to [this documentation](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md)
 
+
+**Creo que aqui antes de hablar de los problemas de persistencia de info entre fragmentos y hablar de la solucion (las sesiones), hay que hablar de fragmentos, y el fragment factory y el enum de fragmentos quiza**
+
 ### Session
 
-One of the problems is the share of information in a fermat app life cycle, a fragment is eliminated when not visible, and its re-created when looked for again. These data must be saved in some place just in case a user wants to change Wallet and leave the session open. 
+One of the problems when using fragments to construct wallets or sub-apps is the sharing of information between fragments on a fermat app life cycle, since a fragment is eliminated when not visible, and has to be re-created when it regains focus. This data must be saved in some place just in case a user wants to change something in a Wallet, and leave the session open. 
 
-To resolve this, there exists something called Sessions: objects that works like Share Memory between the different screens that your Wallet or SubApp may have. This apps must have its own session object to share only what the need, however, there is data that any session always share, such as as the Module of the App (Wallet or SubApp), its Public Key, a reference to the Error Mananger (object that handles exceptions generated in the platform) and a Map (<Key,Value> pair object) that let you hold any other data you need to share.
+To resolve this, there exists something called Sessions: Objects that works like shared memory between the different screens that your Wallet or SubApp may have. These apps must have they're own session object to share any information they need to share. There is also data that every session always shares, such as as the Module of the Wallet or SubApp, its Public Key, a reference to the Error Mananger (object that handles exceptions generated in the platform) and a Map (<Key,Value> pair object) that lets an app hold the data it needs to share.
 
-The management of the sessions in the plataform is held through a Wallet Manager and SubApp Manager, thus having the opportunity to return to the time when the user was when switching screens.
+Managing fermat sessions is done using a Wallet Manager or a SubApp Manager. These objects hold the state of a Wallet or a Sub-App ready for when the user switches back to the Wallet ot Sub-App's screen.
 
-Todas las clases que representen sesiones han de extender de `AbstractFermatSession`. Aqui tenemos un Ejemplo: 
+Every class made to represent a Session has to extend its functionality from `AbstractFermatSession`. Here's an example: 
 
 ```java
 
@@ -45,13 +48,13 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     ...
  
 ```
-
-Donde:
-- La clase `InstalledWallet` es una instancia de wallet instalada.
-- La clase `CryptoWalletManager` es el module que le corresponde a dicha wallet
-- El `ProviderManager` (que no se encuentra en uso en este momento) es nuestro equivalente a la clase R a android.
+Where:
+- `InstalledWallet` holds a reference to the installed wallet.
+- `CryptoWalletManager` is the module corresponding to said wallet.
+- `ProviderManager` (unused at this time) is a Fermat equivalent to android's R class.
 
 <br>
+
 
 ### Fragment factory
 Each GUI component has a folder designated to the fragment factory, that is in charge of connecting what is already developed in the Navigation Structure with the controlling fragments of such screens.
@@ -735,3 +738,60 @@ Provisionalmente se encuentra ubicado en la clase /android-core/common/version_1
 #### Connect Module
 #### Put an Icon from your app in the Main screen
 #### Interacting with the Session and the FragmentFactory﻿
+
+
+
+#### Basic 'Hello World' Fermat Wallet code
+
+
+PASOS PARA CREAR UN REFERENCE WALLET FROM SCRATCH:
+---------------------------------------------------------------
+
+
+
+Crear el codigo base del Android Reference Wallet: 
+	Esto incluye: 
+		Code: WalletFragmentFactory, WalletFragmentsEnumType, PreferenceSettings y WalletSession
+		Res:  Al menos un layout.xml, values (colors,dimens,strings)
+	
+
+
+Crear el codigo base del wallet Module Manager Plugin y registrarlo en el core
+	Codigo base incluye el WalletModuleManager en el api
+	El PluginRoot del ModuleManager en el plugin
+	Registrar el plugin en el core del platform
+
+
+
+
+Registrar los Activities y Fragments en el fermat-api:
+	Ir a: fermat_api/layer/all_definition/navigation_structure/enums:
+	Activities enum: Ingresar los Activities del wallet(el home, for starters?)
+	Fragments enum: Ingresar al menos in Fragment que pertenezca al home (cash balance summary fragment?)
+	Nota: Los fragments hechos en el Fragments enum se deben crear tambien en FramentsEnumType y usar en el FragmentFactory del wallet
+
+
+
+Crear el Navigation Structure:
+	Ir a: WPD/plugin/engine/wallet-runtime/PluginRoot:
+	Agregar el Navigation Structure, usando los Activities y Fragments arriba creados.
+
+
+
+Crear un icono en el Desktop:
+	Ir a: DMP/android/sub_app/sub-app-wallet-manager/fragment/DesktopFragment:
+	Agregar el wallet, de tal forma que el Desktop muestra el icono del wallet para poderla abrir.
+
+
+
+Registrar el FragmentFactory en el android-core:
+	Ir a: fermat-android-core/com.bitdubai.android_core.app/common.version_1/fragment_factory/WalletFragmentFactory
+	y registrar el FragmentFactory del Reference Wallet aqui.
+
+
+
+Registrar el WalletSession en el android-core:
+	Ir a:  fermat-android-core/com.bitdubai.android_core.app/common.version_1/Sessions/WalletSessionManager
+	y registrar el WalletSession del Reference wallet junto al WalletModuleManager Plugin aqui.
+Nota: Hay que modificar ademas la Interfaz: fermat-android-apilayer\definition\wallet\interfaces\WalletSessionManager.java
+Nota2: Tambien \fermat-android-core\com.bitdubai\android_core\app\FermatActivity.java
