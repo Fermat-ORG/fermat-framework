@@ -58,7 +58,7 @@ public class CryptoIndexHelper {
         for(CryptoIndex index: indexList){
 
             if(index.getPurchasePrice() == 0 || index.getSalePrice() == 0) {
-                System.out.println("FIATINDEX - Found INVALID INDEX: " + index.getProviderDescription());
+                System.out.println("CRYPTOINDEX - Found INVALID INDEX: " + index.getProviderDescription());
                 toRemove.add(index);
             }
         }
@@ -78,11 +78,11 @@ public class CryptoIndexHelper {
 
             double purchaseSaleAverage = (index.getPurchasePrice() + index.getSalePrice()) / 2;
             if( (purchaseSaleAverage >= extremeHigh) || (purchaseSaleAverage <= extremeLow)) {
-                System.out.println("FIATINDEX - Found EXTREME INDEX: " + index.getProviderDescription());
-                System.out.println("FIATINDEX - mean=" + mean + "  stdDev=" + standardDeviation);
-                System.out.println("FIATINDEX - extremeHigh=" + extremeHigh + "  extremeLow=" + extremeLow);
-                System.out.println("FIATINDEX - purchasePrice=" + index.getPurchasePrice() + "  salePrice= " + index.getSalePrice() + ". Average of purchase/sale (" + purchaseSaleAverage + ") outside of extremes!");
-
+              /*  System.out.println("CRYPTOINDEX - Found EXTREME INDEX: " + index.getProviderDescription());
+                System.out.println("CRYPTOINDEX - mean=" + mean + "  stdDev=" + standardDeviation);
+                System.out.println("CRYPTOINDEX - extremeHigh=" + extremeHigh + "  extremeLow=" + extremeLow);
+                System.out.println("CRYPTOINDEX - purchasePrice=" + index.getPurchasePrice() + "  salePrice= " + index.getSalePrice() + ". Average of purchase/sale (" + purchaseSaleAverage + ") outside of extremes!");
+              */
                 toRemove.add(index);
             }
         }

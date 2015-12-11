@@ -11,7 +11,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDatabaseFactory;
 import com.googlecode.catchexception.CatchException;
 
-import org.fest.assertions.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,9 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.when;
 
 /**
@@ -73,12 +70,12 @@ public class SaveLastRateExchangeTest {
     }
     @Test
     public void TestSaveLastRateExchange_successful() throws Exception {
-        catchException(cryptoIndexDao).saveLastRateExchange("BTC", "USD", 1);
+      catchException(cryptoIndexDao).saveLastRateExchange("BTC", "USD", 1);
      assertThat(CatchException.<Exception>caughtException()).isNull();
     }
     @Test
     public void TestSaveLastRateExchange_ThrowCantSaveLastRateExchangeException() throws Exception{
-     catchException(cryptoIndexDao).saveLastRateExchange(null, null, 2);
+   catchException(cryptoIndexDao).saveLastRateExchange(null, null, 2);
      assertThat(CatchException.<Exception>caughtException()).isNotNull();
     }
 }
