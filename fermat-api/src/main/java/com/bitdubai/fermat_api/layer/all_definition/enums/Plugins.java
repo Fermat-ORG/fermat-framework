@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Updated by lnacosta (laion.cj91@gmail.com) on 18/11/2015.
  * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 01/12/2015. *
  */
-public enum Plugins implements FermatEnum {
+public enum Plugins implements FermatPluginsEnum {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
@@ -170,6 +171,7 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD       ("BCSHMTU"  ),
     BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT      ("BCSHMTD"  ),
     BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL   ("BCSHMTW"  ),
+    BITDUBAI_CSH_MONEY_WALLET_MODULE            ("BCSHMWM"),
     BITDUBAI_CSH_WALLET_CASH_MONEY              ("BCSHWCM"  ),
     // End CSH Plugins
 
@@ -360,6 +362,7 @@ public enum Plugins implements FermatEnum {
             case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
             case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
+            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;
