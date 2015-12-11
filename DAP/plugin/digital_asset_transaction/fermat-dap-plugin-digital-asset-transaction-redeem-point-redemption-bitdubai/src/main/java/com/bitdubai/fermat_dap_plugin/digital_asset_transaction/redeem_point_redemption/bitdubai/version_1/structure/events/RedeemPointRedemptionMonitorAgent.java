@@ -183,6 +183,12 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                     DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                     String transactionId = assetMetadataTransaction.getGenesisTransaction();
 
+
+                                    //PERSIST METADATA
+                                    debug("persisting metadata");
+                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
+
                                     dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
                                     debug("verifying hash");
                                     boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
@@ -205,10 +211,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                     debug("contract checked");
                                     dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
 
-                                    //PERSIST METADATA
-                                    debug("persisting metadata");
-                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
-                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
 
                                     //EVERYTHING WENT OK.
                                     dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
