@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.holders.AccountListViewHolder;
 
 import java.util.List;
@@ -18,12 +19,12 @@ public class AccountListAdapter extends FermatAdapter<BankAccountNumber,AccountL
 
     @Override
     protected AccountListViewHolder createHolder(View itemView, int type) {
-        return null;
+        return new AccountListViewHolder(itemView);
     }
 
     @Override
     protected int getCardViewResource() {
-        return 0;
+        return R.layout.bw_account_list_item;
     }
 
     @Override
