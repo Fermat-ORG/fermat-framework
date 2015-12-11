@@ -156,7 +156,9 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
                     errorManager,
                     stockTransactionCashMoneyDestockManager,
                     cryptoBrokerWalletManager,
-                    cashUnholdTransactionManager
+                    cashUnholdTransactionManager,
+                    pluginDatabaseSystem,
+                    pluginId
             );
 
             stockTransactionsCashMoneyDestockMonitorAgent.start();

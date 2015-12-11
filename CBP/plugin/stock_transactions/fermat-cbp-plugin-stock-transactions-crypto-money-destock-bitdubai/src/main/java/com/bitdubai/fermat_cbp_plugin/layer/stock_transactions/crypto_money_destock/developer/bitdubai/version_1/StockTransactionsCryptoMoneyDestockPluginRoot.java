@@ -157,7 +157,9 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
                     errorManager,
                     stockTransactionCryptoMoneyDestockManager,
                     cryptoBrokerWalletManager,
-                    cryptoHoldTransactionManager
+                    cryptoHoldTransactionManager,
+                    pluginDatabaseSystem,
+                    pluginId
             );
 
             stockTransactionsCryptoMoneyDestockMonitorAgent.start();

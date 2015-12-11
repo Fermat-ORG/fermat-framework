@@ -155,7 +155,9 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
                     errorManager,
                     stockTransactionBankMoneyDestockManager,
                     cryptoBrokerWalletManager,
-                    unHoldManager
+                    unHoldManager,
+                    pluginDatabaseSystem,
+                    pluginId
             );
 
             businessTransactionBankMoneyDestockMonitorAgent.start();

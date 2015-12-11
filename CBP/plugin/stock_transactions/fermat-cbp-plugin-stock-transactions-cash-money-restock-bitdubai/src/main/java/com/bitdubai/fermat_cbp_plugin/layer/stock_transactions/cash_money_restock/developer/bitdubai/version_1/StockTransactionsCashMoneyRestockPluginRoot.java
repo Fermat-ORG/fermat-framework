@@ -156,7 +156,9 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
                     errorManager,
                     stockTransactionCashMoneyRestockManager,
                     cryptoBrokerWalletManager,
-                    cashHoldTransactionManager
+                    cashHoldTransactionManager,
+                    pluginDatabaseSystem,
+                    pluginId
             );
 
             stockTransactionsCashMoneyRestockMonitorAgent.start();

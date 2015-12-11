@@ -60,24 +60,12 @@ public class StockTransactionCryptoMoneyDestockManager implements
                 originTransaction);
 
         try {
-            saveCryptoMoneyDestockTransactionData(cryptoMoneyRestockTransaction);
+            StockTransactionCryptoMoneyDestockFactory stockTransactionCryptoMoneyDestockFactory = new StockTransactionCryptoMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+            stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyRestockTransaction);
         } catch (DatabaseOperationException e) {
             e.printStackTrace();
         } catch (MissingCryptoMoneyDestockDataException e) {
             e.printStackTrace();
         }
     }
-    private StockTransactionsCryptoMoneyDestockDatabaseDao getStockTransactionCryptoMoneyDestockDao() {
-
-        return new StockTransactionsCryptoMoneyDestockDatabaseDao(pluginDatabaseSystem, pluginId);
-    }
-
-    private void saveCryptoMoneyDestockTransactionData(CryptoMoneyTransaction cryptoMoneyTransaction) throws DatabaseOperationException, MissingCryptoMoneyDestockDataException {
-        getStockTransactionCryptoMoneyDestockDao().saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
-    }
-
-    public List<CryptoMoneyTransaction> getCryptoMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException{
-        return getStockTransactionCryptoMoneyDestockDao().getCryptoMoneyTransactionList(filter);
-    }
-
 }

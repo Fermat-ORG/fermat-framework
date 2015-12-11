@@ -157,7 +157,9 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
                     errorManager,
                     stockTransactionBankMoneyRestockManager,
                     cryptoBrokerWalletManager,
-                    holdManager
+                    holdManager,
+                    pluginDatabaseSystem,
+                    pluginId
             );
 
             businessTransactionBankMoneyRestockMonitorAgent.start();

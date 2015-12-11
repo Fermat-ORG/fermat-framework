@@ -60,7 +60,8 @@ public class StockTransactionCashMoneyDestockManager implements
                 originTransaction);
 
         try {
-            saveCashMoneyDestockTransactionData(cashMoneyRestockTransaction);
+            StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+            stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyRestockTransaction);
         } catch (DatabaseOperationException e) {
             e.printStackTrace();
         } catch (MissingCashMoneyDestockDataException e) {
@@ -68,16 +69,4 @@ public class StockTransactionCashMoneyDestockManager implements
         }
     }
 
-    private StockTransactionsCashMoneyDestockDatabaseDao getStockTransactionCashMoneyDestockDao() {
-
-        return new StockTransactionsCashMoneyDestockDatabaseDao(pluginDatabaseSystem, pluginId);
-    }
-
-    private void saveCashMoneyDestockTransactionData(CashMoneyTransaction cashMoneyTransaction) throws DatabaseOperationException, MissingCashMoneyDestockDataException {
-        getStockTransactionCashMoneyDestockDao().saveCashMoneyDestockTransactionData(cashMoneyTransaction);
-    }
-
-    public List<CashMoneyTransaction> getCashMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException{
-        return getStockTransactionCashMoneyDestockDao().getCashMoneyTransactionList(filter);
-    }
 }

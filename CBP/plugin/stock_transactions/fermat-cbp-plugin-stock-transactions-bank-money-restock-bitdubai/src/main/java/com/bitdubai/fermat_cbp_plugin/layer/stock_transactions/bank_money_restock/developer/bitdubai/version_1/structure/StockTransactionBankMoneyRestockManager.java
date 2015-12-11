@@ -59,23 +59,13 @@ public class StockTransactionBankMoneyRestockManager implements
                 originTransaction);
 
         try {
-            saveBankMoneyRestockTransactionData(bankMoneyRestockTransaction);
+            StockTransactionBankMoneyRestockFactory stockTransactionBankMoneyRestockFactory = new StockTransactionBankMoneyRestockFactory(pluginDatabaseSystem, pluginId);
+            stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyRestockTransaction);
         } catch (DatabaseOperationException e) {
             e.printStackTrace();
         } catch (MissingBankMoneyRestockDataException e) {
             e.printStackTrace();
         }
     }
-    private BusinessTransactionBankMoneyRestockDatabaseDao getStockTransactionBankMoneyRestockDao() {
 
-        return new BusinessTransactionBankMoneyRestockDatabaseDao(pluginDatabaseSystem, pluginId);
-    }
-
-    private void saveBankMoneyRestockTransactionData(BankMoneyTransaction bankMoneyTransaction) throws DatabaseOperationException, MissingBankMoneyRestockDataException {
-        getStockTransactionBankMoneyRestockDao().saveBankMoneyRestockTransactionData(bankMoneyTransaction);
-    }
-
-    public List<BankMoneyTransaction> getBankMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException{
-        return getStockTransactionBankMoneyRestockDao().getBankMoneyTransactionList(filter);
-    }
 }
