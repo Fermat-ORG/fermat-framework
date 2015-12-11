@@ -36,4 +36,8 @@ public interface CryptoWalletIntraUserActor {
      */
     boolean isContact();
 
+    boolean isSelected();
+
+    void setSelected(boolean isSelected);
+
 }

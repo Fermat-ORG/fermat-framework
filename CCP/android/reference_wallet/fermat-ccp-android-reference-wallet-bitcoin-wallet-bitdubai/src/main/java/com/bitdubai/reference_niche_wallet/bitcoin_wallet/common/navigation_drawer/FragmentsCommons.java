@@ -15,6 +15,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -30,17 +31,19 @@ public class FragmentsCommons {
             if (intraUserLoginIdentity != null) {
                 if (intraUserLoginIdentity.getProfileImage() != null) {
                     if (intraUserLoginIdentity.getProfileImage().length > 0) {
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inScaled = true;
-                        options.inSampleSize = 2;
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
-                        options.inBitmap = bitmap;
+                        //BitmapFactory.Options options = new BitmapFactory.Options();
+                        //options.inScaled = true;
+                        //options.inSampleSize = 2;
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),false);
+                        bitmapWorkerTask.execute(intraUserLoginIdentity.getProfileImage());
+                        //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
+                        //options.inBitmap = bitmap;
                         //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
                //         Bitmap converted = bitmap.copy(Bitmap.Config.RGB_565, true);
                         //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
-                        imageView.setImageBitmap(bitmap);
+                        //imageView.setImageBitmap(bitmap);
                     } else
-                        Picasso.with(activity).load(R.drawable.profile_image_standard).fit().into(imageView);
+                        Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
                 }
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());

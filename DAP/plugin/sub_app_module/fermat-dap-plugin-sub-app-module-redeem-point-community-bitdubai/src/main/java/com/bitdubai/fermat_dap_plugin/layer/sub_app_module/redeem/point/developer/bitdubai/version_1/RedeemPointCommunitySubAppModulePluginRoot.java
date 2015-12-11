@@ -66,7 +66,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
-        if(list != null && list.size() > 0) {
+        if(list != null) {
             actorAssetRedeemPoints = new ArrayList<>();
 
             try {

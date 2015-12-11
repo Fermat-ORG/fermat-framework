@@ -334,11 +334,12 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         switch (type) {
 
-            case INTRA_USER           : return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case CCM_INTRA_WALLET_USER: return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case CCP_INTRA_WALLET_USER: return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case DAP_ASSET_ISSUER     : return PlatformComponentType.ACTOR_ASSET_ISSUER;
-            case DAP_ASSET_USER       : return PlatformComponentType.ACTOR_ASSET_USER  ;
+            case INTRA_USER            : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case CCM_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case CCP_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case DAP_ASSET_ISSUER      : return PlatformComponentType.ACTOR_ASSET_ISSUER        ;
+            case DAP_ASSET_USER        : return PlatformComponentType.ACTOR_ASSET_USER          ;
+            case DAP_ASSET_REDEEM_POINT: return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT  ;
 
             default: throw new InvalidParameterException(
                   " actor type: "+type.name()+"  type-code: "+type.getCode(),

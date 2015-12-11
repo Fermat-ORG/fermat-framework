@@ -8,10 +8,10 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_osa_linux_core.layer.system.SystemLayer;
 
 /**
- * The class <code>com.bitdubai.fermat_osa_android_core.OSAPlatform</code>
+ * The class <code>com.bitdubai.fermat_osa_linux_core.OSAPlatform</code>
  * haves all the necessary business logic to start the OSA platform.
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 26/10/2015.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
 public final class OSAPlatform extends AbstractPlatform {
 
@@ -23,6 +23,8 @@ public final class OSAPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
+
+            System.out.println("OSAPlatform - start()");
 
             registerLayer(new SystemLayer());
 
