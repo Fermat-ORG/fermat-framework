@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 
 /**
  * The class <code>PluginReference</code>
@@ -13,23 +14,23 @@ public class PluginReference {
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
-    private LayerReference layerReference;
-    private final Plugins        plugin        ;
+    private       LayerReference    layerReference;
+    private final FermatPluginsEnum plugin        ;
 
     public PluginReference(final Plugins plugin) {
 
         this.plugin = plugin;
     }
 
-    public PluginReference(final LayerReference layerReference,
-                           final Plugins        plugin        ) {
+    public PluginReference(final LayerReference    layerReference,
+                           final FermatPluginsEnum plugin        ) {
 
         this.layerReference = layerReference;
         this.plugin         = plugin        ;
     }
 
 
-    public final Plugins getPlugin() {
+    public final FermatPluginsEnum getPlugin() {
         return plugin;
     }
 

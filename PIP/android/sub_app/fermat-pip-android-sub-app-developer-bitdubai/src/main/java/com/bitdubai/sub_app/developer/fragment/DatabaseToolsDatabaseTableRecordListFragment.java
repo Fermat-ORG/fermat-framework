@@ -106,8 +106,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
                 AddonVersionReference addon = AddonVersionReference.getByKey(resource.code);
                 this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
             } else if (resource.type== Databases.TYPE_PLUGIN) {
-                PluginVersionReference plugin = PluginVersionReference.getByKey(resource.code);
-                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
+                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(resource.pluginVersionReference, developerDatabase, developerDatabaseTable);
             }
 
             columnNames = developerDatabaseTable.getFieldNames();

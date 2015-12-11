@@ -119,8 +119,7 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                 AddonVersionReference addon = AddonVersionReference.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
             } else if (databases.type==Databases.TYPE_PLUGIN) {
-                PluginVersionReference plugin = PluginVersionReference.getByKey(databases.code);
-                this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
+                this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(databases.pluginVersionReference, developerDatabase);
             }
 
             for(int i = 0; i < developerDatabaseTableList.size() ; i++) {

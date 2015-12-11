@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -44,7 +46,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
 
 
     @Override
-    public AbstractFermatSession openWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager, WalletSettings walletSettings, WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager, CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager, AssetIssuerWalletSupAppModuleManager assetIssuerWalletManager, AssetUserWalletSubAppModuleManager assetUserModuleManager, AssetRedeemPointWalletSubAppModule assetRedeemPointModuleManager,ModuleManager moduleManager,BankMoneyWalletModuleManager bankMoneyWalletModuleManager) {
+    public AbstractFermatSession openWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager, WalletSettings walletSettings, WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager, CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager, AssetIssuerWalletSupAppModuleManager assetIssuerWalletManager, AssetUserWalletSubAppModuleManager assetUserModuleManager, AssetRedeemPointWalletSubAppModule assetRedeemPointModuleManager,ModuleManager moduleManager,BankMoneyWalletModuleManager bankMoneyWalletModuleManager,CashMoneyWalletModuleManager cashMoneyWalletModuleManager) {
         AbstractFermatSession walletSession = null;
         if (installedWallet != null) {
             switch (installedWallet.getWalletCategory()) {
@@ -80,6 +82,10 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
                             return walletSession;
                         case "banking_wallet":
                             walletSession = new BankMoneyWalletSession( installedWallet, errorManager, walletResourcesProviderManager, bankMoneyWalletModuleManager);
+                            lstWalletSession.put(installedWallet.getWalletPublicKey(), walletSession);
+                            return walletSession;
+                        case "cash_wallet":
+                            walletSession = new CashMoneyWalletSession( installedWallet, errorManager, walletResourcesProviderManager, cashMoneyWalletModuleManager);
                             lstWalletSession.put(installedWallet.getWalletPublicKey(), walletSession);
                             return walletSession;
                     }

@@ -81,7 +81,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private SearchView mSearchView;
 
     private AppListAdapter adapter;
-    private boolean isStartList;
+    private boolean isStartList=false;
 
 
     private ProgressDialog mDialog;
@@ -162,13 +162,12 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
             onRefresh();
+
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
 
 
