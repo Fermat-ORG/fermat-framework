@@ -171,6 +171,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD       ("BCSHMTU"  ),
     BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT      ("BCSHMTD"  ),
     BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL   ("BCSHMTW"  ),
+    BITDUBAI_CSH_MONEY_WALLET_MODULE            ("BCSHMWM"),
     BITDUBAI_CSH_WALLET_CASH_MONEY              ("BCSHWCM"  ),
     // End CSH Plugins
 
@@ -361,6 +362,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
             case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
+            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;

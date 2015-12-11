@@ -10,7 +10,7 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdu
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DollarTodayProviderDatabaseConstants {
+public class DolartodayProviderDatabaseConstants {
 
     /**
      * Query History database table definition.

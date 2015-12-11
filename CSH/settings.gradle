@@ -5,11 +5,21 @@
  * -Name.
  */
 
+//API
 include ':fermat-csh-api'
 project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api')
 
+//CORE
 include ':fermat-csh-core'
 project(':fermat-csh-core').projectDir = new File('CSH/library/core/fermat-csh-core')
+
+//Reference Wallet
+include ':fermat-csh-android-reference-wallet-cash-money-bitdubai'
+project(':fermat-csh-android-reference-wallet-cash-money-bitdubai').projectDir = new File('CSH/android/reference_wallet/fermat-csh-android-reference-wallet-cash-money-bitdubai')
+
+//Wallet Module
+include ':fermat-csh-plugin-wallet-module-cash-money-bitdubai'
+project(':fermat-csh-plugin-wallet-module-cash-money-bitdubai').projectDir = new File('CSH/plugin/wallet_module/fermat-csh-plugin-wallet-module-cash-money-bitdubai')
 
 //Cash Money Transaction
 include ':fermat-csh-plugin-cash-money-transaction-hold-bitdubai'

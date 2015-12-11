@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetHistoricalExchangeRateException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantInitializeCryptoIndexDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantSaveLastRateExchangeException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.HistoricalExchangeRateNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndex;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketPriceInterface;
@@ -123,10 +124,13 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
         try {
             CryptoIndex cryptoIndex;
             cryptoIndex=cryptoProvidersManager.getCurrentIndex(cryptoCurrency,fiatCurrency);
+            cryptoIndexDao.saveLastRateExchange(cryptoCurrency.getCode(),fiatCurrency.getCode(),cryptoIndex.getPurchasePrice());
             return cryptoIndex.getPurchasePrice();
         } catch (CantGetIndexException e) {
            throw  new FiatCurrencyNotSupportedException(FiatCurrencyNotSupportedException.DEFAULT_MESSAGE,e,"CryptoIndexWorldPluginRoot","FiatCurrency Not Supported Exception");
 
+        } catch (CantSaveLastRateExchangeException e) {
+            throw new CryptoCurrencyNotSupportedException(CryptoCurrencyNotSupportedException.DEFAULT_MESSAGE,e,"Cant get Market Price","Cant Save Last Rate Exchange Exception");
         }
     }
 
