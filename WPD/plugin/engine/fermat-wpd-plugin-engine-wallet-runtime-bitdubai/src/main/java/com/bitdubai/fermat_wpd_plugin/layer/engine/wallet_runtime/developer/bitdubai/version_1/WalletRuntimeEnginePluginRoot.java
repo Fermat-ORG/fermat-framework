@@ -1307,9 +1307,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey(), runtimeFragment);
 
         // TODO falta agregar un footer a navigation structure
+        Footer runtimeFooter = new Footer();
+        runtimeFooter.setBackgroundColor("#AAAAAA");
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
+        runtimeFooter.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+        runtimeActivity.setFooter(runtimeFooter);
 
 
         // Activity: Open Negotiation details
@@ -1805,7 +1809,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         return runtimeWalletNavigationStructure;
     }
 
-    public WalletNavigationStructure createBankMoneyWalletNavigationStructure(){
+    public WalletNavigationStructure createBankMoneyWalletNavigationStructure() {
         WalletNavigationStructure runtimeWalletNavigationStructure;
         Activity runtimeActivity;
         Fragment runtimeFragment;

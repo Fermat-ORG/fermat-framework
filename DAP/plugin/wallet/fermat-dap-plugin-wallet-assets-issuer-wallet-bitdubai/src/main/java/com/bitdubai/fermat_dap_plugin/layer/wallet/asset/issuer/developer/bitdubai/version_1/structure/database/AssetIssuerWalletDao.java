@@ -94,9 +94,9 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     /*
      * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
      */
-    public List<AssetIssuerWalletList> getBookBalanceByAssets() throws CantCalculateBalanceException {
+    public List<AssetIssuerWalletList> getBalanceByAssets() throws CantCalculateBalanceException {
         try {
-            return getCurrentBookBalanceByAssets();
+            return getCurrentBalanceByAssets();
         } catch (CantGetBalanceRecordException exception) {
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
@@ -119,11 +119,11 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     }
 
     /*
-    * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+    * getBalanceByAsset must get actual Balance global of Asset Issuer wallet, select record from balances table
     */
-    public List<AssetIssuerWalletList> getAvailableBalanceByAsset() throws CantCalculateBalanceException {
+    public List<AssetIssuerWalletList> getBalanceByAsset() throws CantCalculateBalanceException {
         try {
-            return getCurrentAvailableBalanceByAssets();
+            return getCurrentBalanceByAssets();
         } catch (CantGetBalanceRecordException exception) {
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
@@ -509,16 +509,12 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         }
     }
 
-    private List<AssetIssuerWalletList> getCurrentAvailableBalanceByAssets() throws CantGetBalanceRecordException {
-        return getCurrentBalanceByAsset(BalanceType.AVAILABLE);
-    }
-
     private long getCurrentBookBalance() throws CantGetBalanceRecordException {
         return getCurrentBalance(BalanceType.BOOK);
     }
 
-    private List<AssetIssuerWalletList> getCurrentBookBalanceByAssets() throws CantGetBalanceRecordException {
-        return getCurrentBalanceByAsset(BalanceType.BOOK);
+    private List<AssetIssuerWalletList> getCurrentBalanceByAssets() throws CantGetBalanceRecordException {
+        return getCurrentBalanceByAsset();
     }
 
     private long getCurrentBalance(final BalanceType balanceType) throws CantGetBalanceRecordException {
@@ -535,33 +531,18 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         return balanceAmount;
     }
 
-    private List<AssetIssuerWalletList> getCurrentBalanceByAsset(final BalanceType balanceType) throws CantGetBalanceRecordException {
+    private List<AssetIssuerWalletList> getCurrentBalanceByAsset() throws CantGetBalanceRecordException {
         List<AssetIssuerWalletList> issuerWalletBalances = new ArrayList<>();
-        if (balanceType == BalanceType.AVAILABLE) {
-            for (DatabaseTableRecord record : getBalancesRecord()) {
-                AssetIssuerWalletList assetIssuerWalletBalance = new AssetIssuerWalletBalance();
-                assetIssuerWalletBalance.setName(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME));
-                assetIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
-                assetIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
-                assetIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
-                assetIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
-                assetIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
-                assetIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
-                issuerWalletBalances.add(assetIssuerWalletBalance);
-            }
-        } else {
-            for (DatabaseTableRecord record : getBalancesRecord()) {
-                AssetIssuerWalletBalance assetIssuerWalletBalance = new AssetIssuerWalletBalance();
-                assetIssuerWalletBalance.setName(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME));
-                assetIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
-                assetIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
-                assetIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
-                assetIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
-                assetIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
-                assetIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
-                issuerWalletBalances.add(assetIssuerWalletBalance);
-            }
-
+        for (DatabaseTableRecord record : getBalancesRecord()) {
+            AssetIssuerWalletList assetIssuerWalletBalance = new AssetIssuerWalletBalance();
+            assetIssuerWalletBalance.setName(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME));
+            assetIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
+            assetIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
+            assetIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
+            assetIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
+            assetIssuerWalletBalance.setQuantityBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME));
+            assetIssuerWalletBalance.setQuantityAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME));
+            issuerWalletBalances.add(assetIssuerWalletBalance);
         }
         return issuerWalletBalances;
     }

@@ -67,7 +67,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
-        if(list != null && list.size() > 0) {
+        if(list != null) {
             assetIssuerActorRecords = new ArrayList<>();
 
             try {

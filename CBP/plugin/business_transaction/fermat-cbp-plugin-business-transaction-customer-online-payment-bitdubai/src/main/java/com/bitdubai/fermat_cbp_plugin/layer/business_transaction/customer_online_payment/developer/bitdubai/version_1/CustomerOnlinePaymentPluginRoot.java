@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -27,15 +28,21 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.event_handler.CustomerOnlinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentTransactionManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -69,8 +76,14 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
     private TransactionTransmissionManager transactionTransmissionManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.OUTGOING_INTRA_ACTOR)
+    OutgoingIntraActorManager outgoingIntraActorManager;
+
     //TODO: Need reference to contract plugin
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+
+    //TODO: Need reference to contract plugin
+    private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
     //TODO: Need reference to contract plugin
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
@@ -219,11 +232,40 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     this.transactionTransmissionManager,
                     this.customerBrokerPurchaseNegotiationManager);
 
+            /**
+             * Init event recorder service.
+             */
+            CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService=new CustomerOnlinePaymentRecorderService(
+                    customerOnlinePaymentBusinessTransactionDao,
+                    eventManager);
+            customerOnlinePaymentRecorderService.start();
+
+            /**
+             * Init monitor Agent
+             */
+            CustomerOnlinePaymentMonitorAgent openContractMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
+                    pluginDatabaseSystem,
+                    logManager,
+                    errorManager,
+                    eventManager,
+                    pluginId,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    outgoingIntraActorManager);
+            openContractMonitorAgent.start();
+
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Customer online payment starting");
         } catch (CantInitializeDatabaseException e) {
             e.printStackTrace();
         } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantStartServiceException e) {
+            e.printStackTrace();
+        } catch (CantSetObjectException e) {
+            e.printStackTrace();
+        } catch (CantStartAgentException e) {
             e.printStackTrace();
         }
     }

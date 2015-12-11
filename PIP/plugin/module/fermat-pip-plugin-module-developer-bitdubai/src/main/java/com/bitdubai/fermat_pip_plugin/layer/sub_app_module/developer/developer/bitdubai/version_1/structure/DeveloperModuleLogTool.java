@@ -98,7 +98,7 @@ public class DeveloperModuleLogTool implements LogTool {
             for (String myClass : classes) {
                 String[] packages = myClass.split(Pattern.quote("."));
                 ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                classesAndPackages.setLevel0(plugin.toKey());
+                classesAndPackages.setLevel0(plugin.toString());
                 classesAndPackages.setFullPath(myClass);
                 if (packages.length == minPackages) {
                     /**
@@ -229,7 +229,7 @@ public class DeveloperModuleLogTool implements LogTool {
      * @param newLogLevelInClass
      */
     @Override
-    public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass) {
+    public void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass) {
         ((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
     }
 
