@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
 import java.util.List;
