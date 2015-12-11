@@ -94,13 +94,13 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        try {
-            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-        } catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
+//        try {
+//            IssuerWalletNavigationViewPainter navigationViewPainter = new IssuerWalletNavigationViewPainter(getActivity(), null);
+//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+//        } catch (Exception e) {
+//            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+//        }
     }
 
     private void configureToolbar() {
