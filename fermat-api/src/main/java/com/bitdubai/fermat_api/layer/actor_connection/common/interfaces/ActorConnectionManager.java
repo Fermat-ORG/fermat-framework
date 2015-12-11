@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorIdentity;
@@ -10,7 +11,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDeny
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedContactStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
@@ -60,7 +60,7 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      */
     void disconnect(final UUID connectionId) throws CantDisconnectFromActorException,
                                                     ActorConnectionNotFoundException,
-                                                    UnexpectedContactStateException ;
+            UnexpectedConnectionStateException;
 
     /**
      * Through the method <code>denyConnection</code> we can deny an actor connection.
@@ -73,7 +73,7 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      */
     void denyConnection(final UUID connectionId) throws CantDenyActorConnectionRequestException,
                                                         ActorConnectionNotFoundException       ,
-                                                        UnexpectedContactStateException        ;
+            UnexpectedConnectionStateException;
 
     /**
      * Through the method <code>cancelConnection</code> we can cancel a connection request sent.
@@ -87,7 +87,7 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      */
     void cancelConnection(final UUID connectionId) throws CantCancelActorConnectionRequestException,
                                                           ActorConnectionNotFoundException         ,
-                                                          UnexpectedContactStateException          ;
+            UnexpectedConnectionStateException;
 
     /**
      * Through the method <code>acceptConnection</code> we can accept a received connection request.
@@ -99,6 +99,6 @@ public interface ActorConnectionManager<T extends ActorIdentity, Z extends Actor
      */
     void acceptConnection(final UUID connectionId) throws CantAcceptActorConnectionRequestException,
                                                           ActorConnectionNotFoundException         ,
-                                                          UnexpectedContactStateException          ;
+            UnexpectedConnectionStateException;
 
 }

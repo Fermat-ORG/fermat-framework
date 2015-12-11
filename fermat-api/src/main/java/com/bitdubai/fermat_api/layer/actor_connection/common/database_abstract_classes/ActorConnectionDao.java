@@ -4,7 +4,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_cla
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionAlreadyExistsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantChangeActorConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
@@ -149,17 +151,17 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
     public void changeConnectionState(final Z               linkedIdentity ,
                                       final String          publicKey      ,
                                       final Actors          actorType      ,
-                                      final ConnectionState connectionState) throws CantGetActorConnectionException  ,
+                                      final ConnectionState connectionState) throws CantChangeActorConnectionStateException  ,
                                                                                     ActorConnectionNotFoundException {
 
         if (linkedIdentity == null)
-            throw new CantGetActorConnectionException("", "The linkedIdentity is required, can not be null");
+            throw new CantChangeActorConnectionStateException("", "The linkedIdentity is required, can not be null");
 
         if (publicKey == null)
-            throw new CantGetActorConnectionException("", "The publicKey is required, can not be null");
+            throw new CantChangeActorConnectionStateException("", "The publicKey is required, can not be null");
 
         if (actorType == null)
-            throw new CantGetActorConnectionException("", "The actorType is required, can not be null");
+            throw new CantChangeActorConnectionStateException("", "The actorType is required, can not be null");
 
         try {
 
@@ -189,17 +191,69 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
         } catch (final CantUpdateRecordException e) {
 
-            throw new CantGetActorConnectionException(
+            throw new CantChangeActorConnectionStateException(
                     e,
                     "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType,
                     "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
             );
         } catch (final CantLoadTableToMemoryException e) {
 
-            throw new CantGetActorConnectionException(
+            throw new CantChangeActorConnectionStateException(
                     e,
                     "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType
                     , "Exception not handled by the plugin, there is a problem in database and i cannot load the table."
+            );
+        }
+    }
+
+    public void changeConnectionState(final UUID            connectionId   ,
+                                      final ConnectionState connectionState) throws CantChangeActorConnectionStateException  ,
+                                                                                    ActorConnectionNotFoundException {
+
+        if (connectionId == null)
+            throw new CantChangeActorConnectionStateException("", "The connectionId is required, can not be null");
+
+
+        if (connectionState == null)
+            throw new CantChangeActorConnectionStateException("", "The connectionState is required, can not be null");
+
+        try {
+
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.setUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                final DatabaseTableRecord record = records.get(0);
+
+                record.setFermatEnum(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, connectionState);
+
+                actorConnectionsTable.updateRecord(record);
+
+            } else
+                throw new ActorConnectionNotFoundException(
+                        "connectionId: "+connectionId,
+                        "Cannot find an actor connection request with that requestId."
+                );
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantChangeActorConnectionStateException(
+                    e,
+                    "connectionId: "+connectionId,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot update the record."
+            );
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantChangeActorConnectionStateException(
+                    e,
+                    "connectionId: "+connectionId,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table."
             );
         }
     }
@@ -237,6 +291,49 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
                     e,
                     "linkedIdentity: "+linkedIdentity + " - publicKey: "+publicKey+" - actorType: "+actorType,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public ConnectionState getConnectionState(final UUID connectionId) throws CantGetConnectionStateException  ,
+                                                                              ActorConnectionNotFoundException {
+
+        if (connectionId == null)
+            throw new CantGetConnectionStateException("", "The connectionId is required, can not be null");
+
+        try {
+
+            final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+            actorConnectionsTable.setUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                final DatabaseTableRecord record = records.get(0);
+
+                return ConnectionState.getByCode(record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME));
+
+            } else
+                throw new ActorConnectionNotFoundException(
+                        "connectionId: "+connectionId,
+                        "Cannot find an actor connection request with that requestId."
+                );
+
+        } catch (final CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+
+            throw new CantGetConnectionStateException(
+                    cantLoadTableToMemoryException,
+                    "connectionId: "+connectionId,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException invalidParameterException) {
+
+            throw new CantGetConnectionStateException(
+                    invalidParameterException,
+                    "connectionId: "+connectionId,
+                    "Problem with the code of some enum.");
         }
     }
 
