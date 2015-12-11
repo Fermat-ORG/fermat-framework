@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -51,9 +52,6 @@ import java.util.UUID;
  * Created by franklin on 16/11/15.
  */
 public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugin  implements
-        //TODO: Documentar y manejo de excepciones.
-        //TODO: Manejo de Eventos
-        CryptoMoneyRestockManager,
         DatabaseManagerForDevelopers {
 
 
@@ -84,13 +82,13 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
 
     @Override
     public void start() throws CantStartPluginException {
-        stockTransactionCryptoMoneyRestockManager = new StockTransactionCryptoMoneyRestockManager(pluginDatabaseSystem, pluginId);
+
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_DATABASE_NAME);
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Crypto Money Restock ******");
-            //testRestock();
+
             startMonitorAgent();
 
             database.closeDatabase();
@@ -119,6 +117,11 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
     }
 
     @Override
+    public FermatManager getManager() {
+        return new StockTransactionCryptoMoneyRestockManager(pluginDatabaseSystem, pluginId);
+    }
+
+    @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         StockTransactionsCryptoMoneyRestockDeveloperFactory stockTransactionsCryptoMoneyRestockDeveloperFactory = new StockTransactionsCryptoMoneyRestockDeveloperFactory(pluginDatabaseSystem, pluginId);
         return stockTransactionsCryptoMoneyRestockDeveloperFactory.getDatabaseList(developerObjectFactory);
@@ -143,35 +146,6 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
         return developerDatabaseTableRecordList;
     }
 
-
-    @Override
-    public void createTransactionRestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey,  float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateCryptoMoneyRestockException {
-        java.util.Date date = new java.util.Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
-        CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = new CryptoMoneyRestockTransactionImpl(
-                UUID.randomUUID(),
-                publicKeyActor,
-                cryptoCurrency,
-                cbpWalletPublicKey,
-                cryWalletPublicKey,
-                memo,
-                "INIT TRANSACTION",
-                amount,
-                timestamp,
-                TransactionStatusRestockDestock.INIT_TRANSACTION,
-                priceReference,
-                originTransaction);
-
-        try {
-            stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyRestockTransaction);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        } catch (MissingCryptoMoneyRestockDataException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     private StockTransactionsCryptoMoneyRestockMonitorAgent stockTransactionsCryptoMoneyRestockMonitorAgent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
@@ -190,11 +164,4 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
         }else stockTransactionsCryptoMoneyRestockMonitorAgent.start();
     }
 
-    private void testRestock(){
-        try {
-            createTransactionRestock("publicKeyActor", CryptoCurrency.CHAVEZCOIN, "cbpWalletPublicKey", "cryWalletPublicKey", 250, "memo", 250, OriginTransaction.STOCK_INITIAL);
-        } catch (CantCreateCryptoMoneyRestockException e) {
-            e.printStackTrace();
-        }
-    }
 }

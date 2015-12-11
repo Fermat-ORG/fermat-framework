@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
@@ -9,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.e
 /**
  * Created by franklin on 16/11/15.
  */
-public interface CashMoneyRestockManager {
+public interface CashMoneyRestockManager extends FermatManager {
         /**
          * Method that create the transaction Destock
          *
