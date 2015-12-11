@@ -26,6 +26,12 @@ public interface CashMoneyWalletManager extends FermatManager {
      *
      * @return A CashMoneyWalletBalance object
      */
-    void createCashMoney(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException;
+    void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException;
+
+    /**
+     * Checks if wallet exists in wallet database
+     *
+     */
+    boolean cashMoneyWalletExists(String walletPublicKey);
 
 }

@@ -25,10 +25,10 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolartodayProviderDao;
+import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DollarTodayProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DollarTodayProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDollarTodayProviderDatabaseException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -43,7 +43,7 @@ import java.util.List;
      */
 
 
-public class ProviderDolartodayPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
+public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
 
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -58,7 +58,7 @@ public class ProviderDolartodayPluginRoot extends AbstractPlugin implements Data
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    DolartodayProviderDao dao;
+    DollarTodayProviderDao dao;
     List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
 
 
@@ -66,7 +66,7 @@ public class ProviderDolartodayPluginRoot extends AbstractPlugin implements Data
     /*
      * PluginRoot Constructor
      */
-    public ProviderDolartodayPluginRoot() {
+    public ProviderDollarTodayPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -110,7 +110,7 @@ public class ProviderDolartodayPluginRoot extends AbstractPlugin implements Data
         supportedCurrencyPairs.add(new CurrencyPairImpl(Currency.US_DOLLAR, Currency.VENEZUELAN_BOLIVAR));
 
         try {
-            dao = new DolartodayProviderDao(pluginDatabaseSystem, pluginId, errorManager);
+            dao = new DollarTodayProviderDao(pluginDatabaseSystem, pluginId, errorManager);
             dao.initialize();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -234,7 +234,7 @@ public class ProviderDolartodayPluginRoot extends AbstractPlugin implements Data
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch(CantInitializeDolarTodayProviderDatabaseException cantInitializeException) {
+        } catch(CantInitializeDollarTodayProviderDatabaseException cantInitializeException) {
             FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "ProviderDolartodayPluginRoot", null);
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
