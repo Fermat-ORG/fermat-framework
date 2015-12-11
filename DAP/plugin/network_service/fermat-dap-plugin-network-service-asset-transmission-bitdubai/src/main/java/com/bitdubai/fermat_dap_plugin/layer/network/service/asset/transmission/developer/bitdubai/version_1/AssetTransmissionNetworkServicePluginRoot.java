@@ -959,7 +959,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantSendDigitalAssetMetadataException pluginStartException = new CantSendDigitalAssetMetadataException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, null, context, possibleCause);
+            CantSendDigitalAssetMetadataException pluginStartException = new CantSendDigitalAssetMetadataException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
@@ -980,6 +980,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
     public void sendDigitalAssetMetadata(DAPActor actorSender, DAPActor actorReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException {
 
         try {
+            System.out.println(" AssetTransmissionNetworkServicePluginRoot - Starting method sendDigitalAssetMetadata");
 
             /*
             * Initialize as null so if the instance is one I can't handle then it will break the app fast instead of causing weird bugs.
@@ -1009,7 +1010,8 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                 receiverType = PlatformComponentType.ACTOR_ASSET_REDEEM_POINT;
             }
 
-            System.out.println(" AssetTransmissionNetworkServicePluginRoot - Starting method sendDigitalAssetMetadata");
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Actor Sender: PK : " + actorSender.getActorPublicKey() + " - Type: " + senderType.getCode());
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Actor Receiver: PK : " + actorReceiver.getActorPublicKey() + " - Type: " + receiverType.getCode());
 
             /*
              * ask for a previous connection
@@ -1035,6 +1037,8 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             digitalAssetMetadataTransaction.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
             digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED);
 
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
+
             /*
              * Save into data base
              */
@@ -1043,6 +1047,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             /*
              * If not null
              */
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Sending message.....");
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
@@ -1082,9 +1087,8 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                  * Ask the client to connect
                  */
                 communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
-
             }
-
+            System.out.println("AssetTransmissionNetworkServicePluginRoot - Message sent.");
         } catch (Exception e) {
 
             StringBuilder contextBuffer = new StringBuilder();
@@ -1101,7 +1105,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantSendDigitalAssetMetadataException pluginStartException = new CantSendDigitalAssetMetadataException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, null, context, possibleCause);
+            CantSendDigitalAssetMetadataException pluginStartException = new CantSendDigitalAssetMetadataException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, pluginStartException);
 

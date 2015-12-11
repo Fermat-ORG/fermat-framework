@@ -158,7 +158,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
             }
             this.userRedemptionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             System.out.println("ASSET USER REDEMPTION set debit in asset issuer wallet:" + genesisTransaction);
-            digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetUsuerWalletDebit(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE, actorAssetRedeemPoint.getActorPublicKey());
+            digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetUserWalletDebit(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE, actorAssetRedeemPoint.getActorPublicKey());
             System.out.println("ASSET USER REDEMPTION Begins the deliver to an remote actor");
             deliverToRemoteActor(digitalAssetMetadata, actorAssetRedeemPoint);
         } catch (CantPersistDigitalAssetException exception) {
