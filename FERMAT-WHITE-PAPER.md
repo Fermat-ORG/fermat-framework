@@ -346,7 +346,9 @@ Through two different paths, the value and the meta-data arrives to the recipien
 
 We define a Private Device Network as a network of devices owned by the same end user. Using the Fermat Network, the Framework synchronizes the information on all nodes of the Private Network. By doing so the information and system identities belonging to the end user are available at any end user's devices.
 
-Crypto funds are kept in a _Multi-Sig-Vault_ and in a _Petty-Cash-Vault_. The funds at the _Petty-Cash-Vault_ are accessible from all nodes even when they are offline from this Private Network. An automated process monitors the _Petty-Cash-Vault_ and tops it up when needed. Several nodes must sign the top-up transaction in order to proceed. If a device is lost or stolen, only the funds at the _Petty-Cash-Vault_ are at risk. End users can eject stolen devices from their Private Network and if they act quickly the system might be on time to re-create the _Petty-Cash-Vault_ under the new configuration of the Private Network and be able to move the funds from the previous _Petty-Cash-Vault_ to the new one.
+Crypto funds are kept in a _Multi-Sig-Vault_ and in a _Petty-Cash-Vault_. The funds at the _Petty-Cash-Vault_ are accessible from all nodes even when they are offline from this Private Network. An automated process monitors the _Petty-Cash-Vault_ and tops it up when needed. Several nodes must sign the top-up transaction in order to proceed. 
+
+If a device is lost or stolen, only the funds at the _Petty-Cash-Vault_ are at risk. End users can eject stolen devices from their Private Network and if they act quickly, the system might be on time to re-create the _Petty-Cash-Vault_ under the new configuration of the Private Network and be able to move the funds from the previous _Petty-Cash-Vault_ to the new one.
 
 <br>
 ## User Interface
