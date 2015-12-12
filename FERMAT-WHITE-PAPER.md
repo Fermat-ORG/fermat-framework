@@ -320,7 +320,7 @@ Each _Platform_ may introduce new workflows to the system, Add-ons, Plug-ins, GU
 <br>
 ## Workflows
 
-We define workflows as high level processes that requires several components to achieve a certain goal. Many workflows start at a GUI component triggered by end users and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
+We define workflows as high level processes that require several components to achieve a certain goal. Many workflows start at a GUI component triggered by end users and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
 
 From a workflow point of view, each Plug-in runs a task and is fully responsible for doing its job. Workflows are a chain of tasks that may split into several paths and may span through more than one device.
 
@@ -344,9 +344,9 @@ Through two different paths, the value and the meta-data arrives to the recipien
 <br>
 ## Synchronization
 
-We define a Private Device Network as a network of devices owned by the same end user. Using the Fermat Network, the Framework synchronizes the information on all nodes of the Private Network. By doing so the information and system identities belonging to the end user are available at any device.
+We define a Private Device Network as a network of devices owned by the same end user. Using the Fermat Network, the Framework synchronizes the information on all nodes of the Private Network. By doing so the information and system identities belonging to the end user are available at any end user's devices.
 
-Crypto funds are kept into a Multi-Sig vaults and there they are shared, making _Petty-Cash-Vault_ accessible from all nodes even when they are offline from this Private Network. An automated process monitors the Petty-Cash-Vault and tops it up when needed. Several nodes must sign the top transaction in order to proceed. This way if a device is lost or stolen, only the Petty-Cash fund is at risk. End users can eject stolen devices from its Private Network and if they act quickly they might be on time to re-create the Petty-Cash fund under the new configuration and be able to save those funds.
+Crypto funds are kept in a _Multi-Sig-Vault_ and in a _Petty-Cash-Vault_. The funds at the _Petty-Cash-Vault_ are accessible from all nodes even when they are offline from this Private Network. An automated process monitors the _Petty-Cash-Vault_ and tops it up when needed. Several nodes must sign the top-up transaction in order to proceed. If a device is lost or stolen, only the funds at the _Petty-Cash-Vault_ are at risk. End users can eject stolen devices from their Private Network and if they act quickly the system might be on time to re-create the _Petty-Cash-Vault_ under the new configuration of the Private Network and be able to move the funds from the previous _Petty-Cash-Vault_ to the new one.
 
 <br>
 ## User Interface
