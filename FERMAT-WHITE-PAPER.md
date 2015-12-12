@@ -274,7 +274,7 @@ The Framework is responsible to charge end users and distribute the payments to 
 
 ### For network nodes
 
-Network clients establish a _Home Node_ where they check themselves and their actors in so as to be found by other network clients. They must pay a subscription fee to their _Home Node_ for its services. Finding and calling other clients through other nodes is free for the caller. The nodes income is covered by those network clients for whom they act as their _Home Node_.
+Network clients establish a _Home Node_ where they check themselves and their _actors_ in so as to be found by other network clients. They must pay a subscription fee to their _Home Node_ for its services. Finding and calling other clients through other nodes is free for the caller. The nodes income is covered by those network clients for whom they act as their _Home Node_.
 
 
 <br>
@@ -293,7 +293,7 @@ We handle identities at different levels for multiple reasons. In all cases, ide
 
 The need to handle multiple logins on the same device brings with it, the first kind of identity which we call _device-user_. This identity lives only at a certain device and not even a public key is exposed to the network.
 
-Besides, the end users can have multiple types of identities (we call them _Actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an actor in a Use Case. Usually each Platform introduces a set of actors and all the Platforms functionality orbits around all the use cases derived on the interactions between those actors. 
+Besides, the end users can have multiple types of identities (we call them _actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an _actor_ in a Use Case. Usually each Platform introduces a set of _actors_ and all the Platforms functionality orbits around all the use cases derived on the interactions between those _actors_. 
 
 The Framework handles a hierarchy of identities. One of them is what we call the _root identity_. At root level end users can set a standard set of information that can be overwritten at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one could tell they are related between each other or to a certain end user. 
 
@@ -314,7 +314,7 @@ d. Nodes to recognize each other even when their IP location or other profile in
 
 We define as _Platform_ a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack. 
 
-Each _Platform_ may introduce new workflows to the system , Add-ons, Plug-ins, GUI components (Apps, wallets) and Actors. This enables the system to target different use cases with different actors involved. 
+Each _Platform_ may introduce new workflows to the system , Add-ons, Plug-ins, GUI components (Apps, wallets) and _actors_. This enables the system to target different use cases with different _actors_ involved. 
 
 
 <br>
@@ -355,7 +355,7 @@ The Framework handles a stack of layers. Starting from the bottom we have the _O
 
 **Wallet**: Any kind of financial application that handles either crypto or digital assets for any purpose. 
 
-**Reference Wallet**: A primitive wallet that is used by a single actor for a handful of use cases. 
+**Reference Wallet**: A primitive wallet that is used by a single _actor_ for a handful of use cases. 
 
 **Niche Wallet**: A combination of several _Reference Wallets_ into a single product with its own look and feel and possibly extra functionality.
 
