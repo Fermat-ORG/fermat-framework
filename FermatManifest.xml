@@ -4371,12 +4371,12 @@
 					<plugin name="Deposit"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="abicelis" scope="implementation" percentage="90"></author>
+							<author name="abicelis" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4386,12 +4386,12 @@
 					<plugin name="Withdrawal"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="abicelis" scope="implementation" percentage="90"></author>
+							<author name="abicelis" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5072,13 +5072,13 @@
 					<plugin	name="Customer Online Payment"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="15"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5479,13 +5479,13 @@
 					<plugin name="Crypto Broker"
 						description=""
 						difficulty="2"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="90"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
