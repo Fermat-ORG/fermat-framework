@@ -17,6 +17,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
@@ -28,11 +29,11 @@ import java.util.List;
 /**
  * Created by guillermo on 04/12/15.
  */
-public class AccountsListFragment extends FermatWalletListFragment<GrouperItem> implements FermatListItemListeners<BankAccountNumber>{
+public class AccountsListFragment extends FermatWalletListFragment<BankAccountNumber> implements FermatListItemListeners<BankAccountNumber>{
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<GrouperItem<BankAccountNumber>> accountsList;
+    private ArrayList<BankAccountNumber> accountsList;
 
     private static final String TAG = "AccountListActivityFragment";
     public AccountsListFragment() {
@@ -107,15 +108,17 @@ public class AccountsListFragment extends FermatWalletListFragment<GrouperItem> 
 
     @Override
     public FermatAdapter getAdapter() {
-	    //TODO: obtener el adapter
-        return null;
+	    if(adapter == null){
+            adapter = new AccountListAdapter(getActivity(), accountsList);
+            adapter.setFermatListEventListener(this);
+        }
+        return adapter;
     }
 
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null)
             layoutManager = new LinearLayoutManager(getActivity());
-
         return layoutManager;
     }
 
@@ -150,25 +153,24 @@ public class AccountsListFragment extends FermatWalletListFragment<GrouperItem> 
     }
 
     @Override
-    public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        ArrayList<GrouperItem> data = new ArrayList<>();
+    public List<BankAccountNumber> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<BankAccountNumber> bankAccountNumbers = new ArrayList<>();
         String grouperText="accounts";
-        try{
-            GrouperItem<BankAccountNumber> grouper;
-            bankAccountNumbers = moduleManager.getBankingWallet().getAccounts();
-            grouper = new GrouperItem<>(grouperText,bankAccountNumbers,true);
-            data.add(grouper);
-        }catch (Exception ex){
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.BNK_BANKING_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
+        if(moduleManager!=null) {
+            try {
+                bankAccountNumbers = moduleManager.getBankingWallet().getAccounts();
+            } catch (Exception ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.BNK_BANKING_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
             }
+
         }
-        return data;
+        return bankAccountNumbers;
     }
 
     @Override
