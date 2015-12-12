@@ -6,6 +6,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
  * Created by lcampo on 26/11/15.
  */
 public class CantUpdateAssetUserGroupException extends DAPException {
+
+    private static final String DEFAULT_MESSAGE = "There was an error while trying to update asset user group.";
+
+    public CantUpdateAssetUserGroupException(Exception e) {
+        this(DEFAULT_MESSAGE, e, null, null);
+    }
+
     /**
      * This is the constructor that every inherited DAPException must implement
      *
