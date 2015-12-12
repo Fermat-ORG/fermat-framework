@@ -20,6 +20,7 @@ public class CustomerBrokerNewImpl implements CustomerBrokerNew {
     private String                          publicKeyBroker;
     private String                          publicKeyCustomer;
     private NegotiationTransactionStatus    negotiationTransactionStatus;
+    private String                          negotiationXML;
     private long timestamp;
 
     public CustomerBrokerNewImpl(
@@ -28,6 +29,7 @@ public class CustomerBrokerNewImpl implements CustomerBrokerNew {
             String                          publicKeyBroker,
             String                          publicKeyCustomer,
             NegotiationTransactionStatus    negotiationTransactionStatus,
+            String                          negotiationXML,
             long                            timestamp
     ){
         this.transactionId                  = transactionId;
@@ -35,7 +37,8 @@ public class CustomerBrokerNewImpl implements CustomerBrokerNew {
         this.publicKeyBroker                = publicKeyBroker;
         this.publicKeyCustomer              = publicKeyCustomer;
         this.negotiationTransactionStatus   = negotiationTransactionStatus;
-        this.timestamp = timestamp;
+        this.negotiationXML                 = negotiationXML;
+        this.timestamp                      = timestamp;
     }
 
     public UUID getTransactionId(){ return this.transactionId; }
@@ -47,6 +50,8 @@ public class CustomerBrokerNewImpl implements CustomerBrokerNew {
     public String getPublicKeyCustomer(){ return this.publicKeyCustomer; }
 
     public NegotiationTransactionStatus getStatusTransaction(){ return this.negotiationTransactionStatus; }
+
+    public String getNegotiationXML(){ return this.negotiationXML; }
 
     public long getTimestamp(){ return this.timestamp; }
 

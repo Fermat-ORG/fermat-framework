@@ -234,7 +234,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }
 
     //GET NEGOTIATION XML OF NEGOTIATION TRANSACTION
-    public String getContractXML(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
+    public String getNegotiationXML(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
         return getValue(
                 negotiationId,
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME,
@@ -271,7 +271,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         }
     }
 
-    //
+    //GET EVENT TYPE OF TRANSACTION
     public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
         try{
 
@@ -344,9 +344,10 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         String                          publicKeyBroker     = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME);
         String                          publicKeyCustomer   = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
         NegotiationTransactionStatus    status              = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME));
+        String                          negotiationXML      = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME);
         long                            timestamp           = record.getLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME);
 
-        return new CustomerBrokerNewImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status,timestamp);
+        return new CustomerBrokerNewImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status, negotiationXML,timestamp);
     }
 
     private String getValue(String key,String keyColumn,String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {

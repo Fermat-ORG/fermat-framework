@@ -23,5 +23,7 @@ public interface NegotiationTransaction {
 
     NegotiationTransactionStatus getStatusTransaction();
 
+    String getNegotiationXML();
+
     long getTimestamp();
 }
