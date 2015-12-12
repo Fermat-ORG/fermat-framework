@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.navigation_drawer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -48,8 +50,18 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     }
 
     @Override
-    public Drawable addBodyBackground() {
-        return ContextCompat.getDrawable(activity.getApplicationContext(), R.color.fab_material_white);
+    public Bitmap addBodyBackground() {
+        Bitmap drawable = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = true;
+            options.inSampleSize = 5;
+            drawable = BitmapFactory.decodeResource(
+                    activity.getResources(), R.color.fab_material_white);
+        }catch (OutOfMemoryError error){
+            error.printStackTrace();
+        }
+        return drawable;
     }
 
     @Override
@@ -60,5 +72,10 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     @Override
     public RecyclerView.ItemDecoration addItemDecoration() {
         return null;
+    }
+
+    @Override
+    public boolean hasBodyBackground() {
+        return true;
     }
 }

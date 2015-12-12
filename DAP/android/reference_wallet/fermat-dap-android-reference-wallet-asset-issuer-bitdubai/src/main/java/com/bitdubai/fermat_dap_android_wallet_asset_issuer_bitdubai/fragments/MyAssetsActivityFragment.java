@@ -67,8 +67,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((AssetIssuerSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -193,7 +193,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
-        walletSession.setData("asset_data", data);
+        appSession.setData("asset_data", data);
 //        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, walletSession.getAppPublicKey());
     }
 
