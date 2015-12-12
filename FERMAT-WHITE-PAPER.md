@@ -37,7 +37,7 @@ Standalone bitcoin wallets were the first generation of trust-less financial app
 
 What is needed on top of all existing protocols is a layer that faces the end user and that finishes the job bitcoin started respecting its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a network client level, allows financial apps to run any user-level interconnected-functionality without ever going through a trusted third party.
 
-By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define micro-use-licensing-scheme as the mechanism for plug-in developers to monetize their work. The Framework itself enforces these micro-use-licenses and guarantees developers a revenue stream. 
+By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro-use-licensing-scheme as the mechanism for plug-in developers to monetize their work. The Framework itself enforces these micro-use-licenses and guarantees developers a revenue stream. 
 
 OS dependent GUI components are built on top of the multi-layered plug-in structure to face the end user as wallets or financial applications in general. Apps and wallets with similar functionality are wrapped into what we call _platforms_, each one introducing new plug-ins, to the ever increasing functionality of the whole system.
 
@@ -56,7 +56,7 @@ The term "Fermat Network" refers to the collection of nodes running the Fermat P
 
 ### Fermat Nodes Roles
 
-Fermat nodes performs several tasks at the same time. For each one of them, the protocol has it own set of rules:
+Fermat nodes perform several tasks at the same time. For each one of them, the protocol has it own set of rules:
 
 #### Maintain the Distributed Nodes Catalogue
 
