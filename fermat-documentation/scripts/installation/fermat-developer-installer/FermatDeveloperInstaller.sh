@@ -190,19 +190,19 @@ if ! checkInternetConnection; then
    exit 1000
 fi
 #Installing Git
-#installGit
+installGit
 
 #Get and installing JDK7
-#installJDK7
+installJDK7
 
 #Get and installing gradle
-#installGradle
+installGradle
 
 #Get and install Android SDK Tools
-#installAndroidSDKTools
+installAndroidSDKTools
 
 #Create the Fermat Environment Vars
-#createEnvironmentVars
+createEnvironmentVars
 
 #Get and install IDE
 installIDE
