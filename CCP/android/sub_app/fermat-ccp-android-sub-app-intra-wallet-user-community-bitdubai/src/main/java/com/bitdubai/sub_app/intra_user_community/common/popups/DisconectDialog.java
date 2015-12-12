@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -31,7 +32,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  */
 
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
+public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -51,7 +52,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
     IntraUserLoginIdentity identity;
 
 
-    public ConnectDialog(Activity a, IntraUserSubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
+    public DisconectDialog(Activity a, IntraUserSubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
         super(a, intraUserSubAppSession, subAppResources);
         this.intraUserInformation = intraUserInformation;
         this.identity = identity;
@@ -107,20 +108,19 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
             try {
                 //image null
                 if (intraUserInformation != null && identity != null) {
-                    ((IntraUserSubAppSession) getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                    ((IntraUserSubAppSession) getSession()).getModuleManager().disconnectIntraUSer(intraUserInformation.getPublicKey());
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
-                    Toast.makeText(getContext(), "Conected", Toast.LENGTH_SHORT).show();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-                    broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
+                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
+                    Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (CantStartRequestException e) {
-                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            } catch (IntraUserDisconnectingFailedException e) {
+                e.printStackTrace();
             }
 
             dismiss();
