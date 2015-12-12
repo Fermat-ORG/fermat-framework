@@ -35,11 +35,11 @@ We propose a framework to replace the standalone wallet application. This framew
 
 Standalone bitcoin wallets were the first generation of trust-less financial applications since they didn't require to trust any third party, inheriting this property from the bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, securing funds, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
 
-What is needed on top of all existing protocols is a layer that faces the end user and that finishes the job bitcoin started respecting its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a network client level, allows financial apps to run any user-level interconnected-functionality without ever going through a trusted third party.
+What is needed on top of all existing protocols is a layer that faces end users and that finishes the job bitcoin started respecting its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a network client level, allows financial apps to run any user-level interconnected-functionality without ever going through a trusted third party.
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro-use-licensing-scheme as the mechanism for plug-in developers to monetize their work. The Framework itself enforces these micro-use-licenses and guarantees developers a revenue stream. 
 
-OS dependent GUI components are built on top of the multi-layered plug-in structure to face the end user as wallets or financial applications in general. Apps and wallets with similar functionality are wrapped into what we call _platforms_, each one introducing new plug-ins, to the ever increasing functionality of the whole system.
+OS dependent GUI components are built on top of the multi-layered plug-in structure to face end users as wallets or financial applications in general. Apps and wallets with similar functionality are wrapped into what we call _platforms_, each one introducing new plug-ins, to the ever increasing functionality of the whole system.
 
 A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalogue.
 
@@ -64,11 +64,11 @@ Each node maintains a full catalogue of all nodes registered in the network. Thi
 
 #### Maintain an Identities Catalogue
 
-Each node maintains a part of a distributed catalogue of the End User identities. This catalogue is designed to facilitate End Users to find each other. This role is ruled by the Fermat Client Protocol.
+Each node maintains a part of a distributed catalogue of end users identities. This catalogue is designed to facilitate end users to find each other. This role is ruled by the Fermat Client Protocol.
 
 #### Act as Identities' Home
 
-Each node is home to a set of End Users identities. These identities can receive calls only through their home node. This role is also ruled by the Fermat Client Protocol.
+Each node is home to a set of end users identities. These identities can receive calls only through their home node. This role is also ruled by the Fermat Client Protocol.
 
 #### Acts as a Call Bridge
 
@@ -149,15 +149,15 @@ Fermat tokes are necesary for users to pay for three things:
 
 #### Communication
 
-End Users pay Fermat Nodes with fermats to be able to receive calls from other devices. 
+End users pay Fermat Nodes with fermats to be able to receive calls from other devices. 
 
 #### Use of Fermat Components
 
-End Users pay Fermat Component's developers with fermats to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro-Use-Licenses defined by each developer involved. This is the way how developers are paid for mantaining their components.
+End users pay Fermat Component's developers with fermats to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro-Use-Licenses defined by each developer involved. This is the way how developers are paid for mantaining their components.
 
 #### Technical Support
 
-End Users pay with fermats to receive personalized technical support from Fermat Component's developers.
+End users pay with fermats to receive personalized technical support from Fermat Component's developers.
 
 <br>
 ## Fermat Blockchain
@@ -172,9 +172,9 @@ Each block within the blockchain:
 <br>
 ## Mining
 
-Mining is the process by which new _fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidh to the Extended Fermat Network in exchange for the opportunity to be rewarded fermats.
+Mining is the process by which new _fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded fermats.
 
-Miners inter-connect devices and acts as a bridge relaying everything from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximatelly 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
+Miners inter-connect devices and act as a bridge relaying everything from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximatelly 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of fermats to spend the fermats they received in those transactions.
 
 A transaction at the Fermat Blockchain is considered "irreversible" as soon as it is added to a block. This is true because it is based on information read from the bitcoin blockchain that it is already on an irreversible state. The Fermat Blockchain is syncronized with the bitcoin blockchain but 6 blocks behind the bitcoin blockchain's head.
 
@@ -270,7 +270,7 @@ We know that by doing this, 1 fermat has a minimun market value of 0.0001 bitcoi
 
 Plug-in developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice. The license to be paid is the sum of the Apps _Micro-Use-License_ plus all the _Micro-Use-Licenses_ of the plug-ins used by that App. 
 
-The Framework is responsible to charge the end user and distribute the payments to all developers involved.
+The Framework is responsible to charge end users and distribute the payments to all developers involved.
 
 ### For network nodes
 
@@ -289,7 +289,7 @@ Wallets are higher level abstractions and have their own set of Plug-ins to keep
 
 We handle identities at different levels for multiple reasons. In all cases, identities are represented by private and public keys.
 
-### End User Identities
+### End Users Identities
 
 The need to handle multiple logins on the same device brings with it, the first kind of identity which we call _device-user_. This identity lives only at a certain device and not even a public key is exposed to the network.
 
@@ -320,7 +320,7 @@ Each _Platform_ may introduce new workflows to the system , Add-ons, Plug-ins, G
 <br>
 ## Workflows
 
-We define workflows as high level processes that requires several components to achieve a certain goal. Manny workflows start at a GUI component triggered by the end user and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
+We define workflows as high level processes that requires several components to achieve a certain goal. Manny workflows start at a GUI component triggered by end users and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
 
 From a workflow point of view, each Plug-in runs a task and is fully responsible for doing its job. Workflows are a chain of tasks that may split into several paths and may span through more than one device.
 
@@ -359,9 +359,9 @@ The Framework handles a stack of layers. Starting from the bottom we have the _O
 
 **Niche Wallet**: A combination of several _Reference Wallets_ into a single product with its own look and feel and possibly extra functionality.
 
-**Branded Wallet**: A _niche wallet_ turned into a new product owned by a different end user. Achieved by a process similar to building a Wordpress site but locally, on the end users device. Usually it involves re-using the business logic of the _niche wallet_ it derives from and adding a new look and feel (different skin and navigation structure).
+**Branded Wallet**: A _niche wallet_ turned into a new product owned by a different end user. Achieved by a process similar to building a Wordpress site but locally, on the end user's device. Usually it involves re-using the business logic of the _niche wallet_ it derives from and adding a new look and feel (different skin and navigation structure).
 
-**External Wallet**: A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infrastructure to interface crypto networks, transporting data through its p2p network, or storing data on the end users _Private Device Network_. 
+**External Wallet**: A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infrastructure to interface crypto networks, transporting data through its p2p network, or storing data on the end user's _Private Device Network_. 
 
 <br>
 Several tools were designed with the purpose of enabling the development of new wallets, an their distribution.
@@ -370,14 +370,14 @@ Several tools were designed with the purpose of enabling the development of new 
 
 **Wallet Editor**: Enables the creation by non-developers of _Branded Wallets_ based on any one of the _Niche Wallets_ available.
 
-**Wallet Store**: Is a distributed application which manages a shared wallet catalog and enables the end user to download from peers the different wallets available for the Framework.
+**Wallet Store**: Is a distributed application which manages a shared wallet catalog and enables end users to download from peers the different wallets available for the Framework.
 
 <br>
 ## Privacy
 
 The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using its own P2P network with point to point encryption for transporting meta-data both value and information are under a similar privacy standard.
 
-Identities are public keys related to private keys kept by the end user and never shared to anyone in any way. 
+Identities are public keys related to private keys kept by end users and never shared to anyone in any way. 
 
 The collection of system information for visualization and statistics uses hashes of public keys to protect end users privacy and at the same time preserve the relationships between them.
 
@@ -385,7 +385,7 @@ The collection of system information for visualization and statistics uses hashe
 <br>
 ## Conclusion
 
-We have proposed a system for developing and running peer-to-peer financial applications. The Fermat Framework shows the way of how to keep the end user away from trusted third parties at a higher level. We propose a solution to several problems at the same time. The highlights of our work are:
+We have proposed a system for developing and running peer-to-peer financial applications. The Fermat Framework shows the way of how to keep end users away from trusted third parties at a higher level. We propose a solution to several problems at the same time. The highlights of our work are:
 
 * How to exchange meta-data in a peer-to-peer way
 * How to prevent the loss of private keys (funds and identities)
