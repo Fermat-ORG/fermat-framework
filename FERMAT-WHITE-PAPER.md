@@ -387,16 +387,16 @@ The collection of system information for visualization and statistics uses hashe
 <br>
 ## Conclusion
 
-We have proposed a system for developing and running peer-to-peer financial applications. The Fermat Framework shows the way of how to keep end users away from trusted third parties at a higher level. We have proposed solutions to several problems at the same time. The highlights of our work are:
+We have proposed a system for developing and running peer-to-peer financial applications. Fermat shows the way of how to keep end users away from trusted third parties at a higher level. We have proposed solutions to several problems at the same time. The highlights of our work are:
 
 * How to exchange meta-data in a peer-to-peer way
 * How to prevent the loss of private keys (funds and identities)
-* How to maximize reusability by building with Plug-ins
+* How to maximize reusability by building with plug-ins
 * How to enable even non-developers to create and use their own wallets and financial applications. 
 
 We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "iilusion" of using a custom tailored financial application, while underneeth the skin a set of plug-ins are collaborating to provide end users the desired functionality and present it in the exact way they fell confortable with.
 
-As Fermat applications and wallets are a set of plug-ins, the more applications built, the more plug-ins are added to the system and more components are ready to be re-used. This produces a positive feedback loop on the development of Fermat applications.
+As Fermat applications and wallets are a set of plug-ins, the more applications built, the more plug-ins are added to the system and more unique components are ready to be re-used. This produces a positive feedback loop on the development of Fermat applications.
 
 We have created an environment where the user base of the system is a shared asset and anyone can profit from it, and by doing so, all contributions to the system are aligned to the shared goal of driving mass adoption.
 
