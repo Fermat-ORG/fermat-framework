@@ -46,8 +46,8 @@ public class BalanceSummaryFragment extends FermatWalletFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CashMoneyWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CashMoneyWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
