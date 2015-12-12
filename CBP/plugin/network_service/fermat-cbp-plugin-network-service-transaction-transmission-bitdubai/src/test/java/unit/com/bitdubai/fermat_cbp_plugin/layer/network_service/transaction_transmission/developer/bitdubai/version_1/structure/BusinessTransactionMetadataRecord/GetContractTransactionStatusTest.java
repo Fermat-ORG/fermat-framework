@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,13 +18,13 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetContractTransactionStatusTest {
     @Mock
-    ContractTransactionStatus contractTransactionStatusMock = mock(ContractTransactionStatus.class);
+    private ContractTransactionStatus contractTransactionStatusMock = mock(ContractTransactionStatus.class);
 
     @Test
     public void getContracTranssactionStatusMock() throws Exception{
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getContractTransactionStatus()).thenReturn(contractTransactionStatusMock);
-        assertEquals(contractTransactionStatusMock, businessTransactionMetadataRecord.getContractTransactionStatus());
-        System.out.println("Esta prueba corrio");
+        assertThat(businessTransactionMetadataRecord.getContractTransactionStatus()).isNotNull();
+        System.out.println("Test run");
     }
 }

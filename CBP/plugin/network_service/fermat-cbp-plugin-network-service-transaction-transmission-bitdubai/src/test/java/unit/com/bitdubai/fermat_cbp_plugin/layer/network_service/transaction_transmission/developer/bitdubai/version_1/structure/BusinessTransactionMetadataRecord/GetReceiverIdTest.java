@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -21,7 +21,7 @@ public class GetReceiverIdTest {
 
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = Mockito.mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getReceiverId()).thenReturn("1");
-        assertEquals("1", businessTransactionMetadataRecord.getReceiverId());
-        System.out.println("Esta prueba corrio");
+        assertThat(businessTransactionMetadataRecord.getReceiverId()).isNotNull();
+        System.out.println("Test run CBP");
     }
 }
