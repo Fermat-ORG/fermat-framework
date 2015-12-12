@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,22 +15,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyDestockDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>BusinessTransactionBankMoneyDestockDeveloperFactory.java
- * keeps constants the column names of the database.<p/>
- * <p/>
- *
- * Created by Franklin Marcano - (franklinmarcano970@gmail.com) on 16/11/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
- */public class BusinessTransactionBankMoneyDestockDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+ * Created by franklin on 11/12/15.
+ */
+public class UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -50,7 +44,7 @@ import java.util.UUID;
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public BusinessTransactionBankMoneyDestockDeveloperFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -65,14 +59,14 @@ import java.util.UUID;
         this.pluginId = pluginId;
     }
 
-    public void initializeDatabase() throws CantInitializeBankMoneyDestockDatabaseException
+    public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseDatabaseException
     {
         try {
 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
             database.closeDatabase();
 
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -80,7 +74,7 @@ import java.util.UUID;
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeBankMoneyDestockDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeCustomerBrokerPurchaseDatabaseException(cantOpenDatabaseException.getMessage());
 
         }catch (DatabaseNotFoundException e) {
 
@@ -88,20 +82,20 @@ import java.util.UUID;
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            BusinessTransactionBankMoneyDestockDatabaseFactory businessTransactionBankMoneyDestockDatabaseFactory = new BusinessTransactionBankMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
+            UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory(this.pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = businessTransactionBankMoneyDestockDatabaseFactory.createDatabase(pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
+                database = userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory.createDatabase(pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
                 database.closeDatabase();
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeBankMoneyDestockDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeCustomerBrokerPurchaseDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -111,7 +105,7 @@ import java.util.UUID;
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME));
 
         return databases;
     }
@@ -120,29 +114,42 @@ import java.util.UUID;
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Project columns.
+         * Table Customer Broker Purchase columns.
          */
-        List<String> projectColumns = new ArrayList<String>();
+        List<String> customerBrokerPurchaseColumns = new ArrayList<String>();
 
         /**
-         * Table Bank Money Destock addition.
+         * Table Customer Broker Purchase addition.
          */
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_FIAT_CURRENCY_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_BNK_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_BANK_ACCOUNT_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_CONCEPT_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_MEMO_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_AMOUNT_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_ID_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TIMESTAMP_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_PURCHASE_STATUS_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_STATUS_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CURRENCY_TYPE_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_TYPE_COLUMN_NAME);
+        customerBrokerPurchaseColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_MEMO_COLUMN_NAME);
 
-        DeveloperDatabaseTable bankMoneyRestockTable = developerObjectFactory.getNewDeveloperDatabaseTable(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TABLE_NAME, projectColumns);
-        tables.add(bankMoneyRestockTable);
+        DeveloperDatabaseTable customerBrokerPurchaseTable = developerObjectFactory.getNewDeveloperDatabaseTable(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TABLE_NAME, customerBrokerPurchaseColumns);
+        tables.add(customerBrokerPurchaseTable);
+
+        /**
+         * Table Events Recorded columns.
+         */
+        List<String> eventsColumns = new ArrayList<String>();
+
+        /**
+         * Table Customer Broker Purchase Events Recorded addition.
+         */
+        eventsColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_ID_COLUMN_NAME);
+        eventsColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        eventsColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+        eventsColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_STATUS_COLUMN_NAME);
+        eventsColumns.add(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable customerBrokerPurchaseEventsRecordedTable = developerObjectFactory.getNewDeveloperDatabaseTable(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_EVENTS_RECORDED_TABLE_NAME, eventsColumns);
+        tables.add(customerBrokerPurchaseEventsRecordedTable);
 
         return tables;
     }
