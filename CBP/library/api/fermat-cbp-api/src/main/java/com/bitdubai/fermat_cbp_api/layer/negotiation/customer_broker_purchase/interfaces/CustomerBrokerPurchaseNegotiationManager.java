@@ -29,20 +29,86 @@ import java.util.UUID;
  */
 
 public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager {
+    /**
+     *
+     * @param negotiation
+     * @throws CantCreateCustomerBrokerPurchaseNegotiationException
+     */
     void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException;
+
+    /**
+     *
+     * @param negotiation
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
     void updateCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
+    /**
+     *
+     * @param negotiation
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
     void    cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
+
+    /**
+     *
+     * @param negotiation
+     * @return
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
     boolean closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
+    /**
+     *
+     * @param negotiation
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
     void sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
+
+    /**
+     *
+     * @param negotiation
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
     void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
 
+    /**
+     *
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantGetListPurchaseNegotiationsException;
+
+    /**
+     *
+     * @param negotiationId
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
     CustomerBrokerPurchaseNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListPurchaseNegotiationsException;
+
+    /**
+     *
+     * @param status
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByStatus(NegotiationStatus status) throws CantGetListPurchaseNegotiationsException;
 
+    /**
+     *
+     * @param type
+     * @return
+     * @throws CantGetNextClauseTypeException
+     */
     ClauseType getNextClauseType(ClauseType type) throws CantGetNextClauseTypeException;
+
+    /**
+     *
+     * @param paymentMethod
+     * @return
+     * @throws CantGetNextClauseTypeException
+     */
     ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException;
 
     /**
