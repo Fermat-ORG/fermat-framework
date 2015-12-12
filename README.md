@@ -113,6 +113,9 @@ Fermat is moving towards version 1, but we're not stopping there. We have many f
 
 You can learn more, see some cool images of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
+
+![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/05aa4fc11e7a523ecf21d6d2b1fc631a73412798/Coins/Fiat_art_3_wb.jpg "Fermat Digital Money")
+
 <br>
 ### Fermat's Purpose
 
