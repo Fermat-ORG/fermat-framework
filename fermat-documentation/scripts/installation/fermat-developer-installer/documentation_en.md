@@ -36,3 +36,8 @@ cd $HOME
 
 It take some time to download all the software, please, be patient.
 
+###Genymotion install
+
+Genymotion is an Android emulator that you can install to test your changes in the Fermat app, as default, is not included the installation of Genymotion in this script.
+If you want to install Genymotion with this script you must set the *_genymotion_* variable and uncomment the version that you need in your development environment.
+
