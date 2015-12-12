@@ -1,5 +1,5 @@
  
-**Fermat Developer Installer
+###Fermat Developer Installer
 The MIT License (MIT)
 
 Copyright (c) 2015 Fermat Foundation.
@@ -25,7 +25,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
  Be careful this is a test version, please, use this script in a virtual machine or in a old computer.
 
-##INSTALL AND RUN
+###INSTALL AND RUN
 
 Copy *_FermatDeveloperInstaller.sh_* in your _$HOME_ folder, open the terminal/shell and execute:
 
