@@ -314,13 +314,13 @@ d. Nodes to recognize each other even when their IP location or other profile in
 
 We define as a _Platform_ a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack. 
 
-Each _Platform_ may introduce new workflows to the system , Add-ons, Plug-ins, GUI components (Apps, wallets) and _actors_. This enables the system to target different use cases with different _actors_ involved. 
+Each _Platform_ may introduce new workflows to the system, Add-ons, Plug-ins, GUI components (Apps, wallets) and _actors_. This enables the system to target different use cases with different _actors_ involved. 
 
 
 <br>
 ## Workflows
 
-We define workflows as high level processes that requires several components to achieve a certain goal. Manny workflows start at a GUI component triggered by end users and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
+We define workflows as high level processes that requires several components to achieve a certain goal. Many workflows start at a GUI component triggered by end users and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
 
 From a workflow point of view, each Plug-in runs a task and is fully responsible for doing its job. Workflows are a chain of tasks that may split into several paths and may span through more than one device.
 
@@ -391,6 +391,8 @@ We have proposed a system for developing and running peer-to-peer financial appl
 * How to prevent the loss of private keys (funds and identities)
 * How to maximize reusability by building with Plug-ins
 * How to enable even non-developers to create and use their own wallets and financial applications. 
+
+We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it.
 
 With this system we allow for a new ecosystem of peer-to-peer financial applications that are both crypto and digital asset enabled.
 
