@@ -398,7 +398,7 @@ We have shifted the paradigm from competition to collaboration by designing and 
 
 As Fermat applications and wallets are a set of plug-ins, the more applications built, the more plug-ins are added to the system and more components are ready to be re-used. This produces a positive feedback loop on the development of Fermat applications.
 
-We have created an environment where the user base of the system is a shared asset and anyone can profit from it, and by doing so, all contributions to the system are aligned to the exact same direction: driving mass adoption.
+We have created an environment where the user base of the system is a shared asset and anyone can profit from it, and by doing so, all contributions to the system are aligned to the shared goal of driving mass adoption.
 
 
 <br>
