@@ -76,7 +76,7 @@ Each node interconnects clients between each other in order to let them freely t
 
 #### Maintain the Fermat Blockchain
 
-Each node maintains the Fermat Blockchain: a public record of all coinbase transactions where the protocol issues new _fermats_, the native token of the Fermat System. This role is ruled by the Fermat Consensus Protocol.
+Each node maintains the Fermat Blockchain: a public record of all _coinbase_ transactions where the protocol issues new _fermats_, the native token of the Fermat System. This role is ruled by the Fermat Consensus Protocol.
 
 ### Fermat Clients
 
@@ -162,7 +162,7 @@ End Users pay with fermats to receive personalized technical support from Fermat
 <br>
 ## Fermat Blockchain
 
-Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are coinbase transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain. 
+Fermat's blockchain inherits many of the characteristics of the bitcoin blockchain and it is highly coupled with it. The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain. 
 
 Each block within the blockchain:
 
@@ -195,7 +195,7 @@ Network clients will try to establish their home base at a nearby Node. This wil
 <br>
 ## Decentralized Consensus
 
-The Fermat blockchain is not created by a central authority, but is assembled independently by every node in the network. The Fermat Protocol provides a set of rules that defines which coinbase transactions are going to be added to the blockchain. As Fermat outsources the transaction processing features of the bitcoin network, it is easier for Fermat to arrive to a consensus. 
+The Fermat blockchain is not created by a central authority, but is assembled independently by every node in the network. The Fermat Protocol provides a set of rules that defines which _coinbase_ transactions are going to be added to the blockchain. As Fermat outsources the transaction processing features of the bitcoin network, it is easier for Fermat to arrive to a consensus. 
 
 ### Proof of Work
 
@@ -223,9 +223,9 @@ In other words, if the node making all these calculations is at the same time in
 
 Immediately when a new block is mined at the bitcoin network, the following actions are taken by each qualifying node in order to see if they can earn the new fermats.
 
-They create a coinbase transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain at the next block mined. The first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block. The recording will happen when that block has 6 more blocks on top of it. 
+They create a _coinbase_ transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain at the next block mined. The first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block. The recording will happen when that block has 6 more blocks on top of it. 
 
-As every node is reading confirmed bitcoin transactions and they all share a syncronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes should be part of the race, and how many fermats they should add on their own coinbase transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
+As every node is reading confirmed bitcoin transactions and they all share a syncronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes should be part of the race, and how many fermats they should add on their own _coinbase_ transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
 
 The sum of the amounts of all these transactions must not exceed the amount of fermats per block allowed by the Fermat Protocol.
 
@@ -237,11 +237,11 @@ By using the fees payed by network clients as "proof of work" we discourage dish
 <br>
 ## Independent Verification of Transactions
 
-In Fermat, coinbase transactions are recorded on the Fermat Blockchain. Previously, nodes recorded the candidate coinbase transactions on the bitcoin network. Those transactions includes the transaction hash on the OP_RETURN field that later is going to be critical to recognize the satoshis present on the other outputs as fermats by Fermat wallets.
+In Fermat, _coinbase_ transactions are recorded on the Fermat Blockchain. Previously, nodes recorded the candidate _coinbase_ transactions on the bitcoin network. Those transactions includes the transaction hash on the OP_RETURN field that later is going to be critical to recognize the satoshis present on the other outputs as fermats by Fermat wallets.
 
 ### Fermat Genesis Transactions
 
-We call a _Fermat Genesis Transaction_ to each coinbase transaction recorded on the bitcoin blockchain that has also been included on the Fermat blockchain. The structure of that transaction is the following:
+We call a _Fermat Genesis Transaction_ to each _coinbase_ transaction recorded on the bitcoin blockchain that has also been included on the Fermat blockchain. The structure of that transaction is the following:
 
 
 | Input # | Contains | Output # | Contains |
@@ -253,7 +253,7 @@ We call a _Fermat Genesis Transaction_ to each coinbase transaction recorded on 
 | n | bitcoins | m - 1 | bitcoins |
 |   |  | m | OP_RETURN |
 
-Note that the _Genesis Transaction_ can have _n_ number of UTXO as INPUTS, all of them bitcoins (or satoshis to be precise). It can also have _m_ number of OUTPUTS where all of them will represent fermats except _m - 1_ which is reserved for bitcoin change and the _m_ which is used to place the Fermat Coinbase Transaction hash on the OP_RETURN field.
+Note that the _Genesis Transaction_ can have _n_ number of UTXO as INPUTS, all of them bitcoins (or satoshis to be precise). It can also have _m_ number of OUTPUTS where all of them will represent fermats except _m - 1_ which is reserved for bitcoin change and the _m_ which is used to place the Fermat _Coinbase_ Transaction hash on the OP_RETURN field.
 
 As usual any difference between the sum of all OUTPUTS and the sum of all INPUTS are the bitcoin miner's fees. 
 
