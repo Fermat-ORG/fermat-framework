@@ -296,7 +296,7 @@ public class UserRedemptionDao {
     }
 
     public List<String> getPendingCryptoRouterEvents() throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
-        return getPendingEventsBySource(EventSource.ASSETS_OVER_BITCOIN_VAULT);
+        return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
     private List<String> getPendingEventsBySource(EventSource eventSource) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {

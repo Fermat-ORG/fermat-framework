@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
@@ -28,20 +29,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 public interface AssetTransmissionNetworkServiceManager extends TransactionProtocolManager<DigitalAssetMetadataTransaction> {
 
     /**
-     * Method that send DigitalAssetMetadata.
-     * This method is deprecated, instead you should use its overload version that sends from an
-     * {@link DAPActor} to another one. This method would remain in there for compatibility. Probably it will dissapear soon.
-     *
-     * @param actorAssetIssuerSender
-     * @param actorAssetUserReceiver
-     * @param digitalAssetMetadataToSend
-     * @throws CantSendDigitalAssetMetadataException
-     */
-    @Deprecated
-    void sendDigitalAssetMetadata(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException;
-
-
-    /**
      * This method sends the digital asset metadata to a remote device.
      *
      * @param actorSender                The {@link DAPActor} that is sending the metadata
@@ -54,9 +41,45 @@ public interface AssetTransmissionNetworkServiceManager extends TransactionProto
     /**
      * Method that send the Transaction New Status Notification
      *
+     * @param actorSenderPublicKey {@link String} that represents the public key from the actor that sends the message.
+     * @param senderType {@link PlatformComponentType} that represents the type of actor that sends the message
+     * @param actorReceiverPublicKey {@link String} that represents the public key from the actor that receives the message.
+     * @param receiverType {@link PlatformComponentType} that represents the type of actor that receives the message
+     * @param transactionId {@link String} the id of the transaction related with the status notification
+     * @param newDistributionStatus {@link DistributionStatus} with the new status for the transaction.
+     * @throws CantSendTransactionNewStatusNotificationException in case something goes wrong while trying to send the message.
+     */
+    void sendTransactionNewStatusNotification(String actorSenderPublicKey,
+                                              PlatformComponentType senderType,
+                                              String actorReceiverPublicKey,
+                                              PlatformComponentType receiverType,
+                                              String transactionId,
+                                              DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
+
+    /**
+     * Method that send the Transaction New Status Notification
+     * <p/>
+     * This method is deprecated, instead you should use its overload version that sends from an
+     * {@link DAPActor} to another one. This method would remain in there for compatibility. Probably this one will disappear soon.
+     *
      * @param transactionId         (GenesisTransaction)
      * @param newDistributionStatus
      */
+    @Deprecated
     void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender, String actorAssetIssuerReceiverPublicKey, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
+
+
+    /**
+     * Method that send DigitalAssetMetadata.
+     * This method is deprecated, instead you should use its overload version that sends from an
+     * {@link DAPActor} to another one. This method would remain in there for compatibility. Probably it will dissapear soon.
+     *
+     * @param actorAssetIssuerSender
+     * @param actorAssetUserReceiver
+     * @param digitalAssetMetadataToSend
+     * @throws CantSendDigitalAssetMetadataException
+     */
+    @Deprecated
+    void sendDigitalAssetMetadata(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException;
 
 }
