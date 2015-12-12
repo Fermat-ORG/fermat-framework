@@ -24,7 +24,7 @@ import java.util.Random;
  * @version 1.0
  * @since 05/11/15.
  */
-public class CryptoCustomerWalletModuleCustomerBrokerNegotationInformation implements CustomerBrokerNegotiationInformation {
+public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation {
 
     // -- for test purposes
     private static final Random random = new Random(321515131);
@@ -35,12 +35,12 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotationInformation imple
     private ActorIdentity customerIdentity;
     private ActorIdentity brokerIdentity;
     private Map<ClauseType, String> summary;
-    private Collection<ClauseInformation> clauses;
+    private Map<ClauseType, ClauseInformation> clauses;
     private NegotiationStatus status;
     private long date;
 
 
-    public CryptoCustomerWalletModuleCustomerBrokerNegotationInformation(String brokerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
+    public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(String brokerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
 
         this.customerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl("CustomerAlias", new byte[0]);
         this.brokerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(brokerAlias, new byte[0]);
@@ -58,15 +58,15 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotationInformation imple
         this.status = status;
         date = calendar.getTimeInMillis();
 
-        clauses = new HashSet<>();
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty, ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, merchandise, ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, "Banesco\n2165645454654", ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, paymentCurrency, ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod, ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, "18-11-2015", ClauseStatus.DRAFT));
-        clauses.add(new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, "20-11-2015", ClauseStatus.DRAFT));
+        clauses = new HashMap<>();
+        clauses.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty, ClauseStatus.DRAFT));
+        clauses.put(ClauseType.CUSTOMER_CURRENCY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, merchandise, ClauseStatus.DRAFT));
+        clauses.put(ClauseType.BROKER_BANK_ACCOUNT, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, "Banesco\n2165645454654", ClauseStatus.DRAFT));
+        clauses.put(ClauseType.BROKER_CURRENCY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, paymentCurrency, ClauseStatus.DRAFT));
+        clauses.put(ClauseType.BROKER_PAYMENT_METHOD, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod, ClauseStatus.DRAFT));
+        clauses.put(ClauseType.EXCHANGE_RATE, new CryptoCustomerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        clauses.put(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, "18-11-2015", ClauseStatus.DRAFT));
+        clauses.put(ClauseType.BROKER_DATE_TIME_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, "20-11-2015", ClauseStatus.DRAFT));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotationInformation imple
     }
 
     @Override
-    public Collection<ClauseInformation> getClauses() {
+    public Map<ClauseType, ClauseInformation> getClauses() {
         return clauses;
     }
 
