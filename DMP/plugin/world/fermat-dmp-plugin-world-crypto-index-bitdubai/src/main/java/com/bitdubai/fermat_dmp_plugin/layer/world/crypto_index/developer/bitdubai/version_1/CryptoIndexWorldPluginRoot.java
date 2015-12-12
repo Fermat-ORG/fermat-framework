@@ -125,6 +125,7 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
             CryptoIndex cryptoIndex;
             cryptoIndex=cryptoProvidersManager.getCurrentIndex(cryptoCurrency,fiatCurrency);
             cryptoIndexDao.saveLastRateExchange(cryptoCurrency.getCode(),fiatCurrency.getCode(),cryptoIndex.getPurchasePrice());
+            System.out.println(cryptoIndex.getProviderDescription());
             return cryptoIndex.getPurchasePrice();
         } catch (CantGetIndexException e) {
            throw  new FiatCurrencyNotSupportedException(FiatCurrencyNotSupportedException.DEFAULT_MESSAGE,e,"CryptoIndexWorldPluginRoot","FiatCurrency Not Supported Exception");

@@ -108,7 +108,8 @@ public class GetMarketPriceTest {
         fiatCurrency= FiatCurrency.getByCode("USD");
         double price;
         price=cryptoIndexWorldPluginRoot.getMarketPrice(fiatCurrency,cryptoCurrency,0);
-        System.out.println(price);
+        System.out.println("Price: " +price );
+
         Assertions.assertThat(price).isNotNull();
     }
 }
