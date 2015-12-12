@@ -394,7 +394,7 @@ We have proposed a system for developing and running peer-to-peer financial appl
 * How to maximize reusability by building with Plug-ins
 * How to enable even non-developers to create and use their own wallets and financial applications. 
 
-We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "iilusion" of using a custom tailored financial application, while underneeth the skin a set of plug-ins are collaborating to provide the end user the desired functionality and present it in the exact way they fell confortable with.
+We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "iilusion" of using a custom tailored financial application, while underneeth the skin a set of plug-ins are collaborating to provide end users the desired functionality and present it in the exact way they fell confortable with.
 
 As Fermat applications and wallets are a set of plug-ins, the more applications built, the more plug-ins are added to the system and more components are ready to be re-used. That produces a positive feedback loop on the development of Fermat applications.
 
