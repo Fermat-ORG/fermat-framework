@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
 
 
@@ -12,7 +12,7 @@
         android:layout_height="180dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        android:background="@drawable/profile_image_standard"
+        tools:background="@drawable/profile_image_standard"
         />
 
     <FrameLayout
@@ -34,7 +34,7 @@
             android:paddingBottom="10dip"
             android:paddingRight="20dp"
             android:paddingTop="10dip"
-            android:text="Jennifer"
+            tools:text="Jennifer"
             android:textColor="#ffffff"
             android:textSize="16sp"
             />

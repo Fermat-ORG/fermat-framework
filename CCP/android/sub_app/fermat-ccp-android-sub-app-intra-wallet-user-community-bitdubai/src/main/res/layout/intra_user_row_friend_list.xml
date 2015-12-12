@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#00000000"
     android:orientation="vertical"
     android:paddingEnd="16dp"
     android:paddingLeft="16dp"
@@ -43,7 +44,7 @@
             android:text="Username"
             android:textColor="#292929"
             android:textSize="14sp"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="HardcodedText,RtlSymmetry" />
 
     </LinearLayout>
 
