@@ -387,7 +387,7 @@ The collection of system information for visualization and statistics uses hashe
 <br>
 ## Conclusion
 
-We have proposed a system for developing and running peer-to-peer financial applications. The Fermat Framework shows the way of how to keep end users away from trusted third parties at a higher level. We propose a solution to several problems at the same time. The highlights of our work are:
+We have proposed a system for developing and running peer-to-peer financial applications. The Fermat Framework shows the way of how to keep end users away from trusted third parties at a higher level. We have proposed solutions to several problems at the same time. The highlights of our work are:
 
 * How to exchange meta-data in a peer-to-peer way
 * How to prevent the loss of private keys (funds and identities)
@@ -398,7 +398,8 @@ We have shifted the paradigm from competition to collaboration by designing and 
 
 As Fermat applications and wallets are a set of plug-ins, the more applications built, the more plug-ins are added to the system and more components are ready to be re-used. This produces a positive feedback loop on the development of Fermat applications.
 
-With this system we allow for a new ecosystem of peer-to-peer financial applications that are both crypto and digital asset enabled.
+We have created an environment where the user base of the system is a shared asset and anyone can profit from it, and by doing so, all contributions to the system are aligned to the exact same direction: driving mass adoption.
+
 
 <br>
 ## References
