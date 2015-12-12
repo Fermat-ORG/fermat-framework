@@ -246,10 +246,8 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
     }
 
     public void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata) {
-        //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
-        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getDigitalAssetHash();
+        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getGenesisTransaction();
         this.digitalAssetUserRedemptionVault.setDigitalAssetLocalFilePath(this.digitalAssetFileStoragePath);
-        //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
-        //this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetFileName;
     }
+
 }
