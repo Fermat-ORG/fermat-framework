@@ -61,7 +61,7 @@ public class SettingsFragment2 extends FermatWalletFragment implements View.OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();

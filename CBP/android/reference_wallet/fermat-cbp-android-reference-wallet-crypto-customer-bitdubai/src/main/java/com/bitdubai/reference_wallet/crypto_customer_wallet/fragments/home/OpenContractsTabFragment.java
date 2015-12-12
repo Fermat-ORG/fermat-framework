@@ -60,8 +60,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -111,7 +111,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_start_negotiation) {
-            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST,walletSession.getAppPublicKey());
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST,appSession.getAppPublicKey());
         }
 
         return true;
@@ -157,7 +157,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet wallet = moduleManager.getCryptoCustomerWallet(walletSession.getAppPublicKey());
+                CryptoCustomerWallet wallet = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
                 GrouperItem<ContractBasicInformation> grouper;
 
                 
@@ -196,8 +196,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        walletSession.setData("contract_data", data);
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS, walletSession.getAppPublicKey());
+        appSession.setData("contract_data", data);
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override

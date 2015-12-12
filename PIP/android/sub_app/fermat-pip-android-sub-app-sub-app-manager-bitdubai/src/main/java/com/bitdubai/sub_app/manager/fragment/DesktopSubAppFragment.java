@@ -110,9 +110,9 @@ public class DesktopSubAppFragment extends FermatFragment implements SearchView.
         try {
 
             // setting up  module
-            //desktopSession = ((DesktopSession) subAppsSession);
+            //desktopSession = ((DesktopSession) appSession);
             //moduleManager = desktopSession.getModuleManager();
-            //errorManager = subAppsSession.getErrorManager();
+            //errorManager = appSession.getErrorManager();
 
 //            //get search name if
 //            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
@@ -151,6 +151,9 @@ public class DesktopSubAppFragment extends FermatFragment implements SearchView.
    //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
+        } catch (OutOfMemoryError error){
+            System.gc();
+            error.printStackTrace();
         }
 
 

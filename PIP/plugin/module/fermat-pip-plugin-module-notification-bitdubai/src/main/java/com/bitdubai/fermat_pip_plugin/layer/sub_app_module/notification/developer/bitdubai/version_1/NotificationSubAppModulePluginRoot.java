@@ -234,13 +234,16 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
         } catch (CantGetExtraUserException e) {
             e.printStackTrace();
+            throw new CantCreateNotification();
 
         } catch (CantGetIntraUserException e) {
             e.printStackTrace();
+            throw new CantCreateNotification();
         } catch (ExtraUserNotFoundException e) {
             e.printStackTrace();
+            throw new CantCreateNotification();
         }
-        throw new CantCreateNotification();
+
     }
 
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource, String actorId, String actorName, Actors actorType, byte[] profileImage) throws CantCreateNotification {

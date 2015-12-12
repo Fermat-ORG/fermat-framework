@@ -114,8 +114,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((AssetFactorySession) subAppsSession).getManager();
-            errorManager = subAppsSession.getErrorManager();
+            manager = ((AssetFactorySession) appSession).getManager();
+            errorManager = appSession.getErrorManager();
             if (!isEdit) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
                 dialog.setTitle("Asset Editor");
@@ -406,7 +406,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), "Asset deleted successfully", Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.DAP_MAIN.getCode(), subAppsSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_MAIN.getCode(), appSession.getAppPublicKey());
                 }
             }
 
@@ -478,7 +478,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.DAP_MAIN.getCode(), subAppsSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_MAIN.getCode(), appSession.getAppPublicKey());
                 }
             }
 

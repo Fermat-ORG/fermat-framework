@@ -53,9 +53,9 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
         try {
             // setting up  module
-            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) subAppsSession;
+            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -72,7 +72,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
              newIdentityButton.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View view) {
-                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
+                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
                  }
              });
 

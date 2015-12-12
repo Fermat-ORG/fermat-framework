@@ -116,6 +116,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                             "Unexpected Crypto Status detected."
                     );
             }
+
         } catch (Exception e) {
             reportUnexpectedError(e);
         }

@@ -8,6 +8,8 @@ import android.content.res.Resources;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
@@ -39,12 +41,12 @@ import java.util.List;
 
         private Activity activity;
 
-        private WalletFragmentFactory walletFragmentFactory;
+        private FermatFragmentFactory walletFragmentFactory;
 
         private TabStrip tabStrip;
 
 
-        private WalletSession walletSession;
+        private AbstractFermatSession walletSession;
 
         private ErrorManager errorManager;
 
@@ -104,7 +106,7 @@ import java.util.List;
 
     }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
             super(fm);
             this.context=context;
 
@@ -125,7 +127,7 @@ import java.util.List;
 
         }
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,String fragment ,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
         super(fm);
         this.context=context;
 

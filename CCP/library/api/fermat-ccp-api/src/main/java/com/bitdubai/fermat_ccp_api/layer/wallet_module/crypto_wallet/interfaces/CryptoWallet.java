@@ -415,12 +415,13 @@ public interface CryptoWallet extends Serializable {
     /**
      * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
      * @param requestId
+     * @param intraUserLoggedInPublicKey
      * @throws CantApproveCryptoPaymentRequestException
      * @throws CryptoPaymentRequestNotFoundException
      * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
      */
 
-    void approveRequest(UUID requestId) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
+    void approveRequest(UUID requestId,String intraUserLoggedInPublicKey) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
 
     /**
      *

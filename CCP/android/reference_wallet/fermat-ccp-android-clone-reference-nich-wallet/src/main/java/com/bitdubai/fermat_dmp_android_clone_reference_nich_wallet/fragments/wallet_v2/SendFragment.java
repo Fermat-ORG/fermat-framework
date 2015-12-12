@@ -82,7 +82,7 @@ public  class SendFragment extends FermatWalletFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
 
         try {
 

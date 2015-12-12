@@ -9,7 +9,11 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip.IconTabProvider;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
@@ -40,12 +44,12 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
     private Activity activity;
 
-    private WalletFragmentFactory walletFragmentFactory;
+    private FermatFragmentFactory walletFragmentFactory;
 
     private TabStrip tabStrip;
 
 
-    private WalletSession walletSession;
+    private AbstractFermatSession walletSession;
 
     private ErrorManager errorManager;
 
@@ -90,7 +94,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
     }
 
-    public TabsPagerAdapterWithIcons(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+    public TabsPagerAdapterWithIcons(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
         super(fm);
         this.context=context;
 

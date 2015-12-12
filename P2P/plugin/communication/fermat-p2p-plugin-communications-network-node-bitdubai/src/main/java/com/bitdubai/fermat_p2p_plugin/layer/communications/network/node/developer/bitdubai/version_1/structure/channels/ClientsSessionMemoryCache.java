@@ -63,7 +63,7 @@ public class ClientsSessionMemoryCache {
      * @param clientPublicKeyIdentity the client identity
      * @return the session of the client
      */
-    private Session get(String clientPublicKeyIdentity){
+    public Session get(String clientPublicKeyIdentity){
 
         /*
          * Return the session of this client
@@ -77,7 +77,7 @@ public class ClientsSessionMemoryCache {
      * @param clientPublicKeyIdentity the client identity
      * @param session the client session
      */
-    private void add(String clientPublicKeyIdentity, Session session){
+    public void add(String clientPublicKeyIdentity, Session session){
 
         /*
          * Add to the cache
@@ -91,7 +91,7 @@ public class ClientsSessionMemoryCache {
      * @param clientPublicKeyIdentity the client identity
      * @return the session of the client
      */
-    private Session remove(String clientPublicKeyIdentity){
+    public Session remove(String clientPublicKeyIdentity){
 
         /*
          * remove the session of this client
