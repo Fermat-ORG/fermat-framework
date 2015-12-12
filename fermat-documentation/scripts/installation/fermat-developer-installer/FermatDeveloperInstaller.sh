@@ -152,7 +152,7 @@ export PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin:$ANDROID_HOME/platform-tools:$
     echo ${enviromentVars}>fermatenv.sh
     echo "Moving fermatenv.sh"
     sudo mv fermatenv.sh /etc/profile.d
-    #Now, I going to set this vars in the actual script session
+    #Now, I'm going to set this vars in the actual script session
     echo "export JAVA_HOME=/opt/java/"
     export JAVA_HOME="/opt/java/"
     echo "GRADLE_HOME=/opt/gradle"
@@ -171,7 +171,7 @@ function installIDE(){
     timpestamp
     echo "Downloading IDE"
     echo "wget https://dl.google.com/dl/android/studio/ide-zips/1.5.1.0/android-studio-ide-141.2456560-linux.zip"
-    #wget https://dl.google.com/dl/android/studio/ide-zips/1.5.1.0/android-studio-ide-141.2456560-linux.zip
+    wget https://dl.google.com/dl/android/studio/ide-zips/1.5.1.0/android-studio-ide-141.2456560-linux.zip
     echo "Unziping IDE"
     echo "unzip -e ${androidStudio}"
     unzip -e ${androidStudio}
