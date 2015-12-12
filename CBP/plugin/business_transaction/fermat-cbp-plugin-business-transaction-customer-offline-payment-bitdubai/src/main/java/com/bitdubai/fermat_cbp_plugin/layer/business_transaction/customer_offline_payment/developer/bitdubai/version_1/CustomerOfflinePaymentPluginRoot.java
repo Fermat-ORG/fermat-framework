@@ -1,210 +1,261 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1;
 
 
+import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
- * Created by Yordin Alayn on 16.09.15.
+ * Created by Manuel Perez on 12/12/2015.
  */
 
-public class CustomerOfflinePaymentPluginRoot implements
-        /*BankMoneyStockReplenishmentManager,
+public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        DealsWithPluginDatabaseSystem,
-        LogManagerForDevelopers,
-        DealsWithErrors,
-        DealsWithLogger,
-        DealsWithDeviceUser,
-        DealsWithPluginFileSystem,*/
-        Plugin/*,
-        Service*/ {
-    @Override
-    public void setId(UUID pluginId) {
+        LogManagerForDevelopers {
 
-    }/*
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    ErrorManager errorManager;
 
-    private BankMoneyStockReplenishmentBusinessTransactionDatabaseDao bankMoneyStockReplenishmentBusinessTransactionDatabaseDao;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
-    private ErrorManager errorManager;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    LogManager logManager;
 
-    private LogManager logManager;
-
-    private DeviceUserManager deviceUserManager;
-
-    private PluginFileSystem pluginFileSystem;
-
-    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    private UUID pluginId;
-
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    *//*BankMoneyStockReplenishmentManager Interface Implementation*//*
-    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetBankMoneyStockReplenishmentException {
-        try {
-            List<BankMoneyStockReplenishment> bankMoneyStockReplenishmentList = new ArrayList<BankMoneyStockReplenishment>();
-            bankMoneyStockReplenishmentList = bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser();
-            return bankMoneyStockReplenishmentList;
-        } catch (CantListBankMoneyStockReplenishmentBusinessTransactionException e) {
-            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", FermatException.wrapException(e), "", "");
-        }
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
+    private TransactionTransmissionManager transactionTransmissionManager;
+
+    //TODO: Need reference to contract plugin
+    private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+
+    //TODO: Need reference to contract plugin
+    private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+
+    //TODO: Need reference to contract plugin
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    /**
+     * Represents the plugin manager.
+     */
+    //CustomerOfflinePaymentTransactionManager customerOnlinePaymentTransactionManager;
+
+    /**
+     * Represents the plugin CustomerOnlinePaymentBusinessTransactionDatabaseFactory
+     */
+    //CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+
+    /**
+     * Represents the database
+     */
+    Database database;
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    public CustomerOfflinePaymentPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
-    public BankMoneyStockReplenishment createBankMoneyStockReplenishment(
-             final String publicKeyBroker
-            ,final CurrencyType merchandiseCurrency
-            ,final float merchandiseAmount
-            ,final UUID executionTransactionId
-            ,final BankCurrencyType bankCurrencyType
-            ,final BankOperationType bankOperationType
-    ) throws CantCreateBankMoneyStockReplenishmentException {
-        try {
-            UUID transactionId = UUID.randomUUID();
-            BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
-            KeyPair keyPairBroker = AsymmetricCryptography.createKeyPair(publicKeyBroker);
-            BankMoneyStockReplenishment bankMoneyStockReplenishment = new BankMoneyStockReplenishmentBusinessTransactionImpl(
-                transactionId,
-                keyPairBroker,
-                merchandiseCurrency,
-                merchandiseAmount,
-                executionTransactionId,
-                bankCurrencyType,
-                bankOperationType,
-                transactionStatus
-            );
-            bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.createNewBankMoneyStockReplenishment(bankMoneyStockReplenishment);
-            return bankMoneyStockReplenishment;
-        } catch (CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException e) {
-            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", e, "Error save user on database", "");
-        } catch (Exception e) {
-            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public void updateStatusBankMoneyStockReplenishment(final UUID transactionId, final BusinessTransactionStatus transactionStatus) throws CantUpdateStatusBankMoneyStockReplenishmentException {
-        try {
-            bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.updateStatusBankMoneyStockReplenishmentTransaction(transactionId, transactionStatus);
-        } catch (CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException e) {
-            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", e, "Error save user on database", "");
-        } catch (Exception e) {
-            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    *//*DatabaseManagerForDevelopers Interface implementation.*//*
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory dbFactory = new BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory dbFactory = new BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseTableList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try {
-            BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory dbFactory = new BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-            dbFactory.initializeDatabase();
-            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-        return new ArrayList<>();
-    }
-
-    *//*DealsWithPluginDatabaseSystem interface implementation.*//*
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-    }
-
-    *//*LogManagerForDevelopers Interface implementation.*//*
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseDao");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot");
         return returnedClasses;
     }
 
-    //BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY TEMPORAL. AGREGAR BUSINESS TRANSACTION.
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeDatabaseException
+     */
+//    private void initializeDb() throws CantInitializeDatabaseException {
+//
+//        try {
+//            /*
+//             * Open new database connection
+//             */
+//            this.database = this.pluginDatabaseSystem.openDatabase(
+//                    pluginId,
+//                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+//
+//        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+//
+//            /*
+//             * The database exists but cannot be open. I can not handle this situation.
+//             */
+//            errorManager.reportUnexpectedPluginException(
+//                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                    cantOpenDatabaseException);
+//            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+//
+//        } catch (DatabaseNotFoundException e) {
+//
+//            /*
+//             * The database no exist may be the first time the plugin is running on this device,
+//             * We need to create the new database
+//             */
+//            CustomerOnlinePaymentBusinessTransactionDatabaseFactory customerOnlinePaymentBusinessTransactionDatabaseFactory =
+//                    new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+//
+//            try {
+//
+//                /*
+//                 * We create the new database
+//                 */
+//                this.database = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(
+//                        pluginId,
+//                        CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+//
+//            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+//
+//                /*
+//                 * The database cannot be created. I can not handle this situation.
+//                 */
+//                errorManager.reportUnexpectedPluginException(
+//                        Plugins.OPEN_CONTRACT,
+//                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+//                        cantOpenDatabaseException);
+//                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+//
+//            }
+//        }
+//
+//    }
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         try {
             for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                if (com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (CustomerOfflinePaymentPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
         }
     }
 
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    *//*DealWithErrors Interface implementation.*//*
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
 
-    *//*DealsWithLogger Interface implementation.*//*
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    *//*DealsWithDeviceUser Interface implementation.*//*
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    *//*DealWithPluginFileSystem Interface implementation.*//*
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
-    }
-
-    *//*Service Interface implementation.*//*
     @Override
     public void start() throws CantStartPluginException {
         try {
+
+            /**
+             * Initialize database
+             */
+            //initializeDb();
+
+            /*
+             * Initialize Developer Database Factory
+             */
+            /*customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory = new
+                    CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+                    pluginId);
+            customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();*/
+
+            /**
+             * Initialize Dao
+             */
+            /*CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
+                    new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,
+                            pluginId,
+                            database);*/
+
+            /**
+             * Init the plugin manager
+             */
+            /*this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
+                    this.customerBrokerContractPurchaseManager,
+                    customerOnlinePaymentBusinessTransactionDao,
+                    this.transactionTransmissionManager,
+                    this.customerBrokerPurchaseNegotiationManager);*/
+
+            /**
+             * Init event recorder service.
+             */
+            /*CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService=new CustomerOnlinePaymentRecorderService(
+                    customerOnlinePaymentBusinessTransactionDao,
+                    eventManager);
+            customerOnlinePaymentRecorderService.start();*/
+
+            /**
+             * Init monitor Agent
+             */
+            /*CustomerOnlinePaymentMonitorAgent openContractMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
+                    pluginDatabaseSystem,
+                    logManager,
+                    errorManager,
+                    eventManager,
+                    pluginId,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    outgoingIntraActorManager);
+            openContractMonitorAgent.start();*/
+
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            //System.out.println("Customer offline payment starting");
+        } /*catch (CantInitializeDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantStartServiceException e) {
+            e.printStackTrace();
+        } catch (CantSetObjectException e) {
+            e.printStackTrace();
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }*/ catch (Exception e) {
+            //TODO: delete this catch
+            e.printStackTrace();
         }
     }
 
@@ -223,14 +274,40 @@ public class CustomerOfflinePaymentPluginRoot implements
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    *//*PlugIn Interface implementation.*//*
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }*/
-
     @Override
     public FermatManager getManager() {
         return null;
+    }
+
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            /**
+             * sometimes the classname may be passed dynamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return CustomerOfflinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            /**
+             * If I couldn't get the correct logging level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 }

@@ -42,7 +42,7 @@ public class NoIdentityFragment extends FermatWalletFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (ReferenceWalletSession) walletSession;
+            referenceWalletSession = (ReferenceWalletSession) appSession;
             intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
 
         } catch (Exception e){
@@ -73,7 +73,7 @@ public class NoIdentityFragment extends FermatWalletFragment {
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY, walletSession.getIdentityConnection(), object);
+                    changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY, ((ReferenceWalletSession)appSession).getIdentityConnection(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

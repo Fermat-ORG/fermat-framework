@@ -277,6 +277,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             CryptoPayment cryptoPayment = cryptoPaymentRequestDao.getRequestById(requestId);
 
+
+
             cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.IN_APPROVING_PROCESS);
 
             fromInApprovingProcessToPaymentProcessStarted(requestId, cryptoPayment);

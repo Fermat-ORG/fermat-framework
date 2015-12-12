@@ -6,7 +6,7 @@
 */
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendCryptoAddressException</code>

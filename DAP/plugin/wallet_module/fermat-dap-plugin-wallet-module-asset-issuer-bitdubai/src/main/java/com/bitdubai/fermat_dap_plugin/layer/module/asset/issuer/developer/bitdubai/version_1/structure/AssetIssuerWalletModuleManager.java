@@ -50,17 +50,9 @@ public class AssetIssuerWalletModuleManager {
         this.pluginFileSystem         = pluginFileSystem;
     }
 
-    public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException{
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey) throws CantLoadWalletException{
         try{
-            return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
-        }catch (Exception exception){
-            throw new CantLoadWalletException("Error load Wallet Balances Available", exception, "Method: getAssetIssuerWalletBalancesAvailable", "Class: AssetIssuerWalletModuleManager");
-        }
-    }
-
-    public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException{
-        try{
-            return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesBook();
+            return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalances();
         }catch (Exception exception){
             throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetIssuerWalletBalancesBook", "Class: AssetIssuerWalletModuleManager");
         }

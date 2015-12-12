@@ -27,12 +27,13 @@ Notas:
     - Se registra en el campo MEMO
   - **(A) Locaciones del broker** >> `Customer Broker Sale Negotiation` 
     - Esto esta como un setting de `Customer Broker Sale Negotiation` 
-    - Se envia al customer a traves del plugin `Customer Broker Update Negotiation Transmition` solo la opcion seleccionada por el
+    - Se envia al customer a traves del plugin `Customer Broker Update Negotiation Transmission` solo la opcion seleccionada por el
     - Se asigna esta lista cuando el Broker confirme que quiere aceptar Cash on Hand y Cash Delivery para recibir el pago
   - **(A) Cuentas bancarias del broker** >> `Customer Broker Sale Negotiation` 
-    - Esto esta como un setting de `Customer Broker Sale Negotiation` y se envia al customer a traves del plugin `Customer Broker Update Negotiation Transmition`
-    - Se asigna esta lista cuendo el Broker confirme que quiere aceptar Bank Transfer como pago
-  - **(A) Locacion del customer** >> `Customer Broker Sale Negotiation` 
+    - Esto esta como un setting de `Customer Broker Sale Negotiation`
+    - Se envia al customer a traves del plugin `Customer Broker Update Negotiation Transmission` solo la opcion seleccionada por el
+    - Se asigna esta lista cuando el Broker confirme que quiere aceptar Bank Transfer como pago
+  - **(A) Locación del customer** >> `Customer Broker Sale Negotiation`
     - La asigna el customer en su wallet cuando confirme que quiere aceptar la mercancia como Cash
     - No va a ser editable por el broker
   - **(A) Cuenta bancaria del customer** >> `Customer Broker Sale Negotiation`
@@ -40,19 +41,18 @@ Notas:
     - No va a ser editable por el broker
   - **(A) Monedas que acepta el broker como pago** >> `Customer Broker Sale Negotiation`
     - Se guarda en un xml ya que esto viene de la cotizacion que se obtiene de la lista de brokers
-  - **(A) Precio de mercado** >> Plugin de super capa `Currency Exchage Rates`
+  - **(A) Precio de mercado** >> Plugin de super capa `Currency Exchange Rates`
     - Obtengo referencia del plugin Provider para ese par de mercancias desde los settings de `Crypto Broker Wallet` 
     - Obtengo el precio del mercado del plugin Provider 
   - **(A) Precio sugerido** >> `Crypto Broker Wallet`
   - **(A) Datos ingresados** >> `Customer Broker Sale Negotiation`
     - El plugin tiene un metodo que me devuelve las clausulas con los datos ingresados en el orden correcto, una clausula a la vez
-    - Deberia existir un metodo que me devuelva todas esas clausulas ya ordenadas
   - **(A) Modificar Datos** >> `Customer Broker Sale Negotiation`
     - Me creo un wrapper para tener la data modificada y la actualice el plugin `Customer Broker Sale Negotiation`
   - **(A) Enviar Datos** >> `Customer Broker Update Negotiation Transmition`
-    - Se envia el objeto `NegotaitonInformation` con la informacion de la negociacion
+    - Se envia el objeto `NegotiationInformation` con la informacion de la negociacion
   - **(A) Cerrar Negociacion** >> `Customer Broker Close Negotiation Transmition`
-    - Se envia el objeto `NegotaitonInformation` con la informacion de la negociacion
+    - Se envia el objeto `NegotiationInformation` con la informacion de la negociacion
   - **(A) Cancelar Negociacion** >> `Customer Broker Update Negotiation Transmition`
     - Se cambia el estado de la negociacion a CANCELED usando `Customer Broker Sale Negotiation` 
     - se envia la informacion de la negociacion a `Customer Broker Update Negotiation Transmition` para que se encargue de actualizar la info en la wallet del customer

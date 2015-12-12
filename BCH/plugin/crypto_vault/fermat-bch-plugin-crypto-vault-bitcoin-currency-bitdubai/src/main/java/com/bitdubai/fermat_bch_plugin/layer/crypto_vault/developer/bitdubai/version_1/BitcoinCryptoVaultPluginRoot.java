@@ -57,6 +57,8 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 
+import org.bitcoinj.core.Wallet;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

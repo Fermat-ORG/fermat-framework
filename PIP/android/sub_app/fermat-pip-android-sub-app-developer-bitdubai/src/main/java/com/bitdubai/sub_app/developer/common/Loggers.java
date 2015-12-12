@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.developer.common;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 
@@ -22,7 +23,7 @@ public class Loggers {
 
     public String picture;
 
-    public String pluginKey;
+    public PluginVersionReference pluginVersionReference;
 
     public ClassHierarchyLevels classHierarchyLevels;
 
