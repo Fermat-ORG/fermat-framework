@@ -265,6 +265,7 @@ public enum Plugins implements FermatPluginsEnum {
     TRANSACTION_TRANSMISSION    ("TRTX"),
     CLOSE_CONTRACT              ("CLC"),
     CUSTOMER_ONLINE_PAYMENT     ("CONP"),
+    CUSTOMER_OFFLINE_PAYMENT    ("COFP"),
 
     // End  new Plugins
 
@@ -372,7 +373,8 @@ public enum Plugins implements FermatPluginsEnum {
             case ("NGP"):   return NEGOTIATION_PURCHASE     ;
             case "OPC":     return OPEN_CONTRACT            ;
             case "CLC":     return CLOSE_CONTRACT           ;
-            case "CONP":     return CUSTOMER_ONLINE_PAYMENT ;
+            case "CONP":    return CUSTOMER_ONLINE_PAYMENT  ;
+            case "COFP":    return CUSTOMER_OFFLINE_PAYMENT ;
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
