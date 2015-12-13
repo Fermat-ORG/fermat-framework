@@ -10,4 +10,19 @@
     <color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
     <color name="accent_pressed">#C2185B</color>
+
+    <color name="half_black">#808080</color>
+    <color name="white">#fafafa</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="black_semi_transparent">#B2000000</color>
+
+    <color name="transaction_item_background">#dddddd</color>
+    <color name="transaction_deposit_background">#c5e1a5</color>
+    <color name="transaction_withdrawal_background">#ef9a9a</color>
+    <color name="ccw_contract_history_customer_name_text">#6b7378</color>
+    <color name="ccw_contract_history_sold_text">#00b3dc</color>
+    <color name="ccw_contract_history_exchange_rate_text">#6b7378</color>
+    <color name="ccw_contract_history_date_text">#6b7378</color>
+
+
 </resources>
