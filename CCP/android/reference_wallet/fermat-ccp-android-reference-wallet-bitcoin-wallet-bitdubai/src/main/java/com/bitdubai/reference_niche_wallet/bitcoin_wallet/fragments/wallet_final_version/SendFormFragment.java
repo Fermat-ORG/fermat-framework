@@ -47,6 +47,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
@@ -102,7 +103,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
         intraUserModuleManager = referenceWalletSession.getIntraUserModuleManager();
 
         try {
@@ -234,11 +235,13 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
         if(cryptoWalletWalletContact!=null) {
             try {
-                imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact,getResources(),true);
+                bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
             }
             contactName.setText(cryptoWalletWalletContact.getActorName());
+
         }else{
             Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
         }
@@ -258,7 +261,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 //add connection like a wallet contact
                 try {
                     if(walletContact.isConnection)
-                        referenceWalletSession.getModuleManager().getCryptoWallet().convertConnectionToContact(
+                        cryptoWalletWalletContact = referenceWalletSession.getModuleManager().getCryptoWallet().convertConnectionToContact(
                                 walletContact.name,
                                 Actors.INTRA_USER,
                                 walletContact.actorPublicKey,
@@ -268,6 +271,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                                 referenceWalletSession.getAppPublicKey() ,
                                 CryptoCurrency.BITCOIN,
                                 BlockchainNetworkType.TEST);
+                    setUpUIData();
 
                 }
                 catch (CantGetActiveLoginIdentityException e) {
@@ -380,7 +384,6 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
             }
         } else {
             Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
-
         }
     }
 

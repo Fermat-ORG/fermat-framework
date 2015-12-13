@@ -1,17 +1,19 @@
 package com.bitdubai.reference_wallet.cash_money_wallet.fragmentFactory;
 
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.fragments.home.BalanceSummaryFragment;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class CashMoneyWalletFragmentFactory extends FermatWalletFragmentFactory<CashMoneyWalletSession, WalletSettings, CashMoneyWalletFragmentsEnumType> {
+public class CashMoneyWalletFragmentFactory extends FermatFragmentFactory<CashMoneyWalletSession, WalletSettings, WalletResourcesProviderManager, CashMoneyWalletFragmentsEnumType> {
     @Override
     public FermatWalletFragment getFermatFragment(CashMoneyWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
         if (fragment == null) {

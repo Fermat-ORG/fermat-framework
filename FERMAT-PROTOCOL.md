@@ -4,9 +4,9 @@
 
 # Fermat Protocol
 
-The Fermat Protocol is an open standard meaning that can be freely adopted, implemented and extended. The protocol defines how both Fermat nodes and clients should behave.  
+The Fermat Protocol is an open standard meaning that it can be freely adopted, implemented and extended. The protocol defines how both Fermat nodes and clients should behave.  
 
-We expect the protocol to evolve through time to address miss behaviours and mitigate attacks. The protocol may be adapted in response to proposed improvements and market feedback but all changes must be decided by consensus of its users.
+We expect the protocol to evolve through time to address misbehavior and mitigate attacks. The protocol may be adapted in response to proposed improvements and market feedbacks but all changes must be decided by the consensus of its users.
 
 <br>
 ## Fermat Protocol Version 1.0

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.exceptions.MissingCashMoneyDestockDataException;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.utils.CashTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
@@ -27,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -35,7 +38,6 @@ import java.util.logging.Logger;
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
-    //TODO: Documentar y manejo de excepciones. Inicializar los manager del Hold Bank y Wallet CBP para que seteados en el constructor
     //TODO: Manejo de Eventos
 
     private Thread agentThread;
@@ -44,16 +46,20 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
     private final StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CashUnholdTransactionManager cashUnholdTransactionManager;
+    private final StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory;
 
     public StockTransactionsCashMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                          StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager,
                                                          CryptoBrokerWalletManager cryptoBrokerWalletManager,
-                                                         CashUnholdTransactionManager cashUnholdTransactionManager) {
+                                                         CashUnholdTransactionManager cashUnholdTransactionManager,
+                                                         PluginDatabaseSystem pluginDatabaseSystem,
+                                                         UUID pluginId) {
 
         this.errorManager                            = errorManager;
         this.stockTransactionCashMoneyDestockManager = stockTransactionCashMoneyDestockManager;
         this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
         this.cashUnholdTransactionManager            = cashUnholdTransactionManager;
+        stockTransactionCashMoneyDestockFactory      = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -118,14 +124,14 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
         try {
             // I define the filter to null for all
             DatabaseTableFilter filter = null;
-            for(CashMoneyTransaction cashMoneyTransaction : stockTransactionCashMoneyDestockManager.getCashMoneyTransactionList(filter))
+            for(CashMoneyTransaction cashMoneyTransaction : stockTransactionCashMoneyDestockFactory.getCashMoneyTransactionList(filter))
             {
                 switch(cashMoneyTransaction.getTransactionStatus()) {
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
                         //Luego cambiar el status al registro de la transaccion leido
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-                        stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                        stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         break;
                     case IN_WALLET:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
@@ -149,7 +155,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
                             cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
-                            stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                            stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
 
                         } catch (CryptoBrokerWalletNotFoundException e) {
                             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
@@ -178,12 +184,12 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
                         {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
-                            stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                            stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
                         if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode())
                         {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
-                            stockTransactionCashMoneyDestockManager.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                            stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
                         break;
                 }

@@ -22,7 +22,7 @@ public class IntraUserActorRecord implements Actor {
 
         this.actorPublicKey = actorPublicKey;
         this.name           = name;
-        this.photo          = photo.clone();
+        this.photo          = photo;
         this.privateKey     = privateKey;
 
     }
@@ -53,7 +53,7 @@ public class IntraUserActorRecord implements Actor {
 
     @Override
     public byte[] getPhoto() {
-        return this.photo.clone();
+        return this.photo;
     }
 
     @Override

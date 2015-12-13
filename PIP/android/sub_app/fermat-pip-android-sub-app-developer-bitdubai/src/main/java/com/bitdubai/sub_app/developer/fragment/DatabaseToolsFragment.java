@@ -74,8 +74,8 @@ public class DatabaseToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (super.subAppsSession != null) {
-            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if (super.appSession != null) {
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
         }
 
         errorManager = developerSubAppSession.getErrorManager();

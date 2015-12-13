@@ -2021,11 +2021,11 @@
 					<plugin name="Hold"
 						description=""
 						difficulty="6"
-						code-level="development">
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2035,11 +2035,11 @@
 					<plugin name="Unhold"
 						description=""
 						difficulty="6"
-						code-level="development">
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="10"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4949,83 +4949,13 @@
 					<plugin	name="Crypto Customer"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="jorgeejgonzalez" scope="implementation" percentage="10"></author>
-							<author name="yalayn" scope="implementation" percentage="15"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Contract" language="java">
-				<plugins>
-					<plugin name="Customer Broker Purchase"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="90"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Customer Broker Sale"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="90"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Negotiation" language="java">
-				<plugins>
-					<plugin name="Customer Broker Purchase"
-						description=""
-						difficulty="4"
-						code-level="development"
-						>
-						<authors>
-							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="70"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Customer Broker Sale"
-						description=""
-						difficulty="4"
-						code-level="development"
-						>
-						<authors>
-							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="70"></author>
+							<author name="yalayn" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5476,6 +5406,74 @@
 				</plugins>
 			</layer>
 
+			<layer name="Contract" language="java">
+				<plugins>
+					<plugin name="Customer Broker Purchase"
+						description=""
+						difficulty="6"
+						code-level="qa">
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Customer Broker Sale"
+						description=""
+						difficulty="6"
+						code-level="qa">
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Negotiation" language="java">
+				<plugins>
+					<plugin name="Customer Broker Purchase"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="90"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin name="Customer Broker Sale"
+						description=""
+						difficulty="4"
+						code-level="qa"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
+							<author name="vlzangel" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin name="Crypto Broker"
@@ -5487,7 +5485,7 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="25"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="90"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5577,12 +5575,12 @@
 						name="Fiat Index"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="abicelis" scope="implementation" percentage="10"></author>
+							<author name="abicelis" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5644,11 +5642,11 @@
 					<plugin	name="Negotiation Transmission"
 						description=""
 						difficulty="7"
-						code-level="development">
+						code-level="qa">
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
+							<author name="yalayn" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -7711,7 +7709,7 @@
 					platform="CCP"
 					superlayer=""
 					layer="Reference Wallet"
-					name="Reference Bitcoin Wallet"
+					name="Bitcoin Wallet"
 					>
 					<next>
 						<step id="1" type="direct call"></step>
@@ -7725,13 +7723,13 @@
 					superlayer=""
 					component="Plugin"
 					layer="Wallet Module"
-					name="Crypto Wallet Module"
+					name="Crypto Wallet"
 					>
 					<next>
 						<step id="2" type="direct call"></step>
 					</next>
 				</step>
-				<step id="1"
+				<step id="2"
 					type="activity"
 					title="Route request to network service"
 					description="The module routes this payment request to the network service to reach the selected intra user."
@@ -7742,23 +7740,24 @@
 					name="Crypto Payment Request"
 					>
 					<next>
-						<step id="2" type="direct call"></step>
+						<step id="3" type="direct call"></step>
 					</next>
 				</step>
-				<step id="2"
+				<step id="3"
 					type="activity"
 					title="Call the intra user to deliver the payment request"
 					description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network."
 					platform="CCP"
 					superlayer=""
+					component="Plugin"
 					layer="Network Service"
 					name="Crypto Payment Request"
 					>
 					<next>
-						<step id="3" type="direct call"></step>
+						<step id="4" type="direct call"></step>
 					</next>
 				</step>
-				<step id="3"
+				<step id="4"
 					type="communication"
 					title="Transport request"
 					description="The payment request is transported through the communication layer and one of the available channels."
@@ -7768,47 +7767,192 @@
 					name="Communication Layer"
 					>
 					<next>
-						<step id="4" type="fermat message"></step>
+						<step id="5" type="fermat message"></step>
 					</next>
 				</step>
-				<step id="4"
+				<step id="5"
 					type="activity"
 					title="Receive the payment request"
 					description="The network service receives the payment request and informs that to Request Crypto Payment Plugin."
 					platform="CCP"
 					superlayer=""
+					component="Plugin"
 					layer="Network Service"
-					name="Crypto Payment Request network services"
+					name="Crypto Payment Request"
 					>
 					<next>
-						<step id="5" type="event"></step>
+						<step id="6" type="event"></step>
 					</next>
 				</step>
-				<step id="5"
+				<step id="6"
 					type="activity"
 					title="Records the request"
 					description="The payment request is saved with the type received and associated to intra user actor ."
 					platform="CCP"
 					superlayer=""
+					component="Plugin"
 					layer="Request"
-					name="Crypto Payment Request"
+					name="Crypto Payment"
 					>
 					<next>
-						<step id="6" type="direct call"></step>
+						<step id="7" type="direct call"></step>
 					</next>
 				</step>
-				<step id="6"
+				<step id="7"
 					type="activity"
+					title="Return payment request list"
+					description="The module returns the payement request receive list."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Wallet Module"
+					name="Crypto Wallet"
+					>
+					<next>
+						<step id="8" type="direct call"></step>
+					</next>
+				</step>
+				<step id="8"
+					type="end"
 					title="List Received Payment Request"
 					description="The wallet's user go to Payment Request menu and list payment request receive."
 					platform="CCP"
 					superlayer=""
 					layer="Reference Wallet"
-					name="Reference Bitcoin Wallet"
+					name="Bitcoin Wallet"
+					>
+
+				</step>
+
+			</steps>
+		</process>
+
+		<process platform="CCP"
+			name="Refuse Payment Request from Intra user"
+			description="A Wallet's Intra User refuse a payment request sent by another actor."
+			previous="List Payment Request"
+			>
+			<steps>
+				<step id="0"
+					type="start"
+					title="Select payment request record to refuse "
+					description="The actor selects a payment request from the list and press deny button."
+					platform="CCP"
+					superlayer=""
+					layer="Reference Wallet"
+					name="Bitcoin Wallet"
 					>
 					<next>
-						<step id="7" type="event"></step>
+						<step id="1" type="direct call"></step>
 					</next>
+				</step>
+				<step id="1"
+					type="activity"
+					title="Route request to payment request plugin"
+					description="The module routes this payment request refuse to the Crypto Payment Request Plugin to reach the selected intra user."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Wallet Module"
+					name="Crypto Wallet"
+					>
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					type="activity"
+					title="Route refuse to network service"
+					description="The module routes this refuse to the network service to reach the selected intra user."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Request"
+					name="Crypto Payment Request"
+					>
+					<next>
+						<step id="3" type="direct call"></step>
+					</next>
+				</step>
+				<step id="3"
+					type="activity"
+					title="Call the intra user to deliver the refuse"
+					description="The network service places a call to the intra user and then it delivers the refuse via the Fermat network."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Network Service"
+					name="Crypto Payment Request"
+					>
+					<next>
+						<step id="4" type="direct call"></step>
+					</next>
+				</step>
+				<step id="4"
+					type="communication"
+					title="Transport request"
+					description="The payment request is transported through the communication layer and one of the available channels."
+					platform=""
+					superlayer="P2P"
+					layer="communication"
+					name="Communication Layer"
+					>
+					<next>
+						<step id="5" type="fermat message"></step>
+					</next>
+				</step>
+				<step id="5"
+					type="activity"
+					title="Receive the payment request"
+					description="The network service receives the refuse and informs that to Request Crypto Payment Plugin."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Network Service"
+					name="Crypto Payment Request"
+					>
+					<next>
+						<step id="6" type="event"></step>
+					</next>
+				</step>
+				<step id="6"
+					type="activity"
+					title="Update the request status"
+					description="The payment request is update with the status deny."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Request"
+					name="Crypto Payment"
+					>
+					<next>
+						<step id="7" type="direct call"></step>
+					</next>
+				</step>
+				<step id="7"
+					type="activity"
+					title="Return payment request send list"
+					description="The module returns the payement request send list."
+					platform="CCP"
+					superlayer=""
+					component="Plugin"
+					layer="Wallet Module"
+					name="Crypto Wallet"
+					>
+					<next>
+						<step id="8" type="direct call"></step>
+					</next>
+				</step>
+				<step id="8"
+					type="end"
+					title="List Send Payment Request"
+					description="The wallet's user go to Payment Request menu and list payment request send, and show this status."
+					platform="CCP"
+					superlayer=""
+					layer="Reference Wallet"
+					name="Bitcoin Wallet"
+					>
+
 				</step>
 
 			</steps>

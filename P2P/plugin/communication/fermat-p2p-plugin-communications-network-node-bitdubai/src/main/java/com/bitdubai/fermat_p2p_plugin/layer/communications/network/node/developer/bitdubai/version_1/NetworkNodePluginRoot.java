@@ -350,9 +350,11 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
         if (dataBase != null){
 
             /*
-             * Create the daoFactory
+             * Create the daoFactory and add to the context
              */
             this.daoFactory = new DaoFactory(dataBase);
+            NodeContext.add(DaoFactory.class.getName(), daoFactory);
+
         }
 
     }

@@ -90,8 +90,8 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession)super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
 
             lstLoggers = (ArrayListLoggers)developerSubAppSession.getData("list");
         }

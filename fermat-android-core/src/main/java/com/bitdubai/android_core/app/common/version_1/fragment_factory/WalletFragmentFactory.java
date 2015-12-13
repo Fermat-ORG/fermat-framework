@@ -1,5 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.fragment_factory;
 
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -23,7 +24,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.Cryp
 public class WalletFragmentFactory {
 
 
-    public static com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory getFragmentFactoryByWalletType(String walletCategory, String walletType, String walletPublicKey) {
+    public static FermatFragmentFactory getFragmentFactoryByWalletType(String walletCategory, String walletType, String walletPublicKey) {
 
         try {
 
@@ -39,7 +40,7 @@ public class WalletFragmentFactory {
                                 case "reference_wallet":
                                     return new ReferenceWalletFragmentFactory();
                                 case "test_wallet":
-                                    return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();
+                                   return null; //return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();
                                 case "crypto_broker_wallet":
                                     return new CryptoBrokerWalletFragmentFactory();
                                 case "crypto_customer_wallet":
