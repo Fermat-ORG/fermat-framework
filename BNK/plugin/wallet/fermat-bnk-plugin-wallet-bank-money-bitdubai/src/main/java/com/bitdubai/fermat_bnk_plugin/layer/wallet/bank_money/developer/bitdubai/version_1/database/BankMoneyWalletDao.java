@@ -400,6 +400,7 @@ public class BankMoneyWalletDao {
         try {
             BankAccountType bankAccountType = BankAccountType.getByCode(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_TYPE_COLUMN_NAME));
             FiatCurrency currency = FiatCurrency.getByCode(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME));
+            System.out.println("BNK-ACCOUNT = ["+account + "] alias = ["+alias+"] account type = [" +bankAccountType.getCode()+"]" );
             bankAccountNumber = new BankAccountNumberImpl(alias,account,currency,bankAccountType);
 
         }catch (Exception e){
