@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantCreateHoldTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CashMoneyWalletDoesNotExistException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
@@ -42,7 +43,10 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -266,23 +270,47 @@ public class CashMoneyWalletDao {
     }
 
 
-    public List<CashMoneyWalletTransaction> getTransactions(TransactionType transactionType, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
+    public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
         List<CashMoneyWalletTransaction> transactions = new ArrayList<>();
 
-        DatabaseTableFilter filter = getEmptyTransactionsTableFilter();
-        filter.setColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
-        filter.setValue(transactionType.getCode());
-        filter.setType(DatabaseFilterType.EQUAL);
+        List<String> transactionTypesString = new ArrayList<>();
+        for(TransactionType t : transactionTypes)
+            transactionTypesString.add(t.getCode());
+
+        String query = "SELECT * FROM " +
+                CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME +
+                " WHERE ( " +
+                CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME +
+                " = '" +
+                StringUtils.join(transactionTypesString, "' OR " + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME + " = '") +
+                "') AND " +
+                CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME +
+                " = '" +
+                walletPublicKey +
+                "' AND " +
+                CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME +
+                " = '" +
+                BalanceType.AVAILABLE.getCode() +
+                "' ORDER BY " +
+                CashMoneyWalletDatabaseConstants.TRANSACTIONS_TIMESTAMP_COLUMN_NAME +
+                " DESC " +
+                " LIMIT " + max +
+                " OFFSET " + offset;
+
+
+        DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
 
         try {
-            for (DatabaseTableRecord record : getTransactionRecordsByFilter(filter, max, offset)) {
+            Collection<DatabaseTableRecord> records = table.customQuery(query, false);
+
+            for (DatabaseTableRecord record : records) {
                 CashMoneyWalletTransaction transaction = constructCashMoneyWalletTransactionFromRecord(record);
                 transactions.add(transaction);
             }
-        } catch (CantCreateHoldTransactionException e) {
-            throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "Failed to get Cash Money Wallet Transactions. Filter: " + filter.toString(), "");
+        } catch (CantCreateCashMoneyWalletTransactionException e) {
+            throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "Failed to get Cash Money Wallet Transactions.", "CantCreateCashMoneyWalletTransactionException");
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "Failed to get Cash Money Wallet Transactions. Filter: " + filter.toString(), "");
+            throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "Failed to get Cash Money Wallet Transactions.", "CantLoadTableToMemoryException");
         }
         return transactions;
     }
@@ -390,7 +418,7 @@ public class CashMoneyWalletDao {
         newRecord.setLongValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TIMESTAMP_COLUMN_NAME, cashMoneyWalletTransaction.getTimestamp());
     }
 
-    private CashMoneyWalletTransaction constructCashMoneyWalletTransactionFromRecord(DatabaseTableRecord record) throws CantCreateHoldTransactionException {
+    private CashMoneyWalletTransaction constructCashMoneyWalletTransactionFromRecord(DatabaseTableRecord record) throws CantCreateCashMoneyWalletTransactionException {
 
         UUID transactionId = record.getUUIDValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
         String publicKeyWallet = record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
@@ -404,7 +432,7 @@ public class CashMoneyWalletDao {
         try {
             transactionType = TransactionType.getByCode(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME));
         } catch (InvalidParameterException e) {
-            throw new CantCreateHoldTransactionException(e.getMessage(), e, "Cash Money Wallet", "Invalid TransactionType value stored in table"
+            throw new CantCreateCashMoneyWalletTransactionException(e.getMessage(), e, "Cash Money Wallet", "Invalid TransactionType value stored in table"
                     + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME + " for id " + transactionId);
         }
 
@@ -412,7 +440,7 @@ public class CashMoneyWalletDao {
         try {
             balanceType = BalanceType.getByCode(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME));
         } catch (InvalidParameterException e) {
-            throw new CantCreateHoldTransactionException(e.getMessage(), e, "Cash Money Wallet", "Invalid BalanceType value stored in table"
+            throw new CantCreateCashMoneyWalletTransactionException(e.getMessage(), e, "Cash Money Wallet", "Invalid BalanceType value stored in table"
                     + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME + " for id " + transactionId);
         }
 
