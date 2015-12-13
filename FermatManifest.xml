@@ -7833,6 +7833,50 @@
         </steps>
     </process>
 
+    <process platform="CBP" name="Create Crypto Customer Identity"
+             description="Creates a Crypto Customer Identity."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Start Crypto Customer Identity creation"
+                  description="Start Crypto Customer Identity creation."
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Customer Identity"
+                  superlayer=""
+                  layer="Sub App"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Crypto Customer Identity creation request"
+                  description="Process Crypto Customer Identity creation request."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer Identity"
+                  superlayer=""
+                  layer="Sub App Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Creates Crypto Customer Identity"
+                  description="Creates Crypto Customer Identity."
+                  type="end"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Identity"
+                  component=""
+                >
+            </step>
+        </steps>
+    </process>
+
     <process platform="CBP" name="Connection request from customer to broker"
         description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
         previous="List crypto brokers"
