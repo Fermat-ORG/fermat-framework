@@ -137,7 +137,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_accounts_list;
+        return R.layout.bw_fragment_accounts_list;
     }
 
     @Override
@@ -147,9 +147,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     protected int getRecyclerLayoutId() {
+
         //TODO: agregar el id del resource recycler layout para mostrar la lista.
         //TODO: arreglar el layout para mostrar el home.
-        return 0;
+        return R.id.account_list_recycler_view;
     }
 
     @Override
