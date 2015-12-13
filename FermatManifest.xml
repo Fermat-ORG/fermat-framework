@@ -7877,6 +7877,140 @@
         </steps>
     </process>
 
+    <process platform="CBP" name="List of Crypto Broker Identities"
+             description="Show the list of Crypto Broker Identities"
+             previous="">
+        <steps>
+            <step id="0" title="Request list of Identities"
+                  description="The Broker request the list of his Identities"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker Identity"
+                  superlayer=""
+                  layer="Sub App"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Request the list of Identities"
+                  description="Request the list of Identities"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker Identity"
+                  superlayer=""
+                  layer="Sub App Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Identity"
+                  component="">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker Identity"
+                  superlayer=""
+                  layer="Sub App Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Show the list of Identities"
+                  description="Show the list of his Identities"
+                  type="end"
+                  platform="CBP"
+                  name="Crypto Broker Identity"
+                  superlayer=""
+                  layer="Sub App"
+                  component="">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="List of Crypto Customer Identities"
+             description="Show the list of Crypto Broker Identities"
+             previous="">
+        <steps>
+            <step id="0" title="Request list of Identities"
+                  description="The Customer request the list of his Identities"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Customer Identity"
+                  superlayer=""
+                  layer="Sub App"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Request the list of Identities"
+                  description="Request the list of Identities"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer Identity"
+                  superlayer=""
+                  layer="Sub App Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Identity"
+                  component="">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer Identity"
+                  superlayer=""
+                  layer="Sub App Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Show the list of Identities"
+                  description="Show the list of his Identities"
+                  type="end"
+                  platform="CBP"
+                  name="Crypto Customer Identity"
+                  superlayer=""
+                  layer="Sub App"
+                  component="">
+            </step>
+        </steps>
+    </process>
+
     <process platform="CBP" name="Connection request from customer to broker"
         description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
         previous="List crypto brokers"
