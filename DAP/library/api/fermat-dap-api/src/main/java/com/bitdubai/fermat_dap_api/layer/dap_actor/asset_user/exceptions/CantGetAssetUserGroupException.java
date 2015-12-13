@@ -5,7 +5,15 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 /**
  * Created by lcampo on 26/11/15.
  */
-public class CantGetAssetUserGroupExcepcion extends DAPException {
+public class CantGetAssetUserGroupException extends DAPException {
+
+    private static final String DEFAULT_MESSAGE = "There was an exception " +
+            "while trying to get the asset user group.";
+
+    public CantGetAssetUserGroupException(Exception e) {
+        this(DEFAULT_MESSAGE, e, null, null);
+    }
+
     /**
      * This is the constructor that every inherited DAPException must implement
      *
@@ -14,7 +22,7 @@ public class CantGetAssetUserGroupExcepcion extends DAPException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetAssetUserGroupExcepcion(String message, Exception cause, String context, String possibleReason) {
+    public CantGetAssetUserGroupException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 

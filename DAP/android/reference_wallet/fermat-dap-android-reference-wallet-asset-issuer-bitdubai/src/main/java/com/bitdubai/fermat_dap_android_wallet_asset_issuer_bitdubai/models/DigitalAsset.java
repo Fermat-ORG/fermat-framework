@@ -2,7 +2,10 @@ package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,10 +15,16 @@ public class DigitalAsset {
 
     private String name;
     private String amount;
+    private Long availableBalance;
+    private Long bookBalance;
+    private Double bitcoinAmount;
+    private Date expDate;
     private String walletPublicKey;
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
 
+    public DigitalAsset() {
+    }
 
     public DigitalAsset(String name, String amount) {
         setName(name);
@@ -73,5 +82,42 @@ public class DigitalAsset {
 
     public void setActorAssetUser(ActorAssetUser actorAssetUser) {
         this.actorAssetUser = actorAssetUser;
+    }
+
+    public Long getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public void setAvailableBalance(Long availableBalance) {
+        this.availableBalance = availableBalance;
+    }
+
+    public Long getBookBalance() {
+        return bookBalance;
+    }
+
+    public void setBookBalance(Long bookBalance) {
+        this.bookBalance = bookBalance;
+    }
+
+    public Double getBitcoinAmount() {
+        return bitcoinAmount;
+    }
+
+    public void setBitcoinAmount(Double bitcoinAmount) {
+        this.bitcoinAmount = bitcoinAmount;
+    }
+
+    public Date getExpDate() {
+        return expDate;
+    }
+
+    public String getFormattedExpDate() {
+        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+        return df.format(expDate);
+    }
+
+    public void setExpDate(Date expDate) {
+        this.expDate = expDate;
     }
 }

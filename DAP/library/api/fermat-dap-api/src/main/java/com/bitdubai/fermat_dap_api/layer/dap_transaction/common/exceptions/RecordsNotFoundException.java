@@ -9,7 +9,7 @@ public class RecordsNotFoundException extends DAPException {
 
     //VARIABLE DECLARATION
 
-    public static final String DEFAULT_MESSAGE = "Couldn't find any record in database.";
+    public static final String DEFAULT_MESSAGE = "Couldn't find any record in database to update or delete.";
 
     //CONSTRUCTORS
 

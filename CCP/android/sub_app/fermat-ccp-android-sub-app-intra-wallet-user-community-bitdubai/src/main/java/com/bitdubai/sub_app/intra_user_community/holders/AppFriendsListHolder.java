@@ -9,9 +9,10 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.intra_user_community.R;
 
 /**
- * Created by josemanueldsds on 30/11/15.
+ * @author Jose manuel De Sousa
  */
 public class AppFriendsListHolder extends FermatViewHolder {
+
     public ImageView friendAvatar;
     public FermatTextView friendName;
 
