@@ -71,6 +71,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
      */
     private static IntraUserModuleManager moduleManager;
     private static ErrorManager errorManager;
+
     protected final String TAG = "Recycler Base";
     private int offset = 0;
 
@@ -196,7 +197,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
          */
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
         setNavigationDrawer(navigationViewAdapter);
-//        setNavigationBackgroundColor(getResources().getColor(R.color.nav_drawer_color));
     }
 
     @Override
