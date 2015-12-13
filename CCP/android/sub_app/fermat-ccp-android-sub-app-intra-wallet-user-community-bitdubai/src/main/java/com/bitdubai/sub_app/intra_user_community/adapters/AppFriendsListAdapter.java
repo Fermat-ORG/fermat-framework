@@ -40,16 +40,24 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
 
     @Override
     protected void bindHolder(AppFriendsListHolder holder, IntraUserInformation data, int position) {
-
-        holder.friendName.setText(data.getName());
-        Bitmap bitmap;
-        if (data.getProfileImage().length > 0) {
-            bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
-        } else {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+        if (data.getPublicKey() != null) {
+            holder.friendName.setText(data.getName());
+            if (data.getProfileImage() != null) {
+                Bitmap bitmap;
+                if (data.getProfileImage().length > 0) {
+                    bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
+                } else {
+                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+                }
+                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+                holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }else{
+                Bitmap bitmap;
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+                holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }
         }
-        bitmap = Bitmap.createScaledBitmap(bitmap, 40,40, true);
-        holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
     }
 
     public int getSize() {

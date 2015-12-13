@@ -16,12 +16,12 @@ import com.squareup.picasso.Picasso;
 
 /**
  * @author Created by mati on 2015.11.12..
- * @author Jose Manuel De Sousa
+ * @author Modified byJose Manuel De Sousa 08/12/2015
  */
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,IntraUserLoginIdentity intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
         /**
          * Navigation view header
          */
@@ -30,13 +30,14 @@ public class FragmentsCommons {
         relativeLayout.setLayoutParams(layoutParams);
         View view = inflater.inflate(R.layout.intra_user_community_navigation_first_row, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
-        if(intraUserLoginIdentity!=null) {
+        if (intraUserLoginIdentity != null) {
             if (intraUserLoginIdentity.getProfileImage() != null) {
                 if (intraUserLoginIdentity.getProfileImage().length > 0) {
                     imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
                 } else
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
-            }
+            } else
+                Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(intraUserLoginIdentity.getAlias());
         }
