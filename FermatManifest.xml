@@ -7618,7 +7618,7 @@
                 </next>
             </step>
             <step id="6" title="Request of resources for the Sub Apps"
-                  description="Request to the SubApp Resources Network Service the download of the resources for the Crypto Broker Identity and Crypto Broker Community Sub Apps"
+                  description="Request to the SubApp Resources Network Service the download of the resources for the Crypto Broker Identity and Crypto Customer Community Sub Apps"
                   type="activity"
                   component="Plugin"
                   name="Sub App Manager"
@@ -7630,7 +7630,7 @@
                 </next>
             </step>
             <step id="7" title="Download of resources for the Sub Apps"
-                  description="Download the resources for the Crypto Broker Identity and Crypto Broker Community Sub Apps"
+                  description="Download the resources for the Crypto Broker Identity and Crypto Customer Community Sub Apps"
                   type="activity"
                   component="Plugin"
                   name="Sub App Resources"
@@ -7642,7 +7642,131 @@
                 </next>
             </step>
             <step id="8" title="Take of the Navigation Structure and Activation of the Sub Apps"
-                  description="Take of the Navigation Structure of the Crypto Broker Identity and Crypto Broker Community Sub Apps and fire a event activate them"
+                  description="Take of the Navigation Structure of the Crypto Broker Identity and Crypto Customer Community Sub Apps and fire a event activate them"
+                  type="activity"
+                  component="Plugin"
+                  name="Sub App Runtime"
+                  layer="Network Service"
+                  platform="CBP"
+                  superlayer="">
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9" title="Marking the Sub Apps has Installed"
+                  description="Mark the Sub Apps as Installed"
+                  type="end"
+                  component="Plugin"
+                  name="Sub App Manager"
+                  layer="Middleware"
+                  platform="WPD"
+                  superlayer="">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="Install a Crypto Customer Reference Wallet"
+             description="Install a Crypto Broker Wallet from the Wallet Store"
+             previous="">
+        <steps>
+            <step id="0" title="Customer select the Reference Wallet from the Wallet Store"
+                  description="The Customer enter in the Wallet Store en select the Crypto Customer Reference Wallet to install it."
+                  type="start"
+                  component=""
+                  name="Wallet Store"
+                  layer="Sub App"
+                  platform="WPD"
+                  superlayer="">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Invoke the installation of the Reference Wallet to the Wallet Manager"
+                  description="Invoke the installation of the Reference Wallet to the Wallet Manager Middleware Plugin"
+                  type="activity"
+                  component="Plugin"
+                  name="Wallet Store"
+                  layer="Sub App Module"
+                  platform="WPD"
+                  superlayer="">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Reference Wallet's Resources Installation Request Request "
+                  description="The Wallet Manager send a Request to install the resources of the Reference Wallet"
+                  type="activity"
+                  component="Plugin"
+                  name="Wallet Manager"
+                  layer="Middleware"
+                  platform="WPD"
+                  superlayer="">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Download of resources in the device"
+                  description="The Wallet Resources Network Service download from the GitHub repository the necessary resources for the Crypto Customer Reference Wallet"
+                  type="activity"
+                  component="Plugin"
+                  name="Wallet Resources"
+                  layer="Network Service"
+                  platform="WPD"
+                  superlayer="">
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Take of the Navigation Structure and Activation of the Reference Wallet"
+                  description="Take the Navigation Structure of the Reference Wallet and fire a event registering the activation of the Reference Wallet "
+                  type="activity"
+                  component="Plugin"
+                  name="Wallet Runtime"
+                  layer="Engine"
+                  platform="WPD"
+                  superlayer="">
+                <next>
+                    <step id="5" type="event"></step>
+                </next>
+            </step>
+            <step id="5" title="Marking the Reference Wallet has Installed"
+                  description="Mark the Crypto Customer Reference Wallet as Installed and fire a event"
+                  type="activity"
+                  component="Plugin"
+                  name="Wallet Manager"
+                  layer="Middleware"
+                  platform="WPD"
+                  superlayer="">
+                <next>
+                    <step id="6" type="event"></step>
+                </next>
+            </step>
+            <step id="6" title="Request of resources for the Sub Apps"
+                  description="Request to the SubApp Resources Network Service the download of the resources for the Crypto Customer Identity and Crypto Broker Community Sub Apps"
+                  type="activity"
+                  component="Plugin"
+                  name="Sub App Manager"
+                  layer="Middleware"
+                  platform="WPD"
+                  superlayer="">
+                <next>
+                    <step id="7" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="7" title="Download of resources for the Sub Apps"
+                  description="Download the resources for the Crypto Customer Identity and Crypto Broker Community Sub Apps"
+                  type="activity"
+                  component="Plugin"
+                  name="Sub App Resources"
+                  layer="Network Service"
+                  platform="CBP"
+                  superlayer="">
+                <next>
+                    <step id="8" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="8" title="Take of the Navigation Structure and Activation of the Sub Apps"
+                  description="Take of the Navigation Structure of the Crypto Customer Identity and Crypto Broker Community Sub Apps and fire a event activate them"
                   type="activity"
                   component="Plugin"
                   name="Sub App Runtime"
