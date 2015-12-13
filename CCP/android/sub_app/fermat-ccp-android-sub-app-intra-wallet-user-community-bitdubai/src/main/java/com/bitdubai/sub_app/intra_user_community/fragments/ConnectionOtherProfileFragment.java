@@ -99,15 +99,21 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         try {
             userName.setText(intraUserInformation.getName());
             userEmail.setText("Unknow");
-            Bitmap bitmap;
-            if (intraUserInformation.getProfileImage().length > 0) {
-                bitmap = BitmapFactory.decodeByteArray(intraUserInformation.getProfileImage(), 0, intraUserInformation.getProfileImage().length);
-            } else {
+            if(intraUserInformation.getProfileImage() != null) {
+                Bitmap bitmap;
+                if (intraUserInformation.getProfileImage().length > 0) {
+                    bitmap = BitmapFactory.decodeByteArray(intraUserInformation.getProfileImage(), 0, intraUserInformation.getProfileImage().length);
+                } else {
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                }
+                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+                userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            }else{
+                Bitmap bitmap;
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+                userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 110,110, true);
-            userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
-
         } catch (Exception ex) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
