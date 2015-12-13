@@ -22,7 +22,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
-import com.bitdubai.reference_wallet.bank_money_wallet.common.navigationDrawer.BankingWalletNavigationViewPainter;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.navigationDrawer.BankMoneyWalletNavigationViewPainter;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 
@@ -73,7 +73,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            BankingWalletNavigationViewPainter navigationViewPainter = new BankingWalletNavigationViewPainter(getActivity());
+            BankMoneyWalletNavigationViewPainter navigationViewPainter = new BankMoneyWalletNavigationViewPainter(getActivity());
             getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();

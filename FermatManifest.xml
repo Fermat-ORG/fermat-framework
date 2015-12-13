@@ -7696,5 +7696,343 @@
 				</step>
 			</steps>
 		</process>
+		<process platform="BNK" name="Add New Account" description="A customer registers a new bank account in the wallet." previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="inputs account registration"
+					  description="inputs account, currency and account type."
+					  platform="BNK"
+					  superlayer=""
+					  layer="Reference Wallet"
+					  name="Bank Money">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="sends registration request"
+					  description="sends data to the wallet plugin to registrate the account."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet Module"
+					  name="Bank Money">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="registers account"
+					  description="registers account: account, currency and account type"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
+		<process platform="BNK" name="Deposit" description="A User Deposits a certain amount on a specific account." previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="request deposit transaction"
+					  description="inputs amount and selects account."
+					  platform="BNK"
+					  superlayer=""
+					  layer="Reference Wallet"
+					  name="Bank Money">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="sends deposit request"
+					  description="sends data to the deposit plugin to make the transaction."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet Module"
+					  name="Bank Money">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="registers deposit transaction and sends credits to the wallet."
+					  description="registers the transaction and send credits on the available and book balance of the account"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Bank Money Transaction"
+					  name="Deposit">
+					<next>
+						<step id="3" type="direct call"></step>
+					</next>
+				</step>
+				<step id="3"
+					  type="activity"
+					  title="register credit on the wallet"
+					  description="makes credit on the balances of the account."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
+		<process platform="BNK" name="Withdraw" description="A User Withdraws a certain amount on a specific account." previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="request withdraw transaction"
+					  description="inputs amount and selects account."
+					  platform="BNK"
+					  superlayer=""
+					  layer="Reference Wallet"
+					  name="Bank Money">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="sends withdraw request"
+					  description="sends data to the withdraw plugin to make the transaction."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet Module"
+					  name="Bank Money">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="registers withdraw transaction and sends debits to the wallet."
+					  description="registers the transaction and validates that the selected account has enough money and send debits to the available and book balance of the account"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Bank Money Transaction"
+					  name="Withdraw">
+					<next>
+						<step id="3" type="direct call"></step>
+					</next>
+				</step>
+				<step id="3"
+					  type="activity"
+					  title="register credit on the wallet"
+					  description="makes credit on the balances of the account."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
+		<process platform="BNK" name="Balance Inquiry" description="returns the current available and book balance of an account." previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="balance inquiry"
+					  description="requests book and available balance of an account"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Reference Wallet"
+					  name="Bank Money">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="sends balance request"
+					  description="sends balance request to the wallet plugin"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet Module"
+					  name="Bank Money">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="returns balance of the account"
+					  description="return balance of the account."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
+		<process platform="BNK" name="Transaction History" description="returns the transaction history of an account." previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="transaction history request"
+					  description="requests list of transactions account"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Reference Wallet"
+					  name="Bank Money">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="sends transaction history request"
+					  description="sends balance request to the wallet plugin"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet Module"
+					  name="Bank Money">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="returns transaction history"
+					  description="returns transaction history sorted by date (from most recent to older)."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
+		<process platform="BNK" name="Hold" description="Holds a certain amount of money in the bank account" previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="request Hold"
+					  description="request a hold of the funds in an account"
+					  platform="BNK"
+					  superlayer=""
+					  layer=""
+					  name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="process hold transaction request"
+					  description="registers and sends holds funds on the available balance of the account"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Bank Money Transaction"
+					  name="Hold">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="makes hold"
+					  description="processes the hold request by making a debit in the account."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
+		<process platform="BNK" name="Hold" description="Holds a certain amount of money in the bank account" previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="request Hold"
+					  description="request a hold of the funds in an account"
+					  platform="BNK"
+					  superlayer=""
+					  layer=""
+					  name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="process hold transaction request"
+					  description="registers and sends holds funds on the available balance of the account"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Bank Money Transaction"
+					  name="Hold">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="makes hold"
+					  description="processes the hold request by making a debit in the account."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
+		<process platform="BNK" name="Unhold" description="Unholds funds from an account that were previusly held by the hold transaction " previous="">
+			<steps>
+				<step id="0"
+					  type="start"
+					  title="request unhold"
+					  description="request an unhold of the funds in an account"
+					  platform="BNK"
+					  superlayer=""
+					  layer=""
+					  name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					  type="activity"
+					  title="process hold transaction request"
+					  description="registers, validates that has enough funds held, and sends unhold funds on the available balance of the account"
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Bank Money Transaction"
+					  name="Unhold">
+					<next>
+						<step id="2" type="direct call"></step>
+					</next>
+				</step>
+				<step id="2"
+					  type="activity"
+					  title="makes unhhold"
+					  description="processes the unhold request by summing all the amount of the hold transactions previusly made in the account, then makes the credit."
+					  component="plugin"
+					  platform="BNK"
+					  superlayer=""
+					  layer="Wallet"
+					  name="Bank Money">
+				</step>
+			</steps>
+		</process>
 	</processes>
 </fermat>

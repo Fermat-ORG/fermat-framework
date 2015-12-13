@@ -14,11 +14,11 @@ import com.bitdubai.reference_wallet.bank_money_wallet.R;
 /**
  * Created by mati on 2015.11.24..
  */
-public class BankingWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     private Activity activity;
 
-    public BankingWalletNavigationViewPainter(Activity activity) {
+    public BankMoneyWalletNavigationViewPainter(Activity activity) {
         this.activity = activity;
     }
 
