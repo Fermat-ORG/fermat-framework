@@ -77,7 +77,7 @@ public class TransactionsReceivedHistory extends FermatWalletListFragment<Crypto
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         super.onCreate(savedInstanceState);
         try {

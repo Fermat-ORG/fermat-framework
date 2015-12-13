@@ -53,8 +53,8 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((BankMoneyWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -136,6 +136,12 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     @Override
+    public void onItemClickListener(BankAccountNumber data, int position) {
+        appSession.setData("account data", data);
+        changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
+    }
+
+    @Override
     protected int getLayoutResource() {
         return R.layout.bw_fragment_accounts_list;
     }
@@ -158,11 +164,13 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return true;
     }
 
+    /*
     @Override
     public void onItemClickListener(BankAccountNumber data, int position) {
-        walletSession.setData("contract_data", data);
+        walletSession.setData("account data", data);
         changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, walletSession.getAppPublicKey());
     }
+    */
 
     @Override
     public void onLongItemClickListener(BankAccountNumber data, int position) {

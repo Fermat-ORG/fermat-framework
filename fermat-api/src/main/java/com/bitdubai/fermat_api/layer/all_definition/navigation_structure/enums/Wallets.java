@@ -13,7 +13,9 @@ public enum Wallets {
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("basic"),
     CBP_CRYPTO_BROKER_WALLET("cbp_crypto_broker_wallet"),
     CBP_CRYPTO_CUSTOMER_WALLET("cbp_crypto_customer_wallet"),
-    BNK_BANKING_WALLET("bnk_banking_wallet"),;
+    CSH_CASH_WALLET("csh_cash_wallet"),
+    BNK_BANKING_WALLET("bnk_banking_wallet");
+    DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet");
 
     private final String code;
 
@@ -42,10 +44,14 @@ public enum Wallets {
                 return CBP_CRYPTO_BROKER_WALLET;
             case "cbp_crypto_customer_wallet":
                 return CBP_CRYPTO_CUSTOMER_WALLET;
+            case "csh_cash_wallet":
+                return CSH_CASH_WALLET;
             case "bnk_banking_wallet":
                 return BNK_BANKING_WALLET;
+            case "dap_asset_issuer_wallet":
+                return DAP_ASSET_ISSUER_WALLET;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Wallets enum");
         }
 
         /**

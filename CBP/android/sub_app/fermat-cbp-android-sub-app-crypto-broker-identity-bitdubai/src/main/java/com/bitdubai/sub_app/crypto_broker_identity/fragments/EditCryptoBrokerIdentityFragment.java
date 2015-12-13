@@ -75,7 +75,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
         super.onCreate(savedInstanceState);
 
         try {
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -103,7 +103,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         FermatCheckBox publishIdentityCheckBox = (FermatCheckBox) layout.findViewById(R.id.publish_identity);
 
-        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
+        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
 
         if (identityInfo != null) {
             mBrokerName.setText(identityInfo.getAlias());
@@ -207,7 +207,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
 
         // TODO falta implementar funcionalidad para editar info del identity en el backend
 
-        PublishIdentityWorker publishIdentityWorker = new PublishIdentityWorker(getActivity(), subAppsSession, wantPublishIdentity, this);
+        PublishIdentityWorker publishIdentityWorker = new PublishIdentityWorker(getActivity(), appSession, wantPublishIdentity, this);
 
         executor = publishIdentityWorker.execute();
     }
@@ -240,7 +240,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment implements 
             int resultCode = (int) result[0];
 
             if (resultCode == SUCCESS || resultCode == DATA_NOT_CHANGED) {
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode(), appSession.getAppPublicKey());
 
             } else if (resultCode == INVALID_ENTRY_DATA) {
                 Toast.makeText(getActivity(), "Please check the submitted data", Toast.LENGTH_LONG).show();

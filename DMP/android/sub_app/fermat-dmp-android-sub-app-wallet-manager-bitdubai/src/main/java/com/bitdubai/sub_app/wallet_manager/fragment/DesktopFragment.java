@@ -115,9 +115,9 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         try {
 
             // setting up  module
-            //desktopSession = ((DesktopSession) subAppsSession);
+            //desktopSession = ((DesktopSession) appSession);
             //moduleManager = desktopSession.getModuleManager();
-            //errorManager = subAppsSession.getErrorManager();
+            //errorManager = appSession.getErrorManager();
 
 //            //get search name if
 //            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
@@ -156,6 +156,8 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
    //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
+        }catch (OutOfMemoryError outOfMemoryError){
+            outOfMemoryError.printStackTrace();
         }
 
 
@@ -416,6 +418,22 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
             item.setPosition(6);
             lstItemsWithIcon.add(item);
 
+            //Cash Wallet
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "cash_wallet",
+                    "Cash Wallet",
+                    "cash_wallet",
+                    "wallet_cash_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.wallet_2);
+            item.setPosition(7);
+            lstItemsWithIcon.add(item);
+
             //subApps
 //            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
 //            Item item2 = new Item(installedSubApp);
@@ -498,6 +516,15 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void onDestroy() {
+
+        adapter = null;
+        mItemTouchHelper = null;
+        super.onDestroy();
     }
 }
 

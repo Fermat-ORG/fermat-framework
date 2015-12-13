@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.ListsForStatus;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.ListsForStatusPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerContractPurchaseDao;
 
 import java.util.Collection;
@@ -35,12 +34,12 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerContractPurc
 
     @Override
     public Collection<CustomerBrokerContractPurchase> getCustomerBrokerContractPurchaseForStatus(ContractStatus status) throws CantGetListCustomerBrokerContractPurchaseException {
-        return null;
+        return this.customerBrokerContractPurchaseDao.getCustomerBrokerContractPurchaseForStatus(status);
     }
 
     @Override
-    public ListsForStatus getCustomerBrokerContractHistory() {
-        return null;
+    public ListsForStatusPurchase getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractPurchaseException{
+        return this.customerBrokerContractPurchaseDao.getCustomerBrokerContractHistory();
     }
 
     @Override
@@ -53,8 +52,4 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerContractPurc
         this.customerBrokerContractPurchaseDao.updateStatusCustomerBrokerPurchaseContract(contractId, status);
     }
 
-    @Override
-    public void updateStatusCustomerBrokerPurchaseContractClauseStatus(String contractId, ContractClause clause) throws CantupdateCustomerBrokerContractPurchaseException {
-        this.customerBrokerContractPurchaseDao.updateStatusCustomerBrokerPurchaseContractClauseStatus(contractId, clause);
-    }
 }

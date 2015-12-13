@@ -3,7 +3,7 @@ package com.bitdubai.sub_app.intra_user_community.fragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionFriendListFragment;
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionSettingsFragment;
@@ -17,6 +17,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 /**
  * Created by Matias Furszyfer on 31/8/2015.
+ * Modify by Jose Manuel De Sousa Dos Santos on 08/12/2015.
  */
 
 public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraUserSubAppSession, IntraUserPreferenceSettings, IntraUserFragmentsEnumType> {
@@ -31,14 +32,14 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                // currentFragment = HomeFragment.newInstance(1);
                 break;
             case CWP_WALLET_STORE_DETAIL_ACTIVITY:
-                //currentFragment = ConnectionsListFragment.newInstance();
+                //currentFragment = OldConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY:
-                //currentFragment = ConnectionsListFragment.newInstance();
+                //currentFragment = OldConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsWorldFragment.newInstance();
-                //currentFragment = ConnectionsListFragment.newInstance();
+                //currentFragment = OldConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_FREE_FRAGMENT:
                 currentFragment = RegisterIntraUserFragment.newInstance();
@@ -66,7 +67,7 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT:
-                currentFragment = ConnectionFriendListFragment.newInstance();
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENT:
                 currentFragment = ConnectionSettingsFragment.newInstance();

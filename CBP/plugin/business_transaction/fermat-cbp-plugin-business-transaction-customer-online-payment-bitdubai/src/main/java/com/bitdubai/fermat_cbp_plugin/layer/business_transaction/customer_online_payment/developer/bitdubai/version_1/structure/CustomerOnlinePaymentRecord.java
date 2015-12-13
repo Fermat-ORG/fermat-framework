@@ -17,6 +17,8 @@ public class CustomerOnlinePaymentRecord {
 
     private CryptoAddress cryptoAddress;
 
+    private long cryptoAmount;
+
     private CryptoStatus cryptoStatus;
 
     private String customerPublicKey;
@@ -29,9 +31,6 @@ public class CustomerOnlinePaymentRecord {
 
     private String walletPublicKey;
 
-    public String getWalletPublicKey() {
-        return walletPublicKey;
-    }
 
     public String getBrokerPublicKey() {
         return brokerPublicKey;
@@ -47,6 +46,10 @@ public class CustomerOnlinePaymentRecord {
 
     public CryptoAddress getCryptoAddress() {
         return cryptoAddress;
+    }
+
+    public long getCryptoAmount() {
+        return cryptoAmount;
     }
 
     public CryptoStatus getCryptoStatus() {
@@ -69,6 +72,10 @@ public class CustomerOnlinePaymentRecord {
         return transactionId;
     }
 
+    public String getWalletPublicKey() {
+        return walletPublicKey;
+    }
+
     public void setBrokerPublicKey(String brokerPublicKey) {
         this.brokerPublicKey = brokerPublicKey;
     }
@@ -83,6 +90,10 @@ public class CustomerOnlinePaymentRecord {
 
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
         this.cryptoAddress = cryptoAddress;
+    }
+
+    public void setCryptoAmount(long cryptoAmount) {
+        this.cryptoAmount = cryptoAmount;
     }
 
     public void setCryptoStatus(CryptoStatus cryptoStatus) {
@@ -115,11 +126,14 @@ public class CustomerOnlinePaymentRecord {
                 "brokerPublicKey='" + brokerPublicKey + '\'' +
                 ", contractHash='" + contractHash + '\'' +
                 ", contractTransactionStatus=" + contractTransactionStatus +
+                ", cryptoAddress=" + cryptoAddress +
+                ", cryptoAmount=" + cryptoAmount +
                 ", cryptoStatus=" + cryptoStatus +
                 ", customerPublicKey='" + customerPublicKey + '\'' +
                 ", timestamp=" + timestamp +
                 ", transactionHash='" + transactionHash + '\'' +
                 ", transactionId='" + transactionId + '\'' +
+                ", walletPublicKey='" + walletPublicKey + '\'' +
                 '}';
     }
 }

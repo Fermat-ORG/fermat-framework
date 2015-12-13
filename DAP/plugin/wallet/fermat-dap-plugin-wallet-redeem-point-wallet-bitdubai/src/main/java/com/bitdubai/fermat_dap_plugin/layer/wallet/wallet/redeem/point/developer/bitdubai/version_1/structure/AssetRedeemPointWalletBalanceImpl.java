@@ -36,19 +36,11 @@ public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_da
     }
 
     @Override
-    public List<AssetRedeemPointWalletList> getAssetIssuerWalletBalancesAvailable() throws CantCalculateBalanceException {
+    public List<AssetRedeemPointWalletList> getAssetIssuerWalletBalances() throws CantCalculateBalanceException {
         assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
         assetRedeemPointWalletDao.setPlugin(plugin);
         assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
-        return assetRedeemPointWalletDao.getAvailableBalanceByAsset();
-    }
-
-    @Override
-    public List<AssetRedeemPointWalletList> getAssetIssuerWalletBalancesBook() throws CantCalculateBalanceException {
-        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-        assetRedeemPointWalletDao.setPlugin(plugin);
-        assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
-        return assetRedeemPointWalletDao.getBookBalanceByAssets();
+        return assetRedeemPointWalletDao.getBalanceByAssets();
     }
 
     @Override

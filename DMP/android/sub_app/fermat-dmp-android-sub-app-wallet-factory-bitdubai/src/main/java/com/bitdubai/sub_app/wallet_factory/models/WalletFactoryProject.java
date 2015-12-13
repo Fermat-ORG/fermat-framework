@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
