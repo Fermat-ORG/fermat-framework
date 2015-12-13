@@ -6,24 +6,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
-import com.bitdubai.reference_wallet.bank_money_wallet.common.models.GrouperItem;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.navigationDrawer.BankingWalletNavigationViewPainter;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 
 /**
@@ -36,8 +42,6 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     private ArrayList<BankAccountNumber> accountsList;
 
     private static final String TAG = "AccountListActivityFragment";
-    public AccountsListFragment() {
-    }
 
     public static AccountsListFragment newInstance() {
         return new AccountsListFragment();
@@ -59,14 +63,22 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         }
         accountsList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
-    /*@Override
+    @Override
     protected void initViews(View layout) {
-        TODO: iniciar views
-    }*/
+        super.initViews(layout);
+        showOrHideNoContractsView(accountsList);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        //todo: añadir el navigationdrawer
+        super.onActivityCreated(savedInstanceState);
+        try {
+            BankingWalletNavigationViewPainter navigationViewPainter = new BankingWalletNavigationViewPainter(getActivity());
+            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+        } catch (Exception e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
     @Override
@@ -117,8 +129,9 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
-        if (layoutManager == null)
-            layoutManager = new LinearLayoutManager(getActivity());
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
         return layoutManager;
     }
 
@@ -173,21 +186,30 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return bankAccountNumbers;
     }
 
+    private void showOrHideNoAccountListView(boolean show) {
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void onPostExecute(Object... result) {
-
+        isRefreshing = false;
+        if (isAttached) {
+            if (result != null && result.length > 0) {
+                accountsList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(accountsList);
+                showOrHideNoAccountListView(accountsList.isEmpty());
+            }
+        }
     }
 
     @Override
     public void onErrorOccurred(Exception ex) {
 
     }
-
-    /*@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.bw_clear_project, container, false);
-    }*/
 
 }
