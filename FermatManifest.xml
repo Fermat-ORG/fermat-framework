@@ -7879,7 +7879,7 @@
 
     <process platform="CBP" name="List of Crypto Broker Identities"
              description="Show the list of Crypto Broker Identities"
-             previous="">
+             previous="Create Crypto Broker Identity">
         <steps>
             <step id="0" title="Request list of Identities"
                   description="The Broker request the list of his Identities"
@@ -7946,7 +7946,7 @@
 
     <process platform="CBP" name="List of Crypto Customer Identities"
              description="Show the list of Crypto Broker Identities"
-             previous="">
+             previous="Create Crypto Customer Identity">
         <steps>
             <step id="0" title="Request list of Identities"
                   description="The Customer request the list of his Identities"
@@ -8011,9 +8011,185 @@
         </steps>
     </process>
 
+    <process platform="CBP" name="Associate a Broker Identity with a Reference Wallet"
+             description="A Broker associate one of his Identities to a Crypto Broker Reference Wallet"
+             previous="List of Crypto Broker Identities">
+        <steps>
+            <step id="0" title="Select a Crypto Broker Reference Wallet and request the list of Identities"
+                  description="The Broker select a Crypto Broker Reference Wallet from the Desktop of the Fermat app to associate and request the list of Identities"
+                  type="start"
+                  component=""
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  superlayer="">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Request the list of Identities"
+                  description="Receive the request from the Reference Wallet to obtain the list of Identities. This send the request to the Crypto Broker Identity Plugin"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  superlayer="">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Identity"
+                  superlayer="">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Wallet Module">
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Show the list of Identities and the broker selected the identity to associate"
+                  description="Show the list of Broker Identities. The broker select one identity and the reference wallet request the module to associate the selected identity"
+                  type="activity"
+                  component=""
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  superlayer="">
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Request the Wallet - Identity association to the Crypto Broker Actor Plugin"
+                  description="Receive the request from the Reference wallet and Request the Wallet - Identity association to the Crypto Broker Actor Plugin"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  superlayer="">
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6" title="Register Wallet - Identity association"
+                  description="Register Wallet - Identity association in its Data Base"
+                  type="end"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  superlayer="">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="Associate a Customer Identity with a Reference Wallet"
+             description="A Customer associate one of his Identities to a Crypto Customer Reference Wallet"
+             previous="List of Crypto Customer Identities">
+        <steps>
+            <step id="0" title="Select a Crypto Customer Reference Wallet and request the list of Identities"
+                  description="The Customer select a Crypto Customer Reference Wallet from the Desktop of the Fermat app to associate and request the list of Identities"
+                  type="start"
+                  component=""
+                  platform="CBP"
+                  name="Crypto Customer"
+                  layer="Reference Wallet"
+                  superlayer="">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Request the list of Identities"
+                  description="Receive the request from the Reference Wallet to obtain the list of Identities. This send the request to the Crypto Customer Identity Plugin"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  layer="Wallet Module"
+                  superlayer="">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  layer="Identity"
+                  superlayer="">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Return the list of Identities"
+                  description="Return the list of Identities"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Wallet Module">
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Show the list of Identities and the Customer select the identity to associate"
+                  description="Show the list of Customer Identities. The Customer select one identity and the reference wallet request the module to associate the selected identity"
+                  type="activity"
+                  component=""
+                  platform="CBP"
+                  name="Crypto Customer"
+                  layer="Reference Wallet"
+                  superlayer="">
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Request the Wallet - Identity association to the Crypto Customer Actor Plugin"
+                  description="Receive the request from the Reference wallet and Request the Wallet - Identity association to the Crypto Customer Actor Plugin"
+                  type="activity"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  layer="Wallet Module"
+                  superlayer="">
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6" title="Register Wallet - Identity association"
+                  description="Register Wallet - Identity association in its Data Base"
+                  type="end"
+                  component="Plugin"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  layer="Wallet Module"
+                  superlayer="">
+            </step>
+        </steps>
+    </process>
+
     <process platform="CBP" name="Connection request from customer to broker"
         description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
-        previous="List crypto brokers"
+        previous="List of Crypto Broker Identities"
         >
         <steps>
             <step id="0"
