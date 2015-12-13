@@ -8187,6 +8187,82 @@
         </steps>
     </process>
 
+    <process platform="CBP" name="Crypto Broker Publish his Identity"
+             description="Broker Publish his Identity to make it visible in the Fermat Network"
+             previous="List of Crypto Broker Identities">
+        <steps>
+            <step id="0" title="Broker Select one Identity and select 'Publish'"
+                  description="The Broker Select one Identity and select 'Publish' in the UI. The Reference Wallet request the module to change the state of this identity to Public"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker Identity"
+                  superlayer=""
+                  layer="Sub App"
+                  component="">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Request the actor to publish the identity"
+                  description="Request the actor to publish the identity"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker Identity"
+                  superlayer=""
+                  layer="Sub App Module"
+                  component="Plugin">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Change the status of the Identity to Public"
+                  description="Change the status of the Identity to Public"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Actor"
+                  component="">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Modify in its Data Base the Status of the Identity"
+                  description="Modify in its Data Base the Status of the Identity"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Identity"
+                  component="Plugin">
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Send the Identity Information to the Actor Network Service"
+                  description="Send the Identity Information to the Actor Network Service"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Actor"
+                  component="Plugin">
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Consult the details of the identity to publish"
+                  description="Consult the details of the identity to publish and send it to the Fermat Network"
+                  type="end"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Actor Network Service"
+                  component="Plugin">
+            </step>
+        </steps>
+    </process>
+
     <process platform="CBP" name="Connection request from customer to broker"
         description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
         previous="List of Crypto Broker Identities"
