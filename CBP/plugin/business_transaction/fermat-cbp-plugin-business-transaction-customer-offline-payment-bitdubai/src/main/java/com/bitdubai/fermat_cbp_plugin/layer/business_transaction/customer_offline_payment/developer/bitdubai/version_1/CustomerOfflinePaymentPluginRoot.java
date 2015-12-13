@@ -23,6 +23,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
@@ -32,6 +35,11 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -78,12 +86,12 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
     /**
      * Represents the plugin manager.
      */
-    //CustomerOfflinePaymentTransactionManager customerOnlinePaymentTransactionManager;
+    //CustomerOfflinePaymentTransactionManager customerOfflinePaymentTransactionManager;
 
     /**
-     * Represents the plugin CustomerOnlinePaymentBusinessTransactionDatabaseFactory
+     * Represents the plugin CustomerOfflinePaymentBusinessTransactionDatabaseFactory
      */
-    //CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+    CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
 
     /**
      * Represents the database
@@ -108,60 +116,60 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
      *
      * @throws CantInitializeDatabaseException
      */
-//    private void initializeDb() throws CantInitializeDatabaseException {
-//
-//        try {
-//            /*
-//             * Open new database connection
-//             */
-//            this.database = this.pluginDatabaseSystem.openDatabase(
-//                    pluginId,
-//                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
-//
-//        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-//
-//            /*
-//             * The database exists but cannot be open. I can not handle this situation.
-//             */
-//            errorManager.reportUnexpectedPluginException(
-//                    Plugins.CUSTOMER_ONLINE_PAYMENT,
-//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-//                    cantOpenDatabaseException);
-//            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-//
-//        } catch (DatabaseNotFoundException e) {
-//
-//            /*
-//             * The database no exist may be the first time the plugin is running on this device,
-//             * We need to create the new database
-//             */
-//            CustomerOnlinePaymentBusinessTransactionDatabaseFactory customerOnlinePaymentBusinessTransactionDatabaseFactory =
-//                    new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
-//
-//            try {
-//
-//                /*
-//                 * We create the new database
-//                 */
-//                this.database = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(
-//                        pluginId,
-//                        CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
-//
-//            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-//
-//                /*
-//                 * The database cannot be created. I can not handle this situation.
-//                 */
-//                errorManager.reportUnexpectedPluginException(
-//                        Plugins.OPEN_CONTRACT,
-//                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-//                        cantOpenDatabaseException);
-//                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-//
-//            }
-//        }
-//
-//    }
+    private void initializeDb() throws CantInitializeDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.database = this.pluginDatabaseSystem.openDatabase(
+                    pluginId,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantOpenDatabaseException);
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CustomerOfflinePaymentBusinessTransactionDatabaseFactory customerOfflinePaymentBusinessTransactionDatabaseFactory =
+                    new CustomerOfflinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.database = customerOfflinePaymentBusinessTransactionDatabaseFactory.createDatabase(
+                        pluginId,
+                        CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.OPEN_CONTRACT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        cantOpenDatabaseException);
+                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         try {
@@ -191,23 +199,23 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Initialize database
              */
-            //initializeDb();
+            initializeDb();
 
             /*
              * Initialize Developer Database Factory
              */
-            /*customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory = new
-                    CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory = new
+                    CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
                     pluginId);
-            customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();*/
+            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             /**
              * Initialize Dao
              */
-            /*CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
-                    new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,
+            CustomerOfflinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
+                    new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);*/
+                            database);
 
             /**
              * Init the plugin manager
@@ -243,20 +251,17 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer offline payment starting");
-        } /*catch (CantInitializeDatabaseException e) {
+        } catch (CantInitializeDatabaseException e) {
             e.printStackTrace();
-        } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException e) {
+        } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException e) {
             e.printStackTrace();
-        } catch (CantStartServiceException e) {
+        } /*catch (CantStartServiceException e) {
             e.printStackTrace();
         } catch (CantSetObjectException e) {
             e.printStackTrace();
         } catch (CantStartAgentException e) {
             e.printStackTrace();
-        }*/ catch (Exception e) {
-            //TODO: delete this catch
-            e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -298,16 +303,16 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 }
