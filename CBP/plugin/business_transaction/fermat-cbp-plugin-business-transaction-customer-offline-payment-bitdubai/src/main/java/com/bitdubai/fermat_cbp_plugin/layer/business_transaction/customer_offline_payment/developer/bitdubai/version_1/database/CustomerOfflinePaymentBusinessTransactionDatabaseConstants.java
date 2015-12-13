@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
- * Created by Manuel Perez - (darkpriestrelative@gmail.com) on 08/12/15.
+ * Created by Manuel Perez - (darkpriestrelative@gmail.com) on 12/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
