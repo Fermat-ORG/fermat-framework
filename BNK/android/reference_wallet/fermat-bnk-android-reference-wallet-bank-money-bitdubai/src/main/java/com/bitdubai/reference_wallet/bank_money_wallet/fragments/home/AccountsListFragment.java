@@ -66,7 +66,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-        showOrHideNoContractsView(accountsList);
+        showOrHideNoAccountListView(accountsList.isEmpty());
     }
 
     @Override
@@ -147,6 +147,8 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     protected int getRecyclerLayoutId() {
+        //TODO: agregar el id del resource recycler layout para mostrar la lista.
+        //TODO: arreglar el layout para mostrar el home.
         return 0;
     }
 
