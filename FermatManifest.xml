@@ -8373,6 +8373,131 @@
         </steps>
     </process>
 
+    <process platform="CBP" name="Broker Accept a Connection from a Customer"
+             description="A Crypto Broker accept a connection request send by a Crypto Customer"
+             previous="">
+        <steps>
+            <step id="0" title="Request list of Crypto Customers waiting for connection"
+                  description="The Broker request the list of Crypto Customers waiting to connect with him"
+                  type="start"
+                  name="Crypto Customer Community"
+                  platform="CBP"
+                  layer="Sub App"
+                  superlayer=""
+                  component="">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Request list of Crypto Customers waiting for connection"
+                  description="The module routes this request to the Actor to get the list"
+                  type="activity"
+                  name="Crypto Customer Community"
+                  platform="CBP"
+                  layer="Sub App Module"
+                  superlayer=""
+                  component="Plugin">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Return of Crypto Customers waiting for connection"
+                  description="Consult its Data Base to get the Crypto Customers waiting for connection and return it has a list."
+                  type="activity"
+                  name="Crypto Broker"
+                  platform="CBP"
+                  layer="Actor"
+                  superlayer=""
+                  component="Plugin">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Return the list of Crypto Customers waiting for connection"
+                  description="The module return to the Sub App the list of Crypto Customers waiting for connection"
+                  type="activity"
+                  name="Crypto Customer Community"
+                  platform="CBP"
+                  layer="Sub App Module"
+                  superlayer=""
+                  component="Plugin">
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Show the list of Crypto Customers waiting for connection and Broker accept one of them"
+                  description="Show the list of Crypto Customers waiting for connection returned by the module. The Broker accept one of this request"
+                  type="start"
+                  name="Crypto Customer Community"
+                  platform="CBP"
+                  layer="Sub App"
+                  superlayer=""
+                  component="">
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Register that the connection has been accepted"
+                  description="The module routes this request to the Actor to register this update"
+                  type="activity"
+                  name="Crypto Customer Community"
+                  platform="CBP"
+                  layer="Sub App Module"
+                  superlayer=""
+                  component="Plugin">
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6" title="Return of Crypto Customers waiting for connection"
+                  description="Register in its Data Base to get the state of the connection change to Accepted. Tell the Network Service to notify the Crypto Customer that the Broker has accepted the connection"
+                  type="activity"
+                  name="Crypto Broker"
+                  platform="CBP"
+                  layer="Actor"
+                  superlayer=""
+                  component="Plugin">
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7" title="Send the message of the update to the Crypto Customer"
+                  description="Send to the Crypto Customer device that the connection request has been accepted"
+                  type="activity"
+                  name="Crypto Customer"
+                  platform="CBP"
+                  layer="Actor Network Service"
+                  superlayer=""
+                  component="Plugin">
+                <next>
+                    <step id="8" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="8" title="Receive the message send by the Crypto Broker"
+                  description="Receive the message send by the Crypto telling him that the connection request has been accepted. Send a event to the plugins notifying about this"
+                  type="activity"
+                  name="Crypto Customer"
+                  platform="CBP"
+                  layer="Actor Network Service"
+                  superlayer=""
+                  component="Plugin">
+                <next>
+                    <step id="9" type="event"></step>
+                </next>
+            </step>
+            <step id="9"
+                  type="end"
+                  title="Send notification to the OS"
+                  description="Sends the notification to the OS and this in turn shows it to the end user."
+                  platform="COR"
+                  superlayer=""
+                  layer="Core"
+                  name="Notification Manager"
+                >
+            </step>
+        </steps>
+    </process>
+
     <process platform="CBP" name="Bank Account Restock">
         <steps>
             <step id="0" title="Broker declare a new merchandise"
