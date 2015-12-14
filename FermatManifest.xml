@@ -10121,8 +10121,7 @@
         </steps>
     </process>
 
-    <process platform="CCP"
-        name="Payment Request to Intra user"
+    <process platform="CCP" name="Payment Request to Intra user"
         description="A Wallet's Intra User sends a payment request to another intra user contact to request payment for a specific amount."
         previous="List Wallet Contacts"
         >
@@ -10252,8 +10251,7 @@
         </steps>
     </process>
 
-    <process platform="CCP"
-        name="Refuse Payment Request from Intra user"
+    <process platform="CCP" name="Refuse Payment Request from Intra user"
         description="A Wallet's Intra User refuse a payment request sent by another actor."
         previous="List Payment Request"
         >
@@ -10382,7 +10380,8 @@
 
         </steps>
     </process>
-    <process platform="CCP"		name="Creates an Intra Wallet User"
+
+    <process platform="CCP" name="Creates an Intra Wallet User"
         description="Creates an Intra Wallet User Identity."
         previous=""
         >
@@ -10451,7 +10450,8 @@
             </step>
         </steps>
     </process>
-    <process platform="CCP"		name="Enter into the Community - Wallet Users"
+
+    <process platform="CCP" name="Enter into the Community - Wallet Users"
         description="List all discovered connections."
         previous=""
         >
@@ -10546,7 +10546,8 @@
             </step>
         </steps>
     </process>
-    <process platform="CCP"		name="Enter into the Community - Connections"
+
+    <process platform="CCP" name="Enter into the Community - Connections"
         description="List all connected users."
         previous="Enter into the Community - Wallet Users"
         >
@@ -10641,7 +10642,8 @@
             </step>
         </steps>
     </process>
-    <process platform="CCP"		name="Enter into the Community - Request Connections"
+
+    <process platform="CCP" name="Enter into the Community - Request Connections"
         description="List all users pending for acceptance."
         previous="Enter into the Community - Wallet Users"
         >
