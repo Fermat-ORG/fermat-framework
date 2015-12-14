@@ -35,11 +35,6 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
         );
     }
 
-    protected ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory() {
-
-        return new CryptoBrokerActorConnectionDatabaseFactory(pluginDatabaseSystem);
-    }
-
     protected CryptoBrokerActorConnection buildActorConnectionNewRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   connectionId                  = record.getUUIDValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             );

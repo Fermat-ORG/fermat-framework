@@ -261,7 +261,11 @@ public class DesktopPluginTextFile implements PluginTextFile {
             throw new CantLoadFileException(e.getMessage());
         } finally {
         	try {
-        		bufferedReader.close();
+
+                if (bufferedReader != null){
+                    bufferedReader.close();
+                }
+
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
