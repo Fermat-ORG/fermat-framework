@@ -7718,8 +7718,8 @@
                 </step>
                 <step id="1"
                     type="activity"
-                    title="Route request to network service"
-                    description="The module routes this payment request to the Crypto Payment Request Plugin to reach the selected intra user."
+                    title="Route Send to Outgoing Intra Actor Plugin"
+                    description="The module routes this crypto send to the Outgoing Intra Actor Plugin to send the actor selected."
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
@@ -7732,13 +7732,13 @@
                 </step>
                 <step id="2"
                     type="activity"
-                    title="Route request to network service"
-                    description="The module routes this payment request to the network service to reach the selected intra user."
+                    title="Send metadata to network service"
+                    description="The Outgoing Intra Actor plugin routes the send metadata to the network service to send payment information to actor selected."
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
-                    layer="Request"
-                    name="Crypto Payment Request"
+                    layer="Network Service"
+                    name="Crypto Payment"
                     >
                     <next>
                         <step id="3" type="direct call"></step>
@@ -8144,8 +8144,8 @@
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
-                    layer="Request"
-                    name="Crypto Payment Request"
+                    layer="Crypto Transaction"
+                    name="Outgoing Intra User"
                     >
                     <next>
                         <step id="4" type="direct call"></step>
