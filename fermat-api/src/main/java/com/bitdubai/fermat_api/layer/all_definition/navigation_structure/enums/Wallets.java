@@ -15,6 +15,7 @@ public enum Wallets {
     CBP_CRYPTO_CUSTOMER_WALLET("cbp_crypto_customer_wallet"),
     CSH_CASH_WALLET("csh_cash_wallet"),
     BNK_BANKING_WALLET("bnk_banking_wallet");
+    DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet");
 
     private final String code;
 
@@ -47,6 +48,8 @@ public enum Wallets {
                 return CSH_CASH_WALLET;
             case "bnk_banking_wallet":
                 return BNK_BANKING_WALLET;
+            case "dap_asset_issuer_wallet":
+                return DAP_ASSET_ISSUER_WALLET;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Wallets enum");
         }
