@@ -33,7 +33,7 @@ Es un servicio de red que pretende definir el protocolo y comportamiento para la
 
 * **Servicios de Red para Actores**, que son los encargados de gestionar las actividades reaccionadas con las identidades (Actores) que se encuentra dentro de la plataforma.
 
-* **Servicios de Red** generales que son los encargados de gestionar lógicas de negocio u protocolos de transferencia de información.
+* **Servicios de Red** generales que son los encargados de gestionar lógicas de negocio o protocolos de transferencia de información.
 
 ### Conexiones
 
@@ -54,7 +54,7 @@ Esta sección le ayudará a entender el flujo de trabajo necesarios a seguir par
 
 #### Issues
 
-Es obligatorio que se cree un conjunto inicial de GitHub Issues antes de continuar más con el flujo de trabajo. Esto le mostrará al resto de los equipos que alguien está trabajando en esta funcionalidad y evitar conflictos de trabajo desde el principio. También se enganchará el líder del equipo en su flujo de trabajo y que le permita orientar y asesorar a usted cuando sea necesario.
+Es obligatorio que se cree un conjunto inicial de GitHub Issues antes de continuar con el flujo de trabajo. Esto le mostrará al resto de los equipos que alguien está trabajando en esta funcionalidad y evitar conflictos de trabajo desde el principio. También se enganchará el líder del equipo en su flujo de trabajo y que le permita orientar y asesorar a usted cuando sea necesario.
 
 Una jerarquía básica de GitHub Issues se crean como un primer paso. Los temas están vinculados uno a otro con sólo colocar un enlace en el primer comentario.
 
@@ -264,11 +264,51 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 
 ## Parte III: Implementación
 
+En Fermat se sigue un estándar al momento de la creación de un Network Service, de tal forma que se le da uniformidad al proceso de envío y recepción de metadata a través de la red P2P. Para ello se dispone de una plantilla o "template", la cual debe ser respetada para la implementación de este tipo de plugins, por supuesto, es posible ajustar el network service a los requerimientos de la plataforma en la cual va a ser utilizado, solo debe permanecer fija la estructura para el establecimiento de la conexión con el servidor, el registro del mismo y el envío de mensajes.
+
+Para comenzar con la creacion de un plugin Network Service podemos crearlo desde cero agregando las siguientes clases template en la estructura:
+
+    + structure
+     > communications
+	     > CommunicationNetworkServiceConnectionManager
+	     > CommunicationNetworkServiceLocal
+	     > CommunicationNetworkServiceRemoteAgent
+	     > CommunicationRegistrationProcessNetworkServiceAgent	
+     > database
+	     > CommunicationNetworkServiceDatabaseConstants
+	     > CommunicationNetworkServiceDatabaseFactory
+	     > CommunicationNetworkServiceDeveloperDatabaseFactory
+	     > IncomingMessageDao
+	     > OutgoingMessageDao
+     > event_handlers
+	     > ClientConnectionCloseNotificationEventHandler
+	     > CompleteComponentConnectionRequestNotificationEventHandler
+	     > CompleteComponentRegistrationNotificationEventHandler
+	     > CompleteRequestListComponentRegisteredNotificationEventHandler
+	     > NewReceiveMessagesNotificationEventHandler
+	     > NewSentMessagesNotificationEventHandler
+	     > VPNConnectionCloseNotificationEventHandler	
+     > exceptions
+	     > CantInitializeDatabaseException
+	     > CantInitializeNetworkServiceDatabaseException
+	     > CantReadRecordDataBaseException
+
+El código fuente de las clases pertenecientes al Template de un Network Service se encuentran en: 
+
+    + P2P/library/api/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/all_definition/common/network_services/template/
+    
+Es bueno destacar que este Template contiene una serie de clases Abstractas que deben ser implementadas en plugin que se está desarrollando.
+
+Como todo plugin en Fermat, este debe incluir una clase **PluginRoot** en la cual se hacen referencia a todos los plugins externos para poder usar las funcionalidades prestadas por estos, así como también sirve para inicializar todas las clases de manejo de base de datos del plugin, agentes y manejadores de aventos (event handlers). Esta clase PluginRoot debe extender de la clase **_AbstractNetworkService_**.
+
+Así mismo, en la _API_ de la plataforma a la cual pertenece el plugin, deben estar la(s) interface(s) manager del plugin, la cual proporcionan acceso a las funcionalidades del plugin Network Service a otros plugins de Fermat. La interface manager debe extender de las interfaces **_FermatManager_** y **_TransactionProtocolManager<BusinessTransactionMetadata>_**.
+
+La interface manager debe ser implementada el paquete _structure_ del plugin.
 <br>
 
 
 
-<br><br><br><br><br><br><br>
+<br><br><br>
 
 ## Parte IV: Servidor Local de Pruebas
 
