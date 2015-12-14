@@ -131,8 +131,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Customer online payment monitor agent starting");
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("Customer online payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -243,8 +243,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
 
-                Logger LOG = Logger.getGlobal();
-                LOG.info("Database in Open Contract monitor agent doesn't exists");
+                //Logger LOG = Logger.getGlobal();
+                //LOG.info("Database in Open Contract monitor agent doesn't exists");
                 CustomerOnlinePaymentBusinessTransactionDatabaseFactory CustomerOnlinePaymentBusinessTransactionDatabaseFactory=
                         new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {

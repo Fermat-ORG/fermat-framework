@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.common.navigationDrawer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -48,11 +50,9 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
         return null;//(RelativeLayout) layoutInflater.inflate(R.layout.cbw_navigation_view_bottom, base, true);
     }
 
-
-
     @Override
-    public Drawable addBodyBackground() {
-        return ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bnk_navigation_drawer_background);
+    public Bitmap addBodyBackground() {
+        return BitmapFactory.decodeResource(activity.getResources(), R.drawable.bnk_navigation_drawer_background);
     }
 
     @Override
@@ -63,5 +63,10 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
     @Override
     public RecyclerView.ItemDecoration addItemDecoration() {
         return null;
+    }
+
+    @Override
+    public boolean hasBodyBackground() {
+        return false;
     }
 }
