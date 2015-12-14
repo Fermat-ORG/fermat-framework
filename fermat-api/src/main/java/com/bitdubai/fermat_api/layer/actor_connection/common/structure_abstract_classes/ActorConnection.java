@@ -14,6 +14,10 @@ import java.util.UUID;
  * An Actor Connection contains all the basic information of the connection.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public abstract class ActorConnection<T extends ActorIdentity> {
 

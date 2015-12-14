@@ -4306,6 +4306,26 @@
 				</androids>
 			</layer>
 
+			<layer name="Desktop" language="java-android">
+				<androids>
+					<android name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin	name="Cash Money"
@@ -4326,17 +4346,37 @@
 				</plugins>
 			</layer>
 
+			<layer name="Desktop Module" language="java">
+				<plugins>
+					<plugin	name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
 			<layer name="Cash Money Transaction" language="java">
 				<plugins>
 					<plugin name="Deposit"
 						description=""
 						difficulty="6"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="abicelis" scope="implementation" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="90"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4346,12 +4386,12 @@
 					<plugin name="Withdrawal"
 						description=""
 						difficulty="6"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="abicelis" scope="implementation" percentage="100"></author>
+							<author name="abicelis" scope="implementation" percentage="90"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4436,12 +4476,52 @@
 				</androids>
 			</layer>
 
+			<layer name="Desktop" language="java-android">
+				<androids>
+					<android name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin	name="Bank Money"
 						description=""
 						difficulty="4"
 						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="guillermo20" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Desktop Module" language="java">
+				<plugins>
+					<plugin	name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4660,6 +4740,41 @@
 				</androids>
 			</layer>
 
+			<layer name="Desktop" language="java-android">
+				<androids>
+					<android name="Sub App Manager"
+						 description=""
+						 difficulty="4"
+						 code-level="qa"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="qa"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin	name="Crypto Broker"
@@ -4769,6 +4884,41 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Desktop Module" language="java">
+				<plugins>
+					<plugin	name="Sub App Manager"
+						description=""
+						difficulty="4"
+						code-level="qa"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin	name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="qa"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4922,13 +5072,13 @@
 					<plugin	name="Customer Online Payment"
 						description=""
 						difficulty="8"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="10"></author>
-							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="15"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5329,13 +5479,13 @@
 					<plugin name="Crypto Broker"
 						description=""
 						difficulty="2"
-						code-level="qa"
+						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="yalayn" scope="implementation" percentage="20"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="90"></author>
 						</authors>
 						<mantainers>
 						</mantainers>

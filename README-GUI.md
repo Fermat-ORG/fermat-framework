@@ -764,7 +764,8 @@ Crear el codigo base del wallet Module Manager Plugin y registrarlo en el core
 
 
 
-Registrar los Activities y Fragments en el fermat-api (Esto es provisorio):
+Registrar los Activities y Fragments en el fermat-api:
+
 	Ir a: fermat_api/layer/all_definition/navigation_structure/enums:
 	Activities enum: Ingresar los Activities del wallet(el home, for starters?)
 	Fragments enum: Ingresar al menos in Fragment que pertenezca al home (cash balance summary fragment?)
