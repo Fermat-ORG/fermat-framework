@@ -14,7 +14,7 @@ public enum Wallets {
     CBP_CRYPTO_BROKER_WALLET("cbp_crypto_broker_wallet"),
     CBP_CRYPTO_CUSTOMER_WALLET("cbp_crypto_customer_wallet"),
     CSH_CASH_WALLET("csh_cash_wallet"),
-    BNK_BANKING_WALLET("bnk_banking_wallet");
+    BNK_BANKING_WALLET("bnk_banking_wallet"),
     DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet");
 
     private final String code;
