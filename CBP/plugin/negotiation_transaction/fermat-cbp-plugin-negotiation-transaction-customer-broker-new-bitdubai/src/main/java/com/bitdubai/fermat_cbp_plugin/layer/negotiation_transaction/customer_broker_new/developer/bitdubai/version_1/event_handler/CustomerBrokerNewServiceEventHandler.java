@@ -95,21 +95,21 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
         Logger LOG = Logger.getGlobal();
         LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         LOG.info("CHECK THE DATABASE");
     }
 
     public void incomingNegotiationTransactionConfirmEventHandler(IncomingNegotiationTransmissionConfirmNegotiationEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
     }
 
     public void incomingNegotiationTransactionConfirmResponseEventHandler(IncomingNegotiationTransmissionConfirmResponseEvent event) throws CantSaveEventException {
         Logger LOG = Logger.getGlobal();
         LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         LOG.info("CHECK THE DATABASE");
     }
 

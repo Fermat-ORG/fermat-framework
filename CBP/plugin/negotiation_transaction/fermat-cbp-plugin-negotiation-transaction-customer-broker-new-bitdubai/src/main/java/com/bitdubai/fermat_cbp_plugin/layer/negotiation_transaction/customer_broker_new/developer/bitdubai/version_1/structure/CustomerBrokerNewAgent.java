@@ -61,7 +61,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by Yordin Alayn on 08.12.15.
- * Based On OpenContractMonitorAgent Create by Manuel Perez.
+ * Based On OpenContractMonitorAgentTransaction Create by Manuel Perez.
  */
 public class CustomerBrokerNewAgent implements
         CBPTransactionAgent,
@@ -95,7 +95,7 @@ public class CustomerBrokerNewAgent implements
     private CustomerBrokerSaleNegotiation       customerBrokerSaleNegotiation;
 
 
-    private MonitorAgent monitorAgent;
+    private MonitorAgentTransaction monitorAgentTransaction;
 
     public CustomerBrokerNewAgent(
             PluginDatabaseSystem                pluginDatabaseSystem,
@@ -123,18 +123,18 @@ public class CustomerBrokerNewAgent implements
 
         Logger LOG = Logger.getGlobal();
         LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
-        monitorAgent = new MonitorAgent();
+        monitorAgentTransaction = new MonitorAgentTransaction();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        ((DealsWithPluginDatabaseSystem) this.monitorAgentTransaction).setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        ((DealsWithErrors) this.monitorAgentTransaction).setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).startAgent();
+            ((MonitorAgentTransaction) this.monitorAgentTransaction).startAgent();
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgentTransaction);
         this.agentThread.start();
 
     }
@@ -171,7 +171,7 @@ public class CustomerBrokerNewAgent implements
     }
 
     /*INNER CLASSES*/
-    private class MonitorAgent implements Runnable {
+    private class MonitorAgentTransaction implements Runnable {
 
         private volatile boolean agentRunning;
         PluginDatabaseSystem pluginDatabaseSystem;
@@ -179,7 +179,7 @@ public class CustomerBrokerNewAgent implements
         public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
         boolean threadWorking;
-        public MonitorAgent() {
+        public MonitorAgentTransaction() {
             startAgent();
         }
         
@@ -354,7 +354,6 @@ public class CustomerBrokerNewAgent implements
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
 
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSACTION.getCode())) {
-                    //evaluar si es transmission o transaction
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
                         negotiationTransmission = record.getInformation();
@@ -407,7 +406,22 @@ public class CustomerBrokerNewAgent implements
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_RESPONSE.getCode())) {
 
                             negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_RESPONSE;
+                            //agrregar getNegotiationType() al negotiationTransaction
+//                            negotiationType              = negotiationTransaction.getNegotiationType().getCode();
 
+//                            switch (negotiationType){
+//                                case PURCHASE:
+//                                    customerBrokerContractPurchaseManager.
+//                                            updateStatusCustomerBrokerPurchaseContractStatus(
+//                                                    contractHash,
+//                                                    ContractStatus.PENDING_PAYMENT);
+//                                    break;
+//                                case SALE:
+//                                    customerBrokerContractSaleManager.
+//                                            updateStatusCustomerBrokerSaleContractStatus(
+//                                                    contractHash,
+//                                                    ContractStatus.PENDING_PAYMENT);
+//                            }
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
                             negotiationTransmissionManager.confirmReception(transactionId);
