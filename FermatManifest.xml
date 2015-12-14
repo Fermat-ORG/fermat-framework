@@ -11715,6 +11715,304 @@
         </steps>
     </process>
 
+    <process platform="CSH" name="Balance Inquiry"
+             description="Returns the current Available and Book balances of the Cash Wallet" previous="">
+        <steps>
+            <step id="0"
+                  type="start"
+                  title="Balance inquiry"
+                  description="Requests both Book and Available balances of the wallet"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  name="Cash Money">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"
+                  type="activity"
+                  title="Sends balance request"
+                  description="Sends balance request to the Wallet plugin"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet Module"
+                  name="Cash Money">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"
+                  type="activity"
+                  title="Fetches and returns balances"
+                  description="Consults database for current balances of the cash wallet"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet"
+                  name="Cash Money">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CSH" name="Transaction History"
+             description="Returns the transaction history (Only deposits and withdrawals) of the cash wallet" previous="">
+        <steps>
+            <step id="0"
+                  type="start"
+                  title="Transaction history inquiry"
+                  description="Requests list of transactions"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  name="Cash Money">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"
+                  type="activity"
+                  title="Sends transaction history request to cash wallet"
+                  description="Sends balance request to the cash wallet plugin"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet Module"
+                  name="Cash Money">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"
+                  type="activity"
+                  title="Retches and returns transaction history"
+                  description="Returns transaction history sorted by date DESC"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet"
+                  name="Cash Money">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CSH" name="Deposit"
+             description="A Fermat user deposits cash money on his Cash Money Reference Wallet" previous="">
+        <steps>
+            <step id="0"
+                  type="start"
+                  title="User requests deposit transaction"
+                  description="User enters amount and memo"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  name="Cash Money">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"
+                  type="activity"
+                  title="Sends deposit request"
+                  description="Sends deposit data to the deposit plugin to make the transaction"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet Module"
+                  name="Cash Money">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"
+                  type="activity"
+                  title="Registers deposit transaction and sends credits to the wallet."
+                  description="Tries to register a credit on the Available and Book balances of the wallet and, if succeded, registers the transaction internally"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Cash Money Transaction"
+                  name="Deposit">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"
+                  type="activity"
+                  title="Register credit on the Available and Book balances of the wallet"
+                  description="Applies a credit on the Available and Book balances of the wallet"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet"
+                  name="Cash Money">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CSH" name="Withdrawal"
+             description="A Fermat user whithdraws cash money from his Cash Money Reference Wallet" previous="">
+        <steps>
+            <step id="0"
+                  type="start"
+                  title="User requests withdrawal transaction"
+                  description="User enters amount and memo"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  name="Cash Money">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"
+                  type="activity"
+                  title="Sends withdrawal request"
+                  description="Sends withdrawal data to the withdrawal plugin to make the transaction"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet Module"
+                  name="Cash Money">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"
+                  type="activity"
+                  title="Registers withdrawal transaction and sends debit to the wallet."
+                  description="Tries to register a debit on the Available and Book balances of the wallet and, if succeded, registers the transaction internally"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Cash Money Transaction"
+                  name="Withdrawal">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"
+                  type="activity"
+                  title="Register debit on the Available and Book balances of the wallet"
+                  description="Applies a debit on the Available and Book balances of the wallet"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet"
+                  name="Cash Money">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CSH" name="Hold"
+             description="Holds (decrements available balance) an amount of cash money from the cash wallet" previous="">
+        <steps>
+            <step id="0"
+                  type="start"
+                  title="External plugin requests a hold of the funds from the cash wallet"
+                  description="For this, it sends a transaction UUID, an amount, a memo, and its own public key"
+                  platform=""
+                  superlayer=""
+                  layer=""
+                  name="">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"
+                  type="activity"
+                  title="Receives hold transaction request"
+                  description="Registers hold transaction internally as an ACKNOWLEDGED transaction"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Cash Money Transaction"
+                  name="Hold">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"
+                  type="activity"
+                  title="Internal agent processes hold transaction request"
+                  description="Tries to hold funds in wallet, if succeded, changes internal status to CONFIRMED, otherwise REJECTED"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Cash Money Transaction"
+                  name="Hold">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"
+                  type="activity"
+                  title="Tries to hold available funds"
+                  description="Processes the hold request by making a debit on the available balance of the cash wallet"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet"
+                  name="Cash Money">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CSH" name="Unhold"
+             description="Unholds (increments available balance) an amount of cash money from the cash wallet" previous="">
+        <steps>
+            <step id="0"
+                  type="start"
+                  title="External plugin requests am unhold of the funds from the cash wallet"
+                  description="For this, it sends a transaction UUID, an amount, a memo, and its own public key"
+                  platform=""
+                  superlayer=""
+                  layer=""
+                  name="">
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"
+                  type="activity"
+                  title="Receives unhold transaction request"
+                  description="Registers unhold transaction internally as an ACKNOWLEDGED transaction"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Cash Money Transaction"
+                  name="Unhold">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"
+                  type="activity"
+                  title="Internal agent processes unhold transaction request"
+                  description="Tries to unhold funds in wallet, if succeded, changes internal status to CONFIRMED, otherwise REJECTED"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Cash Money Transaction"
+                  name="Unhold">
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"
+                  type="activity"
+                  title="Tries to unhold available funds"
+                  description="Processes the unhold request by making a debit on the available balance of the cash wallet"
+                  component="plugin"
+                  platform="CSH"
+                  superlayer=""
+                  layer="Wallet"
+                  name="Cash Money">
+            </step>
+        </steps>
+    </process>
+
     <process platform="CCP" name="Payment Request to Intra user"
         description="A Wallet's Intra User sends a payment request to another intra user contact to request payment for a specific amount."
         previous="List Wallet Contacts"
