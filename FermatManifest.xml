@@ -5041,7 +5041,7 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="50"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
@@ -5057,7 +5057,7 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
@@ -8545,7 +8545,7 @@
                     </next>
                 </step>
                 <step id="4" title="CBP-Business Transaction-Bank Money Restock"
-                    description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                    description="The transactional agent start to review the records according to the transaction status to proceed with the flow."
                     type="activity"
                     platform="CBP"
                     name="Bank Money Restock"
@@ -8624,7 +8624,7 @@
                     </next>
                 </step>
                 <step id="4" title="CBP-Business Transaction-Bank Money Destock"
-                    description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                    description="The transactional agent start to review the records according to the transaction status to proceed with the flow."
                     type="activity"
                     platform="CBP"
                     name="Bank Money Destock"
@@ -8703,7 +8703,7 @@
                     </next>
                 </step>
                 <step id="4" title="CBP-Business Transaction-Cash Money Restock"
-                    description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                    description="The transactional agent start to review the records according to the transaction status to proceed with the flow."
                     type="activity"
                     platform="CBP"
                     name="Cash Money Restock"
@@ -8782,7 +8782,7 @@
                     </next>
                 </step>
                 <step id="4" title="CBP-Business Transaction-Cash Money Destock"
-                    description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                    description="The transactional agent start to review the records according to the transaction status to proceed with the flow."
                     type="activity"
                     platform="CBP"
                     name="Cash Money Destock"
@@ -8861,7 +8861,7 @@
                     </next>
                 </step>
                 <step id="4" title="CBP-Business Transaction-Crypto Money Restock"
-                    description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                    description="The transactional agent start to review the records according to the transaction status to proceed with the flow."
                     type="activity"
                     platform="CBP"
                     name="Crypto Money Restock"
@@ -8940,7 +8940,7 @@
                     </next>
                 </step>
                 <step id="4" title="CBP-Business Transaction-Cash Money Destock"
-                    description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                    description="The transactional agent start to review the records according to the transaction status to proceed with the flow."
                     type="activity"
                     platform="CBP"
                     name="Crypto Money Destock"
