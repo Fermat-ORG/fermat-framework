@@ -25,7 +25,16 @@ public class CryptoProvidersManager implements IndexProvider{
     BterProvider bterProvider = new BterProvider();
     CcexProvider ccexProvider = new CcexProvider();
     CexioProvider cexioProvider = new CexioProvider();
+    BitfinexProvider bitfinexProvider =  new BitfinexProvider();
     CryptoCoinChartsProvider cryptoCoinChartsProvider = new CryptoCoinChartsProvider();
+
+    /**
+     *
+     * @param cryptoCurrency
+     * @param fiatCurrency
+     * @return
+     * @throws CantGetIndexException
+     */
 
     @Override
     public CryptoIndex getCurrentIndex(CryptoCurrency cryptoCurrency, FiatCurrency fiatCurrency) throws CantGetIndexException {
@@ -62,12 +71,20 @@ public class CryptoProvidersManager implements IndexProvider{
                     cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
                     cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
                     (new Date().getTime() / 1000),
-                    "www.cryptocoincharts.info/");
+                    "www.cryptocoincharts.info");
+            CryptoIndexImp bitFinexIndex = new CryptoIndexImp(
+                    CryptoCurrency.BITCOIN,
+                    CryptoCurrency.BITCOIN,//TODO REVISAR !!!!
+                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
+                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
+                    (new Date().getTime() / 1000),
+                    "bitfinex.com");
 
             indexList.add(btceIndex);
             indexList.add(ccexIndex);
             indexList.add(cexioIndex);
-           indexList.add(cryptoCoinChartsIndex);
+            indexList.add(cryptoCoinChartsIndex);
+            indexList.add(bitFinexIndex);
 
             CryptoIndex index;
             index = CryptoIndexHelper.selectBestIndex(indexList);
