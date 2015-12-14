@@ -8,6 +8,8 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 
 
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 

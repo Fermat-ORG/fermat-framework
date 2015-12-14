@@ -19,7 +19,7 @@
             android:adjustViewBounds="true"
             android:id="@+id/image_view_profile"
             android:scaleType="centerCrop"
-            android:src="@drawable/celine_profile_picture"
+            tools:src="@drawable/celine_profile_picture"
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="normal"
                 android:textColor="#4f4f4f"
                 android:textColorHint="#4f4f4f"
@@ -136,7 +136,7 @@
                 android:paddingBottom="7dip"
                 android:layout_gravity="end"
                 android:state_selected = "false"
-                android:text="1GoK5Zk3a6ga25a"
+                android:text="Waiting..."
                 app:typeface="ROBOTO_REGULAR"
                 android:background="@null"/>
         </LinearLayout>

@@ -418,7 +418,11 @@ public class IncomingNotificationDao implements DAO {
 
         dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, record.getId());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME       , record.getActorSenderAlias());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , record.getActorSenderProfileImage().toString());
+        if(record.getActorSenderProfileImage() != null)
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , record.getActorSenderProfileImage().toString());
+        else
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , "");
+
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME         , record.getNotificationDescriptor().getCode());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME      , record.getActorDestinationType().getCode());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME        , record.getActorSenderType().getCode());
@@ -455,10 +459,15 @@ public class IncomingNotificationDao implements DAO {
         Actors actorDestinationType = Actors.getByCode(destinationType);
         Actors actorSenderType    = Actors.getByCode(senderType   );
 
+        byte[] profileImage = null;
+
+        if (senderProfileImage.length() > 0)
+            profileImage = senderProfileImage.getBytes();
+
         return new ActorNetworkServiceRecord(
                 notificationId        ,
                 senderAlias,
-                senderProfileImage.getBytes()     ,
+                profileImage    ,
                 notificationDescriptor,
                 actorDestinationType        ,
                 actorSenderType      ,

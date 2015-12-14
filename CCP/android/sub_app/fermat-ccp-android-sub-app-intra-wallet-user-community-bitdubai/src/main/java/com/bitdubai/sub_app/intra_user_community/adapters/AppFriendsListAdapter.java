@@ -1,19 +1,26 @@
 package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppFriendsListHolder;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
+import java.lang.annotation.Target;
 import java.util.List;
 
 /**
- * Created by josemanueldsds on 30/11/15.
+ * @author Jose Manuel De Sousa
  */
 public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, AppFriendsListHolder> {
 
@@ -34,16 +41,15 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
     @Override
     protected void bindHolder(AppFriendsListHolder holder, IntraUserInformation data, int position) {
 
-        holder.friendName.setText("Jeniffer");
-
-        try {
-            Picasso.with(context)
-                    .load("http://www.garuyo.com/sites/default/files/jennifer-lawrence-signo-del-zodiaco-leo-1.jpg")
-                    .placeholder(R.drawable.profile_image_round)
-                    .into((Target) holder.friendAvatar);
-        } catch (Exception ex) {
-
+        holder.friendName.setText(data.getName());
+        Bitmap bitmap;
+        if (data.getProfileImage().length > 0) {
+            bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
+        } else {
+            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
         }
+        bitmap = Bitmap.createScaledBitmap(bitmap, 40,40, true);
+        holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
     }
 
     public int getSize() {

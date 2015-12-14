@@ -31,9 +31,8 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
     CryptoIndexDao cryptoIndexDao;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
-    //CryptoIndexHelper cryptoIndexHelper;
     /**
-     * Get Historical ExchangeRate From Providers
+     * Get Historical ExchangeRate From CryptoProvidersManager
      * @param cryptoCurrency
      * @param fiatCurrency
      * @param time
@@ -110,7 +109,7 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
      */
     @Override
     public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
-        // TODO MIRA ESTO Y DECIME QUE TE PARECE
+
         try{
 
         List<Double> priceList = new ArrayList<>();
@@ -126,7 +125,6 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
         }
             marketExchangeRate=getBestMarketPrice(priceList);
         } catch (CantGetMarketPriceException cantGetMarketPriceException) {
-           // TODO es necesario manejar esta excepcion? aunque haya error, esto no debería parar
             new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE,cantGetMarketPriceException,"Crypto Index GetMarketPrice","Can't Get Market Price Exception");
         }
         return marketExchangeRate;

@@ -9,5 +9,6 @@ public interface NegotiationLocations {
 
     UUID getLocationId();
     String getLocation();
+    String getURI();
 
 }

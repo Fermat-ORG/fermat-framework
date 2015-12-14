@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -38,7 +39,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest> {
 
     /**
      * MANAGERS
@@ -82,7 +83,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
@@ -161,8 +162,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
+
         }
         return adapter;
     }
@@ -198,6 +200,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     @Override
     public void onItemClickListener(PaymentRequest item, int position) {
         selectedItem = item;
+
         //showDetailsActivityFragment(selectedItem);
     }
 
@@ -244,10 +247,10 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         this.referenceWalletSession = referenceWalletSession;
     }
 
-    @Override
-    public void onClick(View v) {
+   /* @Override
+   public void onClick(View v) {
         try {
-            PaymentRequest paymentRequest = referenceWalletSession.getLastRequestSelected();
+            PaymentRequest paymentRequest = selectedItem;
             int id = v.getId();
             if(id == R.id.btn_refuse_request){
 
@@ -255,7 +258,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                 Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId());
+
+                cryptoWallet.approveRequest(paymentRequest.getRequestId()
+                        , referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 
@@ -263,7 +268,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         {
             showMessage(getActivity(), "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
         }
-    }
+    }*/
 
 
 }

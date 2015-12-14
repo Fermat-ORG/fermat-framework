@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 03/12/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 08/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -140,7 +140,6 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
 
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME);
-        clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME);
         clausesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME);
@@ -188,6 +187,7 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
 
         bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME);
         bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_COLUMN_NAME);
+        bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME);
         /**
          * Table Bank Accounts Broker addition.
          */
@@ -200,6 +200,7 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
         List<String> paymentCurrenciesBrokerColumns = new ArrayList<String>();
 
         paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME);
+        paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_TYPE_COLUMN_NAME);
         paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_COLUMN_NAME);
         /**
          * Table Payment Currencies Broker addition.

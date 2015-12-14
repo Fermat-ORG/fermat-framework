@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 26/10/15.
@@ -9,7 +9,7 @@ public class RecordsNotFoundException extends DAPException {
 
     //VARIABLE DECLARATION
 
-    public static final String DEFAULT_MESSAGE = "Couldn't find any record in database.";
+    public static final String DEFAULT_MESSAGE = "Couldn't find any record in database to update or delete.";
 
     //CONSTRUCTORS
 

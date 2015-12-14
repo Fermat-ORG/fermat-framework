@@ -35,7 +35,6 @@ import static android.widget.Toast.makeText;
 public class SettingsActivityFragment extends FermatWalletFragment {
 
     // Constants
-    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
     private static final String TAG = "SettingsActivityFragment";
 
     // Fermat Managers
@@ -52,8 +51,8 @@ public class SettingsActivityFragment extends FermatWalletFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

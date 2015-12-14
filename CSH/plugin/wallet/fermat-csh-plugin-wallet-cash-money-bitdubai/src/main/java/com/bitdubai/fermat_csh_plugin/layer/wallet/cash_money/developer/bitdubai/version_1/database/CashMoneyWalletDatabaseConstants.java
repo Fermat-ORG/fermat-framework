@@ -35,6 +35,7 @@ public class CashMoneyWalletDatabaseConstants {
     static final String TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME = "actor_public_key";
     static final String TRANSACTIONS_PLUGIN_PUBLIC_KEY_COLUMN_NAME = "plugin_public_key";
     static final String TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
+    static final String TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME = "balance_type";
     static final String TRANSACTIONS_AMOUNT_COLUMN_NAME = "amount";
     static final String TRANSACTIONS_MEMO_COLUMN_NAME = "memo";
     static final String TRANSACTIONS_TIMESTAMP_COLUMN_NAME = "timestamp";

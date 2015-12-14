@@ -33,7 +33,7 @@ public class DigitalAssetAdapter extends FermatAdapter<DigitalAsset, DigitalAsse
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_digital_asset;
+        return R.layout.dap_wallet_asset_user_row_digital_asset;
     }
 
     @Override

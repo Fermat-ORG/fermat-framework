@@ -7,8 +7,8 @@ import java.util.UUID;
 /**
  * Created by angel on 03/12/15.
  */
-public interface NegotiationBankAccount {
 
+public interface NegotiationBankAccount {
     UUID getBankAccountId();
     String getBankAccount();
     FiatCurrency getCurrencyType();

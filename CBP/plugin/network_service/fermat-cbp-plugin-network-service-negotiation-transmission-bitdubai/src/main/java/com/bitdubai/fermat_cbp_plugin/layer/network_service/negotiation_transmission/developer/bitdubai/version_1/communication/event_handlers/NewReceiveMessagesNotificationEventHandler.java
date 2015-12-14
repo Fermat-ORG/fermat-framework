@@ -8,7 +8,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
  */
 public final class NewReceiveMessagesNotificationEventHandler extends AbstractNewReceiveMessagesNotificationEventHandler {
 
-    public NewReceiveMessagesNotificationEventHandler(AbstractNetworkService cryptoAddressesNetworkServicePluginRoot) {
-        super(cryptoAddressesNetworkServicePluginRoot);
+    public NewReceiveMessagesNotificationEventHandler(AbstractNetworkService networkServiceNegotiationTransmissionPluginRoot) {
+        super(networkServiceNegotiationTransmissionPluginRoot);
     }
 }

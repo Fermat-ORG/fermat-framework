@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -18,6 +19,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDeveloperDatabaseFactory;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletManagerImpl;
@@ -26,12 +34,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 11/17/2015
  */
 
-public class WalletCashMoneyPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
+public class WalletCashMoneyPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CashMoneyWalletManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -57,6 +66,63 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
 
 
 
+    /*
+     * TEST METHODS
+     */
+    private void createTestWalletIfNotExists() {
+        System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
+
+        if(!cashMoneyWalletExists("publicKeyWalletMock")) {
+            try {
+                createCashMoneyWallet("publicKeyWalletMock", FiatCurrency.US_DOLLAR);
+            } catch (CantCreateCashMoneyWalletException e) {}
+        }
+    }
+
+    private void testDeposits() {
+        System.out.println("CASHWALLET - testDeposits CALLED");
+
+        try {
+            CashMoneyWallet wallet = loadCashMoneyWallet("publicKeyWalletMock");
+            wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 10000, "testCreditFromWallet");
+            wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 8000, "testDebitFromWallet");
+
+            wallet.getBookBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 4000, "testCreditFromWallet");
+            wallet.getBookBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 2000, "testDebitFromWallet");
+
+        } catch (CantLoadCashMoneyWalletException e) {
+            System.out.println("CASHWALLET - testCashWallet() - CantLoadCashMoneyWalletException");
+        } catch (CantGetCashMoneyWalletBalanceException e) {
+            System.out.println("CASHWALLET - testCashWallet() - CantGetCashMoneyWalletBalanceException");
+        } catch (CantRegisterCreditException e) {
+            System.out.println("CASHWALLET - testCashWallet() - CantRegisterCreditException");
+        } catch (CantRegisterDebitException e) {
+            System.out.println("CASHWALLET - testCashWallet() - CantRegisterCreditException");
+        }
+    }
+
+
+
+    /*
+     * CashMoneyWalletManager interface implementation
+     */
+
+    @Override
+    public void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
+        cashMoneyWalletManagerImpl.createCashMoneyWallet(walletPublicKey, fiatCurrency);
+    }
+
+    @Override
+    public boolean cashMoneyWalletExists(String walletPublicKey) {
+        return cashMoneyWalletManagerImpl.cashMoneyWalletExists(walletPublicKey);
+    }
+
+    @Override
+    public CashMoneyWallet loadCashMoneyWallet(String walletPublicKey) throws CantLoadCashMoneyWalletException {
+        return cashMoneyWalletManagerImpl.loadCashMoneyWallet(walletPublicKey);
+    }
+
+
 
 
     @Override
@@ -71,10 +137,10 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "WalletCashMoneyPluginRoot", null);
         }
+
+        createTestWalletIfNotExists();
+        testDeposits();
     }
-
-
-
 
 
 
@@ -107,14 +173,6 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         }
         return tableRecordList;
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -198,13 +256,13 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     }
 
     @Override
-    public CashMoneyWallet loadCashMoneyWallet(String walletPublicKey) throws CantLoadCashMoneyException {
+    public CashMoneyWallet loadCashMoneyWallet(String walletPublicKey) throws CantLoadCashMoneyWalletException {
 
         return null;
     }
 
     @Override
-    public void createCashMoney(String walletPublicKey) throws CantCreateCashMoneyException {
+    public void createCashMoneyWallet(String walletPublicKey) throws CantCreateCashMoneyException {
 
     }
 

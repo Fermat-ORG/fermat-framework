@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -51,8 +52,6 @@ import java.util.UUID;
  * Created by franklin on 16/11/15.
  */
 public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugin  implements
-        //TODO: Implementar DealsWiths de los modulos BNK y la Wallet CBP
-        BankMoneyDestockManager,
         DatabaseManagerForDevelopers {
 
     public BusinessTransactionBankMoneyDestockPluginRoot() {
@@ -73,8 +72,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    //TODO:Descomentar luego que esten arrancados estos Plugines: plugin = Plugins.CRYPTO_WALLET, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_WALLET)
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION)
@@ -89,7 +87,6 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Bank Money Destock ******");
-            //testDestock();
             startMonitorAgent();
 
             database.closeDatabase();
@@ -118,6 +115,11 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
     }
 
     @Override
+    public FermatManager getManager() {
+        return stockTransactionBankMoneyDestockManager;
+    }
+
+    @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         BusinessTransactionBankMoneyDestockDeveloperFactory businessTransactionBankMoneyDestockDeveloperFactory = new BusinessTransactionBankMoneyDestockDeveloperFactory(pluginDatabaseSystem, pluginId);
         return businessTransactionBankMoneyDestockDeveloperFactory.getDatabaseList(developerObjectFactory);
@@ -142,34 +144,6 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
         return developerDatabaseTableRecordList;
     }
 
-    @Override
-    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyDestockException {
-        java.util.Date date = new java.util.Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
-        BankMoneyDestockTransactionImpl bankMoneyRestockTransaction = new BankMoneyDestockTransactionImpl(
-                UUID.randomUUID(),
-                publicKeyActor,
-                fiatCurrency,
-                cbpWalletPublicKey,
-                bankWalletPublicKey,
-                memo,
-                "INIT TRANSACTION",
-                bankAccount,
-                amount,
-                timestamp,
-                TransactionStatusRestockDestock.INIT_TRANSACTION,
-                priceReference,
-                originTransaction);
-
-        try {
-            stockTransactionBankMoneyDestockManager.saveBankMoneyDestockTransactionData(bankMoneyRestockTransaction);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        } catch (MissingBankMoneyDestockDataException e) {
-            e.printStackTrace();
-        }
-    }
-
     private BusinessTransactionBankMoneyDestockMonitorAgent businessTransactionBankMoneyDestockMonitorAgent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
@@ -181,19 +155,13 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
                     errorManager,
                     stockTransactionBankMoneyDestockManager,
                     cryptoBrokerWalletManager,
-                    unHoldManager
+                    unHoldManager,
+                    pluginDatabaseSystem,
+                    pluginId
             );
 
             businessTransactionBankMoneyDestockMonitorAgent.start();
         }else businessTransactionBankMoneyDestockMonitorAgent.start();
-    }
-
-    private void testDestock(){
-        try {
-            createTransactionDestock("actorPublicKey", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpwalletPublicKey", "bnkWalletPublicKey", "account", 250, "memo", 250, OriginTransaction.STOCK_INITIAL);
-        } catch (CantCreateBankMoneyDestockException e) {
-            e.printStackTrace();
-        }
     }
 
 }

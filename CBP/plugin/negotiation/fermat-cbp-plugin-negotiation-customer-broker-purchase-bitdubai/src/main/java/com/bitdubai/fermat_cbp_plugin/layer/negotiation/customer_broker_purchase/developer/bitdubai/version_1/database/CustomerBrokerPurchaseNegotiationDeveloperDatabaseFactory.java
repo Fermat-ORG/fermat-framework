@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Jorge Gonzalez - (jorgeejgonzalez@gmail.com) on 12/10/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 08/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -115,53 +115,85 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory implement
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Negotiations columns.
+         * Table Negotiations Purchase columns.
          */
-        List<String> negotiationsColumns = new ArrayList<String>();
+        List<String> negotiationsPurchaseColumns = new ArrayList<String>();
 
-        negotiationsColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
-        negotiationsColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        negotiationsColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        negotiationsColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
-        negotiationsColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_EXPIRATION_DATE_TIME_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_MEMO_COLUMN_NAME);
+        negotiationsPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CANCEL_REASON_COLUMN_NAME);
         /**
-         * Table Negotiations addition.
+         * Table Negotiations Purchase addition.
          */
-        DeveloperDatabaseTable negotiationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME, negotiationsColumns);
-        tables.add(negotiationsTable);
-
-        /**
-         * Table Clauses columns.
-         */
-        List<String> clausesColumns = new ArrayList<String>();
-
-        clausesColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_CLAUSE_ID_COLUMN_NAME);
-        clausesColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME);
-        clausesColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME);
-        clausesColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
-        clausesColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME);
-        clausesColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PROPOSED_BY_COLUMN_NAME);
-        clausesColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME);
-        /**
-         * Table Clauses addition.
-         */
-        DeveloperDatabaseTable clausesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME, clausesColumns);
-        tables.add(clausesTable);
+        DeveloperDatabaseTable negotiationsPurchaseTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME, negotiationsPurchaseColumns);
+        tables.add(negotiationsPurchaseTable);
 
         /**
-         * Table Clause Status Log columns.
+         * Table Clauses Purchase columns.
          */
-        List<String> clauseStatusLogColumns = new ArrayList<String>();
+        List<String> clausesPurchaseColumns = new ArrayList<String>();
 
-        clauseStatusLogColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_CHANGE_ID_COLUMN_NAME);
-        clauseStatusLogColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_CLAUSE_ID_COLUMN_NAME);
-        clauseStatusLogColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_STATUS_COLUMN_NAME);
-        clauseStatusLogColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_CHANGE_DATETIME_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CLAUSE_ID_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TYPE_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_VALUE_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_STATUS_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_PROPOSED_BY_COLUMN_NAME);
+        clausesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_INDEX_ORDER_COLUMN_NAME);
         /**
-         * Table Clause Status Log addition.
+         * Table Clauses Purchase addition.
          */
-        DeveloperDatabaseTable clauseStatusLogTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_TABLE_NAME, clauseStatusLogColumns);
-        tables.add(clauseStatusLogTable);
+        DeveloperDatabaseTable clausesPurchaseTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME, clausesPurchaseColumns);
+        tables.add(clausesPurchaseTable);
+
+        /**
+         * Table Changes Purchase columns.
+         */
+        List<String> changesPurchaseColumns = new ArrayList<String>();
+
+        changesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CHANGES_PURCHASE_CHANGE_ID_COLUMN_NAME);
+        changesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CHANGES_PURCHASE_CLAUSE_ID_COLUMN_NAME);
+        changesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CHANGES_PURCHASE_STATUS_COLUMN_NAME);
+        changesPurchaseColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.CHANGES_PURCHASE_START_DATE_TIME_COLUMN_NAME);
+        /**
+         * Table Changes Purchase addition.
+         */
+        DeveloperDatabaseTable changesPurchaseTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CHANGES_PURCHASE_TABLE_NAME, changesPurchaseColumns);
+        tables.add(changesPurchaseTable);
+
+        /**
+         * Table Locations Customer columns.
+         */
+        List<String> locationsCustomerColumns = new ArrayList<String>();
+
+        locationsCustomerColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_ID_COLUMN_NAME);
+        locationsCustomerColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_LOCATION_COLUMN_NAME);
+        locationsCustomerColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_URI_COLUMN_NAME);
+        /**
+         * Table Locations Customer addition.
+         */
+        DeveloperDatabaseTable locationsCustomerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.LOCATIONS_CUSTOMER_TABLE_NAME, locationsCustomerColumns);
+        tables.add(locationsCustomerTable);
+
+        /**
+         * Table Bank Accounts Customer columns.
+         */
+        List<String> bankAccountsCustomerColumns = new ArrayList<String>();
+
+        bankAccountsCustomerColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_ID_COLUMN_NAME);
+        bankAccountsCustomerColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_COLUMN_NAME);
+        bankAccountsCustomerColumns.add(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_BANK_ACCOUNTS_TYPE_COLUMN_NAME);
+        /**
+         * Table Bank Accounts Customer addition.
+         */
+        DeveloperDatabaseTable bankAccountsCustomerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.BANK_ACCOUNTS_CUSTOMER_TABLE_NAME, bankAccountsCustomerColumns);
+        tables.add(bankAccountsCustomerTable);
 
 
 
@@ -174,43 +206,43 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory implement
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()){
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            /**
+             * return the list of DeveloperRecords for the passed table.
+             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
+            return returnedRecords;
+        } catch (Exception e){
+            database.closeDatabase();
             return returnedRecords;
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        for (DatabaseTableRecord row : records) {
-            List<String> developerRow = new ArrayList<String>();
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
+        database.closeDatabase();
         return returnedRecords;
     }
 
