@@ -351,7 +351,7 @@ public class CustomerBrokerNewAgent implements
 
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
 
-                //EVENT TRANSACTION
+                //EVENT TRANSACTION: evelua si se crea la negociacion
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSACTION.getCode())) {
                     //evaluar si es transmission o transaction
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
@@ -360,30 +360,36 @@ public class CustomerBrokerNewAgent implements
                         transactionId = negotiationTransmission.getTransactionId();
                         negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
                         if(negotiationTransaction.getNegotiationXML() != null){
+
                             negotiationId = negotiationTransmission.getNegotiationId();
                             negotiationIdFromDatabase = negotiationTransaction.getNegotiationId();
+
                             if(negotiationId.equals(negotiationIdFromDatabase)){
                                 negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_CONFIRMATION;
                             } else{
                                 negotiationTransactionStatus = NegotiationTransactionStatus.REJECTED_NEGOTIATION;
                             }
+
+                            negotiationTransmissionManager.confirmNegotiation(negotiationTransaction,NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                         }
                     }
                 }
 
-                //EVENT CONFIRM NEGOTIATION
+                //EVENT CONFIRM NEGOTIATION: evalua si se envia la negociacion
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION.getCode())) {
 
                 }
 
-                //EVENT CONFIRM RESPONSE
+                //EVENT CONFIRM RESPONSE: evalua si se confirma.
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE.getCode())) {
 
                 }
 
             } catch (CantDeliverPendingTransactionsException e){
                 e.printStackTrace();
-            } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
+            } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
+                e.printStackTrace();
+            } catch (CantConfirmNegotiationException e){
                 e.printStackTrace();
             }
         }
