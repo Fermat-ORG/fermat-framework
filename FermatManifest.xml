@@ -8373,6 +8373,480 @@
         </steps>
     </process>
 
+    <process platform="CBP" name="Bank Account Restock">
+        <steps>
+            <step id="0" title="Broker declare a new merchandise"
+                  description="Start Bank Money Restock"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="1" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="1" title="CBP-Reference Wallet-Crypto Broker"
+                  description="The Crypto Broker indicates that you want to declare an increase in the stock of merchandise Bank. Then indicates the amount and account concept."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="2" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="2" title="CBP-Wallet Module-Crypto Broker"
+                  description="Transaction processing a Business."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  component="Plugin">
+                <next>
+                    <step id="3" type="direct call" name="Bank Money Restock"></step>
+                </next>
+            </step>
+            <step id="3" title="CBP-Business Transaction-Bank Money Restock"
+                  description="Transaction register"
+                  type="activity"
+                  platform="CBP"
+                  name="Bank Money Restock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="4" type="direct call" name="Bank Money Restock"></step>
+                </next>
+            </step>
+            <step id="4" title="CBP-Business Transaction-Bank Money Restock"
+                  description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                  type="activity"
+                  platform="CBP"
+                  name="Bank Money Restock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="5" type="direct call" name="Hold" ></step>
+                </next>
+            </step>
+            <step id="5" title="BNK-Bank Hold Transaction"
+                  description="Records the transaction and generates a debit to the Available Balance."
+                  type="activity"
+                  platform="BNK"
+                  name="Hold"
+                  layer="Bank Money Transaction"
+                  component="Plugin">
+                <next>
+                    <step id="6" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="6" title="CBP-Wallet-Crypto Broker"
+                  description="Booked and credit records Available"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet"
+                  component="Plugin">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="Bank Account Destock">
+        <steps>
+            <step id="0" title="Broker declare a new merchandise"
+                  description="Start Bank Money Destock"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="1" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="1" title="CBP-Reference Wallet-Crypto Broker"
+                  description="The Crypto Broker indicates that you want to declare an increase in the stock of merchandise Bank. Then indicates the amount and account concept."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="2" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="2" title="CBP-Wallet Module-Crypto Broker"
+                  description="Transaction processing a Business."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  component="Plugin">
+                <next>
+                    <step id="3" type="direct call" name="Bank Money Destock"></step>
+                </next>
+            </step>
+            <step id="3" title="CBP-Business Transaction-Bank Money Destock"
+                  description="Transaction register"
+                  type="activity"
+                  platform="CBP"
+                  name="Bank Money Destock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="4" type="direct call" name="Bank Money Destock"></step>
+                </next>
+            </step>
+            <step id="4" title="CBP-Business Transaction-Bank Money Destock"
+                  description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                  type="activity"
+                  platform="CBP"
+                  name="Bank Money Destock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="5" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="5" title="CBP-Wallet-Crypto Broker"
+                  description="Booked and debit records Available"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet"
+                  component="Plugin">
+                <next>
+                    <step id="6" type="direct call" name="Unhold"></step>
+                </next>
+            </step>
+            <step id="6" title="BNK-Bank UnHold Transaction"
+                  description="Records the transaction and generates a credit to the Available Balance."
+                  type="activity"
+                  platform="BNK"
+                  name="Unhold"
+                  layer="Bank Money Transaction"
+                  component="Plugin">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="Cash Restock"	>
+        <steps>
+            <step id="0" title="Broker declare a new merchandise"
+                  description="Start Cash Money Restock"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="1" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="1" title="CBP-Reference Wallet-Crypto Broker"
+                  description="The Crypto Broker indicates that you want to declare an increase in the stock of merchandise Cash. Then indicates the amount and concept."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="2" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="2" title="CBP-Wallet Module-Crypto Broker"
+                  description="Transaction processing a Business."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  component="">
+                <next>
+                    <step id="3" type="direct call" name="Cash Money Restock"></step>
+                </next>
+            </step>
+            <step id="3" title="CBP-Business Transaction-Cash Money Restock"
+                  description="Transaction register"
+                  type="activity"
+                  platform="CBP"
+                  name="Cash Money Restock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="CBP-Business Transaction-Cash Money Restock"
+                  description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                  type="activity"
+                  platform="CBP"
+                  name="Cash Money Restock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="5" type="direct call" name="Hold"></step>
+                </next>
+            </step>
+            <step id="5" title="CSH-Bank Hold Transaction"
+                  description="Records the transaction and generates a debit to the Available Balance."
+                  type="activity"
+                  platform="CSH"
+                  name="Hold"
+                  layer="Cash Money Transaction"
+                  component="">
+                <next>
+                    <step id="6" type="direct call" name="Reference Wallet"></step>
+                </next>
+            </step>
+            <step id="6" title="CBP-Wallet-Crypto Broker"
+                  description="Booked and credit records Available"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet"
+                  component="Plugin">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="Cash Destock">
+        <steps>
+            <step id="0" title="Broker declare a new merchandise"
+                  description="Start Cash Money Destock"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="Sub App">
+                <next>
+                    <step id="1" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="1" title="CBP-Reference Wallet-Crypto Broker"
+                  description="The Crypto Broker indicates that you want to declare an increase in the stock of merchandise Cash. Then indicates the amount and concept."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="CBP-Wallet Module-Crypto Broker"
+                  description="Transaction processing a Business."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  component="Plugin">
+                <next>
+                    <step id="3" type="direct call" name="Cash Money Destock"></step>
+                </next>
+            </step>
+            <step id="3" title="CBP-Business Transaction-Cash Money Destock"
+                  description="Transaction register"
+                  type="activity"
+                  platform="CBP"
+                  name="Cash Money Destock"
+                  layer="Stock Transactions"
+                  component="">
+                <next>
+                    <step id="4" type="direct call" name="Cash Money Destock"></step>
+                </next>
+            </step>
+            <step id="4" title="CBP-Business Transaction-Cash Money Destock"
+                  description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                  type="activity"
+                  platform="CBP"
+                  name="Cash Money Destock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="5" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="5" title="CBP-Wallet-Crypto Broker"
+                  description="Booked and debit records Available"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet"
+                  component="Plugin">
+                <next>
+                    <step id="6" type="direct call" name="Unhold"></step>
+                </next>
+            </step>
+            <step id="6" title="CSH-Cash UnHold Transaction"
+                  description="Records the transaction and generates a credit to the Available Balance."
+                  type="activity"
+                  platform="CSH"
+                  name="Uhhold"
+                  layer="Cash Money Transaction"
+                  component="Plugin">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="Crypto Restock">
+        <steps>
+            <step id="0" title="Broker declare a new merchandise"
+                  description="Start Crypto Money Restock"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="1" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="1" title="CBP-Reference Wallet-Crypto Broker"
+                  description="The Crypto Broker indicates that you want to declare an increase in the stock of merchandise Crypto. Then indicates the amount and concept."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="2" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="2" title="CBP-Wallet Module-Crypto Broker"
+                  description="Transaction processing a Business."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  component="plugin">
+                <next>
+                    <step id="3" type="direct call" name="Crypto Money Restock"></step>
+                </next>
+            </step>
+            <step id="3" title="CBP-Business Transaction-Crypto Money Restock"
+                  description="Transaction register"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Money Restock"
+                  layer="Stock Transactions"
+                  component="">
+                <next>
+                    <step id="4" type="direct call" name="Crypto Money Restock"></step>
+                </next>
+            </step>
+            <step id="4" title="CBP-Business Transaction-Crypto Money Restock"
+                  description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Money Restock"
+                  layer="Stock Transactions"
+                  component="plugin">
+                <next>
+                    <step id="5" type="direct call" name="Hold"></step>
+                </next>
+            </step>
+            <step id="5" title="CCP-Crypto Hold Transaction"
+                  description="Records the transaction and generates a debit to the Available Balance."
+                  type="activity"
+                  platform="CCP"
+                  name="Hold"
+                  layer="Crypto Transaction"
+                  component="Plugin">
+                <next>
+                    <step id="6" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="6" title="CBP-Wallet-Crypto Broker"
+                  description="Booked and credit records Available"
+                  type="activity"
+                  platform="CBP"
+                  name="Reference Wallet"
+                  layer="Wallet"
+                  component="">
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP" name="Crypto Destock">
+        <steps>
+            <step id="0" title="Broker declare a new merchandise"
+                  description="Start Crypto Money Destock"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="1" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="1" title="CBP-Reference Wallet-Crypto Broker"
+                  description="The Crypto Broker indicates that you want to declare an increase in the stock of merchandise Crypto. Then indicates the amount and concept."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Reference Wallet"
+                  component="">
+                <next>
+                    <step id="2" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="2" title="CBP-Wallet Module-Crypto Broker"
+                  description="Transaction processing a Business."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet Module"
+                  component="Plugin">
+                <next>
+                    <step id="3" type="direct call" name="Crypto Money Destock"></step>
+                </next>
+            </step>
+            <step id="3" title="CBP-Business Transaction-Crypto Money Destock"
+                  description="Transaction register"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Money Destock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="4" type="direct call" name="Crypto Money Destock"></step>
+                </next>
+            </step>
+            <step id="4" title="CBP-Business Transaction-Cash Money Destock"
+                  description="Transactional agent begins to review the records according to the TRANSACTION_STATUS proceed with the flow."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Money Destock"
+                  layer="Stock Transactions"
+                  component="Plugin">
+                <next>
+                    <step id="5" type="direct call" name="Crypto Broker"></step>
+                </next>
+            </step>
+            <step id="5" title="CBP-Wallet-Crypto Broker"
+                  description="Booked and debit records Available"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  layer="Wallet"
+                  component="Plugin">
+                <next>
+                    <step id="6" type="direct call" name="Unhold"></step>
+                </next>
+            </step>
+            <step id="6" title="CCP-Crypto UnHold Transaction"
+                  description="Records the transaction and generates a credit to the Available Balance."
+                  type="activity"
+                  platform="CCP"
+                  name="Unhold"
+                  layer="Crypto Transaction"
+                  component="Plugin">
+            </step>
+        </steps>
+    </process>
+
     <process platform="BNK" name="Add New Account"
              description="A customer registers a new bank account in the wallet." previous="">
         <steps>
