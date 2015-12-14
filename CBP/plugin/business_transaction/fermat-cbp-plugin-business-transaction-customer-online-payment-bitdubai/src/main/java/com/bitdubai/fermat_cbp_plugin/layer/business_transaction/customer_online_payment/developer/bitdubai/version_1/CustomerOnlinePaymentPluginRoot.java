@@ -256,7 +256,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             openContractMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Customer online payment starting");
+            //System.out.println("Customer online payment starting");
         } catch (CantInitializeDatabaseException e) {
             e.printStackTrace();
         } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException e) {

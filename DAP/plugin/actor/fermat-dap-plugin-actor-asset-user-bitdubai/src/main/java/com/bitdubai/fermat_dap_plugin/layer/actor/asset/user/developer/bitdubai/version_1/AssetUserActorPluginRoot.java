@@ -45,7 +45,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCre
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupExcepcion;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
@@ -344,21 +344,21 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantCreateAssetUserGroupException, RecordsNotFoundException {
+    public void removeAssetUserFromGroup(ActorAssetUserGroupMember assetUserGroupMember) throws CantDeleteAssetUserGroupException, RecordsNotFoundException {
         try {
             this.assetUserActorDao.deleteAssetUserGroupMember(assetUserGroupMember);
         } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException e) {
-            throw new CantCreateAssetUserGroupException("You can not remove user from group", e, "Error", "");
+            throw new CantDeleteAssetUserGroupException("You can not remove user from group", e, "Error", "");
         }
     }
 
     @Override
-    public List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupExcepcion {
+    public List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupException {
         List<ActorAssetUserGroup> list = null;
         try {
             list = this.assetUserActorDao.getAssetUserGroupsList();
         } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
-            throw new CantGetAssetUserGroupExcepcion("You can not get groups list", cantGetAssetUserGroupExcepcion, "Error", "");
+            throw new CantGetAssetUserGroupException("You can not get groups list", cantGetAssetUserGroupExcepcion, "Error", "");
         }
         return list;
     }
@@ -373,20 +373,20 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetUserGroup> getListAssetUserGroupsByActorAssetUser(String actorAssetUserPublicKey) throws CantGetAssetUserGroupExcepcion {
+    public List<ActorAssetUserGroup> getListAssetUserGroupsByActorAssetUser(String actorAssetUserPublicKey) throws CantGetAssetUserGroupException {
         try {
             return this.assetUserActorDao.getListAssetUserGroupsByActorAssetUser(actorAssetUserPublicKey);
         } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
-            throw new CantGetAssetUserGroupExcepcion("You can not get groups by users", ex, "Error", "");
+            throw new CantGetAssetUserGroupException("You can not get groups by users", ex, "Error", "");
         }
     }
 
     @Override
-    public ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupExcepcion {
+    public ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupException {
         try {
             return this.assetUserActorDao.getAssetUserGroup(groupId);
         } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
-            throw new CantGetAssetUserGroupExcepcion("You can not get the group", ex, "Error", "");
+            throw new CantGetAssetUserGroupException("You can not get the group", ex, "Error", "");
         }
     }
 
@@ -583,8 +583,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             for (ActorAssetUserGroup actorAssetUserGroup : listGroups) {
                 System.out.println("Grupo: " + actorAssetUserGroup.getGroupName() + ", Id: " + actorAssetUserGroup.getGroupId());
             }
-        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
-            cantGetAssetUserGroupExcepcion.printStackTrace();
+        } catch (CantGetAssetUserGroupException cantGetAssetUserGroupException) {
+            cantGetAssetUserGroupException.printStackTrace();
         }
 
         System.out.println("Asignando usuarios a grupos");
@@ -606,8 +606,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 System.out.println("Grupo: " + actorAssetUserGroup.getGroupName() + " Id: " + actorAssetUserGroup.getGroupId());
             }
             System.out.println();
-        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
-            cantGetAssetUserGroupExcepcion.printStackTrace();
+        } catch (CantGetAssetUserGroupException cantGetAssetUserGroupException) {
+            cantGetAssetUserGroupException.printStackTrace();
         }
 
         try {
@@ -615,8 +615,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             ActorAssetUserGroup group = getAssetUserGroup(groupList.get(0).getGroupId());
             System.out.println("Grupo obtenido: " + group.getGroupId());
 
-        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
-            cantGetAssetUserGroupExcepcion.printStackTrace();
+        } catch (CantGetAssetUserGroupException cantGetAssetUserGroupException) {
+            cantGetAssetUserGroupException.printStackTrace();
         }
 
         System.out.println("Remover un usuario de un grupo");
@@ -625,7 +625,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
             removeAssetUserFromGroup(groupMember);
             System.out.println("El usuario :" + groupMember.getActorPublicKey() + "fue removido con exito");
-        } catch (CantCreateAssetUserGroupException | RecordsNotFoundException e) {
+        } catch (CantDeleteAssetUserGroupException | RecordsNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -637,7 +637,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             ActorAssetUserGroup groupActualizado = getAssetUserGroup(groupList.get(0).getGroupId());
             System.out.println("Grupo actualizado: " + groupActualizado.getGroupName() + "Id: " + groupActualizado.getGroupId());
             if (group.getGroupId().equals(groupActualizado.getGroupId())) System.out.println("OK");
-        } catch (CantUpdateAssetUserGroupException | RecordsNotFoundException | CantGetAssetUserGroupExcepcion e) {
+        } catch (CantUpdateAssetUserGroupException | RecordsNotFoundException | CantGetAssetUserGroupException e) {
             e.printStackTrace();
         }
 
@@ -655,8 +655,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             for (ActorAssetUserGroup actorAssetUserGroup : listGroups) {
                 System.out.println("Grupo: " + actorAssetUserGroup.getGroupName() + ", Id: " + actorAssetUserGroup.getGroupId());
             }
-        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
-            cantGetAssetUserGroupExcepcion.printStackTrace();
+        } catch (CantGetAssetUserGroupException cantGetAssetUserGroupException) {
+            cantGetAssetUserGroupException.printStackTrace();
         }
     }
 }
