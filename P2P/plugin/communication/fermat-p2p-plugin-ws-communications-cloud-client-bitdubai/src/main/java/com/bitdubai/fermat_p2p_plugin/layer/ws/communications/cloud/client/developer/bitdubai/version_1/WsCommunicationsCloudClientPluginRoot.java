@@ -59,7 +59,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-     public static final String SERVER_IP = "192.168.1.113";
+     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCCTION;
 
     /*
      * Hold the list of event listeners
