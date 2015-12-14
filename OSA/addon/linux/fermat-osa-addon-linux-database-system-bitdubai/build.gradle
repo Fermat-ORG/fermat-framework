@@ -4,4 +4,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-api')
     compile project(':fermat-core')
+
+    compile ('org.xerial:sqlite-jdbc:3.8.11.2')
 }
