@@ -16,7 +16,7 @@ configurations {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'fermat-p2p-plugin-ws-communications-cloud-server-bitdubai',
+        attributes 'Implementation-Title': 'fermat-p2p-plugin-communication-cloud-server-bitdubai',
                    'Implementation-Version': version
     }
 }
