@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@color/app_background"
+    android:background="@color/background_body"
     android:paddingBottom="8dp"
     android:paddingEnd="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -21,9 +21,9 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="center_vertical"
         android:singleLine="true"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
-        tools:text="Nelson Ramirez"/>
+        tools:text="Guillermo Gutierrez"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/account_alias"
@@ -33,18 +33,18 @@
         android:layout_marginEnd="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
         android:singleLine="true"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
         android:text="prueba alias"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_last_update_date"
+        android:id="@+id/account_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
         tools:text="03 Feb 2015"/>
 
@@ -56,7 +56,7 @@
         android:layout_marginEnd="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
         android:singleLine="true"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
         android:text="prueba currency"/>
 </RelativeLayout>

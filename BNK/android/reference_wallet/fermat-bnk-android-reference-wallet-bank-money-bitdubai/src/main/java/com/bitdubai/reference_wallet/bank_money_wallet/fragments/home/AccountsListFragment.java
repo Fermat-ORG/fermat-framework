@@ -194,6 +194,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
             }
 
         }
+        System.out.println("size list account = "+bankAccountNumbers.size());
         return bankAccountNumbers;
     }
 

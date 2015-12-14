@@ -1,52 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/app_background">
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/account_list_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            tools:listitem="@layout/bw_account_list_item"/>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background">
 
     <LinearLayout
-        android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:background="@color/black_overlay"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginBottom="16dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/sad_face"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/background_header"
+            android:orientation="vertical">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/textView_header_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:text="@string/home_header"
+                android:textColor="@color/text_color_clear"
+                android:textSize="@dimen/large_text_size" />
+        </LinearLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/account_list_recycler_view"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
+                tools:listitem="@layout/bw_account_list_item" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/no_accounts"
-            android:textColor="#000"
-            android:textSize="20sp"/>
+            android:orientation="vertical"
+            android:visibility="gone">
 
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginBottom="16dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/sad_face" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_accounts"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+        </LinearLayout>
     </LinearLayout>
-
 </FrameLayout>

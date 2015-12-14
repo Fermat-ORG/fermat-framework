@@ -29,6 +29,6 @@ public class AccountListAdapter extends FermatAdapter<BankAccountNumber,AccountL
 
     @Override
     protected void bindHolder(AccountListViewHolder holder, BankAccountNumber data, int position) {
-
+        holder.bind(data);
     }
 }
