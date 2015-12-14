@@ -11,8 +11,10 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal|center_vertical"
+        android:gravity="center"
         android:layout_marginTop="32dp"
-        android:background="@drawable/bg_circular_other_profile">
+        android:background="@drawable/bg_circular_other_profile"
+        >
 
         <ImageView
             android:id="@+id/img_user_avatar"
@@ -21,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/profile_image" />
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 
@@ -31,21 +33,32 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp">
 
-        <ToggleButton
+
+        <Button
             android:id="@+id/btn_conect"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/drawable_background"
-            android:drawableLeft="@drawable/conection_check"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_blue"
+            android:drawableStart="@drawable/ic_profile_connect"
+            android:drawableLeft="@drawable/ic_profile_connect"
             android:drawablePadding="4dp"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:textAllCaps="true"
-            android:textColor="@color/text_color_conect"
-            android:textOff="Disconect"
-            android:textOn="Conect"
-            tools:ignore="HardcodedText,RtlHardcoded"/>
+            android:text="Connect"
+            android:visibility="gone"
+            android:textColor="#ffffff"/>
+        <Button
+            android:id="@+id/btn_disconect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_white"
+            android:drawableStart="@drawable/ic_profile_disconnect"
+            android:drawableLeft="@drawable/ic_profile_disconnect"
+            android:drawablePadding="4dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="Disconnect"
+            android:textColor="#0072bc"/>
 
     </RelativeLayout>
 
