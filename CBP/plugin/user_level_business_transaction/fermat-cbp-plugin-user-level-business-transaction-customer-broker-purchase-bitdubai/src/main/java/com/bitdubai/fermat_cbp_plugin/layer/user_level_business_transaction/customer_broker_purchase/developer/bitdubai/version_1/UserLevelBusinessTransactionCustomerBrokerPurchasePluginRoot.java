@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -22,8 +24,14 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -60,6 +68,14 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    //@NeededPluginReference()
+    //TODO: Colocar NeededPluginReference a todos los managers abajos mencionados
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
+    private OpenContractManager openContractManager;
+    private CloseContractManager closeContractManager;
+    private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     @Override
@@ -94,6 +110,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
     public void start() throws CantStartPluginException {
         try {
             customerBrokerPurchaseManager = new UserLevelBusinessTransactionCustomerBrokerPurchaseManager();
+            //startMonitorAgent();
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.print("***** Init Customer Broker Purchase *****");
         } catch (Exception exception) {
@@ -160,5 +177,23 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
             System.out.println("******* Error trying to get database table list for plugin Bank Money Restock ******");
         }
         return developerDatabaseTableRecordList;
+    }
+
+    UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
+    /**
+     * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
+     * @throws CantStartAgentException
+     */
+    private void startMonitorAgent() throws CantStartAgentException {
+        if(userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent == null) {
+            userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(errorManager,
+                    customerBrokerPurchaseNegotiationManager,
+                    pluginDatabaseSystem,
+                    pluginId,
+                    openContractManager,
+                    closeContractManager,
+                    customerBrokerContractPurchaseManager);
+            userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
+        }else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
     }
 }
