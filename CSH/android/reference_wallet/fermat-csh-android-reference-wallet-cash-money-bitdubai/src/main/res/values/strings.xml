@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Cash Wallet</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_cash_wallet">Hello Cash Wallet World</string>
+    <string name="available_balance_text">Available Balance:</string>
+    <string name="book_balance_text">Book Balance:</string>
+    <string name="action_settings">Settings</string>
+</resources>

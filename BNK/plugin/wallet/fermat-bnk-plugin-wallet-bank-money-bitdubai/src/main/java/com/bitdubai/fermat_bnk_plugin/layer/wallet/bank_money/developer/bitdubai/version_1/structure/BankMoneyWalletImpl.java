@@ -29,12 +29,14 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     PluginDatabaseSystem pluginDatabaseSystem;
 
     BankMoneyWalletDao bankMoneyWalletDao;
+    String publicKey;
 
-    public BankMoneyWalletImpl(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem,ErrorManager errorManager) throws CantStartPluginException  {
+    public BankMoneyWalletImpl(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem,ErrorManager errorManager,String publicKey) throws CantStartPluginException  {
         this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
-        this.bankMoneyWalletDao = new BankMoneyWalletDao(this.pluginId,this.pluginDatabaseSystem,this.errorManager);
+        this.publicKey = publicKey;
+        this.bankMoneyWalletDao = new BankMoneyWalletDao(this.pluginId,this.pluginDatabaseSystem,this.errorManager,publicKey);
         try {
             this.bankMoneyWalletDao.initialize();
         } catch (CantInitializeBankMoneyWalletDatabaseException e) {
@@ -70,9 +72,9 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     }
 
     @Override
-    public List<BankAccountNumber> getAccounts(UUID walletPublicKey) {
+    public List<BankAccountNumber> getAccounts() {
         try {
-            return bankMoneyWalletDao.getAccounts(walletPublicKey.toString());
+            return bankMoneyWalletDao.getAccounts();
         }catch(CantGetAccountsException e){
 
         }
@@ -98,9 +100,10 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     }
 
     @Override
-    public void addNewAccount(BankAccountNumber bankAccountNumber, UUID walletPublicKey) throws CantAddNewAccountException {
+    public void addNewAccount(BankAccountNumber bankAccountNumber) throws CantAddNewAccountException {
+        System.out.println("registrando bankAccountNumber = "+bankAccountNumber.getAccount());
         try {
-            bankMoneyWalletDao.addNewAccount(bankAccountNumber,walletPublicKey);
+            bankMoneyWalletDao.addNewAccount(bankAccountNumber);
         }catch (CantInsertRecordException e){
             throw new CantAddNewAccountException(CantInsertRecordException.DEFAULT_MESSAGE,e,null,null);
         }
