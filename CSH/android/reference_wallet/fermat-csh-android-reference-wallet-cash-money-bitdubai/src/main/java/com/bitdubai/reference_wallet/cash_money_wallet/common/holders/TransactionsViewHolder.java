@@ -50,13 +50,17 @@ public class TransactionsViewHolder extends FermatViewHolder {
     }
 
     public void bind(CashMoneyWalletTransaction itemInfo) {
-
-        itemView.setBackgroundColor(getTransactionBackgroundColor(itemInfo.getTransactionType()));
+        //itemView.setBackgroundColor(getTransactionColor(itemInfo.getTransactionType()));
 
         transactionTypeImage.setImageBitmap(getImgBitmap(itemInfo.getTransactionType()));
+
         transactionType.setText(getTransactionTypeText(itemInfo.getTransactionType()));
-        transactionAmount.setText(decimalFormat.format(itemInfo.getAmount()));
-        transactionDate.setText(DateFormat.format("dd MMM yyyy", itemInfo.getTimestamp()));
+
+        transactionAmount.setText(getTransactionAmountText(itemInfo.getTransactionType(), itemInfo.getAmount()));
+        transactionAmount.setTextColor(getTransactionColor(itemInfo.getTransactionType()));
+
+        transactionDate.setText(DateFormat.format("dd MMM yyyy h:mm:ss aa", (itemInfo.getTimestamp()*1000)));
+
         transactionMemo.setText(itemInfo.getMemo());
     }
 
@@ -70,11 +74,11 @@ public class TransactionsViewHolder extends FermatViewHolder {
             return BitmapFactory.decodeResource(res, R.drawable.ic_action_download_grey);
     }
 
-    private int getTransactionBackgroundColor(TransactionType transactionType) {
+    private int getTransactionColor(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
-            return res.getColor(R.color.transaction_withdrawal_background);
+            return res.getColor(R.color.csh_transaction_withdrawal_color);
         else
-            return res.getColor(R.color.transaction_deposit_background);
+            return res.getColor(R.color.csh_transaction_deposit_color);
     }
 
     private String getTransactionTypeText(TransactionType transactionType) {
@@ -82,6 +86,11 @@ public class TransactionsViewHolder extends FermatViewHolder {
             return res.getString(R.string.withdrawal_transaction_text);
         else
             return res.getString(R.string.deposit_transaction_text);
+    }
+
+    private String getTransactionAmountText(TransactionType transactionType, double amount)
+    {
+        return (transactionType == TransactionType.CREDIT ? "+" : "-") + decimalFormat.format(amount);
     }
 
 }
