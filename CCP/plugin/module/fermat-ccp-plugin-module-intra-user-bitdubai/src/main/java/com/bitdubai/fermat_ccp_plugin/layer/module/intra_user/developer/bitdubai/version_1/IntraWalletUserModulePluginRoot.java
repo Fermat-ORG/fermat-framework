@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -573,6 +574,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         catch (Exception e) {
             throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY",FermatException.wrapException(e),"","Error on IntraUserIdentity Manager");
         }
+    }
+
+    @Override
+    public boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException {
+        return intraWalletUserManager.isActorConnected(publicKey);
     }
 
 

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
@@ -172,4 +173,6 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @throws CantListIntraWalletUsersException
      */
     void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException;
+
+    boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException;
 }
