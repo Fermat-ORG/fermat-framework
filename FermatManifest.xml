@@ -7794,7 +7794,7 @@
         previous=""
         >
         <steps>
-            <step id="0"	title="Start Crypto Broker Identity creation"
+            <step id="0" title="Start Crypto Broker Identity creation"
                 description="Start Crypto Broker Identity creation."
                 type="start"
                 platform="CBP"
@@ -7807,7 +7807,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="1"	title="Process Crypto Broker Identity creation request"
+            <step id="1" title="Process Crypto Broker Identity creation request"
                 description="Process Crypto Broker Identity creation request."
                 type="activity"
                 platform="CBP"
@@ -7820,7 +7820,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Creates Crypto Broker Identity"
+            <step id="2" title="Creates Crypto Broker Identity"
                 description="Creates Crypto Broker Identity."
                 type="end"
                 platform="CBP"
@@ -7838,7 +7838,7 @@
              previous=""
         >
         <steps>
-            <step id="0"	title="Start Crypto Customer Identity creation"
+            <step id="0" title="Start Crypto Customer Identity creation"
                   description="Start Crypto Customer Identity creation."
                   type="start"
                   platform="CBP"
@@ -7851,7 +7851,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="1"	title="Process Crypto Customer Identity creation request"
+            <step id="1" title="Process Crypto Customer Identity creation request"
                   description="Process Crypto Customer Identity creation request."
                   type="activity"
                   platform="CBP"
@@ -7864,7 +7864,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Creates Crypto Customer Identity"
+            <step id="2" title="Creates Crypto Customer Identity"
                   description="Creates Crypto Customer Identity."
                   type="end"
                   platform="CBP"
@@ -7907,7 +7907,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Return the list of Identities"
+            <step id="2" title="Return the list of Identities"
                   description="Return the list of Identities"
                   type="activity"
                   platform="CBP"
@@ -7974,7 +7974,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Return the list of Identities"
+            <step id="2" title="Return the list of Identities"
                   description="Return the list of Identities"
                   type="activity"
                   platform="CBP"
@@ -8847,6 +8847,926 @@
         </steps>
     </process>
 
+    <process platform="CBP"	name="Create Negotiation Customer Broker"
+             description="The Crypto Customer start negotiation with Crypto Broker."
+             previous="">
+        <steps>
+            <step id="0" title="Start Customer Broker New Negotiation Transaction"
+                  description="The Crypto Customer indicates to start negotiations with the selected Crypto Broker"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Process Negotiation Request"
+                  description="Processes the request to create negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Wallet Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Manages the creation of Negotiation"
+                  description="Create a transaction to manage the negotiation Customer Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker New"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Create The Purchase Negotiation"
+                  description="Create the purchase negotiation of Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Process Sending Negotiation To Broker"
+                  description="Process Sending Negotiation To Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker New"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Sending Negotiation To Broker"
+                  description="Sending negotiation to Broker for creation Sale Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="6" title="Receiving Negotiation From Customer"
+                  description="Receiving negotiation from Customer for creation Sale Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7" title="Process Receiving Negotiation From Customer"
+                  description="Process Receiving Negotiation From Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker New"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8" title="Create The Sale Negotiation"
+                  description="Create the Sale negotiation of Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9" title="Sending Confirmation of Negotiation"
+                  description="Sending Confirmation of Creation Negotiation to Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="10" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="10" title="Receiving Confirmation of Negotiation"
+                  description="Receiving Confirmation of Creation Negotiation From Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="11" type="direct call"></step>
+                </next>
+            </step>
+            <step id="11" title="Process the Receive Confirmation of Negotiation"
+                  description="Process the Receive Confirmation of Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker New"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="12" type="direct call"></step>
+                </next>
+            </step>
+            <step id="12" title="Confirm the Negotiation is Done"
+                  description=""
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Update Negotiation Customer Broker"
+             description="The Crypto Customer update negotiation with Crypto Broker."
+             previous="">
+        <steps>
+            <step id="0" title="Start Customer Broker Update Negotiation Transaction"
+                  description="The Crypto Customer indicates to update negotiations with the selected Crypto Broker"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Process Negotiation Request"
+                  description="Processes the request to update negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Wallet Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Manages the update of Negotiation"
+                  description="Create a transaction to manage the update negotiation Customer Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Update The Purchase Negotiation"
+                  description="Update the purchase negotiation of Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchaser"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Process Sending Update Negotiation To Broker"
+                  description="Process Sending Update Negotiation To Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Sending Update Negotiation To Broker"
+                  description="Sending update negotiation to Broker for update Sale Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="6" title="Receiving Update Negotiation From Customer"
+                  description="Receiving update negotiation from Customer for update Sale Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7" title="Process Receiving Update Negotiation From Customer"
+                  description="Process Receiving Update Negotiation From Customer and Request data Sale negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8" title="Provides data of Sale negotiation"
+                  description="Provides data of Sale negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9" title="Compare Date of Purchase Negotiation vs Sale Negotiation"
+                  description="Compare Date of Purchase Negotiation vs Sale Negotiation to maintain synchronization of Negotiation Customer-Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="10" type="direct call"></step>
+                </next>
+            </step>
+            <step id="10" title="Update The Sale Negotiation"
+                  description="If the data del Sale Negotiation are more updated than the negotiation Purchase keeps if not update"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="11" type="direct call"></step>
+                </next>
+            </step>
+            <step id="11" title="Sending Confirmation of Update Negotiation"
+                  description="Sending Confirmation of Update Negotiation to Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="12" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="12" title="Receiving Confirmation of Update Negotiation"
+                  description="Receiving Confirmation of Update Negotiation From Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="13" type="direct call"></step>
+                </next>
+            </step>
+            <step id="13" title="Process the Receive Confirmation of Update Negotiation"
+                  description="Process the Receive Confirmation of Update Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="14" type="direct call"></step>
+                </next>
+            </step>
+            <step id="14" title="Confirm the Update Negotiation is Done"
+                  description=""
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Update Negotiation Broker Customer"
+             description="The Crypto Broker update negotiation with Crypto Customer."
+             previous=""
+        >
+        <steps>
+            <step id="0" title="Start Customer Broker Update Negotiation Transaction"
+                  description="The Crypto Broker indicates to update negotiations with the selected Crypto Customer"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Process Negotiation Request"
+                  description="Processes the request to update negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Wallet Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Manages the update of Negotiation"
+                  description="Create a transaction to manage the update negotiation Broker Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Update The Sale Negotiation"
+                  description="Update the Sale negotiation of Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Process Sending Update Negotiation To Customer"
+                  description="Process Sending Update Negotiation To Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Sending Update Negotiation To Customer"
+                  description="Sending update negotiation to Customer for update Purchase Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6" title="Receiving Update Negotiation From Broker"
+                  description="Receiving update negotiation from Broker for update Purchase Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7" title="Prosess Receiving Update Negotiation From Broker"
+                  description="Prosess Receiving Update Negotiation From Broker and Request data Purchase negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8" title="Provides data of Pruchase negotiation"
+                  description="Provides data of Purchase negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Pruchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9" title="Compare Date of Sale Negotiation vs Purchase Negotiation"
+                  description="Compare Date of Sale Negotiation vs Purchase Negotiation to maintain synchronization of Negotiation Customer-Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="10" type="direct call"></step>
+                </next>
+            </step>
+            <step id="10" title="Update The Purchase Negotiation"
+                  description="If the data del Purchase Negotiation are more updated than the negotiation Purchase keeps if not update"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="11" type="direct call"></step>
+                </next>
+            </step>
+            <step id="11" title="Sending Confirmation of Update Negotiation"
+                  description="Sending Confirmation of Update Negotiation to Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="12" type="direct call"></step>
+                </next>
+            </step>
+            <step id="12" title="Receiving Confirmation of Update Negotiation"
+                  description="Receiving Confirmation of Update Negotiation From Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="13" type="direct call"></step>
+                </next>
+            </step>
+            <step id="13" title="Process the Receive Confirmation of Update Negotiation"
+                  description="Process the Receive Confirmation of Update Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Update"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="14" type="direct call"></step>
+                </next>
+            </step>
+            <step id="14" title="Confirm the Update Negotiation is Done"
+                  description=""
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Close Negotiation Customer Broker"
+             description="The Crypto Customer update negotiation with Crypto Broker."
+             previous=""
+        >
+        <steps>
+            <step id="0" title="Start Customer Broker Close Negotiation Transaction"
+                  description="The Crypto Customer Acept all clause and it Close negotiations with the selected Crypto Broker"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Process Negotiation Request"
+                  description="Processes the request to Close negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Wallet Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Manages the Close of Negotiation"
+                  description="Create a transaction to manage the Close negotiation Customer Broker, If the merchandise is currency Crypto, requesting Crypto address actuality the Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Close The Purchase Negotiation"
+                  description="If the merchandise is currency Crypto, add to information of Purchase Negotiation the Crypto address actuality the Customer and later Close the Purchase Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchaser"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Process Sending Close Negotiation To Broker"
+                  description="Process Sending Close Negotiation To Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Sending Close Negotiation To Broker"
+                  description="Sending Close negotiation to Broker for Close Sale Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6" title="Receiving Close Negotiation From Customer"
+                  description="Receiving Close negotiation from Customer for Close Sale Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7" title="Process Receiving Close Negotiation From Customer"
+                  description="Process Receiving Close Negotiation From Customer. If the payment is currency Crypto, requesting Crypto address actuality the Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8" title="Close The Sale Negotiation"
+                  description="If the payment is currency Crypto, add to information of Sale Negotiation the Crypto address actuality the Broker and later Close the Sale Negotiation "
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9" title="Sending Confirmation of Close Negotiation"
+                  description="Sending Confirmation of Close Negotiation to Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="10" type="direct call"></step>
+                </next>
+            </step>
+            <step id="10" title="Receiving Confirmation of Close Negotiation"
+                  description="Receiving Confirmation of Close Negotiation From Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="11" type="direct call"></step>
+                </next>
+            </step>
+            <step id="11" title="Process the Receive Confirmation of Close Negotiation"
+                  description="Process the Receive Confirmation of Close Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="12" type="direct call"></step>
+                </next>
+            </step>
+            <step id="12" title="Confirm the Close Negotiation is Done"
+                  description=""
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Close Negotiation Broker Customer"
+             description="The Crypto Broker update negotiation with Crypto Customer."
+             previous=""
+        >
+        <steps>
+            <step id="0" title="Start Customer Broker Close Negotiation Transaction"
+                  description="The Crypto Broker Acept all clause and it Close negotiations with the selected Crypto Customer"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1" title="Process Negotiation Request"
+                  description="Processes the request to Close negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Wallet Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2" title="Manages the Close of Negotiation"
+                  description="Create a transaction to manage the Close Negotiation Broker Customer. If the payment is currency Crypto, requesting Crypto address actuality the Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3" title="Close The Sale Negotiation"
+                  description="If the merchandise is currency Crypto, add to information of Sale Negotiation the Crypto address actuality the Broker and later Close the Sale Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4" title="Process Sending Close Negotiation To Customer"
+                  description="Process Sending Close Negotiation To Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5" title="Sending Close Negotiation To Customer"
+                  description="Sending Close negotiation to Customer for Close Purchase Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6" title="Receiving Close Negotiation From Broker"
+                  description="Receiving Close negotiation from Broker for Close Purchase Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7" title="Process Receiving Close Negotiation From Broker"
+                  description="Process Receiving Close Negotiation From Broker. If the merchandise is currency Crypto, requesting Crypto address actuality the Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8" title="Close The Purchase Negotiation"
+                  description="If the merchandise is currency Crypto, add to information of Purchase Negotiation the Crypto address actuality the Customer and later Close the Purchase Negotiation "
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9" title="Sending Confirmation of Close Negotiation"
+                  description="Sending Confirmation of Close Negotiation to Customer"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="10" type="direct call"></step>
+                </next>
+            </step>
+            <step id="10" title="Receiving Confirmation of Close Negotiation"
+                  description="Receiving Confirmation of Close Negotiation From Broker"
+                  type="activity"
+                  platform="CBP"
+                  name="Negotiation Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="11" type="direct call"></step>
+                </next>
+            </step>
+            <step id="11" title="Process the Receive Confirmation of Close Negotiation"
+                  description="Process the Receive Confirmation of Close Negotiation"
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Close"
+                  superlayer=""
+                  layer="Negotiation Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="12" type="direct call"></step>
+                </next>
+            </step>
+            <step id="12" title="Confirm the Close Negotiation is Done"
+                  description=""
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
     <process platform="BNK" name="Add New Account"
              description="A customer registers a new bank account in the wallet." previous="">
         <steps>
@@ -9467,7 +10387,7 @@
         previous=""
         >
         <steps>
-            <step id="0"	title="Start Intra User Identity creation"
+            <step id="0" title="Start Intra User Identity creation"
                 description="The user open the Wallet Users Register Identity and proceed to fill the requested data inside the form and press the save button."
                 type="start"
                 platform="CCP"
@@ -9480,7 +10400,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="1"	title="Process Intra User Identity creation request"
+            <step id="1" title="Process Intra User Identity creation request"
                 description="The module routes the data containing the name and profile picture to the  IntraWalletUserModulePluginRoot plugin.	"
                 type="activity"
                 platform="CCP"
@@ -9493,7 +10413,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Process Intra User Identity creation request"
+            <step id="2" title="Process Intra User Identity creation request"
                 description="The plugin routes the name and profile picture to the  IntraWalletIdentityPluginRoot  plugin."
                 type="activity"
                 platform="CCP"
@@ -9506,7 +10426,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="3"	title="Process Intra User Identity creation request"
+            <step id="3" title="Process Intra User Identity creation request"
                 description="Within this plugin, two different keys are created, a public one and a private one, after that the plugin routes the data to the IntraWalletUserIdentityDao."
                 type="activity"
                 platform="CCP"
@@ -9519,7 +10439,7 @@
                     <step id="3" type="direct call"></step>
                 </next>
             </step>
-            <step id="4"	title="Creates Intra User Identity"
+            <step id="4" title="Creates Intra User Identity"
                 description="The dao  inserts the data in the DB."
                 type="end"
                 platform="CCP"
@@ -9536,7 +10456,7 @@
         previous=""
         >
         <steps>
-            <step id="0"	title="Start "
+            <step id="0" title="Start "
                 description="The user opens the Community Wallet Users and the fragment proceeds to initialize all required components and data."
                 type="start"
                 platform="CCP"
@@ -9549,7 +10469,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="1"	title="Processing the requested list "
+            <step id="1" title="Processing the requested list "
                 description="The module routes the requested list.	"
                 type="activity"
                 platform="CCP"
@@ -9562,7 +10482,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Routing the requested list."
+            <step id="2" title="Routing the requested list."
                 description="The NS routes the request to the WS."
                 type="activity"
                 platform="CCP"
@@ -9575,7 +10495,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="3"	title="Processing the list"
+            <step id="3" title="Processing the list"
                 description="The ws gets the connected list of components and send it back to the ns"
                 type="end"
                 platform="CCP"
@@ -9588,7 +10508,7 @@
                     <step id="3" type="direct call"></step>
                 </next>
             </step>
-            <step id="4"	title="Getting the list of connected users."
+            <step id="4" title="Getting the list of connected users."
                 description="The NS routes the request back to the module."
                 type="activity"
                 platform="CCP"
@@ -9601,7 +10521,7 @@
                     <step id="4" type="direct call"></step>
                 </next>
             </step>
-            <step id="5"	title="Sends the list back to the view"
+            <step id="5" title="Sends the list back to the view"
                 description="The module routes the requested list to the fragment."
                 type="activity"
                 platform="CCP"
@@ -9614,7 +10534,7 @@
                     <step id="5" type="direct call"></step>
                 </next>
             </step>
-            <step id="6"	title="Start "
+            <step id="6" title="Start "
                 description="The fragment displays the list of discovered users."
                 type="end"
                 platform="CCP"
@@ -9631,7 +10551,7 @@
         previous="Enter into the Community - Wallet Users"
         >
         <steps>
-            <step id="0"	title="Start "
+            <step id="0" title="Start "
                 description="The user opens the Community Connections and the fragment proceeds to initialize all required components and data."
                 type="start"
                 platform="CCP"
@@ -9644,7 +10564,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="1"	title="Processing the requested list "
+            <step id="1" title="Processing the requested list "
                 description="The module routes the requested list to the IntraWalletUser plugin."
                 type="activity"
                 platform="CCP"
@@ -9657,7 +10577,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Routing the requested list."
+            <step id="2" title="Routing the requested list."
                 description="The plugin routes the request to the IntraWalletUserDao."
                 type="activity"
                 platform="CCP"
@@ -9670,7 +10590,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="3"	title="Processing the list"
+            <step id="3" title="Processing the list"
                 description="The list is retrived from the DB and send back to the plugin."
                 type="end"
                 platform="CCP"
@@ -9683,7 +10603,7 @@
                     <step id="3" type="direct call"></step>
                 </next>
             </step>
-            <step id="4"	title="Getting the list of connected users."
+            <step id="4" title="Getting the list of connected users."
                 description="The plugin send the request back to the module."
                 type="activity"
                 platform="CCP"
@@ -9696,7 +10616,7 @@
                     <step id="4" type="direct call"></step>
                 </next>
             </step>
-            <step id="5"	title="Sends the list back to the view"
+            <step id="5" title="Sends the list back to the view"
                 description="The module routes the requested list to the fragment."
                 type="activity"
                 platform="CCP"
@@ -9709,7 +10629,7 @@
                     <step id="5" type="direct call"></step>
                 </next>
             </step>
-            <step id="6"	title="Start "
+            <step id="6" title="Start "
                 description="The fragment displays the list of connected users."
                 type="end"
                 platform="CCP"
@@ -9726,7 +10646,7 @@
         previous="Enter into the Community - Wallet Users"
         >
         <steps>
-            <step id="0"	title="Start "
+            <step id="0" title="Start "
                 description="The user opens the Community Request Connections and the fragment proceeds to initialize all required components and data."
                 type="start"
                 platform="CCP"
@@ -9739,7 +10659,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="1"	title="Processing the requested list of users pending for acceptance. "
+            <step id="1" title="Processing the requested list of users pending for acceptance. "
                 description="The module routes the requested list to the IntraWalletUserActor plugin."
                 type="activity"
                 platform="CCP"
@@ -9752,7 +10672,7 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="2"	title="Routing the requested list."
+            <step id="2" title="Routing the requested list."
                 description="The plugin routes the request to the IntraWalletUserDao."
                 type="activity"
                 platform="CCP"
@@ -9765,7 +10685,7 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="3"	title="Processing the list"
+            <step id="3" title="Processing the list"
                 description="The list is retrived from the DB and send back to the plugin."
                 type="end"
                 platform="CCP"
@@ -9778,7 +10698,7 @@
                     <step id="3" type="direct call"></step>
                 </next>
             </step>
-            <step id="4"	title="Getting the list of connected users."
+            <step id="4" title="Getting the list of connected users."
                 description="The plugin send the request back to the module."
                 type="activity"
                 platform="CCP"
@@ -9791,7 +10711,7 @@
                     <step id="4" type="direct call"></step>
                 </next>
             </step>
-            <step id="5"	title="Sends the list back to the view"
+            <step id="5" title="Sends the list back to the view"
                 description="The module routes the requested list to the fragment."
                 type="activity"
                 platform="CCP"
@@ -9804,7 +10724,7 @@
                     <step id="5" type="direct call"></step>
                 </next>
             </step>
-            <step id="6"	title="Start "
+            <step id="6" title="Start "
                 description="The fragment displays the list of users pending for acceptance."
                 type="end"
                 platform="CCP"
