@@ -1,4 +1,5 @@
 <fermat>
+
     <platforms>
         <platform code="COR" name="Core And Api" logo="COR_logo.png">
 
@@ -8562,7 +8563,6 @@
             </steps>
         </process>
     </processes>
-
 
 
 
