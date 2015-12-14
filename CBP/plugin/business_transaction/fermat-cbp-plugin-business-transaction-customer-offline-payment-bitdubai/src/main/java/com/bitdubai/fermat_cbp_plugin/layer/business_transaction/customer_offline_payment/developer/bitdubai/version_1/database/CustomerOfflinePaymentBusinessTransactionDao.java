@@ -404,10 +404,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase,
-            String brokerCryptoAddress,
-            String walletPublicKey,
-            long cryptoAmount)
+            CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
 
         DatabaseTable databaseTable=getDatabaseContractTable();
@@ -425,8 +422,6 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
-            CryptoAddress brokerCryptoAddress;
-            String cryptoAddressString;
             CustomerOfflinePaymentRecord customerOfflinePaymentRecord=new CustomerOfflinePaymentRecord();
             databaseTable.setStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
