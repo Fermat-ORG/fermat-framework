@@ -51,10 +51,17 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
             roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.profile_image_standard);
         }
 
-        holder.getThumbnail().setImageBitmap(roundedBitmap.getBitmap());
+        holder.getThumbnail().setImageDrawable(roundedBitmap);
 
+        holder.getContainer_data().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.setSelected(!data.isSelected());
+                v.setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
+            }
+        });
         if(data.isSelected()){
-            holder.getContainer_data().setBackgroundColor(Color.parseColor("#dcf6f7"));
+            holder.getContainer_data().setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
         }else{
             holder.getContainer_data().setBackgroundColor(Color.parseColor("#ffffff"));
 

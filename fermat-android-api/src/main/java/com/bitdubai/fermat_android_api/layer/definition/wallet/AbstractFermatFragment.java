@@ -51,6 +51,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
         }
     }
 
+
     /**
      * Start a configuration Wizard
      *

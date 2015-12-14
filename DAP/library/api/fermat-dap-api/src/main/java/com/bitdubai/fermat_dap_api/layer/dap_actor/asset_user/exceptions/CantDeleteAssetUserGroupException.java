@@ -6,6 +6,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
  * Created by lcampo on 26/11/15.
  */
 public class CantDeleteAssetUserGroupException extends DAPException {
+
+    private static final String DEFAULT_MESSAGE = "There was an error while trying to delete asset user group.";
+
+    public CantDeleteAssetUserGroupException(Exception cause) {
+        this(DEFAULT_MESSAGE, cause, null, null);
+    }
+
     /**
      * This is the constructor that every inherited DAPException must implement
      *

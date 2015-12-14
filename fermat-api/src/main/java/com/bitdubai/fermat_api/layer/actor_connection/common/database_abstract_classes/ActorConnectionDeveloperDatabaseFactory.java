@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -62,14 +63,14 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
             database = this.pluginDatabaseSystem.openDatabase(
                     pluginId,
-                    com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
             );
 
         } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
 
             throw new CantInitializeActorConnectionDatabaseException(
                     cantOpenDatabaseException,
-                    "databaseName: "+ com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                    "databaseName: "+ ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                     "There was an error trying to open database."
             );
 
@@ -81,21 +82,24 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
                 database = actorConnectionActorConnectionDatabaseFactory.createDatabase(
                         pluginId,
-                        com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
+                        ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME
                 );
 
             } catch (final CantCreateDatabaseException cantCreateDatabaseException) {
 
                 throw new CantInitializeActorConnectionDatabaseException(
                         cantCreateDatabaseException,
-                        "databaseName: "+ com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                        "databaseName: "+ ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                         "There was an error trying to create database."
                 );
             }
         }
     }
 
-    protected abstract ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory();
+    protected ActorConnectionDatabaseFactory getActorConnectionDatabaseFactory() {
+
+        return new ActorConnectionDatabaseFactory(pluginDatabaseSystem);
+    }
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
@@ -104,7 +108,7 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
         List<DeveloperDatabase> databases = new ArrayList<>();
         databases.add(
                 developerObjectFactory.getNewDeveloperDatabase(
-                    com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTION_DATABASE_NAME,
                     this.pluginId.toString()
                 )
         );
@@ -121,19 +125,19 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
          */
         List<String> actorConnectionsColumns = new ArrayList<>();
 
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             );
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                );
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                );
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     );
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          );
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             );
-        actorConnectionsColumns.add(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               );
 
         /**
          * Table Actor Connections addition.
          */
-        DeveloperDatabaseTable actorConnectionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME, actorConnectionsColumns);
+        DeveloperDatabaseTable actorConnectionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME, actorConnectionsColumns);
         tables.add(actorConnectionsTable);
 
         return tables;

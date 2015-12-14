@@ -37,6 +37,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptI
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDisconnectIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
@@ -321,6 +322,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", e, "", "");
+
+        } catch (RequestAlreadySendException e) {
+            throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", FermatException.wrapException(e), "", "The request already sent to actor.");
+
         } catch (Exception e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", FermatException.wrapException(e), "", "");
         }
@@ -394,6 +399,11 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     @Override
     public void setPhoto(String actorPublicKey, byte[] photo) throws CantSetPhotoException, IntraUserNotFoundException{
 
+    }
+
+    @Override
+    public boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException {
+        return intraWalletUserActorDao.isConnectionExist(publicKey);
     }
 
 
@@ -606,10 +616,9 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                 switch (notification.getNotificationDescriptor()) {
                     //ASKFORACCEPTANCE occurs when other user request you a connection
                     case ASKFORACCEPTANCE:
-
-                        //this.askIntraWalletUserForAccepombretance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
-                        this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
-                        break;
+                            this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                             //this.askIntraWalletUserForAccepombretance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                              break;
                     case CANCEL:
                         this.cancelIntraWalletUser(intraUserToConnectPublicKey,intraUserSendingPublicKey);
                         break;

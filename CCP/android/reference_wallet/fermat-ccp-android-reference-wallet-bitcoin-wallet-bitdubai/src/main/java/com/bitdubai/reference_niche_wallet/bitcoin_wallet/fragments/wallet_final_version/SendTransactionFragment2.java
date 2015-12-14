@@ -207,7 +207,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 Bitmap bitmap = null;
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inScaled = true;
-                options.inSampleSize = 6;
+                options.inSampleSize = 3;
                 try {
                     bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header,options);
 //                    bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
