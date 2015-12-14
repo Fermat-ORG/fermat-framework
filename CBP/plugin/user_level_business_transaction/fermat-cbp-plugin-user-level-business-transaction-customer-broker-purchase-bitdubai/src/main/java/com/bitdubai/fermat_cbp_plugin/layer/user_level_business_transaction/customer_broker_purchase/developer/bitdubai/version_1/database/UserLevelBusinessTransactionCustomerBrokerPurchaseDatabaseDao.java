@@ -192,7 +192,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_TRANSACTION_ID_COLUMN_NAME, customerBrokerPurchase.getTransactionId());
         record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_PURCHASE_STATUS_COLUMN_NAME, customerBrokerPurchase.getPurchaseStatus());
         record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_STATUS_COLUMN_NAME, customerBrokerPurchase.getContractStatus());
-        record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME, customerBrokerPurchase.getTransactionStatus());
+        record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME, customerBrokerPurchase.getTransactionStatus().getCode());
         record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CURRENCY_TYPE_COLUMN_NAME, customerBrokerPurchase.getCurrencyType());
         record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_TYPE_COLUMN_NAME, customerBrokerPurchase.getTransactionType());
         record.setStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_MEMO_COLUMN_NAME, customerBrokerPurchase.getMemo());
