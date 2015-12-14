@@ -14,16 +14,25 @@
 # Be careful this is a test version, please, use this script in a virtual machine or in a old computer.
 #
 #
-# Please, not modify after this line, thanks!
+#Change log:
+#0.08 - Includes Genymotion support
+#
+#
 # Environment Variables
 installationFolder=$HOME #you can modify the installation folder, as default I am going to set the home user folder.
 #Please, select one platform accoding your Operative System
 platform="-linux-x64.tar.gz"
 #plafform="-linux-i586.tar.gz"
 gradleVersion=2.9
+#If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
+#Genymotion 32Bits
+#genymotion="genymotion-2.5.2_x86.bin"
+#Genymotion 64Bits
+#genymotion="genymotion-2.5.2_x64.bin"
+# Please, not modify after this line, thanks!
 # Setting variables
 scriptName="Fermat Developer Installer"
-scriptVersion=0.04
+scriptVersion=0.08
 developer="Manuel Perez"
 developerMail="darkpriestrelative@gmail.com"
 maintainer="Manuel Perez"
@@ -104,7 +113,7 @@ function installJDK(){
     JDK_VERSION=${jkdURL##*/}
     echo "wget --header 'Cookie: oraclelicense=accept-securebackup-cookie' ${jdkURL}${platform}"
     wget --header 'Cookie: oraclelicense=accept-securebackup-cookie' ${jdkURL}${platform}
-    echo "Unziping JDK7"
+    echo "Unzipping JDK7"
     echo "tar xvzf ${jdkZip}${platform}"
     tar xvzf ${jdkZip}${platform}
     echo "Moving JDK to opt"
@@ -172,13 +181,35 @@ function installIDE(){
     echo "Downloading IDE"
     echo "wget https://dl.google.com/dl/android/studio/ide-zips/1.5.1.0/android-studio-ide-141.2456560-linux.zip"
     wget https://dl.google.com/dl/android/studio/ide-zips/1.5.1.0/android-studio-ide-141.2456560-linux.zip
-    echo "Unziping IDE"
+    echo "Unzipping IDE"
     echo "unzip -e ${androidStudio}"
     unzip -e ${androidStudio}
     echo "Moving IDE"
     sudo mv android-studio /opt/android-studio
     
-    }
+}
+function installGenymotion(){
+    if[ ! genymotion ]; then
+        timestamp
+        genymotionURL="http://files2.genymotion.com/genymotion/genymotion-2.5.2/"
+        echo "Downloading Genymotion"
+        echo "wget ${genymotionURL}${genymotion}"
+        wget $genymotion
+        echo "Moving genymotion"
+        echo "sudo mv ${genymotion} /opt"
+        sudo mv ${genymotion} /opt
+        echo "Add executing permission"
+        echo "sudo chmod +x ${genymotion}"
+        sudo chmod +x ${genymotion}
+        echo "Unpacking genymotion"
+        echo "./${genymotion}"
+        ./${genymotion}
+        echo "cd genymotion"
+        cd genymotion
+        echo "Executing genymotion"
+        echo "./genymotion"
+        ./genymotion
+}
 #Main script
 clear
 echo "Bitdubai - $scriptName $scriptVersion"
@@ -206,6 +237,9 @@ createEnvironmentVars
 
 #Get and install IDE
 installIDE
+
+#Get and install Genymotion (optional)
+installGenymotion
 
 echo "Congratulations, your development enviroment is ready to configurate."
 echo "Bye!"
