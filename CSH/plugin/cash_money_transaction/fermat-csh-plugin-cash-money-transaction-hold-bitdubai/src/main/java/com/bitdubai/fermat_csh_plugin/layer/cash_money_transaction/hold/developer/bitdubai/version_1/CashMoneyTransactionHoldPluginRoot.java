@@ -80,7 +80,7 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
      * TEST METHODS
      */
     private void testCreateCashHoldTransaction() {
-        System.out.println("CASHHOLD - testCreateCashHoldTransaction CALLED");
+        //System.out.println("CASHHOLD - testCreateCashHoldTransaction CALLED");
 
         CashHoldTransactionParameters params = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", 20, FiatCurrency.US_DOLLAR, "testHold 20USD");
         CashHoldTransactionParameters params2 = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", 50, FiatCurrency.US_DOLLAR, "testHold 50USD");
