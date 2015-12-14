@@ -42,8 +42,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTra
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -374,18 +374,8 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     //SELECT COUNT(*) FROM THE TABLE. OR THIS WALLET WILL SUFFER A LOT OF PERFORMANCE ISSUES.
 
     @Override
-    public int getUnusedAmountForAsset(String assetName) throws CantGetAssetStatisticException {
-        return getStatisticForGivenAssetByStatus(assetName, AssetCurrentStatus.ASSET_UNUSED).size();
-    }
-
-    @Override
-    public int getAppropriatedAmountForAsset(String assetName) throws CantGetAssetStatisticException {
-        return getStatisticForGivenAssetByStatus(assetName, AssetCurrentStatus.ASSET_APPROPRIATED).size();
-    }
-
-    @Override
-    public int getRedeemedAmountForAsset(String assetName) throws CantGetAssetStatisticException {
-        return getStatisticForGivenAssetByStatus(assetName, AssetCurrentStatus.ASSET_REDEEMED).size();
+    public int getUnusedAmountForAssetByStatus(AssetCurrentStatus status, String assetName) throws CantGetAssetStatisticException {
+        return getStatisticForGivenAssetByStatus(assetName, status).size();
     }
 
     private List<AssetStatistic> constructListFromAssetPublicKey(List<String> assetPublicKeys) {

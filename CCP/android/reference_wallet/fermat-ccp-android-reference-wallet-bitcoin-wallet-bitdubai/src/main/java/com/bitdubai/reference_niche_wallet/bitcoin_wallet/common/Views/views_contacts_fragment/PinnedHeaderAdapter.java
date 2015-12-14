@@ -160,7 +160,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         //guardo el contacto
                         contactPositionItem.put(position, walletContact);
                         try {
-                            if (walletContact.getProfilePicture() != null) {
+                            if (walletContact.getProfilePicture() != null && walletContact.getProfilePicture().length > 0) {
                                 holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
                             } else
                                 Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);

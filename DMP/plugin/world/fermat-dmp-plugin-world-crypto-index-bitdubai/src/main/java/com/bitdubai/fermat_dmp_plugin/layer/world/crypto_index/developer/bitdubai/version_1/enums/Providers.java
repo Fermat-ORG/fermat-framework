@@ -31,7 +31,9 @@ public enum Providers {
     },
     CRYPTOCOINCHART{
         public CryptoIndexProvider getProviderInstance() { return new CryptoCoinChartsProvider(); }
+    },
+    BITFINEX{
+        public CryptoIndexProvider getProviderInstance() { return new CryptoCoinChartsProvider(); }
     };
-
     public abstract CryptoIndexProvider getProviderInstance();
 }

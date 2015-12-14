@@ -749,6 +749,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              * Mark as register
              */
              this.register = Boolean.TRUE;
+            setRegister(Boolean.TRUE);
 
             System.out.print("-----------------------\n" +
                     "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
@@ -769,6 +770,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     identity,
                     eventManager
             );
+
+            setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
 
             // Initialize messages handlers
             initializeMessagesListeners();
@@ -902,18 +905,22 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+        System.out.println("CRYPTO TRANSMISSION - handleVpnConnectionCloseNotificationEvent");
+        VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+        cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-
-                if(communicationNetworkServiceConnectionManager != null)
-                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
-            }
-
-        }
+//        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+//
+//
+//
+//            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+//
+//                if(communicationNetworkServiceConnectionManager != null)
+//                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+//
+//            }
+//
+//        }
 
     }
 

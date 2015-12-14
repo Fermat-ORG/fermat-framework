@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
@@ -33,14 +32,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
@@ -57,6 +53,7 @@ import static android.widget.Toast.makeText;
 
 /**
  * Created by Matias Furszyfer on 15/09/15.
+ * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
  */
 
 
@@ -74,6 +71,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
      */
     private static IntraUserModuleManager moduleManager;
     private static ErrorManager errorManager;
+
     protected final String TAG = "Recycler Base";
     private int offset = 0;
 
@@ -118,9 +116,9 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             setHasOptionsMenu(true);
             // setting up  module
-            intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
+            intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
@@ -145,7 +143,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
-
             rootView = inflater.inflate(R.layout.world_main, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
@@ -200,7 +197,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
          */
         NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
         setNavigationDrawer(navigationViewAdapter);
-//        setNavigationBackgroundColor(getResources().getColor(R.color.nav_drawer_color));
     }
 
     @Override
@@ -309,14 +305,14 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             // Esto podria ser un enum de item menu que correspondan a otro menu
             if (itemTitle.equals("New Identity")) {
-                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), appSession.getAppPublicKey());
 
             }
 //            if(id == R.id.action_connection_request){
 //                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
 //            }
             if (item.getItemId() == R.id.action_notifications) {
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode(), subAppsSession.getAppPublicKey());
+                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode(), appSession.getAppPublicKey());
                 return true;
             }
 
@@ -412,13 +408,13 @@ Updates the count of notifications in the ActionBar.
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
 
-        subAppsSession.setData(INTRA_USER_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), subAppsSession.getAppPublicKey());
+        appSession.setData(INTRA_USER_SELECTED, data);
+        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
 
 
         /*ConnectDialog connectDialog = null;
         try {
-            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) subAppsSession, subAppResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
             connectDialog.show();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();

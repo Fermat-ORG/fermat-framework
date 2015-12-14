@@ -66,12 +66,23 @@
 
         <include layout="@layout/loading_empty_view"/>
 
-        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
-            android:id="@+id/list_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scrollingCache="false"
-            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
+                android:id="@+id/list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollingCache="false"
+                />
+
+
+        </RelativeLayout>
+
+
+
+
 
     </FrameLayout>
 
@@ -104,6 +115,9 @@
             />
 
     </LinearLayout>
+
+
+
 
 
 </LinearLayout>

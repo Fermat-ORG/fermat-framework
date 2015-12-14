@@ -15,7 +15,8 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by mati on 2015.11.12..
+ * @author Created by mati on 2015.11.12..
+ * @author Jose Manuel De Sousa
  */
 public class FragmentsCommons {
 
@@ -34,7 +35,7 @@ public class FragmentsCommons {
                 if (intraUserLoginIdentity.getProfileImage().length > 0) {
                     imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.tessa_profile_picture).into(imageView);
+                    Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             }
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(intraUserLoginIdentity.getAlias());

@@ -280,7 +280,7 @@ public class CryptoTransmissionAgent {
 
         } catch (InterruptedException e) {
             toSend.interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped ...  ");
             return;        }
 
     }
@@ -497,7 +497,7 @@ public class CryptoTransmissionAgent {
 
         } catch (InterruptedException e) {
             toReceive.interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("CryptoTransmissionAgent - Thread Interrupted stopped ...  ");
             return;        }
 
     }

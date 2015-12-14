@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
 
 /**
- * Created by mati on 2015.11.21..
+ * Created by Matias Furszyfer on 2015.11.21..
  */
 public abstract class AbstractFermatFragment<S extends FermatSession,PS extends FermatSettings,R extends ResourceProviderManager> extends Fragment implements FermatFragments{
 
@@ -28,13 +28,9 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
     /**
      * Platform
      */
-    protected S subAppsSession;
-    protected PS subAppSettings;
-    protected R subAppResourcesProviderManager;
-
-    /**
-     * Platform
-     */
+    protected S appSession;
+    protected PS appSettings;
+    protected R appResourcesProviderManager;
 
 
     /**
@@ -49,11 +45,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
         super.onCreate(savedInstanceState);
         try {
             context = (WizardConfiguration) getActivity();
-            viewInflater = new ViewInflater(getActivity(), subAppResourcesProviderManager);
+            viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to WizardConfiguration");
         }
     }
+
 
     /**
      * Start a configuration Wizard
@@ -84,16 +81,16 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
         menu.clear();
     }
 
-    public void setSubAppsSession(S subAppsSession) {
-        this.subAppsSession = subAppsSession;
+    public void setAppSession(S appSession) {
+        this.appSession = appSession;
     }
 
-    public void setSubAppSettings(PS subAppSettings) {
-        this.subAppSettings = subAppSettings;
+    public void setAppSettings(PS appSettings) {
+        this.appSettings = appSettings;
     }
 
-    public void setSubAppResourcesProviderManager(R subAppResourcesProviderManager) {
-        this.subAppResourcesProviderManager = subAppResourcesProviderManager;
+    public void setAppResourcesProviderManager(R appResourcesProviderManager) {
+        this.appResourcesProviderManager = appResourcesProviderManager;
     }
 
 

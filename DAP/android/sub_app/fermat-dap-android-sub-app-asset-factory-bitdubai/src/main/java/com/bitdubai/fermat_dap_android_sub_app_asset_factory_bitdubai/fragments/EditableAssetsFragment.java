@@ -83,8 +83,8 @@ public class EditableAssetsFragment extends FermatFragment implements
         super.onCreate(savedInstanceState);
         try {
             selectedAsset = null;
-            manager = ((AssetFactorySession) subAppsSession).getManager();
-            //viewInflater = new ViewInflater(getActivity(), subAppResourcesProviderManager);
+            manager = ((AssetFactorySession) appSession).getManager();
+            //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -193,7 +193,7 @@ public class EditableAssetsFragment extends FermatFragment implements
             public void onClick(View view) {
                 /* create new asset factory project */
                 selectedAsset = null;
-                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), subAppsSession.getAppPublicKey(), getAssetForEdit());
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
             }
         });
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
