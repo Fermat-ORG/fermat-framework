@@ -22,9 +22,12 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -36,6 +39,8 @@ import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.MessageReceiver;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+
+import java.util.List;
 
 /**
  * Creado por Jose Manuel De Sousa on 29/11/15.
@@ -91,10 +96,17 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if(prefs.getBoolean("Connect", true))
+        try{
+        if(moduleManager.isActorConnected(intraUserInformation.getPublicKey())) {
             disconnect.setVisibility(View.VISIBLE);
-        else connect.setVisibility(View.VISIBLE);
+            connect.setVisibility(View.GONE);
+        }else {
+            connect.setVisibility(View.VISIBLE);
+            disconnect.setVisibility(View.GONE);
+        }
+        }catch (CantCreateNewDeveloperException e) {
+            e.printStackTrace();
+        }
 
         try {
             userName.setText(intraUserInformation.getName());
