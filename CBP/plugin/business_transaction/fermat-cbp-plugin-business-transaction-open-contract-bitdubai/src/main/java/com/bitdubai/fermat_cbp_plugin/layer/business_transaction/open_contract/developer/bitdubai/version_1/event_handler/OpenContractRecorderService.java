@@ -41,7 +41,7 @@ public class OpenContractRecorderService implements CBPService {
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception,
-                    "Cannot set the asset distribution database handler",
+                    "Cannot set the open contract database handler",
                     "The database handler is null");
         }
     }
