@@ -66,7 +66,12 @@ public class MyAssetsViewHolder extends FermatViewHolder {
 
         redeemTempButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            doRedeem(digitalAsset.getAssetPublicKey());
+                doRedeem(digitalAsset.getAssetPublicKey());
+            }
+        });
+        appropriateTempButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                doAppropriate(digitalAsset.getAssetPublicKey());
             }
         });
     }
@@ -96,6 +101,45 @@ public class MyAssetsViewHolder extends FermatViewHolder {
                 dialog.dismiss();
                 if (context != null) {
                     Toast.makeText(context, "Everything ok (redeem)...", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (context != null)
+                    Toast.makeText(context, "Fermat Has detected an exception",
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();
+    }
+
+    private void doAppropriate(final String assetPublicKey) {
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setMessage("Please wait...");
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+//                    manager.distributionAssets(
+//                            asset.getAssetPublicKey(),
+//                            asset.getWalletPublicKey(),
+//                            asset.getActorAssetUser()
+//                    );
+                //TODO: only for Appropriate test
+                manager.appropriateAsset(assetPublicKey, null);
+                return true;
+            }
+        };
+        task.setContext((Activity) context);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (context != null) {
+                    Toast.makeText(context, "Everything ok (appropriate)...", Toast.LENGTH_SHORT).show();
                 }
             }
 

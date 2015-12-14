@@ -13,7 +13,9 @@ public enum Wallets {
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("basic"),
     CBP_CRYPTO_BROKER_WALLET("cbp_crypto_broker_wallet"),
     CBP_CRYPTO_CUSTOMER_WALLET("cbp_crypto_customer_wallet"),
-    DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet");
+    DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet"),
+    DAP_ASSET_USER_WALLET("dap_asset_user_wallet"),
+    DAP_REDEEM_POINT_WALLET("dap_redeem_point_wallet");
 
     private final String code;
 
