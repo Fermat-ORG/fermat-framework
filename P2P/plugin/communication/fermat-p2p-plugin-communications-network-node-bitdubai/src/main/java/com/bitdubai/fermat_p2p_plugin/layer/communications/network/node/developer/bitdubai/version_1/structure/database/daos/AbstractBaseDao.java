@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
@@ -157,7 +156,6 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      *
      * @throws CantReadRecordDataBaseException
      *
-     * @see CommunicationNetworkServiceDatabaseConstants
      */
     public final List<E> findAll(final String columnName , final String columnValue) throws CantReadRecordDataBaseException {
 
@@ -203,7 +201,6 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      *
      * @throws CantReadRecordDataBaseException if something goes wrong.
      *
-     * @see CommunicationNetworkServiceDatabaseConstants
      */
     public final List<E> findAll(final Map<String, Object> filters) throws CantReadRecordDataBaseException {
 

@@ -180,7 +180,7 @@ public class DesktopPlatformBinaryFile implements PlatformBinaryFile {
         } finally {
         	try {
         		if (binaryStream != null)
-        		binaryStream.close();
+        		    binaryStream.close();
         	} catch (Exception e) {
                 throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause");
         	}

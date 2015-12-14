@@ -11,10 +11,19 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -28,6 +37,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
@@ -54,7 +65,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem {
+public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNodeManager {
 
     /**
      * Represent the LOG
@@ -64,21 +75,25 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
     /**
      * ErrorManager references definition.
      */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
     /**
      * EventManager references definition.
      */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     /**
      * PluginFileSystem references definition.
      */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem        ;
 
     /**
      * PluginDatabaseSystem references definition.
      */
+   // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -107,15 +122,10 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
     private FermatEmbeddedNodeServer fermatEmbeddedNodeServer;
 
     /**
-     * Represent the plugin id
-     */
-    private UUID pluginId;
-
-    /**
      * Constructor
      */
     public NetworkNodePluginRoot() {
-        super();
+        super(new PluginVersionReference(new Version()));
     }
 
     /**
@@ -130,7 +140,7 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
         /*
          * Validate required resources
          */
-        validateInjectedResources();
+       // validateInjectedResources();
 
         try {
 
@@ -142,13 +152,15 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
              /*
              * Initialize the Data Base of the node
              */
-            initializeDb();
+         //   initializeDb();
 
             /*
              * Create and start the internal server
              */
             fermatEmbeddedNodeServer = new FermatEmbeddedNodeServer();
             fermatEmbeddedNodeServer.start();
+
+            LOG.info("Add references to the node context...");
 
             /*
              * Add references to the node context
@@ -161,6 +173,9 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
             NodeContext.add(PluginDatabaseSystem.class.getSimpleName(),     pluginDatabaseSystem);
 
         } catch (Exception exception) {
+
+
+            exception.printStackTrace();
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -176,26 +191,6 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
             throw pluginStartException;
         }
 
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return null;
     }
 
     /**
@@ -271,13 +266,14 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
                  */
                 PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(identity.getPrivateKey());
+                pluginTextFile.persistToMedia();
 
-            } catch (CantCreateFileException cantCreateFileException) {
+            } catch (Exception exception) {
                 /*
                  * The file cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
-                throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantCreateFileException.getLocalizedMessage());
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(exception.getLocalizedMessage());
             }
 
 
@@ -286,7 +282,7 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
             /*
              * The file cannot be load. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
             throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantCreateFileException.getLocalizedMessage());
 
         }
@@ -315,7 +311,7 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -340,7 +336,7 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
@@ -353,39 +349,8 @@ public class NetworkNodePluginRoot implements Plugin, Service, DealsWithEvents, 
              * Create the daoFactory and add to the context
              */
             this.daoFactory = new DaoFactory(dataBase);
-            NodeContext.add(DaoFactory.class.getName(), daoFactory);
 
         }
 
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    @Override
-    public FermatManager getManager() {
-        return null;
     }
 }

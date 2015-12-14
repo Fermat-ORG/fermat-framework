@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos;
 
-import android.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -52,7 +52,7 @@ public class ActorsCatalogTransactionsPendingForPropagationDao extends AbstractB
             actorsCatalogTransactionsPendingForPropagation.setName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NAME_COLUMN_NAME));
             actorsCatalogTransactionsPendingForPropagation.setAlias(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_ALIAS_COLUMN_NAME));
             actorsCatalogTransactionsPendingForPropagation.setActorType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_ACTOR_TYPE_COLUMN_NAME));
-            actorsCatalogTransactionsPendingForPropagation.setPhoto(Base64.decode(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_PHOTO_COLUMN_NAME), Base64.DEFAULT));
+            actorsCatalogTransactionsPendingForPropagation.setPhoto(Base64.decodeBase64(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_PHOTO_COLUMN_NAME)));
             actorsCatalogTransactionsPendingForPropagation.setLastLatitude(Double.valueOf(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LATITUDE_COLUMN_NAME)));
             actorsCatalogTransactionsPendingForPropagation.setLastLongitude(Double.valueOf(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LONGITUDE_COLUMN_NAME)));
             actorsCatalogTransactionsPendingForPropagation.setExtraData(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_EXTRA_DATA_COLUMN_NAME));
@@ -85,7 +85,7 @@ public class ActorsCatalogTransactionsPendingForPropagationDao extends AbstractB
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NAME_COLUMN_NAME,entity.getName());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_ALIAS_COLUMN_NAME,entity.getAlias());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_ACTOR_TYPE_COLUMN_NAME,entity.getActorType());
-        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_PHOTO_COLUMN_NAME, Base64.encodeToString(entity.getPhoto(), Base64.DEFAULT));
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_PHOTO_COLUMN_NAME, Base64.encodeBase64String(entity.getPhoto()));
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LATITUDE_COLUMN_NAME,entity.getLastLatitude());
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_EXTRA_DATA_COLUMN_NAME,entity.getExtraData());

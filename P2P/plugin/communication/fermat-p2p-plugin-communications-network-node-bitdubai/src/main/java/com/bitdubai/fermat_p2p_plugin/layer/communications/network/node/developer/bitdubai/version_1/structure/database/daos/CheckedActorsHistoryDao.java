@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos;
 
-import android.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -53,7 +53,7 @@ public class CheckedActorsHistoryDao extends AbstractBaseDao<CheckedActorsHistor
             checkedActorsHistory.setName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_NAME_COLUMN_NAME));
             checkedActorsHistory.setAlias(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_ALIAS_COLUMN_NAME));
             checkedActorsHistory.setActorType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_ACTOR_TYPE_COLUMN_NAME));
-            checkedActorsHistory.setPhoto(Base64.decode(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_PHOTO_COLUMN_NAME), Base64.DEFAULT));
+            checkedActorsHistory.setPhoto(Base64.decodeBase64(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_PHOTO_COLUMN_NAME)));
             checkedActorsHistory.setLastLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LATITUDE_COLUMN_NAME));
             checkedActorsHistory.setLastLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LONGITUDE_COLUMN_NAME));
             checkedActorsHistory.setClientIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME));
@@ -86,7 +86,7 @@ public class CheckedActorsHistoryDao extends AbstractBaseDao<CheckedActorsHistor
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_NAME_COLUMN_NAME,entity.getName());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_ALIAS_COLUMN_NAME,entity.getAlias());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_ACTOR_TYPE_COLUMN_NAME,entity.getActorType());
-        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_PHOTO_COLUMN_NAME, Base64.encodeToString(entity.getPhoto(), Base64.DEFAULT));
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_PHOTO_COLUMN_NAME, Base64.encodeBase64String(entity.getPhoto()));
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LATITUDE_COLUMN_NAME, entity.getLastLatitude());
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME, entity.getClientIdentityPublicKey());

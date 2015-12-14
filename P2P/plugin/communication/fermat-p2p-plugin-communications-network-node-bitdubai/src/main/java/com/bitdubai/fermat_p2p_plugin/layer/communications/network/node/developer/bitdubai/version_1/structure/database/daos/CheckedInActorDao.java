@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos;
 
-import android.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -53,7 +53,7 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
             checkedInActor.setName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME));
             checkedInActor.setAlias(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME));
             checkedInActor.setActorType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME));
-            checkedInActor.setPhoto(Base64.decode(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_PHOTO_COLUMN_NAME), Base64.DEFAULT));
+            checkedInActor.setPhoto(Base64.decodeBase64(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_PHOTO_COLUMN_NAME)));
             checkedInActor.setLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LATITUDE_COLUMN_NAME));
             checkedInActor.setLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LONGITUDE_COLUMN_NAME));
             checkedInActor.setExtraData(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME));
@@ -86,7 +86,7 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME,entity.getName());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME,entity.getAlias());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME,entity.getActorType());
-        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_PHOTO_COLUMN_NAME, Base64.encodeToString(entity.getPhoto(), Base64.DEFAULT));
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_PHOTO_COLUMN_NAME, Base64.encodeBase64String(entity.getPhoto()));
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LATITUDE_COLUMN_NAME, entity.getLatitude());
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LONGITUDE_COLUMN_NAME, entity.getLongitude());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME,entity.getExtraData());

@@ -166,8 +166,7 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
                 path = EnvironmentVariables.getExternalStorageDirectory().toString();
             else
                 path = EnvironmentVariables.getInternalStorageDirectory().toString();
-                // acá iria el path de donde están los archivos
-                //path = this.context.getFilesDir().toString();
+
             /**
              * Get the file handle.
              */
@@ -196,8 +195,11 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
             throw new CantLoadFileException(e.getMessage());
         } finally {
         	try {
-        		bufferedReader.close();
-        		bufferedReader=null;
+
+                if (bufferedReader != null){
+                    bufferedReader.close();
+                }
+
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
