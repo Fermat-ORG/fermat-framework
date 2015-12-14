@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ import java.util.UUID;
 public class ActorConnectionManager implements CryptoCustomerActorConnectionManager {
 
     @Override
-    public CryptoCustomerActorConnectionSearch getSearch(CryptoCustomerActorIdentity actorIdentitySearching) {
+    public CryptoCustomerActorConnectionSearch getSearch(CryptoCustomerLinkedActorIdentity actorIdentitySearching) {
         return null;
     }
 
