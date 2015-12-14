@@ -2,7 +2,9 @@ package com.bitdubai.fermat_android_api.ui.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
@@ -61,6 +63,15 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
         }
     }
 
+    /**
+     * Send local broadcast
+     *
+     * @param broadcast Intent broadcast with channel and extras
+     */
+    public void sendLocalBroadcast(Intent broadcast) {
+        LocalBroadcastManager.getInstance(getContext())
+                .sendBroadcast(broadcast);
+    }
     /**
      *
      * Set the layout content view
