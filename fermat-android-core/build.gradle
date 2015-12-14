@@ -134,6 +134,6 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:design:23.1.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
-   // compile files('src/main/libs/beans.jar')
+    // compile files('src/main/libs/beans.jar')
 
 }

@@ -52,7 +52,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
      */
     @Override
     public void start() {
-        System.out.println("CASHHOLD - Agent START");
+        //System.out.println("CASHHOLD - Agent START");
 
         this.agentThread.start();
         this.status = AgentStatus.STARTED;
