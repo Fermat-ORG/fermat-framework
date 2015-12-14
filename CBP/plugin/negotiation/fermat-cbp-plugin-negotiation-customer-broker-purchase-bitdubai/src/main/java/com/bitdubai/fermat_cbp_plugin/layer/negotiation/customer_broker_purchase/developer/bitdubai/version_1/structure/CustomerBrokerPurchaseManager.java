@@ -33,6 +33,7 @@ import java.util.UUID;
 /**
  * Created by angel on 07/12/15.
  */
+
 public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNegotiationManager {
 
     private CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao;

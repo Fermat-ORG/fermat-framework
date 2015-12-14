@@ -12,11 +12,13 @@ public class BankAccountNumberImpl implements BankAccountNumber {
     String alias;
     String Account;
     FiatCurrency currency;
+    BankAccountType bankAccountType;
 
-    public BankAccountNumberImpl(String alias, String account, FiatCurrency currency) {
+    public BankAccountNumberImpl(String alias, String account, FiatCurrency currency,BankAccountType bankAccountType) {
         this.alias = alias;
         Account = account;
         this.currency = currency;
+        this.bankAccountType=bankAccountType;
     }
 
     @Override
@@ -34,15 +36,15 @@ public class BankAccountNumberImpl implements BankAccountNumber {
         return currency;
     }
 
-    //TODO: agregar bankName como setting y retornal e acountType;
+    //TODO: agregar bankName como setting y retornar el  acountType;
 
     @Override
     public String getBankName() {
-        return null;
+        return "Test Account";
     }
 
     @Override
     public BankAccountType getAccountType() {
-        return null;
+        return this.bankAccountType;
     }
 }

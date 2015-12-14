@@ -1,13 +1,19 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.database.BusinessTransactionBankMoneyRestockDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.exceptions.MissingBankMoneyRestockDataException;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +23,8 @@ import java.util.UUID;
  *
  * Created by franklin on 17/11/15.
  */
-public class StockTransactionBankMoneyRestockManager {
+public class StockTransactionBankMoneyRestockManager implements
+        BankMoneyRestockManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
 
@@ -32,17 +39,33 @@ public class StockTransactionBankMoneyRestockManager {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
     }
+    @Override
+    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyRestockException {
+        java.util.Date date = new java.util.Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        BankMoneyRestockTransactionImpl bankMoneyRestockTransaction = new BankMoneyRestockTransactionImpl(
+                UUID.randomUUID(),
+                publicKeyActor,
+                fiatCurrency,
+                cbpWalletPublicKey,
+                bankWalletPublicKey,
+                memo,
+                "INIT TRANSACTION",
+                bankAccount,
+                amount,
+                timestamp,
+                TransactionStatusRestockDestock.INIT_TRANSACTION,
+                priceReference,
+                originTransaction);
 
-    private BusinessTransactionBankMoneyRestockDatabaseDao getStockTransactionBankMoneyRestockDao() {
-
-        return new BusinessTransactionBankMoneyRestockDatabaseDao(pluginDatabaseSystem, pluginId);
+        try {
+            StockTransactionBankMoneyRestockFactory stockTransactionBankMoneyRestockFactory = new StockTransactionBankMoneyRestockFactory(pluginDatabaseSystem, pluginId);
+            stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyRestockTransaction);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        } catch (MissingBankMoneyRestockDataException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void saveBankMoneyRestockTransactionData(BankMoneyTransaction bankMoneyTransaction) throws DatabaseOperationException, MissingBankMoneyRestockDataException {
-        getStockTransactionBankMoneyRestockDao().saveBankMoneyRestockTransactionData(bankMoneyTransaction);
-    }
-
-    public List<BankMoneyTransaction> getBankMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException{
-        return getStockTransactionBankMoneyRestockDao().getBankMoneyTransactionList(filter);
-    }
 }

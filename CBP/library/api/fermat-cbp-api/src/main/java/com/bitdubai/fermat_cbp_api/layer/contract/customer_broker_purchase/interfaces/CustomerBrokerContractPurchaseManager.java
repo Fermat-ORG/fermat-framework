@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
@@ -42,7 +41,7 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
      *
      * @return an ListsForStatus with separate lists and sorted by status
      */
-    ListsForStatus getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractPurchaseException;
+    ListsForStatusPurchase getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
      *
@@ -59,13 +58,5 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
      * @throws CantupdateCustomerBrokerContractPurchaseException
      */
     void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException;
-
-    /**
-     *
-     * @param contractId
-     * @param clause
-     * @throws CantupdateCustomerBrokerContractPurchaseException
-     */
-    void updateStatusCustomerBrokerPurchaseContractClauseStatus(String contractId, ContractClause clause) throws CantupdateCustomerBrokerContractPurchaseException;
 
 }
