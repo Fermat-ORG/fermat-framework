@@ -54,8 +54,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
@@ -67,9 +67,11 @@ import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerPro
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -223,7 +225,9 @@ public abstract class FermatActivity extends AppCompatActivity
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
     private NavigationViewPainter navigationViewPainter;
     private FooterViewPainter footerViewPainter;
+    private HeaderViewPainter headerViewPainter;
     private BottomNavigation bottomNavigation;
+
 
     /**
      * Called when the activity is first created
@@ -379,9 +383,11 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
-            paintSideMenu(activity,sideMenu);
+            paintSideMenu(activity, sideMenu);
 
             paintFooter(activity.getFooter());
+
+            pantHeader(activity.getHeader());
 
             setScreen(activity);
         } catch (Exception e) {
@@ -400,6 +406,15 @@ public abstract class FermatActivity extends AppCompatActivity
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
+        }
+    }
+
+    private void pantHeader(FermatHeader header) {
+        if(header!=null){
+            if(header.hasExpandable()){
+                headerViewPainter.addExpandableHeader(getToolbarHeader());
+            }
+
         }
     }
 
@@ -687,7 +702,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Method used from a Wallet to paint tabs
      */
-    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, WalletSession walletSession) {
+    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, AbstractFermatSession walletSession) {
 
         //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
         //pagerSlidingTabStrip.setShouldExpand(true);
@@ -708,6 +723,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     getResources());
             pagertabs.setAdapter(adapterWithIcons);
         } else {
+
             adapter = new TabsPagerAdapter(getFragmentManager(),
                     getApplicationContext(),
                     WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),

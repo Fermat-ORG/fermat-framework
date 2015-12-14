@@ -35,7 +35,7 @@ public abstract class FermatSubAppFragmentFactory <S extends SubAppsSession,J ex
         fermatFragment = getFermatFragment(fragments);
 
         fermatFragment.setSubAppsSession(subAppsSession);
-        fermatFragment.setSubAppSettings(subAppSettingsManager);
+        fermatFragment.setAppSettings(subAppSettingsManager);
         fermatFragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
         return fermatFragment;
     }

@@ -31,11 +31,15 @@ Los Servicios de Red también tienen  la responsabilidad de definir un protocolo
 
 Es un servicio de red que pretende definir el protocolo y comportamiento para la comunicación entre los componentes de una plataforma que se ejecuta dentro del Fermat Framework. 
 
+* **Servicios de Red para Actores**, que son los encargados de gestionar las actividades reaccionadas con las identidades (Actores) que se encuentra dentro de la plataforma.
+
+* **Servicios de Red** generales que son los encargados de gestionar lógicas de negocio o protocolos de transferencia de información.
+
 ### Conexiones
 
 Son los canales establecidos por la capa de comunicaciones para que los servicio de red envíen y reciban sus mensajes.
 
-### Menssajes
+### Mensajes
 
 Está definido como la información que el emisor envía al receptor a través de un canal de comunicación determinado, y el mismo tiene un sentido unico.
 
@@ -50,7 +54,7 @@ Esta sección le ayudará a entender el flujo de trabajo necesarios a seguir par
 
 #### Issues
 
-Es obligatorio que se cree un conjunto inicial de GitHub Issues antes de continuar más con el flujo de trabajo. Esto le mostrará al resto de los equipos que alguien está trabajando en esta funcionalidad y evitar conflictos de trabajo desde el principio. También se enganchará el líder del equipo en su flujo de trabajo y que le permita orientar y asesorar a usted cuando sea necesario.
+Es obligatorio que se cree un conjunto inicial de GitHub Issues antes de continuar con el flujo de trabajo. Esto le mostrará al resto de los equipos que alguien está trabajando en esta funcionalidad y evitar conflictos de trabajo desde el principio. También se enganchará el líder del equipo en su flujo de trabajo y que le permita orientar y asesorar a usted cuando sea necesario.
 
 Una jerarquía básica de GitHub Issues se crean como un primer paso. Los temas están vinculados uno a otro con sólo colocar un enlace en el primer comentario.
 
@@ -74,54 +78,54 @@ Los jefes de equipo etiquetados en la segunda línea con el fin de pedirles que 
 
 "@ líder de usuario Nombre del equipo, por favor asigne este tema para mí."
 
-<br>
-#### Plug-in Estructura de la emisión
+#### Plug-in Issue Structure
 
 La estructura inicial obligatoria es el siguiente: (nota: la palabra ISSUE no es parte del nombre)
 
-<br>
-##### ISSUE: '_Plugin name_' - Plug-In
+##### ISSUE: '_Plugin Name_' - Plug-In
 
 Esta es la raíz de la estructura de su problema y debe ser etiquetado como _SUPER ISSUE_. Está cerrado sólo cuando todos sus hijos y nietos están cerrados.
 
-<br>
-##### ISSUE: '_Plugin name_' - Análisis
+##### ISSUE: '_Plugin Name_' - Analysis
 
-Esta es la raíz para el Análisis. Está cerrado cada vez que se lleven a cabo todos los análisis. Este problema debe estar vinculado a la raíz de la estructura de tema.
+Esta es la raíz para el Análisis. Está cerrado cada vez que se lleven a cabo todos los análisis. Este Issue debe estar vinculado a la raíz de la estructura de tema.
 
-<br>
-1 - ISSUE: ** '_ Plugin name_' - Caso de Usos **
+1 - ISSUE: **'_ Plugin name_' - Caso de Usos**
 
 Este es donde se especifica cada uno de los posibles casos de usos para cubrir el problema.
 
-<br>
+##### ISSUE: '_Plugin Name_' - Implementation
+
+Esta es la raíz para la implemtación. Está cerrado cada vez que se lleven a cabo todos las implemntaciones. Este Issue debe estar vinculado a la raíz de la estructura de tema.
 
 <br>
+1 - ISSUE: **'_ Plugin name_' - Interfaces**
+
+Este es donde se especifica cada uno de los posibles interfaces a implementar.
+
+2 - ISSUE: **'_ Plugin name_' - Data Base**
+
+Este es donde se especifica cada una de las componenetes de base de datos.
+
 ##### ISSUE: '_Plugin name_' - Pruebas
 
 Esta es la raíz de pruebas. Está cerrado cada vez que se lleva a cabo todas las pruebas. Este ISSUE debe estar vinculado a la raíz de la estructura de tema.
 
-* ISSUE: ** '_ Plugin name_' - Pruebas - Pruebas Unitarias **
+* ISSUE: **'_ Plugin name_' - Pruebas - Pruebas Unitarias**
 
-* ISSUE: '_Plugin name_' - Pruebas - Pruebas de Integración
- 
- 
-<br>
+* ISSUE: **'_Plugin name_' - Pruebas - Pruebas de Integración**
+
 ##### ISSUE: '_Plugin name_' - QA
  
-
 Esta es la raíz de control de calidad. Es cerrado cuando se pasan las pruebas de control de calidad. Este problema debe estar vinculado a la raíz de la estructura de tema.
 
 Se espera que tenga aquí Issues hijos en la forma '_Plugin name_' QA - Bug Fix n, donde n es el número y el nombre de error.
 
-<br>
 ##### ISSUE: '_Plugin name_' - Producción
 
 Esta es la raíz de Producción. Se cierra cada vez que el plug-in alcanza producción. Se puede volver a abrir si se encuentran problemas de bugs en producción y cerrados de nuevo una vez que son solventados. Este Issue debe estar vinculado a la raíz de la estructura de tema.
 
 Se espera que tenga aquí Issues hijos en la forma '_Plugin name_' Producción - Bug Fix n, donde n es el número y el nombre de error.
-
-<br>
 
 ### Estructura Proyectos
 ----------------------
@@ -144,10 +148,10 @@ Cada vez que usted desea crear una nueva carpeta, SubApp o de escritorio, debe c
 
 Donde:
 
-- ** PLATFORM_NAME **: Se refiere a la plataforma en la que vas a crear sus componentes.
-- ** plugin: Se refiere directorio o paguete donde van los componentes de tipo plugin.
-- ** actor_network_services **: Se refiere directorio o paguete donde van los network services especializado para los actores.
-- ** ** network_services: Se refiere directorio o paguete donde van los network services de tipo generales.
+- **PLATFORM_NAME**: Se refiere a la plataforma en la que vas a crear sus componentes.
+- **plugin**: Se refiere directorio o paguete donde van los componentes de tipo plugin.
+- **actor_network_services**: Se refiere directorio o paguete donde van los network services especializado para los actores.
+- **network_services**: Se refiere directorio o paguete donde van los network services de tipo generales.
 
 Aqui un ejemplo:
 
@@ -167,34 +171,33 @@ Aqui un ejemplo:
         + wallet
         + wallet_module
 
-Como podemos observar en la estructura de la plataforma "Digital Asset Plataform (DAP)" cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
+Como podemos observar en la estructura de la plataforma **"Digital Asset Plataform (DAP)"** cuenta con tres Servicio de Red de tipo Actor y un  Servicio de Red general para una tarea en especifico.
 
-#### Project Names Conventions
+#### Convenciones para Nombres del Proyecto
 
-The name of the projects follow this pattern:
+El nombre de los proyectos siguen este patrón:
 
-    fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
+    fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]
 
 Where:                                                                               
 
-- **platform_Name**: Refers to the platform where you will create your components.
-- **client_type**: Refers to the device where the client is going to create, either Android, IPhone, a web or desktop application, etc. At the moment the client we are using is Android, therefore the name of this folder is “android”.
-- **project_type**: Refers to the type of project you’re goint to create GUI components for. They could be **desktop**, **reference-wallet** or **sub-app**.  
-- **name_of_the_project**: This is the name of the project. For example: if your project is named **Crypto Broker Community** then you have to name it **crypto-broker-community**.
-- **org_name**: This is the name of the developer organization o company that is creating the project, for example: **bitdubai**.  
+- **platform_Name**: Se refiere a la plataforma en la que va a crear sus componentes.
+- **network_service_type**: Se refiere al tipo de network service que se va a crear, Si es un para un actor o no.  
+- **name_of_the_project**: Este es el nombre del proyecto.
+- **org_name**: Este es el nombre de la empresa o organización promotora que está creando el proyecto, por ejemplo: ** bitdubai **.
  
-Here’s an example:
+He aquí un ejemplo:
 
-    fermat-cbp-android-sub-app-crypto-broker-community-bitdubai
+    fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai
+    
+    Dónde: **DAP ** es la plataforma, **plugin** es el tipo de componente, **actor-network-service** es el tipo de network service, **asset-issuer** es el nombre del proyecto y ** bitdubai ** es la organización responsable de los componentes de este proyecto. Esto significa que el proyecto es un plugin llamado Asset Issuer desarrollado  por BitDubai para la plataforma de la DAP.
 
-Where: **cbp** is the platform, **android** is the device, **sub-app** is the type of project, **crypto-broker-community** es is the name of the project and **bitdubai** is the organization responsible for the components of this project. This means that the project is a SubApp called Crypto Broker Community developed for Android devices and created by BitDubai for the CBP platform.
 
+#### ¿Qué hay dentro de un proyecto de componete Network Service?
 
-#### What's Inside an Android GUI Components Project
+Un proyecto de componentes de Network Service en Fermat tiene la siguiente estructura básica (Etiquetas: **+** carpeta, **>** paquete, **-** archivo):
 
-A GUI component project for Android in Fermat has the following basic structure (Label: **+** folder, **>** package, **-** file):
-
-    + fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]
+    + fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]
       - .gitignore
       - build.gradle
       - proguard-rules.pro
@@ -202,67 +205,56 @@ A GUI component project for Android in Fermat has the following basic structure 
         + main
           + java
             > com.bitdubai.[project_type].[name_of_the_project]
-              > fragmentFactory
-              > fragments
-              > preference_settings
-              > session
-          + res
-            + drawable
-            + layout
-            + menu
-            + values
+              > structure
+                > version_1
+                  > structure
+                    > communications
+                    > database
+                    > event_handlers
+                    > exceptions
+                - Developer.java
         + test
           + java
             > unit.com.bitdubai.[project_type].[name_of_the_project]
 
-Where:
+Donde:
 
-- Everything that goes in the `src` folder are files and resources you will need to develop your Wallet/SubApp/Desktop in Android.
-- Inside `src/main/java` you will find the package where you will place java files (classes, intefaces, enums..) with your Android code. It has the following basic packages: **fragmentFactory**, **fragments**, **preference_settings** and **session**. Each one of them explained in detail later on in this README.
-- Inside `src/main/res` there are `xml` files found that represent *layouts, menus, colors, strings and sizes* as well as image files and others that represent visual resources with which you’re going to interact the java classes that have an Android logic.
-- Everything that goes in the `test` folder is code that is used to make Unit Testing on the funtionalities you’re developing in `src`.
-- The Unit Test are created inside the package `unit.com.bitdubai.[project_type].[name_of_the_project]` in `test/java`
-- The file `build.gradle` is where you define the dependencies of the project with others of the platforms or with third party libraries and those that Android offers but not as default (the Support Libraries for example). Also the minimal version of the OS is defined where the app is going to run like the SDK Android version that is going to be used among other things (for more information see [this link](http://developer.android.com/tools/building/configuring-gradle.html))
-- The file `proguard-rules.pro` configures the Proguard tool. (for more information see  [this link](http://developer.android.com/guide/developing/tools/proguard.html)). **NOTE:** *we do not configure this file at the moment, therefore it is empty*
+- El archivo `build.gradle` es donde se definen las dependencias del proyecto con otras de las plataformas o con bibliotecas de terceros, pero no por defecto (las bibliotecas de soporte, por ejemplo).
+- El archivo `Proguard-rules.pro` configura la herramienta Proguard. (para más información ver [este enlace] (http://developer.android.com/guide/developing/tools/proguard.html)). **NOTA:** no configuramos este archivo en el momento, por lo tanto, está vacía *
+- Dentro de la carpeta `src/main/java` se encuentra el paquete donde colocar los archivos de Java (clases, intefaces, enumeraciones ..)
+- Dentro de la carpeta `test` va el código que se utiliza para hacer pruebas unitarias en las funcionalidades que usted está en desarrollo en la carpeta `src`.
+- Dentro del paquete `structure` se encuentra bien organizado dentro de otros paquetes las clases que component el plug-in que se esta desarrollando.
+- Las Pruebas unitarias se crean dentro del paquete `unit.com.bitdubai.[project_type].[name_of_the_project]` en el directorio `test/java`
 
-### Add to your project the file settings.gradle
+### Añadir su proyecto el archivo settings.gradle
 
-At the beginning when you create your Android project to develop your Wallet/SubApp/Desktop, it won’t be recognized as such in the dependencies structure of the root project (Fermat) and it will show like one more directory. So your project is included in dependencies structure it is necessary to add the following lines in the file `settings.gradle` that is found in the folder of the platform where you’re going to work:
-
+Al principio, cuando se crea el proyecto, no será reconocido como tal en la estructura de dependencias del proyecto raíz (Fermat) y se mostrará como un directorio más. Por lo que su proyecto debe ser incluido en la estructura de dependencias, es necesario añadir las siguientes líneas en el archivo `settings.gradle` que se encuentra en la carpeta de la plataforma en la que vas a trabajar:
+<br>
 ```Gradle
-include ':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]'
-project(':fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]').projectDir = new File('platform_name/client_type/project_type/fermat-[platform_name]-[client_type]-[project_type]-[name_of_the_project]-[org_name]')
+include ':fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]'
+project(':fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]').projectDir = new File('platform_name/plugin/project_type/fermat-[platform_name]-plugin-[network_service_type]-[name_of_the_project]-[org_name]')
 ```
-Here's an example of part of the file `settings.gradle` of the CBP platform (`fermat/CBP/settings.gradle`):
 
+<br>
+He aquí un ejemplo de una parte del archivo `settings.gradle` para la plataforma DAP (`fermat/DAP/settings.gradle`):
+<br>
 ```Gradle
 ...
 
-//Desktop
-include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
-project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
-include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
-project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
+// actor network service
+include ':fermat-dap-plugin-actor-network-service-asset-user-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
 
-//Reference Wallet
-include ':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai'
-project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
-include ':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai'
-project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
+include ':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
 
-//Sub App
-include ':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
-include ':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
-include ':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
-include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
-include ':fermat-cbp-android-sub-app-customers-bitdubai'
-project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
+include ':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
 
-//PLUG-INS
+// network-service
+include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
+project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
+
 ...
 
 ```
@@ -270,12 +262,93 @@ project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File(
 <br>
 
 
+## Parte III: Implementación
 
-## Part IV: Implementación
+En Fermat se sigue un estándar al momento de la creación de un Network Service, de tal forma que se le da uniformidad al proceso de envío y recepción de metadata a través de la red P2P. Para ello se dispone de una plantilla o "template", la cual debe ser respetada para la implementación de este tipo de plugins, por supuesto, es posible ajustar el network service a los requerimientos de la plataforma en la cual va a ser utilizado, solo debe permanecer fija la estructura para el establecimiento de la conexión con el servidor, el registro del mismo y el envío de mensajes.
 
+Para comenzar con la creacion de un plugin Network Service podemos crearlo desde cero agregando las siguientes clases template en la estructura:
+
+    + structure
+     > communications
+	     > CommunicationNetworkServiceConnectionManager
+	     > CommunicationNetworkServiceLocal
+	     > CommunicationNetworkServiceRemoteAgent
+	     > CommunicationRegistrationProcessNetworkServiceAgent	
+     > database
+	     > CommunicationNetworkServiceDatabaseConstants
+	     > CommunicationNetworkServiceDatabaseFactory
+	     > CommunicationNetworkServiceDeveloperDatabaseFactory
+	     > IncomingMessageDao
+	     > OutgoingMessageDao
+     > event_handlers
+	     > ClientConnectionCloseNotificationEventHandler
+	     > CompleteComponentConnectionRequestNotificationEventHandler
+	     > CompleteComponentRegistrationNotificationEventHandler
+	     > CompleteRequestListComponentRegisteredNotificationEventHandler
+	     > NewReceiveMessagesNotificationEventHandler
+	     > NewSentMessagesNotificationEventHandler
+	     > VPNConnectionCloseNotificationEventHandler	
+     > exceptions
+	     > CantInitializeDatabaseException
+	     > CantInitializeNetworkServiceDatabaseException
+	     > CantReadRecordDataBaseException
+
+El código fuente de las clases pertenecientes al Template de un Network Service se encuentran en: 
+
+    + P2P/library/api/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/all_definition/common/network_services/template/
+    
+Es bueno destacar que este Template contiene una serie de clases Abstractas que deben ser implementadas en plugin que se está desarrollando.
+
+Como todo plugin en Fermat, este debe incluir una clase **PluginRoot** en la cual se hacen referencia a todos los plugins externos para poder usar las funcionalidades prestadas por estos, así como también sirve para inicializar todas las clases de manejo de base de datos del plugin, agentes y manejadores de aventos (event handlers). Esta clase PluginRoot debe extender de la clase **_AbstractNetworkService_**.
+
+Así mismo, en la _API_ de la plataforma a la cual pertenece el plugin, deben estar la(s) interface(s) manager del plugin, la cual proporcionan acceso a las funcionalidades del plugin Network Service a otros plugins de Fermat. La interface manager debe extender de las interfaces **_FermatManager_** y **_TransactionProtocolManager<BusinessTransactionMetadata>_**.
+
+La interface manager debe ser implementada el paquete _structure_ del plugin.
 <br>
 
 
 
-<br><br><br><br><br><br><br>
+<br><br><br>
 
+## Parte IV: Servidor Local de Pruebas
+
+Es posible la ejecución de un servidor local para realizar pruebas de funcionamiento de un Plugin Network Service, esto permite agilizar el proceso de depuración del código fuente del plugin, así como el proceso de detección de errores del mismo.
+
+Para la ejecución del servidor en un ambiente local de desarrollo se deben seguir los siguientes pasos:
+
+* Se debe ingresar a la carpeta principal donde está guardado el proyecto en el disco duro.
+```Shell
+cd $PATH_TO_FERMAT_REPO/fermat
+```
+* Luego se ejecuta el comando que ejecuta la compilación:
+ ```Shell
+cd $PATH_TO_gradle/gradle fatjar
+```
+* Ahora se ingresa a la carpeta en la cual se encuentra el archivo ejecutable, producto de la compilación anterior:
+ ```Shell
+P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/
+```
+* Se debe verificar el contenido de la carpeta anterior, para ello se usa el comando:
+```Shell
+ls
+```
+* Una vez obtenida la lista de archivos contenidos en **_P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/_** se debe copiar el nombre del archivo JAR que contenga en su nombre **with dependencies**
+* Para la ejecución del servidor, se debe ejecutar el siguiente comando:
+```Shell
+java -jar $NOMBRE_DEL_ARCHIVO_OBTENIDO_EN_EL_PASO_ANTERIOR -jar
+```
+* Cuando se esté ejecutando el servidor se deben observar los mensajes impresos en la consola, entre los cuales se imprime la dirección IP que está usando el servidor local, esta dirección debe ser copiada y usada para configurar al cliente local de comunicaciones. El cliente local de comunicaciones se encuentra en **_com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf_**.
+* La dirección IP obtenida en el paso anterior se debe usar en la siguiente variable de configuración:
+```Java
+    /**
+     * Represent the SERVER_IP in the local environment
+     */
+    public static final String SERVER_IP_DEVELOPER_LOCAL = "<LOCAL IP SERVER>";
+```
+* Una vez configurada la dirección IP se debe ejecutar la aplicación, cuando esta inicie, si el Plugin Network Service se está ejecutando y registrando de forma correcta debería obtener en la consola del servidor un texto como el que se muestra a continuación:
+```Shell
+ComponentRegistrationRequestPacketProcessor - processingPackage
+ComponentRegistrationRequestPacketProcessor - packetContentJsonStringRepresentation = {"ns-t":"TESTING PLUGIN","pr":"{\"alias\":\"testingpluginnetworkservice\",\"communicationCloudClientIdentity\":\"048B5A003C40B82563BCC002A08D2F6F5257D2B1A0487BCDD11CED7E2845918D57F5998FEF38900A9B665A27235BDEF2A5E6D6BE9AFBA4CED545045F00C14FCDBF\",\"identityPublicKey\":\"04DC8F6915AE276E602EEAA29155EA094A072F876C86B9E9C3A75E6F3FD46B2FA0846BC1C445CDA77C1C07DA0AA566541810FDDD0B28340BE3D99A83F945D526F6\",\"name\":\"Testing Plugin Network Service\",\"networkServiceType\":\"TESTING_PLUGIN\",\"platformComponentType\":\"NETWORK_SERVICE\"}"}
+ComponentRegistrationRequestPacketProcessor - registerNetworkServiceComponent
+ComponentRegistrationRequestPacketProcessor - Total Network Service Component Registered (TESTING_PLUGIN) = 1
+```

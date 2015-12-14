@@ -17,6 +17,7 @@ import com.bitdubai.android_core.app.common.version_1.connections.ConnectionCons
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
@@ -164,9 +165,9 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
-                com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory walletFragmentFactory = WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
+                FermatFragmentFactory walletFragmentFactory = WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(),(WalletSession) getWalletSessionManager().getWalletSession(wallet.getPublicKey()), null, getWalletResourcesProviderManager()));
+                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), getWalletSessionManager().getWalletSession(wallet.getPublicKey()), null, getWalletResourcesProviderManager()));
 //                    switch (page.getType()) {
 //                        case CWP_WALLET_FACTORY_CREATE_STEP_1:
 //                            fragments.add(new CreateWalletFragment());

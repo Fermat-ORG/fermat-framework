@@ -13,13 +13,13 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
@@ -62,11 +62,11 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSession) subAppsSession);
-        intraUserInformation = (IntraUserInformation)subAppsSession.getData(INTRA_USER_SELECTED);
+        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
+        intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
         moduleManager = intraUserSubAppSession.getModuleManager();
-        errorManager = subAppsSession.getErrorManager();
-        intraUserInformation = (IntraUserInformation) subAppsSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
+        errorManager = appSession.getErrorManager();
+        intraUserInformation = (IntraUserInformation) appSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
 
     }
 
@@ -91,7 +91,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
             public void onClick(View view) {
                 ConnectDialog connectDialog = null;
                 try {
-                    connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) subAppsSession, subAppResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                    connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                     connectDialog.show();
                 } catch (CantGetActiveLoginIdentityException e) {
                     e.printStackTrace();
