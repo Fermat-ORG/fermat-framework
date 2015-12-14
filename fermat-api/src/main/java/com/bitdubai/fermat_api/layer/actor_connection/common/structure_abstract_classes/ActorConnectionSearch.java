@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends ActorConnection<Z>> {
+public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
 
     protected final Z                        actorIdentity;
     protected final ActorConnectionDao<Z, T> dao          ;
