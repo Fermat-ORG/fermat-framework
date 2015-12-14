@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
@@ -53,7 +54,7 @@ public interface CashMoneyWallet {
      *
      * @return A List of CashMoneyWalletTransaction objects
      */
-    public List<CashMoneyWalletTransaction> getTransactions(List<TransactionType> transactionTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException;
+    public List<CashMoneyWalletTransaction> getTransactions(List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException;
 
 
     /**

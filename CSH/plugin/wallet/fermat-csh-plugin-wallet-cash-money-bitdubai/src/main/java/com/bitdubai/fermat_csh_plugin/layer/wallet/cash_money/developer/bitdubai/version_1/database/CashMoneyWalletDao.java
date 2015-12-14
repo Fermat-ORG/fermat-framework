@@ -270,12 +270,16 @@ public class CashMoneyWalletDao {
     }
 
 
-    public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
+    public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
         List<CashMoneyWalletTransaction> transactions = new ArrayList<>();
 
         List<String> transactionTypesString = new ArrayList<>();
         for(TransactionType t : transactionTypes)
             transactionTypesString.add(t.getCode());
+
+        List<String> balanceTypesString = new ArrayList<>();
+        for(BalanceType b : balanceTypes)
+            balanceTypesString.add(b.getCode());
 
         String query = "SELECT * FROM " +
                 CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME +
@@ -283,14 +287,14 @@ public class CashMoneyWalletDao {
                 CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME +
                 " = '" +
                 StringUtils.join(transactionTypesString, "' OR " + CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME + " = '") +
+                "') AND (" +
+                CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME +
+                " = '" +
+                StringUtils.join(balanceTypesString, "' OR " + CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME + " = '") +
                 "') AND " +
                 CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME +
                 " = '" +
                 walletPublicKey +
-                "' AND " +
-                CashMoneyWalletDatabaseConstants.TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME +
-                " = '" +
-                BalanceType.AVAILABLE.getCode() +
                 "' ORDER BY " +
                 CashMoneyWalletDatabaseConstants.TRANSACTIONS_TIMESTAMP_COLUMN_NAME +
                 " DESC " +

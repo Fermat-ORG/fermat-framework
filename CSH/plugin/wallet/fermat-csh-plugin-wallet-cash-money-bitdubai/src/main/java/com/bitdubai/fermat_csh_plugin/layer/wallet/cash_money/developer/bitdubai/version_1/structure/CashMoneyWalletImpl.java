@@ -97,8 +97,8 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
     }
 
     @Override
-    public List<CashMoneyWalletTransaction> getTransactions(List<TransactionType> transactionTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
-        return dao.getTransactions(walletPublicKey, transactionTypes, max, offset);
+    public List<CashMoneyWalletTransaction> getTransactions(List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
+        return dao.getTransactions(walletPublicKey, transactionTypes, balanceTypes, max, offset);
     }
 
 

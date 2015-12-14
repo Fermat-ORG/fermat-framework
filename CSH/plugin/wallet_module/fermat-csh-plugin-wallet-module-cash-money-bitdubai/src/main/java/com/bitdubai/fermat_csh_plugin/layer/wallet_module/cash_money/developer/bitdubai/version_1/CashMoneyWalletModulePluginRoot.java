@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
@@ -154,7 +155,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
-    public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
+    public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes,  int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
         CashMoneyWallet wallet;
         try{
             wallet = cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey);
@@ -164,7 +165,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
         }
 
         try {
-            return wallet.getTransactions(transactionTypes, max, offset);
+            return wallet.getTransactions(transactionTypes, balanceTypes, max, offset);
         } catch(CantGetCashMoneyWalletTransactionsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot get cash money wallet currency");
