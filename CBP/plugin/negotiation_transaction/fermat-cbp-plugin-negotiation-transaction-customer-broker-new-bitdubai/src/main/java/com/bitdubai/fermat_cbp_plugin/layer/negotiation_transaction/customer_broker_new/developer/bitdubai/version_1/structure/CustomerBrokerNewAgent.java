@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -342,54 +344,87 @@ public class CustomerBrokerNewAgent implements
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
             try {
-                UUID                            transactionId;
-                UUID                            negotiationId;
-                UUID                            negotiationIdFromDatabase;
-                NegotiationTransmission         negotiationTransmission;
-                NegotiationTransaction          negotiationTransaction;
-                NegotiationTransactionStatus    negotiationTransactionStatus;
+                UUID transactionId;
+                UUID negotiationId;
+                UUID negotiationIdFromDatabase;
+                NegotiationTransmission negotiationTransmission;
+                NegotiationTransaction negotiationTransaction;
+                NegotiationTransactionStatus negotiationTransactionStatus;
 
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
 
-                //EVENT TRANSACTION: evelua si se crea la negociacion
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSACTION.getCode())) {
                     //evaluar si es transmission o transaction
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<NegotiationTransmission> record : pendingTransactionList){
+                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
                         negotiationTransmission = record.getInformation();
                         transactionId = negotiationTransmission.getTransactionId();
-                        negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
-                        if(negotiationTransaction.getNegotiationXML() != null){
+                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+                        if (negotiationTransaction.getNegotiationXML() != null) {
 
                             negotiationId = negotiationTransmission.getNegotiationId();
                             negotiationIdFromDatabase = negotiationTransaction.getNegotiationId();
 
-                            if(negotiationId.equals(negotiationIdFromDatabase)){
+                            if (negotiationId.equals(negotiationIdFromDatabase)) {
                                 negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_CONFIRMATION;
-                            } else{
+                            } else {
                                 negotiationTransactionStatus = NegotiationTransactionStatus.REJECTED_NEGOTIATION;
                             }
 
-                            negotiationTransmissionManager.confirmNegotiation(negotiationTransaction,NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            negotiationTransmissionManager.confirmNegotiation(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                         }
                     }
                 }
 
                 //EVENT CONFIRM NEGOTIATION: evalua si se envia la negociacion
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION.getCode())) {
+                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
+                        negotiationTransmission = record.getInformation();
+                        transactionId = negotiationTransmission.getTransactionId();
+                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+                        if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
 
+                            negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_RESPONSE;
+
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            negotiationTransmissionManager.confirmReception(transactionId);
+
+                        }
+                    }
                 }
 
                 //EVENT CONFIRM RESPONSE: evalua si se confirma.
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE.getCode())) {
+                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
+                        negotiationTransmission = record.getInformation();
+                        transactionId = negotiationTransmission.getTransactionId();
+                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+                        if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_RESPONSE.getCode())) {
 
+                            negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_RESPONSE;
+
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            negotiationTransmissionManager.confirmReception(transactionId);
+
+                        }
+                    }
                 }
 
-            } catch (CantDeliverPendingTransactionsException e){
+            } catch (CantDeliverPendingTransactionsException e) {
                 e.printStackTrace();
             } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
                 e.printStackTrace();
-            } catch (CantConfirmNegotiationException e){
+            } catch (CantConfirmNegotiationException e) {
+                e.printStackTrace();
+            } catch (CantConfirmTransactionException e) {
+                e.printStackTrace();
+            } catch (CantUpdateRecordException e){
                 e.printStackTrace();
             }
         }
