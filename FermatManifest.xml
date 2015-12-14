@@ -9892,6 +9892,1475 @@
         </steps>
     </process>
 
+    <process platform="CBP"	name="Open a Purchase Contract"
+             description="Creates and opens a Customer Broker Purchase Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Start a Customer Broker Purchase Contract creation"
+                  description="Start a Open Contract Business Transaction."
+                  type="start"
+                  platform="CBP"
+                  name="Customer Broker Pursache"
+                  superlayer=""
+                  layer="User Level Business Transaction"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Gets the Negotiation ID"
+                  description="Gets the closed negotiation Id."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Creates a Open Contract Business Transaction"
+                  description="Creates a Open Contract Business Transaction with the closed negotiation data."
+                  type="activity"
+                  platform="CBP"
+                  name="Open Contract"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Gets the Negotiation clauses"
+                  description="Gets the Negotiation clauses associated to a closed negotiation."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Creates a new Contract Record"
+                  description="Creates a new Contract Record with the Negotiation data."
+                  type="activity"
+                  platform="CBP"
+                  name="Open Contract"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Creates a new Customer Broker Purchase Contract"
+                  description="Creates a new Customer Broker Purchase Contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Sends Contract Hash to Crypto Broker"
+                  description="Sends the contract hash to Crypto Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8"	title="Update the Contract Status"
+                  description="Update the Contract status to PENDING_PAYMENT."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Open a Sale Contract"
+             description="Creates and opens a Customer Broker Sale Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Start a Customer Broker Sale Contract creation"
+                  description="Start a Open Contract Business Transaction."
+                  type="start"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="User Level Business Transaction"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Gets the Negotiation ID"
+                  description="Gets the closed negotiation Id."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Creates a Open Contract Business Transaction"
+                  description="Creates a Open Contract Business Transaction with the closed negotiation data."
+                  type="activity"
+                  platform="CBP"
+                  name="Open Contract"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Gets the Negotiation clauses"
+                  description="Gets the Negotiation clauses associated to a closed negotiation."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Creates a new Contract Record"
+                  description="Creates a new Contract Record with the Negotiation data."
+                  type="activity"
+                  platform="CBP"
+                  name="Open Contract"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Creates a new Customer Broker Sale Contract"
+                  description="Creates a new Customer Broker Sale Contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Sends Contract Hash to Crypto Customer"
+                  description="Sends the contract hash to Crypto Customer."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Gets the Crypto Customer Confirmation"
+                  description="Raises an event with the Crypto Customer Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8"	title="Update the Contract Status"
+                  description="Update the Contract status to PENDING_PAYMENT."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Customer sends an Online Payment"
+             description="Customer sends an Online Payment to a Crypto Broker, this payment is associated to a Customer Broker Purchase Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Customer sends online payment"
+                  description="Customer select a contract and send payment."
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Payment Request"
+                  description="Process request and starts the payment process."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Waller Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Creates a Business Transaction"
+                  description="Creates a Customer Online Payment Business Transaction with the contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Online Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Sends the Online Payment"
+                  description="Sends the Online Payment to a Crypto Broker."
+                  type="activity"
+                  platform="CCP"
+                  name="Outgoing Intra Actor"
+                  superlayer=""
+                  layer="Crypto Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Verifies the Transaction Status"
+                  description="Verifies the Crypto Status until this is confirmed."
+                  type="activity"
+                  platform="CCP"
+                  name="Outgoing Intra Actor"
+                  superlayer=""
+                  layer="Crypto Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Online Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Sends Payment Notification to Crypto Broker"
+                  description="Sends the sucessful payment notification to Crypto Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8"	title="Update the Contract Status"
+                  description="Update the Contract status to PAYMENT_SUBMIT."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Customer sends an Offline Payment"
+             description="Customer sends an Offline Payment to a Crypto Broker, this payment is associated to a Customer Broker Purchase Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Customer sends offline payment"
+                  description="Customer select a contract and send payment."
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Payment Request"
+                  description="Process request and starts the payment process."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Customer"
+                  superlayer=""
+                  layer="Waller Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Creates a Business Transaction"
+                  description="Creates a Customer Offline Payment Business Transaction with the contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Offline Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Offline Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Sends Payment Notification to Crypto Broker"
+                  description="Sends the sucessful payment notification to Crypto Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Update the Contract Status"
+                  description="Update the Contract status to PAYMENT_SUBMIT."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Broker Acknowledge Online Payment"
+             description="Broker receive an acknowledge an Online Payment from a Crypto Customer, this payment is associated to a Customer Broker Sale Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Incoming an Online payment"
+                  description="Raise an event when incoming an online payment"
+                  type="start"
+                  platform="CBP"
+                  name="Customer Online Payment"
+                  superlayer=""
+                  layer="Business"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Creates a Business Transaction"
+                  description="Creates a Customer Online Payment Business Transaction with the payment associated to a contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Ack Online Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Listen an incoming money event"
+                  description="Listens an incoming money notification."
+                  type="activity"
+                  platform="CCP"
+                  name="Incoming Intra User"
+                  superlayer=""
+                  layer="Crypto Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Ack Online Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Sends Acknowledge Payment Notification to Crypto Customer"
+                  description="Sends the sucessful Acknowledge payment notification to Crypto Customer."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Update the Contract Status"
+                  description="Update the Contract status to PENDING_MERCHANDISE."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Broker Acknowledge Offline Payment"
+             description="Broker receive an acknowledge an Offline Payment from a Crypto Customer, this payment is associated to a Customer Broker Sale Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Crypto Broker acknowledges payment"
+                  description="The crypto broker acknowledges the incoming payment"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Acknowledge Request"
+                  description="Process request and starts the acknowledge process."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Wallet Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Creates a Business Transaction"
+                  description="Creates a Customer Offline Payment Business Transaction with the payment associated to a contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Ack Offline Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Ack Offline Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Sends Acknowledge Payment Notification to Crypto Customer"
+                  description="Sends the successful Acknowledge payment notification to Crypto Customer."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Update the Contract Status"
+                  description="Update the Contract status to PENDING_MERCHANDISE."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Crypto broker submits an Online Merchandise"
+             description="Crypto Broker submits an Online merchandise to a Customer, this merchandise is associated to a Customer Broker Sale Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Cryto Broker submits online merchandise"
+                  description="Crypto Broker selects a contract and submits merchandise."
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Payment Request"
+                  description="Process request and starts the submit process."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Waller Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Creates a Business Transaction"
+                  description="Creates a Broker Submit Online Merchandise Business Transaction with the contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Submit Online Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Submit the Online Merchandise"
+                  description="Submit the Online Merchandise to a Crypto Customer."
+                  type="activity"
+                  platform="CCP"
+                  name="Outgoing Intra Actor"
+                  superlayer=""
+                  layer="Crypto Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Verifies the Transaction Status"
+                  description="Verifies the Crypto Status until this is confirmed."
+                  type="activity"
+                  platform="CCP"
+                  name="Outgoing Intra Actor"
+                  superlayer=""
+                  layer="Crypto Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Online Payment"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Sends Submit Merchandise Notification to Crypto Customer"
+                  description="Sends the successful Submit Merchandise notification to Crypto Customer."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Gets the Crypto Customer Confirmation"
+                  description="Raises an event with the Crypto Customer Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8"	title="Update the Contract Status"
+                  description="Update the Contract status to MERCHANDISE_SUBMIT."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Crypto Broker submits an Offline Cash Merchandise"
+             description="Crypto Broker submits an Offline Cash Merchandise to a Crypto Customer, this merchandise is associated to a Customer Broker Sale Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Crypto Broker submits an Offline Cash Merchandise"
+                  description="Customer select a contract and submit merchandise."
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Submit Merchandise Request"
+                  description="Process request and starts the Submit Merchandise process."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Waller Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Creates a Business Transaction"
+                  description="Creates a Broker Submit Offline Merchandise Business Transaction with the contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Submit Offline Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Performs a De-stock Transaction"
+                  description="Performs a Cash De-stock Transaction."
+                  type="activity"
+                  platform="CBP"
+                  name="Destock Cash"
+                  superlayer=""
+                  layer="Stock Transactions"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Performs a Cash Withdrawall Transaction"
+                  description="Performs a Cash Withdrawal Transaction."
+                  type="activity"
+                  platform="CBP"
+                  name="Withdrawal"
+                  superlayer=""
+                  layer="Cash Money Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Submit Offline Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Sends Payment Notification to Crypto Customer"
+                  description="Sends the successful submit offline merchandise notification to Crypto Customer."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8"	title="Gets the Crypto Customer Confirmation"
+                  description="Raises an event with the Crypto Customer Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9"	title="Update the Contract Status"
+                  description="Update the Contract status to MERCHANDISE_SUBMIT."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Crypto Broker submits an Offline Bank Transfer Merchandise"
+             description="Crypto Broker submits an Offline Bank Transfer to a Crypto Customer, this merchandise is associated to a Customer Broker Sale Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Crypto Broker submits an Offline Bank Transfer Merchandise"
+                  description="Customer select a contract and submit merchandise."
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Submit Merchandise Request"
+                  description="Process request and starts the Submit Merchandise process."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Waller Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Creates a Business Transaction"
+                  description="Creates a Broker Submit Offline Merchandise Business Transaction with the contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Submit Offline Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Performs a De-stock Transaction"
+                  description="Performs a Bank De-stock Transaction."
+                  type="activity"
+                  platform="CBP"
+                  name="Destock Bank"
+                  superlayer=""
+                  layer="Stock Transactions"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Performs a Bank Withdrawal Transaction"
+                  description="Performs a Bank Withdrawal Transaction."
+                  type="activity"
+                  platform="CBP"
+                  name="Withdrawal"
+                  superlayer=""
+                  layer="Bank Money Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Broker Submit Offline Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Sends Payment Notification to Crypto Customer"
+                  description="Sends the successful submit offline merchandise notification to Crypto Customer."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8"	title="Gets the Crypto Customer Confirmation"
+                  description="Raises an event with the Crypto Customer Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9"	title="Update the Contract Status"
+                  description="Update the Contract status to MERCHANDISE_SUBMIT."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Customer Acknowledge Online Merchandise"
+             description="Broker receive an Online Merchandise from a Crypto Broker, this merchandise is associated to a Customer Broker Purchase Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Incoming an Online merchandise"
+                  description="Raise an event when incoming an online merchandise"
+                  type="start"
+                  platform="CBP"
+                  name="Customer Acknowledge Online Merchandise"
+                  superlayer=""
+                  layer="Business"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Creates a Business Transaction"
+                  description="Creates a Customer Acknowledge Online Merchandise Business Transaction with the merchandise associated to a contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Ack Online Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Listen an incoming money event"
+                  description="Listens an incoming money notification."
+                  type="activity"
+                  platform="CCP"
+                  name="Incoming Intra User"
+                  superlayer=""
+                  layer="Crypto Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Ack Online Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Sends Acknowledge Merchandise Notification to Crypto Broker"
+                  description="Sends the successful Acknowledge merchandise notification to Crypto Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Update the Contract Status"
+                  description="Update the Contract status to READY_TO_CLOSE."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Customer Acknowledge Offline Merchandise"
+             description="Customer receive an Offline Merchandise from a Crypto Broker, this payment is associated to a Customer Broker Purchase Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Crypto Customer acknowledges merchandise"
+                  description="The crypto Customer acknowledges the incoming merchandise"
+                  type="start"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Reference Wallet"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Process Acknowledge Request"
+                  description="Process request and starts the acknowledge process."
+                  type="activity"
+                  platform="CBP"
+                  name="Crypto Broker"
+                  superlayer=""
+                  layer="Wallet Module"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Creates a Business Transaction"
+                  description="Creates a Customer Ack Offline Merchandise Business Transaction with the payment associated to a contract data."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Ack Offline Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Gets the Contract clauses"
+                  description="Gets the Contract clauses associated to a open contract."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Update the Transaction Contract Status"
+                  description="Update the Transaction Contract status."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Ack Offline Merchandise"
+                  superlayer=""
+                  layer="Business Transaction"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="5" type="direct call"></step>
+                </next>
+            </step>
+            <step id="5"	title="Sends Acknowledge Merchandise Notification to Crypto Broker"
+                  description="Sends the successful Acknowledge merchandise notification to Crypto Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Update the Contract Status"
+                  description="Update the Contract status to READY_TO_CLOSE."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Close a Purchase Contract"
+             description="Creates and closes a Customer Broker Purchase Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Start a Customer Broker Purchase Contract closing"
+                  description="Start a Close Contract Business Transaction."
+                  type="start"
+                  platform="CBP"
+                  name="Customer Broker Pursache"
+                  superlayer=""
+                  layer="User Level Business Transaction"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Gets the Negotiation ID"
+                  description="Gets the closed negotiation Id."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="2"	title="Sends Contract Hash to Crypto Broker"
+                  description="Sends the contract hash to Crypto Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="4" type="direct call"></step>
+                </next>
+            </step>
+            <step id="4"	title="Update the Contract Status"
+                  description="Update the Contract status to COMPLETED."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Purchase"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
+    <process platform="CBP"	name="Close a Purchase Contract"
+             description="Creates and closes a Customer Broker Sale Contract."
+             previous=""
+        >
+        <steps>
+            <step id="0"	title="Start a Customer Broker Sale Contract closing"
+                  description="Start a Close Contract Business Transaction."
+                  type="start"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="User Level Business Transaction"
+                  component=""
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"	title="Gets the Negotiation ID"
+                  description="Gets the closed negotiation Id."
+                  type="activity"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Negotiation"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"	title="Sends Contract Hash to Crypto Broker"
+                  description="Sends the contract hash to Crypto Broker."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"	title="Gets the Crypto Broker Confirmation"
+                  description="Raises an event with the Crypto Broker Confirmation."
+                  type="activity"
+                  platform="CBP"
+                  name="Transaction Transmission"
+                  superlayer=""
+                  layer="Network Service"
+                  component="Plugin"
+                >
+                <next>
+                    <step id="8" type="direct call"></step>
+                </next>
+            </step>
+            <step id="8"	title="Update the Contract Status"
+                  description="Update the Contract status to COMPLETED."
+                  type="end"
+                  platform="CBP"
+                  name="Customer Broker Sale"
+                  superlayer=""
+                  layer="Contract"
+                  component="Plugin"
+                >
+            </step>
+        </steps>
+    </process>
+
     <process platform="BNK" name="Add New Account"
              description="A customer registers a new bank account in the wallet." previous="">
         <steps>
