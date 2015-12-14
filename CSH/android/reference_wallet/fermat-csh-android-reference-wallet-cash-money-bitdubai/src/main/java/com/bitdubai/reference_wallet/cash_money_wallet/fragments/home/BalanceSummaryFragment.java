@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
@@ -90,9 +91,11 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
         updateWalletBalances(layout);
 
         //configureToolbar();
+        getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_summary_top_background_color));
 
-        //RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.ccw_divider_shape);
-        //recyclerView.addItemDecoration(itemDecoration);
+
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.csh_divider_shape);
+        recyclerView.addItemDecoration(itemDecoration);
 
         //Set up no_transactions view
         noTransactionsView = layout.findViewById(R.id.no_transactions);
@@ -247,11 +250,14 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
 
         List<TransactionType> transactionTypes = new ArrayList<>();
         transactionTypes.add(TransactionType.CREDIT);
-        //transactionTypes.add(TransactionType.DEBIT);
+        transactionTypes.add(TransactionType.DEBIT);
+
+        List<BalanceType> balanceTypes = new ArrayList<>();
+        balanceTypes.add(BalanceType.BOOK);
 
         if (moduleManager != null) {
             try {
-                data.addAll(moduleManager.getTransactions(walletPublicKey, transactionTypes, 5, 2));
+                data.addAll(moduleManager.getTransactions(walletPublicKey, transactionTypes, balanceTypes, 100, 0));
 
             } catch (Exception ex) {
                 if (errorManager != null)

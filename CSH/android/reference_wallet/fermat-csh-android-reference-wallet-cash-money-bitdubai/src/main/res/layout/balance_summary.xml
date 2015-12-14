@@ -13,50 +13,58 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="@color/summary_top">
+            android:background="@color/csh_summary_top_background_color">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView_available"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/available_balance_text"
-                android:paddingTop="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:textColor="#000000"/>
+                android:textSize="@dimen/csh_largest_text_size"
+                android:gravity="left"
+                android:paddingLeft="@dimen/csh_balance_left_margin"
+                android:paddingTop="@dimen/csh_activity_vertical_margin"
+                android:textColor="@color/csh_summary_top_balance_text_color"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView_available_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:gravity="right"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:textColor="#000000" />
+                android:textSize="@dimen/csh_large_text_size"
+                android:gravity="left"
+                android:paddingLeft="@dimen/csh_balance_left_margin"
+                android:textColor="@color/csh_summary_top_balance_amount_text_color"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView_book"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/book_balance_text"
-                android:paddingTop="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:textColor="#000000"/>
+                android:textSize="@dimen/csh_largest_text_size"
+                android:gravity="left"
+                android:paddingLeft="@dimen/csh_balance_left_margin"
+                android:paddingTop="@dimen/csh_activity_vertical_margin"
+                android:textColor="@color/csh_summary_top_balance_text_color"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView_book_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:gravity="right"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:textColor="#000000"/>
+                android:textSize="@dimen/csh_large_text_size"
+                android:gravity="left"
+                android:paddingLeft="@dimen/csh_balance_left_margin"
+                android:paddingBottom="@dimen/csh_activity_vertical_margin"
+
+                android:textColor="@color/csh_summary_top_balance_amount_text_color"/>
 
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:background="@color/summary_bottom">
+            android:background="@color/csh_transactions_background_color">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/transactions_swipe_refresh"
@@ -68,10 +76,10 @@
                     android:id="@+id/transactions_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/activity_vertical_margin"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/csh_activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/csh_activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/csh_activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/csh_activity_vertical_margin"
                     android:layout_marginTop="8dp"/>
 
             </android.support.v4.widget.SwipeRefreshLayout>
@@ -97,7 +105,7 @@
                     android:gravity="center"
                     android:text="@string/no_transactions"
                     android:textColor="#000"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/csh_large_text_size"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -110,21 +118,21 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        fab:fab_addButtonColorNormal="@color/white"
-        fab:fab_addButtonColorPressed="@color/white_pressed"
-        fab:fab_addButtonPlusIconColor="@color/half_black"
+        fab:fab_addButtonColorNormal="@color/csh_fab_color_normal"
+        fab:fab_addButtonColorPressed="@color/csh_fab_color_pressed"
+        fab:fab_addButtonPlusIconColor="@color/csh_fab_plus_icon_color"
         fab:fab_labelStyle="@style/menu_labels_style"
         android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/csh_fab_bottom_right_margin"
         android:gravity="bottom|right">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_withdraw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
+            fab:fab_colorNormal="@color/csh_fab_color_normal"
             fab:fab_title="Withdraw"
-            fab:fab_colorPressed="@color/white_pressed"
+            fab:fab_colorPressed="@color/csh_fab_color_pressed"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/ic_arrow_up_grey"/>
 
@@ -132,9 +140,9 @@
             android:id="@+id/fab_deposit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
+            fab:fab_colorNormal="@color/csh_fab_color_normal"
             fab:fab_title="Deposit"
-            fab:fab_colorPressed="@color/white_pressed"
+            fab:fab_colorPressed="@color/csh_fab_color_pressed"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/ic_arrow_down_grey"/>
 

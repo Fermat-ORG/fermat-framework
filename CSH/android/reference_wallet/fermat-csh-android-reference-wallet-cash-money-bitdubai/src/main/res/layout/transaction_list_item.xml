@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@color/transaction_item_background"
+    android:background="@color/csh_transaction_item_background"
     android:paddingBottom="8dp"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/csh_activity_horizontal_margin"
+    android:paddingLeft="@dimen/csh_activity_horizontal_margin"
+    android:paddingRight="@dimen/csh_activity_horizontal_margin"
+    android:paddingStart="@dimen/csh_activity_horizontal_margin"
     android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/imageView_transaction_type_image"
-        android:layout_width="@dimen/transaction_image_width_and_height"
+        android:layout_width="@dimen/csh_transaction_image_width_and_height"
         android:layout_height="match_parent"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="8dp"
@@ -31,22 +31,21 @@
         android:layout_toEndOf="@+id/imageView_transaction_type_image"
         android:layout_toRightOf="@+id/imageView_transaction_type_image"
         android:singleLine="true"
-        android:textColor="@color/ccw_contract_history_customer_name_text"
-        android:textSize="@dimen/subtitle_text_size"
+        android:textColor="@color/csh_transaction_type_text_color"
+        android:textSize="@dimen/csh_large_text_size"
         tools:text="Deposit"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/textView_transaction_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_transaction_type"
-        android:layout_marginEnd="@dimen/margin_text"
-        android:layout_marginRight="@dimen/margin_text"
-        android:layout_toEndOf="@+id/imageView_transaction_type_image"
-        android:layout_toRightOf="@+id/imageView_transaction_type_image"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:singleLine="true"
-        android:textColor="@color/ccw_contract_history_sold_text"
-        android:textSize="@dimen/title_text_size"
+        android:textColor="@color/csh_transaction_amount_text_color"
+        android:textSize="@dimen/csh_regular_text_size"
         android:text="0 USD"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -56,21 +55,21 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:textColor="@color/ccw_contract_history_date_text"
-        android:textSize="@dimen/regular_text_size"
+        android:textColor="@color/csh_transaction_date_text_color"
+        android:textSize="@dimen/csh_small_text_size"
         tools:text="03 Feb 2015"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/textView_transaction_memo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView_transaction_amount"
-        android:layout_marginEnd="@dimen/margin_text"
-        android:layout_marginRight="@dimen/margin_text"
+        android:layout_below="@id/textView_transaction_type"
+        android:layout_marginEnd="@dimen/csh_margin_text"
+        android:layout_marginRight="@dimen/csh_margin_text"
         android:layout_toEndOf="@+id/imageView_transaction_type_image"
         android:layout_toRightOf="@+id/imageView_transaction_type_image"
         android:singleLine="true"
-        android:textColor="@color/ccw_contract_history_exchange_rate_text"
-        android:textSize="@dimen/regular_text_size"
+        android:textColor="@color/csh_transaction_memo_text_color"
+        android:textSize="@dimen/csh_small_text_size"
         android:text="memo"/>
 </RelativeLayout>
