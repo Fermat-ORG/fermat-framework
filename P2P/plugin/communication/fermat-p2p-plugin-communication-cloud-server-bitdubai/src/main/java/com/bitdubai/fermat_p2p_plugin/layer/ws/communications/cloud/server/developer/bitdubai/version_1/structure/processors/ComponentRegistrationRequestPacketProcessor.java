@@ -83,7 +83,6 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              * Get the platformComponentProfile from the message content and decrypt
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
-            LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
             /*
              * Construct the json object
@@ -91,6 +90,10 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             JsonObject contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
             networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
             platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
+
+            LOG.info("platformComponentProfileToRegister = " + platformComponentProfileToRegister.getAlias() + "("+platformComponentProfileToRegister.getIdentityPublicKey()+")");
+            LOG.info("platformComponentType              = " + platformComponentProfileToRegister.getPlatformComponentType());
+            LOG.info("networkServiceType                 = " + platformComponentProfileToRegister.getNetworkServiceType());
 
             /*
              * Switch between platform component type

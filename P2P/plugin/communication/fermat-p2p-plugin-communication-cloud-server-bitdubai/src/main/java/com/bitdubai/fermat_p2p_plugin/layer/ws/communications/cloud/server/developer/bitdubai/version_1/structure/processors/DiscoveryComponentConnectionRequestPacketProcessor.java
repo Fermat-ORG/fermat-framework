@@ -75,8 +75,10 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         LOG.info("Starting processingPackage");
 
         String packetContentJsonStringRepresentation = null;
+        PlatformComponentProfile applicantParticipant = null;
         PlatformComponentProfile networkServiceApplicant = null;
         PlatformComponentProfile remoteParticipant = null;
+        PlatformComponentProfile remoteNsParticipant = null;
 
         try {
 
@@ -84,7 +86,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Get the packet content from the message content and decrypt
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
-            LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
+           // LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
 
             /*
@@ -96,12 +98,12 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
              * Get the applicant network service
              */
             networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
-            LOG.info("networkServiceApplicant " + networkServiceApplicant.toJson());
+            LOG.info("networkServiceApplicant = " + networkServiceApplicant.getAlias() + "("+networkServiceApplicant.getIdentityPublicKey()+")");
 
             /*
              * Get the component profile as participant that live in the same device of the network service applicant
              */
-            PlatformComponentProfile applicantParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString());
+            applicantParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString());
             List<PlatformComponentProfile> applicantParticipantList = searchProfileByCommunicationCloudClientIdentity(applicantParticipant.getPlatformComponentType(), applicantParticipant.getNetworkServiceType(), networkServiceApplicant.getCommunicationCloudClientIdentity());
             for (PlatformComponentProfile platformComponentProfile: applicantParticipantList) {
                 if (platformComponentProfile.getIdentityPublicKey().equals(applicantParticipant.getIdentityPublicKey()) &&
@@ -110,7 +112,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
                     break;
                 }
             }
-            LOG.info("applicantParticipant " + applicantParticipant.toJson());
+            LOG.info("applicantParticipant = " + applicantParticipant.getAlias() + "("+applicantParticipant.getIdentityPublicKey()+")");
 
             /*
              * Get the component profile to connect as remote participant
@@ -118,14 +120,14 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             remoteParticipant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
             List<PlatformComponentProfile> remoteParticipantList = searchProfile(remoteParticipant.getPlatformComponentType(), remoteParticipant.getNetworkServiceType(), remoteParticipant.getIdentityPublicKey());
             remoteParticipant = remoteParticipantList.get(0);
-            LOG.info("remoteParticipant " + remoteParticipant.toJson());
+            LOG.info("remoteParticipant = " + remoteParticipant.getAlias() + "("+remoteParticipant.getIdentityPublicKey()+")");
 
             /*
              * Get the network service profile that live in the same device of the remote participant
              */
             List<PlatformComponentProfile> remoteNsParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), remoteParticipant.getCommunicationCloudClientIdentity());
-            PlatformComponentProfile remoteNsParticipant = remoteNsParticipantList.get(0);
-            LOG.info("remoteNsParticipant " + remoteNsParticipant.toJson());
+            remoteNsParticipant = remoteNsParticipantList.get(0);
+            LOG.info("remoteNsParticipant = " + remoteNsParticipant.getAlias() + "("+remoteNsParticipant.getIdentityPublicKey()+")");
 
             /*
              * Create the list of participant
@@ -154,7 +156,12 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
         }catch (Exception e){
 
-            LOG.info("requested connection is no possible ");
+            LOG.info("applicantParticipant    = " + (applicantParticipant == null ? "SI" : "NO" ));
+            LOG.info("networkServiceApplicant = " + (networkServiceApplicant== null ? "SI" : "NO" ));
+            LOG.info("remoteParticipant       = " + (remoteParticipant== null ? "SI" : "NO" ));
+            LOG.info("remoteNsParticipant     = " + (remoteNsParticipant== null ? "SI" : "NO" ));
+
+            LOG.info("requested connection is no possible, some of the participant are no available.");
             LOG.info("cause: "+e.getMessage());
 
             /*
@@ -168,7 +175,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
             packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, networkServiceApplicant.toJson());
             packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
-            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
+            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection, some of the component participant are no available: "+e.getMessage());
 
             /*
              * Create the respond packet

@@ -93,7 +93,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     /**
      * PluginDatabaseSystem references definition.
      */
-   // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+   @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -136,11 +136,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     public void start() throws CantStartPluginException {
 
         LOG.info("Calling the method - start() ");
+        LOG.info("pluginId = "+pluginId);
 
         /*
          * Validate required resources
          */
-       // validateInjectedResources();
+         validateInjectedResources();
 
         try {
 
@@ -152,7 +153,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              /*
              * Initialize the Data Base of the node
              */
-         //   initializeDb();
+            //initializeDb();
 
             /*
              * Create and start the internal server
@@ -244,6 +245,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
           */
           PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
           String content = pluginTextFile.getContent();
+
+          System.out.println("content = "+content);
+
           identity = new ECCKeyPair(content);
 
         } catch (FileNotFoundException e) {
@@ -260,6 +264,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                  * Create the new identity
                  */
                 identity = new ECCKeyPair();
+
+                System.out.println("identity.getPrivateKey() = "+identity.getPrivateKey());
+                System.out.println("identity.getPublicKey() = "+identity.getPublicKey());
 
                 /*
                  * save into the file
@@ -346,7 +353,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         if (dataBase != null){
 
             /*
-             * Create the daoFactory and add to the context
+             * Create the daoFactory
              */
             this.daoFactory = new DaoFactory(dataBase);
 

@@ -209,12 +209,14 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      */
     public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
+        System.out.println("WsCommunicationVPNClientManagerAgent - riseVpnConnectionCloseNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_CLOSE);
         VPNConnectionCloseNotificationEvent event =  (VPNConnectionCloseNotificationEvent) platformEvent;
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         event.setNetworkServiceApplicant(networkServiceApplicant);
         event.setRemoteParticipant(remoteParticipant);
         eventManager.raiseEvent(platformEvent);
+        System.out.println("WsCommunicationVPNClientManagerAgent - Raised Event = P2pEventType.VPN_CONNECTION_CLOSE");
     }
 
     /**
