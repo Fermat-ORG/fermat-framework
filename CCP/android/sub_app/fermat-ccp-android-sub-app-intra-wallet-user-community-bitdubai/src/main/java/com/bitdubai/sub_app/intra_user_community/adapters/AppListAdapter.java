@@ -36,17 +36,7 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
 
     @Override
     protected void bindHolder(IntraUserInformationHolder holder, IntraUserInformation data, int position) {
-        if (data.getName().isEmpty())
-            holder.name.setText("Hola");
         holder.name.setText(data.getName());
-        /*if (!data.getCity().isEmpty())
-            holder.city.setText(data.getCity());
-        else
-            holder.city.setText("");
-        if (!data.getCountry().isEmpty())
-            holder.country.setText(data.getCountry());
-        else
-            holder.country.setText("");*/
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null) {
             if(profileImage.length>0) {

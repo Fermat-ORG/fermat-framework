@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import org.apache.commons.lang.Validate;
 
 /**
- * The abstract class <code>ActorIdentity</code>
+ * The abstract class <code>LinkedActorIdentity</code>
  * represents an actor identity.
  *
  * An Actor Identity contains all the information related with the identity which is connected with other actors.
@@ -17,13 +17,13 @@ import org.apache.commons.lang.Validate;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorIdentity {
+public abstract class LinkedActorIdentity {
 
     private final String publicKey;
     private final Actors actorType;
 
-    public ActorIdentity(final String publicKey,
-                         final Actors actorType) {
+    public LinkedActorIdentity(final String publicKey,
+                               final Actors actorType) {
 
         Validate.notNull(publicKey, "The Public Key can't be null.");
         Validate.notNull(actorType, "The Actor Type can't be null.");
