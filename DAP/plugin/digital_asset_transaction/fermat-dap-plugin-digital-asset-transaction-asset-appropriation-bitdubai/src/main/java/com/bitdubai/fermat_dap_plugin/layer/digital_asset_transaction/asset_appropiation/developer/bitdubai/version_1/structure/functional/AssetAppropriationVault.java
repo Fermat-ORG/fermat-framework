@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
@@ -39,17 +39,16 @@ public class AssetAppropriationVault {
 
     //PUBLIC METHODS
 
-    public void persistDigitalAssetInLocalStorage(DigitalAsset digitalAsset) throws CantCreateDigitalAssetFileException {
+    public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata assetMetadata) throws CantCreateDigitalAssetFileException {
         try {
-            PluginTextFile digitalAssetFile = pluginFileSystem.createTextFile(pluginId, STORAGE_PATH, createFilename(digitalAsset.getPublicKey()), FILE_PRIVACY, FILE_LIFE_SPAN);
-            digitalAssetFile.setContent(digitalAsset.toString());
+            PluginTextFile digitalAssetFile = pluginFileSystem.createTextFile(pluginId, STORAGE_PATH, createFilename(assetMetadata.getDigitalAsset().getPublicKey()), FILE_PRIVACY, FILE_LIFE_SPAN);
+            digitalAssetFile.setContent(assetMetadata.toString());
             digitalAssetFile.persistToMedia();
 
         } catch (CantPersistFileException | CantCreateFileException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
         }
     }
-
     //PRIVATE METHODS
 
     private String createFilename(String digitalAssetPublicKey) {
@@ -58,17 +57,15 @@ public class AssetAppropriationVault {
 
     //GETTER AND SETTERS
 
-    public DigitalAsset getDigitalAssetFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+    public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
         try {
-
-            PluginTextFile digitalAssetFile = pluginFileSystem.getTextFile(pluginId, STORAGE_PATH, createFilename(assetPublicKey), FILE_PRIVACY, FILE_LIFE_SPAN);
-            return (DigitalAsset) XMLParser.parseXML(digitalAssetFile.getContent(), new DigitalAsset());
+            PluginTextFile metadataFile = pluginFileSystem.getTextFile(pluginId, STORAGE_PATH, createFilename(assetPublicKey), FILE_PRIVACY, FILE_LIFE_SPAN);
+            return (DigitalAssetMetadata) XMLParser.parseXML(metadataFile.getContent(), new DigitalAssetMetadata());
         } catch (FileNotFoundException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
         } catch (CantCreateFileException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, "Getting Digital Asset file from local storage", "Unexpected exception creating '" + STORAGE_PATH + createFilename(assetPublicKey) + "' file");
         }
     }
-
     //INNER CLASSES
 }
