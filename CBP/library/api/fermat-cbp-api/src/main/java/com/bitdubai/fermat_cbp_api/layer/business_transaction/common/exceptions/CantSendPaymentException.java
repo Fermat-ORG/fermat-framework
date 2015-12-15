@@ -9,7 +9,7 @@ public class CantSendPaymentException extends CBPException {
         /**
          * Represent the default message
          */
-        public static final String DEFAULT_MESSAGE = "CANNOT GET A LIST FROM DATABASE";
+        public static final String DEFAULT_MESSAGE = "CANNOT SEND A PAYMENT TO CRYPTO BROKER";
 
         /**
          * Constructor with parameters

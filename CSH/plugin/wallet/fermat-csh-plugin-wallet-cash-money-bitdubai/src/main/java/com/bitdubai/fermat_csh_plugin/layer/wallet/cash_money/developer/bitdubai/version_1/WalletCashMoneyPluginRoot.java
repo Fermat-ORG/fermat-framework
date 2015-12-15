@@ -72,12 +72,13 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     private void createTestWalletIfNotExists() {
         System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
 
-        try {
-            createCashMoney("publicKeyWalletMock", FiatCurrency.US_DOLLAR);
-        } catch (CantCreateCashMoneyWalletException e) {
-            //Wallet exists
+        if(!cashMoneyWalletExists("publicKeyWalletMock")) {
+            try {
+                createCashMoneyWallet("publicKeyWalletMock", FiatCurrency.US_DOLLAR);
+            } catch (CantCreateCashMoneyWalletException e) {}
         }
     }
+
     private void testDeposits() {
         System.out.println("CASHWALLET - testDeposits CALLED");
 
@@ -107,8 +108,13 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
      */
 
     @Override
-    public void createCashMoney(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
-        cashMoneyWalletManagerImpl.createCashMoney(walletPublicKey, fiatCurrency);
+    public void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
+        cashMoneyWalletManagerImpl.createCashMoneyWallet(walletPublicKey, fiatCurrency);
+    }
+
+    @Override
+    public boolean cashMoneyWalletExists(String walletPublicKey) {
+        return cashMoneyWalletManagerImpl.cashMoneyWalletExists(walletPublicKey);
     }
 
     @Override
@@ -256,7 +262,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     }
 
     @Override
-    public void createCashMoney(String walletPublicKey) throws CantCreateCashMoneyException {
+    public void createCashMoneyWallet(String walletPublicKey) throws CantCreateCashMoneyException {
 
     }
 

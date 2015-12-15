@@ -56,12 +56,17 @@ public class CashMoneyWalletManagerImpl implements CashMoneyWalletManager {
     }
 
     @Override
-    public void createCashMoney(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
+    public void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency) throws CantCreateCashMoneyWalletException {
         try {
             dao.createCashMoneyWallet(walletPublicKey, fiatCurrency);
         } catch (CantCreateCashMoneyWalletException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCashMoneyWalletException(CantCreateCashMoneyWalletException.DEFAULT_MESSAGE, e, "CashMoneyWalletManagerImpl", null);
         }
+    }
+
+    @Override
+    public boolean cashMoneyWalletExists(String walletPublicKey) {
+        return dao.walletExists(walletPublicKey);
     }
 }

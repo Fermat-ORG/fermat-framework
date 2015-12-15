@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdu
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException</code>
+ * The Class <code>package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolartodayProviderDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
  *

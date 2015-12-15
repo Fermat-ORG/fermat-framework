@@ -98,9 +98,9 @@ public class CustomersSubAppSession extends AbstractFermatSession<InstalledSubAp
     }
 
     /**
-     * Return the Crypto Customer ActorIdentity Module Manager
+     * Return the Crypto Customer LinkedActorIdentity Module Manager
      *
-     * @return reference to the Crypto Customer ActorIdentity Module Manager
+     * @return reference to the Crypto Customer LinkedActorIdentity Module Manager
      */
     public CustomerModuleManager getModuleManager() {
         return getModuleManager();

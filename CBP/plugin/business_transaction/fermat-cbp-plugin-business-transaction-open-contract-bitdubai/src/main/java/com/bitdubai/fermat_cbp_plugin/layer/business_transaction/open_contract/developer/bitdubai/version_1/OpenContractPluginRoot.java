@@ -257,7 +257,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             openContractMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Starting Open Contract Business Transaction");
+            //System.out.println("Starting Open Contract Business Transaction");
             //launchNotificationTest();
         } catch (Exception exception) {
             throw new CantStartPluginException(
