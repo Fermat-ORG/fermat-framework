@@ -395,11 +395,15 @@ public class BankMoneyWalletDao {
     private BankAccountNumber constructBankAccountNumber(DatabaseTableRecord record){
         String alias = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME);
         String account = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
-
+        System.out.println(" BNK-ACCOUNT   alias = "+alias +" account ="+account);
         BankAccountNumberImpl bankAccountNumber=null;
         try {
-            BankAccountType bankAccountType = BankAccountType.getByCode(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_TYPE_COLUMN_NAME));
-            FiatCurrency currency = FiatCurrency.getByCode(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME));
+            String accountType=record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME);
+            System.out.println("account type = "+accountType);
+            String currencyType=record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME);
+            System.out.println("currency type = "+currencyType);
+            BankAccountType bankAccountType = BankAccountType.getByCode(accountType);
+            FiatCurrency currency = FiatCurrency.getByCode(currencyType);
             System.out.println("BNK-ACCOUNT = ["+account + "] alias = ["+alias+"] account type = [" +bankAccountType.getCode()+"]" );
             bankAccountNumber = new BankAccountNumberImpl(alias,account,currency,bankAccountType);
 

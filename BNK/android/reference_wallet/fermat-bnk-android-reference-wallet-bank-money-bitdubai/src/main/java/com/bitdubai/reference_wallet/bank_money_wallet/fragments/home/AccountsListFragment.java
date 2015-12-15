@@ -1,8 +1,10 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -66,7 +68,12 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+        configureToolbar();
         showOrHideNoAccountListView(accountsList.isEmpty());
+    }
+
+    private void configureToolbar() {
+        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header));
     }
 
     @Override
@@ -137,7 +144,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     public void onItemClickListener(BankAccountNumber data, int position) {
-        appSession.setData("account data", data);
+        appSession.setData("account_data", data);
         changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
     }
 
@@ -153,9 +160,6 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     protected int getRecyclerLayoutId() {
-
-        //TODO: agregar el id del resource recycler layout para mostrar la lista.
-        //TODO: arreglar el layout para mostrar el home.
         return R.id.account_list_recycler_view;
     }
 
@@ -214,14 +218,17 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 accountsList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(accountsList);
-                showOrHideNoAccountListView(accountsList.isEmpty());
             }
         }
     }
 
     @Override
     public void onErrorOccurred(Exception ex) {
-
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
     }
 
 }
