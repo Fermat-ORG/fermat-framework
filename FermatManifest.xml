@@ -7541,129 +7541,129 @@
             </step>
         </process>
 
-        <process platform="CBP" name="Install a Crypto Broker Reference Wallet"
-             description="Install a Crypto Broker Wallet from the Wallet Store"
-             previous="">
-        <steps>
-            <step id="0" title="Broker select the Reference Wallet from the Wallet Store"
-                  description="The Crypto Broker enter in the Wallet Store en select the Crypto Broker Reference Wallet to install it."
-                  type="start"
-                  component=""
-                  name="Wallet Store"
-                  layer="Sub App"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="1" type="direct call"></step>
-                </next>
-            </step>
-            <step id="1" title="Invoke the installation of the Reference Wallet to the Wallet Manager"
-                  description="Invoke the installation of the Reference Wallet to the Wallet Manager Middleware Plugin"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Store"
-                  layer="Sub App Module"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="2" type="direct call"></step>
-                </next>
-            </step>
-            <step id="2" title="Reference Wallet's Resources Installation Request Request "
-                  description="The Wallet Manager send a Request to install the resources of the Reference Wallet"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="3" type="direct call"></step>
-                </next>
-            </step>
-            <step id="3" title="Download of resources in the device"
-                  description="The Wallet Resources Network Service download from the GitHub repository the necessary resources for the Crypto Broker Reference Wallet"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Resources"
-                  layer="Network Service"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="4" type="direct call"></step>
-                </next>
-            </step>
-            <step id="4" title="Take of the Navigation Structure and Activation of the Reference Wallet"
-                  description="Take the Navigation Structure of the Reference Wallet and fire a event registering the activation of the Reference Wallet "
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Runtime"
-                  layer="Engine"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="5" type="event"></step>
-                </next>
-            </step>
-            <step id="5" title="Marking the Reference Wallet has Installed"
-                  description="Mark the Crypto Broker Reference Wallet as Installed and fire a event"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="6" type="event"></step>
-                </next>
-            </step>
-            <step id="6" title="Request of resources for the Sub Apps"
-                  description="Request to the SubApp Resources Network Service the download of the resources for the Crypto Broker Identity and Crypto Customer Community Sub Apps"
-                  type="activity"
-                  component="Plugin"
-                  name="Sub App Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="7" type="fermat message"></step>
-                </next>
-            </step>
-            <step id="7" title="Download of resources for the Sub Apps"
-                  description="Download the resources for the Crypto Broker Identity and Crypto Customer Community Sub Apps"
-                  type="activity"
-                  component="Plugin"
-                  name="Sub App Resources"
-                  layer="Network Service"
-                  platform="CBP"
-                  superlayer="">
-                <next>
-                    <step id="8" type="fermat message"></step>
-                </next>
-            </step>
-            <step id="8" title="Take of the Navigation Structure and Activation of the Sub Apps"
-                  description="Take of the Navigation Structure of the Crypto Broker Identity and Crypto Customer Community Sub Apps and fire a event activate them"
-                  type="activity"
-                  component="Plugin"
-                  name="Sub App Runtime"
-                  layer="Network Service"
-                  platform="CBP"
-                  superlayer="">
-                <next>
-                    <step id="9" type="direct call"></step>
-                </next>
-            </step>
-            <step id="9" title="Marking the Sub Apps has Installed"
-                  description="Mark the Sub Apps as Installed"
-                  type="end"
-                  component="Plugin"
-                  name="Sub App Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-            </step>
-        </steps>
-    </process>
+        <process platform="CBP" name="Crypto Broker Reference Wallet Installation"
+                 description="Wallet Store installation procedure for the Crypto Broker Reference Wallet"
+                 previous="">
+            <steps>
+                <step id="0" title="User selects the Broker Wallet on the Wallet Store"
+                      description="The user enters the Wallet Store and selects the Crypto Broker Reference Wallet to install it"
+                      type="start"
+                      component=""
+                      name="Wallet Store"
+                      layer="Sub App"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" title="Wallet Store invokes the Wallet Manager Middleware Plugin"
+                      description="The Wallet Store notifies the Wallet Manager Middleware Plugin so it can install the Wallet"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Store"
+                      layer="Sub App Module"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" title="Wallet Manager Middleware Plugin processes installation request"
+                      description="The Wallet Manager Middleware Plugin sends a request to the Wallet Resources Network Service, to gather the resources of the Reference Wallet to be installed"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" title="Wallet Resources Network Service downloads wallet's resources"
+                      description="The Wallet Resources Network Service downloads the Crypto Broker Reference Wallet's resources, from the GitHub repository"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Resources"
+                      layer="Network Service"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" title="Processing of the Wallet's Navigation Structure"
+                      description="The Wallet Runtime processes the Navigation Structure of the Reference Wallet and fires an event which effectively registers the Reference Wallet"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Runtime"
+                      layer="Engine"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="5" type="event"></step>
+                    </next>
+                </step>
+                <step id="5" title="Setting the Crypto Broker Reference Wallet as Installed"
+                      description="The Wallet Manager Middleware sets the Crypto Broker Reference Wallet as installed, and fires an event"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="6" type="event"></step>
+                    </next>
+                </step>
+                <step id="6" title="Sub App Manager requests resources for the Wallet's Sub Apps"
+                      description="Sub App Manager sends a request to the Sub App Resources Network Service so it can download the necessary resources (Crypto Broker Identity and Crypto Customer Community Sub Apps)"
+                      type="activity"
+                      component="Plugin"
+                      name="Sub App Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="7" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="7" title="Sub App Resources Network Service downloads Sub App's resources"
+                      description="The Sub App Resources Network Service downloads resources for Crypto Broker Identity and Crypto Customer Community Sub Apps"
+                      type="activity"
+                      component="Plugin"
+                      name="Sub App Resources"
+                      layer="Network Service"
+                      platform="CBP"
+                      superlayer="">
+                    <next>
+                        <step id="8" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="8" title="Sub App Runtime parses the Navigation Structure and activates the Sub Apps"
+                      description="The Sub App Runtime processes the Navigation Structure of the Crypto Broker Identity and Crypto Customer Community Sub Apps and fires a event to activate them"
+                      type="activity"
+                      component="Plugin"
+                      name="Sub App Runtime"
+                      layer="Network Service"
+                      platform="CBP"
+                      superlayer="">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" title="Setting the Sub Apps as Installed"
+                      description="The Sub App Manager Middleware sets the Sub Apps as Installed"
+                      type="end"
+                      component="Plugin"
+                      name="Sub App Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                </step>
+            </steps>
+        </process>
 
         <process platform="CBP" name="Install a Crypto Customer Reference Wallet"
              description="Install a Crypto Broker Wallet from the Wallet Store"
@@ -8972,12 +8972,12 @@
             </steps>
         </process>
 
-        <process platform="CBP"	name="Create Negotiation Customer Broker"
-            description="The Crypto Customer start negotiation with Crypto Broker."
+        <process platform="CBP"	name="Crypto Customer Start a Negotiation"
+            description="The Crypto Customer start a negotiation with a Crypto Broker."
             previous="">
             <steps>
-                <step id="0" title="Start Customer Broker New Negotiation Transaction"
-                    description="The Crypto Customer indicates to start negotiations with the selected Crypto Broker"
+                <step id="0" title="Customer set the info to start a New Negotiation"
+                    description="The Crypto Customer indicates he wants to start a new negotiation with a selected Crypto Broker passing the necesary info" (merchandise, amount to buy, hoy to recive the merchandise, etc)
                     type="start"
                     platform="CBP"
                     name="Crypto Customer"
