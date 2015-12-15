@@ -25,7 +25,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             super.onActivityCreated(savedInstanceState);
             lstPaymentRequest = new ArrayList<PaymentRequest>();
-            getPaintActivtyFeactures().addNavigationView(new NavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+            getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
         } catch (CantGetActiveLoginIdentityException e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);

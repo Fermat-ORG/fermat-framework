@@ -7391,7 +7391,7 @@
         <layer name="Api" language="java"></layer>
     </layers>
 
-    <processes>
+    <>
         <process platform="DAP"
             name="Digital Asset Platform"
             description=""
@@ -12319,6 +12319,402 @@
         </process>
 
         <process platform="CCP"
+<<<<<<< HEAD
+=======
+            name="Send Payment Request to Intra user"
+            description="A Wallet's Intra User sends a payment request to another intra user contact to request payment for a specific amount."
+            previous="List Wallet Contacts"
+            >
+            <steps>
+                <step id="0"
+                    type="start"
+                    title="Select Intra User contact and submit payment request"
+                    description="The customer selects a contact from the list and submits the payment request."
+                    platform="CCP"
+                    superlayer=""
+                    layer="Reference Wallet"
+                    name="Bitcoin Wallet"
+                    >
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1"
+                    type="activity"
+                    title="Route request to network service"
+                    description="The module routes this payment request to the Crypto Payment Request Plugin to reach the selected intra user."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Wallet Module"
+                    name="Crypto Wallet"
+                    >
+                    <next>
+                        <step id="2" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2"
+                    type="activity"
+                    title="Route request to network service"
+                    description="The module routes this payment request to the network service to reach the selected intra user."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Request"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3"
+                    type="activity"
+                    title="Call the intra user to deliver the payment request"
+                    description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Network Service"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4"
+                    type="communication"
+                    title="Transport request"
+                    description="The payment request is transported through the communication layer and one of the available channels."
+                    platform=""
+                    superlayer="P2P"
+                    layer="communication"
+                    name="Communication Layer"
+                    >
+                    <next>
+                        <step id="5" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="5"
+                    type="activity"
+                    title="Receive the payment request"
+                    description="The network service receives the payment request and informs that to Request Crypto Payment Plugin."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Network Service"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="6" type="event"></step>
+                    </next>
+                </step>
+                <step id="6"
+                    type="activity"
+                    title="Records the request"
+                    description="The payment request is saved with the type received and associated to intra user actor ."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Request"
+                    name="Crypto Payment"
+                    >
+                    <next>
+                        <step id="7" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7"
+                    type="activity"
+                    title="Return payment request list"
+                    description="The module returns the payement request receive list."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Wallet Module"
+                    name="Crypto Wallet"
+                    >
+                    <next>
+                        <step id="8" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8"
+                    type="end"
+                    title="List Received Payment Request"
+                    description="The wallet's user go to Payment Request menu and list payment request receive."
+                    platform="CCP"
+                    superlayer=""
+                    layer="Reference Wallet"
+                    name="Bitcoin Wallet"
+                    >
+
+                </step>
+
+            </steps>
+        </process>
+
+        <process platform="CCP"
+            name="Refuse Payment Request from Intra user"
+            description="A Wallet's Intra User refuse a payment request sent by another actor."
+            previous="List Payment Request"
+            >
+            <steps>
+                <step id="0"
+                    type="start"
+                    title="Select payment request record to refuse "
+                    description="The actor selects a payment request from the list and press deny button."
+                    platform="CCP"
+                    superlayer=""
+                    layer="Reference Wallet"
+                    name="Bitcoin Wallet"
+                    >
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1"
+                    type="activity"
+                    title="Route request to payment request plugin"
+                    description="The module routes this payment request refuse to the Crypto Payment Request Plugin to reach the selected intra user."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Wallet Module"
+                    name="Crypto Wallet"
+                    >
+                    <next>
+                        <step id="2" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2"
+                    type="activity"
+                    title="Route refuse to network service"
+                    description="The module routes this refuse to the network service to reach the selected intra user."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Request"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3"
+                    type="activity"
+                    title="Call the intra user to deliver the refuse"
+                    description="The network service places a call to the intra user and then it delivers the refuse via the Fermat network."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Network Service"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4"
+                    type="communication"
+                    title="Transport request"
+                    description="The payment request is transported through the communication layer and one of the available channels."
+                    platform=""
+                    superlayer="P2P"
+                    layer="communication"
+                    name="Communication Layer"
+                    >
+                    <next>
+                        <step id="5" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="5"
+                    type="activity"
+                    title="Receive the payment request"
+                    description="The network service receives the refuse and informs that to Request Crypto Payment Plugin."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Network Service"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="6" type="event"></step>
+                    </next>
+                </step>
+                <step id="6"
+                    type="activity"
+                    title="Update the request status"
+                    description="The payment request is update with the status deny."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Request"
+                    name="Crypto Payment"
+                    >
+                    <next>
+                        <step id="7" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7"
+                    type="activity"
+                    title="Return payment request send list"
+                    description="The module returns the payement request send list."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Wallet Module"
+                    name="Crypto Wallet"
+                    >
+                    <next>
+                        <step id="8" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8"
+                    type="end"
+                    title="List Send Payment Request"
+                    description="The wallet's user go to Payment Request menu and list payment request send, and show this status."
+                    platform="CCP"
+                    superlayer=""
+                    layer="Reference Wallet"
+                    name="Bitcoin Wallet"
+                    >
+
+                </step>
+
+            </steps>
+        </process>
+
+        <process platform="CCP"
+            name="Send Crypto to Intra user"
+            description="A Wallet's Intra User sends a crypto to another intra user contact for a specific amount."
+            previous="List Wallet Contacts"
+            >
+            <steps>
+                <step id="0"
+                    type="start"
+                    title="Select Intra User contact and send crypto"
+                    description="The customer selects a contact from the list and press send button, then complete Send forms and confirms the operation."
+                    platform="CCP"
+                    superlayer=""
+                    layer="Reference Wallet"
+                    name="Bitcoin Wallet"
+                    >
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1"
+                    type="activity"
+                    title="Route request to network service"
+                    description="The module routes this payment request to the Crypto Payment Request Plugin to reach the selected intra user."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Wallet Module"
+                    name="Crypto Wallet"
+                    >
+                    <next>
+                        <step id="2" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2"
+                    type="activity"
+                    title="Route request to network service"
+                    description="The module routes this payment request to the network service to reach the selected intra user."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Request"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3"
+                    type="activity"
+                    title="Call the intra user to deliver the payment request"
+                    description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Network Service"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4"
+                    type="communication"
+                    title="Transport request"
+                    description="The payment request is transported through the communication layer and one of the available channels."
+                    platform=""
+                    superlayer="P2P"
+                    layer="communication"
+                    name="Communication Layer"
+                    >
+                    <next>
+                        <step id="5" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="5"
+                    type="activity"
+                    title="Receive the payment request"
+                    description="The network service receives the payment request and informs that to Request Crypto Payment Plugin."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Network Service"
+                    name="Crypto Payment Request"
+                    >
+                    <next>
+                        <step id="6" type="event"></step>
+                    </next>
+                </step>
+                <step id="6"
+                    type="activity"
+                    title="Records the request"
+                    description="The payment request is saved with the type received and associated to intra user actor ."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Request"
+                    name="Crypto Payment"
+                    >
+                    <next>
+                        <step id="7" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7"
+                    type="activity"
+                    title="Return payment request list"
+                    description="The module returns the payement request receive list."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Wallet Module"
+                    name="Crypto Wallet"
+                    >
+                    <next>
+                        <step id="8" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8"
+                    type="end"
+                    title="List Received Payment Request"
+                    description="The wallet's user go to Payment Request menu and list payment request receive."
+                    platform="CCP"
+                    superlayer=""
+                    layer="Reference Wallet"
+                    name="Bitcoin Wallet"
+                    >
+
+                </step>
+
+            </steps>
+        </process>
+
+        <process platform="CCP"
+>>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5
             name="Accept  Payment Request From Intra user"
             description="A Wallet's Intra User accept a payment request sent by another actor."
             previous="List Payment Request"
@@ -12372,8 +12768,13 @@
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
+<<<<<<< HEAD
                     layer="Crypto Transaction"
                     name="Outgoing Intra User"
+=======
+                    layer="Request"
+                    name="Crypto Payment Request"
+>>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5
                     >
                     <next>
                         <step id="4" type="direct call"></step>
@@ -12436,7 +12837,10 @@
 
             </steps>
         </process>
+<<<<<<< HEAD
 
+=======
+>>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5
         <process platform="CCP"		name="Creates an Intra Wallet User"
             description="Creates an Intra Wallet User Identity."
             previous=""
@@ -12601,6 +13005,7 @@
                 </step>
             </steps>
         </process>
+<<<<<<< HEAD
         <process platform="CCP"		name="Enter into the Community - Connections"
             description="List all connected users."
             previous="Enter into the Community - Wallet Users"
@@ -12696,6 +13101,8 @@
                 </step>
             </steps>
         </process>
+=======
+>>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5
         <process platform="CCP"		name="Enter into the Community - Request Connections"
             description="List all users pending for acceptance."
             previous="Enter into the Community - Wallet Users"
@@ -12791,9 +13198,15 @@
                 </step>
             </steps>
         </process>
+<<<<<<< HEAD
     </processes>
 
 
 
 </fermat>
 
+=======
+
+    </processes>
+</fermat>
+>>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5
