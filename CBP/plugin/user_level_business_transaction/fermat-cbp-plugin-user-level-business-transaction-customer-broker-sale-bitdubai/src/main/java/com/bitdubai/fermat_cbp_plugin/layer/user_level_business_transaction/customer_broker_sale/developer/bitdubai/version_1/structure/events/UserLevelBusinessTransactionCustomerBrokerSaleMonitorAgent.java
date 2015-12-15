@@ -41,7 +41,6 @@ import java.util.UUID;
  */
 public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implements Agent {
     //TODO: Documentar y manejo de excepciones.
-
     private Thread agentThread;
     private final ErrorManager errorManager;
     private final CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
