@@ -63,6 +63,16 @@ public class IdentityAssetIssuerImpl implements DealsWithPluginFileSystem, Deals
         this.pluginId = pluginId;
     }
 
+    public IdentityAssetIssuerImpl(String alias, String publicKey, byte[] profileImage) {
+        this.alias = alias;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+    }
+
+    public IdentityAssetIssuerImpl() {
+
+    }
+
     @Override
     public String getAlias() {
         return this.alias;

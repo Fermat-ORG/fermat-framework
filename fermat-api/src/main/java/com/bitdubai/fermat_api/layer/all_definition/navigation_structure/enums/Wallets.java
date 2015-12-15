@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Matias Furszyfer on 2015.07.22..
  */
 public enum Wallets {
-
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
@@ -19,7 +18,9 @@ public enum Wallets {
     CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI("TEENS"),
     CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI("YOUNG"),
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("BASIC"),
-    DAP_ASSET_ISSUER_WALLET("DAPAIW");
+    DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet"),
+    DAP_ASSET_USER_WALLET("dap_asset_user_wallet"),
+    DAP_REDEEM_POINT_WALLET("dap_redeem_point_wallet");
 
     private final String code;
 
@@ -52,8 +53,12 @@ public enum Wallets {
                 return CSH_CASH_WALLET;
             case "BNKBW":
                 return BNK_BANKING_WALLET;
-            case "DAPAIW":
+            case "dap_asset_issuer_wallet":
                 return DAP_ASSET_ISSUER_WALLET;
+            case "dap_asset_user_wallet":
+                return DAP_ASSET_USER_WALLET;
+            case "dap_redeem_point_wallet":
+                return DAP_REDEEM_POINT_WALLET;
             default:
                 throw new InvalidParameterException(
                         InvalidParameterException.DEFAULT_MESSAGE,

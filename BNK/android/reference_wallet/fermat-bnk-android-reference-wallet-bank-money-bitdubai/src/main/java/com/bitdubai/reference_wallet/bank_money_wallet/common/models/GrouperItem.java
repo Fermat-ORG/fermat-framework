@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.bank_money_wallet.common;
+package com.bitdubai.reference_wallet.bank_money_wallet.common.models;
 
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;

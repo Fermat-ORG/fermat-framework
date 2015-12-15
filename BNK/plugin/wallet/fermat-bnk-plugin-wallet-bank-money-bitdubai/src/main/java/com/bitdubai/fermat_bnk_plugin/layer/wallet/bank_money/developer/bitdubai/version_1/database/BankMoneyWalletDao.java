@@ -292,9 +292,10 @@ public class BankMoneyWalletDao {
 
     public List<BankAccountNumber> getAccounts() throws CantGetAccountsException {
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
-        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME,pluginId.toString(),DatabaseFilterType.EQUAL);
+        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME,publicKey,DatabaseFilterType.EQUAL);
+        System.out.println("BNK-account");
         try {
-        table.loadToMemory();
+            table.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAccountsException(CantGetAccountsException.DEFAULT_MESSAGE, e, "Cant Get Transactions Exception", "Cant Load Table To Memory Exception");
         }
@@ -304,7 +305,6 @@ public class BankMoneyWalletDao {
     public List<BankMoneyTransactionRecord> getTransactions(TransactionType transactionType, int max, int offset,String account) throws CantGetTransactionsException {
 
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
-
         table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
         table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, account, DatabaseFilterType.EQUAL);
         table.setFilterTop(String.valueOf(max));
@@ -395,11 +395,16 @@ public class BankMoneyWalletDao {
     private BankAccountNumber constructBankAccountNumber(DatabaseTableRecord record){
         String alias = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME);
         String account = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
-
+        System.out.println(" BNK-ACCOUNT   alias = "+alias +" account ="+account);
         BankAccountNumberImpl bankAccountNumber=null;
         try {
-            BankAccountType bankAccountType = BankAccountType.getByCode(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_TYPE_COLUMN_NAME));
-            FiatCurrency currency = FiatCurrency.getByCode(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME));
+            String accountType=record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME);
+            System.out.println("account type = "+accountType);
+            String currencyType=record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME);
+            System.out.println("currency type = "+currencyType);
+            BankAccountType bankAccountType = BankAccountType.getByCode(accountType);
+            FiatCurrency currency = FiatCurrency.getByCode(currencyType);
+            System.out.println("BNK-ACCOUNT = ["+account + "] alias = ["+alias+"] account type = [" +bankAccountType.getCode()+"]" );
             bankAccountNumber = new BankAccountNumberImpl(alias,account,currency,bankAccountType);
 
         }catch (Exception e){
