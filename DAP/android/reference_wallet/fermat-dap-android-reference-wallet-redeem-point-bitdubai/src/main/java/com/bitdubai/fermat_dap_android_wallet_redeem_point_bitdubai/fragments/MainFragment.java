@@ -58,11 +58,11 @@ public class MainFragment extends FermatWalletFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            manager = ((RedeemPointSession) appSession).getRedeemManager();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            manager = ((RedeemPointSession) appSession).getRedeemManager();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     @Override
