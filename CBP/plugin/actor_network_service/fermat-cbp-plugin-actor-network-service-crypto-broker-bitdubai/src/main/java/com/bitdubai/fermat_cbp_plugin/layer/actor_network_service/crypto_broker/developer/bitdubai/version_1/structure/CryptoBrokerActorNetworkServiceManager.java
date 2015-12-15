@@ -202,11 +202,9 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * - Type          : SENT.
      */
     @Override
-    public final void disconnect(final String identityPublicKey,
-                                 final Actors identityActorType,
-                                 final String brokerPublicKey  ) throws CantDisconnectException {
+    public final void disconnect(final UUID requestId) throws CantDisconnectException, ConnectionRequestNotFoundException {
 
-        try {
+       /* try {
 
             final UUID newId    = UUID.randomUUID();
             final long sentTime = System.currentTimeMillis();
@@ -234,7 +232,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDisconnectException(e, null, "Unhandled Exception.");
-        }
+        }*/
     }
 
     /**

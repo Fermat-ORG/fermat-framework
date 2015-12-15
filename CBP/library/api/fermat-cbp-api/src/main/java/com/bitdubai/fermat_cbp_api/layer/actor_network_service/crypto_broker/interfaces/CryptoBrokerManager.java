@@ -70,15 +70,11 @@ public interface CryptoBrokerManager extends FermatManager {
      * Through the method <code>disconnect</code> we can disconnect of a crypto broker.
      * If we don't want to negotiate anymore or the reason that you want with a broker, you can disconnect of him.
      *
-     * @param actorIdentityPublicKey the public key of the actor identity who is trying to disconnect.
-     * @param actorIdentityActorType the actor type of the actor identity who is trying to disconnect.
-     * @param cryptoBrokerPublicKey  the public key of the crypto broker with who we're trying to disconnect.
+     * @param requestId   id of the connection request to disconnect.
      *
      * @throws CantDisconnectException if something goes wrong.
      */
-    void disconnect(final String actorIdentityPublicKey,
-                    final Actors actorIdentityActorType,
-                    final String cryptoBrokerPublicKey ) throws CantDisconnectException;
+    void disconnect(final UUID requestId) throws CantDisconnectException, ConnectionRequestNotFoundException;
 
     /**
      * Through the method <code>denyConnection</code> we can deny a connection request.
