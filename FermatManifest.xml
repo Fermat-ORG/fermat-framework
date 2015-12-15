@@ -12319,8 +12319,7 @@
         </process>
 
         <process platform="CCP"
-<<<<<<< HEAD
-=======
+
             name="Send Payment Request to Intra user"
             description="A Wallet's Intra User sends a payment request to another intra user contact to request payment for a specific amount."
             previous="List Wallet Contacts"
@@ -12714,7 +12713,7 @@
         </process>
 
         <process platform="CCP"
->>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5
+
             name="Accept  Payment Request From Intra user"
             description="A Wallet's Intra User accept a payment request sent by another actor."
             previous="List Payment Request"
@@ -12768,13 +12767,10 @@
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
-<<<<<<< HEAD
                     layer="Crypto Transaction"
                     name="Outgoing Intra User"
-=======
-                    layer="Request"
-                    name="Crypto Payment Request"
->>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5
+
+
                     >
                     <next>
                         <step id="4" type="direct call"></step>
@@ -13005,7 +13001,7 @@
                 </step>
             </steps>
         </process>
-<<<<<<< HEAD
+
         <process platform="CCP"		name="Enter into the Community - Connections"
             description="List all connected users."
             previous="Enter into the Community - Wallet Users"
@@ -13198,15 +13194,7 @@
                 </step>
             </steps>
         </process>
-<<<<<<< HEAD
-    </processes>
-
-
-
-</fermat>
-
-=======
 
     </processes>
+
 </fermat>
->>>>>>> d010d827d1751cb5cfbbb253174fc3d0e03e25e5

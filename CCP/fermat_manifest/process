@@ -527,6 +527,7 @@ previous="List Payment Request"
 </steps>
 </process>
 
+
 <process platform="CCP"		name="Creates an Intra Wallet User"
 description="Creates an Intra Wallet User Identity."
 previous=""
@@ -881,4 +882,149 @@ previous="Enter into the Community - Wallet Users"
     </step>
 </steps>
 </process>
+
+    <process platform="CCP"
+        name="Add Intra User Actor as a Wallet Contact"
+        description="A Wallet's User sends a payment to an intra user is not your wallet contact."
+        previous="Connect with other intra user"
+        >
+        <steps>
+            <step id="0"
+                type="start"
+                title="Select Send btc options."
+                description="The wallet user selects Send btc options and write contact name in in the sending form, then select a intra user connection"
+                platform="CCP"
+                superlayer=""
+                layer="Reference Wallet"
+                name="Bitcoin Wallet"
+                >
+                <next>
+                    <step id="1" type="direct call"></step>
+                </next>
+            </step>
+            <step id="1"
+                type="activity"
+                title="Convert connection as wallet contact"
+                description="The module create a new contact through the Wallet Contact Middleware and send crypto address request for network services."
+                platform="CCP"
+                superlayer=""
+                component="Plugin"
+                layer="Wallet Module"
+                name="Crypto Wallet"
+                >
+                <next>
+                    <step id="2" type="direct call"></step>
+                </next>
+            </step>
+
+            <step id="2"
+                type="activity"
+                title="Call the intra user to deliver the address request"
+                description="The network service places a call to the intra user and then it delivers the address request via the Fermat network."
+                platform="CCP"
+                superlayer=""
+                component="Plugin"
+                layer="Network Service"
+                name="Crypto Addresses"
+                >
+                <next>
+                    <step id="3" type="direct call"></step>
+                </next>
+            </step>
+            <step id="3"
+                type="communication"
+                title="Transport request"
+                description="The address request is transported through the communication layer and one of the available channels."
+                platform=""
+                superlayer="P2P"
+                layer="communication"
+                name="Communication Layer"
+                >
+                <next>
+                    <step id="4" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="4"
+                type="activity"
+                title="Receive the address request"
+                description="The network service receives the address request and informs that to Crypto Addresses Middleware."
+                platform="CCP"
+                superlayer=""
+                component="Plugin"
+                layer="Network Service"
+                name="Crypto Addresses"
+                >
+                <next>
+                    <step id="5" type="event"></step>
+                </next>
+            </step>
+            <step id="5"
+                type="activity"
+                title="Get the address of intra user"
+                description="Crypto Addresses Middleware gets a new address through the Crypto Address Manager and the return to Crypto Address Network Services."
+                platform="BCH"
+                superlayer=""
+                component="Plugin"
+                layer="Middleware"
+                name="Crypto Address"
+                >
+                <next>
+                    <step id="6" type="direct call"></step>
+                </next>
+            </step>
+            <step id="6"
+                type="activity"
+                title="Call the Wallet Contacts middleware to deliver the intra user address"
+                description="The network service places a call to the Wallet Contacts middleware and then it delivers the crypto address via the Fermat network."
+                platform="CCP"
+                superlayer=""
+                component="Plugin"
+                layer="Network Service"
+                name="Crypto Addresses"
+                >
+                <next>
+                    <step id="7" type="direct call"></step>
+                </next>
+            </step>
+            <step id="7"
+                type="communication"
+                title="Transport request"
+                description="The crypto address is transported through the communication layer and one of the available channels."
+                platform=""
+                superlayer="P2P"
+                layer="communication"
+                name="Communication Layer"
+                >
+                <next>
+                    <step id="8" type="fermat message"></step>
+                </next>
+            </step>
+            <step id="8"
+                type="activity"
+                title="Update wallet contact crypto address"
+                description="The crypto address network services returns the address of the contact, which is updated in the database ."
+                platform="CCP"
+                superlayer=""
+                component="Plugin"
+                layer="Middleware"
+                name="Wallet Contact"
+                >
+                <next>
+                    <step id="9" type="direct call"></step>
+                </next>
+            </step>
+            <step id="9"
+                type="end"
+                title="List wallets contacts"
+                description="The wallet's user will contact list and select the new contact to view his address."
+                platform="CCP"
+                superlayer=""
+                layer="Reference Wallet"
+                name="Bitcoin Wallet"
+                >
+
+            </step>
+
+        </steps>
+    </process>
 </processes>
