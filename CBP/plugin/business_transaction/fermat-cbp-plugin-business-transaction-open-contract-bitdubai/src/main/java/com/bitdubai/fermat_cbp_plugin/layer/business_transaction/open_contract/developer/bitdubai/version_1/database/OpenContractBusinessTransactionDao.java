@@ -468,9 +468,15 @@ public class OpenContractBusinessTransactionDao {
             //LOG.info("record:" + eventRecord.getStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME));
             
         } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Open Contract database");
         } catch(Exception exception){
-            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
         }
     }
 

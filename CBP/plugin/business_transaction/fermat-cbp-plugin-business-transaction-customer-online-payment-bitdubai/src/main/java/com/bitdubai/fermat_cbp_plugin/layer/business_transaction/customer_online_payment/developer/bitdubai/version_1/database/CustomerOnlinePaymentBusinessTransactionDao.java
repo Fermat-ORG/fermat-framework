@@ -24,7 +24,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -774,9 +774,15 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
 
         } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Online Payment database");
         } catch(Exception exception){
-            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
         }
     }
     
