@@ -12,10 +12,10 @@ import java.util.UUID;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public final class CryptoCustomerActorConnection extends ActorConnection<CryptoCustomerActorIdentity> {
+public final class CryptoCustomerActorConnection extends ActorConnection<CryptoCustomerLinkedActorIdentity> {
 
     public CryptoCustomerActorConnection(final UUID connectionId,
-                                         final CryptoCustomerActorIdentity linkedIdentity,
+                                         final CryptoCustomerLinkedActorIdentity linkedIdentity,
                                          final String publicKey,
                                          final Actors actorType,
                                          final String alias,

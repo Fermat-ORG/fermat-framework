@@ -99,8 +99,8 @@ public class OpenContractMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Open contract monitor agent starting");
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("Open contract monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -208,8 +208,8 @@ public class OpenContractMonitorAgent implements
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
 
-                Logger LOG = Logger.getGlobal();
-                LOG.info("Database in Open Contract monitor agent doesn't exists");
+                //Logger LOG = Logger.getGlobal();
+                //LOG.info("Database in Open Contract monitor agent doesn't exists");
                 OpenContractBusinessTransactionDatabaseFactory openContractBusinessTransactionDatabaseFactory=new OpenContractBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
                     database = openContractBusinessTransactionDatabaseFactory.createDatabase(pluginId,

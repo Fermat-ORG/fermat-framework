@@ -98,8 +98,8 @@ public class CloseContractMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Close contract monitor agent starting");
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("Close contract monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -210,8 +210,8 @@ public class CloseContractMonitorAgent implements
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
 
-                Logger LOG = Logger.getGlobal();
-                LOG.info("Database in Close Contract monitor agent doesn't exists");
+                //Logger LOG = Logger.getGlobal();
+                //LOG.info("Database in Close Contract monitor agent doesn't exists");
                 CloseContractBusinessTransactionDatabaseFactory closeContractBusinessTransactionDatabaseFactory=
                         new CloseContractBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {

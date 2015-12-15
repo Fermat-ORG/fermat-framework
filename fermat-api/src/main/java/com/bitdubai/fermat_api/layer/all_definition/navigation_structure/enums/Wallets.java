@@ -6,13 +6,18 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Matias Furszyfer on 2015.07.22..
  */
 public enum Wallets {
-    CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI("kids"),
-    CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI("teens"),
-    CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI("adults"),
-    CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI("young"),
-    CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("basic"),
-    CBP_CRYPTO_BROKER_WALLET("cbp_crypto_broker_wallet"),
-    CBP_CRYPTO_CUSTOMER_WALLET("cbp_crypto_customer_wallet"),
+    /**
+     * Please for doing the code more readable, keep the elements of the enum ordered.
+     */
+    BNK_BANKING_WALLET("BNKBW"),
+    CBP_CRYPTO_BROKER_WALLET("CBPCBW"),
+    CBP_CRYPTO_CUSTOMER_WALLET("CBPCCW"),
+    CSH_CASH_WALLET("CSHCW"),
+    CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI("ADULTS"),
+    CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI("KIDS"),
+    CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI("TEENS"),
+    CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI("YOUNG"),
+    CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("BASIC"),
     DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet"),
     DAP_ASSET_USER_WALLET("dap_asset_user_wallet"),
     DAP_REDEEM_POINT_WALLET("dap_redeem_point_wallet");
@@ -30,24 +35,36 @@ public enum Wallets {
     public static Wallets getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "basic":
+            case "BASIC":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI;
-            case "young":
+            case "YOUNG":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI;
-            case "adults":
+            case "ADULTS":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
-            case "teens":
+            case "TEENS":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI;
-            case "kids":
+            case "KIDS":
                 return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI;
-            case "cbp_crypto_broker_wallet":
+            case "CBPCBW":
                 return CBP_CRYPTO_BROKER_WALLET;
-            case "cbp_crypto_customer_wallet":
+            case "CBPCCW":
                 return CBP_CRYPTO_CUSTOMER_WALLET;
+            case "CSHCW":
+                return CSH_CASH_WALLET;
+            case "BNKBW":
+                return BNK_BANKING_WALLET;
             case "dap_asset_issuer_wallet":
                 return DAP_ASSET_ISSUER_WALLET;
+            case "dap_asset_user_wallet":
+                return DAP_ASSET_USER_WALLET;
+            case "dap_redeem_point_wallet":
+                return DAP_REDEEM_POINT_WALLET;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
+                throw new InvalidParameterException(
+                        InvalidParameterException.DEFAULT_MESSAGE,
+                        null,
+                        "Code Received: " + code,
+                        "This Code Is Not Valid for the Wallets enum");
         }
 
         /**

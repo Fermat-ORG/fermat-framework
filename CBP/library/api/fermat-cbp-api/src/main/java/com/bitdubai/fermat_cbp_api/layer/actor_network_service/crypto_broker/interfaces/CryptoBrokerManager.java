@@ -100,7 +100,7 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantCancelConnectionRequestException   if something goes wrong.
      * @throws ConnectionRequestNotFoundException     if the connection request cannot be found.
      */
-    void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException, ConnectionRequestNotFoundException, UnexpectedProtocolStateException;
+    void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException, ConnectionRequestNotFoundException;
 
     /**
      * Through the method <code>acceptConnection</code> we can accept a received connection request.

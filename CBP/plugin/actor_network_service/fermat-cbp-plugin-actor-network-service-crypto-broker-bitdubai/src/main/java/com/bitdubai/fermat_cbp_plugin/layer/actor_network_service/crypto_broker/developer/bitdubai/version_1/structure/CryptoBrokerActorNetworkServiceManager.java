@@ -275,8 +275,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
-                                                                    ConnectionRequestNotFoundException  ,
-                                                                    UnexpectedProtocolStateException    {
+                                                                    ConnectionRequestNotFoundException  {
 
     }
 
