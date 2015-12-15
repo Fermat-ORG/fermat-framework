@@ -1,0 +1,884 @@
+<processes>
+<process platform="CCP"
+    name="Send Crypto to Intra user"
+    description="A Wallet's Intra User sends a crypto to another intra user contact for a specific amount."
+    previous="List Wallet Contacts"
+    >
+    <steps>
+        <step id="0"
+            type="start"
+            title="Select Intra User contact and send crypto"
+            description="The customer selects a contact from the list and press send button, then complete Send forms and confirms the operation."
+            platform="CCP"
+            superlayer=""
+            layer="Reference Wallet"
+            name="Bitcoin Wallet"
+            >
+            <next>
+                <step id="1" type="direct call"></step>
+            </next>
+        </step>
+        <step id="1"
+            type="activity"
+            title="Route send crypto to outgoing intra user plugin"
+            description="The module sends it to the outgoing intra user plugin to create the crypto transaction."
+            platform="CCP"
+            superlayer=""
+            component="Plugin"
+            layer="Wallet Module"
+            name="Crypto Wallet"
+            >
+            <next>
+                <step id="2" type="direct call"></step>
+            </next>
+        </step>
+        <step id="2"
+            type="activity"
+            title="Route send crypto metadata to network service"
+            description="The outgoing intra user plugin routes this crypto transaction to the crypto transmission network service to send metadata."
+            platform="CCP"
+            superlayer=""
+            component="Plugin"
+            layer="Crypto Transaction"
+            name="Outgoing Intra Actor"
+            >
+            <next>
+                <step id="3" type="direct call"></step>
+            </next>
+        </step>
+        <step id="3"
+            type="activity"
+            title="Route send crypto to Crypto Bitcoin Vault"
+            description="The outgoing intra user plugin routes this crypto transaction to the Crypto Bitcoin Vault to send btc to another actor and debit amount to Available Balance."
+            platform="CCP"
+            superlayer=""
+            component="Plugin"
+            layer="Crypto Transaction"
+            name="Outgoing Intra Actor"
+            >
+            <next>
+                <step id="4" type="direct call"></step>
+            </next>
+        </step>
+        <step id="4"
+            type="activity"
+            title="Send the crypto metadata"
+            description="The network service sends the crypto metadata and informs that to Incoming Intra User Plugin."
+            platform="CCP"
+            superlayer=""
+            component="Plugin"
+            layer="Network Service"
+            name="Crypto Transmission"
+            >
+            <next>
+                <step id="5" type="event"></step>
+            </next>
+        </step>
+        <step id="5"
+            type="communication"
+            title="Transport request"
+            description="The send metadata is transported through the communication layer and one of the available channels."
+            platform=""
+            superlayer="P2P"
+            layer="communication"
+            name="Communication Layer"
+            >
+            <next>
+                <step id="6" type="fermat message"></step>
+            </next>
+        </step>
+        <step id="6"
+            type="activity"
+            title="Receive the crypto metadata"
+            description="The network service receives the crypto metadata and informs that to Incoming Intra User Plugin."
+            platform="CCP"
+            superlayer=""
+            component="Plugin"
+            layer="Network Service"
+            name="Crypto Transmission"
+            >
+            <next>
+                <step id="7" type="event"></step>
+            </next>
+        </step>
+
+        <step id="7"
+            type="activity"
+            title="Call the incoming intra user plugin to deliver the sends bitcoins"
+            description="The crypto network bitcoin places a call to the incoming intra user plugin and then it delivers the sends crypto."
+            platform="BCH"
+            superlayer=""
+            component="Plugin"
+            layer="Crypto Network"
+            name="Crypto Network Bitcoin"
+            >
+            <next>
+                <step id="8" type="direct call"></step>
+            </next>
+        </step>
+        <step id="8"
+            type="activity"
+            title="Apply transaction"
+            description="The incoming intra user actor merge transaction metada with the bitcoin received and credited its on actor available balance."
+            platform="CCP"
+            superlayer=""
+            component="Plugin"
+            layer="Crypto Transaction"
+            name="Incoming Intra User"
+            >
+            <next>
+                <step id="8" type="direct call"></step>
+            </next>
+        </step>
+        <step id="8"
+            type="end"
+            title="List Received Transaction"
+            description="The wallet's user go to Home menu and list receive transactions."
+            platform="CCP"
+            superlayer=""
+            layer="Reference Wallet"
+            name="Bitcoin Wallet"
+            >
+
+        </step>
+
+    </steps>
+</process>
+
+
+<process platform="CCP"
+name="Send Payment Request to Intra user"
+description="A Wallet's Intra User sends a payment request to another intra user contact to request payment for a specific amount."
+previous="List Wallet Contacts"
+    >
+<steps>
+    <step id="0"
+        type="start"
+        title="Select Intra User contact and submit payment request"
+        description="The customer selects a contact from the list and submits the payment request."
+        platform="CCP"
+        superlayer=""
+        layer="Reference Wallet"
+        name="Bitcoin Wallet"
+        >
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="1"
+        type="activity"
+        title="Route Send to Outgoing Intra Actor Plugin"
+        description="The module routes this crypto send to the Outgoing Intra Actor Plugin to send the actor selected."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Wallet Module"
+        name="Crypto Wallet"
+        >
+        <next>
+            <step id="2" type="direct call"></step>
+        </next>
+    </step>
+    <step id="2"
+        type="activity"
+        title="Send metadata to network service"
+        description="The Outgoing Intra Actor plugin routes the send metadata to the network service to send payment information to actor selected."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Network Service"
+        name="Crypto Payment"
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="3"
+        type="activity"
+        title="Call the intra user to deliver the payment request"
+        description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Network Service"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="4" type="direct call"></step>
+        </next>
+    </step>
+    <step id="4"
+        type="communication"
+        title="Transport request"
+        description="The payment request is transported through the communication layer and one of the available channels."
+        platform=""
+        superlayer="P2P"
+        layer="communication"
+        name="Communication Layer"
+        >
+        <next>
+            <step id="5" type="fermat message"></step>
+        </next>
+    </step>
+    <step id="5"
+        type="activity"
+        title="Receive the payment request"
+        description="The network service receives the payment request and informs that to Request Crypto Payment Plugin."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Network Service"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="6" type="event"></step>
+        </next>
+    </step>
+    <step id="6"
+        type="activity"
+        title="Records the request"
+        description="The payment request is saved with the type received and associated to intra user actor ."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Request"
+        name="Crypto Payment"
+        >
+        <next>
+            <step id="7" type="direct call"></step>
+        </next>
+    </step>
+    <step id="7"
+        type="activity"
+        title="Return payment request list"
+        description="The module returns the payement request receive list."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Wallet Module"
+        name="Crypto Wallet"
+        >
+        <next>
+            <step id="8" type="direct call"></step>
+        </next>
+    </step>
+    <step id="8"
+        type="end"
+        title="List Received Payment Request"
+        description="The wallet's user go to Payment Request menu and list payment request receive."
+        platform="CCP"
+        superlayer=""
+        layer="Reference Wallet"
+        name="Bitcoin Wallet"
+        >
+
+    </step>
+
+</steps>
+</process>
+
+<process platform="CCP"
+name="Refuse Payment Request from Intra user"
+description="A Wallet's Intra User refuse a payment request sent by another actor."
+previous="List Payment Request"
+    >
+<steps>
+    <step id="0"
+        type="start"
+        title="Select payment request record to refuse "
+        description="The actor selects a payment request from the list and press deny button."
+        platform="CCP"
+        superlayer=""
+        layer="Reference Wallet"
+        name="Bitcoin Wallet"
+        >
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="1"
+        type="activity"
+        title="Route request to payment request plugin"
+        description="The module routes this payment request refuse to the Crypto Payment Request Plugin to reach the selected intra user."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Wallet Module"
+        name="Crypto Wallet"
+        >
+        <next>
+            <step id="2" type="direct call"></step>
+        </next>
+    </step>
+    <step id="2"
+        type="activity"
+        title="Route refuse to network service"
+        description="The module routes this refuse to the network service to reach the selected intra user."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Request"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="3"
+        type="activity"
+        title="Call the intra user to deliver the refuse"
+        description="The network service places a call to the intra user and then it delivers the refuse via the Fermat network."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Network Service"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="4" type="direct call"></step>
+        </next>
+    </step>
+    <step id="4"
+        type="communication"
+        title="Transport request"
+        description="The payment request is transported through the communication layer and one of the available channels."
+        platform=""
+        superlayer="P2P"
+        layer="communication"
+        name="Communication Layer"
+        >
+        <next>
+            <step id="5" type="fermat message"></step>
+        </next>
+    </step>
+    <step id="5"
+        type="activity"
+        title="Receive the payment request"
+        description="The network service receives the refuse and informs that to Request Crypto Payment Plugin."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Network Service"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="6" type="event"></step>
+        </next>
+    </step>
+    <step id="6"
+        type="activity"
+        title="Update the request status"
+        description="The payment request is update with the status deny."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Request"
+        name="Crypto Payment"
+        >
+        <next>
+            <step id="7" type="direct call"></step>
+        </next>
+    </step>
+    <step id="7"
+        type="activity"
+        title="Return payment request send list"
+        description="The module returns the payement request send list."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Wallet Module"
+        name="Crypto Wallet"
+        >
+        <next>
+            <step id="8" type="direct call"></step>
+        </next>
+    </step>
+    <step id="8"
+        type="end"
+        title="List Send Payment Request"
+        description="The wallet's user go to Payment Request menu and list payment request send, and show this status."
+        platform="CCP"
+        superlayer=""
+        layer="Reference Wallet"
+        name="Bitcoin Wallet"
+        >
+
+    </step>
+
+</steps>
+</process>
+
+<process platform="CCP"
+name="Accept  Payment Request From Intra user"
+description="A Wallet's Intra User accept a payment request sent by another actor."
+previous="List Payment Request"
+    >
+<steps>
+    <step id="0"
+        type="start"
+        title="Select payment request receive and accept it"
+        description="The customer selects a payment request from the receive list and press accept button."
+        platform="CCP"
+        superlayer=""
+        layer="Reference Wallet"
+        name="Bitcoin Wallet"
+        >
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="1"
+        type="activity"
+        title="Route request acceptance to plugin"
+        description="The module routes this acceptance to the Crypto Payment Request Plugin to apply the payment to the intra user actor."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Wallet Module"
+        name="Crypto Wallet"
+        >
+        <next>
+            <step id="2" type="direct call"></step>
+        </next>
+    </step>
+    <step id="2"
+        type="activity"
+        title="Route acceptance to network service"
+        description="The Crypto Payment Request Plugin routes this acceptance to the network service to inform the actor intra user about payment acceptance."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Request"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="3"
+        type="activity"
+        title="Route acceptance to Outgoing Intra User"
+        description="The Crypto Payment Request Plugin notifies the outgoing intra user plugin to generate the send crypto transaction. And continuous workflow of sending btc an intra user actor "
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Crypto Transaction"
+        name="Outgoing Intra User"
+        >
+        <next>
+            <step id="4" type="direct call"></step>
+        </next>
+    </step>
+    <step id="4"
+        type="activity"
+        title="Call the intra user to deliver the acceptance message"
+        description="The network service places a call to the intra user and then it delivers the message via the Fermat network."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Network Service"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="5" type="direct call"></step>
+        </next>
+    </step>
+    <step id="5"
+        type="communication"
+        title="Transport request"
+        description="The acceptance message is transported through the communication layer and one of the available channels."
+        platform=""
+        superlayer="P2P"
+        layer="communication"
+        name="Communication Layer"
+        >
+        <next>
+            <step id="6" type="fermat message"></step>
+        </next>
+    </step>
+    <step id="6"
+        type="activity"
+        title="Receive the acceptance notification"
+        description="The network service receives the acceptance notification and informs that to Request Crypto Payment Plugin."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Network Service"
+        name="Crypto Payment Request"
+        >
+        <next>
+            <step id="7" type="event"></step>
+        </next>
+    </step>
+    <step id="7"
+        type="end"
+        title="Update the Payment request"
+        description="The payment request is updated  with the Request Action in state INFORM_APPROVAL ."
+        platform="CCP"
+        superlayer=""
+        component="Plugin"
+        layer="Request"
+        name="Crypto Payment"
+        >
+
+    </step>
+
+
+</steps>
+</process>
+
+<process platform="CCP"		name="Creates an Intra Wallet User"
+description="Creates an Intra Wallet User Identity."
+previous=""
+    >
+<steps>
+    <step id="0"	title="Start Intra User Identity creation"
+        description="The user open the Wallet Users Register Identity and proceed to fill the requested data inside the form and press the save button."
+        type="start"
+        platform="CCP"
+        superlayer=""
+        layer="Community Wallet Users"
+        component=""
+        >
+
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="1"	title="Process Intra User Identity creation request"
+        description="The module routes the data containing the name and profile picture to the  IntraWalletUserModulePluginRoot plugin.	"
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User"
+        superlayer=""
+        layer="plugin"
+        component=""
+        >
+        <next>
+            <step id="2" type="direct call"></step>
+        </next>
+    </step>
+    <step id="2"	title="Process Intra User Identity creation request"
+        description="The plugin routes the name and profile picture to the  IntraWalletIdentityPluginRoot  plugin."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Module"
+        superlayer=""
+        layer="sub-app module"
+        component="Plugin"
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="3"	title="Process Intra User Identity creation request"
+        description="Within this plugin, two different keys are created, a public one and a private one, after that the plugin routes the data to the IntraWalletUserIdentityDao."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet Identity"
+        superlayer=""
+        layer="Plugin"
+        component=""
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="4"	title="Creates Intra User Identity"
+        description="The dao  inserts the data in the DB."
+        type="end"
+        platform="CCP"
+        name="Intra Wallet User Identity."
+        superlayer=""
+        layer="Communication"
+        component=""
+        >
+    </step>
+</steps>
+</process>
+<process platform="CCP"		name="Enter into the Community - Wallet Users"
+description="List all discovered connections."
+previous=""
+    >
+<steps>
+    <step id="0"	title="Start "
+        description="The user opens the Community Wallet Users and the fragment proceeds to initialize all required components and data."
+        type="start"
+        platform="CCP"
+        name="Intra User Community"
+        superlayer=""
+        layer="Community Wallet Users"
+        component=""
+        >
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="1"	title="Processing the requested list "
+        description="The module routes the requested list.	"
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User"
+        superlayer=""
+        layer="Sub App Module"
+        component="Plugin"
+        >
+        <next>
+            <step id="2" type="direct call"></step>
+        </next>
+    </step>
+    <step id="2"	title="Routing the requested list."
+        description="The NS routes the request to the WS."
+        type="activity"
+        platform="CCP"
+        name="Actor Network Service"
+        superlayer=""
+        layer="Network Service"
+        component="Plugin"
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="3"	title="Processing the list"
+        description="The ws gets the connected list of components and send it back to the ns"
+        type="activity"
+        platform="CCP"
+        name="WS Cloud Client Connection"
+        superlayer=""
+        layer="p2p"
+        component=""
+        >
+        <next>
+            <step id="4" type="direct call"></step>
+        </next>
+    </step>
+    <step id="4"	title="Getting the list of connected users."
+        description="The NS routes the request back to the module."
+        type="activity"
+        platform="CCP"
+        name="Actor Network Service"
+        superlayer=""
+        layer="Network Service"
+        component="Plugin"
+        >
+        <next>
+            <step id="5" type="direct call"></step>
+        </next>
+    </step>
+    <step id="5"	title="Sends the list back to the view"
+        description="The module routes the requested list to the fragment."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User"
+        superlayer=""
+        layer="Sub App Module"
+        component="Plugin"
+        >
+        <next>
+            <step id="6" type="direct call"></step>
+        </next>
+    </step>
+    <step id="6"	title="Start "
+        description="The fragment displays the list of discovered users."
+        type="end"
+        platform="CCP"
+        name="Intra User Community"
+        superlayer=""
+        layer="Community Wallet Users"
+        component=""
+        >
+    </step>
+</steps>
+</process>
+<process platform="CCP"		name="Enter into the Community - Connections"
+description="List all connected users."
+previous="Enter into the Community - Wallet Users"
+    >
+<steps>
+    <step id="0"	title="Start "
+        description="The user opens the Community Connections and the fragment proceeds to initialize all required components and data."
+        type="start"
+        platform="CCP"
+        name="Intra User Community"
+        superlayer=""
+        layer="Community Connected Users"
+        component=""
+        >
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="1"	title="Processing the requested list "
+        description="The module routes the requested list to the IntraWalletUser plugin."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Module"
+        superlayer=""
+        layer="Sub App Module"
+        component="Plugin"
+        >
+        <next>
+            <step id="2" type="direct call"></step>
+        </next>
+    </step>
+    <step id="2"	title="Routing the requested list."
+        description="The plugin routes the request to the IntraWalletUserDao."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User plugin"
+        superlayer=""
+        layer="Plugin"
+        component=""
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="3"	title="Processing the list"
+        description="The list is retrived from the DB and send back to the plugin."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Dao"
+        superlayer=""
+        layer="Communication"
+        component=""
+        >
+        <next>
+            <step id="4" type="direct call"></step>
+        </next>
+    </step>
+    <step id="4"	title="Getting the list of connected users."
+        description="The plugin send the request back to the module."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Plugin"
+        superlayer=""
+        layer="Pluign"
+        component=""
+        >
+        <next>
+            <step id="5" type="direct call"></step>
+        </next>
+    </step>
+    <step id="5"	title="Sends the list back to the view"
+        description="The module routes the requested list to the fragment."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Module"
+        superlayer=""
+        layer="Sub App Module"
+        component="Plugin"
+        >
+        <next>
+            <step id="6" type="direct call"></step>
+        </next>
+    </step>
+    <step id="6"	title="Start "
+        description="The fragment displays the list of connected users."
+        type="end"
+        platform="CCP"
+        name="Intra User Community"
+        superlayer=""
+        layer="Community Connections"
+        component=""
+        >
+    </step>
+</steps>
+</process>
+<process platform="CCP"		name="Enter into the Community - Request Connections"
+description="List all users pending for acceptance."
+previous="Enter into the Community - Wallet Users"
+    >
+<steps>
+    <step id="0"	title="Start "
+        description="The user opens the Community Request Connections and the fragment proceeds to initialize all required components and data."
+        type="start"
+        platform="CCP"
+        name="Intra User Community"
+        superlayer=""
+        layer="Community Request Connections"
+        component=""
+        >
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="1"	title="Processing the requested list of users pending for acceptance. "
+        description="The module routes the requested list to the IntraWalletUserActor plugin."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Module"
+        superlayer=""
+        layer="Sub App Module"
+        component="Plugin"
+        >
+        <next>
+            <step id="1" type="direct call"></step>
+        </next>
+    </step>
+    <step id="2"	title="Routing the requested list."
+        description="The plugin routes the request to the IntraWalletUserDao."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Actor plugin"
+        superlayer=""
+        layer="Plugin"
+        component=""
+        >
+        <next>
+            <step id="3" type="direct call"></step>
+        </next>
+    </step>
+    <step id="3"	title="Processing the list"
+        description="The list is retrived from the DB and send back to the plugin."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Dao"
+        superlayer=""
+        layer="Communication"
+        component=""
+        >
+        <next>
+            <step id="4" type="direct call"></step>
+        </next>
+    </step>
+    <step id="4"	title="Getting the list of connected users."
+        description="The plugin send the request back to the module."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Actor Plugin"
+        superlayer=""
+        layer="Plugin"
+        component=""
+        >
+        <next>
+            <step id="5" type="direct call"></step>
+        </next>
+    </step>
+    <step id="5"	title="Sends the list back to the view"
+        description="The module routes the requested list to the fragment."
+        type="activity"
+        platform="CCP"
+        name="Intra Wallet User Module"
+        superlayer=""
+        layer="Sub App Module"
+        component="Plugin"
+        >
+        <next>
+            <step id="6" type="direct call"></step>
+        </next>
+    </step>
+    <step id="6"	title="Start "
+        description="The fragment displays the list of users pending for acceptance."
+        type="end"
+        platform="CCP"
+        name="Intra User Community"
+        superlayer=""
+        layer="Community Request Connections"
+        component=""
+        >
+    </step>
+</steps>
+</process>
+</processes>

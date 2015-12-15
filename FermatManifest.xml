@@ -11930,8 +11930,8 @@
                 </step>
                 <step id="1"
                     type="activity"
-                    title="Route request to network service"
-                    description="The module routes this payment request to the Crypto Payment Request Plugin to reach the selected intra user."
+                    title="Route send crypto to outgoing intra user plugin"
+                    description="The module sends it to the outgoing intra user plugin to create the crypto transaction."
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
@@ -11944,13 +11944,13 @@
                 </step>
                 <step id="2"
                     type="activity"
-                    title="Route request to network service"
-                    description="The module routes this payment request to the network service to reach the selected intra user."
+                    title="Route send crypto metadata to network service"
+                    description="The outgoing intra user plugin routes this crypto transaction to the crypto transmission network service to send metadata."
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
-                    layer="Request"
-                    name="Crypto Payment Request"
+                    layer="Crypto Transaction"
+                    name="Outgoing Intra Actor"
                     >
                     <next>
                         <step id="3" type="direct call"></step>
@@ -11958,68 +11958,83 @@
                 </step>
                 <step id="3"
                     type="activity"
-                    title="Call the intra user to deliver the payment request"
-                    description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network."
+                    title="Route send crypto to Crypto Bitcoin Vault"
+                    description="The outgoing intra user plugin routes this crypto transaction to the Crypto Bitcoin Vault to send btc to another actor and debit amount to Available Balance."
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
-                    layer="Network Service"
-                    name="Crypto Payment Request"
+                    layer="Crypto Transaction"
+                    name="Outgoing Intra Actor"
                     >
                     <next>
                         <step id="4" type="direct call"></step>
                     </next>
                 </step>
                 <step id="4"
+                    type="activity"
+                    title="Send the crypto metadata"
+                    description="The network service sends the crypto metadata and informs that to Incoming Intra User Plugin."
+                    platform="CCP"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Network Service"
+                    name="Crypto Transmission"
+                    >
+                    <next>
+                        <step id="5" type="event"></step>
+                    </next>
+                </step>
+                <step id="5"
                     type="communication"
                     title="Transport request"
-                    description="The payment request is transported through the communication layer and one of the available channels."
+                    description="The send metadata is transported through the communication layer and one of the available channels."
                     platform=""
                     superlayer="P2P"
                     layer="communication"
                     name="Communication Layer"
                     >
                     <next>
-                        <step id="5" type="fermat message"></step>
-                    </next>
-                </step>
-                <step id="5"
-                    type="activity"
-                    title="Receive the payment request"
-                    description="The network service receives the payment request and informs that to Request Crypto Payment Plugin."
-                    platform="CCP"
-                    superlayer=""
-                    component="Plugin"
-                    layer="Network Service"
-                    name="Crypto Payment Request"
-                    >
-                    <next>
-                        <step id="6" type="event"></step>
+                        <step id="6" type="fermat message"></step>
                     </next>
                 </step>
                 <step id="6"
                     type="activity"
-                    title="Records the request"
-                    description="The payment request is saved with the type received and associated to intra user actor ."
+                    title="Receive the crypto metadata"
+                    description="The network service receives the crypto metadata and informs that to Incoming Intra User Plugin."
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
-                    layer="Request"
-                    name="Crypto Payment"
+                    layer="Network Service"
+                    name="Crypto Transmission"
                     >
                     <next>
-                        <step id="7" type="direct call"></step>
+                        <step id="7" type="event"></step>
                     </next>
                 </step>
+
                 <step id="7"
                     type="activity"
-                    title="Return payment request list"
-                    description="The module returns the payement request receive list."
+                    title="Call the incoming intra user plugin to deliver the sends bitcoins"
+                    description="The crypto network bitcoin places a call to the incoming intra user plugin and then it delivers the sends crypto."
+                    platform="BCH"
+                    superlayer=""
+                    component="Plugin"
+                    layer="Crypto Network"
+                    name="Crypto Network Bitcoin"
+                    >
+                    <next>
+                        <step id="8" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8"
+                    type="activity"
+                    title="Apply transaction"
+                    description="The incoming intra user actor merge transaction metada with the bitcoin received and credited its on actor available balance."
                     platform="CCP"
                     superlayer=""
                     component="Plugin"
-                    layer="Wallet Module"
-                    name="Crypto Wallet"
+                    layer="Crypto Transaction"
+                    name="Incoming Intra User"
                     >
                     <next>
                         <step id="8" type="direct call"></step>
@@ -12027,8 +12042,8 @@
                 </step>
                 <step id="8"
                     type="end"
-                    title="List Received Payment Request"
-                    description="The wallet's user go to Payment Request menu and list payment request receive."
+                    title="List Received Transaction"
+                    description="The wallet's user go to Home menu and list receive transactions."
                     platform="CCP"
                     superlayer=""
                     layer="Reference Wallet"
