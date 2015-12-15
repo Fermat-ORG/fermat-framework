@@ -4,12 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.nelsonalfo.testapplication.R;
 
 /**
  * Created by nelson on 11/12/15.
  */
-public class NoteViewHolder extends RecyclerView.ViewHolder {
+public class NoteViewHolder extends FermatViewHolder {
 
     TextView noteTextView;
 

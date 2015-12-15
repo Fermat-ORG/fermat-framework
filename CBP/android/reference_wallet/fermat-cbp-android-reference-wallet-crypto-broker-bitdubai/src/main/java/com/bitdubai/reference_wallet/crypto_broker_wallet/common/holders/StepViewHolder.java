@@ -9,13 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nelsonalfo.testapplication.R;
-import com.nelsonalfo.testapplication.activityNegotiationDetails.adapters.NegotiationDetailsAdapter;
-import com.nelsonalfo.testapplication.fermat_api.fermat_interfaces.NegotiationStep;
-import com.nelsonalfo.testapplication.fermat_api.fermat_interfaces.NegotiationStepStatus;
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
 
 
-public abstract class StepViewHolder extends RecyclerView.ViewHolder {
+public abstract class StepViewHolder extends FermatViewHolder {
 
     private final Resources res;
 

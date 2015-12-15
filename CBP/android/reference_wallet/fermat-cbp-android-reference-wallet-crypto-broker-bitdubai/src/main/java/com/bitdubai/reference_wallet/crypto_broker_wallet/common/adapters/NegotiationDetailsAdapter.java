@@ -4,15 +4,22 @@ import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.AmountToSellStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.DateTimeStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ExchangeRateStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.NoteViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.SingleChoiceStepViewHolder;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
-public class NegotiationDetailsAdapter extends FermatAdapter<NegotiationStep, RecyclerView.ViewHolder> {
+public class NegotiationDetailsAdapter extends FermatAdapter<NegotiationStep, FermatViewHolder> {
     private static final int NO_TYPE = Integer.MIN_VALUE;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM_SINGLE_CHOICE = 1;
@@ -34,7 +41,7 @@ public class NegotiationDetailsAdapter extends FermatAdapter<NegotiationStep, Re
     }
 
     @Override
-    protected RecyclerView.ViewHolder createHolder(View itemView, int type) {
+    protected FermatViewHolder createHolder(View itemView, int type) {
         if (type == TYPE_HEADER)
             return new NoteViewHolder(itemView);
         if (type == TYPE_ITEM_DATE_TIME)

@@ -8,18 +8,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nelsonalfo.testapplication.R;
-import com.nelsonalfo.testapplication.activityBrokerList.MainActivity;
-import com.nelsonalfo.testapplication.fermat_api.ModuleManager;
-import com.nelsonalfo.testapplication.fermat_api.fermat_interfaces.CustomerBrokerNegotiationInformation;
-import com.nelsonalfo.testapplication.fermat_api.fermat_interfaces.NegotiationStep;
+
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 
 import java.util.List;
 
 /**
  * Created by nelson on 11/12/15.
  */
-public class FooterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class FooterViewHolder extends FermatViewHolder implements View.OnClickListener {
 
     private CustomerBrokerNegotiationInformation data;
     private List<NegotiationStep> dataSet;
