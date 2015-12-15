@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
@@ -132,5 +133,15 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
+
+    /**
+     * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.
+     *
+     * @param requestId  id of the connection request to confirm.
+     *
+     * @throws CantConfirmException                   if something goes wrong.
+     * @throws ConnectionRequestNotFoundException     if the connection request cannot be found.
+     */
+    void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
 
 }
