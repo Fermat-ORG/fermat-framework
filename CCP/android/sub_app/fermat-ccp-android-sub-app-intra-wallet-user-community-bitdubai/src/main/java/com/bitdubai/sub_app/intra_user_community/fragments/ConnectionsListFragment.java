@@ -55,7 +55,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
-    private List<IntraUserInformation> lstIntraUserInformations;
+    private ArrayList<IntraUserInformation> lstIntraUserInformations;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
@@ -81,6 +81,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new AppFriendsListAdapter(getActivity(), lstIntraUserInformations);
+            adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
@@ -125,7 +126,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            lstIntraUserInformations = (List<IntraUserInformation>) result[0];
+                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -183,7 +184,6 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-        Toast.makeText(getActivity(),"Action Clicked",Toast.LENGTH_SHORT).show();
         appSession.setData(INTRA_USER_SELECTED, data);
         changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
