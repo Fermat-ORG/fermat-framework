@@ -2,14 +2,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.deve
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
-import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDatabaseFactory;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 
 import java.util.UUID;
 
@@ -24,7 +23,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBrokerActorIdentity, CryptoBrokerActorConnection> {
+public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBrokerLinkedActorIdentity, CryptoBrokerActorConnection> {
 
     public CryptoBrokerActorConnectionDao(final PluginDatabaseSystem pluginDatabaseSystem,
                                           final UUID                 pluginId            ) {
@@ -49,7 +48,7 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
         Actors          actorType       = Actors         .getByCode(actorTypeString      );
         ConnectionState connectionState = ConnectionState.getByCode(connectionStateString);
 
-        CryptoBrokerActorIdentity actorIdentity = new CryptoBrokerActorIdentity(linkedIdentityPublicKey);
+        CryptoBrokerLinkedActorIdentity actorIdentity = new CryptoBrokerLinkedActorIdentity(linkedIdentityPublicKey);
 
         return new CryptoBrokerActorConnection(
                 connectionId   ,

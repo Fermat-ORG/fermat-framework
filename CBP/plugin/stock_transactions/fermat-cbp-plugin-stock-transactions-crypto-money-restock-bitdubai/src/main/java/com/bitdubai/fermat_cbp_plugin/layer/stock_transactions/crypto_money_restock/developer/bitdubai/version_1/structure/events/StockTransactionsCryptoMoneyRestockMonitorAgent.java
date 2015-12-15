@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyRestockDataException;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyRestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils.CryptoTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
@@ -28,6 +30,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -36,7 +39,6 @@ import java.util.logging.Logger;
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
-    //TODO: Documentar y manejo de excepciones. Inicializar los manager del Hold Crypto que no existe esos plugines en CCP y Wallet CBP para que seteados en el constructor
     //TODO: Manejo de Eventos
 
     private Thread agentThread;
@@ -45,17 +47,21 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
     private final StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CryptoUnholdTransactionManager cryptoUnholdTransactionManager;
+    private final StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory;
 
     public StockTransactionsCryptoMoneyRestockMonitorAgent(ErrorManager errorManager,
                                                            StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager,
                                                            CryptoBrokerWalletManager cryptoBrokerWalletManager,
-                                                           CryptoUnholdTransactionManager cryptoUnholdTransactionManager)
+                                                           CryptoUnholdTransactionManager cryptoUnholdTransactionManager,
+                                                           PluginDatabaseSystem pluginDatabaseSystem,
+                                                           UUID pluginId)
                                                            {
 
-        this.errorManager                            = errorManager;
+        this.errorManager                              = errorManager;
         this.stockTransactionCryptoMoneyRestockManager = stockTransactionCryptoMoneyRestockManager;
-        this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
-        this.cryptoUnholdTransactionManager           = cryptoUnholdTransactionManager;
+        this.cryptoBrokerWalletManager                 = cryptoBrokerWalletManager;
+        this.cryptoUnholdTransactionManager            = cryptoUnholdTransactionManager;
+        this.stockTransactionCryptoMoneyRestockFactory = new StockTransactionCryptoMoneyRestockFactory(pluginDatabaseSystem, pluginId);
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -120,7 +126,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
         try {
             // I define the filter to null for all
             DatabaseTableFilter filter = null;
-            for(CryptoMoneyTransaction cryptoMoneyTransaction : stockTransactionCryptoMoneyRestockManager.getCryptoMoneyTransactionList(filter))
+            for(CryptoMoneyTransaction cryptoMoneyTransaction : stockTransactionCryptoMoneyRestockFactory.getCryptoMoneyTransactionList(filter))
             {
                 switch(cryptoMoneyTransaction.getTransactionStatus()) {
                     case INIT_TRANSACTION:
@@ -138,7 +144,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
-                        stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+                        stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
                         break;
                     case IN_HOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
@@ -173,12 +179,12 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent{
                                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
                             }
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
-                            stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+                            stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
                         }
                         break;
                     case IN_WALLET:
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
-                        stockTransactionCryptoMoneyRestockManager.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+                        stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
                         break;
                 }
             }

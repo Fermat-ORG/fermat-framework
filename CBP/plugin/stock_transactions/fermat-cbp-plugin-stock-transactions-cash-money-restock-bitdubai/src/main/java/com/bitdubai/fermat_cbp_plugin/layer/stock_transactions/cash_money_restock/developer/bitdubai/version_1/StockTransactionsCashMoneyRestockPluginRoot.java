@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -51,8 +52,6 @@ import java.util.UUID;
  * Created by franklin on 16/11/15.
  */
 public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin  implements
-        //TODO: Implementar DealsWiths de los modulos BNK y la Wallet CBP
-        CashMoneyRestockManager,
         DatabaseManagerForDevelopers {
 
     public StockTransactionsCashMoneyRestockPluginRoot() {
@@ -88,7 +87,7 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Cash Money Restock ******");
-            //testRestock();
+
             startMonitorAgent();
 
             database.closeDatabase();
@@ -117,6 +116,11 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
     }
 
     @Override
+    public FermatManager getManager() {
+        return stockTransactionCashMoneyRestockManager;
+    }
+
+    @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         StockTransactionsCashMoneyRestockDeveloperFactory stockTransactionsCashMoneyRestockDeveloperFactory = new StockTransactionsCashMoneyRestockDeveloperFactory(pluginDatabaseSystem, pluginId);
         return stockTransactionsCashMoneyRestockDeveloperFactory.getDatabaseList(developerObjectFactory);
@@ -141,35 +145,6 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
         return developerDatabaseTableRecordList;
     }
 
-    @Override
-    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, float amount, String memo, float priceReference, OriginTransaction originTransaction) throws CantCreateCashMoneyRestockException {
-
-        java.util.Date date = new java.util.Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
-        CashMoneyRestockTransactionImpl cashMoneyRestockTransaction = new CashMoneyRestockTransactionImpl(
-                UUID.randomUUID(),
-                publicKeyActor,
-                fiatCurrency,
-                cbpWalletPublicKey,
-                cshWalletPublicKey,
-                memo,
-                "INIT TRANSACTION",
-                cashReference,
-                amount,
-                timestamp,
-                TransactionStatusRestockDestock.INIT_TRANSACTION,
-                priceReference,
-                originTransaction);
-
-        try {
-            stockTransactionCashMoneyRestockManager.saveCashMoneyRestockTransactionData(cashMoneyRestockTransaction);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        } catch (MissingCashMoneyRestockDataException e) {
-            e.printStackTrace();
-        }
-    }
-
     private StockTransactionsCashMoneyRestockMonitorAgent stockTransactionsCashMoneyRestockMonitorAgent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
@@ -181,20 +156,13 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
                     errorManager,
                     stockTransactionCashMoneyRestockManager,
                     cryptoBrokerWalletManager,
-                    cashHoldTransactionManager
+                    cashHoldTransactionManager,
+                    pluginDatabaseSystem,
+                    pluginId
             );
 
             stockTransactionsCashMoneyRestockMonitorAgent.start();
         }else stockTransactionsCashMoneyRestockMonitorAgent.start();
     }
-
-    private void testRestock(){
-        try {
-            createTransactionRestock("publicKeyActor", FiatCurrency.VENEZUELAN_BOLIVAR, "cbpWalletPublicKey", "cshWalletPublicKey", "cashReference", 250, "memo",250, OriginTransaction.STOCK_INITIAL);
-        } catch (CantCreateCashMoneyRestockException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

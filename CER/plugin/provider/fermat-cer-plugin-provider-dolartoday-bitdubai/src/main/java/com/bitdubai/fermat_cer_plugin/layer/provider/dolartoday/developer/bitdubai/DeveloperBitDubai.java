@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.ProviderDolartodayPluginRoot;
+import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.ProviderDollarTodayPluginRoot;
 
 
 /**
@@ -25,7 +25,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new ProviderDolartodayPluginRoot());
+            this.registerVersion(new ProviderDollarTodayPluginRoot());
 
         } catch (CantRegisterVersionException e) {
 
