@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot;
 
 /**
- * Created by Yordin Alayn on 16.09.15.
+ * Created by Manuel Perez on 08/12/2015
  */
 
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {

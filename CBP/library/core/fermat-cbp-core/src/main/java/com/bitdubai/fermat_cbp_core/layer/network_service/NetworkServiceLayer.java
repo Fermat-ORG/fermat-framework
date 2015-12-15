@@ -21,9 +21,9 @@ public class NetworkServiceLayer extends AbstractLayer {
         try {
 
             registerPlugin(new TransactionTransmissionPluginSubsystem());
-            registerPlugin(new NegotiationTransmissionPluginSubsystem());
+            // registerPlugin(new NegotiationTransmissionPluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

@@ -125,7 +125,7 @@ import java.util.UUID;
         List<String> projectColumns = new ArrayList<String>();
 
         /**
-         * Table Asset Factory addition.
+         * Table Bank Money Destock addition.
          */
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME);
