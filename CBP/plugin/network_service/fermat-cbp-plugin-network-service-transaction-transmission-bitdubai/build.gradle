@@ -33,5 +33,6 @@ task testCoverage(dependsOn: jacocoTestReport) << {
 }
 
 jacocoTestReport.dependsOn clean, test
-test.mustRunAfter clean
 jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean
+

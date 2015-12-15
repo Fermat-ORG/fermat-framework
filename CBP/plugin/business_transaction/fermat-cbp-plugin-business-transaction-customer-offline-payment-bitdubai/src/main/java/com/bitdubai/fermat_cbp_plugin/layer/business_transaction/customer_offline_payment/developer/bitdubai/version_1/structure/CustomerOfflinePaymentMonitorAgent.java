@@ -51,6 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 14/12/15.
@@ -97,8 +98,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("Customer online payment monitor agent starting");
+        Logger LOG = Logger.getGlobal();
+        LOG.info("Customer offline payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
