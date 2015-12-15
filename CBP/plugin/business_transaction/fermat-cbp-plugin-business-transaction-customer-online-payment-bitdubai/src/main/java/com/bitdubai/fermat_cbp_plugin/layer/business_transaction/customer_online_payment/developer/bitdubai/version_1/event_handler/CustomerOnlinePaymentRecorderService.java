@@ -39,7 +39,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception,
-                    "Cannot set the asset distribution database handler",
+                    "Cannot set the customer offline payment database handler",
                     "The database handler is null");
         }
     }
@@ -47,7 +47,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
     private void setDatabaseDao(CustomerOnlinePaymentBusinessTransactionDao closeContractBusinessTransactionDao)
             throws CantSetObjectException {
         if(closeContractBusinessTransactionDao==null){
-            throw new CantSetObjectException("The CloseContractBusinessTransactionDao is null");
+            throw new CantSetObjectException("The CustomerOnlinePaymentBusinessTransactionDao is null");
         }
         this.customerOnlinePaymentBusinessTransactionDao =closeContractBusinessTransactionDao;
     }
