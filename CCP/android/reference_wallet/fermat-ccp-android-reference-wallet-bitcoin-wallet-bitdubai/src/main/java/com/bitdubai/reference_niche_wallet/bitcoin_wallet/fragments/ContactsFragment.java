@@ -25,10 +25,8 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -57,12 +55,11 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_con
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewPainter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -194,18 +191,20 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
     private void setUpFAB() {
         // in Activity Context
-        FrameLayout frameLayout = new FrameLayout(getActivity());
+//        FrameLayout frameLayout = new FrameLayout(getActivity());
+//
+//        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+//
+//        frameLayout.setLayoutParams(lbs);
+//
+//        ImageView icon = new ImageView(getActivity()); // Create an icon
+//        //icon.setImageResource(R.drawable.ic_contact_newcontact);
+//
+//        frameLayout.addView(icon);
 
-        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-
-        frameLayout.setLayoutParams(lbs);
-
-        ImageView icon = new ImageView(getActivity()); // Create an icon
-        //icon.setImageResource(R.drawable.ic_contact_newcontact);
-
-        frameLayout.addView(icon);
-
-        rootView.findViewById(R.id.btn_intra_user).setOnClickListener(this);
+        View view = rootView.findViewById(R.id.btn_intra_user);
+        view.setVisibility(View.VISIBLE);
+                view.setOnClickListener(this);
         rootView.findViewById(R.id.btn_extra_user).setOnClickListener(this);
 
 
@@ -247,7 +246,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            getPaintActivtyFeactures().addNavigationView(new NavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
+            getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
         } catch (CantGetActiveLoginIdentityException e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -298,9 +297,9 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
         if(walletContactRecords.isEmpty()){
             mEmptyView.setVisibility(View.VISIBLE);
-            contacts_container.setVisibility(View.GONE);
+            mListView.setVisibility(View.GONE);
         }else {
-            contacts_container.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         }
         refreshAdapter();
@@ -338,6 +337,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
         mSearchView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+
+        //(LinearLayout) rootView.findViewById(R.id.fragment_container2).setVisibility((cryptoWallet.listWalletContactsScrolling(referenceWalletSession.getAppPublicKey(),)));
 
         mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
