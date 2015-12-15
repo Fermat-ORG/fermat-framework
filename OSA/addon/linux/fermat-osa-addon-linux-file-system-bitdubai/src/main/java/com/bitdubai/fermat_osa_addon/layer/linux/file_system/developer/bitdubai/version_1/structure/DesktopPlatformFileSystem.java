@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.structure;
 
 
-
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformBinaryFile;
@@ -12,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.exceptions.CantHashFileNameException;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -22,74 +21,88 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * The Platform File System is the implementation of the file system that is handled to external plugins not requires the plug in to identify itself.
- *
+ * <p>
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
 public class DesktopPlatformFileSystem implements PlatformFileSystem {
 
-
-    /**
-     * PlatformFileSystem interface member variables.
-     */
-
-
+    private static final String CHARSET_NAME = "UTF-8";
+    private static final String DIGEST_ALGORITHM = "SHA-256";
 
     /**
      * PlatformFileSystem interface implementation.
      */
 
     /**
-     *<p>This method gets a new PlatformTextFile object. And load file content on memory
+     * <p>This method gets a new PlatformTextFile object. And load file content on memory
      *
      * @param directoryName name of the directory where the files are stored
-     * @param fileName name of file to load
-     * @param privacyLevel level of privacy for the file, if it is public or private
-     * @param lifeSpan lifeSpan of the file, whether it is permanent or temporary
+     * @param fileName      name of file to load
+     * @param privacyLevel  level of privacy for the file, if it is public or private
+     * @param lifeSpan      lifeSpan of the file, whether it is permanent or temporary
      * @return PlatformTextFile object
      * @throws FileNotFoundException
      * @throws CantCreateFileException
      */
     @Override
-    public PlatformTextFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
-        DesktopPlatformTextFile newFile =null;
-        try {
-
-            newFile = new DesktopPlatformTextFile(directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
-
-        }
-        catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
-            throw new CantCreateFileException();
-        }
+    public final PlatformTextFile getFile(final String directoryName,
+                                          final String fileName,
+                                          final FilePrivacy privacyLevel,
+                                          final FileLifeSpan lifeSpan) throws FileNotFoundException,
+            CantCreateFileException {
 
         try {
+
+            final DesktopPlatformTextFile newFile = new DesktopPlatformTextFile(
+                    EnvironmentVariables.getInternalStorageDirectory().toString(),
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
+                    lifeSpan
+            );
+
             newFile.loadFromMedia();
             return newFile;
-        }
-        catch (CantLoadFileException e){
-            e.printStackTrace();
-            throw new FileNotFoundException();
+        } catch (CantLoadFileException exception) {
+
+            throw new FileNotFoundException(exception, null, "Check the cause of this error");
+        } catch (Exception e) {
+
+            throw new CantCreateFileException(e, "", "Unhandled error.");
         }
 
     }
 
     /**
-     *<p>This method create a new PlatformTextFile object.
+     * <p>This method create a new PlatformTextFile object.
      *
      * @param directoryName name of the directory where the files are stored
-     * @param fileName name of file to load
-     * @param privacyLevel level of privacy for the file, if it is public or private
-     * @param lifeSpan lifeSpan of the file, whether it is permanent or temporary
+     * @param fileName      name of file to load
+     * @param privacyLevel  level of privacy for the file, if it is public or private
+     * @param lifeSpan      lifeSpan of the file, whether it is permanent or temporary
+     *
      * @return PlatformTextFile object
+     *
      * @throws CantCreateFileException
      */
     @Override
-    public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws  CantCreateFileException{
+    public PlatformTextFile createFile(final String       directoryName,
+                                       final String       fileName     ,
+                                       final FilePrivacy  privacyLevel ,
+                                       final FileLifeSpan lifeSpan     ) throws CantCreateFileException {
+
         try {
-        return new DesktopPlatformTextFile(directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
-        }
-        catch (NoSuchAlgorithmException e){
-            throw new CantCreateFileException();
+            return new DesktopPlatformTextFile(
+                    EnvironmentVariables.getInternalStorageDirectory().toString(),
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
+                    lifeSpan
+            );
+
+        } catch(Exception e){
+
+            throw new CantCreateFileException(e,"", "Unhandled error.");
         }
     }
 
@@ -101,10 +114,10 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
             binaryFile.loadFromMedia();
             return binaryFile;
 
-        } catch (CantLoadFileException e){
+        } catch (CantLoadFileException e) {
 
             throw new FileNotFoundException(e, "", "Check the cause");
-        }catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
@@ -117,36 +130,26 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
 
             return new DesktopPlatformBinaryFile(directoryName, fileName, privacyLevel, lifeSpan);
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
-    /**
-     *
-     * Hash the file name using the algorithm SHA 256
-     */
+    private String hashFileName(final String fileName) throws CantHashFileNameException {
 
-    private String hashFileName(String fileName) throws NoSuchAlgorithmException {
-        String encryptedString = fileName;
-        try{
+        try {
 
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(fileName.getBytes(Charset.forName("UTF-8")));
+            final MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
+            md.update(fileName.getBytes(Charset.forName(CHARSET_NAME)));
             byte[] digest = md.digest();
-            Base64 base64 = new Base64();
-            byte[] encoded = base64.encode(digest);
+            byte[] encoded = new Base64().encode(digest);
+            final String encryptedString = new String(encoded, CHARSET_NAME);
+            return encryptedString.replace("/","");
 
-            try {
-                encryptedString = new String(encoded, "UTF-8");
-            } catch (Exception e){
-            	throw new NoSuchAlgorithmException (e);
-            }    
+        } catch(Exception e){
 
-        }catch(NoSuchAlgorithmException e){
-            throw e;
+            throw new CantHashFileNameException(e, "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }
-        return encryptedString.replace("/","");
     }
 }
