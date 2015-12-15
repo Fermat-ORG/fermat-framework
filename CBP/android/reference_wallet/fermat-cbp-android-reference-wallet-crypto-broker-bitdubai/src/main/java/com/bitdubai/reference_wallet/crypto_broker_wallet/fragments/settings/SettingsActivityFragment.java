@@ -35,7 +35,6 @@ import static android.widget.Toast.makeText;
 public class SettingsActivityFragment extends FermatWalletFragment {
 
     // Constants
-    private static final String WALLET_PUBLIC_KEY = "crypto_broker_wallet";
     private static final String TAG = "SettingsActivityFragment";
 
     // Fermat Managers
