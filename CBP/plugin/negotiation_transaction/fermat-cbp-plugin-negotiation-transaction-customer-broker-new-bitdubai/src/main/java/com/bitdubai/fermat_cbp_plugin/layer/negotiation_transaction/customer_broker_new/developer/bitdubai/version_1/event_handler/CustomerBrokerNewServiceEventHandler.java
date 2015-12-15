@@ -117,14 +117,6 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/
-    private void setDatabaseDao(CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao)
-            throws CantSetObjectException {
-        if(customerBrokerNewNegotiationTransactionDatabaseDao==null){
-            throw new CantSetObjectException("The CustomerBrokerNewNegotiationTransactionDatabaseDao is null");
-        }
-        this.customerBrokerNewNegotiationTransactionDatabaseDao=customerBrokerNewNegotiationTransactionDatabaseDao;
-    }
-
     private void removeRegisteredListeners(){
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);
