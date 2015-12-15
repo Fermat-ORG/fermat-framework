@@ -88,14 +88,14 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*Represent Network Service Negotiation Transmission*/
     private NegotiationTransmissionManager                                  negotiationTransmissionManager;
 
-    /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager                        customerBrokerPurchaseNegotiationManager;
-
     /*Represent the Transaction Negotiation Purchase*/
     private CustomerBrokerNewPurchaseNegotiationTransaction                 customerBrokerNewPurchaseNegotiationTransaction;
 
     /*Represent the Transaction Negotiation Sale*/
     private CustomerBrokerNewSaleNegotiationTransaction                     customerBrokerNewSaleNegotiationTransaction;
+
+    /*Represent the Negotiation Purchase*/
+    private CustomerBrokerPurchaseNegotiationManager                        customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
     private CustomerBrokerSaleNegotiationManager                            customerBrokerSaleNegotiationManager;
@@ -147,7 +147,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     pluginId,
                     negotiationTransmissionManager,
                     customerBrokerPurchaseNegotiation,
-                    customerBrokerSaleNegotiation
+                    customerBrokerSaleNegotiation,
+                    customerBrokerPurchaseNegotiationManager,
+                    customerBrokerSaleNegotiationManager
+
             );
             customerBrokerNewAgent.start();
 

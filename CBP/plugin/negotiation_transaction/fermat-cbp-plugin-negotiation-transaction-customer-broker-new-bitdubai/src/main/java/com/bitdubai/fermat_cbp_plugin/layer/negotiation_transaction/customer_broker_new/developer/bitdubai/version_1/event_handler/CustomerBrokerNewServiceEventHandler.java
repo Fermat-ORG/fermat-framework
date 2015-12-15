@@ -48,6 +48,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
              */
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
+
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSACTION);
             fermatEventHandler = new IncomingNegotiationTransactionEventHandler();
             ((IncomingNegotiationTransactionEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
@@ -55,7 +56,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
             fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
             ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);

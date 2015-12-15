@@ -9,6 +9,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.Negoti
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantGetPendingTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 
@@ -25,6 +27,12 @@ public interface NegotiationTransmissionManager extends FermatManager, Transacti
 
     /*Crypto Customer Send negotiation To Crypto Broker*/
     void sendNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType TransactionType) throws CantSendNegotiationToCryptoBrokerException;
+
+    /*Confirmation of creation of negotiation the other side of network service*/
+    void sendConfirmNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException;
+
+    /*Confirmation of creation of negotiation the other side of network service*/
+    void sendConfirmNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoBrokerException;
 
     /*Confirmation of creation of negotiation the other side of network service*/
     void confirmNegotiation(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantConfirmNegotiationException;

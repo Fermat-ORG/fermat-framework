@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -28,22 +29,23 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.events.NewNegotiationTransactionNewEvent;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantSendConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantSendCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.NegotiationPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.NegotiationSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerNewPluginRoot;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
@@ -71,50 +73,59 @@ public class CustomerBrokerNewAgent implements
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity{
 
-    private Database                            database;
+    private Database                                    database;
 
-    private Thread                              agentThread;
+    private Thread                                      agentThread;
 
-    private LogManager                          logManager;
+    private LogManager                                  logManager;
 
-    private EventManager                        eventManager;
+    private EventManager                                eventManager;
 
-    private ErrorManager                        errorManager;
+    private ErrorManager                                errorManager;
 
-    private PluginDatabaseSystem                pluginDatabaseSystem;
+    private PluginDatabaseSystem                        pluginDatabaseSystem;
 
-    private UUID                                pluginId;
+    private UUID                                        pluginId;
 
     /*Represent the Network Service*/
-    private NegotiationTransmissionManager      negotiationTransmissionManager;
+    private NegotiationTransmissionManager              negotiationTransmissionManager;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation   customerBrokerPurchaseNegotiation;
+    private CustomerBrokerPurchaseNegotiation           customerBrokerPurchaseNegotiation;
+
+    /*Represent the Negotiation Purchase*/
+    private CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation       customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation;
 
+    /*Represent the Negotiation Sale*/
+    private CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager;
 
-    private MonitorAgentTransaction monitorAgentTransaction;
+    private MonitorAgentTransaction                     monitorAgentTransaction;
 
     public CustomerBrokerNewAgent(
-            PluginDatabaseSystem                pluginDatabaseSystem,
-            LogManager                          logManager,
-            ErrorManager                        errorManager,
-            EventManager                        eventManager,
-            UUID                                pluginId,
-            NegotiationTransmissionManager      negotiationTransmissionManager,
-            CustomerBrokerPurchaseNegotiation   customerBrokerPurchaseNegotiation,
-            CustomerBrokerSaleNegotiation       customerBrokerSaleNegotiation
+            PluginDatabaseSystem                        pluginDatabaseSystem,
+            LogManager                                  logManager,
+            ErrorManager                                errorManager,
+            EventManager                                eventManager,
+            UUID                                        pluginId,
+            NegotiationTransmissionManager              negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiation           customerBrokerPurchaseNegotiation,
+            CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation,
+            CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager
     ){
-        this.pluginDatabaseSystem               = pluginDatabaseSystem;
-        this.logManager                         = logManager;
-        this.errorManager                       = errorManager;
-        this.eventManager                       = eventManager;
-        this.pluginId                           = pluginId;
-        this.negotiationTransmissionManager     = negotiationTransmissionManager;
-        this.customerBrokerPurchaseNegotiation  = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation      = customerBrokerSaleNegotiation;
+        this.pluginDatabaseSystem                       = pluginDatabaseSystem;
+        this.logManager                                 = logManager;
+        this.errorManager                               = errorManager;
+        this.eventManager                               = eventManager;
+        this.pluginId                                   = pluginId;
+        this.negotiationTransmissionManager             = negotiationTransmissionManager;
+        this.customerBrokerPurchaseNegotiation          = customerBrokerPurchaseNegotiation;
+        this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
+        this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -125,7 +136,7 @@ public class CustomerBrokerNewAgent implements
         LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
         monitorAgentTransaction = new MonitorAgentTransaction();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgentTransaction).setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        ((DealsWithPluginDatabaseSystem) this.monitorAgentTransaction).setPluginDatabaseSystem(pluginDatabaseSystem);
         ((DealsWithErrors) this.monitorAgentTransaction).setErrorManager(this.errorManager);
 
         try {
@@ -246,19 +257,20 @@ public class CustomerBrokerNewAgent implements
                 CantUpdateRecordException
         {
             try{
-                
-                //Check if exist in database new contracts to send
+
                 String                  negotiationXML;
                 NegotiationType         negotiationType;
                 UUID                    transactionId;
                 NegotiationTransaction  negotiationTransaction;
-                CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
+                List<String>            negotiationPendingToSubmitList;
+                        CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation      saleNegotiation     = new NegotiationSaleRecord();
 
-                List<String> negotiationPendingToSubmitList    = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
-                
+                //Check if exist negotiation for send (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
+                negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
                     for(String negotiationToSubmit: negotiationPendingToSubmitList){
+
                         System.out.println("Customer Broker New - Negotiation to submit:\n"+negotiationToSubmit);
 
                         negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
@@ -268,13 +280,18 @@ public class CustomerBrokerNewAgent implements
 
                         switch (negotiationType){
                             case PURCHASE:
-                                //PASAR LA NEGOCIACION, AGREGAR AL NegotiationPurchaseRecord EL ToString
                                 purchaseNegotiation = (CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                //CHANGE STATUS PURCHASE NEGOTIATION
+                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
                                 break;
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation)XMLParser.parseXML(negotiationXML,saleNegotiation);
+                                //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                //CHANGE STATUS SALE NEGOTIATION
+                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
                                 break;
                         }
                         
@@ -283,31 +300,32 @@ public class CustomerBrokerNewAgent implements
                     }
 
                 }
-                
-                //Check if pending contract to confirm
-                List<String> contractPendingToConfirmList   = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
-                
-                if(!contractPendingToConfirmList.isEmpty()){
+
+                //Check if exist negotiation for confirm (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
+                negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
+                if(!negotiationPendingToSubmitList.isEmpty()){
                     for(String negotiationToSubmit: negotiationPendingToSubmitList){
                         
                         System.out.println("Customer Broker New - Negotiation to confirm:\n"+negotiationToSubmit);
                         
-                        negotiationXML  = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
-                        negotiationType = customerBrokerNewNegotiationTransactionDatabaseDao.getContractType(negotiationToSubmit);
-                        transactionId   = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
+                        negotiationXML          = customerBrokerNewNegotiationTransactionDatabaseDao.getNegotiationXML(negotiationToSubmit);
+                        negotiationType         = customerBrokerNewNegotiationTransactionDatabaseDao.getContractType(negotiationToSubmit);
+                        transactionId           = customerBrokerNewNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
                         negotiationTransaction  = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
 
                         switch (negotiationType){
                             case PURCHASE:
-                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
-                                negotiationTransmissionManager.confirmNegotiation(negotiationTransaction,NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+//                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
+                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                //VIEW THAN METHOD OF NEGOTIATION CHANGE STATUS CONFITMATION
                                 break;
                             case SALE:
-                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
-                                negotiationTransmissionManager.confirmNegotiation(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+//                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
+                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
+                                //VIEW THAN METHOD OF NEGOTIATION CHANGE STATUS CONFITMATION
                                 break;
                         }
-                        //Update the ContractTransactionStatus
+
                         customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
                     }
 
@@ -326,11 +344,15 @@ public class CustomerBrokerNewAgent implements
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Unexpected result in database");
             } catch (CantSendNegotiationToCryptoBrokerException e) {
-                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Error in Negotiation Transmission Network Service");
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
             } catch (CantSendNegotiationToCryptoCustomerException e) {
-                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Error in Negotiation Transmission Network Service");
-            } catch (CantConfirmNegotiationException e) {
-                throw new CantSendConfirmationNegotiationTransactionException(CantSendConfirmationNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Error in Negotiation Transmission Network Service");
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Purchase Negotiation","Error in Negotiation Transmission Network Service");
+            } catch (CantSendConfirmToCryptoBrokerException e) {
+                throw new CantSendConfirmationNegotiationTransactionException(CantSendConfirmationNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Confirm Sale Negotiation","Error in Negotiation Transmission Network Service");
+            } catch (CantSendConfirmToCryptoCustomerException e) {
+                throw new CantSendConfirmationNegotiationTransactionException(CantSendConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
+            } catch (Exception e) {
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
             }
         }
         

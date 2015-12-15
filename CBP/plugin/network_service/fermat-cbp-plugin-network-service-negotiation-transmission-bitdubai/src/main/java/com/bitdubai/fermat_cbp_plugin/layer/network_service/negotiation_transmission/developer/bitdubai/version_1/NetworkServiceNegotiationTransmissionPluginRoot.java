@@ -49,6 +49,8 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantGetPendingTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
@@ -153,7 +155,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     //Represent the newLoggingLevel
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    /*CONSTRUCTOR*/
     public NetworkServiceNegotiationTransmissionPluginRoot() {
         super(
                 new PluginVersionReference(new Version()),
@@ -259,6 +260,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*END IMPLEMENTATION Service*/
 
     /*IMPLEMENTATION NegotiationTransmissionManager*/
+
+    //Crypto Broker Send negotiation To Crypto Customer
     public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
 
         try{
@@ -267,9 +270,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
         } catch (CantConstructNegotiationTransmissionException e){
-            throw new CantSendNegotiationToCryptoCustomerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
+            throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantSendNegotiationToCryptoCustomerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
+            throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (Exception e){
             throw new CantSendNegotiationToCryptoCustomerException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER, UNKNOWN FAILURE.");
         }
@@ -285,23 +288,49 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
         } catch (CantConstructNegotiationTransmissionException e){
-            throw new CantSendNegotiationToCryptoBrokerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
+            throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantSendNegotiationToCryptoBrokerException("CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
+            throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
         } catch (Exception e){
             throw new CantSendNegotiationToCryptoBrokerException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND NEGOTIATION TO CRYPTO BROKER, UNKNOWN FAILURE.");
         }
 
     }
 
-    public void confirmReception(UUID transmissionId) throws CantConfirmTransactionException {
+    //Crypto Customer Send confirmation negotiation To Crypto Broker
+    public void sendConfirmNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException{
+
         try{
-            databaseDao.confirmReception(transmissionId);
+            PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
+            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+        } catch (CantConstructNegotiationTransmissionException e){
+            throw new CantSendConfirmToCryptoCustomerException(CantSendConfirmToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantConfirmTransactionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
+            throw new CantSendConfirmToCryptoCustomerException(CantSendConfirmToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (Exception e){
-            throw new CantConfirmTransactionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", "ERROR SEND CONFIRM THE RECEPTION, UNKNOWN FAILURE.");
+            throw new CantSendConfirmToCryptoCustomerException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER, UNKNOWN FAILURE.");
         }
+
+    }
+
+    //Crypto Customer Send confirmation negotiation To Crypto Broker
+    public void sendConfirmNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoBrokerException {
+
+        try{
+            PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
+            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+        } catch (CantConstructNegotiationTransmissionException e){
+            throw new CantSendConfirmToCryptoBrokerException(CantSendConfirmToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO BROKER", "");
+        } catch (CantRegisterSendNegotiationTransmissionException e){
+            throw new CantSendConfirmToCryptoBrokerException(CantSendConfirmToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO BROKER", "");
+        } catch (Exception e){
+            throw new CantSendConfirmToCryptoBrokerException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND NEGOTIATION TO CRYPTO BROKER, UNKNOWN FAILURE.");
+        }
+
     }
 
     public void confirmNegotiation(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantConfirmNegotiationException {
@@ -319,6 +348,16 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw new CantConfirmNegotiationException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND CONFIRM TO CRYPTO BROKER, UNKNOWN FAILURE.");
         }
 
+    }
+
+    public void confirmReception(UUID transmissionId) throws CantConfirmTransactionException {
+        try{
+            databaseDao.confirmReception(transmissionId);
+        } catch (CantRegisterSendNegotiationTransmissionException e){
+            throw new CantConfirmTransactionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
+        } catch (Exception e){
+            throw new CantConfirmTransactionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", "ERROR SEND CONFIRM THE RECEPTION, UNKNOWN FAILURE.");
+        }
     }
 
     public List<Transaction<NegotiationTransmission>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
