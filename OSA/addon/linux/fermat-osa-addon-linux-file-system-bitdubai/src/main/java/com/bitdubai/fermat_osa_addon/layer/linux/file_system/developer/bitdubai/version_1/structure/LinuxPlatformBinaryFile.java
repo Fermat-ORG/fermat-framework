@@ -27,7 +27,7 @@ import java.io.OutputStream;
  * @Version 1.0
  */
 
-public class DesktopPlatformBinaryFile implements PlatformBinaryFile {
+public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 6547;
     private static final int HASH_PRIME_NUMBER_ADD = 3847;
@@ -41,7 +41,7 @@ public class DesktopPlatformBinaryFile implements PlatformBinaryFile {
     private byte[] content;
 
 
-    public DesktopPlatformBinaryFile( final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan) {
+    public LinuxPlatformBinaryFile(final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan) {
         this.directoryName = directoryName;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
@@ -190,10 +190,10 @@ public class DesktopPlatformBinaryFile implements PlatformBinaryFile {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof DesktopPlatformBinaryFile))
+        if(!(o instanceof LinuxPlatformBinaryFile))
             return false;
 
-        DesktopPlatformBinaryFile compare = (DesktopPlatformBinaryFile) o;
+        LinuxPlatformBinaryFile compare = (LinuxPlatformBinaryFile) o;
         return directoryName.equals(compare.getDirectoryName()) && fileName.equals(compare.getFileName()) && privacyLevel.equals(compare.getPrivacyLevel());
     }
 

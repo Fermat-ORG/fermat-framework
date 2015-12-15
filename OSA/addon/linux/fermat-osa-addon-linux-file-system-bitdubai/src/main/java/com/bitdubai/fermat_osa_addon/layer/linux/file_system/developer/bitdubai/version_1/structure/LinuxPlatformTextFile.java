@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
  * Created by Natalia on 12/02/2015. Migrated to Desktop by Matias
  * Modified by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
-public class DesktopPlatformTextFile implements PlatformTextFile {
+public class LinuxPlatformTextFile implements PlatformTextFile {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 5003;
     private static final int HASH_PRIME_NUMBER_ADD     = 4349;
@@ -52,11 +52,11 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
      * @param privacyLevel level of privacy for the file, if it is public or private
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
-    public DesktopPlatformTextFile(final String       contextPath  ,
-                                   final String       directoryName,
-                                   final String       fileName     ,
-                                   final FilePrivacy  privacyLevel ,
-                                   final FileLifeSpan lifeSpan     ){
+    public LinuxPlatformTextFile(final String contextPath,
+                                 final String directoryName,
+                                 final String fileName,
+                                 final FilePrivacy privacyLevel,
+                                 final FileLifeSpan lifeSpan){
 
         this.contextPath   = contextPath  ;
         this.directoryName = directoryName;
@@ -214,10 +214,10 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
 
     @Override
     public boolean equals(Object o){
-        if(!(o instanceof DesktopPlatformTextFile))
+        if(!(o instanceof LinuxPlatformTextFile))
             return false;
 
-        DesktopPlatformTextFile compare = (DesktopPlatformTextFile) o;
+        LinuxPlatformTextFile compare = (LinuxPlatformTextFile) o;
         return directoryName.equals(compare.getDirectoryName()) && fileName.equals(compare.getFileName()) && privacyLevel.equals(compare.getPrivacyLevel());
     }
 

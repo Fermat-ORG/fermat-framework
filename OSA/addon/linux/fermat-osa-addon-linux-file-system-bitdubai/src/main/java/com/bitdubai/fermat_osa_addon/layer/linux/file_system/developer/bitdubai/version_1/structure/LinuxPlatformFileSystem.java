@@ -16,7 +16,6 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -24,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
  * <p>
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
-public class DesktopPlatformFileSystem implements PlatformFileSystem {
+public class LinuxPlatformFileSystem implements PlatformFileSystem {
 
     private static final String CHARSET_NAME = "UTF-8";
     private static final String DIGEST_ALGORITHM = "SHA-256";
@@ -53,7 +52,7 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
 
         try {
 
-            final DesktopPlatformTextFile newFile = new DesktopPlatformTextFile(
+            final LinuxPlatformTextFile newFile = new LinuxPlatformTextFile(
                     EnvironmentVariables.getInternalStorageDirectory().toString(),
                     directoryName,
                     hashFileName(fileName),
@@ -92,7 +91,7 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
                                        final FileLifeSpan lifeSpan     ) throws CantCreateFileException {
 
         try {
-            return new DesktopPlatformTextFile(
+            return new LinuxPlatformTextFile(
                     EnvironmentVariables.getInternalStorageDirectory().toString(),
                     directoryName,
                     hashFileName(fileName),
@@ -110,7 +109,7 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
     public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
         try {
 
-            final DesktopPlatformBinaryFile binaryFile = new DesktopPlatformBinaryFile(directoryName, fileName, privacyLevel, lifeSpan);
+            final LinuxPlatformBinaryFile binaryFile = new LinuxPlatformBinaryFile(directoryName, fileName, privacyLevel, lifeSpan);
             binaryFile.loadFromMedia();
             return binaryFile;
 
@@ -128,7 +127,7 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
 
         try {
 
-            return new DesktopPlatformBinaryFile(directoryName, fileName, privacyLevel, lifeSpan);
+            return new LinuxPlatformBinaryFile(directoryName, fileName, privacyLevel, lifeSpan);
 
         } catch (Exception e) {
 
