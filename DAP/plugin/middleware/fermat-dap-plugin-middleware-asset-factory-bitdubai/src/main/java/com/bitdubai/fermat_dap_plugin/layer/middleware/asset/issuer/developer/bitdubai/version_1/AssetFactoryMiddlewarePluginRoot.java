@@ -31,6 +31,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
@@ -78,6 +80,9 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM   , layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_ISSUING)
     private AssetIssuingManager assetIssuingManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY , plugin = Plugins.ASSET_ISSUER        )
+    private IdentityAssetIssuerManager identityAssetIssuerManager;
 
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
@@ -132,7 +137,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 
     @Override
     public void start() throws CantStartPluginException {
-        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(assetIssuingManager, pluginDatabaseSystem, pluginFileSystem, pluginId, walletManagerManager) ;
+        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(assetIssuingManager, pluginDatabaseSystem, pluginFileSystem, pluginId, walletManagerManager, identityAssetIssuerManager) ;
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             //TODO: Borrar luego solo es para Test
@@ -208,10 +213,10 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 //            resource.setResourceBinayData(new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff});
 //            resources.add(resource);
             assetFactory.setResources(null);
-            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
-            assetIssuerIdentity.setAlias("Franklin Marcano");
-            assetIssuerIdentity.setPublicKey("ASDS-10087982");
-            assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
+//            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
+//            assetIssuerIdentity.setAlias("Franklin Marcano");
+//            assetIssuerIdentity.setPublicKey("ASDS-10087982");
+            assetFactory.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
             assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
         }catch (Exception e){
             System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
