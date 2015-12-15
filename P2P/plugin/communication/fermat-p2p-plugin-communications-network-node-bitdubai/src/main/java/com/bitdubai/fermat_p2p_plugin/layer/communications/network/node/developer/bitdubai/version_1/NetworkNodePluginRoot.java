@@ -154,7 +154,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              /*
              * Initialize the Data Base of the node
              */
-            //initializeDb();
+            initializeDb();
 
             /*
              * Create and start the internal server
