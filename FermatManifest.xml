@@ -7665,137 +7665,137 @@
             </steps>
         </process>
 
-        <process platform="CBP" name="Install a Crypto Customer Reference Wallet"
-             description="Install a Crypto Broker Wallet from the Wallet Store"
-             previous="">
-        <steps>
-            <step id="0" title="Customer select the Reference Wallet from the Wallet Store"
-                  description="The Customer enter in the Wallet Store en select the Crypto Customer Reference Wallet to install it."
-                  type="start"
-                  component=""
-                  name="Wallet Store"
-                  layer="Sub App"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="1" type="direct call"></step>
-                </next>
-            </step>
-            <step id="1" title="Invoke the installation of the Reference Wallet to the Wallet Manager"
-                  description="Invoke the installation of the Reference Wallet to the Wallet Manager Middleware Plugin"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Store"
-                  layer="Sub App Module"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="2" type="direct call"></step>
-                </next>
-            </step>
-            <step id="2" title="Reference Wallet's Resources Installation Request Request "
-                  description="The Wallet Manager send a Request to install the resources of the Reference Wallet"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="3" type="direct call"></step>
-                </next>
-            </step>
-            <step id="3" title="Download of resources in the device"
-                  description="The Wallet Resources Network Service download from the GitHub repository the necessary resources for the Crypto Customer Reference Wallet"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Resources"
-                  layer="Network Service"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="4" type="direct call"></step>
-                </next>
-            </step>
-            <step id="4" title="Take of the Navigation Structure and Activation of the Reference Wallet"
-                  description="Take the Navigation Structure of the Reference Wallet and fire a event registering the activation of the Reference Wallet "
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Runtime"
-                  layer="Engine"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="5" type="event"></step>
-                </next>
-            </step>
-            <step id="5" title="Marking the Reference Wallet has Installed"
-                  description="Mark the Crypto Customer Reference Wallet as Installed and fire a event"
-                  type="activity"
-                  component="Plugin"
-                  name="Wallet Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="6" type="event"></step>
-                </next>
-            </step>
-            <step id="6" title="Request of resources for the Sub Apps"
-                  description="Request to the SubApp Resources Network Service the download of the resources for the Crypto Customer Identity and Crypto Broker Community Sub Apps"
-                  type="activity"
-                  component="Plugin"
-                  name="Sub App Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-                <next>
-                    <step id="7" type="fermat message"></step>
-                </next>
-            </step>
-            <step id="7" title="Download of resources for the Sub Apps"
-                  description="Download the resources for the Crypto Customer Identity and Crypto Broker Community Sub Apps"
-                  type="activity"
-                  component="Plugin"
-                  name="Sub App Resources"
-                  layer="Network Service"
-                  platform="CBP"
-                  superlayer="">
-                <next>
-                    <step id="8" type="fermat message"></step>
-                </next>
-            </step>
-            <step id="8" title="Take of the Navigation Structure and Activation of the Sub Apps"
-                  description="Take of the Navigation Structure of the Crypto Customer Identity and Crypto Broker Community Sub Apps and fire a event activate them"
-                  type="activity"
-                  component="Plugin"
-                  name="Sub App Runtime"
-                  layer="Network Service"
-                  platform="CBP"
-                  superlayer="">
-                <next>
-                    <step id="9" type="direct call"></step>
-                </next>
-            </step>
-            <step id="9" title="Marking the Sub Apps has Installed"
-                  description="Mark the Sub Apps as Installed"
-                  type="end"
-                  component="Plugin"
-                  name="Sub App Manager"
-                  layer="Middleware"
-                  platform="WPD"
-                  superlayer="">
-            </step>
-        </steps>
-    </process>
+        <process platform="CBP" name="Crypto Customer Reference Wallet Installation"
+                 description="Wallet Store installation procedure for the Crypto Customer Reference Wallet"
+                 previous="">
+            <steps>
+                <step id="0" title="User selects the Customer Wallet on the Wallet Store"
+                      description="The user enters the Wallet Store and selects the Crypto Customer Reference Wallet to install it"
+                      type="start"
+                      component=""
+                      name="Wallet Store"
+                      layer="Sub App"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" title="Wallet Store invokes the Wallet Manager Middleware Plugin"
+                      description="The Wallet Store notifies the Wallet Manager Middleware Plugin so it can install the Wallet"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Store"
+                      layer="Sub App Module"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" title="Wallet Manager Middleware Plugin processes installation request"
+                      description="The Wallet Manager Middleware Plugin sends a request to the Wallet Resources Network Service, to gather the resources of the Reference Wallet to be installed"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" title="Wallet Resources Network Service downloads wallet's resources"
+                      description="The Wallet Resources Network Service downloads the Crypto Customer Reference Wallet's resources, from the GitHub repository"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Resources"
+                      layer="Network Service"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" title="Processing of the Wallet's Navigation Structure"
+                      description="The Wallet Runtime processes the Navigation Structure of the Reference Wallet and fires an event which effectively registers the Reference Wallet"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Runtime"
+                      layer="Engine"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="5" type="event"></step>
+                    </next>
+                </step>
+                <step id="5" title="Setting the Crypto Customer Reference Wallet as Installed"
+                      description="The Wallet Manager Middleware sets the Crypto Customer Reference Wallet as installed, and fires an event"
+                      type="activity"
+                      component="Plugin"
+                      name="Wallet Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="6" type="event"></step>
+                    </next>
+                </step>
+                <step id="6" title="Sub App Manager requests resources for the Wallet's Sub Apps"
+                      description="Sub App Manager sends a request to the Sub App Resources Network Service so it can download the necessary resources (Crypto Customer Identity and Crypto Broker Community Sub Apps)"
+                      type="activity"
+                      component="Plugin"
+                      name="Sub App Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                    <next>
+                        <step id="7" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="7" title="Sub App Resources Network Service downloads Sub App's resources"
+                      description="The Sub App Resources Network Service downloads resources for Crypto Customer Identity and Crypto Broker Community Sub Apps"
+                      type="activity"
+                      component="Plugin"
+                      name="Sub App Resources"
+                      layer="Network Service"
+                      platform="CBP"
+                      superlayer="">
+                    <next>
+                        <step id="8" type="fermat message"></step>
+                    </next>
+                </step>
+                <step id="8" title="Sub App Runtime parses the Navigation Structure and activates the Sub Apps"
+                      description="The Sub App Runtime processes the Navigation Structure of the Crypto Customer Identity and Crypto Broker Community Sub Apps and fires a event to activate them"
+                      type="activity"
+                      component="Plugin"
+                      name="Sub App Runtime"
+                      layer="Network Service"
+                      platform="CBP"
+                      superlayer="">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" title="Setting the Sub Apps as Installed"
+                      description="The Sub App Manager Middleware sets the Sub Apps as Installed"
+                      type="end"
+                      component="Plugin"
+                      name="Sub App Manager"
+                      layer="Middleware"
+                      platform="WPD"
+                      superlayer="">
+                </step>
+            </steps>
+        </process>
 
-        <process platform="CBP" name="Create Crypto Broker Identity"
-            description="Creates a Crypto Broker Identity."
+        <process platform="CBP" name="Crypto Broker Identity creation"
+            description="Broker identity creation procedure, to be used by Crypto Brokers"
             previous=""
             >
             <steps>
-                <step id="0" title="Start Crypto Broker Identity creation"
-                    description="Start Crypto Broker Identity creation."
+                <step id="0" title="User requests the creation of a new identity"
+                    description="The user enters the Crypto broker Itentity Sub App and creates a new Crypto Broker identity"
                     type="start"
                     platform="CBP"
                     name="Crypto Broker Identity"
@@ -7807,8 +7807,8 @@
                         <step id="1" type="direct call"></step>
                     </next>
                 </step>
-                <step id="1" title="Process Crypto Broker Identity creation request"
-                    description="Process Crypto Broker Identity creation request."
+                <step id="1" title="Crypto Broker Identity processes request"
+                    description="The Crypto Broker Identity Sub App Module processes the new identity request"
                     type="activity"
                     platform="CBP"
                     name="Crypto Broker Identity"
@@ -7820,8 +7820,8 @@
                         <step id="2" type="direct call"></step>
                     </next>
                 </step>
-                <step id="2" title="Creates Crypto Broker Identity"
-                    description="Creates Crypto Broker Identity."
+                <step id="2" title="Crypto Broker Identity creates the new identity"
+                    description="The Crypto Broker Identity receives the request and creates a new identity for the Crypto Broker"
                     type="end"
                     platform="CBP"
                     name="Crypto Broker"
@@ -7833,13 +7833,13 @@
             </steps>
         </process>
 
-        <process platform="CBP" name="Create Crypto Customer Identity"
-            description="Creates a Crypto Customer Identity."
+        <process platform="CBP" name="Crypto Customer Identity creation"
+            description="Customer identity creation procedure, to be used by Crypto Customers"
             previous=""
             >
             <steps>
-                <step id="0" title="Start Crypto Customer Identity creation"
-                    description="Start Crypto Customer Identity creation."
+                <step id="0" title="User requests the creation of a new identity"
+                    description="The user enters the Crypto Customer Itentity Sub App and creates a new Crypto Customer identity"
                     type="start"
                     platform="CBP"
                     name="Crypto Customer Identity"
@@ -7851,8 +7851,8 @@
                         <step id="1" type="direct call"></step>
                     </next>
                 </step>
-                <step id="1" title="Process Crypto Customer Identity creation request"
-                    description="Process Crypto Customer Identity creation request."
+                <step id="1" title="Crypto Customer Identity processes request"
+                    description="The Crypto Customer Identity Sub App Module processes the new identity request"
                     type="activity"
                     platform="CBP"
                     name="Crypto Customer Identity"
@@ -7864,8 +7864,8 @@
                         <step id="2" type="direct call"></step>
                     </next>
                 </step>
-                <step id="2" title="Creates Crypto Customer Identity"
-                    description="Creates Crypto Customer Identity."
+                <step id="2" title="Crypto Customer Identity creates the new identity"
+                    description="The Crypto Customer Identity receives the request and creates a new identity for the Crypto Customer"
                     type="end"
                     platform="CBP"
                     name="Crypto Customer"
@@ -7877,12 +7877,12 @@
             </steps>
         </process>
 
-        <process platform="CBP" name="List of Crypto Broker Identities"
-            description="Show the list of Crypto Broker Identities"
-            previous="Create Crypto Broker Identity">
+        <process platform="CBP" name="Listing of Crypto Broker Identities"
+            description="Shows a list of Crypto Broker Identities"
+            previous="Crypto Broker Identity creation">
             <steps>
-                <step id="0" title="Request list of Identities"
-                    description="The Broker request the list of his Identities"
+                <step id="0" title="Request list of identities"
+                    description="The Broker requests the list of his identities"
                     type="start"
                     platform="CBP"
                     name="Crypto Broker Identity"
@@ -7894,8 +7894,8 @@
                         <step id="1" type="direct call"></step>
                     </next>
                 </step>
-                <step id="1" title="Request the list of Identities"
-                    description="Request the list of Identities"
+                <step id="1" title="Process the request of the list of Identities"
+                    description="The Crypto Broker Identity Sub App Module processes the request"
                     type="activity"
                     platform="CBP"
                     name="Crypto Broker Identity"
@@ -7907,8 +7907,8 @@
                         <step id="2" type="direct call"></step>
                     </next>
                 </step>
-                <step id="2" title="Return the list of Identities"
-                    description="Return the list of Identities"
+                <step id="2" title="Fetches and returns the list of identities"
+                    description="The Crypto Broker Identity returns the list of identities associated to the broker"
                     type="activity"
                     platform="CBP"
                     name="Crypto Broker"
@@ -7944,12 +7944,12 @@
             </steps>
         </process>
 
-        <process platform="CBP" name="List of Crypto Customer Identities"
-            description="Show the list of Crypto Broker Identities"
-            previous="Create Crypto Customer Identity">
+       <process platform="CBP" name="Listing of Crypto Customer Identities"
+            description="Shows a list of Crypto Customer Identities"
+            previous="Crypto Customer Identity creation">
             <steps>
-                <step id="0" title="Request list of Identities"
-                    description="The Customer request the list of his Identities"
+                <step id="0" title="Request list of identities"
+                    description="The Customer requests the list of his identities"
                     type="start"
                     platform="CBP"
                     name="Crypto Customer Identity"
@@ -7961,8 +7961,8 @@
                         <step id="1" type="direct call"></step>
                     </next>
                 </step>
-                <step id="1" title="Request the list of Identities"
-                    description="Request the list of Identities"
+                <step id="1" title="Process the request of the list of Identities"
+                    description="The Crypto Customer Identity Sub App Module processes the request"
                     type="activity"
                     platform="CBP"
                     name="Crypto Customer Identity"
@@ -7974,8 +7974,8 @@
                         <step id="2" type="direct call"></step>
                     </next>
                 </step>
-                <step id="2" title="Return the list of Identities"
-                    description="Return the list of Identities"
+                <step id="2" title="Fetches and returns the list of identities"
+                    description="The Crypto Customer Identity returns the list of identities associated to the broker"
                     type="activity"
                     platform="CBP"
                     name="Crypto Customer"
