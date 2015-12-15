@@ -10,13 +10,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
@@ -139,8 +137,8 @@ public class AssetFactoryMiddlewareDao {
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetPublicKey);
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, value);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN, name);
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, value);
 
         return record;
     }
@@ -152,9 +150,9 @@ public class AssetFactoryMiddlewareDao {
         DatabaseTable databaseTable = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, assetPublicKey);
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN, name);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN, publicKey);
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN, name);
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, assetPublicKey);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN, signature);
 
         return record;
@@ -190,7 +188,7 @@ public class AssetFactoryMiddlewareDao {
                 DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(),
                         contractProperties.getValue() != null ? contractProperties.getValue().toString() : null);
                 DatabaseTableFilter filter = getContractFilter(contractProperties.getName());
-                filter.setValue(contractProperties.getName());
+//                filter.setValue(contractProperties.getName());
                 if (isNewRecord(table, filter))
                     //New Records
                     transaction.addRecordToInsert(table, record);
@@ -209,8 +207,8 @@ public class AssetFactoryMiddlewareDao {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
 
         DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getPublicKey(), assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
-        DatabaseTableFilter filter = getIdentityIssuerFilter(assetFactory.getIdentyAssetIssuer().getPublicKey());
-        filter.setValue(assetFactory.getIdentyAssetIssuer().getPublicKey());
+        DatabaseTableFilter filter = getIdentityAssetPublicKeyFilter(assetFactory.getPublicKey());
+//        filter.setValue(assetFactory.getIdentyAssetIssuer().getPublicKey());
         if (isNewRecord(table, filter))
             //New Records
             transaction.addRecordToInsert(table, record);
@@ -223,9 +221,9 @@ public class AssetFactoryMiddlewareDao {
         return transaction;
     }
 
-    private DatabaseTableFilter getIdentityIssuerFilter(String value) {
+    private DatabaseTableFilter getIdentityAssetPublicKeyFilter(String value) {
         DatabaseTableFilter filter = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME).getEmptyTableFilter();
-        filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
+        filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN);
         filter.setType(DatabaseFilterType.EQUAL);
         filter.setValue(value);
 
@@ -559,8 +557,8 @@ public class AssetFactoryMiddlewareDao {
            }
 
            DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getPublicKey(), assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
-           DatabaseTableFilter filter = getIdentityIssuerFilter(assetFactory.getIdentyAssetIssuer().getPublicKey());
-           filter.setValue(assetFactory.getIdentyAssetIssuer().getPublicKey());
+           DatabaseTableFilter filter = getIdentityAssetPublicKeyFilter(assetFactory.getIdentyAssetIssuer().getPublicKey());
+//           filter.setValue(assetFactory.getIdentyAssetIssuer().getPublicKey());
            tableIdentityUser.deleteRecord(record);
 
            table.deleteRecord(databaseTablerecord);

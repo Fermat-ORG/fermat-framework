@@ -381,10 +381,11 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
     }
 
     private String getClauseValue(CustomerBrokerNegotiationInformation data, final ClauseType type) {
-        Collection<ClauseInformation> clauses = data.getClauses();
-        for (ClauseInformation clause : clauses)
-            if (clause.getType().equals(type))
-                return clause.getValue();
+        Map<ClauseType, ClauseInformation> clauses = data.getClauses();
+        ClauseInformation clauseInformation = clauses.get(type);
+
+        if (clauseInformation != null)
+            return clauseInformation.getValue();
 
         return null;
     }

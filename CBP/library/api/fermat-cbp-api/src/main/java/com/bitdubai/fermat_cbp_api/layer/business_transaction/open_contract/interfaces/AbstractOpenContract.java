@@ -303,7 +303,7 @@ public abstract class AbstractOpenContract {
             }catch (Exception exception){
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
-                        "Paring String object to long",
+                        "Parsing String object to long",
                         "Cannot parse string value to long");
             }
 

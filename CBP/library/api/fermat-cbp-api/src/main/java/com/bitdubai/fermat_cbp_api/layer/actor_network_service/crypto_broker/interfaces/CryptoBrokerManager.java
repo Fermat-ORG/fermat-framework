@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
@@ -70,15 +71,11 @@ public interface CryptoBrokerManager extends FermatManager {
      * Through the method <code>disconnect</code> we can disconnect of a crypto broker.
      * If we don't want to negotiate anymore or the reason that you want with a broker, you can disconnect of him.
      *
-     * @param actorIdentityPublicKey the public key of the actor identity who is trying to disconnect.
-     * @param actorIdentityActorType the actor type of the actor identity who is trying to disconnect.
-     * @param cryptoBrokerPublicKey  the public key of the crypto broker with who we're trying to disconnect.
+     * @param requestId   id of the connection request to disconnect.
      *
      * @throws CantDisconnectException if something goes wrong.
      */
-    void disconnect(final String actorIdentityPublicKey,
-                    final Actors actorIdentityActorType,
-                    final String cryptoBrokerPublicKey ) throws CantDisconnectException;
+    void disconnect(final UUID requestId) throws CantDisconnectException, ConnectionRequestNotFoundException;
 
     /**
      * Through the method <code>denyConnection</code> we can deny a connection request.
@@ -100,7 +97,7 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantCancelConnectionRequestException   if something goes wrong.
      * @throws ConnectionRequestNotFoundException     if the connection request cannot be found.
      */
-    void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException, ConnectionRequestNotFoundException, UnexpectedProtocolStateException;
+    void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException, ConnectionRequestNotFoundException;
 
     /**
      * Through the method <code>acceptConnection</code> we can accept a received connection request.
@@ -136,5 +133,15 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
+
+    /**
+     * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.
+     *
+     * @param requestId  id of the connection request to confirm.
+     *
+     * @throws CantConfirmException                   if something goes wrong.
+     * @throws ConnectionRequestNotFoundException     if the connection request cannot be found.
+     */
+    void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
 
 }

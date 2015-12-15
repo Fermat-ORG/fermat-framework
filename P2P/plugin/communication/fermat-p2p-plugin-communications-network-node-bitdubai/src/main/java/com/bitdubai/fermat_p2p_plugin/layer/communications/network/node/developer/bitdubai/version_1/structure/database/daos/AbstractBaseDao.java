@@ -159,10 +159,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      */
     public final List<E> findAll(final String columnName , final String columnValue) throws CantReadRecordDataBaseException {
 
-        if (columnName == null ||
-                columnName.isEmpty() ||
-                    columnValue == null ||
-                        columnValue.isEmpty())
+        if (columnName == null || columnName.isEmpty() || columnValue == null || columnValue.isEmpty())
             throw new IllegalArgumentException("The filter are required, can not be null or empty.");
 
         try {
