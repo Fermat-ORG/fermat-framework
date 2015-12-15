@@ -352,16 +352,17 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     private void sendCrypto() {
         CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(), cryptoWallet);
         if (validAddress != null) {
-            EditText amount = (EditText) rootView.findViewById(R.id.amount);
+            EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
+            String amount = txtAmount.getText().toString();
 
-            if(!amount.getText().toString().equals("") && amount.getText()!=null) {
+            if(!amount.equals("") && amount!=null && Integer.parseInt(amount)!=0) {
                 try {
                     String notes=null;
                     if(txt_notes.getText().toString().length()!=0){
                         notes = txt_notes.getText().toString();
                     }
                     cryptoWallet.send(
-                            Long.parseLong(amount.getText().toString()),
+                            Long.parseLong(txtAmount.getText().toString()),
                             validAddress,
                             notes,
                             referenceWalletSession.getAppPublicKey(),
@@ -383,7 +384,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                 }
             }
         } else {
-            Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Invalid amount", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -66,7 +66,7 @@
 
         <include layout="@layout/loading_empty_view"/>
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -78,7 +78,88 @@
                 />
 
 
-        </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/empty_view"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_contact_empty"
+                    />
+
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:padding="15dp"
+                    app:typeface="ROBOTO_REGULAR"
+                    android:text="Click me to\nsearch contacts!"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/color_black_light"
+                    />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.getbase.floatingactionbutton.FloatingActionsMenu
+                    android:id="@+id/multiple_actions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    app:fab_addButtonColorNormal="#fff"
+                    app:fab_addButtonColorPressed="#0f0"
+                    app:fab_addButtonPlusIconColor="#66ff0000"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
+                    app:fab_icon="@drawable/btn_contact_selector"
+                    app:fab_labelStyle="@style/menu_labels_style"
+                    android:layout_marginEnd="16dp"
+                    >
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_intra_user"
+                        app:fab_colorNormal="#fff"
+                        app:fab_size="mini"
+                        app:fab_icon="@drawable/ic_contact_float_new_contact"
+                        app:fab_title="Crypto User"
+                        app:fab_colorPressed="#0f0"/>
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:fab_colorNormal="#fff"
+                        app:fab_size="mini"
+                        android:id="@+id/btn_extra_user"
+                        app:fab_title="Extra User"
+                        app:fab_icon="@drawable/ic_contact_float_new_contact_blue"
+                        app:fab_colorPressed="#a53"/>
+
+                </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+
+            </RelativeLayout>
+
+
+        </FrameLayout>
+
+
 
 
 
@@ -86,35 +167,6 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/empty_view"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:visibility="visible">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_contact_empty"
-            />
-
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:padding="15dp"
-            app:typeface="ROBOTO_REGULAR"
-            android:text="Click me to\nsearch contacts!"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/color_black_light"
-            />
-
-    </LinearLayout>
 
 
 
