@@ -49,9 +49,7 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
 
     @Override
     public void sendPayment(String contractHash) throws CantSendPaymentException {
-        /**
-         * TODO: Get contract, persist in database the base information, leave the send crypto to monitor agent
-         */
+
         try{
             //Get contract
             CustomerBrokerContractPurchase customerBrokerContractPurchase=
