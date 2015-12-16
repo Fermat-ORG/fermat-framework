@@ -241,7 +241,7 @@ public class BankMoneyWalletDao {
         try {
 
             totalBalancesTable = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
-            totalBalancesTable.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, accountNumber, DatabaseFilterType.EQUAL);
+            totalBalancesTable.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, accountNumber, DatabaseFilterType.EQUAL);
             totalBalancesTable.loadToMemory();
 
         } catch (CantLoadTableToMemoryException e) {
@@ -292,7 +292,7 @@ public class BankMoneyWalletDao {
 
     public List<BankAccountNumber> getAccounts() throws CantGetAccountsException {
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
-        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME,publicKey,DatabaseFilterType.EQUAL);
+        table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
         System.out.println("BNK-account");
         try {
             table.loadToMemory();
@@ -305,8 +305,8 @@ public class BankMoneyWalletDao {
     public List<BankMoneyTransactionRecord> getTransactions(TransactionType transactionType, int max, int offset,String account) throws CantGetTransactionsException {
 
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
-        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, account, DatabaseFilterType.EQUAL);
+        table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, account, DatabaseFilterType.EQUAL);
         table.setFilterTop(String.valueOf(max));
         table.setFilterOffSet(String.valueOf(offset));
 
@@ -323,8 +323,8 @@ public class BankMoneyWalletDao {
         int offset=20;
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
 
-        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-        table.setStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, account, DatabaseFilterType.EQUAL);
+        table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, account, DatabaseFilterType.EQUAL);
         table.setFilterTop(String.valueOf(max));
         table.setFilterOffSet(String.valueOf(offset));
 

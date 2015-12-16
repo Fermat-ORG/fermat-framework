@@ -227,8 +227,8 @@ public class IntraWalletUserActorDao {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor list, table not found.", "Intra User Actor", "");
 
             // 2) Find the Intra User , filter by keys.
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -277,8 +277,8 @@ public class IntraWalletUserActorDao {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
 
             // 2) Find all Intra Users.
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME             , connectedState.getCode()  , DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectedState.getCode(), DatabaseFilterType.EQUAL);
 
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
@@ -335,8 +335,8 @@ public class IntraWalletUserActorDao {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get intra user actor, table not found.", "Plugin Intra User Actor", "Cant get Intra User actor, table not found.");
 
             // 2) Find all Intra Users.
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserPublicKey, DatabaseFilterType.EQUAL);
 
 
             table.loadToMemory();
@@ -398,8 +398,8 @@ public class IntraWalletUserActorDao {
 
 
             // 2) Find  Intra Users by state.
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraActorSelectedPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME             , contactState.getCode()     , DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraActorSelectedPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode(), DatabaseFilterType.EQUAL);
 
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
@@ -525,7 +525,7 @@ public class IntraWalletUserActorDao {
                 throw new CantGetUserDeveloperIdentitiesException("intraUserToAddPublicKey null", "intraUserToAddPublicKey must not be null.");
             }
 
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords().size() > 0;

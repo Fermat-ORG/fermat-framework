@@ -99,7 +99,7 @@ public class AssetDistributionDao {
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable=this.database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
@@ -166,8 +166,8 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();
@@ -193,7 +193,7 @@ public class AssetDistributionDao {
         try {
             this.database=openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -223,8 +223,8 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             List<String> eventIdList=new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
@@ -279,7 +279,7 @@ public class AssetDistributionDao {
             DatabaseTable databaseTable;
             List<String> returningList=new ArrayList<>();
             databaseTable = database.getTable(table);
-            databaseTable.setStringFilter(referenceColumn, referenceValue, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(referenceColumn, referenceValue, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()){
                 returningList.add(record.getStringValue(returningColumn));
@@ -340,7 +340,7 @@ public class AssetDistributionDao {
         try {
             this.database=openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(tableName);
-            databaseTable.setStringFilter(indexColumn, value, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(indexColumn, value, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
@@ -367,8 +367,8 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();
@@ -388,8 +388,8 @@ public class AssetDistributionDao {
             DatabaseTable databaseTable;
             List<String> transactionsHashList=new ArrayList<>();
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.toString(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()){
                 transactionsHashList.add(record.getStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME));
@@ -413,7 +413,7 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -443,7 +443,7 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -472,7 +472,7 @@ public class AssetDistributionDao {
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable=this.database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
@@ -501,7 +501,7 @@ public class AssetDistributionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
@@ -529,7 +529,7 @@ public class AssetDistributionDao {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();

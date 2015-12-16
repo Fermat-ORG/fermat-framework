@@ -94,10 +94,10 @@ public class FilterTest {
         testDatabaseTable.setFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
         testDatabaseTable.setFilterOrder("testColumn2", DatabaseFilterOrder.ASCENDING);
 
-        testDatabaseTable.setStringFilter("testColumn2", "valor 1", DatabaseFilterType.LIKE);
-        testDatabaseTable.setStringFilter("testColumn2", "valor 1", DatabaseFilterType.EQUAL);
-        testDatabaseTable.setStringFilter("testColumn1", "0", DatabaseFilterType.GREATER_THAN);
-        testDatabaseTable.setStringFilter("testColumn1", "2", DatabaseFilterType.LESS_THAN);
+        testDatabaseTable.addStringFilter("testColumn2", "valor 1", DatabaseFilterType.LIKE);
+        testDatabaseTable.addStringFilter("testColumn2", "valor 1", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addStringFilter("testColumn1", "0", DatabaseFilterType.GREATER_THAN);
+        testDatabaseTable.addStringFilter("testColumn1", "2", DatabaseFilterType.LESS_THAN);
 
     }
 }

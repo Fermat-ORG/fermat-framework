@@ -169,9 +169,9 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME, actorType, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -224,7 +224,7 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -278,9 +278,9 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME, actorType, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -307,7 +307,7 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 

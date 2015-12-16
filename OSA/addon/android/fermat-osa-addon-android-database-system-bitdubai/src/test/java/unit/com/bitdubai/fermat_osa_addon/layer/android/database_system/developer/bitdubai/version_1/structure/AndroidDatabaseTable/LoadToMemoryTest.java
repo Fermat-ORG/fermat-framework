@@ -88,7 +88,7 @@ public class LoadToMemoryTest {
     @Test
     public void loadTable_TableFilters_RecordsListLoaded() throws Exception{
         testDatabaseTable = testDatabase.getTable(testTableName);
-        testDatabaseTable.setStringFilter("testColumn1","1", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addStringFilter("testColumn1", "1", DatabaseFilterType.EQUAL);
         testDatabaseTable.loadToMemory();
         assertThat(testDatabaseTable.getRecords()).isNotNull();
     }

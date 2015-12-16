@@ -72,7 +72,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -101,7 +101,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -130,7 +130,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -159,7 +159,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, eventId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -188,7 +188,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -318,7 +318,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(indexColumn, value, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(indexColumn, value, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -395,9 +395,9 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             List<String> pendingDigitalAssetsTransactionId = new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             //Para ejecutar este segundo filtro necesitaría modificar el objeto DatabaseFilterType para que acepte NOT_EQUAL, por ahora, lo hago "MANUALMENTE"
-            //databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, publicKey, DatabaseFilterType.);
+            //databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, publicKey, DatabaseFilterType.);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
@@ -429,7 +429,7 @@ public class AssetIssuingTransactionDao {
 
             this.database.openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -467,7 +467,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database.openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -506,7 +506,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database.openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -540,7 +540,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -567,7 +567,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -594,7 +594,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_OUTGOING_ID_COLUMN_NAME, outgoingTransactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_OUTGOING_ID_COLUMN_NAME, outgoingTransactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -631,7 +631,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, outgoingTransactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, outgoingTransactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -664,7 +664,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -697,7 +697,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             int recordsInTable = databaseTableRecords.size();
@@ -726,7 +726,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setUUIDFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_FIRST_KEY_COLUMN, transactionId, DatabaseFilterType.EQUAL);
+            databaseTable.addUUIDFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_FIRST_KEY_COLUMN, transactionId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             int recordsInTable = databaseTableRecords.size();
@@ -756,7 +756,7 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable;
             HashMap<String, String> transactionsIds = new HashMap<String, String>();
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
                 transactionsIds.put(record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME), record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME));
@@ -774,9 +774,9 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
-            //databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.ISSUING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            //databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.ISSUING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             Logger LOG = Logger.getGlobal();
@@ -796,7 +796,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             Logger LOG = Logger.getGlobal();
@@ -817,7 +817,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             List<String> eventIdList = new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -844,7 +844,7 @@ public class AssetIssuingTransactionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, eventId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -881,7 +881,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(fieldCode, value, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(fieldCode, value, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();
@@ -899,7 +899,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             List<String> genesisTransactionsFromDigitalAssetReceived = new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.RECEIVED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.RECEIVED.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
@@ -960,7 +960,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             List<String> resultList = new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(fieldCode, valueAsked, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(fieldCode, valueAsked, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
@@ -988,8 +988,8 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable;
             List<String> transactionsHashList = new ArrayList<>();
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
                 transactionsHashList.add(record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME));
@@ -1016,8 +1016,8 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable;
             List<String> transactionsHashList = new ArrayList<>();
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
                 transactionsHashList.add(record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME));
@@ -1042,7 +1042,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -1072,7 +1072,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -1102,7 +1102,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -1132,7 +1132,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -1168,7 +1168,7 @@ public class AssetIssuingTransactionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;

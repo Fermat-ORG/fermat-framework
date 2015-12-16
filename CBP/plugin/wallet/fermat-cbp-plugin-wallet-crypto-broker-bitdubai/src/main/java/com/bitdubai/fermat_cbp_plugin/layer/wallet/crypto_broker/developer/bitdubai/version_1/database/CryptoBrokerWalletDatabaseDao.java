@@ -373,7 +373,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, Record);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, Record);
             }
             //I execute the transaction and persist the database
@@ -417,7 +417,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, Record);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, Record);
             }
             //I execute the transaction and persist the database
@@ -462,7 +462,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, Record);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, Record);
             }
             //I execute the transaction and persist the database
@@ -522,8 +522,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         //if (CurrencyType.CRYPTO_MONEY.getCode() != currencyType.getCode())
         //{
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
-        table.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, merchandise.getCode(), DatabaseFilterType.EQUAL);
-        table.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, merchandise.getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
 
         table.loadToMemory();
 
@@ -595,7 +595,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     private List<DatabaseTableRecord> getCryptoBrokerWalletSpreadSettingData(String Id) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME);
 
-        table.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, Id, DatabaseFilterType.EQUAL);
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, Id, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
@@ -623,7 +623,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
         if (table.getRecords().isEmpty())
             return true;
@@ -678,7 +678,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
             DatabaseTable databaseTable = getBalancesTable();
             //if (CurrencyType.CRYPTO_MONEY != CurrencyType.getByCode(stockTransaction.getMerchandise().getCode()))
-            databaseTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME, stockTransaction.getMerchandise().getCode().toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME, stockTransaction.getMerchandise().getCode().toString(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()){
                 transaction.addRecordToInsert(databaseTable, stockWalletBalance);
@@ -766,7 +766,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     private DatabaseTableRecord getBalancesByMerchandiseRecord(String merchandise) throws CantGetBalanceRecordException{
         try {
             DatabaseTable balancesTable = getBalancesTable();
-            balancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME, merchandise, DatabaseFilterType.EQUAL);
+            balancesTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME, merchandise, DatabaseFilterType.EQUAL);
             balancesTable.loadToMemory();
             if (!balancesTable.getRecords().isEmpty() ) {
                 return balancesTable.getRecords().get(0);
@@ -782,9 +782,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
     private boolean isTransactionInTable(final String transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
         DatabaseTable assetIssuerWalletTable = getStockWalletTransactionTable();
-        assetIssuerWalletTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
-        assetIssuerWalletTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-        assetIssuerWalletTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+        assetIssuerWalletTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        assetIssuerWalletTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        assetIssuerWalletTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
         assetIssuerWalletTable.loadToMemory();
         return !assetIssuerWalletTable.getRecords().isEmpty();
     }

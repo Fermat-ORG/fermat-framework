@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -81,7 +80,7 @@ public class IncomingMessageDAO {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -206,7 +205,7 @@ public class IncomingMessageDAO {
              * 1 - load the data base to memory with filters
              */
             DatabaseTable networkIntraUserTable = getDatabaseTable();
-            networkIntraUserTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            networkIntraUserTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             networkIntraUserTable.loadToMemory();
 
             /*

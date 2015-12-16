@@ -155,7 +155,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                   , protocolState.getCode(), DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -194,7 +194,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -226,7 +226,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable table = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            table.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
 
             table.setFilterTop("1");
 
@@ -257,8 +257,8 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME , protocolState.getCode(), DatabaseFilterType.EQUAL);
-            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME, requestAction.getCode(), DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME, requestAction.getCode(), DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -291,7 +291,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -348,7 +348,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -406,7 +406,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -457,7 +457,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -507,7 +507,7 @@ public final class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.addUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 

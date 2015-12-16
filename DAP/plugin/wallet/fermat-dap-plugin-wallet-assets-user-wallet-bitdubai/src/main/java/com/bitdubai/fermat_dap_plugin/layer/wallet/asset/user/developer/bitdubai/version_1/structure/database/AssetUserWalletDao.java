@@ -230,8 +230,8 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
     public List<AssetUserWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException {
         try {
             DatabaseTable databaseTableAssuerUsetWallet = getAssetUserWalletTable();
-            databaseTableAssuerUsetWallet.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
-            databaseTableAssuerUsetWallet.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
             databaseTableAssuerUsetWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerUsetWallet.setFilterOffSet(String.valueOf(offset));
 
@@ -248,9 +248,9 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
         try {
             DatabaseTable databaseTableAssuerUserWallet = getAssetUserWalletTable();
 
-            databaseTableAssuerUserWallet.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-            databaseTableAssuerUserWallet.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-            databaseTableAssuerUserWallet.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
             databaseTableAssuerUserWallet.setFilterOrder(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerUserWallet.setFilterTop(String.valueOf(max));
@@ -270,7 +270,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
         try {
             DatabaseTable databaseTableAssuerUserWallet = getAssetUserWalletTable();
 
-            databaseTableAssuerUserWallet.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
             databaseTableAssuerUserWallet.setFilterOrder(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerUserWallet.setFilterTop(String.valueOf(max));
@@ -297,7 +297,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
              *  I will load the information of table into a memory structure, filter for transaction id
              */
 
-            databaseTableAssuerUserWalletBalance.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerUserWalletBalance.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
             for (DatabaseTableRecord record : databaseTableAssuerUserWalletBalance.getRecords()) {
                 record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_MEMO_COLUMN_NAME, memo);
                 databaseTableAssuerUserWalletBalance.updateRecord(record);
@@ -344,9 +344,9 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
 
     private boolean isTransactionInTable(final String transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
         DatabaseTable assetUserWalletTable = getAssetUserWalletTable();
-        assetUserWalletTable.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
-        assetUserWalletTable.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-        assetUserWalletTable.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+        assetUserWalletTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        assetUserWalletTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        assetUserWalletTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
         assetUserWalletTable.loadToMemory();
         return !assetUserWalletTable.getRecords().isEmpty();
     }
@@ -394,7 +394,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
             transaction.addRecordToInsert(getAssetUserWalletTable(), assetUserWalletRecord);
 
             DatabaseTable databaseTable = getBalancesTable();
-            databaseTable.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()) {
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);

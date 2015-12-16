@@ -226,7 +226,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             DatabaseTable eventRecordedTable;
             eventRecordedTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-            eventRecordedTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            eventRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             eventRecordedTable.loadToMemory();
             if (eventRecordedTable.getRecords().isEmpty()) {
                 throw new RecordsNotFoundException(null, context, "");
@@ -248,7 +248,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
@@ -361,7 +361,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Genesis Transaction: " + genesisTransaction;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             databaseTable.loadToMemory();
@@ -381,7 +381,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "User Wallet: " + userWalletPublicKey;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey, DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
@@ -405,7 +405,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Bitcoin Wallet: " + bitcoinWalletPublicKey;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey, DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             databaseTable.loadToMemory();
@@ -430,7 +430,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Status: " + status;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
@@ -454,7 +454,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -473,7 +473,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -491,7 +491,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             DatabaseTable transactionTable;
             transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            transactionTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            transactionTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
 
             if (transactionTable.getRecords().isEmpty()) {
@@ -515,7 +515,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             DatabaseTable transactionTable;
             transactionTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
-            transactionTable.setStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            transactionTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
 
             if (transactionTable.getRecords().isEmpty()) {

@@ -105,7 +105,7 @@ public class TransactionTransmissionConnectionsDAO {
 
             DatabaseTable metadataTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
 
-            metadataTable.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            metadataTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
 
             metadataTable.loadToMemory();
 

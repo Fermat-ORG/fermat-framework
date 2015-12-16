@@ -50,15 +50,15 @@ public interface DatabaseTable {
 
     boolean isTableExists();
 
-    void setStringFilter(String columnName, String value,DatabaseFilterType type);
+    void addStringFilter(String columnName, String value, DatabaseFilterType type);
 
-    void setFermatEnumFilter(String columnName, FermatEnum value,DatabaseFilterType type);
+    void addFermatEnumFilter(String columnName, FermatEnum value, DatabaseFilterType type);
 
     void setFilterGroup(DatabaseTableFilterGroup filterGroup);
 
     void setFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator);
 
-    void setUUIDFilter(String columnName, UUID value,DatabaseFilterType type);
+    void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type);
 
     void setFilterOrder(String columnName, DatabaseFilterOrder direction);
 
@@ -66,7 +66,7 @@ public interface DatabaseTable {
 
     void setFilterOffSet(String offset);
 
-    void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
+    void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
 
     void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 

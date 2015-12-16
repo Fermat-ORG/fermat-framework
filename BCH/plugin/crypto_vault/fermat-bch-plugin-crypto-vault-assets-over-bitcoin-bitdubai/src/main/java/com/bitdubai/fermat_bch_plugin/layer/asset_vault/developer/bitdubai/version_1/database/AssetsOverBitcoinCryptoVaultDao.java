@@ -196,7 +196,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * I will filter the table using the account id
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -320,7 +320,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * first I see if we already have records for this account by setting a filter and getting the values
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -368,7 +368,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
      */
     public int getCurrentGeneratedKeys(int accountId) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -389,7 +389,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
      */
     public int getCurrentUsedKeys(int accountId) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -414,7 +414,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * I will check to see if I already have a value for this account so i can updated it.
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -464,7 +464,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * I will check to see if I already have a value for this account so i can updated it.
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -601,8 +601,8 @@ public class AssetsOverBitcoinCryptoVaultDao {
             return;
 
         DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
