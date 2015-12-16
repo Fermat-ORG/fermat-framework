@@ -221,9 +221,14 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                     brokerAckOnlinePaymentBusinessTransactionDao);
 
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Broker Ack Online Payment Starting");
+            //System.out.println("Broker Ack Online Payment Starting");
         } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            //TODO: handle correctly this method exceptions
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    null,
+                    null);
         }
     }
 
