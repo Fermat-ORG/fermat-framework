@@ -1169,7 +1169,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
            for (PlatformComponentProfile platformComponentProfile : list) {
 
                 byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias()));
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),platformComponentProfile.getPhrase()));
             }
 
         } catch (Exception e) {

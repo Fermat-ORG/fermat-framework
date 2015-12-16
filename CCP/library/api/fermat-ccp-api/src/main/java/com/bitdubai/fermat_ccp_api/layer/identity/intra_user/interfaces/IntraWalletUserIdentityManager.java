@@ -39,6 +39,17 @@ public interface IntraWalletUserIdentityManager extends ModuleManager {
 
 
     /**
+     *
+     * @param alias
+     * @param profileImage
+     * @return
+     * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException
+     */
+    IntraWalletUserIdentity createNewIntraWalletUser(String alias ,
+                                                     byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+
+
+    /**
      * The method <code>hasIntraUserIdentity</code> returns if has a intra user identity created
      *
      * @return

@@ -175,6 +175,30 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
+    public IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage) throws CantCreateNewIntraWalletUserException {
+        try {
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+
+            ECCKeyPair keyPair = new ECCKeyPair();
+            String publicKey = keyPair.getPublicKey();
+            String privateKey = keyPair.getPrivateKey();
+
+            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage);
+
+            com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+
+            registerIdentities();
+
+            return intraWalletUserIdentity;
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantCreateNewIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER IDENTITY", e, "Error getting current logged in device user", "");
+        } catch (Exception e) {
+            throw new CantCreateNewIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER IDENTITY", FermatException.wrapException(e), "", "");
+        }
+
+    }
+
+    @Override
    public boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException{
         try {
 
