@@ -19,7 +19,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnection<T extends ActorIdentity> {
+public abstract class ActorConnection<T extends LinkedActorIdentity> {
 
     private final UUID            connectionId   ;
     private final T               linkedIdentity ;
@@ -63,35 +63,6 @@ public abstract class ActorConnection<T extends ActorIdentity> {
         this.updateTime = updateTime != 0 ? updateTime : creationTime;
     }
 
-    public ActorConnection(final UUID   connectionId   ,
-                           final T      linkedIdentity ,
-                           final String publicKey      ,
-                           final Actors actorType      ,
-                           final String alias          ,
-                           final byte[] image          ,
-                           final long   creationTime   ,
-                           final long   updateTime     ) {
-
-        Validate.notNull(connectionId   , "The Connection ID can't be null."   );
-        Validate.notNull(linkedIdentity , "The Linked Identity can't be null." );
-        Validate.notNull(publicKey      , "The Public Key can't be null."      );
-        Validate.notNull(actorType      , "The Actor Type can't be null."      );
-        Validate.notNull(alias          , "The Alias can't be null."           );
-        Validate.notNull(image          , "The Image can't be null."           );
-        Validate.notNull(creationTime   , "The Creation Time can't be null."   );
-
-        this.connectionId    = connectionId   ;
-        this.linkedIdentity  = linkedIdentity ;
-        this.publicKey       = publicKey      ;
-        this.actorType       = actorType      ;
-        this.alias           = alias          ;
-        this.image           = image          ;
-        this.creationTime    = creationTime   ;
-
-        // if the update time is 0 we'll assign like last update time the creation time.
-        this.updateTime = updateTime != 0 ? updateTime : creationTime;
-    }
-
     /**
      * @return an UUID instance representing the ID of the connection.
      */
@@ -100,7 +71,7 @@ public abstract class ActorConnection<T extends ActorIdentity> {
     }
 
     /**
-     * @return an ActorIdentity instance representing the identity which is connected with the other actor.
+     * @return an LinkedActorIdentity instance representing the identity which is connected with the other actor.
      */
     public final T getLinkedIdentity() {
         return linkedIdentity;
