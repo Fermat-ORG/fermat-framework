@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

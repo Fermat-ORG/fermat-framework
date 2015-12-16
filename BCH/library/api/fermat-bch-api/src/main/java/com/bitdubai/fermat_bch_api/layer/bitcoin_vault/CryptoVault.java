@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces;
+package com.bitdubai.fermat_bch_api.layer.bitcoin_vault;
 
 import java.util.UUID;
 

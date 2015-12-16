@@ -20,6 +20,7 @@ public class AssetsOverBitcoinCryptoVaultDatabaseConstants {
 
     static final String KEY_ACCOUNTS_ID_COLUMN_NAME = "id";
     static final String KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME = "description";
+    static final String KEY_ACCOUNTS_TYPE_COLUMN_NAME = "type";
 
     static final String KEY_ACCOUNTS_FIRST_KEY_COLUMN = "id";
 
