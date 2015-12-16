@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
 
 import java.text.DecimalFormat;

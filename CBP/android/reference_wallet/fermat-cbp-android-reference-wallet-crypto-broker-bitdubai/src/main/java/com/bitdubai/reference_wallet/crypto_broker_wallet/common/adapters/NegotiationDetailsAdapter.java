@@ -1,13 +1,11 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
@@ -16,12 +14,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.AmountToSellStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.DateTimeStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ExchangeRateStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.FooterViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.NoteViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.SingleChoiceStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.AmountToSellStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.DateTimeStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.ExchangeRateStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.NoteViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.SingleChoiceStepViewHolder;
 
 import java.util.List;
 import java.util.NoSuchElementException;

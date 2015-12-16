@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
