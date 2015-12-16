@@ -82,7 +82,7 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             errorManager = appSession.getErrorManager();
 
             if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
-                moduleManager.createNewIntraWalletUser("John Doe", null);
+                moduleManager.createNewIntraWalletUser("John Doe","xxxx", null);
             }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -267,8 +267,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             if (moduleManager != null) {
                 try {
                     if(!isUpdate)
-                    moduleManager.createNewIntraWalletUser(brokerNameText, brokerImageByteArray);
-                    else moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(),brokerNameText,brokerImageByteArray);
+                    moduleManager.createNewIntraWalletUser(brokerNameText,"phrase", brokerImageByteArray);
+                    else moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(),brokerNameText,"phrase",brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                 } catch (CantUpdateIdentityException e) {

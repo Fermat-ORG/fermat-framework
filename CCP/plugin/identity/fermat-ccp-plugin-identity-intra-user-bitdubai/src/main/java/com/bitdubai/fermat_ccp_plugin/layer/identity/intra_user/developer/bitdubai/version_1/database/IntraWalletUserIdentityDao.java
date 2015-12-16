@@ -129,7 +129,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser (String alias, String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser (String alias, String phrase,String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists (alias)) {
@@ -143,6 +143,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias);
+            record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "true");
 
@@ -166,7 +167,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
 
-    public void updateIdentity (String publicKey,String alias, byte[] profileImage) throws CantUpdateIntraUserIdentityException {
+    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage) throws CantUpdateIntraUserIdentityException {
 
         try {
 
@@ -193,6 +194,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
                 //set new values
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias);
+                record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
 
                 table.updateRecord(record);
             }
@@ -296,6 +298,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
                 // Add records to list.
                 list.add(new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME),
+                        record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME),
                         record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
                         getIntraUserIdentityPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                         getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),

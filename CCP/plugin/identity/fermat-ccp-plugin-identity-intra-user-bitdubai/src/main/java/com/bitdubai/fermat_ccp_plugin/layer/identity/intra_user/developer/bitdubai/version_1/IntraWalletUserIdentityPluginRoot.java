@@ -151,7 +151,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
      * @throws CantCreateNewIntraWalletUserException
      */
     @Override
-    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateNewIntraWalletUserException {
+    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -159,9 +159,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
+            intraWalletUserIdentityDao.createNewUser(alias,phrase, publicKey, privateKey, loggedUser, profileImage);
 
-            com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
 
             registerIdentities();
 
@@ -194,10 +194,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage) throws CantUpdateIdentityException {
             try
             {
-                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,profileImage);
+                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
             }
             catch(CantUpdateIntraUserIdentityException e)
             {

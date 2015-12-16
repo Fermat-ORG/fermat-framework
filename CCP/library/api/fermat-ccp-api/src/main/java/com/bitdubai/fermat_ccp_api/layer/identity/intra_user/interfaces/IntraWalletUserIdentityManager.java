@@ -27,13 +27,14 @@ public interface IntraWalletUserIdentityManager extends ModuleManager {
      * associated public key
      *
      * @param alias        the alias that the user choose as intra user identity
+     * @param phrase        the alias that the user choose as intra user identity
      * @param profileImage the profile image to identify this identity
      *
      * @return the intra user created
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException if something goes wrong.
      */
-    IntraWalletUserIdentity createNewIntraWalletUser(String alias       ,
+    IntraWalletUserIdentity createNewIntraWalletUser(String alias ,String phrase      ,
                                              byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 
 
@@ -50,10 +51,11 @@ public interface IntraWalletUserIdentityManager extends ModuleManager {
      * The method <code>updateIntraUserIdentity</code> change a identity information data
      * @param identityPublicKey
      * @param identityAlias
+     * @param phrase
      * @param profileImage
      * @throws CantUpdateIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage) throws CantUpdateIdentityException;
 
     /**
      *The method <code>deleteIntraUserIdentity</code> change identity status to inactive
