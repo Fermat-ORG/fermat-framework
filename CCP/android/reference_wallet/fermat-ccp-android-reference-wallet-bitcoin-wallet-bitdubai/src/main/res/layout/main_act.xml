@@ -77,6 +77,47 @@
                 android:scrollingCache="false"
                 />
 
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:id="@+id/multiple_actions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                app:fab_addButtonColorNormal="#fff"
+                app:fab_addButtonColorPressed="#0f0"
+                app:fab_addButtonPlusIconColor="#66ff0000"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                app:fab_addButtonStrokeVisible="true"
+                app:fab_icon="@drawable/btn_contact_selector"
+                app:fab_labelStyle="@style/menu_labels_style"
+                android:layout_marginEnd="16dp">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_intra_user"
+                    app:fab_colorNormal="#fff"
+                    app:fab_size="mini"
+                    app:fab_icon="@drawable/ic_contact_float_new_contact"
+                    app:fab_title="Crypto User"
+                    app:backgroundTintMode="multiply"
+                    app:fab_colorPressed="#0f0"/>
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_colorNormal="#fff"
+                    app:fab_size="mini"
+                    android:id="@+id/btn_extra_user"
+                    app:fab_title="Extra User"
+                    app:fab_icon="@drawable/ic_contact_float_new_contact_blue"
+                    app:fab_colorPressed="#0f0"/>
+
+            </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
 
         </RelativeLayout>
 

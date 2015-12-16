@@ -150,6 +150,11 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantListAssetIssuersException {
+        return identityAssetIssuerManager.getIdentityAssetIssuer();
+    }
+
+    @Override
     public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException {
         return identityAssetIssuerManager.createNewIdentityAssetIssuer(alias, profileImage);
     }

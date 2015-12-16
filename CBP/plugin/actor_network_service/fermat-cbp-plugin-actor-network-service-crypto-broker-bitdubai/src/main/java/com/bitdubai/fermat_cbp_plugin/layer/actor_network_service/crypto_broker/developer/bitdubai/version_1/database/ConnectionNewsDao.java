@@ -214,44 +214,6 @@ public final class ConnectionNewsDao {
         }
     }
 
-    public final void createDisconnectionRequest(final UUID                    newId            ,
-                                                 final String                  identityPublicKey,
-                                                 final Actors                  identityActorType,
-                                                 final String                  brokerPublicKey  ,
-                                                 final long                    sentTime         ,
-                                                 final ProtocolState           state            ,
-                                                 final RequestType             type             ,
-                                                 final ConnectionRequestAction action           ) throws CantDisconnectException {
-
-        try {
-
-            final CryptoBrokerConnectionRequest connectionNew = new CryptoBrokerConnectionRequest(
-                    newId            ,
-                    identityPublicKey,
-                    identityActorType,
-                    null             ,
-                    null             ,
-                    brokerPublicKey  ,
-                    type             ,
-                    state            ,
-                    action           ,
-                    sentTime
-            );
-
-            final DatabaseTable addressExchangeRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
-
-            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
-
-            entityRecord = buildDatabaseRecord(entityRecord, connectionNew);
-
-            addressExchangeRequestTable.insertRecord(entityRecord);
-
-        } catch (final CantInsertRecordException e) {
-
-            throw new CantDisconnectException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        }
-    }
-
     /**
      * Through this method you can save a denial for a connection request.
      * It can be LOCAL or REMOTE.
