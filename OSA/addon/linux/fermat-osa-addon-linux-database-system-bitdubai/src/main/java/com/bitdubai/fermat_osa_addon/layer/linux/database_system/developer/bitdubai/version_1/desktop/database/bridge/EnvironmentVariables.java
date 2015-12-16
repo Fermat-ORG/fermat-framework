@@ -26,7 +26,7 @@ public class EnvironmentVariables {
 
         //User home directory
         String home = System.getProperty("user.home");
-        File dir = new File(home+"/externalStorage/files/");
+        File dir = new File(home+"/externalStorage/databases/");
         boolean createdDirectory = dir.mkdirs();
         return dir.getAbsolutePath();
 
@@ -41,7 +41,8 @@ public class EnvironmentVariables {
 
         //User home directory
         String home = System.getProperty("user.home");
-        File dir = new File(home+"/externalStorage/files/");
+        File dir = new File(home+"/externalStorage/databases/");
+        boolean createdDirectory = dir.mkdirs();
         return dir.getAbsolutePath();
     }
 

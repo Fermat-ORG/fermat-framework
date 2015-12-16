@@ -44,13 +44,13 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
     public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException{
         try{
             DesktopDatabase database;
-            String hasDBName = hashDataBaseName(databaseName);
-            database = new DesktopDatabase(hasDBName);
-            database.openDatabase(hasDBName);
+           // String hasDBName = hashDataBaseName(databaseName);
+            database = new DesktopDatabase(databaseName);
+            database.openDatabase(databaseName);
 
             return database;
         }
-        catch (NoSuchAlgorithmException e){
+        catch (Exception e){
             throw new CantOpenDatabaseException();
         }
 
@@ -67,13 +67,13 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
     public Database createDatabase (String databaseName) throws CantCreateDatabaseException{
         try{
             DesktopDatabase database;
-            String hasDBName = hashDataBaseName(databaseName);
-            database = new DesktopDatabase(hasDBName);
-            database.createDatabase(hasDBName);
+            //String hasDBName = hashDataBaseName(databaseName);
+            database = new DesktopDatabase(databaseName);
+            database.createDatabase(databaseName);
 
             return database;
         }
-        catch (NoSuchAlgorithmException e){
+        catch (Exception e){
             throw new CantCreateDatabaseException();
         }
 
@@ -103,7 +103,7 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
 
     }
 
-
+/*
     private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
         String encryptedString;
         try{
@@ -125,7 +125,7 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
         encryptedString = encryptedString.replace("+","");
         return encryptedString.replace("/","");
     }
-
+*/
 
 
     /**
@@ -133,7 +133,7 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
      * Hash the file name using the algorithm SHA 256
      */
 
-    private String hashFileName(String fileName) throws NoSuchAlgorithmException {
+/*    private String hashFileName(String fileName) throws NoSuchAlgorithmException {
         String encryptedString = fileName;
         try{
 
@@ -154,5 +154,7 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
         }
         return encryptedString.replace("/","");
     }
+*/
+
 
 }
