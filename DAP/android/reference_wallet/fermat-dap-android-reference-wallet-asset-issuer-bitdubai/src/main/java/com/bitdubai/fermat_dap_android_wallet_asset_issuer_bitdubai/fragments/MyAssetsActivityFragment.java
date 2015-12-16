@@ -194,7 +194,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         appSession.setData("asset_data", data);
-//        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, walletSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
     }
 
     @Override

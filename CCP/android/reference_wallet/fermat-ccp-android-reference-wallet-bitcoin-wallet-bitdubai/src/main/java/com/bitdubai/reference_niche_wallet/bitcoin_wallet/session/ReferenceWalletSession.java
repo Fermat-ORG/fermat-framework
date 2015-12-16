@@ -60,11 +60,19 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     private String communityConnection;
 
 
+    public ReferenceWalletSession() {
+    }
+
     public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager){//,EventManager eventManager){
         super(installedWallet.getWalletPublicKey(),installedWallet,errorManager,cryptoWalletManager,walletResourcesProviderManager);
         this.walletSettings=walletSettings;
         this.intraUserModuleManager = intraUserModuleManager;
+    }
 
+
+
+    public ReferenceWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, CryptoWalletManager moduleManager, WalletResourcesProviderManager resourceProviderManager) {
+        super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
 
 
