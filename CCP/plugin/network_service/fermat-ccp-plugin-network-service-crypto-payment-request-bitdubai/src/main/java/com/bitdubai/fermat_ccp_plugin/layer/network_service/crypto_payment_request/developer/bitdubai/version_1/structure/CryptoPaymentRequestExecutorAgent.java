@@ -361,7 +361,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
             return true;
         }
-
+            poolConnectionsWaitingForResponse.remove(actorPublicKey);
         return false;
     }
 

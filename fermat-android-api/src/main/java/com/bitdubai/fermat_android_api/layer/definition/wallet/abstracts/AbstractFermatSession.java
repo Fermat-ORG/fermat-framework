@@ -38,6 +38,7 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     }
 
     protected AbstractFermatSession() {
+        this.data = new HashMap<>();
     }
 
     /**
@@ -92,4 +93,23 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     }
 
 
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public void setFermatApp(A fermatApp) {
+        this.fermatApp = fermatApp;
+    }
+
+    public void setModuleManager(M moduleManager) {
+        this.moduleManager = moduleManager;
+    }
+
+    public void setResourceProviderManager(R resourceProviderManager) {
+        this.resourceProviderManager = resourceProviderManager;
+    }
+
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
 }

@@ -30,11 +30,6 @@ public class AssetUserCommunitySubAppSession extends AbstractFermatSession<Insta
 
 
     @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
-
-    @Override
     public void setData(String key, Object object) {
         if (data == null)
             data = new HashMap<>();

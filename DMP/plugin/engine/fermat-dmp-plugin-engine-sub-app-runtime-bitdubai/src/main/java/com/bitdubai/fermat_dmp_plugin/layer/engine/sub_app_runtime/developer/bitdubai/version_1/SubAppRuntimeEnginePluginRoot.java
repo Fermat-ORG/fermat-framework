@@ -532,7 +532,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Explore");
+            runtimeTitleBar.setLabel("Online cripto wallet users");
             runtimeTitleBar.setLabelSize(20);
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
@@ -557,7 +557,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setLabel("Online cripto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -617,7 +617,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setLabel("Online cripto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -677,7 +677,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.setHasFooter(false);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setLabel("Online cripto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -737,7 +737,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Explore");
+            runtimeMenuItem.setLabel("Online cripto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);

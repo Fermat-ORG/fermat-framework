@@ -109,9 +109,4 @@ public class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<In
     public int hashCode() {
         return subApps.hashCode();
     }
-
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
 }
