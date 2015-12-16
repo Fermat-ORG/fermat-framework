@@ -61,7 +61,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         if (type == TYPE_HEADER)
             return new NoteViewHolder(itemView);
         if (type == TYPE_ITEM_DATE_TIME)
-            return new DateTimeStepViewHolder(this, itemView, activity);
+            return new DateTimeStepViewHolder(this, itemView, activity, walletManager);
         if (type == TYPE_ITEM_SINGLE_CHOICE)
             return new SingleChoiceStepViewHolder(this, itemView, activity, walletManager);
         if (type == TYPE_ITEM_EXCHANGE_RATE)

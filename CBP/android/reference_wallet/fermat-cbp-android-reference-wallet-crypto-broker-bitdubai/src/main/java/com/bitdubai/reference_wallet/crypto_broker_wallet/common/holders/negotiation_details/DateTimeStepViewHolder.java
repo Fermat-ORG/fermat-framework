@@ -37,7 +37,7 @@ public class DateTimeStepViewHolder extends StepViewHolder
     private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 
 
-    public DateTimeStepViewHolder(CryptoBrokerWalletManager walletManager, NegotiationDetailsAdapter adapter, View viewItem, Activity activity) {
+    public DateTimeStepViewHolder(NegotiationDetailsAdapter adapter, View viewItem, Activity activity, CryptoBrokerWalletManager walletManager) {
         super(viewItem, adapter);
 
         this.activity = activity;
