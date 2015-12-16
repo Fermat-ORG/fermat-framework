@@ -18,7 +18,7 @@
         tools:visibility="visible">
 
         <ImageView
-            android:id="@+id/customer_image"
+            android:id="@+id/cbw_customer_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
@@ -26,50 +26,50 @@
             android:src="@android:drawable/sym_def_app_icon"
             tools:ignore="contentDescription"/>
 
-        <TextView
-            android:id="@+id/buying_summary"
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_buying_summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/customer_image"
-            android:layout_toRightOf="@+id/customer_image"
+            android:layout_toEndOf="@+id/cbw_customer_image"
+            android:layout_toRightOf="@+id/cbw_customer_image"
             android:textColor="#222"
             tools:text="Buying 12 BTC"/>
 
-        <TextView
-            android:id="@+id/selling_exchange_rate"
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_selling_exchange_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buying_summary"
-            android:layout_toEndOf="@+id/customer_image"
-            android:layout_toRightOf="@+id/customer_image"
+            android:layout_below="@+id/cbw_buying_summary"
+            android:layout_toEndOf="@+id/cbw_customer_image"
+            android:layout_toRightOf="@+id/cbw_customer_image"
             android:textColor="#fff"
             tools:text="1 BTC @ 254 USD"/>
 
-        <TextView
-            android:id="@+id/customer_name"
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_customer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/selling_exchange_rate"
-            android:layout_toEndOf="@+id/customer_image"
-            android:layout_toRightOf="@+id/customer_image"
+            android:layout_below="@+id/cbw_selling_exchange_rate"
+            android:layout_toEndOf="@+id/cbw_customer_image"
+            android:layout_toRightOf="@+id/cbw_customer_image"
             android:textColor="#222"
             tools:text="Customer Name"/>
 
-        <TextView
-            android:id="@+id/last_update_date"
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_last_update_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/customer_name"
+            android:layout_below="@+id/cbw_customer_name"
             android:textColor="#fff"
             android:textSize="12sp"
             tools:text="03 Feb 2015"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/negotiation_details_recycler_view"
+        android:id="@+id/cbw_open_negotiation_details_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="16dp"

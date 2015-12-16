@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
 
@@ -19,6 +20,8 @@ import java.text.ParseException;
 
 public class AmountToSellStepViewHolder extends StepViewHolder
         implements TextWatcher, ExchangeRateStepViewHolder.OnExchangeValueChangeListener {
+
+    private CryptoBrokerWalletManager walletManager;
 
     private final DecimalFormat decimalFormat;
 
@@ -35,8 +38,10 @@ public class AmountToSellStepViewHolder extends StepViewHolder
     private String currencyToReceive;
 
 
-    public AmountToSellStepViewHolder(NegotiationDetailsAdapter adapter,View itemView) {
+    public AmountToSellStepViewHolder(NegotiationDetailsAdapter adapter, View itemView, CryptoBrokerWalletManager walletManager) {
         super(itemView, adapter);
+
+        this.walletManager = walletManager;
 
         decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
@@ -129,7 +134,7 @@ public class AmountToSellStepViewHolder extends StepViewHolder
         super.modifyData(stepStatus);
 
         NegotiationStep step = adapter.getItem(itemPosition);
-        ModuleManager.modifyNegotiationStepValues(step, stepStatus, actualAmountToSell, actualAmountToReceive, exchangeRateValue);
+        walletManager.modifyNegotiationStepValues(step, stepStatus, actualAmountToSell, actualAmountToReceive, exchangeRateValue);
         adapter.notifyItemChanged(itemPosition);
     }
 

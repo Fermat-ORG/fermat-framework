@@ -63,7 +63,7 @@
                     android:textColor="@color/description_text_status_confirm"/>
 
                 <TextView
-                    android:id="@+id/exchange_rate_reference_value"
+                    android:id="@+id/cbw_exchange_rate_reference_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"

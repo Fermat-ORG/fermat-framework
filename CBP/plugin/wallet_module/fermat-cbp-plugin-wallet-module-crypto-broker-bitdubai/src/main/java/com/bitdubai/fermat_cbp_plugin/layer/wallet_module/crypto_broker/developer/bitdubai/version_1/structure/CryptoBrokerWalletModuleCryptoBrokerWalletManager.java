@@ -2,8 +2,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
@@ -16,9 +18,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
 
@@ -34,7 +37,7 @@ import java.util.UUID;
  * @version 1.0
  * @since 05/11/15
  */
-public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWallet {
+public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWalletManager {
     private List<ContractBasicInformation> contractsHistory;
 
 
@@ -246,6 +249,41 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public StockStatistics getStockStatistics(String stockCurrency) {
+        return null;
+    }
+
+    @Override
+    public List<String> getBrokerLocations() {
+        return null;
+    }
+
+    @Override
+    public List<String> getBrokerBankAccounts() {
+        return null;
+    }
+
+    @Override
+    public List<String> getPaymentMethods(String currencyToSell) {
+        return null;
+    }
+
+    @Override
+    public List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo) {
+        return null;
+    }
+
+    @Override
+    public void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues) {
+
+    }
+
+    @Override
+    public boolean isNothingLeftToConfirm(List<NegotiationStep> dataSet) {
+        return false;
+    }
+
+    @Override
+    public CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
         return null;
     }
 }

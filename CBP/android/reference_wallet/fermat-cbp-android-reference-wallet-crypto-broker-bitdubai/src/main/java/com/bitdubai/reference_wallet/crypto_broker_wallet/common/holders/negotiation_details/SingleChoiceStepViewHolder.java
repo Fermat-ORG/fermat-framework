@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SingleChoiceDialogFragment;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class SingleChoiceStepViewHolder extends StepViewHolder
         implements View.OnClickListener, SingleChoiceDialogFragment.SelectedItem<String> {
 
+    private CryptoBrokerWalletManager walletManager;
     private List<String> dataList;
     private String selectedValue;
     private Activity activity;
@@ -26,13 +29,14 @@ public class SingleChoiceStepViewHolder extends StepViewHolder
     private TextView descriptionTextView;
 
 
-    public SingleChoiceStepViewHolder(NegotiationDetailsAdapter adapter, View viewItem, Activity activity) {
+    public SingleChoiceStepViewHolder(NegotiationDetailsAdapter adapter, View viewItem, Activity activity, CryptoBrokerWalletManager walletManager) {
         super(viewItem, adapter);
 
         this.activity = activity;
+        this.walletManager = walletManager;
 
-        descriptionTextView = (TextView) viewItem.findViewById(R.id.description_text);
-        buttonValue = (Button) viewItem.findViewById(R.id.single_choice_value);
+        descriptionTextView = (TextView) viewItem.findViewById(R.id.cbw_description_text);
+        buttonValue = (Button) viewItem.findViewById(R.id.cbw_single_choice_value);
         buttonValue.setOnClickListener(this);
     }
 
@@ -49,12 +53,14 @@ public class SingleChoiceStepViewHolder extends StepViewHolder
 
     @Override
     public void onClick(View view) {
-        SingleChoiceDialogFragment<String> dialog = new SingleChoiceDialogFragment<>();
+        if (dataList != null) {
+            SingleChoiceDialogFragment<String> dialog = new SingleChoiceDialogFragment<>();
 
-        dialog.configure("Select an Item", dataList, selectedValue, this);
+            dialog.configure("Select an Item", dataList, selectedValue, this);
 
-        FragmentManager fragmentManager = activity.getFragmentManager();
-        dialog.show(fragmentManager, "SingleChoiceDialog");
+            FragmentManager fragmentManager = activity.getFragmentManager();
+            dialog.show(fragmentManager, "SingleChoiceDialog");
+        }
     }
 
     @Override
@@ -93,7 +99,7 @@ public class SingleChoiceStepViewHolder extends StepViewHolder
         super.modifyData(stepStatus);
 
         NegotiationStep step = adapter.getItem(itemPosition);
-        ModuleManager.modifyNegotiationStepValues(step, stepStatus, selectedValue);
+        walletManager.modifyNegotiationStepValues(step, stepStatus, selectedValue);
         adapter.notifyItemChanged(itemPosition);
     }
 }

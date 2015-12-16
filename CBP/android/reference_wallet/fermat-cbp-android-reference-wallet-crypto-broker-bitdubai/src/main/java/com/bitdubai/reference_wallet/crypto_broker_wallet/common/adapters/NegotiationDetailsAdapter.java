@@ -7,13 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.AmountToSellStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.DateTimeStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.ExchangeRateStepViewHolder;
@@ -36,15 +39,17 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
     private List<NegotiationStep> dataSet;
     private Activity activity;
-    private FermatListItemListeners<NegotiationStep> eventListeners;
+    private CryptoBrokerWalletManager walletManager;
 
     private final CustomerBrokerNegotiationInformation data;
     private ExchangeRateStepViewHolder exchangeRateViewHolder;
     private boolean haveNote;
 
-    public NegotiationDetailsAdapter(Activity activity, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
+    public NegotiationDetailsAdapter(Activity activity, CryptoBrokerWalletManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
         this.activity = activity;
         this.dataSet = dataSet;
+
+        this.walletManager = walletManager;
 
         haveNote = false;
         this.data = data;
@@ -52,26 +57,24 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         haveNote = (data.getMemo() != null);
     }
 
-    @Override
-    protected FermatViewHolder createHolder(View itemView, int type) {
+    private FermatViewHolder createHolder(View itemView, int type) {
         if (type == TYPE_HEADER)
             return new NoteViewHolder(itemView);
         if (type == TYPE_ITEM_DATE_TIME)
-            return new DateTimeStepViewHolder(this, itemView, (Activity) context);
+            return new DateTimeStepViewHolder(this, itemView, activity);
         if (type == TYPE_ITEM_SINGLE_CHOICE)
-            return new SingleChoiceStepViewHolder(this, itemView, (Activity) context);
+            return new SingleChoiceStepViewHolder(this, itemView, activity, walletManager);
         if (type == TYPE_ITEM_EXCHANGE_RATE)
-            return new ExchangeRateStepViewHolder(this, itemView);
+            return new ExchangeRateStepViewHolder(this, itemView, walletManager);
         if (type == TYPE_ITEM_AMOUNT_TO_SELL)
-            return new AmountToSellStepViewHolder(this, itemView);
+            return new AmountToSellStepViewHolder(this, itemView, walletManager);
         if (type == TYPE_FOOTER)
-            return new FooterViewHolder(itemView, data, dataSet, (Activity) context);
+            return new FooterViewHolder(itemView, data, dataSet, walletManager);
 
         throw new NoSuchElementException("Incorrect type value");
     }
 
-    @Override
-    protected int getCardViewResource(int type) {
+    private int getCardViewResource(int type) {
         switch (type) {
             case TYPE_HEADER:
                 return R.layout.notes_item;
@@ -92,7 +95,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
     @Override
     public FermatViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
-        return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(), viewGroup, false), type);
+        return createHolder(LayoutInflater.from(activity).inflate(getCardViewResource(type), viewGroup, false), type);
     }
 
     @Override
@@ -151,9 +154,14 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         }
     }
 
-    @Override
-    protected void bindHolder(FermatViewHolder holder, NegotiationStep data, int position) {
-        // DO NOTHING...
+    /**
+     * Get item
+     *
+     * @param position int position to getDate
+     * @return Model object
+     */
+    public NegotiationStep getItem(final int position) {
+        return dataSet != null ? ((!dataSet.isEmpty() && position < dataSet.size()) ? dataSet.get(position) : null) : null;
     }
 
     @Override
@@ -219,12 +227,13 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
         switch (type) {
             case PAYMENT_METHOD:
+                String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
                 viewHolder.bind(
                         stepNumber,
                         R.string.payment_methods_title,
                         R.string.payment_method,
                         step.getValue(),
-                        ModuleManager.PAYMENT_METHODS);
+                        walletManager.getPaymentMethods(currencyToSell));
                 break;
             case BROKER_BANK_ACCOUNT:
                 viewHolder.bind(
@@ -232,7 +241,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                         R.string.broker_bank_account_title,
                         R.string.selected_bank_account,
                         step.getValue(),
-                        ModuleManager.BROKER_BANK_ACCOUNTS);
+                        walletManager.getBrokerBankAccounts());
                 break;
             case BROKER_LOCATION:
                 viewHolder.bind(
@@ -240,7 +249,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                         R.string.broker_locations_title,
                         R.string.selected_location,
                         step.getValue(),
-                        ModuleManager.BROKER_LOCATIONS);
+                        walletManager.getBrokerLocations());
                 break;
             case CUSTOMER_BANK_ACCOUNT:
                 viewHolder.bind(
@@ -248,7 +257,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                         R.string.customer_bank_account_title,
                         R.string.selected_bank_account,
                         step.getValue(),
-                        ModuleManager.CUSTOMER_BANK_ACCOUNTS);
+                        null);
                 break;
             case CUSTOMER_LOCATION:
                 viewHolder.bind(
@@ -256,7 +265,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                         R.string.customer_locations_title,
                         R.string.selected_location,
                         step.getValue(),
-                        ModuleManager.CUSTOMER_LOCATIONS);
+                        null);
                 break;
         }
     }

@@ -9,11 +9,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 import java.util.List;
 
@@ -24,16 +28,16 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
 
     private CustomerBrokerNegotiationInformation data;
     private List<NegotiationStep> dataSet;
-    private Activity activity;
+    private CryptoBrokerWalletManager walletManager;
 
     private CardView addNoteButton;
     private TextView sendButton;
 
-    public FooterViewHolder(View itemView, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet, Activity activity) {
+    public FooterViewHolder(View itemView, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet, CryptoBrokerWalletManager walletManager) {
         super(itemView);
         this.data = data;
         this.dataSet = dataSet;
-        this.activity = activity;
+        this.walletManager = walletManager;
 
         addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
         addNoteButton.setOnClickListener(this);
@@ -44,18 +48,18 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.add_a_note_card_view:
-                Toast.makeText(itemView.getContext(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.send_button:
-                Toast.makeText(itemView.getContext(), "Click on send_button", Toast.LENGTH_SHORT).show();
-                boolean nothingLeftToConfirm = ModuleManager.isNothingLeftToConfirm(dataSet);
-                if (nothingLeftToConfirm) {
-                    ModuleManager.sendNegotiationSteps(data, dataSet);
-                    activity.startActivity(new Intent(activity, MainActivity.class));
-                }
-                break;
+        if (view.getId() == R.id.add_a_note_card_view) {
+            Toast.makeText(itemView.getContext(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
+
+        } else if (view.getId() == R.id.send_button) {
+
+            Toast.makeText(itemView.getContext(), "Click on send_button", Toast.LENGTH_SHORT).show();
+            boolean nothingLeftToConfirm = walletManager.isNothingLeftToConfirm(dataSet);
+
+            if (nothingLeftToConfirm) {
+                walletManager.sendNegotiationSteps(data, dataSet);
+                //activity.startActivity(new Intent(activity, MainActivity.class));
+            }
         }
     }
 }

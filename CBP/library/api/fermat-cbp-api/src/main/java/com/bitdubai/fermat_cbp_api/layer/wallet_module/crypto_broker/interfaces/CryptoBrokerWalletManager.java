@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
@@ -15,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/09/15.
  */
-public interface CryptoBrokerWallet extends WalletManager {
+public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * associate an Identity to this wallet
@@ -49,4 +51,18 @@ public interface CryptoBrokerWallet extends WalletManager {
      * @return stock statistics data
      */
     StockStatistics getStockStatistics(String stockCurrency);
+
+    List<String> getBrokerLocations();
+
+    List<String> getBrokerBankAccounts();
+
+    List<String> getPaymentMethods(String currencyToSell);
+
+    List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);
+
+    void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues);
+
+    boolean isNothingLeftToConfirm(List<NegotiationStep> dataSet);
+
+    CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet);
 }

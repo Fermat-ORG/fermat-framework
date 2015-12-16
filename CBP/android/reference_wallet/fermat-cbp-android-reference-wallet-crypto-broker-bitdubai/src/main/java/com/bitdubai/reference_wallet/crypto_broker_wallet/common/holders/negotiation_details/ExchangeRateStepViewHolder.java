@@ -9,8 +9,9 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.StepViewHolder;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -18,6 +19,7 @@ import java.text.NumberFormat;
 
 public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWatcher {
     private final DecimalFormat decimalFormat;
+    private final CryptoBrokerWalletManager walletManager;
 
     private TextView yourExchangeRateValueLeftSide;
     private TextView yourExchangeRateValueRightSide;
@@ -34,19 +36,21 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
     private String actualValue;
 
 
-    public ExchangeRateStepViewHolder(NegotiationDetailsAdapter adapter, View itemView) {
+    public ExchangeRateStepViewHolder(NegotiationDetailsAdapter adapter, View itemView, CryptoBrokerWalletManager walletManager) {
         super(itemView, adapter);
+
+        this.walletManager = walletManager;
 
         decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
-        exchangeRateReferenceText = (TextView) itemView.findViewById(R.id.exchange_rate_reference_text);
-        exchangeRateReference = (TextView) itemView.findViewById(R.id.exchange_rate_reference_value);
-        markerRateReferenceText = (TextView) itemView.findViewById(R.id.market_exchange_rate_reference_text);
-        markerRateReference = (TextView) itemView.findViewById(R.id.market_exchange_rate_reference_value);
-        yourExchangeRateText = (TextView) itemView.findViewById(R.id.your_exchange_rate_text);
-        yourExchangeRateValueLeftSide = (TextView) itemView.findViewById(R.id.your_exchange_rate_value_left_side);
-        yourExchangeRateValueRightSide = (TextView) itemView.findViewById(R.id.your_exchange_rate_value_right_side);
-        yourExchangeRateValue = (EditText) itemView.findViewById(R.id.your_exchange_rate_value);
+        exchangeRateReferenceText = (TextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_text);
+        exchangeRateReference = (TextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_value);
+        markerRateReferenceText = (TextView) itemView.findViewById(R.id.cbw_market_exchange_rate_reference_text);
+        markerRateReference = (TextView) itemView.findViewById(R.id.cbw_market_exchange_rate_reference_value);
+        yourExchangeRateText = (TextView) itemView.findViewById(R.id.cbw_your_exchange_rate_text);
+        yourExchangeRateValueLeftSide = (TextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_left_side);
+        yourExchangeRateValueRightSide = (TextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_right_side);
+        yourExchangeRateValue = (EditText) itemView.findViewById(R.id.cbw_your_exchange_rate_value);
         yourExchangeRateValue.addTextChangedListener(this);
     }
 
@@ -133,7 +137,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         super.modifyData(stepStatus);
 
         NegotiationStep step = adapter.getItem(itemPosition);
-        ModuleManager.modifyNegotiationStepValues(step, stepStatus, actualValue);
+        walletManager.modifyNegotiationStepValues(step, stepStatus, actualValue);
         adapter.notifyItemChanged(itemPosition);
     }
 
