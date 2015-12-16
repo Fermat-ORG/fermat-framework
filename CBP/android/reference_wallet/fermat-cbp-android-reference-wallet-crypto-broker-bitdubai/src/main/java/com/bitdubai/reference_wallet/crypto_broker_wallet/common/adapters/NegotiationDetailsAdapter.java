@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
@@ -40,6 +39,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private List<NegotiationStep> dataSet;
     private Activity activity;
     private CryptoBrokerWalletManager walletManager;
+    private FooterViewHolder.OnFooterButtonsClickListener footerListener;
 
     private final CustomerBrokerNegotiationInformation data;
     private ExchangeRateStepViewHolder exchangeRateViewHolder;
@@ -105,6 +105,10 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         int stepNumber = itemPosition + 1;
 
         switch (holderType) {
+            case TYPE_FOOTER:
+                FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
+                footerViewHolder.setListener(footerListener);
+                break;
             case TYPE_HEADER:
                 NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
                 noteViewHolder.bind(data.getMemo());
@@ -212,6 +216,10 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
     public NegotiationStep getDataSetItem(int position) {
         return dataSet.get(position);
+    }
+
+    public void setFooterListener(FooterViewHolder.OnFooterButtonsClickListener listener) {
+        footerListener = listener;
     }
 
     private int getItemPosition(int position) {

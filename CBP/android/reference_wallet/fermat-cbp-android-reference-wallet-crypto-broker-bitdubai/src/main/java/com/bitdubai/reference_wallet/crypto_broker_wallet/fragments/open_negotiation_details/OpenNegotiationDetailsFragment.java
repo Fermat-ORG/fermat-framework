@@ -15,30 +15,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
+public class OpenNegotiationDetailsFragment extends FermatWalletFragment implements FooterViewHolder.OnFooterButtonsClickListener {
     private static final String TAG = "OpenNegotiationDetails";
 
     // UI
@@ -51,6 +56,7 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
 
     // DATA
     private CustomerBrokerNegotiationInformation negotiationInfo;
+    private List<NegotiationStep> negotiationSteps;
 
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
@@ -133,7 +139,10 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
         exchangeRateSummary.setText(getResources().getString(R.string.cbw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
         buyingDetails.setText(getResources().getString(R.string.cbw_buying_details, amount, merchandise));
 
-        NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), walletManager, negotiationInfo, walletManager.getSteps(negotiationInfo));
+        negotiationSteps = walletManager.getSteps(negotiationInfo);
+        NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), walletManager, negotiationInfo, negotiationSteps);
+        adapter.setFooterListener(this);
+
         recyclerView.setAdapter(adapter);
     }
 
@@ -144,5 +153,20 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+    }
+
+    @Override
+    public void onAddNoteButtonClicked() {
+        Toast.makeText(getActivity(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSendButtonClicked() {
+        boolean nothingLeftToConfirm = walletManager.isNothingLeftToConfirm(negotiationSteps);
+
+        if (nothingLeftToConfirm) {
+            walletManager.sendNegotiationSteps(negotiationInfo, negotiationSteps);
+            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        }
     }
 }

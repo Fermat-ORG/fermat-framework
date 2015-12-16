@@ -53,14 +53,18 @@ public class SingleChoiceStepViewHolder extends StepViewHolder
 
     @Override
     public void onClick(View view) {
-        if (dataList != null) {
-            SingleChoiceDialogFragment<String> dialog = new SingleChoiceDialogFragment<>();
+        if (dataList == null)
+            return;
+        if (dataList.isEmpty())
+            return;
 
-            dialog.configure("Select an Item", dataList, selectedValue, this);
+        SingleChoiceDialogFragment<String> dialog = new SingleChoiceDialogFragment<>();
 
-            FragmentManager fragmentManager = activity.getFragmentManager();
-            dialog.show(fragmentManager, "SingleChoiceDialog");
-        }
+        dialog.configure("Select an Item", dataList, selectedValue, this);
+
+        FragmentManager fragmentManager = activity.getFragmentManager();
+        dialog.show(fragmentManager, "SingleChoiceDialog");
+
     }
 
     @Override
