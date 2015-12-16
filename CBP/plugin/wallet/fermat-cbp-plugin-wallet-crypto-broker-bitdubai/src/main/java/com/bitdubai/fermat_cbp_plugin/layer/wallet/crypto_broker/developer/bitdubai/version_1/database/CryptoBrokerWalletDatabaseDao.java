@@ -388,10 +388,10 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         }
     }
 
-    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(UUID id) throws CantGetCryptoBrokerWalletSettingException {
+    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting() throws CantGetCryptoBrokerWalletSettingException {
         CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = null;
         try {
-            for (DatabaseTableRecord record : getCryptoBrokerWalletSpreadSettingData(id.toString())) {
+            for (DatabaseTableRecord record : getCryptoBrokerWalletSpreadSettingData()) {
                 cryptoBrokerWalletSettingSpread = getCryptoBrokerWalletSpreadSetting(record);
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -565,6 +565,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         cryptoBrokerWalletSettingSpread.setId(record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME));
         cryptoBrokerWalletSettingSpread.setBrokerPublicKey(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME));
         cryptoBrokerWalletSettingSpread.setSpread(record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME));
+        cryptoBrokerWalletSettingSpread.setRestockAutomatic(Boolean.valueOf(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_RESTOCK_AUTOMATIC)));
 
         return cryptoBrokerWalletSettingSpread;
     }
@@ -595,10 +596,10 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return cryptoBrokerWalletAssociatedSetting;
     }
 
-    private List<DatabaseTableRecord> getCryptoBrokerWalletSpreadSettingData(String Id) throws CantLoadTableToMemoryException {
+    private List<DatabaseTableRecord> getCryptoBrokerWalletSpreadSettingData() throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME);
 
-        table.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, Id, DatabaseFilterType.EQUAL);
+        //table.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, Id, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
@@ -641,6 +642,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         record.setUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, cryptoBrokerWalletSettingSpread.getId());
         record.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME, cryptoBrokerWalletSettingSpread.getSpread());
         record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME, cryptoBrokerWalletSettingSpread.getBrokerPublicKey());
+        record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_RESTOCK_AUTOMATIC, String.valueOf(cryptoBrokerWalletSettingSpread.getRestockAutomatic()));
 
         return record;
     }

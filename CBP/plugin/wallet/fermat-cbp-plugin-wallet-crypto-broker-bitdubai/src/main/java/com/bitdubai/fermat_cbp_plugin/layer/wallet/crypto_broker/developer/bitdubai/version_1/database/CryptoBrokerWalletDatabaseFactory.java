@@ -138,6 +138,7 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_RESTOCK_AUTOMATIC, DatabaseDataType.STRING, 10, false);
 
         return table;
     }
