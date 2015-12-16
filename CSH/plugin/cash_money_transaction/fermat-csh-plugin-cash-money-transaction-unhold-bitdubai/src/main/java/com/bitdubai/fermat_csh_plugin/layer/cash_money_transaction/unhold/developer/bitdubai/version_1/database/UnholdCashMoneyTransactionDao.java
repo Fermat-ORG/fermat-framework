@@ -28,6 +28,7 @@ import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.develo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -195,7 +196,7 @@ public class UnholdCashMoneyTransactionDao {
         newRecord.setStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, unholdParameters.getPublicKeyWallet());
         newRecord.setStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, unholdParameters.getPublicKeyActor());
         newRecord.setStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, unholdParameters.getPublicKeyPlugin());
-        newRecord.setDoubleValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, unholdParameters.getAmount());
+        newRecord.setStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, unholdParameters.getAmount().toPlainString());
         newRecord.setStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, unholdParameters.getCurrency().getCode());
         newRecord.setStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, unholdParameters.getMemo());
         newRecord.setStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, CashTransactionStatus.ACKNOWLEDGED.getCode());
@@ -209,7 +210,7 @@ public class UnholdCashMoneyTransactionDao {
         String publicKeyWallet = record.getStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyActor = record.getStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyPlugin = record.getStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME);
-        float amount = record.getFloatValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME);
+        BigDecimal amount = new BigDecimal(record.getStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME));
         String memo = record.getStringValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME);
         long timestampAcknowledged = record.getLongValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         long timestampConfirmedRejected = record.getLongValue(UnholdCashMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);

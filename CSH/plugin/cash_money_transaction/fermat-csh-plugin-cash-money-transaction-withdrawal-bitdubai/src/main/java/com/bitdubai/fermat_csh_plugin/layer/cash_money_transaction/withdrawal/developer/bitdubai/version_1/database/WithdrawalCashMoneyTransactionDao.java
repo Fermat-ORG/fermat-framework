@@ -25,6 +25,7 @@ import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.withdrawal.de
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -160,7 +161,7 @@ public class WithdrawalCashMoneyTransactionDao {
         newRecord.setStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_WALLET_PUBLIC_KEY_COLUMN_NAME, withdrawalParameters.getPublicKeyWallet());
         newRecord.setStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_ACTOR_PUBLIC_KEY_COLUMN_NAME, withdrawalParameters.getPublicKeyActor());
         newRecord.setStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_PLUGIN_PUBLIC_KEY_COLUMN_NAME, withdrawalParameters.getPublicKeyPlugin());
-        newRecord.setDoubleValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_AMOUNT_COLUMN_NAME, withdrawalParameters.getAmount());
+        newRecord.setStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_AMOUNT_COLUMN_NAME, withdrawalParameters.getAmount().toPlainString());
         newRecord.setStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_CURRENCY_COLUMN_NAME, withdrawalParameters.getCurrency().getCode());
         newRecord.setStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_MEMO_COLUMN_NAME, withdrawalParameters.getMemo());
         newRecord.setLongValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
@@ -172,7 +173,7 @@ public class WithdrawalCashMoneyTransactionDao {
         String publicKeyWallet = record.getStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyActor = record.getStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyPlugin = record.getStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_PLUGIN_PUBLIC_KEY_COLUMN_NAME);
-        float amount = record.getFloatValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_AMOUNT_COLUMN_NAME);
+        BigDecimal amount = new BigDecimal(record.getStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_AMOUNT_COLUMN_NAME));
         String memo = record.getStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_MEMO_COLUMN_NAME);
         long timestamp = record.getLongValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_TIMESTAMP_COLUMN_NAME);
 
