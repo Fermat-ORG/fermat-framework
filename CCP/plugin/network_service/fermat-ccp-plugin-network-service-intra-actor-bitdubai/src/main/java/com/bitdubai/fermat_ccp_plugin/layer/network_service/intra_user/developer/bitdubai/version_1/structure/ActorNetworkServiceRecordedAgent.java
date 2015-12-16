@@ -368,7 +368,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
                 }else{
-                 // connectionFailure(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                  connectionFailure(actorNetworkServiceRecord.getActorDestinationPublicKey());
                    System.out.println("ENTRO EN ESTE ELSE");
                 }
             }
