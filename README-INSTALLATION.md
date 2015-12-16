@@ -28,9 +28,43 @@ Although there are many ways to configure these tools, we'll provide a recommend
 <br>
 ### Working on Linux
 
-Most Fermat developers are on Linux since compilation is faster there than in Windows. 
+Most Fermat developers are on Linux since compilation is faster there than in Windows. It is highly recommended that you use linux instead of windows. Developers that tried to set up a windows environment finally gave up and moved to Ubuntu. If you don't have Ubuntu installed, we recommed you to do so in a fresh disk partition.
+
+#### Automatic installation
+
+You can install all the needed software automatically using the script that you can find at the following URL:
+[FermatDeveloperInstaller.sh] (https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
+
+This script the downloads and installs all the software that you need for develop in Fermat.
+
+* To begin using the script, copy **_FermatDeveloperInstaller.sh_** in your _$HOME_ folder
+* You can edit the sctipt with gedit, eMacs or any text editor to set some variables (optional)
+
+```shell
+platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
+#plafform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
+
+gradleVersion=2.9 #Sets the version that you want to use in development, this version must be superior to 2.5.
+
+#If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
+#genymotion="genymotion-2.5.2_x86.bin" #Genymotion for 32 Bits OS
+genymotion="genymotion-2.5.2_x64.bin" #Genymotion for 64 Bits OS
+#If you want to use the default Android Studio emulator, please, leave the previous lines commented.
+```
+* To execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
+```shell
+cd $HOME
+./FermatDeveloperInstaller.sh
+```
+
+It takes some time to download all the software, please, be patient.
+
 
 <br>
+#### Manual installation
+
+In case the script goes wrong or does not do its intended job, you can go with the manual set up of the environment.
+
 #### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you will find in any Distro of Linux.
