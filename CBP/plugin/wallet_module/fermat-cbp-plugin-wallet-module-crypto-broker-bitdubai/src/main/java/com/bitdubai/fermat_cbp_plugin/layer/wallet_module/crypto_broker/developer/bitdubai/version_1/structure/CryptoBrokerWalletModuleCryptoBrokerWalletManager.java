@@ -340,7 +340,27 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues) {
+        NegotiationStepType negotiationStepType = step.getType();
 
+        switch (negotiationStepType) {
+            case EXCHANGE_RATE:
+                ExchangeRateStepImp exchangeRateStep = (ExchangeRateStepImp) step;
+                exchangeRateStep.setExchangeRate(newValues[0]);
+                exchangeRateStep.setStatus(status);
+                break;
+            case AMOUNT_TO_SALE:
+                AmountToSellStepImp amountToSellStep = (AmountToSellStepImp) step;
+                amountToSellStep.setAmountToSell(newValues[0]);
+                amountToSellStep.setAmountToReceive(newValues[1]);
+                amountToSellStep.setExchangeRateValue(newValues[2]);
+                amountToSellStep.setStatus(status);
+                break;
+            default:
+                SingleValueStepImp singleValueStep = (SingleValueStepImp) step;
+                singleValueStep.setValue(newValues[0]);
+                singleValueStep.setStatus(status);
+                break;
+        }
     }
 
     @Override
