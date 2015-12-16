@@ -19,13 +19,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionS
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
-import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
@@ -44,21 +41,31 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     private UUID pluginId;
 
-    public CustomerBrokerNewNegotiationTransactionDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    private Database database;
+
+    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
+        this.pluginDatabaseSystem   = pluginDatabaseSystem;
+        this.pluginId               = pluginId;
+        this.database               = database;
+    }
+/*
+    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
 
     Database database;
-
+*/
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+//            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
             try {
                 CustomerBrokerNewNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerNewNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
-                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+//                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
@@ -187,10 +194,40 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO SUBMIT
     public List<String> getPendingToSubmitNegotiation() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
 
-        return getStringList(
+        /*return getStringList(
                 NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,
-                CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
+                CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);*/
+
+        try{
+
+            List<String> negotiationList=new ArrayList<>();
+            String negotiation;
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
+            }
+            table.setStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return negotiationList;
+            }
+
+            for(DatabaseTableRecord databaseTableRecord : records){
+                negotiation = databaseTableRecord.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
+                negotiationList.add(negotiation);
+            }
+
+            return negotiationList;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e, "Getting "+NegotiationTransactionStatus.PENDING_SUBMIT.getCode()+" based on "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,"Cannot load the table into memory");
+        } catch (Exception e){
+            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+NegotiationTransactionStatus.PENDING_SUBMIT.getCode()+" based on "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,"Cannot load the table into memory");
+        }
 
     }
 
@@ -327,7 +364,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
             DatabaseTableRecord record=records.get(0);
-            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME,eventStatus.getCode());
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME, eventStatus.getCode());
             table.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(exception,"Updating parameter "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME,"");
@@ -389,6 +426,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         try{
 
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
+            }
             List<String> negotiationList=new ArrayList<>();
             String negotiation;
             table.setStringFilter(keyColumn,key,DatabaseFilterType.EQUAL);
@@ -398,8 +438,9 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
                 //There is no records in database, I'll return an empty list.
                 return negotiationList;
             }
+
             for(DatabaseTableRecord databaseTableRecord : records){
-                negotiation=databaseTableRecord.getStringValue(valueColumn);
+                negotiation = databaseTableRecord.getStringValue(valueColumn);
                 negotiationList.add(negotiation);
             }
 
@@ -407,6 +448,8 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
+        } catch (Exception e){
+            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
         }
     }
 

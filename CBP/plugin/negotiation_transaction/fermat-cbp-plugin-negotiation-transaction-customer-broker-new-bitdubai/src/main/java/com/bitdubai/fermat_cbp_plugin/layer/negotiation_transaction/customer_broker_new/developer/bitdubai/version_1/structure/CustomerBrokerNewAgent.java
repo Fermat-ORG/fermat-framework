@@ -46,9 +46,11 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerNewPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -132,15 +134,15 @@ public class CustomerBrokerNewAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        Logger LOG = Logger.getGlobal();
-        LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
+//        Logger LOG = Logger.getGlobal();
+//        LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
         monitorAgentTransaction = new MonitorAgentTransaction();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgentTransaction).setPluginDatabaseSystem(pluginDatabaseSystem);
+        ((DealsWithPluginDatabaseSystem) this.monitorAgentTransaction).setPluginDatabaseSystem(this.pluginDatabaseSystem);
         ((DealsWithErrors) this.monitorAgentTransaction).setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgentTransaction) this.monitorAgentTransaction).startAgent();
+            ((MonitorAgentTransaction) this.monitorAgentTransaction).Initialize();
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
@@ -182,17 +184,16 @@ public class CustomerBrokerNewAgent implements
     }
 
     /*INNER CLASSES*/
-    private class MonitorAgentTransaction implements Runnable {
+    private class MonitorAgentTransaction implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
 
         private volatile boolean agentRunning;
+        ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        private CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
+        CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
         public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
         boolean threadWorking;
-        public MonitorAgentTransaction() {
-            startAgent();
-        }
+//        public MonitorAgentTransaction() { startAgent(); }
         
         /*INNER CLASS PUBLIC METHOD*/
         @Override
@@ -223,15 +224,17 @@ public class CustomerBrokerNewAgent implements
         
         public void Initialize() throws CantInitializeCBPAgent {
             try {
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+//                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
 
-                Logger LOG = Logger.getGlobal();
-                LOG.info("Database in Open Contract monitor agent doesn't exists");
-                CustomerBrokerNewNegotiationTransactionDatabaseFactory customerBrokerNewNegotiationTransactionDatabaseFactory=new CustomerBrokerNewNegotiationTransactionDatabaseFactory(this.pluginDatabaseSystem);
+//                Logger LOG = Logger.getGlobal();
+//                LOG.info("Database in Negotiation Transaction monitor agent doesn't exists");
                 try {
-                    database = customerBrokerNewNegotiationTransactionDatabaseFactory.createDatabase(pluginId,pluginId.toString());
+                    CustomerBrokerNewNegotiationTransactionDatabaseFactory customerBrokerNewNegotiationTransactionDatabaseFactory=new CustomerBrokerNewNegotiationTransactionDatabaseFactory(this.pluginDatabaseSystem);
+//                    database = customerBrokerNewNegotiationTransactionDatabaseFactory.createDatabase(pluginId,pluginId.toString());
+                    database = customerBrokerNewNegotiationTransactionDatabaseFactory.createDatabase(pluginId,CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
                     throw new CantInitializeCBPAgent(cantCreateDatabaseException,"Customer Broker New Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
@@ -243,11 +246,30 @@ public class CustomerBrokerNewAgent implements
             }
         }
 
+        /*public void Initialize() throws CantInitializeCBPAgent {
+            try {
+                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
+            } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException ei){
+                throw new CantInitializeCBPAgent(ei,"Customer Broker New Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
+            }
+        }*/
+
         public void stopAgent() { agentRunning = false; }
 
         public void startAgent() { agentRunning = true; }
 
         public boolean isAgentRunning() { return agentRunning; }
+
+        /*IMPLEMENTATION DealsWithPluginIdentity*/
+        @Override
+        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { this.pluginDatabaseSystem=pluginDatabaseSystem; }
+
+        /*IMPLEMENTATION DealsWithErrors*/
+        @Override
+        public void setErrorManager(ErrorManager errorManager) {
+            this.errorManager=errorManager;
+        }
         /*END INNER CLASS PUBLIC METHOD*/
         
         /*INNER CLASS PRIVATE METHOD*/
@@ -258,16 +280,20 @@ public class CustomerBrokerNewAgent implements
         {
             try{
 
+                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
+//                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+//                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
+
                 String                  negotiationXML;
                 NegotiationType         negotiationType;
                 UUID                    transactionId;
                 NegotiationTransaction  negotiationTransaction;
                 List<String>            negotiationPendingToSubmitList;
-                        CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation      saleNegotiation     = new NegotiationSaleRecord();
 
                 //Check if exist negotiation for send (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
-                negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
+                negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
                     for(String negotiationToSubmit: negotiationPendingToSubmitList){
 
@@ -399,25 +425,6 @@ public class CustomerBrokerNewAgent implements
                     }
                 }
 
-                //EVENT CONFIRM NEGOTIATION: evalua si se envia la negociacion
-                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION.getCode())) {
-                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
-                        negotiationTransmission = record.getInformation();
-                        transactionId = negotiationTransmission.getTransactionId();
-                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
-                        if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
-
-                            negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_RESPONSE;
-
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
-                            negotiationTransmissionManager.confirmReception(transactionId);
-
-                        }
-                    }
-                }
-
                 //EVENT CONFIRM RESPONSE: evalua si se confirma.
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
@@ -427,7 +434,7 @@ public class CustomerBrokerNewAgent implements
                         negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_RESPONSE.getCode())) {
 
-                            negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_RESPONSE;
+                            negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_CONFIRMATION;
                             //agrregar getNegotiationType() al negotiationTransaction
 //                            negotiationType              = negotiationTransaction.getNegotiationType().getCode();
 
@@ -444,6 +451,25 @@ public class CustomerBrokerNewAgent implements
 //                                                    contractHash,
 //                                                    ContractStatus.PENDING_PAYMENT);
 //                            }
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
+                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            negotiationTransmissionManager.confirmReception(transactionId);
+
+                        }
+                    }
+                }
+
+                //EVENT CONFIRM NEGOTIATION: evalua si se envia la negociacion
+                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION.getCode())) {
+                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
+                        negotiationTransmission = record.getInformation();
+                        transactionId = negotiationTransmission.getTransactionId();
+                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+                        if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
+
+                            negotiationTransactionStatus = NegotiationTransactionStatus.CONFIRM_NEGOTIATION;
+
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
                             negotiationTransmissionManager.confirmReception(transactionId);

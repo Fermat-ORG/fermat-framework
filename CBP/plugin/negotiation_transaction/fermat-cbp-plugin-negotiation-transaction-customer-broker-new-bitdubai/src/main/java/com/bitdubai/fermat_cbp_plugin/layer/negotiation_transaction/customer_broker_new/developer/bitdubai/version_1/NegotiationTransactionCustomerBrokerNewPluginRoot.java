@@ -28,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
@@ -129,7 +130,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             //Initialize Dao
-            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+//            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
 
             //Initialize manager
             customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(customerBrokerNewNegotiationTransactionDatabaseDao);
@@ -241,11 +243,13 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*PUBLIC METHOD*/
     private void initializeDb() throws CantInitializeDatabaseException {
         try {
-            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+//            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
             try {
                 CustomerBrokerNewNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerNewNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
-                dataBase = databaseFactory.createDatabase(pluginId, pluginId.toString());
+//                dataBase = databaseFactory.createDatabase(pluginId, pluginId.toString());
+                dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
