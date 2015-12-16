@@ -4,45 +4,15 @@ import java.security.InvalidParameterException;
 
 public enum NegotiationStepType {
 
-    /**
-     * Tasa de cambio
-     */
     EXCHANGE_RATE("EXCRAT"),
-    /**
-     * Cantidad a Vender
-     */
     AMOUNT_TO_SALE("AMOUTOSAL"),
-    /**
-     * Metodo de pago que acepta el broker (Crypto, Cash in Hand, Cash Delivery, Bank)
-     */
     PAYMENT_METHOD("PAYMET"),
-    /**
-     * Contiene toda la informacion necesaria sobre las cuenta bancaria del Customer
-     */
     CUSTOMER_BANK_ACCOUNT("CUSBANACC"),
-    /**
-     * Contiene toda la informacion necesaria sobre las cuenta bancaria del Broker
-     */
     BROKER_BANK_ACCOUNT("BROBANACC"),
-    /**
-     * Lugar donde el Broker recibira el pago
-     */
     BROKER_LOCATION("BROPLADEL"),
-    /**
-     * Fecha y hora limite en la que el Broker debe recibir el pago
-     */
     DATE_TIME_TO_DELIVER("BRODATDEL"),
-    /**
-     * Lugar donde el Customer recibira el pago
-     */
     CUSTOMER_LOCATION("CUSPLADEL"),
-    /**
-     * Fecha y hora limite en la que el Customer debe recibir el pago
-     */
     DATE_TIME_TO_PAY("CUSDATDEL"),
-    /**
-     * Fecha y hora limite en la que se mantiene la negociacion
-     */
     EXPIRATION_DATE_TIME("EXPDATI");
 
     private final String code;

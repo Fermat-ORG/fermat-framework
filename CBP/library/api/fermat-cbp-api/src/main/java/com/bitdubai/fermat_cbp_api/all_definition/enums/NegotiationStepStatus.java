@@ -7,17 +7,8 @@ import java.security.InvalidParameterException;
  */
 public enum NegotiationStepStatus {
 
-    /**
-     * Tasa de cambio
-     */
     ACCEPTED("ACCEPT"),
-    /**
-     * Cantidad a Vender
-     */
     CHANGED("CHANGE"),
-    /**
-     * Metodo de pago que acepta el broker (Crypto, Cash in Hand, Cash Delivery, Bank)
-     */
     CONFIRM("CONFIR");
 
     private final String code;
