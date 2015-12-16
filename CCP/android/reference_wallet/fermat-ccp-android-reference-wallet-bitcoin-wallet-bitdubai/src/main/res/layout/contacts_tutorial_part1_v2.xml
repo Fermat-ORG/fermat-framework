@@ -43,7 +43,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txt_title"
-                        android:text="Add contact tutorial"
+                        android:text="Add Contact Help"
                         android:paddingLeft="2dp"
                         android:textSize="20sp"
                         android:textColor="#00a99d"
@@ -59,13 +59,36 @@
 
                 </RelativeLayout>
 
-
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.7dp"
                     android:layout_marginRight="64dp"
                     android:background="@drawable/round_corner_line_dialog"/>
+
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="12sp"
+                    android:text="In this wallet you can have two different kind of contacts"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="20dp"
+                    android:textColor="#1d1d26"
+                    android:paddingRight="30dp"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#dad9d9"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="5dp"
+                    />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -85,10 +108,10 @@
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:paddingBottom="5dp"
                         android:paddingTop="12sp"
-                        android:text="Acá va la explicacion que le demos a los Fermat Users. le pongo más informacion para que veas"
+                        android:text="Users of other Fermat wallets: you don´t need to mannually exchange addresses with them"
                         android:gravity="center_horizontal"
                         android:layout_gravity="center_horizontal"
                         android:paddingLeft="20dp"
@@ -123,10 +146,10 @@
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:paddingBottom="5dp"
                         android:paddingTop="12sp"
-                        android:text="Acá va la explicacion que le demos a los Extra Users le pongo más informacion para que veas"
+                        android:text="Users of other wallets outside Fermat: You need to exchange addresses manually"
                         android:gravity="center_horizontal"
                         android:layout_gravity="center_horizontal"
                         android:paddingLeft="20dp"
@@ -135,6 +158,28 @@
 
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#dad9d9"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="12dp"/>
+
+
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="12sp"
+                    android:text="Select which kind of contact you want to add:"                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="20dp"
+                    android:textColor="#1d1d26"
+                    android:paddingRight="30dp"
+                    />
 
                 <View
                     android:layout_width="match_parent"
@@ -160,10 +205,10 @@
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Dont show me this again"
+                        android:text="Don´t show this again"
                         android:layout_alignParentEnd="true"
                         android:textColor="#7c7c7c"
-                        android:textSize="13dp"
+                        android:textSize="12dp"
                         android:layout_marginRight="32dp"
                         android:gravity="center_vertical"/>
                 </RelativeLayout>
@@ -171,19 +216,55 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="15dp"
+            >
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="CREATE EXTRA USER"
-                android:layout_weight="1"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bitcoin_wallet_2"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Add Fermat Contact"
+                    android:textSize="12dp"
+                    android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:text="CREATE FERMAT USER"
-                android:layout_weight="1"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_04"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Add External Contact"
+                    android:textSize="12dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
