@@ -31,8 +31,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashDepositTransactionParametersImpl;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashWithdrawalTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.adapters.TransactionsAdapter;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.util.ArrayList;
@@ -59,6 +59,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
 
     //UI
     private View noTransactionsView;
+    CreateTransactionFragmentDialog dialog;
 
 
     public BalanceSummaryFragment() {}
@@ -104,31 +105,14 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
         layout.findViewById(R.id.fab_withdraw).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Making 500USD Withdrawal!", Toast.LENGTH_SHORT).show();
-                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), walletPublicKey, "pkeyActorRefWallet", "pkeyPluginRefWallet", 500, FiatCurrency.US_DOLLAR, "500USD RefWallet withdrawal");
-                try {
-                    moduleManager.createCashWithdrawalTransaction(t);
-                    updateWalletBalances(view.getRootView());
-
-                } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(getActivity(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
-                }
+                lauchCreateTransactionDialog(TransactionType.DEBIT);
             }
         });
 
         layout.findViewById(R.id.fab_deposit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Making 500USD Deposit!", Toast.LENGTH_SHORT).show();
-                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), walletPublicKey, "pkeyActorRefWallet", "pkeyPluginRefWallet", 500, FiatCurrency.US_DOLLAR, "500USD RefWallet deposit");
-                try {
-                    moduleManager.createCashDepositTransaction(t);
-                    updateWalletBalances(view.getRootView());
-
-                } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(getActivity(), "Error on deposit!", Toast.LENGTH_SHORT).show();
-
-                }
+                lauchCreateTransactionDialog(TransactionType.CREDIT);
             }
         });
     }
@@ -244,6 +228,12 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
     }
 
     /* MISC FUNCTIONS */
+    private void lauchCreateTransactionDialog(TransactionType transactionType){
+        dialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType);
+        //dialog.setOnDismissListener(this);
+        dialog.show();
+    }
+
     @Override
     public List<CashMoneyWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CashMoneyWalletTransaction> data = new ArrayList<>();
