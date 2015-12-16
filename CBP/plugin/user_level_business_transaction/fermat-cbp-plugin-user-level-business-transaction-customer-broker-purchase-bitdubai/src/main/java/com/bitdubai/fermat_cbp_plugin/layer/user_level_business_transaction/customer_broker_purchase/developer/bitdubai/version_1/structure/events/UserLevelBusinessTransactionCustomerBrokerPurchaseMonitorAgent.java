@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
@@ -178,7 +179,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                             //Recorrer las clausulas del contrato
                             for (ContractClause contractClause : customerBrokerContractPurchase.getContractClause())
                             {
-
+                                if (contractClause.getStatus().getCode() != ContractClauseStatus.EXECUTED.getCode())
+                                {
+                                    //Debemos enviar notificacion de las distintas clausulas segun se estatus
+                                }
                             }
                         }
                     }
