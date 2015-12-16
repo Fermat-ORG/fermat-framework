@@ -377,9 +377,36 @@ public class AssetCryptoVaultManager  {
      * @throws CantAddHierarchyAccountException
      */
     public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
-        //todo implement adding a new account. It will add the record in the database.
-        // derive the standard amount of keys and monitor the network with this new account
-        return null;
+        /**
+         * I will insert the record in the database. First I will get the next Id available from the database
+         */
+        int hierarchyAccountID;
+        try {
+            hierarchyAccountID = getDao().getNextAvailableHierarchyAccountId();
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't get next available Id from the database.", "database issue");
+        }
+
+        /**
+         * I create the HierarchyAccount and addit to the database.
+         */
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(hierarchyAccountID, description, hierarchyAccountType);
+
+        try {
+            this.getDao().addNewHierarchyAccount(hierarchyAccount);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't insert the next Hierarchy in the database.", "database issue");
+        }
+
+        /**
+         * I will add the account to the KeyHierarchy
+         */
+        this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().addVaultAccount(hierarchyAccount);
+        //todo analyze what else is missing
+
+
+
+        return hierarchyAccount;
     }
 
     /**

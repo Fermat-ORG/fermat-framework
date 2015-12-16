@@ -638,4 +638,35 @@ public class AssetsOverBitcoinCryptoVaultDao {
         }
     }
 
+    /**
+     * Gets the next It to be used to create a new HierarchyAccountId
+     * @return
+     */
+    public int getNextAvailableHierarchyAccountId() throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
+        }
+
+        /**
+         * returns the next available Id to be used.
+         */
+        List<DatabaseTableRecord> databaseTableRecords =  databaseTable.getRecords();
+        if (databaseTableRecords.isEmpty())
+            return 0;
+        else
+        {
+            int hierarchyAccountId = 0;
+            for (DatabaseTableRecord record : databaseTableRecords){
+                if (record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME) > hierarchyAccountId)
+                    hierarchyAccountId = record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
+            }
+
+            return hierarchyAccountId + 1;
+        }
+    }
+
+
 }
