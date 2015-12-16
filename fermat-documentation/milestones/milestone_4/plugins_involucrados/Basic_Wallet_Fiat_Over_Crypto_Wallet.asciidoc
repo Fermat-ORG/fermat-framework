@@ -1,3 +1,0 @@
-= Fiat over crypto Wallet
-
-Guardar el tipo y monto en fiat de las transacciones y que eso no cambie al elegir cambiar de moneda.

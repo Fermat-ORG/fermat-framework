@@ -1,3 +1,0 @@
-= Incoming Intra User
-
-Ver la documentación en "Incoming_Intra_User.asciidoc" del Milestone 4. +
