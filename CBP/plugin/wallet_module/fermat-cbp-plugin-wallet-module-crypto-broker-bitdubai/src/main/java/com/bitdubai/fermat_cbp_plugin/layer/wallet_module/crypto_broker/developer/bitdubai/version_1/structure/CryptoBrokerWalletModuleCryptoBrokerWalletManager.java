@@ -3,9 +3,11 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develop
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
@@ -25,9 +27,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -269,7 +274,68 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo) {
-        return null;
+        final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+        List<NegotiationStep> data = new ArrayList<>();
+        int stepNumber = 0;
+
+        // exchange rate step
+        Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+        String currencyToSell = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        String currencyToReceive = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
+        String suggestedExchangeRate = decimalFormat.format(215.25); // TODO este valor me lo da la wallet
+        data.add(new ExchangeRateStepImp(++stepNumber, currencyToSell, currencyToReceive, suggestedExchangeRate, exchangeRate));
+
+        // amount to sell step
+        String amountToSell = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
+        String amountToReceive = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue();
+        data.add(new AmountToSellStepImp(++stepNumber, currencyToSell, currencyToReceive, amountToSell, amountToReceive, exchangeRate));
+
+        // Payment Method
+        String paymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
+        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.PAYMENT_METHOD, paymentMethod));
+
+        // Broker Bank Account
+        ClauseInformation clauseInformation = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
+        if (clauseInformation != null) {
+            String brokerBankAccount = clauseInformation.getValue();
+            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.BROKER_BANK_ACCOUNT, brokerBankAccount));
+        }
+
+        // Broker Locations
+        clauseInformation = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
+        if (clauseInformation != null) {
+            String brokerBankAccount = clauseInformation.getValue();
+            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.BROKER_LOCATION, brokerBankAccount));
+        }
+
+        // Customer Bank Account
+        clauseInformation = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
+        if (clauseInformation != null) {
+            String brokerBankAccount = clauseInformation.getValue();
+            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.CUSTOMER_BANK_ACCOUNT, brokerBankAccount));
+        }
+
+        // Customer Location
+        clauseInformation = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+        if (clauseInformation != null) {
+            String brokerBankAccount = clauseInformation.getValue();
+            data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.CUSTOMER_LOCATION, brokerBankAccount));
+        }
+
+        // Datetime to Pay
+        String datetimeToPay = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER).getValue();
+        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.DATE_TIME_TO_PAY, datetimeToPay));
+
+        // Datetime to Deliver
+        String datetimeToDeliver = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER).getValue();
+        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.DATE_TIME_TO_DELIVER, datetimeToDeliver));
+
+        // Datetime to Deliver
+        String expirationDatetime = String.valueOf(negotiationInfo.getNegotiationExpirationDate());
+        data.add(new SingleValueStepImp(++stepNumber, NegotiationStepType.EXPIRATION_DATE_TIME, expirationDatetime));
+
+        return data;
     }
 
     @Override
