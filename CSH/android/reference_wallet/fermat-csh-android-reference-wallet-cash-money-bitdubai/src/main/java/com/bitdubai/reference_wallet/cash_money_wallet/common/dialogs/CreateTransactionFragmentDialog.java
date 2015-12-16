@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashDepositTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashWithdrawalTransactionParametersImpl;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.NumberInputFilter;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.util.UUID;
@@ -112,6 +114,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
 
             dialogTitleText.setText(getTransactionTitleText());
+            amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
+
             cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
 
@@ -175,40 +179,43 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             String memo = memoText.getText().toString();
             String amount = amountText.getText().toString();
 
-            if (!amount.equals("") && !memo.equals("")) {
-
-                if (transactionType == TransactionType.DEBIT) {
-                    Toast.makeText(activity.getApplicationContext(), "Making 500USD Withdrawal!", Toast.LENGTH_SHORT).show();
-                    CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", Float.valueOf(amount), FiatCurrency.US_DOLLAR, memo);
-                    try {
-                        cashMoneyWalletSession.getModuleManager().createCashWithdrawalTransaction(t);
-                        //updateWalletBalances(view.getRootView());
-
-                    } catch (CantCreateWithdrawalTransactionException e) {
-                        Toast.makeText(activity.getApplicationContext(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else if(transactionType == TransactionType.CREDIT) {
-                    Toast.makeText(activity.getApplicationContext(), "Making 500USD Deposit!", Toast.LENGTH_SHORT).show();
-                    CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", Float.valueOf(amount), FiatCurrency.US_DOLLAR, memo);
-                    try {
-                        cashMoneyWalletSession.getModuleManager().createCashDepositTransaction(t);
-                        //updateWalletBalances(view.getRootView());
-
-                    } catch (CantCreateDepositTransactionException e) {
-                        Toast.makeText(activity.getApplicationContext(), "Error on deposit!", Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-                dismiss();
-
-            } else {
-                Toast.makeText(activity.getApplicationContext(), "Please enter a valid address...", Toast.LENGTH_SHORT).show();
+            if (amount.equals("")) {
+                Toast.makeText(activity.getApplicationContext(), "Please enter a valid amount", Toast.LENGTH_SHORT).show();
+                return;
             }
+            if (memo.equals("")) {
+                Toast.makeText(activity.getApplicationContext(), "Please enter a valid memo", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            if (transactionType == TransactionType.DEBIT) {
+                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", Float.valueOf(amount), FiatCurrency.US_DOLLAR, memo);
+                try {
+                    cashMoneyWalletSession.getModuleManager().createCashWithdrawalTransaction(t);
+                    //updateWalletBalances(view.getRootView());
+
+                } catch (CantCreateWithdrawalTransactionException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if(transactionType == TransactionType.CREDIT) {
+                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", Float.valueOf(amount), FiatCurrency.US_DOLLAR, memo);
+                try {
+                    cashMoneyWalletSession.getModuleManager().createCashDepositTransaction(t);
+                    //updateWalletBalances(view.getRootView());
+
+                } catch (CantCreateDepositTransactionException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error on deposit!", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+            dismiss();
+
 
         } catch (Exception e) {
             cashMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error - " +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "There was an error processing transaction!" +  e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
