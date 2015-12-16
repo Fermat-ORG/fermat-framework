@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negoti
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,10 +41,10 @@ public abstract class StepViewHolder extends FermatViewHolder {
     }
 
     private void configClauseViews(View itemView) {
-        titleTextView = (TextView) itemView.findViewById(R.id.card_view_title);
-        clauseNumberImageView = (ImageView) itemView.findViewById(R.id.clause_number);
+        titleTextView = (TextView) itemView.findViewById(R.id.cbw_card_view_title);
+        clauseNumberImageView = (ImageView) itemView.findViewById(R.id.cbw_clause_number);
 
-        confirmButton = (Button) itemView.findViewById(R.id.confirm_button);
+        confirmButton = (Button) itemView.findViewById(R.id.cbw_confirm_button);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +86,7 @@ public abstract class StepViewHolder extends FermatViewHolder {
                 break;
 
             case CONFIRM:
-                containerCardView.setCardBackgroundColor(getColor(R.color.card_background_status_confirm));
+                containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_confirm));
                 confirmButton.setText(R.string.status_confirm);
                 titleTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
                 break;

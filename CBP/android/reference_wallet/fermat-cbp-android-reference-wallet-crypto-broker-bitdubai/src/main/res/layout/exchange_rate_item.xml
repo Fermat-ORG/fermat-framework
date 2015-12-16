@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-    android:id="@+id/exchange_rate_card_view"
+    android:id="@+id/cbw_exchange_rate_card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
-    app:cardBackgroundColor="@color/card_background_status_confirm"
+    app:cardBackgroundColor="@color/cbw_card_background_status_confirm"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
     tools:visibility="visible">
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/clause_number"
+            android:id="@+id/cbw_clause_number"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="bottom|start"
@@ -33,7 +33,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/card_view_title"
+                android:id="@+id/cbw_card_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -53,7 +53,7 @@
                 android:layout_margin="16dp">
 
                 <TextView
-                    android:id="@+id/exchange_rate_reference_text"
+                    android:id="@+id/cbw_exchange_rate_reference_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -67,28 +67,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/exchange_rate_reference_text"
-                    android:layout_toRightOf="@+id/exchange_rate_reference_text"
+                    android:layout_toEndOf="@+id/cbw_exchange_rate_reference_text"
+                    android:layout_toRightOf="@+id/cbw_exchange_rate_reference_text"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="1 BTC / 210 USD"/>
 
                 <TextView
-                    android:id="@+id/market_exchange_rate_reference_text"
+                    android:id="@+id/cbw_market_exchange_rate_reference_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/exchange_rate_reference_text"
+                    android:layout_below="@+id/cbw_exchange_rate_reference_text"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
                     android:text="@string/market_exchange_rate"
                     android:textColor="@color/description_text_status_confirm"/>
 
                 <TextView
-                    android:id="@+id/market_exchange_rate_reference_value"
+                    android:id="@+id/cbw_market_exchange_rate_reference_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/market_exchange_rate_reference_text"
-                    android:layout_toEndOf="@+id/market_exchange_rate_reference_text"
-                    android:layout_toRightOf="@+id/market_exchange_rate_reference_text"
+                    android:layout_alignTop="@+id/cbw_market_exchange_rate_reference_text"
+                    android:layout_toEndOf="@+id/cbw_market_exchange_rate_reference_text"
+                    android:layout_toRightOf="@+id/cbw_market_exchange_rate_reference_text"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="1 BTC / 210 USD"/>
             </RelativeLayout>
@@ -104,7 +104,7 @@
                 android:layout_margin="16dp">
 
                 <TextView
-                    android:id="@+id/your_exchange_rate_text"
+                    android:id="@+id/cbw_your_exchange_rate_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -116,25 +116,25 @@
                     android:textColor="@color/description_text_status_confirm"/>
 
                 <TextView
-                    android:id="@+id/your_exchange_rate_value_left_side"
+                    android:id="@+id/cbw_your_exchange_rate_value_left_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/your_exchange_rate_text"
+                    android:layout_alignTop="@+id/cbw_your_exchange_rate_text"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/your_exchange_rate_text"
-                    android:layout_toRightOf="@+id/your_exchange_rate_text"
+                    android:layout_toEndOf="@+id/cbw_your_exchange_rate_text"
+                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="1 USD / "/>
 
                 <EditText
-                    android:id="@+id/your_exchange_rate_value"
+                    android:id="@+id/cbw_your_exchange_rate_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/your_exchange_rate_value_left_side"
-                    android:layout_toRightOf="@+id/your_exchange_rate_value_left_side"
+                    android:layout_toEndOf="@+id/cbw_your_exchange_rate_value_left_side"
+                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_value_left_side"
                     android:inputType="numberDecimal"
                     android:minEms="3"
                     android:textColor="@color/text_value_status_confirm"
@@ -142,14 +142,14 @@
                     tools:text="212.05"/>
 
                 <TextView
-                    android:id="@+id/your_exchange_rate_value_right_side"
+                    android:id="@+id/cbw_your_exchange_rate_value_right_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/your_exchange_rate_value"
-                    android:layout_toRightOf="@+id/your_exchange_rate_value"
+                    android:layout_toEndOf="@+id/cbw_your_exchange_rate_value"
+                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_value"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
             </RelativeLayout>
@@ -160,7 +160,7 @@
                 android:background="#2e2e2e2e"/>
 
             <Button
-                android:id="@+id/confirm_button"
+                android:id="@+id/cbw_confirm_button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"

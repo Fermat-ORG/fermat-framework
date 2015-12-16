@@ -40,11 +40,11 @@ public class AmountToSellStepViewHolder extends StepViewHolder
 
         decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
-        sellingText = (TextView) itemView.findViewById(R.id.selling_text);
-        sellingValue = (EditText) itemView.findViewById(R.id.selling_value);
-        currencyToSellTextValue = (TextView) itemView.findViewById(R.id.currency_to_sell);
-        youWillReceiveText = (TextView) itemView.findViewById(R.id.you_will_receive_text);
-        youWillReceiveTextValue = (TextView) itemView.findViewById(R.id.you_will_receive_text_value);
+        sellingText = (TextView) itemView.findViewById(R.id.cbw_selling_text);
+        sellingValue = (EditText) itemView.findViewById(R.id.cbw_selling_value);
+        currencyToSellTextValue = (TextView) itemView.findViewById(R.id.cbw_currency_to_sell);
+        youWillReceiveText = (TextView) itemView.findViewById(R.id.cbw_you_will_receive_text);
+        youWillReceiveTextValue = (TextView) itemView.findViewById(R.id.cbw_you_will_receive_text_value);
 
         sellingValue.addTextChangedListener(this);
     }

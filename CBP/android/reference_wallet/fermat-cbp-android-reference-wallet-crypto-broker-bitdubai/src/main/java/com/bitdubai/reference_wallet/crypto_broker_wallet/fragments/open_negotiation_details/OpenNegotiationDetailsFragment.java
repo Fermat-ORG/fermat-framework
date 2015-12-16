@@ -41,7 +41,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -142,17 +141,17 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment {
         noteText = (FermatTextView) rootView.findViewById(R.id.note_text);
 
         // Clause EXCHANGE_RATE
-        exchangeRateCardView = (CardView) rootView.findViewById(R.id.exchange_rate_card_view);
+        exchangeRateCardView = (CardView) rootView.findViewById(R.id.cbw_exchange_rate_card_view);
         exchangeRateReference = (FermatTextView) rootView.findViewById(R.id.exchange_rate_reference_value);
         markerRateReference = (FermatTextView) rootView.findViewById(R.id.market_rate_reference_value);
-        yourExchangeRateValueLeftSide = (FermatTextView) rootView.findViewById(R.id.your_exchange_rate_value_left_side);
-        yourExchangeRateValueRightSide = (FermatTextView) rootView.findViewById(R.id.your_exchange_rate_value_right_side);
-        yourExchangeRateValue = (FermatEditText) rootView.findViewById(R.id.your_exchange_rate_value);
+        yourExchangeRateValueLeftSide = (FermatTextView) rootView.findViewById(R.id.cbw_your_exchange_rate_value_left_side);
+        yourExchangeRateValueRightSide = (FermatTextView) rootView.findViewById(R.id.cbw_your_exchange_rate_value_right_side);
+        yourExchangeRateValue = (FermatEditText) rootView.findViewById(R.id.cbw_your_exchange_rate_value);
 
         // Clause CUSTOMER_CURRENCY_QUANTITY
         amountToSellCardView = (CardView) rootView.findViewById(R.id.amount_to_sell_card_view);
-        sellingValue = (FermatEditText) rootView.findViewById(R.id.selling_value);
-        currencyToSell = (FermatTextView) rootView.findViewById(R.id.currency_to_sell);
+        sellingValue = (FermatEditText) rootView.findViewById(R.id.cbw_selling_value);
+        currencyToSell = (FermatTextView) rootView.findViewById(R.id.cbw_currency_to_sell);
         youWillReceiveValue = (FermatTextView) rootView.findViewById(R.id.you_will_receive_value);
 
         // Clause BROKER_PAYMENT_METHOD
