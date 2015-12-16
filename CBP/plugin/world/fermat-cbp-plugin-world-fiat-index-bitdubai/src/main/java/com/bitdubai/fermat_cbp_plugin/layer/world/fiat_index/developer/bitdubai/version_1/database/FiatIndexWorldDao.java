@@ -123,7 +123,7 @@ public class FiatIndexWorldDao {
         DatabaseTable table = this.database.getTable(FiatIndexWorldDatabaseConstants.FIAT_INDEX_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();

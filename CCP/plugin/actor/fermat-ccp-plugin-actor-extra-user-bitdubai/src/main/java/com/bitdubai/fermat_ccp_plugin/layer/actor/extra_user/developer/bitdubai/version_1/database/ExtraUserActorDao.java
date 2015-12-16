@@ -79,7 +79,7 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
 
         try {
             DatabaseTable extraUserTable = database.getTable(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME);
-            extraUserTable.setStringFilter(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            extraUserTable.addStringFilter(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             extraUserTable.loadToMemory();
 
             List<DatabaseTableRecord> records = extraUserTable.getRecords();

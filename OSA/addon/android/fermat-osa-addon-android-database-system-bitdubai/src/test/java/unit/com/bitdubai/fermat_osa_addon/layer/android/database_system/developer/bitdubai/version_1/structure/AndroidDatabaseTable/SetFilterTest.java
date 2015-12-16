@@ -2,7 +2,6 @@ package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develop
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -67,13 +66,13 @@ public class SetFilterTest {private Activity mockActivity;
 
     @Test
     public void setFilterString_Succefuly() throws Exception{
-        testDatabaseTable.setStringFilter("testColumn2", "nn", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addStringFilter("testColumn2", "nn", DatabaseFilterType.EQUAL);
 
     }
 
     @Test
     public void setFilterUUID_Succefuly() throws Exception{
-        testDatabaseTable.setUUIDFilter("testColumn2", UUID.randomUUID(), DatabaseFilterType.EQUAL);
+        testDatabaseTable.addUUIDFilter("testColumn2", UUID.randomUUID(), DatabaseFilterType.EQUAL);
 
     }
 
