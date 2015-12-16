@@ -12,11 +12,16 @@ This guide covers *everything* you need to know to set up the development enviro
 ## Part I: Setting up the Environment
 
 <br>
-### Working on Linux - PLEASE READ THIS - 
+### Working on Linux - PLEASE READ THIS FIRST- 
 
-Most Fermat developers are on Linux since compilation is faster there than in Windows. It is highly recommended that you use linux instead of windows. Developers that tried to set up a windows environment finally gave up and moved to Ubuntu. If you don't have Ubuntu installed, we recommed you to do so in a fresh disk partition.
+It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution). 
+To use Ubuntu, you will need:
+* a) 30 Gb Free space in you hard disk, to allocate a new *partition* to install Ubuntu (this will NOT affect your Windows partition)
+* b) A valid UBUNTU disc image ( you can download it here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) )     
+* c) A free DVD to create the UBUNTU installation disk.
+
 <br>
-### Overview
+### Tools Overview
 
 You will need the following tools in order to develop in Fermat
 
@@ -27,8 +32,7 @@ You will need the following tools in order to develop in Fermat
 * **Android build-tools 23.01**
 * **Android Development Studio or IntelliJ IDEA**
 
-Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team.
-
+Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team, by means of the automatic installationscript or following the manual installation steps.
 
 
 #### Automatic installation
