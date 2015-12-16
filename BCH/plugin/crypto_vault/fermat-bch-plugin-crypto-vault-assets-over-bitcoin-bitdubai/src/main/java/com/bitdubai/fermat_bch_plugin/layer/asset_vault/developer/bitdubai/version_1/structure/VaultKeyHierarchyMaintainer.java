@@ -94,6 +94,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
     @Override
     public void stop() {
         isSupposedToRun = false;
+        vaultKeyHierarchyMaintainerAgent.interrupProcess();
+        vaultKeyHierarchyMaintainerAgent = null;
     }
 
     private class VaultKeyHierarchyMaintainerAgent implements Runnable {
@@ -127,6 +129,13 @@ class VaultKeyHierarchyMaintainer implements Agent {
                     e.printStackTrace();
                 }
             }
+        }
+
+        /**
+         * stop the current thread.
+         */
+        public void interrupProcess(){
+            Thread.currentThread().interrupt();
         }
 
         /**

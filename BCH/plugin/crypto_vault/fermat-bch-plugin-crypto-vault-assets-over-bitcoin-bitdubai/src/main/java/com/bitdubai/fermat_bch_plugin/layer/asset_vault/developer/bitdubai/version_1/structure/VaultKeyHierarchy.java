@@ -247,8 +247,16 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
         List<ECKey> childKeys = new ArrayList<>();
 
-        //todo I need to get the value of generated keys from the database
-        for (int i = 0; i < 200; i++) {
+        /**
+         * I will get how many keys are already generated for this account.
+         */
+        int generatedKeys;
+        try {
+            generatedKeys  = this.getDao().getCurrentGeneratedKeys(account.getId());
+        } catch (CantExecuteDatabaseOperationException e) {
+            generatedKeys = 200;
+        }
+        for (int i = 0; i < generatedKeys; i++) {
             // I derive the key at position i
             DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
             // I add this key to the ECKey list

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -388,7 +389,7 @@ public class AssetCryptoVaultManager  {
         }
 
         /**
-         * I create the HierarchyAccount and addit to the database.
+         * I create the HierarchyAccount and add it to the database.
          */
         HierarchyAccount hierarchyAccount = new HierarchyAccount(hierarchyAccountID, description, hierarchyAccountType);
 
@@ -399,12 +400,14 @@ public class AssetCryptoVaultManager  {
         }
 
         /**
-         * I will add the account to the KeyHierarchy
+         * Restart the Hierarchy Maintainer so that it loads the new added Hierarchy Account and start the monitoring.
          */
-        this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().addVaultAccount(hierarchyAccount);
-        //todo analyze what else is missing
-
-
+        this.vaultKeyHierarchyGenerator.vaultKeyHierarchyMaintainer.stop();
+        try {
+            this.vaultKeyHierarchyGenerator.vaultKeyHierarchyMaintainer.start();
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }
 
         return hierarchyAccount;
     }
@@ -416,7 +419,7 @@ public class AssetCryptoVaultManager  {
      * @throws CantGetExtendedPublicKeyException
      */
     public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
-        //todo implement will get the extendedpublic key used to create the new watch only vault
+
         return null;
     }
 }
