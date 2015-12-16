@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
@@ -62,12 +63,14 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
     void deriveKeys(UUID pluginId, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException;
 
     /**
-     * Creates a new hierarchy Account in the vault.
+     * * Creates a new hierarchy Account in the vault.
      * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param hierarchyAccount
+     * @param description
+     * @param hierarchyAccountType
+     * @return
      * @throws CantAddHierarchyAccountException
      */
-    void addHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantAddHierarchyAccountException;
+    HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException;
 
     /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.

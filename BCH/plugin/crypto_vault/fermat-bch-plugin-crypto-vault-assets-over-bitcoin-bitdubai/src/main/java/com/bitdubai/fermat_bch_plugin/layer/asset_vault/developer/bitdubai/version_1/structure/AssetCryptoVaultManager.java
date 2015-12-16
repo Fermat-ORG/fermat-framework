@@ -369,14 +369,17 @@ public class AssetCryptoVaultManager  {
     }
 
     /**
-     * Creates a new hierarchy Account in the vault.
+     * * Creates a new hierarchy Account in the vault.
      * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param hierarchyAccount
+     * @param description
+     * @param hierarchyAccountType
+     * @return
      * @throws CantAddHierarchyAccountException
      */
-    public void addHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantAddHierarchyAccountException {
+    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
         //todo implement adding a new account. It will add the record in the database.
         // derive the standard amount of keys and monitor the network with this new account
+        return null;
     }
 
     /**

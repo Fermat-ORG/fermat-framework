@@ -27,6 +27,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Can
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
@@ -260,14 +261,16 @@ public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlug
     }
 
     /**
-     * Creates a new hierarchy Account in the vault.
+     * * Creates a new hierarchy Account in the vault.
      * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param hierarchyAccount
+     * @param description
+     * @param hierarchyAccountType
+     * @return
      * @throws CantAddHierarchyAccountException
      */
     @Override
-    public void addHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantAddHierarchyAccountException {
-         assetCryptoVaultManager.addHierarchyAccount(hierarchyAccount);
+    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
+        return assetCryptoVaultManager.addHierarchyAccount(description, hierarchyAccountType);
     }
 
     /**
