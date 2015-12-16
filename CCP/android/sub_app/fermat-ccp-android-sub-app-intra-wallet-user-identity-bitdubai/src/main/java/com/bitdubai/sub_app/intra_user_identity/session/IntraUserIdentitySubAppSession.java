@@ -19,16 +19,6 @@ public class IntraUserIdentitySubAppSession extends AbstractFermatSession<Instal
 
 
     /**
-     * SubApps type
-     */
-    SubApps subApps;
-
-    /**
-     * Active objects in wallet session
-     */
-    Map<String, Object> data;
-
-    /**
      * Error manager
      */
     private ErrorManager errorManager;
@@ -46,46 +36,15 @@ public class IntraUserIdentitySubAppSession extends AbstractFermatSession<Instal
      */
     public IntraUserIdentitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, IntraWalletUserIdentityManager moduleManager) {
         super(subApp.getAppPublicKey(),subApp,errorManager,moduleManager,null);
-        this.subApps = subApps;
-        data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
     }
 
+    public IntraUserIdentitySubAppSession() {
 
-
-
-    /**
-     * Return the SubApp type
-     *
-     * @return SubApps instance indicating the type
-     */
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
     }
 
-    /**
-     * Store any data you need to hold between the fragments of the sub app
-     *
-     * @param key    key to reference the object
-     * @param object the object yo want to store
-     */
-    @Override
-    public void setData(String key, Object object) {
-        data.put(key, object);
-    }
 
-    /**
-     * Return the data referenced by the key
-     *
-     * @param key the key to access de data
-     * @return the data you want
-     */
-    @Override
-    public Object getData(String key) {
-        return data.get(key);
-    }
 
     /**
      * Return the Error Manager
@@ -106,19 +65,4 @@ public class IntraUserIdentitySubAppSession extends AbstractFermatSession<Instal
         return moduleManager;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        IntraUserIdentitySubAppSession that = (IntraUserIdentitySubAppSession) o;
-
-        return subApps == that.subApps;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return subApps.hashCode();
-    }
 }

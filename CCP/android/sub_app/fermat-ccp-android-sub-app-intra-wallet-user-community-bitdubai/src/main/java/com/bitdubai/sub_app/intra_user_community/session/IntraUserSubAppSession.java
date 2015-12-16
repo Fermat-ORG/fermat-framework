@@ -28,15 +28,8 @@ public class IntraUserSubAppSession extends AbstractFermatSession<InstalledSubAp
         super(subApp.getAppPublicKey(),subApp,errorManager,intraUserModuleManager,null);
     }
 
-    /**
-     * Return the SubApp type
-     *
-     * @return SubApps instance indicating the type
-     */
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
+
+    public IntraUserSubAppSession() {
+
     }
-
-
 }

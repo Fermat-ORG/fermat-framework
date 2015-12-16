@@ -52,12 +52,6 @@ public class AssetFactorySession extends AbstractFermatSession<InstalledSubApp,A
         this.manager = manager;
     }
 
-
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
-
     @Override
     public void setData(String key, Object object) {
         data.put(key, object);
