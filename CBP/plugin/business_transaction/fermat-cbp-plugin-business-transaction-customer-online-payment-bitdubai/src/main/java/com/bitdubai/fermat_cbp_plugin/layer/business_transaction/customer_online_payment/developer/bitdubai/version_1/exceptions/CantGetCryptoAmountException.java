@@ -5,7 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/12/15.
  */
-public class CantgetCryptoAmountException extends CBPException {
+public class CantGetCryptoAmountException extends CBPException {
     /**
      * Represent the default message
      */
@@ -19,7 +19,7 @@ public class CantgetCryptoAmountException extends CBPException {
      * @param context
      * @param possibleReason
      */
-    public CantgetCryptoAmountException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetCryptoAmountException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -30,7 +30,7 @@ public class CantgetCryptoAmountException extends CBPException {
      * @param context
      * @param possibleReason
      */
-    public CantgetCryptoAmountException(Exception cause, String context, String possibleReason) {
+    public CantGetCryptoAmountException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
@@ -40,7 +40,7 @@ public class CantgetCryptoAmountException extends CBPException {
      * @param message
      * @param cause
      */
-    public CantgetCryptoAmountException(final String message, final Exception cause) {
+    public CantGetCryptoAmountException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -49,7 +49,7 @@ public class CantgetCryptoAmountException extends CBPException {
      *
      * @param message
      */
-    public CantgetCryptoAmountException(final String message) {
+    public CantGetCryptoAmountException(final String message) {
         this(message, null);
     }
 
@@ -58,7 +58,7 @@ public class CantgetCryptoAmountException extends CBPException {
      *
      * @param exception
      */
-    public CantgetCryptoAmountException(final Exception exception) {
+    public CantGetCryptoAmountException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -66,7 +66,7 @@ public class CantgetCryptoAmountException extends CBPException {
     /**
      * Constructor
      */
-    public CantgetCryptoAmountException() {
+    public CantGetCryptoAmountException() {
         this(DEFAULT_MESSAGE);
     }
 
