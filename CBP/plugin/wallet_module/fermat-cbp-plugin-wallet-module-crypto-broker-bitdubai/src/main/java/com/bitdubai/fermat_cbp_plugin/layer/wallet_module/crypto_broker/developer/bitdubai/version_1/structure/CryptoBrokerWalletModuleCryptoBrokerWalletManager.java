@@ -365,7 +365,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public boolean isNothingLeftToConfirm(List<NegotiationStep> dataSet) {
-        return false;
+        for (NegotiationStep step : dataSet) {
+            if (step.getStatus() == NegotiationStepStatus.CONFIRM) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
