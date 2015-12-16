@@ -26,6 +26,7 @@ public enum EventSource implements FermatEnum {
     CRYPTO_NETWORK_BITCOIN_PLUGIN           ("CNB"),
     CRYPTO_ROUTER                           ("CCR"),
     CRYPTO_VAULT                            ("CCV"),
+    CUSTOMER_OFFLINE_PAYMENT                ("CFP"),
     CUSTOMER_ONLINE_PAYMENT                 ("COP"),
     DEVICE_CONNECTIVITY                     ("DCO"),
     DISCOUNT_WALLET_BASIC_WALLET_PLUGIN     ("DWB"),

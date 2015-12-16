@@ -39,7 +39,10 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -86,7 +89,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
     /**
      * Represents the plugin manager.
      */
-    //CustomerOfflinePaymentTransactionManager customerOfflinePaymentTransactionManager;
+    CustomerOfflinePaymentTransactionManager customerOfflinePaymentTransactionManager;
 
     /**
      * Represents the plugin CustomerOfflinePaymentBusinessTransactionDatabaseFactory
@@ -201,7 +204,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
              */
             initializeDb();
 
-            /*
+            /**
              * Initialize Developer Database Factory
              */
             customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory = new
@@ -220,24 +223,22 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init the plugin manager
              */
-            /*this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
+            this.customerOfflinePaymentTransactionManager=new CustomerOfflinePaymentTransactionManager(
                     this.customerBrokerContractPurchaseManager,
-                    customerOnlinePaymentBusinessTransactionDao,
-                    this.transactionTransmissionManager,
-                    this.customerBrokerPurchaseNegotiationManager);*/
+                    customerOnlinePaymentBusinessTransactionDao);
 
             /**
              * Init event recorder service.
              */
-            /*CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService=new CustomerOnlinePaymentRecorderService(
+            CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService=new CustomerOfflinePaymentRecorderService(
                     customerOnlinePaymentBusinessTransactionDao,
                     eventManager);
-            customerOnlinePaymentRecorderService.start();*/
+            customerOfflinePaymentRecorderService.start();
 
             /**
              * Init monitor Agent
              */
-            /*CustomerOnlinePaymentMonitorAgent openContractMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
+            CustomerOfflinePaymentMonitorAgent customerOnlinePaymentMonitorAgent=new CustomerOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -245,9 +246,8 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager,
-                    outgoingIntraActorManager);
-            openContractMonitorAgent.start();*/
+                    customerBrokerContractSaleManager);
+            customerOnlinePaymentMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer offline payment starting");
@@ -255,13 +255,11 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException e) {
             e.printStackTrace();
-        } /*catch (CantStartServiceException e) {
-            e.printStackTrace();
-        } catch (CantSetObjectException e) {
+        } catch (CantStartServiceException e) {
             e.printStackTrace();
         } catch (CantStartAgentException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     @Override
@@ -281,7 +279,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return this.customerOfflinePaymentTransactionManager;
     }
 
     public static LogLevel getLogLevelByClass(String className) {
