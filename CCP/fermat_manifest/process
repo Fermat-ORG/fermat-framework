@@ -528,17 +528,17 @@ previous="List Payment Request"
 </process>
 
 
-<process platform="CCP"		name="Creates an Intra Wallet User"
+<process platform="CCP"	name="Creates an Intra Wallet User"
 description="Creates an Intra Wallet User Identity."
 previous=""
     >
 <steps>
-    <step id="0"	title="Start Intra User Identity creation"
-        description="The user open the Wallet Users Register Identity and proceed to fill the requested data inside the form and press the save button."
+    <step id="0"	title="Open the wallet to create a new Identity"
+        description="The user open the Wallet User Identity and proceed to fill the requested data inside the form and press the save button."
         type="start"
         platform="CCP"
         superlayer=""
-        layer="Community Wallet Users"
+        layer="SubApp"
         component=""
         >
 
@@ -547,20 +547,18 @@ previous=""
         </next>
     </step>
     <step id="1"	title="Process Intra User Identity creation request"
-        description="The module routes the data containing the name and profile picture to the  IntraWalletUserModulePluginRoot plugin.	"
+        description="The module routes the data containing the name and profile picture to the  IntraWalletUserModule plugin.	"
         type="activity"
         platform="CCP"
         name="Intra Wallet User"
         superlayer=""
-        layer="plugin"
-        component=""
         >
         <next>
             <step id="2" type="direct call"></step>
         </next>
     </step>
     <step id="2"	title="Process Intra User Identity creation request"
-        description="The plugin routes the name and profile picture to the  IntraWalletIdentityPluginRoot  plugin."
+        description="The module routes the name and profile picture to the  IntraWalletIdentityPluginRoot  plugin."
         type="activity"
         platform="CCP"
         name="Intra Wallet User Module"
@@ -578,38 +576,36 @@ previous=""
         platform="CCP"
         name="Intra Wallet Identity"
         superlayer=""
-        layer="Plugin"
-        component=""
+        layer="Identity"
+        component="Plugin"
         >
         <next>
             <step id="3" type="direct call"></step>
         </next>
     </step>
-    <step id="4"	title="Creates Intra User Identity"
+    <step id="4"	title="Creates the Intra User Identity"
         description="The dao  inserts the data in the DB."
         type="end"
         platform="CCP"
-        name="Intra Wallet User Identity."
+        name="Intra Wallet User Identity Dao."
         superlayer=""
-        layer="Communication"
-        component=""
+        layer="Database"
+        component="Plugin"
         >
     </step>
 </steps>
 </process>
-<process platform="CCP"		name="Enter into the Community - Wallet Users"
+<process platform="CCP"	name="Open Intra Wallet Community"
 description="List all discovered connections."
 previous=""
     >
 <steps>
     <step id="0"	title="Start "
-        description="The user opens the Community Wallet Users and the fragment proceeds to initialize all required components and data."
+        description="The user opens the Intra Wallet Community and the fragment proceeds to initialize all required components."
         type="start"
         platform="CCP"
         name="Intra User Community"
-        superlayer=""
-        layer="Community Wallet Users"
-        component=""
+        layer="SubApp"
         >
         <next>
             <step id="1" type="direct call"></step>
@@ -648,7 +644,7 @@ previous=""
         name="WS Cloud Client Connection"
         superlayer=""
         layer="p2p"
-        component=""
+        component="Plugin"
         >
         <next>
             <step id="4" type="direct call"></step>
@@ -680,7 +676,7 @@ previous=""
             <step id="6" type="direct call"></step>
         </next>
     </step>
-    <step id="6"	title="Start "
+    <step id="6"	title="Display the list of users "
         description="The fragment displays the list of discovered users."
         type="end"
         platform="CCP"
@@ -692,19 +688,17 @@ previous=""
     </step>
 </steps>
 </process>
-<process platform="CCP"		name="Enter into the Community - Connections"
+<process platform="CCP"	name="Open the Intra Wallet Community Connections"
 description="List all connected users."
-previous="Enter into the Community - Wallet Users"
+previous="Open Intra Wallet Community"
     >
 <steps>
     <step id="0"	title="Start "
-        description="The user opens the Community Connections and the fragment proceeds to initialize all required components and data."
+        description="The user opens the Community Connections and the fragment proceeds to initialize all required components."
         type="start"
         platform="CCP"
-        name="Intra User Community"
-        superlayer=""
-        layer="Community Connected Users"
-        component=""
+        name="Intra Wallet Community"
+        layer="SubApp"
         >
         <next>
             <step id="1" type="direct call"></step>
@@ -727,10 +721,10 @@ previous="Enter into the Community - Wallet Users"
         description="The plugin routes the request to the IntraWalletUserDao."
         type="activity"
         platform="CCP"
-        name="Intra Wallet User plugin"
+        name="Intra Wallet User"
         superlayer=""
-        layer="Plugin"
-        component=""
+        layer="module"
+        component="plugin"
         >
         <next>
             <step id="3" type="direct call"></step>
@@ -742,8 +736,8 @@ previous="Enter into the Community - Wallet Users"
         platform="CCP"
         name="Intra Wallet User Dao"
         superlayer=""
-        layer="Communication"
-        component=""
+        layer="database"
+        component="plugin"
         >
         <next>
             <step id="4" type="direct call"></step>
@@ -753,10 +747,10 @@ previous="Enter into the Community - Wallet Users"
         description="The plugin send the request back to the module."
         type="activity"
         platform="CCP"
-        name="Intra Wallet User Plugin"
+        name="Intra Wallet User"
         superlayer=""
-        layer="Pluign"
-        component=""
+        layer="Module"
+        component="Plugin"
         >
         <next>
             <step id="5" type="direct call"></step>
@@ -766,7 +760,7 @@ previous="Enter into the Community - Wallet Users"
         description="The module routes the requested list to the fragment."
         type="activity"
         platform="CCP"
-        name="Intra Wallet User Module"
+        name="Intra Wallet User"
         superlayer=""
         layer="Sub App Module"
         component="Plugin"
@@ -775,7 +769,7 @@ previous="Enter into the Community - Wallet Users"
             <step id="6" type="direct call"></step>
         </next>
     </step>
-    <step id="6"	title="Start "
+    <step id="6"	title="Display list of users"
         description="The fragment displays the list of connected users."
         type="end"
         platform="CCP"
@@ -787,19 +781,18 @@ previous="Enter into the Community - Wallet Users"
     </step>
 </steps>
 </process>
-<process platform="CCP"		name="Enter into the Community - Request Connections"
+<process platform="CCP"		name="Open Intra Wallet Community Requested Connections"
 description="List all users pending for acceptance."
-previous="Enter into the Community - Wallet Users"
+previous="Open Intra Wallet Community"
     >
 <steps>
     <step id="0"	title="Start "
-        description="The user opens the Community Request Connections and the fragment proceeds to initialize all required components and data."
+        description="The user opens the Community Request Connections and the fragment proceeds to initialize all required components."
         type="start"
         platform="CCP"
         name="Intra User Community"
         superlayer=""
-        layer="Community Request Connections"
-        component=""
+        layer="SubApp"
         >
         <next>
             <step id="1" type="direct call"></step>
@@ -809,23 +802,23 @@ previous="Enter into the Community - Wallet Users"
         description="The module routes the requested list to the IntraWalletUserActor plugin."
         type="activity"
         platform="CCP"
-        name="Intra Wallet User Module"
+        name="Intra Wallet User"
         superlayer=""
         layer="Sub App Module"
         component="Plugin"
         >
         <next>
-            <step id="1" type="direct call"></step>
+            <step id="2" type="direct call"></step>
         </next>
     </step>
     <step id="2"	title="Routing the requested list."
         description="The plugin routes the request to the IntraWalletUserDao."
         type="activity"
         platform="CCP"
-        name="Intra Wallet User Actor plugin"
+        name="Intra Wallet User Actor"
         superlayer=""
-        layer="Plugin"
-        component=""
+        layer="Module"
+        component="Plugin"
         >
         <next>
             <step id="3" type="direct call"></step>
@@ -837,8 +830,8 @@ previous="Enter into the Community - Wallet Users"
         platform="CCP"
         name="Intra Wallet User Dao"
         superlayer=""
-        layer="Communication"
-        component=""
+        layer="Database"
+        component="Plugin"
         >
         <next>
             <step id="4" type="direct call"></step>
@@ -848,10 +841,10 @@ previous="Enter into the Community - Wallet Users"
         description="The plugin send the request back to the module."
         type="activity"
         platform="CCP"
-        name="Intra Wallet User Actor Plugin"
+        name="Intra Wallet User Actor"
         superlayer=""
-        layer="Plugin"
-        component=""
+        layer="Module"
+        component="Plugin"
         >
         <next>
             <step id="5" type="direct call"></step>
@@ -861,7 +854,7 @@ previous="Enter into the Community - Wallet Users"
         description="The module routes the requested list to the fragment."
         type="activity"
         platform="CCP"
-        name="Intra Wallet User Module"
+        name="Intra Wallet User"
         superlayer=""
         layer="Sub App Module"
         component="Plugin"
@@ -870,18 +863,18 @@ previous="Enter into the Community - Wallet Users"
             <step id="6" type="direct call"></step>
         </next>
     </step>
-    <step id="6"	title="Start "
+    <step id="6"	title="Display the list of users. "
         description="The fragment displays the list of users pending for acceptance."
         type="end"
         platform="CCP"
-        name="Intra User Community"
+        name="Intra Wallet Community"
         superlayer=""
-        layer="Community Request Connections"
-        component=""
+        layer="SubApp"
         >
     </step>
 </steps>
 </process>
+
 
     <process platform="CCP"
         name="Add Intra User Actor as a Wallet Contact"
