@@ -1,13 +1,21 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.AmountToSellStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.DateTimeStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ExchangeRateStepViewHolder;
@@ -19,7 +27,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-public class NegotiationDetailsAdapter extends FermatAdapter<NegotiationStep, FermatViewHolder> {
+public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHolder> {
     private static final int NO_TYPE = Integer.MIN_VALUE;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM_SINGLE_CHOICE = 1;
@@ -28,12 +36,18 @@ public class NegotiationDetailsAdapter extends FermatAdapter<NegotiationStep, Fe
     private static final int TYPE_ITEM_AMOUNT_TO_SELL = 4;
     private static final int TYPE_FOOTER = 5;
 
+    private List<NegotiationStep> dataSet;
+    private Activity activity;
+    private FermatListItemListeners<NegotiationStep> eventListeners;
+
     private final CustomerBrokerNegotiationInformation data;
     private ExchangeRateStepViewHolder exchangeRateViewHolder;
     private boolean haveNote;
 
     public NegotiationDetailsAdapter(Activity activity, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
-        super(activity, dataSet);
+        this.activity = activity;
+        this.dataSet = dataSet;
+
         haveNote = false;
         this.data = data;
 
@@ -79,7 +93,12 @@ public class NegotiationDetailsAdapter extends FermatAdapter<NegotiationStep, Fe
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public FermatViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
+        return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(), viewGroup, false), type);
+    }
+
+    @Override
+    public void onBindViewHolder(FermatViewHolder holder, int position) {
         int holderType = getItemViewType(position);
         int itemPosition = getItemPosition(position);
         int stepNumber = itemPosition + 1;
@@ -135,7 +154,7 @@ public class NegotiationDetailsAdapter extends FermatAdapter<NegotiationStep, Fe
     }
 
     @Override
-    protected void bindHolder(RecyclerView.ViewHolder holder, NegotiationStep data, int position) {
+    protected void bindHolder(FermatViewHolder holder, NegotiationStep data, int position) {
         // DO NOTHING...
     }
 
