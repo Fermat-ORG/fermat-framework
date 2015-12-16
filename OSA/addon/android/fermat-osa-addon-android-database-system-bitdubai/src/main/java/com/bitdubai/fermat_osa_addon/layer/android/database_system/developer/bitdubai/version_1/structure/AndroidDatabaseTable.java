@@ -534,6 +534,15 @@ public class AndroidDatabaseTable implements DatabaseTable {
                                 .append(tableFilter.get(i).getValue())
                                 .append("%'");
                         break;
+                    case STARTS_WITH:
+                        strFilter.append(" Like '")
+                                .append(tableFilter.get(i).getValue())
+                                .append("%'");
+                        break;
+                    case ENDS_WITH:
+                        strFilter.append(" Like '%")
+                                .append(tableFilter.get(i).getValue())
+                                .append("'");
                     default:
                         strFilter.append(" ");
                         break;
@@ -781,6 +790,16 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 strFilter.append(" Like '%")
                         .append(filter.getValue())
                         .append("%'");
+                break;
+            case STARTS_WITH:
+                strFilter.append(" Like '")
+                        .append(filter.getValue())
+                        .append("%'");
+                break;
+            case ENDS_WITH:
+                strFilter.append(" Like '%")
+                        .append(filter.getValue())
+                        .append("'");
                 break;
             default:
                 strFilter.append(" ");
