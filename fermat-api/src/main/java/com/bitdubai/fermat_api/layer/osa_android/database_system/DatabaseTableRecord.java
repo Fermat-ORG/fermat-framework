@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +33,8 @@ import java.util.UUID;
     public double getDoubleValue(String columnName);
 
     public String getVariableName(String columnName);
+
+    public BigDecimal getBigDecimalValue(String columnName);
     
     public void setStringValue (String columnName, String value);
 
@@ -46,6 +49,8 @@ import java.util.UUID;
     public void setDoubleValue(String columnName, double value);
 
     public void setVariableValue (String columnName, String variableName);
+
+    public void setBigDecimalValue(String columnName, BigDecimal value);
 
     public void setSelectField (String columnName);
 

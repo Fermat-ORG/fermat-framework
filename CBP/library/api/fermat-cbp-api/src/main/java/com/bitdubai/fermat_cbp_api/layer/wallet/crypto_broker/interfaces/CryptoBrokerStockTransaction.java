@@ -2,17 +2,19 @@ package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Franklin  Marcano 03.12.2015
  */
 public interface CryptoBrokerStockTransaction extends StockTransaction {
     //TODO: Documentar
 
-    float getRunningBookBalance();
+    BigDecimal getRunningBookBalance();
 
-    float getRunningAvailableBalance();
+    BigDecimal getRunningAvailableBalance();
 
-    float getPreviousBookBalance();
+    BigDecimal getPreviousBookBalance();
 
-    float getPreviousAvailableBalance();
+    BigDecimal getPreviousAvailableBalance();
 }
