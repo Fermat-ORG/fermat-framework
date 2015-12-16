@@ -14,12 +14,15 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * */
 public enum DatabaseFilterType implements FermatEnum {
 
-    ENDS_WITH    ("EW"),
-    EQUAL        ("EQ"),
-    GREATER_THAN ("GT"),
-    LESS_THAN    ("LT"),
-    LIKE         ("LK"),
-    STARTS_WITH  ("SW"),
+    ENDS_WITH             ("EW"),
+    EQUAL                 ("EQ"),
+    GREATER_OR_EQUAL_THAN ("GE"),
+    GREATER_THAN          ("GT"),
+    LESS_OR_EQUAL_THAN    ("LE"),
+    LESS_THAN             ("LT"),
+    LIKE                  ("LK"),
+    NOT_EQUALS            ("NE"),
+    STARTS_WITH           ("SW"),
 
     ;
 
@@ -34,12 +37,15 @@ public enum DatabaseFilterType implements FermatEnum {
 
         switch (code){
 
-            case "EW": return ENDS_WITH   ;
-            case "EQ": return EQUAL       ;
-            case "GT": return GREATER_THAN;
-            case "LT": return LESS_THAN   ;
-            case "LK": return LIKE        ;
-            case "SW": return STARTS_WITH ;
+            case "EW": return ENDS_WITH            ;
+            case "EQ": return EQUAL                ;
+            case "GE": return GREATER_OR_EQUAL_THAN;
+            case "GT": return GREATER_THAN         ;
+            case "LE": return LESS_OR_EQUAL_THAN   ;
+            case "LT": return LESS_THAN            ;
+            case "LK": return LIKE                 ;
+            case "NE": return NOT_EQUALS           ;
+            case "SW": return STARTS_WITH          ;
 
             default:
                 throw new InvalidParameterException(

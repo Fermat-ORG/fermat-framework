@@ -515,16 +515,28 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 strFilter.append(tableFilter.get(i).getColumn());
 
                 switch (tableFilter.get(i).getType()) {
+                    case NOT_EQUALS:
+                        strFilter.append(" <> '")
+                                .append(tableFilter.get(i).getValue())
+                                .append("'");
+                        break;
                     case EQUAL:
                         strFilter.append(" ='")
                                 .append(tableFilter.get(i).getValue())
                                 .append("'");
                         break;
+                    case GREATER_OR_EQUAL_THAN:
+                        strFilter.append(" >= '")
+                                .append(tableFilter.get(i).getValue())
+                                .append("'");;
                     case GREATER_THAN:
                         strFilter.append(" >'")
                                 .append(tableFilter.get(i).getValue())
                                 .append("'");;
                         break;
+                    case LESS_OR_EQUAL_THAN:
+                        strFilter.append(" <= ")
+                                .append(tableFilter.get(i).getValue());
                     case LESS_THAN:
                         strFilter.append(" < ")
                                 .append(tableFilter.get(i).getValue());
@@ -778,8 +790,21 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append(filter.getValue())
                         .append("'");
                 break;
+            case NOT_EQUALS:
+                strFilter.append(" <> '")
+                        .append(filter.getValue())
+                        .append("'");
+                break;
+            case GREATER_OR_EQUAL_THAN:
+                strFilter.append(" >= ")
+                        .append(filter.getValue());
+                break;
             case GREATER_THAN:
                 strFilter.append(" > ")
+                        .append(filter.getValue());
+                break;
+            case LESS_OR_EQUAL_THAN:
+                strFilter.append(" <= ")
                         .append(filter.getValue());
                 break;
             case LESS_THAN:
