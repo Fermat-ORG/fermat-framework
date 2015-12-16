@@ -301,7 +301,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
                             new ArrayList<DatabaseTableFilterGroup>(),
                             DatabaseFilterOperator.AND));
 
-            eventsRecordedTable.setFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            eventsRecordedTable.addFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             eventsRecordedTable.loadToMemory();
             List<String> eventIdList = new ArrayList<>();
@@ -325,7 +325,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
             DatabaseTable metadataTable;
             metadataTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
             metadataTable.addStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
-            metadataTable.setFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            metadataTable.addFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             metadataTable.loadToMemory();
             List<String> genesisTransactionList = new ArrayList<>();

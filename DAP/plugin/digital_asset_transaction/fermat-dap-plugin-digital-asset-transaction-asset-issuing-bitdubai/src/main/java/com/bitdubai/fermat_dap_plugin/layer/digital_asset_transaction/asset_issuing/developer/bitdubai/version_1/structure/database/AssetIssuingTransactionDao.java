@@ -818,7 +818,7 @@ public class AssetIssuingTransactionDao {
             List<String> eventIdList = new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
             databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {

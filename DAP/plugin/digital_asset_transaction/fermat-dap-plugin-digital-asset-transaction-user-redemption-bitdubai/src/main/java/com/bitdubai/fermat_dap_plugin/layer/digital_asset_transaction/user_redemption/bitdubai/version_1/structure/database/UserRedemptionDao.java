@@ -307,7 +307,7 @@ public class UserRedemptionDao {
             DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
             databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {

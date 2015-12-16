@@ -249,7 +249,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
             databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
@@ -285,7 +285,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
                             new ArrayList<DatabaseTableFilterGroup>(),
                             DatabaseFilterOperator.AND));
 
-            eventsRecordedTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            eventsRecordedTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             eventsRecordedTable.loadToMemory();
             List<String> eventIdList = new ArrayList<>();
@@ -342,7 +342,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
                             new ArrayList<DatabaseTableFilterGroup>(),
                             DatabaseFilterOperator.AND));
 
-            transactionMetadataTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            transactionMetadataTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             transactionMetadataTable.loadToMemory();
 
@@ -362,7 +362,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             databaseTable.loadToMemory();
 
@@ -382,7 +382,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey, DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {
@@ -406,7 +406,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey, DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             databaseTable.loadToMemory();
 
@@ -431,7 +431,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             databaseTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().isEmpty()) {

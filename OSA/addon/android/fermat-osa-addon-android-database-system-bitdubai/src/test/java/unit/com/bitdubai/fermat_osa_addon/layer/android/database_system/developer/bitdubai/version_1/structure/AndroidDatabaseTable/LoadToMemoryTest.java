@@ -96,7 +96,7 @@ public class LoadToMemoryTest {
     @Test
     public void loadTable_TableOrder_RecordsListLoaded() throws Exception{
         testDatabaseTable = testDatabase.getTable(testTableName);
-        testDatabaseTable.setFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
+        testDatabaseTable.addFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
         testDatabaseTable.loadToMemory();
         assertThat(testDatabaseTable.getRecords()).isNotNull();
     }

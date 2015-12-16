@@ -91,8 +91,8 @@ public class FilterTest {
 
         testDatabaseTable.setFilterOffSet("10");
         testDatabaseTable.setFilterTop("100");
-        testDatabaseTable.setFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
-        testDatabaseTable.setFilterOrder("testColumn2", DatabaseFilterOrder.ASCENDING);
+        testDatabaseTable.addFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
+        testDatabaseTable.addFilterOrder("testColumn2", DatabaseFilterOrder.ASCENDING);
 
         testDatabaseTable.addStringFilter("testColumn2", "valor 1", DatabaseFilterType.LIKE);
         testDatabaseTable.addStringFilter("testColumn2", "valor 1", DatabaseFilterType.EQUAL);

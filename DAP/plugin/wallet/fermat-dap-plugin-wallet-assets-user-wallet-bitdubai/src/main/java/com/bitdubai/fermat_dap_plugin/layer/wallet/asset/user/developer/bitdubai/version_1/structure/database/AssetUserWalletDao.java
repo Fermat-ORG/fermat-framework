@@ -251,7 +251,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
             databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerUserWallet.setFilterOrder(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableAssuerUserWallet.addFilterOrder(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerUserWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerUserWallet.setFilterOffSet(String.valueOf(offset));
@@ -271,7 +271,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
             DatabaseTable databaseTableAssuerUserWallet = getAssetUserWalletTable();
 
             databaseTableAssuerUserWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerUserWallet.setFilterOrder(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableAssuerUserWallet.addFilterOrder(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerUserWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerUserWallet.setFilterOffSet(String.valueOf(offset));

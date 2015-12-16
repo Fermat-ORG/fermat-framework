@@ -226,7 +226,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             databaseTableAssuerIssuerWallet.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             databaseTableAssuerIssuerWallet.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             databaseTableAssuerIssuerWallet.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableAssuerIssuerWallet.addFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
@@ -247,7 +247,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
 
             databaseTableAssuerIssuerWallet.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableAssuerIssuerWallet.addFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));

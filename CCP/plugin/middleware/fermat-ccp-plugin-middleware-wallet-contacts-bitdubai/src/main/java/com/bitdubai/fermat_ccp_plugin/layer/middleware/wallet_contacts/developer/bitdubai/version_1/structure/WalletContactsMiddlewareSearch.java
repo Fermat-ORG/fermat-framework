@@ -53,7 +53,7 @@ public class WalletContactsMiddlewareSearch implements WalletContactsSearch {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME;
         walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class WalletContactsMiddlewareSearch implements WalletContactsSearch {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME;
         walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class WalletContactsMiddlewareSearch implements WalletContactsSearch {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME;
         walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override

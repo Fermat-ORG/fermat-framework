@@ -269,7 +269,7 @@ public class AssetReceptionDao {
             DatabaseTable databaseTable = getDatabaseTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TABLE_NAME);
             databaseTable.addStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.addStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             for(DatabaseTableRecord databaseTableRecord : databaseTableRecords){

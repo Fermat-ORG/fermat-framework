@@ -333,7 +333,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         if (transactionType != null )
             databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-        databaseTable.setFilterOrder(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+        databaseTable.addFilterOrder(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
         /**
          * Wil load the table into memory
@@ -404,7 +404,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * I will get the current execution number
          */
         int currentExecutionNumber;
-        databaseTable.setFilterOrder(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+        databaseTable.addFilterOrder(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {

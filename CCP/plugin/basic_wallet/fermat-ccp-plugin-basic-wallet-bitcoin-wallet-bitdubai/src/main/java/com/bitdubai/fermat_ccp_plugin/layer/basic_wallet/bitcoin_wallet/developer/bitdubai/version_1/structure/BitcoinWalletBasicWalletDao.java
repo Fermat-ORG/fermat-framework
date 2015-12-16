@@ -91,7 +91,7 @@ public class BitcoinWalletBasicWalletDao {
 
             bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
             bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-            bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             bitcoinWalletTable.setFilterTop(String.valueOf(max));
             bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
@@ -116,7 +116,7 @@ public class BitcoinWalletBasicWalletDao {
             bitcoinWalletTable.setFilterTop(String.valueOf(max));
             bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
 
-            bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
 
@@ -149,7 +149,7 @@ public class BitcoinWalletBasicWalletDao {
             bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
             bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
 
-            bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
 

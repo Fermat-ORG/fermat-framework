@@ -238,7 +238,7 @@ public class AppropriationStatsDAO implements AutoCloseable {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TABLE_NAME);
             databaseTable.addStringFilter(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addFilterOrder(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
@@ -274,7 +274,7 @@ public class AppropriationStatsDAO implements AutoCloseable {
                             new ArrayList<DatabaseTableFilterGroup>(),
                             DatabaseFilterOperator.AND));
 
-            eventsRecordedTable.setFilterOrder(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            eventsRecordedTable.addFilterOrder(AssetAppropriationStatsDatabaseConstants.APPROPRIATION_STATS_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             eventsRecordedTable.loadToMemory();
             List<String> eventIdList = new ArrayList<>();

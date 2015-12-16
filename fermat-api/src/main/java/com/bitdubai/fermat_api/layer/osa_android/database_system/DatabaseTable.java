@@ -31,10 +31,6 @@ public interface DatabaseTable {
     DatabaseTableRecord getEmptyRecord();
 
     void clearAllFilters();
-    
-    List<DatabaseTableFilter> getFilters();
-
-    DatabaseTableFilterGroup getFilterGroup();
 
     DatabaseTableFilter getEmptyTableFilter();
 
@@ -60,7 +56,7 @@ public interface DatabaseTable {
 
     void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type);
 
-    void setFilterOrder(String columnName, DatabaseFilterOrder direction);
+    void addFilterOrder(String columnName, DatabaseFilterOrder direction);
 
     void setFilterTop(String top);
 

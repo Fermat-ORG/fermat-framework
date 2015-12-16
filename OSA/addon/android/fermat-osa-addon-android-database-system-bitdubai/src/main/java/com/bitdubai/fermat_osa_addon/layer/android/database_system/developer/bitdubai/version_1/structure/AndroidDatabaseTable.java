@@ -153,26 +153,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     /**
-     * <p>This method return a list of DatabaseTableFilter objects
-     *
-     * @return List<DatabaseTableFilter> object
-     */
-    @Override
-    public List<DatabaseTableFilter> getFilters() {
-        return this.tableFilter;
-    }
-
-    /**
-     * <p>This method return a DatabaseTableFilterGroup objects
-     *
-     * @return DatabaseTableFilterGroup object
-     */
-    @Override
-    public DatabaseTableFilterGroup getFilterGroup() {
-        return this.tableFilterGroup;
-    }
-
-    /**
      * <p>This method update a table record in the database
      *
      * @param record DatabaseTableRecord object to update
@@ -454,16 +434,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @param direction  DatabaseFilterOrder object
      */
     @Override
-    public void setFilterOrder(String columnName, DatabaseFilterOrder direction) {
+    public void addFilterOrder(final String              columnName,
+                               final DatabaseFilterOrder direction ) {
 
         if (this.tableOrder == null)
             this.tableOrder = new ArrayList<>();
 
-        DataBaseTableOrder order = new AndroidDatabaseTableOrder();
-
-        order.setColumName(columnName);
-        order.setDirection(direction);
-
+        DataBaseTableOrder order = new AndroidDatabaseTableOrder(columnName, direction);
 
         this.tableOrder.add(order);
     }
@@ -760,11 +737,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
                 switch (tableOrder.get(i).getDirection()) {
                     case DESCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName())
+                        strOrder.append(tableOrder.get(i).getColumnName())
                                 .append(" DESC ");
                         break;
                     case ASCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName());
+                        strOrder.append(tableOrder.get(i).getColumnName());
                         break;
                     default:
                         strOrder.append(" ");

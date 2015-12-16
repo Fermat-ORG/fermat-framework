@@ -360,7 +360,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
             databaseTableRedeemPointWallet.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             databaseTableRedeemPointWallet.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             databaseTableRedeemPointWallet.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableRedeemPointWallet.setFilterOrder(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableRedeemPointWallet.addFilterOrder(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableRedeemPointWallet.setFilterTop(String.valueOf(max));
             databaseTableRedeemPointWallet.setFilterOffSet(String.valueOf(offset));
@@ -398,7 +398,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetRedeemPointWalletTable();
 
             databaseTableAssuerIssuerWallet.addStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableAssuerIssuerWallet.addFilterOrder(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));

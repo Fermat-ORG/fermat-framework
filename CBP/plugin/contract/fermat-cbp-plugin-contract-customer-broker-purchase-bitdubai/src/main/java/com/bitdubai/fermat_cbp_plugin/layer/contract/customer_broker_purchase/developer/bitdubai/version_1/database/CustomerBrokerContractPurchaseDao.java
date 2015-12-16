@@ -115,7 +115,7 @@ public class CustomerBrokerContractPurchaseDao {
         public Collection<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchase() throws CantGetListCustomerBrokerContractPurchaseException {
             try {
                 DatabaseTable ContractPurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
-                ContractPurchaseTable.setFilterOrder(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+                ContractPurchaseTable.addFilterOrder(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
                 ContractPurchaseTable.loadToMemory();
                 Collection<DatabaseTableRecord> records = ContractPurchaseTable.getRecords();
                 ContractPurchaseTable.clearAllFilters();
@@ -154,7 +154,7 @@ public class CustomerBrokerContractPurchaseDao {
 
         public Collection<CustomerBrokerContractPurchase> getCustomerBrokerContractPurchaseForStatus(ContractStatus status) throws CantGetListCustomerBrokerContractPurchaseException {
             DatabaseTable ContractPurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
-            ContractPurchaseTable.setFilterOrder(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            ContractPurchaseTable.addFilterOrder(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
             ContractPurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
             try {
                 ContractPurchaseTable.loadToMemory();

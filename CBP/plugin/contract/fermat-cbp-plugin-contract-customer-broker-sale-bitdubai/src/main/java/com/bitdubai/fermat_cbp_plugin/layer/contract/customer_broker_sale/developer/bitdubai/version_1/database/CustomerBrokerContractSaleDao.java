@@ -159,7 +159,7 @@ public class CustomerBrokerContractSaleDao {
 
         public Collection<CustomerBrokerContractSale> getCustomerBrokerContractSaleForStatus(ContractStatus status) throws CantGetListCustomerBrokerContractSaleException {
             DatabaseTable ContractSaleTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_TABLE_NAME);
-            ContractSaleTable.setFilterOrder(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            ContractSaleTable.addFilterOrder(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
             ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
             try {
                 ContractSaleTable.loadToMemory();
