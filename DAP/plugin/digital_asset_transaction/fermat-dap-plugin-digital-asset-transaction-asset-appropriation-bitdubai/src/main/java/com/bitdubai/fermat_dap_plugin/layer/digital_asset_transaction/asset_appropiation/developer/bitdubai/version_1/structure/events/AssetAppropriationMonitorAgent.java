@@ -250,8 +250,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void statusMonitoring(AssetAppropriationDAO dao) throws Exception {
-            AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation(dao.getUnsendedTransactions().size() + " unsended transactions were found.");
             for (AssetAppropriationTransactionRecord record : dao.getUnsendedTransactions()) {
+                AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation(dao.getUnsendedTransactions().size() + " unsended transactions were found.");
                 switch (record.status()) {
                     case APPROPRIATION_STARTED:
                         AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("getting crypto address and saving it..." + record.transactionRecordId());
