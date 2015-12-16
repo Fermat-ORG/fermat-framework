@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededLayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantCollectReferencesException;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fea
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -34,8 +36,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPlugin implements Plugin, Service {
 
-    private final ConcurrentHashMap<AddonVersionReference, Field> addonNeededReferences;
+    private final ConcurrentHashMap<AddonVersionReference , Field> addonNeededReferences ;
     private final ConcurrentHashMap<PluginVersionReference, Field> pluginNeededReferences;
+    private final ConcurrentHashMap<LayerReference        , Field> layerNeededReferences ;
 
     private boolean referencesCollected;
 
@@ -50,6 +53,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
         this.addonNeededReferences  = new ConcurrentHashMap<>();
         this.pluginNeededReferences = new ConcurrentHashMap<>();
+        this.layerNeededReferences  = new ConcurrentHashMap<>();
+
         this.referencesCollected    = false;
         this.serviceStatus          = ServiceStatus.CREATED;
     }
@@ -201,6 +206,17 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         this.pluginNeededReferences.put(pvr, f);
                     }
 
+                    if (a instanceof NeededLayerReference) {
+                        NeededLayerReference layerReference = (NeededLayerReference) a;
+
+                        LayerReference lr = new LayerReference(
+                                layerReference.platform(),
+                                layerReference.layer()
+                        );
+
+                        this.layerNeededReferences.put(lr, f);
+                    }
+
                 }
             }
 
@@ -348,6 +364,54 @@ public abstract class AbstractPlugin implements Plugin, Service {
             throw new CantAssignReferenceException(
                     e,
                     "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ pluginVersion.toString3(),
+                    "Error assigning references for the plugin."
+            );
+        }
+    }
+
+    public final void assignLayerReference(final LayerReference layerReference,
+                                           final FermatManager  fermatManager) throws CantAssignReferenceException   ,
+                                                                                      IncompatibleReferenceException {
+
+        try {
+
+            final Field field = this.layerNeededReferences.get(layerReference);
+
+            if (field == null) {
+                throw new CantAssignReferenceException(
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given layer: " + layerReference.toString3(),
+                        "The plugin doesn't need the given reference."
+                );
+            }
+
+            if (fermatManager == null) {
+                throw new CantAssignReferenceException(
+                        "Plugin receiving: " + this.pluginVersionReference + " ---- Given layer is null. "+ layerReference.toString3(),
+                        "Please check the given layer."
+                );
+            }
+
+            final Class<?> refManager = field.getType();
+
+            if(refManager.isAssignableFrom(fermatManager.getClass())) {
+                field.setAccessible(true);
+                field.set(this, refManager.cast(fermatManager));
+
+                this.layerNeededReferences.remove(layerReference);
+
+            } else {
+                throw new IncompatibleReferenceException(
+                        "Working plugin: "+this.getPluginVersionReference().toString3()+
+                                " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + fermatManager.getClass().getName(),
+                        "Field is not assignable by the given reference (bad definition, different type expected). Check the expected layer and the defined type."
+                );
+            }
+
+        } catch (final IllegalAccessException e) {
+
+            throw new CantAssignReferenceException(
+                    e,
+                    "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ layerReference.toString3(),
                     "Error assigning references for the plugin."
             );
         }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
@@ -35,6 +36,7 @@ public class IntraUserModuleSearch implements IntraUserSearch {
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     private String nameToSearch;
+    private String publicKeyToSearch;
 
     /**
      * Constructor
@@ -67,7 +69,13 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             /**
              * search intra users by name from intra user network service
              */
-            List<IntraUserInformation> intraUserList = this.intraUserNSManager.searchIntraUserByName(this.nameToSearch);
+        //TODO: Esto deberia estar por parametros ya que se le van a poder pasar muchos o uno solo
+            List<IntraUserInformation> intraUserList = new ArrayList<>();
+            if(nameToSearch!=null)
+                intraUserList = this.intraUserNSManager.searchIntraUserByName(this.nameToSearch);
+            if (publicKeyToSearch!=null) {
+                //intraUserList =intraWalletUserIdentityManager.searchIntraUserByPublicKey(publicKeyToSearch);
+            }
 
             /**
              * search Device User intra users  from intra user identity
@@ -104,5 +112,10 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             throw new CantGetIntraUserSearchResult("CAN'T GET INTRA USERS SEARCH RESULT", FermatException.wrapException(e),"","unknown exception");
         }
 
+    }
+
+    @Override
+    public void setPublicKeyToSearch(String publicKey) {
+        this.publicKeyToSearch = publicKey;
     }
 }
