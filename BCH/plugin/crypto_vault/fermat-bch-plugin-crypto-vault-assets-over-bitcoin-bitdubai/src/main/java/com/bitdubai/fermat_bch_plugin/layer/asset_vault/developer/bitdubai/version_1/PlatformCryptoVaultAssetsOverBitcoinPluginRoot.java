@@ -25,6 +25,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
@@ -33,6 +35,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -227,5 +230,28 @@ public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlug
     @Override
     public Platforms getPlatform() {
         return Platforms.DIGITAL_ASSET_PLATFORM;
+    }
+
+    /**
+     * Gets the amount of unused keys that are available from the passed account.
+     * @param  account the hierarchy account to get the keys from
+     * @return
+     */
+    @Override
+    public int getAvailableKeyCount(HierarchyAccount account){
+        return assetCryptoVaultManager.getAvailableKeyCount(account);
+    }
+
+
+    /**
+     * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
+     * @param pluginId the pluginId invoking this call. Might not have permissions to create new keys.
+     * @param account the account to derive keys from.
+     * @param keysToDerive thre amount of keys to derive.
+     * @throws CantDeriveNewKeysException
+     */
+    @Override
+    public void deriveKeys(UUID pluginId, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+        assetCryptoVaultManager.deriveKeys(pluginId, account, keysToDerive);
     }
 }

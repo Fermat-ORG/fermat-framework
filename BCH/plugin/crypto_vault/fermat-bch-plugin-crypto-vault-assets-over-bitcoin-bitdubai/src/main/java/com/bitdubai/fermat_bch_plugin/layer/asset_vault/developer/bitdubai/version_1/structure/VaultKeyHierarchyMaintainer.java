@@ -136,7 +136,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
             /**
              * I get all the accounts that are available from the database
              */
-            for (HierarchyAccount hierarchyAccount : getHierarchyAccounts()) {
+            for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()) {
                 /**
                  * for each account, I will get the currentGeneratedKeys value
                  */
@@ -251,7 +251,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param amount
          * @return
          */
-        private List<ECKey> deriveChildKeys(HierarchyAccount hierarchyAccount, int amount) {
+        private List<ECKey> deriveChildKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount, int amount) {
             DeterministicHierarchy keyHierarchy = vaultKeyHierarchy.getKeyHierarchyFromAccount(hierarchyAccount);
             List<ECKey> childKeys = new ArrayList<>();
             for (int i = 1; i < amount; i++) {
@@ -319,7 +319,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param hierarchyAccount
          * @return
          */
-        private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
+        private int getCurrentUsedKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) {
             try {
                 int currentUsedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
 
@@ -335,7 +335,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param hierarchyAccount
          * @return
          */
-        private int getCurrentGeneratedKeys(HierarchyAccount hierarchyAccount) {
+        private int getCurrentGeneratedKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) {
             /**
              * I can never return 0 or it will fail by dividing by 0
              */
@@ -355,8 +355,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
          *
          * @return
          */
-        private List<HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
-            List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
+        private List<com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
+            List<com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount> hierarchyAccounts = new ArrayList<>();
 
             /**
              * The DAO object used to access the database.
@@ -381,7 +381,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
              * the account 0 that will be used by the asset vault.
              */
             if (hierarchyAccounts.size() == 0) {
-                HierarchyAccount accountZero = new HierarchyAccount(0, "Asset Vault account");
+                com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount accountZero = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account");
                 hierarchyAccounts.add(accountZero);
 
                 /**

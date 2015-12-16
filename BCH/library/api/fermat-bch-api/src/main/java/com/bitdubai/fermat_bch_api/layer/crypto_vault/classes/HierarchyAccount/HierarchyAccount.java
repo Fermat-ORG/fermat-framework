@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount;
 
 import com.google.common.collect.ImmutableList;
 
@@ -7,7 +7,7 @@ import org.bitcoinj.crypto.ChildNumber;
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.HierarchyAccount</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.AssetsOverBitcoin.developer.bitdubai.version_1.structure.HierarchyAccount</code>
  * Defines the account object of the hierarchy. In standard BIP0032 notation, is the first derivation from the master key.
  * The asset vault account is always the first one (m/0) and new ones may be added when Redeem points are dependant on this vault.
  * New redeem points added are m/1, m/2 and so on.
