@@ -16,20 +16,5 @@ public class IntraUserSubAppSession extends AbstractFermatSession<InstalledSubAp
     public static final String PREVIEW_IMGS = "preview images";
     public static final String DEVELOPER_NAME = "developer name";
 
-
-    /**
-     * Create a session for the Wallet Store SubApp
-     *
-
-     * @param errorManager             the error manager
-     * @param intraUserModuleManager the module of this SubApp
-     */
-    public IntraUserSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager) {
-        super(subApp.getAppPublicKey(),subApp,errorManager,intraUserModuleManager,null);
-    }
-
-
-    public IntraUserSubAppSession() {
-
-    }
+    public IntraUserSubAppSession() {}
 }
