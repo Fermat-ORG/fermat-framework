@@ -27,6 +27,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Can
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
@@ -261,15 +262,22 @@ public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlug
     /**
      * Creates a new hierarchy Account in the vault.
      * This will create the sets of keys and start monitoring the default network with these keys.
-     * @return the created Hierarchy Account
+     * @param hierarchyAccount
+     * @throws CantAddHierarchyAccountException
      */
     @Override
-    public HierarchyAccount addHierarchyAccount() {
-        return null;
+    public void addHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantAddHierarchyAccountException {
+         assetCryptoVaultManager.addHierarchyAccount(hierarchyAccount);
     }
 
+    /**
+     * Gets the Extended Public Key from the specified account. Can't be from a master account.
+     * @param hierarchyAccount a Redeem Point account.
+     * @return the DeterministicKey that will be used by the redeem Points.
+     * @throws CantGetExtendedPublicKeyException
+     */
     @Override
     public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
-        return null;
+        return assetCryptoVaultManager.getExtendedPublicKey(hierarchyAccount);
     }
 }

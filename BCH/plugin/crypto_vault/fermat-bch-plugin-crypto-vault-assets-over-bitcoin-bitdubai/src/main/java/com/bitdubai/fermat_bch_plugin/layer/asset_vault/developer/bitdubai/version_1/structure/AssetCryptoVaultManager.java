@@ -7,8 +7,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.*;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
@@ -27,6 +29,7 @@ import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
@@ -363,5 +366,27 @@ public class AssetCryptoVaultManager  {
      */
     public void deriveKeys(UUID pluginId, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
         //todo implement when creating assets, If I create more assets than available keys, then first I need to generate new keys.
+    }
+
+    /**
+     * Creates a new hierarchy Account in the vault.
+     * This will create the sets of keys and start monitoring the default network with these keys.
+     * @param hierarchyAccount
+     * @throws CantAddHierarchyAccountException
+     */
+    public void addHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantAddHierarchyAccountException {
+        //todo implement adding a new account. It will add the record in the database.
+        // derive the standard amount of keys and monitor the network with this new account
+    }
+
+    /**
+     * Gets the Extended Public Key from the specified account. Can't be from a master account.
+     * @param hierarchyAccount a Redeem Point account.
+     * @return the DeterministicKey that will be used by the redeem Points.
+     * @throws CantGetExtendedPublicKeyException
+     */
+    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
+        //todo implement will get the extendedpublic key used to create the new watch only vault
+        return null;
     }
 }
