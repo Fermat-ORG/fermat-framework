@@ -21,6 +21,7 @@ import java.util.List;
 public class HierarchyAccount {
     private int id;
     private String description;
+    private HierarchyAccountType hierarchyAccountType;
     private String pathAsString;
     private List<ChildNumber> accountPath;
 
@@ -30,9 +31,10 @@ public class HierarchyAccount {
      * @param id the account id
      * @param description a description that identifies the account
      */
-    public HierarchyAccount(int id, String description) {
+    public HierarchyAccount(int id, String description, HierarchyAccountType hierarchyAccountType) {
         this.id = id;
         this.description = description;
+        this.hierarchyAccountType = hierarchyAccountType;
 
         /**
          * I set the account path, the m/path
@@ -55,6 +57,14 @@ public class HierarchyAccount {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public HierarchyAccountType getHierarchyAccountType() {
+        return hierarchyAccountType;
+    }
+
+    public void setHierarchyAccountType(HierarchyAccountType hierarchyAccountType) {
+        this.hierarchyAccountType = hierarchyAccountType;
     }
 
     public String getPathAsString() {

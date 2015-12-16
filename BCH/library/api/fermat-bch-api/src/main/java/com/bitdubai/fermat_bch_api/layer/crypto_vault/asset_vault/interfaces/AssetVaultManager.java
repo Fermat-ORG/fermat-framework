@@ -3,11 +3,14 @@ package com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
+
+import org.bitcoinj.crypto.DeterministicKey;
 
 import java.util.UUID;
 
@@ -56,5 +59,20 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws CantDeriveNewKeysException
      */
     void deriveKeys(UUID pluginId, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException;
+
+    /**
+     * Creates a new hierarchy Account in the vault.
+     * This will create the sets of keys and start monitoring the default network with these keys.
+     * @return
+     */
+    HierarchyAccount addHierarchyAccount();
+
+    /**
+     * Gets the Extended Public Key from the specified account. Can't be from a master account.
+     * @param hierarchyAccount a Redeem Point account.
+     * @return the DeterministicKey that will be used by the redeem Points.
+     * @throws CantGetExtendedPublicKeyException
+     */
+    DeterministicKey getExtendedPublicKey (HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException;
 
 }

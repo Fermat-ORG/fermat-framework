@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
@@ -33,6 +34,8 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import org.bitcoinj.crypto.DeterministicKey;
 
 import java.util.List;
 import java.util.UUID;
@@ -253,5 +256,20 @@ public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlug
     @Override
     public void deriveKeys(UUID pluginId, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
         assetCryptoVaultManager.deriveKeys(pluginId, account, keysToDerive);
+    }
+
+    /**
+     * Creates a new hierarchy Account in the vault.
+     * This will create the sets of keys and start monitoring the default network with these keys.
+     * @return the created Hierarchy Account
+     */
+    @Override
+    public HierarchyAccount addHierarchyAccount() {
+        return null;
+    }
+
+    @Override
+    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
+        return null;
     }
 }
