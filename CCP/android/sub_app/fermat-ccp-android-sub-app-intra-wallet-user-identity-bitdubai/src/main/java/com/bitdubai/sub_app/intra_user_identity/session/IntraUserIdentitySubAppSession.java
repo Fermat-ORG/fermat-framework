@@ -16,53 +16,6 @@ import java.util.Map;
  */
 public class IntraUserIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,IntraWalletUserIdentityManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
-
-
-    /**
-     * Error manager
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * Wallet Store Module
-     */
-    private IntraWalletUserIdentityManager moduleManager;
-
-
-    /**
-     * Create a session for the Wallet Store SubApp
-     * @param errorManager             the error manager
-     * @param moduleManager the module of this SubApp
-     */
-    public IntraUserIdentitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, IntraWalletUserIdentityManager moduleManager) {
-        super(subApp.getAppPublicKey(),subApp,errorManager,moduleManager,null);
-        this.errorManager = errorManager;
-        this.moduleManager = moduleManager;
-    }
-
-    public IntraUserIdentitySubAppSession() {
-
-    }
-
-
-
-    /**
-     * Return the Error Manager
-     *
-     * @return reference to the Error Manager
-     */
-    @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-    /**
-     * Return the Wallet Store Module
-     *
-     * @return reference to the Wallet Store Module
-     */
-    public IntraWalletUserIdentityManager getModuleManager() {
-        return moduleManager;
-    }
+    public IntraUserIdentitySubAppSession() {}
 
 }
