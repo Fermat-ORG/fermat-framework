@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMon
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -19,10 +20,10 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
     String                          cryWalletPublicKey;
     String                          memo;
     String                          concept;
-    float                           amount;
+    BigDecimal                      amount;
     Timestamp                       timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-    float                           priceReference;
+    BigDecimal                      priceReference;
     OriginTransaction originTransaction;
 
     public CryptoMoneyRestockTransactionImpl(){
@@ -36,10 +37,10 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
                                              String cryWalletPublicKey,
                                              String memo,
                                              String concept,
-                                             float amount,
+                                             BigDecimal amount,
                                              Timestamp timeStamp,
                                              TransactionStatusRestockDestock transactionStatus,
-                                             float priceReference,
+                                             BigDecimal priceReference,
                                              OriginTransaction originTransaction){
         this.transactionId      = transactionId;
         this.actorPublicKey     = actorPublicKey;
@@ -118,12 +119,12 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     @Override
-    public void setAmount(float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -158,12 +159,12 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
     }
 
     @Override
-    public float getPriceReference() {
+    public BigDecimal getPriceReference() {
         return priceReference;
     }
 
     @Override
-    public void setPriceReference(float priceReference) {
+    public void setPriceReference(BigDecimal priceReference) {
         this.priceReference = priceReference;
     }
 
