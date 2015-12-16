@@ -6,21 +6,21 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.holders.AppListItentitiesDrawer;
+import com.bitdubai.sub_app.intra_user_community.holders.AppListItentitiesDrawerHolder;
 
 import java.util.List;
 
 /**
  * @author Jose Manuel De Sousa
  */
-public class AppListIdentityAdapter extends FermatAdapter<MenuItem, AppListItentitiesDrawer> {
+public class AppListIdentityAdapter extends FermatAdapter<MenuItem, AppListItentitiesDrawerHolder> {
 
     protected AppListIdentityAdapter(Context context, List<MenuItem> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected AppListItentitiesDrawer createHolder(View itemView, int type) {
+    protected AppListItentitiesDrawerHolder createHolder(View itemView, int type) {
         return null;
     }
 
@@ -30,7 +30,7 @@ public class AppListIdentityAdapter extends FermatAdapter<MenuItem, AppListItent
     }
 
     @Override
-    protected void bindHolder(AppListItentitiesDrawer holder, MenuItem data, int position) {
+    protected void bindHolder(AppListItentitiesDrawerHolder holder, MenuItem data, int position) {
 
     }
 }
