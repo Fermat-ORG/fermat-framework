@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/12/15.
  */
-public class IncomingNewContractStatusUpdateEventHandler extends AbstractBrokerAckOfflinePaymentEventHandler {
+public class IncomingNewContractStatusUpdateEventHandler extends AbstractBrokerAckOnlinePaymentEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if(this.brokerAckOnlinePaymentRecorderService.getStatus()== ServiceStatus.STARTED) {

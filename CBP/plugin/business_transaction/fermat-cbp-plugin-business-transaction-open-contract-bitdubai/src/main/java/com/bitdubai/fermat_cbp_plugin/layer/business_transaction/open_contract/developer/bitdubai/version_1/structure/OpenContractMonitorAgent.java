@@ -368,10 +368,11 @@ public class OpenContractMonitorAgent implements
 
         }
 
-        private void raiseNewContractEvent(){
+        private void raiseNewContractEvent(String contractHash){
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
             NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
             newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
+            newContractOpened.setContractHash(contractHash);
             eventManager.raiseEvent(newContractOpened);
         }
 
@@ -457,7 +458,7 @@ public class OpenContractMonitorAgent implements
                                                     ContractStatus.PENDING_PAYMENT);
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            raiseNewContractEvent();
+                            raiseNewContractEvent(contractHash);
                         }
                     }
 
