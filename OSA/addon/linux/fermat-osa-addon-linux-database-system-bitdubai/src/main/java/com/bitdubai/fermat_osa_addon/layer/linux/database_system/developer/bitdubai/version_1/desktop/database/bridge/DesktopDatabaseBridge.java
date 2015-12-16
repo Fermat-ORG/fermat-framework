@@ -54,7 +54,6 @@ public class DesktopDatabaseBridge {
         try {
             //SQLite Driver
             Class.forName("org.sqlite.JDBC");
-            //c = DriverManager.getConnection("jdbc:sqlite:"+databasePath);
             c = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
             c.setAutoCommit(false);
             //Testing purpose
@@ -72,8 +71,15 @@ public class DesktopDatabaseBridge {
      **/
     private void close(){
         try {
-            c.close();
-            stmt.close();
+
+            if (c != null){
+                c.close();
+            }
+
+            if (stmt != null){
+                stmt.close();
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
             //Luis acá iria una Excepcion de que no abrío la base de datos

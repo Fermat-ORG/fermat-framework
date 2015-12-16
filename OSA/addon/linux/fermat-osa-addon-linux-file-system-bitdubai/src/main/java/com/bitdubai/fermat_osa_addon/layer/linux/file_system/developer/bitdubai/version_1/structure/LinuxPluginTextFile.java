@@ -38,7 +38,7 @@ import javax.crypto.spec.SecretKeySpec;
  *  Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
 
-public class DesktopPluginTextFile implements PluginTextFile {
+public class LinuxPluginTextFile implements PluginTextFile {
 
     /**
      * PluginTextFile interface member variables.
@@ -106,7 +106,7 @@ public class DesktopPluginTextFile implements PluginTextFile {
      * @param privacyLevel level of privacy for the file, if it is public or private
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
-    public DesktopPluginTextFile(UUID ownerId,String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public LinuxPluginTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.ownerId = ownerId;
         this.fileName = fileName;
