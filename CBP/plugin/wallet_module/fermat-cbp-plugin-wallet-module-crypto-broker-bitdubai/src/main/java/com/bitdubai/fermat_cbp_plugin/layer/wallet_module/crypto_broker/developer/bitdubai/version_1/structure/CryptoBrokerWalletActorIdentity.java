@@ -31,7 +31,7 @@ public class CryptoBrokerWalletActorIdentity implements ActorIdentity {
 
     @Override
     public void setNewProfileImage(byte[] imageBytes) {
-
+        this.img = imageBytes;
     }
 
     @Override
