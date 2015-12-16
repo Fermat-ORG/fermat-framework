@@ -1,28 +1,30 @@
-package com.bitdubai.sub_app.intra_user_community.common.navigation_drawer;
+package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 
-
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.holders.AppNavigationHolder;
 
 import java.util.List;
 
 /**
  * Created by Matias Furszyfer on 2015.09.30..
+ * Modified by Jose Manuel De Sousa
  */
-public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
+public class AppNavigationAdapter extends FermatAdapter<MenuItem, AppNavigationHolder> {
 
 
     Typeface tf;
-    protected NavigationViewAdapter(Context context) {
+
+    protected AppNavigationAdapter(Context context) {
         super(context);
     }
 
-    public NavigationViewAdapter(Context context, List<MenuItem> dataSet) {
+    public AppNavigationAdapter(Context context, List<MenuItem> dataSet) {
         super(context, dataSet);
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
@@ -43,8 +45,8 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
      * @return ViewHolder
      */
     @Override
-    protected NavigationItemMenuViewHolder createHolder(View itemView, int type) {
-        return new NavigationItemMenuViewHolder(itemView);
+    protected AppNavigationHolder createHolder(View itemView, int type) {
+        return new AppNavigationHolder(itemView);
     }
 
     /**
@@ -54,7 +56,7 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.intra_user_community_navigation_row;
+        return R.layout.row_navigation_drawer_community_content;
     }
 
     /**
@@ -65,7 +67,7 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
      * @param position position to render
      */
     @Override
-    protected void bindHolder(NavigationItemMenuViewHolder holder, MenuItem data, int position) {
+    protected void bindHolder(AppNavigationHolder holder, MenuItem data, int position) {
 
         try {
             holder.getLabel().setText(data.getLabel());

@@ -8,9 +8,9 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.intra_user_community.R;
 
 /**
- * Created by josemanueldsds on 29/11/15.
+ * @author Jose Manuel De Sousa
  */
-public class NavigationItemIdentityHolder extends FermatViewHolder {
+public class AppListItentitiesDrawerHolder extends FermatViewHolder {
 
     public FermatTextView userIdentityName;
     public ImageView userIdentityImage;
@@ -18,9 +18,9 @@ public class NavigationItemIdentityHolder extends FermatViewHolder {
     /**
      * Constructor
      *
-     * @param itemView
+     * @param itemView cast ui elements
      */
-    protected NavigationItemIdentityHolder(View itemView) {
+    protected AppListItentitiesDrawerHolder(View itemView) {
         super(itemView);
 
         userIdentityImage = (ImageView) itemView.findViewById(R.id.imageView_avatar);

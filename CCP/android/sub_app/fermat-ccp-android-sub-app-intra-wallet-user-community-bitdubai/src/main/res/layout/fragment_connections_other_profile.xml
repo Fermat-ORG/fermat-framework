@@ -11,10 +11,9 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:gravity="center"
         android:layout_marginTop="32dp"
         android:background="@drawable/bg_circular_other_profile"
-        >
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/img_user_avatar"
@@ -39,26 +38,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_shape_blue"
-            android:drawableStart="@drawable/ic_profile_connect"
             android:drawableLeft="@drawable/ic_profile_connect"
             android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_profile_connect"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:text="Connect"
+            android:textColor="#ffffff"
             android:visibility="gone"
-            android:textColor="#ffffff"/>
+            tools:ignore="HardcodedText" />
+
         <Button
             android:id="@+id/btn_disconect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_shape_white"
-            android:drawableStart="@drawable/ic_profile_disconnect"
             android:drawableLeft="@drawable/ic_profile_disconnect"
             android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_profile_disconnect"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:text="Disconnect"
-            android:textColor="#0072bc"/>
+            android:textColor="#0072bc"
+            tools:ignore="HardcodedText" />
 
     </RelativeLayout>
 
@@ -101,11 +103,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/email_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="18dp"
-        android:paddingRight="18dp">
+        android:paddingRight="18dp"
+        android:visibility="gone">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"

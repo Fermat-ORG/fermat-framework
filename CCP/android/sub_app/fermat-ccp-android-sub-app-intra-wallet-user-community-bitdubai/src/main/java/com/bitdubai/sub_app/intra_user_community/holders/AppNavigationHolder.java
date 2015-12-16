@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user_community.common.navigation_drawer;
+package com.bitdubai.sub_app.intra_user_community.holders;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -13,13 +13,13 @@ import com.bitdubai.sub_app.intra_user_community.R;
  */
 
 
-public class NavigationItemMenuViewHolder extends FermatViewHolder {
+public class AppNavigationHolder extends FermatViewHolder {
 
     private TextView label;
     private ImageView icon;
 
 
-    public NavigationItemMenuViewHolder(View itemView) {
+    public AppNavigationHolder(View itemView) {
         super(itemView);
 
         label = (TextView) itemView.findViewById(R.id.textView_label);

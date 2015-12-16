@@ -2,16 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
     android:layout_margin="1dp"
     android:background="#d9d6d6"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:background="#d9d6d6">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
             android:id="@+id/profile_Image"
@@ -48,12 +47,14 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fffff4"
         android:orientation="vertical"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp"
+        android:visibility="gone">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/community_city"

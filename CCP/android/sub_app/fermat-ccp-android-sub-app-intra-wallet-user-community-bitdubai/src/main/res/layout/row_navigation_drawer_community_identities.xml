@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingRight="24dp"
-    android:paddingLeft="24dp"
-    android:paddingTop="8dp"
+    android:background="#0072bb"
     android:orientation="vertical"
-    android:background="#0072bb">
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,13 +27,13 @@
             android:id="@+id/textView_identity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#0072bb"
             android:paddingBottom="14dp"
-            android:paddingTop="14dp"
             android:paddingLeft="36dp"
+            android:paddingTop="14dp"
             android:text="Second Identity"
             android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:background="#0072bb"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 
