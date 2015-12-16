@@ -1,16 +1,20 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-
-#Installation Guide
+# Installation and Configuration Guide for Fermat Development Environment 
 
 <br>
 ## Introduction
 
-Currently Fermat is targeting the Android OS, once there we are going to move fordward to other OS. You will notice that this guide covers everything you need to do to set up the environmet and start using Fermat.
+Currently Fermat is targeting the Android OS (other OS will come later on). 
+This guide covers *everything* you need to know to set up the development environment to start programming within Fermat.
 
 <br>
 ## Part I: Setting up the Environment
 
+<br>
+### Working on Linux - PLEASE READ THIS - 
+
+Most Fermat developers are on Linux since compilation is faster there than in Windows. It is highly recommended that you use linux instead of windows. Developers that tried to set up a windows environment finally gave up and moved to Ubuntu. If you don't have Ubuntu installed, we recommed you to do so in a fresh disk partition.
 <br>
 ### Overview
 
@@ -23,12 +27,9 @@ You will need the following tools in order to develop in Fermat
 * **Android build-tools 23.01**
 * **Android Development Studio or IntelliJ IDEA**
 
-Although there are many ways to configure these tools, we'll provide a recommended configuration for your development environment.
+Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team.
 
-<br>
-### Working on Linux
 
-Most Fermat developers are on Linux since compilation is faster there than in Windows. It is highly recommended that you use linux instead of windows. Developers that tried to set up a windows environment finally gave up and moved to Ubuntu. If you don't have Ubuntu installed, we recommed you to do so in a fresh disk partition.
 
 #### Automatic installation
 
