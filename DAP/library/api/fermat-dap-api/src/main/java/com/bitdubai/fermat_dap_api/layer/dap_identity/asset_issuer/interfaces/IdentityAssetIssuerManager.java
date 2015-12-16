@@ -25,6 +25,14 @@ public interface IdentityAssetIssuerManager extends ModuleManager {
      */
     List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantListAssetIssuersException;
 
+    /**
+     * The method <code>getIdentityAssetIssuer</code> will give Identity Asset Issuer associated
+     *
+     * @return Identity Asset Issuer associated.
+     *
+     * @throws CantListAssetIssuersException if something goes wrong.
+     */
+    IdentityAssetIssuer getIdentityAssetIssuer() throws CantListAssetIssuersException;
 
     /**
      * The method <code>createNewIntraWalletUser</code> creates a new intra wallet user Identity for the logged in Device User and returns the

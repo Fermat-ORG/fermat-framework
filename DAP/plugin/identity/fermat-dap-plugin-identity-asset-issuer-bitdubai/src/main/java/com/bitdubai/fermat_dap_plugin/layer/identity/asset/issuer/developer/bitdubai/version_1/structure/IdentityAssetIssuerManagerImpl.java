@@ -104,8 +104,7 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
     }
 
     private AssetIssuerIdentityDao getAssetIssuerIdentityDao() throws CantInitializeAssetIssuerIdentityDatabaseException {
-        AssetIssuerIdentityDao assetIssuerIdentityDao = new AssetIssuerIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
-        return assetIssuerIdentityDao;
+        return new AssetIssuerIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
     }
 
     public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantListAssetIssuersException {
@@ -149,6 +148,16 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
         } catch (Exception e) {
             throw new CantCreateNewIdentityAssetIssuerException("CAN'T CREATE NEW ASSET ISSUER IDENTITY", FermatException.wrapException(e), "", "");
         }
+    }
+
+    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantListAssetIssuersException {
+        IdentityAssetIssuer identityAssetIssuer = null;
+        try {
+            identityAssetIssuer = getAssetIssuerIdentityDao().getIdentityAssetIssuer();
+        } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+        return identityAssetIssuer;
     }
 
     public boolean  hasIntraIssuerIdentity() throws CantListAssetIssuersException{

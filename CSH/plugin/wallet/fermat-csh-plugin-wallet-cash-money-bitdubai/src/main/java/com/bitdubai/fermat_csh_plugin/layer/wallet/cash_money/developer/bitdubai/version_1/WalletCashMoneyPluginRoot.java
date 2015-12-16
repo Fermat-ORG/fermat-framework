@@ -70,7 +70,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
      * TEST METHODS
      */
     private void createTestWalletIfNotExists() {
-        System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
+        //System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
 
         if(!cashMoneyWalletExists("publicKeyWalletMock")) {
             try {
@@ -80,7 +80,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     }
 
     private void testDeposits() {
-        System.out.println("CASHWALLET - testDeposits CALLED");
+        //System.out.println("CASHWALLET - testDeposits CALLED");
 
         try {
             CashMoneyWallet wallet = loadCashMoneyWallet("publicKeyWalletMock");

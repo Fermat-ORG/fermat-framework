@@ -16,6 +16,7 @@ public enum ContractTransactionStatus implements FermatEnum {
     CHECKING_HASH("CHA"),
     CLOSING_CONTRACT("CLC"),
     CONFIRM_CLOSED_CONTRACT("CCLC"),
+    CONFIRM_OFFLINE_PAYMENT("CFP"),
     CONFIRM_ONLINE_PAYMENT("COP"),
     CONTRACT_COMPLETED("CNC"),
     CONTRACT_CONFIRMED("COC"),

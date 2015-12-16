@@ -22,29 +22,14 @@ public class AndroidDatabaseTableOrder implements DataBaseTableOrder {
     private String columnName;
     private DatabaseFilterOrder direction;
 
+    public AndroidDatabaseTableOrder(String columnName, DatabaseFilterOrder direction) {
+        this.columnName = columnName;
+        this.direction = direction;
+    }
+
     /**
      * DataBaseTableOrder interface implementation.
      */
-
-    /**
-     * <p>This method sets the column to order the query
-     *
-     * @param columnName
-     */
-    @Override
-    public void setColumName (String columnName){
-        this.columnName = columnName;
-    }
-
-    /**
-     * <p>This method sets the direction of the order of the query
-     *
-     * @param direction DatabaseFilterOrder enum, ASC or DESC
-     */
-    @Override
-    public void setDirection (DatabaseFilterOrder direction){
-        this.direction = direction;
-    }
 
     /**
      *<p>This method gets the column to order the query
@@ -52,7 +37,7 @@ public class AndroidDatabaseTableOrder implements DataBaseTableOrder {
      * @return String column name
      */
     @Override
-    public String getColumName (){
+    public String getColumnName(){
 
         return this.columnName;
     }
