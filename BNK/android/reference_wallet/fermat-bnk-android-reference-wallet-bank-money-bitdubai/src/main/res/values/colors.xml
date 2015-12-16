@@ -9,4 +9,6 @@
     <color name="text_color_bold">#400F4D</color>
     <color name="fab_red_background">#FF2A1A</color>
     <color name="fab_normal">#6633B5E5</color>
+    <color name="white">#ffffff</color>
+    <color name="fab_black_semi_transparent">#B2000000</color>
 </resources>

@@ -121,7 +121,8 @@
         android:layout_alignParentEnd="true"
         fab:fab_addButtonColorNormal="@color/fab_red_background"
         fab:fab_addButtonColorPressed="@color/background_header"
-        fab:fab_addButtonPlusIconColor="@color/fab_normal"
+        fab:fab_addButtonPlusIconColor="@color/white"
+        fab:fab_labelStyle="@style/menu_labels_style"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/fab_margin"
         android:gravity="bottom|right">
@@ -132,7 +133,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/fab_red_background"
             fab:fab_title="Withdraw"
-            fab:fab_colorPressed="@color/fab_normal"
+            fab:fab_colorPressed="@color/white"
             fab:fab_size="mini"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -141,7 +142,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/fab_red_background"
             fab:fab_title="Deposit"
-            fab:fab_colorPressed="@color/fab_normal"
+            fab:fab_colorPressed="@color/white"
             fab:fab_size="mini"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
