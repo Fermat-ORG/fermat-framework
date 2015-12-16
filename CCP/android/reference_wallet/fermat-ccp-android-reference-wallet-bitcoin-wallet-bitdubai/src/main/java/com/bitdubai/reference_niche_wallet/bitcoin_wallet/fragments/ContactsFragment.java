@@ -127,6 +127,9 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
     Bundle mSavedInstanceState;
 
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
+
+
 
     /**
      * Resources
