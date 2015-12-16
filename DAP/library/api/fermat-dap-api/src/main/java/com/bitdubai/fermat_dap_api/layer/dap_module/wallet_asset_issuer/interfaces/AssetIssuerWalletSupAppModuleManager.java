@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -65,4 +67,6 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager {
     void createWalletAssetIssuer(String walletPublicKey) throws CantCreateWalletException;
 
     public AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException, CantCreateFileException;
+
+    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
 }

@@ -24,6 +24,7 @@ public class DigitalAsset {
     private String walletPublicKey;
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
+    private byte[] image;
 
     public DigitalAsset() {
     }
@@ -130,5 +131,13 @@ public class DigitalAsset {
 
     public void setExpDate(Timestamp expDate) {
         this.expDate = expDate;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
