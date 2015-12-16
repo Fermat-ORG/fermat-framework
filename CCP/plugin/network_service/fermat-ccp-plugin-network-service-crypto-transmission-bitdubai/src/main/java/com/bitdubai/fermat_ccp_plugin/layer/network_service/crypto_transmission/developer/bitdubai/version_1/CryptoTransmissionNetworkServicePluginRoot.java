@@ -871,20 +871,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println("CRYPTO TRANSMISSION - handleVpnConnectionCloseNotificationEvent");
         VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-        cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+        //cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
-//        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
-//
-//
-//
-//            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-//
-//                if(communicationNetworkServiceConnectionManager != null)
-//                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-//
-//            }
-//
-//        }
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                if(communicationNetworkServiceConnectionManager != null)
+                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }
 
     }
 
