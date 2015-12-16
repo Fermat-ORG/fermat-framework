@@ -1,12 +1,18 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions;
 
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by lcampo on 26/11/15.
  */
 public class CantCreateAssetUserGroupException extends DAPException {
+
+    private static final String DEFAULT_MESSAGE = "There was an error while creating the asset user group.";
+
+    public CantCreateAssetUserGroupException(Exception cause) {
+        this(DEFAULT_MESSAGE, cause, null, null);
+    }
+
     /**
      * This is the constructor that every inherited DAPException must implement
      *

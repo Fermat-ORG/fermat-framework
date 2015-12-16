@@ -22,6 +22,7 @@ public enum ConnectionState implements FermatEnum {
     DENIED_REMOTELY             ("DNR"),
     DISCONNECTED_LOCALLY        ("DSL"),
     DISCONNECTED_REMOTELY       ("DSR"),
+    ERROR                       ("ERR"),
     PENDING_LOCALLY_ACCEPTANCE  ("PLA"),
     PENDING_REMOTELY_ACCEPTANCE ("PRA");
 
@@ -44,6 +45,7 @@ public enum ConnectionState implements FermatEnum {
             case "DNR": return DENIED_REMOTELY            ;
             case "DSL": return DISCONNECTED_LOCALLY       ;
             case "DSR": return DISCONNECTED_REMOTELY      ;
+            case "ERR": return ERROR                      ;
             case "PLA": return PENDING_LOCALLY_ACCEPTANCE ;
             case "PRA": return PENDING_REMOTELY_ACCEPTANCE;
 

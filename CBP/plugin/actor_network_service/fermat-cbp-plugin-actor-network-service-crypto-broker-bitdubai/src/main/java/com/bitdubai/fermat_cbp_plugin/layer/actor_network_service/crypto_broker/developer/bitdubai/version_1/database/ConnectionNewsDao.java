@@ -27,6 +27,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 
 import java.util.ArrayList;
@@ -140,6 +142,43 @@ public final class ConnectionNewsDao {
         }
     }
 
+    /**
+     * Return all the pending requests depending on the protocol state informed through parameters.
+     *
+     * @param protocolState  the protocol state that we need to bring.
+     *
+     * @return a list of CryptoBrokerConnectionRequest instances.
+     *
+     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     */
+    public final List<CryptoBrokerConnectionRequest> listAllRequestByProtocolState(final ProtocolState protocolState) throws CantListPendingConnectionRequestsException {
+
+        try {
+
+            final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionNewsTable.setFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState, DatabaseFilterType.EQUAL);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+
+            final List<CryptoBrokerConnectionRequest> cryptoAddressRequests = new ArrayList<>();
+
+            for (final DatabaseTableRecord record : records)
+                cryptoAddressRequests.add(buildConnectionNewRecord(record));
+
+            return cryptoAddressRequests;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+        }
+    }
+
     public final void createConnectionRequest(final UUID                              newId            ,
                                               final CryptoBrokerConnectionInformation brokerInformation,
                                               final ProtocolState                     state            ,
@@ -172,44 +211,6 @@ public final class ConnectionNewsDao {
         } catch (final CantInsertRecordException e) {
 
             throw new CantRequestConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        }
-    }
-
-    public final void createDisconnectionRequest(final UUID                    newId            ,
-                                                 final String                  identityPublicKey,
-                                                 final Actors                  identityActorType,
-                                                 final String                  brokerPublicKey  ,
-                                                 final long                    sentTime         ,
-                                                 final ProtocolState           state            ,
-                                                 final RequestType             type             ,
-                                                 final ConnectionRequestAction action           ) throws CantDisconnectException {
-
-        try {
-
-            final CryptoBrokerConnectionRequest connectionNew = new CryptoBrokerConnectionRequest(
-                    newId            ,
-                    identityPublicKey,
-                    identityActorType,
-                    null             ,
-                    null             ,
-                    brokerPublicKey  ,
-                    type             ,
-                    state            ,
-                    action           ,
-                    sentTime
-            );
-
-            final DatabaseTable addressExchangeRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
-
-            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
-
-            entityRecord = buildDatabaseRecord(entityRecord, connectionNew);
-
-            addressExchangeRequestTable.insertRecord(entityRecord);
-
-        } catch (final CantInsertRecordException e) {
-
-            throw new CantDisconnectException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
         }
     }
 
@@ -265,6 +266,127 @@ public final class ConnectionNewsDao {
 
             throw new CantDenyConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
+    }
+
+    /**
+     * change the protocol state
+     *
+     * @param requestId id of the address exchange request we want to confirm.
+     * @param state     protocol state to change
+     *
+     * @throws CantChangeProtocolStateException      if something goes wrong.
+     * @throws ConnectionRequestNotFoundException    if i can't find the record.
+     */
+    public void changeProtocolState(final UUID          requestId,
+                                    final ProtocolState state    ) throws CantChangeProtocolStateException,
+                                                                          ConnectionRequestNotFoundException  {
+
+        if (requestId == null)
+            throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
+
+        if (state == null)
+            throw new CantChangeProtocolStateException(null, "", "The state is required, can not be null");
+
+        try {
+
+            DatabaseTable actorConnectionRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            actorConnectionRequestTable.setUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            actorConnectionRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = actorConnectionRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, state.getCode());
+
+                actorConnectionRequestTable.updateRecord(record);
+
+            } else
+                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
+
+        } catch (CantUpdateRecordException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    /**
+     * when i confirm a request i put it in the final state, indicating:
+     * State : DONE.
+     * Action: NONE.
+     *
+     * @param requestId id of the address exchange request we want to confirm.
+     *
+     * @throws CantConfirmConnectionRequestException   if something goes wrong.
+     * @throws ConnectionRequestNotFoundException      if i can't find the record.
+     */
+    public void confirmActorConnectionRequest(final UUID requestId) throws CantConfirmConnectionRequestException,
+                                                                           ConnectionRequestNotFoundException   {
+
+        if (requestId == null) {
+            throw new CantConfirmConnectionRequestException(null, "", "The requestId is required, can not be null");
+        }
+
+        try {
+
+            ProtocolState           state  = ProtocolState          .DONE;
+            ConnectionRequestAction action = ConnectionRequestAction.NONE;
+
+            DatabaseTable actorConnectionRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            actorConnectionRequestTable.setUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            actorConnectionRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = actorConnectionRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME , state .getCode());
+                record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action.getCode());
+
+                actorConnectionRequestTable.updateRecord(record);
+
+            } else
+                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
+
+        } catch (CantUpdateRecordException e) {
+
+            throw new CantConfirmConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantConfirmConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    public boolean isPendingUpdates() throws CantListPendingConnectionRequestsException {
+
+        List<ConnectionRequestAction> actions = new ArrayList<>();
+
+        actions.add(ConnectionRequestAction.ACCEPT);
+        actions.add(ConnectionRequestAction.DENY  );
+
+        return this.listAllPendingRequests(actions) != null && !(this.listAllPendingRequests(actions).isEmpty());
+    }
+
+    public boolean isPendingRequests() throws CantListPendingConnectionRequestsException {
+
+        List<ConnectionRequestAction> actions = new ArrayList<>();
+
+        actions.add(ConnectionRequestAction.CANCEL    );
+        actions.add(ConnectionRequestAction.DISCONNECT);
+        actions.add(ConnectionRequestAction.REQUEST   );
+
+        return this.listAllPendingRequests(actions) != null && !(this.listAllPendingRequests(actions).isEmpty());
     }
 
     /**

@@ -16,15 +16,19 @@ public enum ContractTransactionStatus implements FermatEnum {
     CHECKING_HASH("CHA"),
     CLOSING_CONTRACT("CLC"),
     CONFIRM_CLOSED_CONTRACT("CCLC"),
+    CONFIRM_OFFLINE_PAYMENT("CFP"),
     CONFIRM_ONLINE_PAYMENT("COP"),
     CONTRACT_COMPLETED("CNC"),
     CONTRACT_CONFIRMED("COC"),
     CONTRACT_OPENED("COO"),
     CREATING_CONTRACT("CRC"),
     HASH_REJECTED("HRJ"),
+    OFFLINE_PAYMENT_SUBMITTED("FPS"),
     ONLINE_PAYMENT_SUBMITTED("OPS"),
     PENDING_CONFIRMATION("PEC"),
+    PENDING_OFFLINE_PAYMENT_CONFIRMATION("POFC"),
     PENDING_ONLINE_PAYMENT_CONFIRMATION("POPC"),
+    PENDING_OFFLINE_PAYMENT_NOTIFICATION("POFP"),
     PENDING_ONLINE_PAYMENT_NOTIFICATION("POPN"),
     PENDING_PAYMENT("PEP"),
     PENDING_RESPONSE("PER"),
@@ -47,7 +51,7 @@ public enum ContractTransactionStatus implements FermatEnum {
         for (ContractTransactionStatus value : values()) {
             if (value.getCode().equals(code)) return value;
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the OpenContractStatus enum.");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContractTransactionStatus enum.");
     }
 
     @Override

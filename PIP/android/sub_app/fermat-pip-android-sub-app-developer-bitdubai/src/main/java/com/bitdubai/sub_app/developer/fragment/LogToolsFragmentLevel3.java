@@ -1,13 +1,10 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Activity;
-
 import android.app.Dialog;
-
 import android.app.FragmentTransaction;
 import android.app.Service;
 import android.content.Context;
-
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -27,17 +24,14 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
@@ -87,8 +81,8 @@ public class LogToolsFragmentLevel3 extends FermatFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession)super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
             lstLoggers = (ArrayListLoggers)developerSubAppSession.getData("list");
         }
 
@@ -109,19 +103,14 @@ public class LogToolsFragmentLevel3 extends FermatFragment {
 
 
 
-    private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
+    private void changeLogLevel(PluginVersionReference pluginKey,LogLevel logLevel, String resource) {
         try {
-            //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
-            Plugins plugin = Plugins.getByCode(pluginKey);
-
-
-            //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
             data.put(resource, logLevel);
-            logTool.setNewLogLevelInClass(plugin, data);
+            logTool.setNewLogLevelInClass(pluginKey, data);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -300,7 +289,7 @@ public class LogToolsFragmentLevel3 extends FermatFragment {
 
                         //popupMenu.show();
 
-                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginVersionReference);
                         cdd.show();
 
                         return true;
@@ -412,7 +401,7 @@ public class LogToolsFragmentLevel3 extends FermatFragment {
 
 
         private Loggers logger;
-        private String pluginKey;
+        private PluginVersionReference pluginKey;
         public Activity c;
         public Dialog d;
 
@@ -433,7 +422,7 @@ public class LogToolsFragmentLevel3 extends FermatFragment {
                 0
         };
 
-        public CustomDialogClass(Activity a,Loggers loggers,String pluginKey) {
+        public CustomDialogClass(Activity a,Loggers loggers,PluginVersionReference pluginKey) {
             super(a);
             this.logger=loggers;
             this.pluginKey=pluginKey;

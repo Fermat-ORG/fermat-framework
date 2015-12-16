@@ -12,7 +12,7 @@ import java.util.Map;
 public interface NegotiationInformation {
     Map<ClauseType, String> getNegotiationSummary();
 
-    Collection<ClauseInformation> getClauses();
+    Map<ClauseType, ClauseInformation> getClauses();
 
     NegotiationStatus getStatus();
 

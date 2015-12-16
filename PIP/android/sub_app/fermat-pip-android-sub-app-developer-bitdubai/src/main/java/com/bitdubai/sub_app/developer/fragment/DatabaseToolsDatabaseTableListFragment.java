@@ -82,8 +82,8 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
 
             databases = (Resource)developerSubAppSession.getData("resource");
             developerDatabase = (DeveloperDatabase)developerSubAppSession.getData("database");
@@ -119,8 +119,7 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                 AddonVersionReference addon = AddonVersionReference.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
             } else if (databases.type==Databases.TYPE_PLUGIN) {
-                PluginVersionReference plugin = PluginVersionReference.getByKey(databases.code);
-                this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
+                this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(databases.pluginVersionReference, developerDatabase);
             }
 
             for(int i = 0; i < developerDatabaseTableList.size() ; i++) {

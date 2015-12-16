@@ -62,10 +62,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Connectio
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -158,11 +155,11 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession =(ReferenceWalletSession) walletSession;
+        referenceWalletSession =(ReferenceWalletSession) appSession;
         setRetainInstance(true);
         setHasOptionsMenu(false);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
-        errorManager = walletSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         cryptoWalletManager = referenceWalletSession.getModuleManager();
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -208,38 +205,41 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
         frameLayout.addView(icon);
 
-
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout)
-                .setBackgroundDrawable(R.drawable.btn_contact_selector)
-                .build();
+        rootView.findViewById(R.id.btn_intra_user).setOnClickListener(this);
+        rootView.findViewById(R.id.btn_extra_user).setOnClickListener(this);
 
 
-
-
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-// repeat many times:
-        ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.drawable.ic_contact_float_new_contact_blue);
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setLayoutParams(new FrameLayout.LayoutParams(160,160)).build();
-        button1.setId(ID_BTN_EXTRA_USER);
-//        button1.setLayoutParams();
-
-
-        ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.drawable.ic_contact_float_new_contact);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
-        button2.setId(ID_BTN_INTRA_USER);
-
-
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
-                .addSubActionView(button1)
-                .addSubActionView(button2)
-                .attachTo(actionButton)
-                .build();
-
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
+//        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
+//                .setContentView(frameLayout)
+//                .setBackgroundDrawable(R.drawable.btn_contact_selector)
+//                .build();
+//
+//
+//
+//
+//        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+//// repeat many times:
+//        ImageView itemIcon = new ImageView(getActivity());
+//        itemIcon.setImageResource(R.drawable.ic_contact_float_new_contact_blue);
+//        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setLayoutParams(new FrameLayout.LayoutParams(160,160)).build();
+//        button1.setId(ID_BTN_EXTRA_USER);
+////        button1.setLayoutParams();
+//
+//
+//        ImageView itemIcon2 = new ImageView(getActivity());
+//        itemIcon2.setImageResource(R.drawable.ic_contact_float_new_contact);
+//        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+//        button2.setId(ID_BTN_INTRA_USER);
+//
+//
+//        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+//                .addSubActionView(button1)
+//                .addSubActionView(button2)
+//                .attachTo(actionButton)
+//                .build();
+//
+//        button1.setOnClickListener(this);
+//        button2.setOnClickListener(this);
 
     }
 
@@ -390,7 +390,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 mListItems,
                 mListSectionPos,
                 constrainStr,
-                this);
+                this,
+                errorManager);
 
         mListView.setAdapter(mPinnedHeaderAdapter);
 
@@ -485,8 +486,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(ReferenceWalletSession walletSession) {
-        this.walletSession = walletSession;
+    public void setWalletSession(ReferenceWalletSession appSession) {
+        this.appSession = appSession;
     }
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
@@ -498,11 +499,11 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
         int id = v.getId();
 
-        if(id == ID_BTN_EXTRA_USER){
+        if(id == R.id.btn_extra_user){
                 walletContact = new WalletContact();
                 walletContact.setName("");
                 lauchCreateContactDialog(false);
-        }else if (id == ID_BTN_INTRA_USER){
+        }else if (id == R.id.btn_intra_user){
             changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY,referenceWalletSession.getAppPublicKey());
         }
     }

@@ -1,4 +1,6 @@
 <resources>
-    <string name="app_name">fermat-dap-android-wallet-asset-issuer-bitdubai</string>
+    <string name="app_name">Asset Issuer Wallet</string>
     <string name="action_publish">Distribute</string>
+
+    <string name="no_assets">No Assets</string>
 </resources>

@@ -145,14 +145,14 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
          */
         List<String> bankMoneyTotalBalancesColumns = new ArrayList<String>();
 
-        bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_WALLET_KEY_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME);
+        bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME);
-        bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME);
+        bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME);
-        bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
+
         /**
          * Table Bank Money Total Balances addition.
          */

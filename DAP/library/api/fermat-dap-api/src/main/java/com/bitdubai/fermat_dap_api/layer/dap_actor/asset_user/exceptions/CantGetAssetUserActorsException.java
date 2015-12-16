@@ -1,11 +1,17 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by eze on 2015.07.29..
  */
 public class CantGetAssetUserActorsException extends DAPException {
+
+    private static final String DEFAULT_MESSAGE = "There was an exception while trying to load the asset user actors list.";
+
+    public CantGetAssetUserActorsException(Exception cause) {
+        super(DEFAULT_MESSAGE, cause, null, null);
+    }
     /**
      * This is the constructor that every inherited FermatException must implement
      *

@@ -65,9 +65,9 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) walletSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(walletSession.getAppPublicKey());
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            errorManager = appSession.getErrorManager();
 
             brokerList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -162,8 +162,8 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     public void onItemClickListener(BrokerIdentityBusinessInfo data, int position) {
-        walletSession.setData("broker_data", data);
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION, walletSession.getAppPublicKey());
+        appSession.setData("broker_data", data);
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION, appSession.getAppPublicKey());
     }
 
     @Override

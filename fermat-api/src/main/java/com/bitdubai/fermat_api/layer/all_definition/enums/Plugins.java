@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Updated by lnacosta (laion.cj91@gmail.com) on 18/11/2015.
  * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 01/12/2015. *
  */
-public enum Plugins implements FermatEnum {
+public enum Plugins implements FermatPluginsEnum {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
@@ -170,6 +171,7 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD       ("BCSHMTU"  ),
     BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT      ("BCSHMTD"  ),
     BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL   ("BCSHMTW"  ),
+    BITDUBAI_CSH_MONEY_WALLET_MODULE            ("BCSHMWM"),
     BITDUBAI_CSH_WALLET_CASH_MONEY              ("BCSHWCM"  ),
     // End CSH Plugins
 
@@ -263,6 +265,10 @@ public enum Plugins implements FermatEnum {
     TRANSACTION_TRANSMISSION    ("TRTX"),
     CLOSE_CONTRACT              ("CLC"),
     CUSTOMER_ONLINE_PAYMENT     ("CONP"),
+    CUSTOMER_OFFLINE_PAYMENT    ("COFP"),
+
+    CUSTOMER_BROKER_PURCHASE    ("CBPU"),
+    CUSTOMER_BROKER_SALE        ("CBSA"),
 
     // End  new Plugins
 
@@ -349,6 +355,8 @@ public enum Plugins implements FermatEnum {
             case ("CRRE"):  return CRYPTO_MONEY_RESTOCK     ;
             case ("CRDE"):  return CRYPTO_MONEY_DESTOCK     ;
             case "TRTX":    return TRANSACTION_TRANSMISSION ;
+            case "CBPU":    return CUSTOMER_BROKER_PURCHASE ;
+            case "CBSA":    return CUSTOMER_BROKER_SALE     ;
             case ("FI"):    return FIAT_INDEX               ;
             case "BBNKHMT": return BITDUBAI_BNK_HOLD_MONEY_TRANSACTION;
             case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
@@ -360,6 +368,7 @@ public enum Plugins implements FermatEnum {
             case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
             case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
+            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;
@@ -369,7 +378,8 @@ public enum Plugins implements FermatEnum {
             case ("NGP"):   return NEGOTIATION_PURCHASE     ;
             case "OPC":     return OPEN_CONTRACT            ;
             case "CLC":     return CLOSE_CONTRACT           ;
-            case "CONP":     return CUSTOMER_ONLINE_PAYMENT ;
+            case "CONP":    return CUSTOMER_ONLINE_PAYMENT  ;
+            case "COFP":    return CUSTOMER_OFFLINE_PAYMENT ;
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

@@ -58,11 +58,11 @@ public class MainFragment extends FermatWalletFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            manager = ((RedeemPointSession) walletSession).getRedeemManager();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            manager = ((RedeemPointSession) appSession).getRedeemManager();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     @Override
@@ -73,7 +73,7 @@ public class MainFragment extends FermatWalletFragment
             protected Object doInBackground() throws Exception {
                 if (manager == null)
                     throw new NullPointerException("AssetRedeemPointWalletModuleManager is null");
-                assetRedeemPointWalletList = manager.getAssetRedeemPointWalletBalancesBook("walletPublicKeyTest");
+                assetRedeemPointWalletList = manager.getAssetRedeemPointWalletBalances("walletPublicKeyTest");
                 if (assetRedeemPointWalletList != null && !assetRedeemPointWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetRedeemPointWalletList assetRedeemPointWallet : assetRedeemPointWalletList) {

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <color name="background_header">#406feb</color>
+    <color name="background_body">#E2F0FF</color>
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
-
+    <color name="app_background">#66000000</color>
+    <color name="text_color_clear">#EAE7E7</color>
+    <color name="text_color_bold">#400F4D</color>
 </resources>

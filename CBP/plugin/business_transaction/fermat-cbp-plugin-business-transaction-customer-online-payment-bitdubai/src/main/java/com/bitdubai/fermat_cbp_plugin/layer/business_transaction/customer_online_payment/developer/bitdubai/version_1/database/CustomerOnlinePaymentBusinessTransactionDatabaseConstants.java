@@ -36,7 +36,7 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
     /**
      * Events recorded database table definition.
      */
-    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME = "distribution_events_recorded";
+    public static final String ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME = "transmission_events_recorded";
 
     public static final String ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME = "event_id";
     public static final String ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME = "event";

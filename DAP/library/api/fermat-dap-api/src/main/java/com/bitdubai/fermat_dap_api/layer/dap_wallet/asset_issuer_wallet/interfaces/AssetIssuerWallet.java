@@ -76,10 +76,5 @@ public interface AssetIssuerWallet {
 
     List<AssetStatistic> getAllStatisticForGivenAsset(String assetName) throws CantGetAssetStatisticException;
 
-
-    int getUnusedAmountForAsset(String assetName) throws CantGetAssetStatisticException;
-
-    int getAppropriatedAmountForAsset(String assetName) throws CantGetAssetStatisticException;
-
-    int getRedeemedAmountForAsset(String assetName) throws CantGetAssetStatisticException;
+    int getUnusedAmountForAssetByStatus(AssetCurrentStatus status, String assetName) throws CantGetAssetStatisticException;
 }

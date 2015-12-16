@@ -78,7 +78,7 @@ public class TransactionsSendHistory extends FermatWalletListFragment<CryptoWall
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)appSession;
 
         try {
 

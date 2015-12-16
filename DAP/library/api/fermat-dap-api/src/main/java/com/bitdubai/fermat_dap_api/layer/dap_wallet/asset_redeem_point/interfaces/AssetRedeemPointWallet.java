@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionSummary;
+
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
@@ -19,7 +19,7 @@ public interface AssetRedeemPointWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetRedeemPointWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetRedeemPointWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
@@ -42,5 +42,5 @@ public interface AssetRedeemPointWallet {
     AssetRedeemPointWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
                                                                  BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
-
+    DigitalAssetMetadata getDigitalAssetMetadata(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
 }

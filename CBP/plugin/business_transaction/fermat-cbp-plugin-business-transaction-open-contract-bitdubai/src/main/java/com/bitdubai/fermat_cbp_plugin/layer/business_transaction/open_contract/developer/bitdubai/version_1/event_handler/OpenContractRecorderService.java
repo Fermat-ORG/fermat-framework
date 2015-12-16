@@ -41,7 +41,7 @@ public class OpenContractRecorderService implements CBPService {
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception,
-                    "Cannot set the asset distribution database handler",
+                    "Cannot set the open contract database handler",
                     "The database handler is null");
         }
     }
@@ -59,10 +59,10 @@ public class OpenContractRecorderService implements CBPService {
     }
 
     public void incomingBusinessTransactionContractHashEventHandler(IncomingBusinessTransactionContractHash event) throws CantSaveEventException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.openContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("CHECK THE DATABASE");
+        //LOG.info("CHECK THE DATABASE");
     }
 
     public void incomingConfirmBusinessTransactionContractEventHandler(IncomingConfirmBusinessTransactionContract event) throws CantSaveEventException {
@@ -73,10 +73,10 @@ public class OpenContractRecorderService implements CBPService {
     }
 
     public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.openContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("CHECK THE DATABASE");
+        //LOG.info("CHECK THE DATABASE");
     }
 
     @Override

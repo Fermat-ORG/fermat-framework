@@ -153,9 +153,9 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                     customerBrokerContractSaleManager);
             openContractMonitorAgent.start();
 
-            System.out.println("Close contract starting");
+            //System.out.println("Close contract starting");
             //Test method
-            raiseNewContractClosedEvent();
+            //raiseNewContractClosedEvent();
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(

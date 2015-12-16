@@ -60,13 +60,13 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.int
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.ClientConnectionCloseNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CloseConnectionNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.VPNConnectionCloseNotificationEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
@@ -83,6 +83,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionMetadataRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionResponseMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionTransactionProtocolManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -114,9 +117,8 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin implements
+public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoTransmissionNetworkServiceManager,
-        NetworkService,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
@@ -133,32 +135,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-
-
-    /**
-     * Represent the platformComponentType
-     */
-    private PlatformComponentType platformComponentType;
-
-    /**
-     * Represent the networkServiceType
-     */
-    private NetworkServiceType networkServiceType;
-
-    /**
-     * Represent the name
-     */
-    private String name;
-
-    /**
-     * Represent the alias
-     */
-    private String alias;
-
-    /**
-     * Represent the extraData
-     */
-    private String extraData;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
@@ -207,10 +183,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     private ECCKeyPair identity;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
 
     /**
      * Represent the communicationRegistrationProcessNetworkServiceAgent
@@ -248,13 +220,17 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * Constructor
      */
     public CryptoTransmissionNetworkServicePluginRoot() {
-        super(new PluginVersionReference(new Version()));
+        super(new PluginVersionReference(new Version()),
+                PlatformComponentType.NETWORK_SERVICE,
+                NetworkServiceType.CRYPTO_TRANSMISSION,
+                "Crypto Transmission Network Service",
+                "CryptoTransmissionNetworkService",
+                null,
+                EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION
+
+                );
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType    = NetworkServiceType.CRYPTO_TRANSMISSION;
-        this.name                  = "Crypto Transmission Network Service";
-        this.alias                 = "CryptoTransmissionNetworkService";
-        this.extraData             = null;
     }
 
 
@@ -304,7 +280,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(this,platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
     /**
@@ -351,6 +327,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+
+              /*
+         *
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+
 
 
 
@@ -504,6 +494,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
              * Initialize the data base
              */
             initializeDb();
+            initializeCryptoTransmissionDb();
 
             /*
              * Initialize Developer Database Factory
@@ -546,8 +537,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
-
-
 
 
 
@@ -724,6 +713,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
              * Mark as register
              */
              this.register = Boolean.TRUE;
+            setRegister(Boolean.TRUE);
 
             System.out.print("-----------------------\n" +
                     "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
@@ -744,6 +734,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                     identity,
                     eventManager
             );
+
+            setPlatformComponentProfilePluginRoot(platformComponentProfileRegistered);
 
             // Initialize messages handlers
             initializeMessagesListeners();
@@ -877,18 +869,22 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+        System.out.println("CRYPTO TRANSMISSION - handleVpnConnectionCloseNotificationEvent");
+        VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+        cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-
-                if(communicationNetworkServiceConnectionManager != null)
-                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-
-            }
-
-        }
+//        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+//
+//
+//
+//            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+//
+//                if(communicationNetworkServiceConnectionManager != null)
+//                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+//
+//            }
+//
+//        }
 
     }
 
@@ -899,6 +895,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
+        //TODO: esto lo comento porque cierra las conexiones, tiene que decirnos de quien es
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
 
@@ -917,48 +914,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         return this.identity.getPublicKey();
     }
 
-    /**
-     * (non-Javadoc)
-     * @see NetworkService#getPlatformComponentProfilePluginRoot()
-     */
-    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return platformComponentProfilePluginRoot;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see NetworkService#getPlatformComponentType()
-     */
-    @Override
-    public PlatformComponentType getPlatformComponentType() {
-        return platformComponentType;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see NetworkService#getNetworkServiceType()
-     */
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
-
-    /**
-     * Set the PlatformComponentProfile
-     *
-     * @param platformComponentProfile
-     */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfilePluginRoot = platformComponentProfile;
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    public boolean isRegister() {
-        return register;
-    }
 
     /**
      * (non-Javadoc)
@@ -1050,29 +1005,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     }
 
-    /**
-     * Get the Name
-     * @return String
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Get the Alias
-     * @return String
-     */
-    public String getAlias() {
-        return alias;
-    }
-
-    /**
-     * Get the ExtraData
-     * @return String
-     */
-    public String getExtraData() {
-        return extraData;
-    }
 
     @Override
     public void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException {

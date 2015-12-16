@@ -4,10 +4,11 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.DeveloperBitDubai;
+import com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.PlatformFileSystemDeveloperBitDubai;
+
 
 /**
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 27/10/2015.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -21,7 +22,8 @@ public class PlatformFileSystemAddonSubsystem extends AbstractAddonSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            //registerDeveloper(new DeveloperBitDubai());
+            System.out.println("PlatformFileSystemAddonSubsystem - start()");
+            registerDeveloper(new PlatformFileSystemDeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

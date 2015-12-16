@@ -131,8 +131,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Customer online payment monitor agent starting");
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("Customer online payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -141,7 +141,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
         try {
             ((MonitorAgent) this.monitorAgent).Initialize();
         } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         this.agentThread = new Thread(monitorAgent);
@@ -243,8 +243,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
 
-                Logger LOG = Logger.getGlobal();
-                LOG.info("Database in Open Contract monitor agent doesn't exists");
+                //Logger LOG = Logger.getGlobal();
+                //LOG.info("Database in Open Contract monitor agent doesn't exists");
                 CustomerOnlinePaymentBusinessTransactionDatabaseFactory CustomerOnlinePaymentBusinessTransactionDatabaseFactory=
                         new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {

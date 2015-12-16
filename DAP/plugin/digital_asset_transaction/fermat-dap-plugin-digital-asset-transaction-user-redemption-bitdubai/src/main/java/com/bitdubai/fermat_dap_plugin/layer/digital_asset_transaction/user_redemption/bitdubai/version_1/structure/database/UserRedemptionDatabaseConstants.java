@@ -9,7 +9,7 @@ public class UserRedemptionDatabaseConstants {
     /**
      * Asset Distribution database table definition.
      */
-    public static final String USER_REDEMPTION_TABLE_NAME = "asset_distribution";
+    public static final String USER_REDEMPTION_TABLE_NAME = "asset_redeemption";
 
     public static final String USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";
     public static final String USER_REDEMPTION_DIGITAL_ASSET_HASH_COLUMN_NAME = "digital_asset_hash";
@@ -26,7 +26,7 @@ public class UserRedemptionDatabaseConstants {
     /**
      * Events recorded database table definition.
      */
-    public static final String USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME = "distribution_events_recorded";
+    public static final String USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME = "redeemption_events_recorded";
 
     public static final String USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME = "event_id";
     public static final String USER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME = "event";
@@ -39,7 +39,7 @@ public class UserRedemptionDatabaseConstants {
     /**
      * Delivering Asset database table definition
      */
-    public static final String USER_REDEMPTION_DELIVERING_TABLE_NAME="delivering";
+    public static final String USER_REDEMPTION_DELIVERING_TABLE_NAME="redeemption_delivering";
 
     public static final String USER_REDEMPTION_DELIVERING_MESSAGE_ID_COLUMN_NAME="message_id";
     public static final String USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME="delivering_genesis_transaction";
