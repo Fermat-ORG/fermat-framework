@@ -7,11 +7,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.*;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.VaultSeedGenerator;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
@@ -25,6 +29,7 @@ import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
@@ -134,7 +139,7 @@ public class AssetCryptoVaultManager  {
          * I create the account manually instead of getting it from the database because this method always returns addresses
          * from the asset vault account with Id 0.
          */
-        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 
@@ -186,7 +191,7 @@ public class AssetCryptoVaultManager  {
         /**
          * Create the bitcoinj wallet from the keys of this account
          */
-        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
 
         /**
@@ -238,7 +243,7 @@ public class AssetCryptoVaultManager  {
      * @param networkParameters
      * @return
      */
-    private Wallet getWalletForAccount(HierarchyAccount vaultAccount, NetworkParameters networkParameters) {
+    private Wallet getWalletForAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount, NetworkParameters networkParameters) {
         List<ECKey> derivedKeys = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount);
         Wallet wallet = Wallet.fromKeys(networkParameters, derivedKeys);
         return wallet;
@@ -259,7 +264,7 @@ public class AssetCryptoVaultManager  {
      * Gets the next available key from the specified account.
      * @return
      */
-    private ECKey getNextAvailableECKey(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+    private ECKey getNextAvailableECKey(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
         ECKey ecKey = vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getNextAvailableKey(hierarchyAccount);
         return ecKey;
     }
@@ -338,5 +343,50 @@ public class AssetCryptoVaultManager  {
         }
 
         return dao;
+    }
+
+    /**
+     * Gets the amount of unused keys that are available from the passed account.
+     * @param  account the hierarchy account to get the keys from
+     * @return
+     */
+    public int getAvailableKeyCount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
+        //todo implement: I will use this to validate when new assets are created in the factory the amount of available keys.
+        // if the amount of keys is less than the amount of assets to create, then I will invoke deriveKeys
+        return 0;
+    }
+
+
+    /**
+     * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
+     * @param pluginId the pluginId invoking this call. Might not have permissions to create new keys.
+     * @param account the account to derive keys from.
+     * @param keysToDerive thre amount of keys to derive.
+     * @throws CantDeriveNewKeysException
+     */
+    public void deriveKeys(UUID pluginId, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+        //todo implement when creating assets, If I create more assets than available keys, then first I need to generate new keys.
+    }
+
+    /**
+     * Creates a new hierarchy Account in the vault.
+     * This will create the sets of keys and start monitoring the default network with these keys.
+     * @param hierarchyAccount
+     * @throws CantAddHierarchyAccountException
+     */
+    public void addHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantAddHierarchyAccountException {
+        //todo implement adding a new account. It will add the record in the database.
+        // derive the standard amount of keys and monitor the network with this new account
+    }
+
+    /**
+     * Gets the Extended Public Key from the specified account. Can't be from a master account.
+     * @param hierarchyAccount a Redeem Point account.
+     * @return the DeterministicKey that will be used by the redeem Points.
+     * @throws CantGetExtendedPublicKeyException
+     */
+    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
+        //todo implement will get the extendedpublic key used to create the new watch only vault
+        return null;
     }
 }

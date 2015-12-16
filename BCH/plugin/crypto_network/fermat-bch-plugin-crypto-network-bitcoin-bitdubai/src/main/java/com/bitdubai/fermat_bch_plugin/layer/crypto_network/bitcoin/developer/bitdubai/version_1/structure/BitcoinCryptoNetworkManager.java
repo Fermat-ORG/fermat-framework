@@ -556,4 +556,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
         return cryptoTransactions;
     }
+
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash the parent transaction
+     * @param depth the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
+        //todo implementar esto lo voy a necesitar cuando el redeem point recibe el digital asset metadata y quiere buscar la transaccion.
+        return null;
+    }
 }

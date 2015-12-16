@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -10,9 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantDeleteExistingVaultSeed;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantDeleteExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -82,9 +81,9 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
 
     /**
      * Creates a new Seed and saves it to disk.
-     * @throws CantCreateAssetVaultSeed
+     * @throws com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed
      */
-    public void create() throws CantCreateAssetVaultSeed{
+    public void create() throws com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed {
         /**
          * The Wallet class of bitcoinJ has a great entrophy level to generate a random seed.
          */
@@ -107,7 +106,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
             seedFile.setContent(generateFileContent());
             seedFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
-            throw new CantCreateAssetVaultSeed(CantCreateAssetVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + this.filePath + " " + this.fileName, "file might already exists.");
+            throw new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + this.filePath + " " + this.fileName, "file might already exists.");
         }
     }
 

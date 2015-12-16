@@ -7391,7 +7391,7 @@
         <layer name="Api" language="java"></layer>
     </layers>
 
-    <>
+    <processes>
         <process platform="DAP"
             name="Digital Asset Platform"
             description=""
