@@ -78,7 +78,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccount
      * @return the fist key of the path m/HierarchyAccount/0. Example: m/0/0
      */
-    private DeterministicKey getAddressKeyFromAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount){
+    public DeterministicKey getAddressKeyFromAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount){
         /**
          * gets the masterKey for this account
          */

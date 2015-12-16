@@ -31,6 +31,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
+import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
@@ -419,7 +420,22 @@ public class AssetCryptoVaultManager  {
      * @throws CantGetExtendedPublicKeyException
      */
     public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
+        /**
+         * get the master account key
+         */
+        DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(hierarchyAccount);
 
-        return null;
+        // Serialize the pub key.
+        byte[] pubKeyBytes = accountMasterKey.getPubKey();
+        byte[] chainCode = accountMasterKey.getChainCode();
+
+
+        // Deserialize the pub key.
+        final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
+
+        /**
+         * return the extended public Key
+         */
+        return watchPubKeyAccountZero;
     }
 }
