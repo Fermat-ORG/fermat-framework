@@ -1,6 +1,13 @@
 package com.bitdubai.android_core.app.common.version_1.sessions;
 
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
@@ -45,7 +52,7 @@ import java.util.Map;
  */
 public class SubAppSessionManager implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager {
 
-    private Map<String, SubAppsSession> lstSubAppSession;
+    private Map<String, FermatSession<InstalledSubApp>> lstSubAppSession;
 
 
     public SubAppSessionManager() {
@@ -54,72 +61,76 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
 
 
     @Override
-    public Map<String, SubAppsSession> listOpenSubApps() {
+    public Map<String, FermatSession<InstalledSubApp>> listOpenSubApps() {
         return lstSubAppSession;
     }
 
     @Override
-    public SubAppsSession openSubAppSession(InstalledSubApp subApp,String subAppType, ErrorManager errorManager, ModuleManager moduleManager) {
-        SubAppsSession subAppsSession = null;
+    public FermatSession<InstalledSubApp> openSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, ModuleManager moduleManager,AppConnections appConnections) {
+        FermatSession<InstalledSubApp> subAppsSession = null;
 
-        try {
-            switch (SubApps.getByCode(subAppType)) {
-                case CWP_WALLET_FACTORY:
-                    subAppsSession = new WalletFactorySubAppSession(subApp, errorManager, (WalletFactoryManager) moduleManager);
-                    break;
-                case CWP_WALLET_STORE:
-                    subAppsSession = new WalletStoreSubAppSession(subApp, errorManager, (WalletStoreModuleManager) moduleManager);
-                    break;
-                case CWP_DEVELOPER_APP:
-                    subAppsSession = new DeveloperSubAppSession(subApp, errorManager, (ToolManager) moduleManager);
-                    break;
-                case CWP_WALLET_MANAGER:
-                    break;
-                case CWP_WALLET_PUBLISHER:
-                    subAppsSession = new WalletPublisherSubAppSession(subApp, errorManager, (WalletPublisherModuleManager) moduleManager);
-                    break;
-                case CWP_INTRA_USER_IDENTITY:
-                    subAppsSession = new IntraUserIdentitySubAppSession(subApp, errorManager, (IntraWalletUserIdentityManager) moduleManager);
-                    break;
-                case DAP_ASSETS_IDENTITY_ISSUER:
-                    subAppsSession = new IssuerIdentitySubAppSession(subApp, errorManager, (IdentityAssetIssuerManager) moduleManager);
-                    break;
-                case DAP_ASSETS_IDENTITY_USER:
-                    subAppsSession = new UserIdentitySubAppSession(subApp, errorManager, (IdentityAssetUserManager) moduleManager);
-                    break;
-                case DAP_REDEEM_POINT_IDENTITY:
-                    subAppsSession = new RedeemPointIdentitySubAppSession(subApp, errorManager, (RedeemPointIdentityManager) moduleManager);
-                    break;
-                case CCP_INTRA_USER_COMMUNITY:
-                    subAppsSession = new IntraUserSubAppSession(subApp, errorManager, (IntraUserModuleManager) moduleManager);
-                    break;
-                case DAP_ASSETS_FACTORY:
-                    subAppsSession = new AssetFactorySession(subApp, errorManager, (AssetFactoryModuleManager) moduleManager);
-                    break;
-                case DAP_ASSETS_COMMUNITY_ISSUER:
-                    subAppsSession = new AssetIssuerCommunitySubAppSession(subApp, errorManager, (AssetIssuerCommunitySubAppModuleManager) moduleManager);
-                    break;
-                case DAP_ASSETS_COMMUNITY_USER:
-                    subAppsSession = new AssetUserCommunitySubAppSession(subApp, errorManager, (AssetUserCommunitySubAppModuleManager) moduleManager);
-                    break;
-                case DAP_ASSETS_COMMUNITY_REDEEM_POINT:
-                    subAppsSession = new AssetRedeemPointCommunitySubAppSession(subApp, errorManager, (RedeemPointCommunitySubAppModuleManager) moduleManager);
-                    break;
-                case CBP_CRYPTO_BROKER_IDENTITY:
-                    subAppsSession = new CryptoBrokerIdentitySubAppSession(subApp, errorManager, (CryptoBrokerIdentityModuleManager) moduleManager);
-                    break;
-                case CBP_CRYPTO_CUSTOMER_IDENTITY:
-                    subAppsSession = new CryptoCustomerIdentitySubAppSession(subApp, errorManager, (CryptoCustomerIdentityModuleManager) moduleManager);
-                    break;
-                default:
-                    return null;
-                //throw new FermatException("")
-            }
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
+        subAppsSession = appConnections.buildSession(subApp,moduleManager,errorManager);
+
+//        ModuleManager moduleManager1 = applicationSession.getFermatSystem().getModuleManager(appConnections.getPluginVersionReference());
+//        try {
+//            switch (SubApps.getByCode(subAppType)) {
+//                case CWP_WALLET_FACTORY:
+//                    subAppsSession = new WalletFactorySubAppSession(subApp, errorManager, (WalletFactoryManager) moduleManager);
+//                    break;
+//                case CWP_WALLET_STORE:
+//                    subAppsSession = new WalletStoreSubAppSession(subApp, errorManager, (WalletStoreModuleManager) moduleManager);
+//                    break;
+//                case CWP_DEVELOPER_APP:
+//                    subAppsSession = new DeveloperSubAppSession(subApp, errorManager, (ToolManager) moduleManager);
+//                    break;
+//                case CWP_WALLET_MANAGER:
+//                    break;
+//                case CWP_WALLET_PUBLISHER:
+//                    subAppsSession = new WalletPublisherSubAppSession(subApp, errorManager, (WalletPublisherModuleManager) moduleManager);
+//                    break;
+//                case CWP_INTRA_USER_IDENTITY:
+//                    subAppsSession = new IntraUserIdentitySubAppSession(subApp, errorManager, (IntraWalletUserIdentityManager) moduleManager);
+//                    break;
+//                case DAP_ASSETS_IDENTITY_ISSUER:
+//                    subAppsSession = new IssuerIdentitySubAppSession(subApp, errorManager, (IdentityAssetIssuerManager) moduleManager);
+//                    break;
+//                case DAP_ASSETS_IDENTITY_USER:
+//                    subAppsSession = new UserIdentitySubAppSession(subApp, errorManager, (IdentityAssetUserManager) moduleManager);
+//                    break;
+//                case DAP_REDEEM_POINT_IDENTITY:
+//                    subAppsSession = new RedeemPointIdentitySubAppSession(subApp, errorManager, (RedeemPointIdentityManager) moduleManager);
+//                    break;
+//                case CCP_INTRA_USER_COMMUNITY:
+//                    subAppsSession = new IntraUserSubAppSession(subApp, errorManager, (IntraUserModuleManager) moduleManager);
+//                    break;
+//                case DAP_ASSETS_FACTORY:
+//                    subAppsSession = new AssetFactorySession(subApp, errorManager, (AssetFactoryModuleManager) moduleManager);
+//                    break;
+//                case DAP_ASSETS_COMMUNITY_ISSUER:
+//                    subAppsSession = new AssetIssuerCommunitySubAppSession(subApp, errorManager, (AssetIssuerCommunitySubAppModuleManager) moduleManager);
+//                    break;
+//                case DAP_ASSETS_COMMUNITY_USER:
+//                    subAppsSession = new AssetUserCommunitySubAppSession(subApp, errorManager, (AssetUserCommunitySubAppModuleManager) moduleManager);
+//                    break;
+//                case DAP_ASSETS_COMMUNITY_REDEEM_POINT:
+//                    subAppsSession = new AssetRedeemPointCommunitySubAppSession(subApp, errorManager, (RedeemPointCommunitySubAppModuleManager) moduleManager);
+//                    break;
+//                case CBP_CRYPTO_BROKER_IDENTITY:
+//                    subAppsSession = new CryptoBrokerIdentitySubAppSession(subApp, errorManager, (CryptoBrokerIdentityModuleManager) moduleManager);
+//                    break;
+//                case CBP_CRYPTO_CUSTOMER_IDENTITY:
+//                    subAppsSession = new CryptoCustomerIdentitySubAppSession(subApp, errorManager, (CryptoCustomerIdentityModuleManager) moduleManager);
+//                    break;
+//                default:
+//                    return null;
+//                //throw new FermatException("")
+//            }
+//        } catch (InvalidParameterException e) {
+//            e.printStackTrace();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
         lstSubAppSession.put(subApp.getAppPublicKey(), subAppsSession);
         return subAppsSession;
     }
@@ -142,7 +153,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
     }
 
     @Override
-    public SubAppsSession getSubAppsSession(String subAppPublicKey) {
+    public FermatSession<InstalledSubApp> getSubAppsSession(String subAppPublicKey) {
         return lstSubAppSession.get(subAppPublicKey);
     }
 
