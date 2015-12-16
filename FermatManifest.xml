@@ -4306,26 +4306,6 @@
                 </androids>
             </layer>
 
-            <layer name="Desktop" language="java-android">
-                <androids>
-                    <android name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                </androids>
-            </layer>
-
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin	name="Cash Money"
@@ -4346,37 +4326,17 @@
                 </plugins>
             </layer>
 
-            <layer name="Desktop Module" language="java">
-                <plugins>
-                    <plugin	name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                </plugins>
-            </layer>
-
             <layer name="Cash Money Transaction" language="java">
                 <plugins>
                     <plugin name="Deposit"
                         description=""
                         difficulty="6"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="90"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
@@ -4386,7 +4346,7 @@
                     <plugin name="Withdrawal"
                         description=""
                         difficulty="6"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4476,52 +4436,12 @@
                 </androids>
             </layer>
 
-            <layer name="Desktop" language="java-android">
-                <androids>
-                    <android name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="guillermo20" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                </androids>
-            </layer>
-
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin	name="Bank Money"
                         description=""
                         difficulty="4"
                         code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="guillermo20" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                </plugins>
-            </layer>
-
-            <layer name="Desktop Module" language="java">
-                <plugins>
-                    <plugin	name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="concept"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4740,41 +4660,6 @@
                 </androids>
             </layer>
 
-            <layer name="Desktop" language="java-android">
-                <androids>
-                    <android name="Sub App Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nelsonalfo" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                    <android name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nelsonalfo" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                </androids>
-            </layer>
-
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin	name="Crypto Broker"
@@ -4893,41 +4778,6 @@
                 </plugins>
             </layer>
 
-            <layer name="Desktop Module" language="java">
-                <plugins>
-                    <plugin	name="Sub App Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nattyco" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin	name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nattyco" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                </plugins>
-            </layer>
-
             <layer name="Actor" language="java">
                 <plugins>
                     <plugin	name="Crypto Broker"
@@ -4967,21 +4817,6 @@
 
             <layer name="Middleware" language="java">
                 <plugins>
-                    <plugin	name="Wholesalers"
-                        description=""
-                        difficulty="4"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="vlzangel" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
                     <plugin	name="Wallet Manager"
                         description=""
                         difficulty="6"
@@ -5021,6 +4856,21 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="lnacosta" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <mantainers>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
+                    <plugin	name="Wholesalers"
+                        description=""
+                        difficulty="4"
+                        code-level="concept"
+                        >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="vlzangel" scope="implementation" percentage="10"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
@@ -5072,7 +4922,7 @@
                     <plugin	name="Customer Online Payment"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5263,7 +5113,7 @@
                     <plugin	name="Customer Broker New"
                         description=""
                         difficulty="8"
-                        code-level="development">
+                        code-level="q"a>
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -5444,7 +5294,7 @@
                     <plugin name="Customer Broker Purchase"
                         description=""
                         difficulty="4"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
@@ -5479,7 +5329,7 @@
                     <plugin name="Crypto Broker"
                         description=""
                         difficulty="2"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
