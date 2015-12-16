@@ -41,11 +41,6 @@ public class DeveloperSubAppSession extends AbstractFermatSession<InstalledSubAp
 
 
     @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
-
-    @Override
     public void setData(String key, Object object) {
         data.put(key,object);
     }

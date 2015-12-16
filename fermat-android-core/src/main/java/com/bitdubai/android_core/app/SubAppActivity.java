@@ -11,10 +11,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.managers.ManagerFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.FermatException;
@@ -29,6 +34,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import android.view.View;
@@ -115,7 +121,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
 
         SubAppSessionManager subAppSessionManager = ((ApplicationSession) getApplication()).getSubAppSessionManager();
-        SubAppsSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey());
+        FermatSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey());
 
 
         try {
@@ -453,7 +459,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * Method that loads the UI
      */
 
-    protected void loadUI(SubAppsSession subAppSession) {
+    protected void loadUI(FermatSession<InstalledSubApp> subAppSession) {
 
         try {
             /**
@@ -491,12 +497,15 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         SubApp subApp = subAppRuntimeManager.getLastSubApp();
         SubApps subAppType = subApp.getType();
 
-        com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
+//        com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
         String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
-        SubAppsSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
+        FermatSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
+
+        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null);
+        com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
 
         try {
-            if(subAppFragmentFactory !=null){
+            if(fermatFragmentFactory !=null){
 
 
                     TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -508,7 +517,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     adapter = new TabsPagerAdapter(getFragmentManager(),
                             getApplicationContext(),
-                            subAppFragmentFactory,
+                            fermatFragmentFactory,
                             fragment,
                             subAppsSession,
                             getSubAppResourcesProviderManager(),
@@ -527,8 +536,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
 
         }
-    private SubAppsSession createOrCallSubAppSession(){
-        SubAppsSession subAppSession = null;
+    private FermatSession<InstalledSubApp> createOrCallSubAppSession(){
+        FermatSession<InstalledSubApp> subAppSession = null;
         try {
             Bundle bundle = getIntent().getExtras();
             InstalledSubApp installedSubApp=null;
@@ -543,16 +552,18 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 }
             }
 
-            ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(installedSubApp.getAppPublicKey(), this, null);
+            ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
+            //ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
             if(installedSubApp!=null){
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {
                     subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getAppPublicKey());
                 } else {
                         subAppSession = getSubAppSessionManager().openSubAppSession(
                                 installedSubApp,
-                                installedSubApp.getSubAppType().getCode(),
                                 getErrorManager(),
-                                managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
+                                moduleManager,
+                                fermatAppConnection
                         );
                 }
             }else {
@@ -560,9 +571,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 //TODO:deberiamos tener el subAppManager por eso va en null
                 subAppSession = getSubAppSessionManager().openSubAppSession(
                         installedSubApp,
-                        subAppType.getCode(),
                         getErrorManager(),
-                        managerFactory.getModuleManagerFactory(subAppType)
+                        moduleManager,
+                        fermatAppConnection
                 );
             }
 
