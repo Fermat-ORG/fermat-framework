@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.nelsonalfo.testapplication.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
  * Created by nelson on 11/12/15.

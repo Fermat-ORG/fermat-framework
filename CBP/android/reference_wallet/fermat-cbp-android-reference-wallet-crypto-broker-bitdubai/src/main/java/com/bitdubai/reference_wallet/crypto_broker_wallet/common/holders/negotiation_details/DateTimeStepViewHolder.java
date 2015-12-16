@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.StepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.DatePickerFragment;
@@ -25,6 +27,7 @@ public class DateTimeStepViewHolder extends StepViewHolder
     private java.text.DateFormat dateFormat;
     private java.text.DateFormat timeFormat;
 
+    CryptoBrokerWalletManager walletManager;
     private Activity activity;
 
     private Button buttonDate;
@@ -34,17 +37,19 @@ public class DateTimeStepViewHolder extends StepViewHolder
     private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 
 
-    public DateTimeStepViewHolder(NegotiationDetailsAdapter adapter, View viewItem, Activity activity) {
+    public DateTimeStepViewHolder(CryptoBrokerWalletManager walletManager, NegotiationDetailsAdapter adapter, View viewItem, Activity activity) {
         super(viewItem, adapter);
 
         this.activity = activity;
         timeFormat = DateFormat.getTimeFormat(activity);
         dateFormat = DateFormat.getDateFormat(activity);
 
-        descriptionTextView = (TextView) viewItem.findViewById(R.id.date_time_description_text);
-        buttonDate = (Button) viewItem.findViewById(R.id.date_value);
+        this.walletManager = walletManager;
+
+        descriptionTextView = (TextView) viewItem.findViewById(R.id.cbw_date_time_description_text);
+        buttonDate = (Button) viewItem.findViewById(R.id.cbw_date_value);
         buttonDate.setOnClickListener(this);
-        buttonTime = (Button) viewItem.findViewById(R.id.time_value);
+        buttonTime = (Button) viewItem.findViewById(R.id.cbw_time_value);
         buttonTime.setOnClickListener(this);
     }
 
@@ -136,7 +141,7 @@ public class DateTimeStepViewHolder extends StepViewHolder
         super.modifyData(stepStatus);
 
         NegotiationStep step = adapter.getItem(itemPosition);
-        ModuleManager.modifyNegotiationStepValues(step, stepStatus, String.valueOf(selectedValue));
+        walletManager.modifyNegotiationStepValues(step, stepStatus, String.valueOf(selectedValue));
         adapter.notifyItemChanged(itemPosition);
     }
 }
