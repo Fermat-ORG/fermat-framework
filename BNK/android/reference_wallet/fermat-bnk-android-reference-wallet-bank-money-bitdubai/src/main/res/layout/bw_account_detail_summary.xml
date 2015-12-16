@@ -127,6 +127,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:gravity="bottom|right">
 
+        <!-- TODO: FALTAN LOS ICONS DE ESTOS 2 BOTONCITOS-->
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/bw_fab_withdraw"
             android:layout_width="wrap_content"
