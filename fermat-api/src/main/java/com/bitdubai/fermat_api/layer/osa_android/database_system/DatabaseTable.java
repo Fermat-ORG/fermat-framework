@@ -66,9 +66,10 @@ public interface DatabaseTable {
 
     void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 
+    @Deprecated // try to not use this when you're updating records. android database needs filters to update records.
     DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
 
-    // modif leon
+    // todo try to substract this method from here, they don't belong
     String makeFilter();
     String getTableName();
     List<DatabaseSelectOperator> getTableSelectOperator();
