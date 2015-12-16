@@ -36,6 +36,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,8 +83,8 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
     private void testCreateCashHoldTransaction() {
         //System.out.println("CASHHOLD - testCreateCashHoldTransaction CALLED");
 
-        CashHoldTransactionParameters params = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", 20, FiatCurrency.US_DOLLAR, "testHold 20USD");
-        CashHoldTransactionParameters params2 = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", 50, FiatCurrency.US_DOLLAR, "testHold 50USD");
+        CashHoldTransactionParameters params = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(20), FiatCurrency.US_DOLLAR, "testHold 20USD");
+        CashHoldTransactionParameters params2 = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(50) , FiatCurrency.US_DOLLAR, "testHold 50USD");
 
         try {
             this.createCashHoldTransaction(params);

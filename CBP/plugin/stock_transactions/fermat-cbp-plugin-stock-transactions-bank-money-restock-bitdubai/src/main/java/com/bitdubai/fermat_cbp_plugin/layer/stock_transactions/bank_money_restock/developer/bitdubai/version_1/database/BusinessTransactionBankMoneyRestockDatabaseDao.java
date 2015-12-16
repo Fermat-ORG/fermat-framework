@@ -21,6 +21,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.exceptions.MissingBankMoneyRestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.BankMoneyRestockTransactionImpl;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,9 +84,9 @@ public class BusinessTransactionBankMoneyRestockDatabaseDao {
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, bankMoneyTransaction.getConcept());
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME, bankMoneyTransaction.getTimeStamp().toString());
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_MEMO_COLUMN_NAME, bankMoneyTransaction.getMemo());
-        record.setBigDecimalValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, bankMoneyTransaction.getAmount());
+        record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, bankMoneyTransaction.getAmount().toPlainString());
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, bankMoneyTransaction.getTransactionStatus().getCode());
-        record.setBigDecimalValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, bankMoneyTransaction.getPriceReference());
+        record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, bankMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, bankMoneyTransaction.getOriginTransaction().getCode());
 
         return record;
@@ -122,11 +123,11 @@ public class BusinessTransactionBankMoneyRestockDatabaseDao {
         bankMoneyRestockTransaction.setBnkWalletPublicKey(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_BNK_WALLET_PUBLIC_KEY_COLUMN_NAME));
         bankMoneyRestockTransaction.setBankAccount(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_BANK_ACCOUNT_COLUMN_NAME));
         bankMoneyRestockTransaction.setConcept(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_CONCEPT_COLUMN_NAME));
-        bankMoneyRestockTransaction.setAmount(bankMoneyRestockTransactionRecord.getBigDecimalValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_AMOUNT_COLUMN_NAME));
+        bankMoneyRestockTransaction.setAmount(new BigDecimal(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_AMOUNT_COLUMN_NAME)));
         bankMoneyRestockTransaction.setTimeStamp(Timestamp.valueOf(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME)));
         bankMoneyRestockTransaction.setMemo(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_MEMO_COLUMN_NAME));
         bankMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
-        bankMoneyRestockTransaction.setPriceReference(bankMoneyRestockTransactionRecord.getBigDecimalValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME));
+        bankMoneyRestockTransaction.setPriceReference(new BigDecimal(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         bankMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
 
         return bankMoneyRestockTransaction;
