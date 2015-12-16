@@ -15,14 +15,14 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
 /**
- * Created by mati on 2015.11.24..
+ * Created by Matias Furszyfer on 2015.11.24..
  */
-public class NavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     private final IntraUserLoginIdentity intraUserLoginIdentity;
     private Activity activity;
 
-    public NavigationViewPainter(Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) {
+    public BitcoinWalletNavigationViewPainter(Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) {
         this.activity = activity;
         this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
