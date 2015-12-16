@@ -98,8 +98,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Customer offline payment monitor agent starting");
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("Customer offline payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -252,8 +252,6 @@ public class CustomerOfflinePaymentMonitorAgent implements
                         pluginId,
                         database);
 
-                UUID outgoingCryptoTransactionId;
-                CustomerOfflinePaymentRecord customerOfflinePaymentRecord;
                 String contractHash;
 
                 //TODO: finish this
