@@ -28,15 +28,18 @@ Although there are many ways to configure these tools, we'll provide a recommend
 <br>
 ### Working on Linux
 
-Most Fermat developers are on Linux since compilation is faster there than in Windows.
+Most Fermat developers are on Linux since compilation is faster there than in Windows. It is highly recommended that you use linux instead of windows. Developers that tried to set up a windows environment finally gave up and moved to Ubuntu. If you don't have Ubuntu installed, we recommed you to do so in a fresh disk partition.
 
 #### Automatic installation
-You can install all the needed software automatically using the script that you can find in the following URL:
-[FermatDeveloperInstaller.sh] (https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).<br>
-This is a script the downloads and installs all the software that you need for develop in Fermat.
+
+You can install all the needed software automatically using the script that you can find at the following URL:
+[FermatDeveloperInstaller.sh] (https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
+
+This script the downloads and installs all the software that you need for develop in Fermat.
 
 * To begin using the script, copy **_FermatDeveloperInstaller.sh_** in your _$HOME_ folder
 * You can edit the sctipt with gedit, eMacs or any text editor to set some variables (optional)
+
 ```shell
 platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
 #plafform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
@@ -55,9 +58,12 @@ cd $HOME
 ```
 
 It takes some time to download all the software, please, be patient.
-<br>
+
+
 <br>
 #### Manual installation
+
+In case the script goes wrong or does not do its intended job, you can go with the manual set up of the environment.
 
 #### Installing Git
 
