@@ -127,6 +127,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     public NetworkNodePluginRoot() {
         super(new PluginVersionReference(new Version()));
+        pluginId= UUID.fromString("2a4e644f-d9a9-4e8d-98f0-01379dc54967");
     }
 
     /**
@@ -154,7 +155,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              /*
              * Initialize the Data Base of the node
              */
-            //initializeDb();
+            initializeDb();
 
             /*
              * Create and start the internal server
