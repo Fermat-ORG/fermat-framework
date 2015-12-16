@@ -180,6 +180,146 @@ sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
 
 This will enable 64-bit linux distros to run 32-bit applications like adb and aapt (Android tools). More information found here: [Android Issue 82711](https://code.google.com/p/android/issues/detail?id=82711)
 
+### Cloning Repository
+
+#### Create your fork.
+
+* Enter to GitHub:
+https://github.com/bitDubai/fermat then create Fork:
+To fork you must press button “Fork” in the top-right corner of the url, and then, select your user.
+
+You have your Fork created!
+https://github.com/$YOUR_USER/fermat
+
+##### Create a local branch pointing to the original project.
+* Create a new local branch, pointing to the original project:
+```shell
+git remote add newbranch https://github.com/bitDubai/fermat
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/lnacosta/fermat (fetch)
+origin https://github.com/lnacosta/fermat (push)
+newbranch https://github.com/bitDubai/fermat (fetch)
+newbranch https://github.com/bitDubai/fermat (push)
+```
+
+#### Update your fork to the last release.
+
+* Open a command prompt and clone your fork:
+```shell
+git clone https://github.com/$YOUR_USER/fermat
+```
+* Enter your credentials
+
+* Well, you have cloned your fork.
+
+* Enter to your cloned repository folder and try this:
+```shell 
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/$YOUR_USER/fermat (fetch)
+origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+* Follow section: **“Create a local branch pointing to the original project”.**
+
+Now you have a local repository pointing to your fork, and a local repository pointing to the main fork.
+
+* Update your local repository to the last release:
+```shell
+git fetch newbranch
+```
+This will update all your code to the last release.
+
+* Point to the outdated local repository:
+```shell
+git checkout master
+```
+
+* Now merge the changes!
+```shell
+git merge newbranch/master
+```
+
+All changes will be updated in your oudated local repository with the last release.
+
+* Now push the changes to update your fork!
+```shell
+git push
+```
+
+If you have any problems to push then try: 
+```shell
+git config http.postBuffer 524288000
+```
+and push again.
+
+#### Pull your changes to the main fork (if you haven’t got a fork yet).
+
+If you don’t have a fork.
+
+Please go to **“Create your fork.”**
+
+Then, you must have a local repository pointing to your fork and one local repository pointing to the main fork.
+To do this then follow the next steps:
+
+* Open a command prompt and clone your fork:
+```shell
+git clone https://github.com/$YOUR_USER/fermat
+```
+Enter your credentials
+
+Well, you have cloned your fork.
+
+* Enter to your cloned repository folder and try this:
+```shell
+git remote -v
+```
+
+The console must return you something like this:
+```shell
+origin https://github.com/$YOUR_USER/fermat (fetch)
+origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+Follow section: **“Create a local branch pointing to the original project”**.
+
+Now you have a local repository pointing to your fork, and a local repository pointing to the main fork.
+
+* Point to your the repository that points to the fork:
+```shell
+git checkout master
+```
+
+Then overwrite the source code with your changes.
+
+* Commit the changes.
+
+Go to github and create a Pull Request:
+You have to go to your fork and then with the commits do the pull request.
+
+#### Pull your changes to the main fork (if you have a fork created and a branch pointing to main fork).
+
+* Update your local branch pointing to main fork to the last release:
+```shell
+git fetch mainforkbranch
+```
+This will update all your code to the last release.
+
+* Now merge the changes!
+```shell
+git merge mainforkbranch/master
+```
+
+* Commit the changes.
+
+* Go to github and create a Pull Request:
+You have to go to your fork and then with the commits do the pull request.
+
 
 <br>
 ## Part II: Compiling and Running
