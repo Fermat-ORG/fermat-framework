@@ -21,16 +21,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  *  @since  01/01/15.
  * */
 public interface DatabaseTable {
-    
-    List<DatabaseTableRecord> customQuery(String query, boolean customResult) throws CantLoadTableToMemoryException;
 
-    DatabaseTableColumn newColumn();
+    void loadToMemory() throws CantLoadTableToMemoryException;
 
     List<DatabaseTableRecord> getRecords();
 
+    void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
+
+    void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
+
+    void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
+
     DatabaseTableRecord getEmptyRecord();
 
-    void clearAllFilters();
+    boolean isTableExists();
+
+    List<DatabaseTableRecord> customQuery(String query, boolean customResult) throws CantLoadTableToMemoryException;
 
     DatabaseTableFilter getEmptyTableFilter();
 
@@ -38,33 +44,25 @@ public interface DatabaseTable {
 
     DatabaseTableFilterGroup getNewFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator);
 
-    void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
+    void setFilterTop(String top);
 
-    void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
-
-    void loadToMemory() throws CantLoadTableToMemoryException;
-
-    boolean isTableExists();
+    void setFilterOffSet(String offset);
 
     void addStringFilter(String columnName, String value, DatabaseFilterType type);
 
     void addFermatEnumFilter(String columnName, FermatEnum value, DatabaseFilterType type);
 
+    void addFilterOrder(String columnName, DatabaseFilterOrder direction);
+
+    void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type);
+
+    void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
+
     void setFilterGroup(DatabaseTableFilterGroup filterGroup);
 
     void setFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator);
 
-    void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type);
-
-    void addFilterOrder(String columnName, DatabaseFilterOrder direction);
-
-    void setFilterTop(String top);
-
-    void setFilterOffSet(String offset);
-
-    void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
-
-    void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
+    void clearAllFilters();
 
     @Deprecated // try to not use this when you're updating records. android database needs filters to update records.
     DatabaseTableRecord getRecordFromPk(String pk) throws Exception;

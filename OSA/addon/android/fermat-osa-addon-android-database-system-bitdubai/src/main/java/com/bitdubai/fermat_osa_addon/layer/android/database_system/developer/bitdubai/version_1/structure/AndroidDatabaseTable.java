@@ -76,16 +76,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
 
     /**
-     * <p>This method return a new empty instance of DatabaseTableColumn object
-     *
-     * @return DatabaseTableColumn object
-     */
-    @Override
-    public DatabaseTableColumn newColumn() {
-        return new AndroidDatabaseTableColumn();
-    }
-
-    /**
      * <p>This method return a list of table columns names
      *
      * @return List<String> of columns names
