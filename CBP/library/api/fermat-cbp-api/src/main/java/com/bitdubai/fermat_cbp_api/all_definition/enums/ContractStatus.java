@@ -16,6 +16,7 @@ public enum ContractStatus implements FermatEnum {
     PENDING_MERCHANDISE("PEM"),
     PENDING_PAYMENT("PEN"),
     PAYMENT_SUBMIT("PYS"),
+    READY_TO_CLOSE("RTC"),
     ;
 
     private String code;
@@ -38,6 +39,7 @@ public enum ContractStatus implements FermatEnum {
             case "PEM": return ContractStatus.PENDING_MERCHANDISE;
             case "PEN": return ContractStatus.PENDING_PAYMENT;
             case "PYS": return ContractStatus.PAYMENT_SUBMIT;
+            case "RTC": return ContractStatus.READY_TO_CLOSE;
 
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
