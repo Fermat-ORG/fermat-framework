@@ -12,15 +12,16 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCre
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database.AssetUserIdentityDao;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,16 +93,16 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
      * @param pluginFileSystem
      */
     public IdentityAssetUserManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ActorAssetUserManager actorAssetUserManager) {
-        this.errorManager          = errorManager;
-        this.logManager            = logManager;
-        this.pluginDatabaseSystem  = pluginDatabaseSystem;
-        this.pluginFileSystem      = pluginFileSystem;
-        this.pluginId              = pluginId;
-        this.deviceUserManager     = deviceUserManager;
+        this.errorManager = errorManager;
+        this.logManager = logManager;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.deviceUserManager = deviceUserManager;
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
-    private AssetUserIdentityDao getAssetUserIdentityDao() throws CantInitializeAssetUserIdentityDatabaseException{
+    private AssetUserIdentityDao getAssetUserIdentityDao() throws CantInitializeAssetUserIdentityDatabaseException {
         AssetUserIdentityDao assetUserIdentityDao = new AssetUserIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
         return assetUserIdentityDao;
     }
@@ -150,19 +151,27 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
         }
     }
 
-    public boolean  hasIntraUserIdentity() throws CantListAssetUsersException{
+    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetUserException {
+        try {
+            getAssetUserIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+        } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean hasIntraUserIdentity() throws CantListAssetUsersException {
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0)
+            if (getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0)
                 return true;
             else
                 return false;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        }  catch (CantListAssetUserIdentitiesException e) {
+        } catch (CantListAssetUserIdentitiesException e) {
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES EXISTS", e, "", "");
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CantListAssetUsersException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
@@ -175,8 +184,7 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
                     actorAssetUserManager.createActorAssetUserFactory(identityAssetUser.getPublicKey(), identityAssetUser.getAlias(), identityAssetUser.getProfileImage());
                 }
             }
-        }
-        catch (CantGetLoggedInDeviceUserException e) {
+        } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
         } catch (CantListAssetUserIdentitiesException e) {
             throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
