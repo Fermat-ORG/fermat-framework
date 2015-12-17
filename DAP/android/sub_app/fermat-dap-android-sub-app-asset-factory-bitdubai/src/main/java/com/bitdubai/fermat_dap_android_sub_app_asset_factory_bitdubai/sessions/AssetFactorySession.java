@@ -19,77 +19,84 @@ import java.util.Map;
  */
 public class AssetFactorySession extends AbstractFermatSession<InstalledSubApp,AssetFactoryModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
-    /**
-     * Issuer Manager
-     */
-    private AssetFactoryModuleManager manager;
-    /**
-     * SubApps type
-     */
-    private SubApps subApps;
+    public AssetFactorySession() {}
 
-    /**
-     * Active objects in wallet session
-     */
-    private Map<String, Object> data;
-
-    /**
-     * Error manager
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * Constructor
-     *
-     * @param errorManager Error Manager
-     * @param manager      AssetIssuerWallet Manager
-     */
-    public AssetFactorySession(InstalledSubApp subApp, ErrorManager errorManager, AssetFactoryModuleManager manager) {
-        super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
-        this.subApps = subApps;
-        data = new HashMap<String, Object>();
-        this.errorManager = errorManager;
-        this.manager = manager;
-    }
-
-    @Override
-    public void setData(String key, Object object) {
-        data.put(key, object);
-    }
-
-    @Override
-    public Object getData(String key) {
-        return data.get(key);
-    }
-
-    @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AssetFactorySession that = (AssetFactorySession) o;
-
-        return subApps == that.subApps;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return subApps.hashCode();
-    }
-
-    /**
-     * Get Asset Issuer Wallet Manager instance
-     *
-     * @return AssetIssuerWalletManager object
-     */
-    public AssetFactoryModuleManager getManager() {
-        return manager;
-    }
+    //
+//    /**
+//     * Issuer Manager
+//     */
+//    private AssetFactoryModuleManager manager;
+//    /**
+//     * SubApps type
+//     */
+//    private SubApps subApps;
+//
+//    /**
+//     * Active objects in wallet session
+//     */
+//    private Map<String, Object> data;
+//
+//    /**
+//     * Error manager
+//     */
+//    private ErrorManager errorManager;
+//
+//    /**
+//     * Constructor
+//     *
+//     * @param errorManager Error Manager
+//     * @param manager      AssetIssuerWallet Manager
+//     */
+//    public AssetFactorySession(InstalledSubApp subApp, ErrorManager errorManager, AssetFactoryModuleManager manager) {
+//        super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
+//        this.subApps = subApps;
+//        data = new HashMap<String, Object>();
+//        this.errorManager = errorManager;
+//        this.manager = manager;
+//    }
+//
+//    public AssetFactorySession() {
+//
+//    }
+//
+//    @Override
+//    public void setData(String key, Object object) {
+//        data.put(key, object);
+//    }
+//
+//    @Override
+//    public Object getData(String key) {
+//        return data.get(key);
+//    }
+//
+//    @Override
+//    public ErrorManager getErrorManager() {
+//        return errorManager;
+//    }
+//
+//
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//
+//        AssetFactorySession that = (AssetFactorySession) o;
+//
+//        return subApps == that.subApps;
+//
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return subApps.hashCode();
+//    }
+//
+//    /**
+//     * Get Asset Issuer Wallet Manager instance
+//     *
+//     * @return AssetIssuerWalletManager object
+//     */
+//    public AssetFactoryModuleManager getManager() {
+//        return manager;
+//    }
 }

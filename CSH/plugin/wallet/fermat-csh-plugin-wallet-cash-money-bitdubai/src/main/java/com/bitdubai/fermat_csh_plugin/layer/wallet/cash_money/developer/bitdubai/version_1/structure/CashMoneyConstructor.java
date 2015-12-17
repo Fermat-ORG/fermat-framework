@@ -5,6 +5,8 @@ import java.util.UUID;
 /**
  * Created by francisco on 02/11/15.
  */
+
+//TODO: kill this class
 public class CashMoneyConstructor {
     UUID cashTransactionId;
     String walletKeyBroker;

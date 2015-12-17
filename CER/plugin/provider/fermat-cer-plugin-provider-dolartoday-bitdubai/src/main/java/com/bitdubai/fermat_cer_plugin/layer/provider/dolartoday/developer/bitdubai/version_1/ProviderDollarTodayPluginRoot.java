@@ -158,60 +158,6 @@ public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements Dat
     }
 
 
-
-    /*OLD FIAT INDEX CODE*/
-
-    /*
-
-    @Override
-    public FiatCurrency getReferenceCurrency() {
-        return FiatCurrency.US_DOLLAR;
-    }
-
-    @Override
-    public Collection<FiatCurrency> getSupportedCurrencies() {
-
-        return new HashSet<>(Arrays.asList(FiatCurrency.values()));
-    }
-
-    @Override
-    public FiatIndex getCurrentIndex(FiatCurrency currency) throws CantGetIndexException {
-        String currencyCode = currency.getCode();
-        IndexProvider ip = FiatIndexProviders.valueOf(currencyCode).getProviderInstance();
-        FiatIndex fiatIndex = ip.getCurrentIndex(currency);
-
-        try {
-            dao.saveFiatIndex(fiatIndex);
-
-        } catch(CantCreateFiatIndexException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
-
-        return fiatIndex;
-    }
-
-    @Override
-    public Collection<FiatIndex> getIndexListFromDate(FiatCurrency currency, long timestamp) throws CantGetIndexException {
-        //Todo: implement this in dao
-        return null;
-    }
-
-    @Override
-    public Collection<FiatIndex> getQueriedIndexHistory(FiatCurrency currency) {
-        Collection<FiatIndex> fiatIndexList = null;
-
-        try {
-            fiatIndexList =  dao.getQueriedIndexHistory(currency);
-        } catch(CantGetFiatIndexException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
-        return fiatIndexList;
-    }
-
-    */
-
-
-
     /*
      * DatabaseManagerForDevelopers interface implementation
      */

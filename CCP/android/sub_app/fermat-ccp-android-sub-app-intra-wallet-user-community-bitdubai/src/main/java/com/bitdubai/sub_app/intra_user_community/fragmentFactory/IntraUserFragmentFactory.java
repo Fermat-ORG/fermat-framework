@@ -1,11 +1,9 @@
 package com.bitdubai.sub_app.intra_user_community.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsFragment;

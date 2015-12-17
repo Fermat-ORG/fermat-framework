@@ -33,10 +33,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.events.CustomerOnlinePaymentConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
@@ -64,7 +61,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
@@ -282,7 +278,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                         database);
 
                 UUID outgoingCryptoTransactionId;
-                CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+                com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
                 String contractHash;
                 /**
                  * Check if there is some crypto to send
@@ -314,9 +310,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 /**
                  * Check contract status to send.
                  */
-                List<CustomerOnlinePaymentRecord> pendingToSubmitNotificationList=
+                List<com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord> pendingToSubmitNotificationList=
                         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOnlinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+                for(com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
@@ -334,9 +330,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 /**
                  * Check pending notifications - Broker side
                  */
-                List<CustomerOnlinePaymentRecord> pendingToSubmitConfirmationList=
+                List<com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord> pendingToSubmitConfirmationList=
                         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOnlinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+                for(com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotificationToCryptoCustomer(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
@@ -354,19 +350,19 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 /**
                  * Check pending transactions
                  */
-                List<CustomerOnlinePaymentRecord> pendingTransactions=
+                List<com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord> pendingTransactions=
                         customerOnlinePaymentBusinessTransactionDao.getPendingCryptoTransactionList();
-                for(CustomerOnlinePaymentRecord onlinePaymentRecord: pendingTransactions){
+                for(com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord onlinePaymentRecord: pendingTransactions){
                     checkPendingTransaction(onlinePaymentRecord);
                 }
 
                 /**
                  * Check if pending to submit crypto status
                  */
-                List<CustomerOnlinePaymentRecord> pendingSubmitContractList=
+                List<com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord> pendingSubmitContractList=
                         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList();
                 CryptoStatus cryptoStatus;
-                for(CustomerOnlinePaymentRecord pendingSubmitContractRecord : pendingSubmitContractList){
+                for(com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord pendingSubmitContractRecord : pendingSubmitContractList){
                     cryptoStatus=outgoingIntraActorManager.getTransactionStatus(
                             pendingSubmitContractRecord.getTransactionHash());
                     pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
@@ -377,9 +373,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 /**
                  * Check if on crypto network crypto status
                  */
-                List<CustomerOnlinePaymentRecord> pendingOnCryptoNetworkContractList=
+                List<com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord> pendingOnCryptoNetworkContractList=
                         customerOnlinePaymentBusinessTransactionDao.getOnCryptoNetworkCryptoStatusList();
-                for(CustomerOnlinePaymentRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList){
+                for(com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList){
                     cryptoStatus=outgoingIntraActorManager.getTransactionStatus(
                             onCryptoNetworkContractRecord.getTransactionHash());
                     onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
@@ -390,9 +386,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 /**
                  * Check if on blockchain crypto status
                  */
-                List<CustomerOnlinePaymentRecord> pendingOnBlockchainContractList=
+                List<com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord> pendingOnBlockchainContractList=
                         customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
-                for(CustomerOnlinePaymentRecord onBlockchainContractRecord : pendingOnBlockchainContractList){
+                for(com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord onBlockchainContractRecord : pendingOnBlockchainContractList){
                     cryptoStatus=outgoingIntraActorManager.getTransactionStatus(
                             onBlockchainContractRecord.getTransactionHash());
                     onBlockchainContractRecord.setCryptoStatus(cryptoStatus);
@@ -455,7 +451,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
         //TODO: raise an event only in broker side, notifying the incoming online payment. Create the event.
         //TODO: raise an event only in customer side, notifying the reception of an online payment. Create the event.
         private void checkPendingTransaction(
-                CustomerOnlinePaymentRecord customerOnlinePaymentRecord)throws CantUpdateRecordException
+                com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord customerOnlinePaymentRecord)throws CantUpdateRecordException
         {
             UUID transactionUUID=UUID.fromString(customerOnlinePaymentRecord.getTransactionId());
             //Get transaction hash from IntraActorCryptoTransactionManager
@@ -495,7 +491,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
-                CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+                com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
                 if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
                     //This will happen in broker side
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
