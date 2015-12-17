@@ -177,7 +177,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseEventsTable();
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
                     DatabaseFilterType.EQUAL);
@@ -211,7 +211,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -342,7 +342,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseContractTable();
             List<String> contractHashList=new ArrayList<>();
             String contractHash;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -388,7 +388,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -478,7 +478,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException{
         try{
             DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -525,7 +525,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             CryptoAddress brokerCryptoAddress;
             String cryptoAddressString;
             CustomerOnlinePaymentRecord customerOnlinePaymentRecord=new CustomerOnlinePaymentRecord();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -585,7 +585,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             String contractHash=customerOnlinePaymentRecord.getContractHash();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -756,7 +756,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -805,7 +805,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -827,7 +827,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             CantUpdateRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
