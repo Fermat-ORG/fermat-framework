@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_sale.interfaces.CustomerBrokerSale;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -48,6 +50,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
     private final OpenContractManager openContractManager;
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    private final FiatIndexManager fiatIndexManager;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
                                                                       CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
@@ -55,13 +58,15 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                                                       UUID pluginId,
                                                                       OpenContractManager openContractManager,
                                                                       CloseContractManager closeContractManager,
-                                                                      CustomerBrokerContractSaleManager customerBrokerContractSaleManager) {
+                                                                      CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+                                                                      FiatIndexManager fiatIndexManager) {
 
         this.errorManager                                              = errorManager;
         this.customerBrokerSaleNegotiationManager                      = customerBrokerSaleNegotiationManager;
         this.openContractManager                                       = openContractManager;
         this.closeContractManager                                      = closeContractManager;
         this.customerBrokerContractSaleManager                         = customerBrokerContractSaleManager;
+        this.fiatIndexManager                                          = fiatIndexManager;
         this.userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao(pluginDatabaseSystem, pluginId);
     }
     @Override
@@ -144,7 +149,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                 {
                     CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerSale.getTransactionId()));
                     //Registra el Open Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_PROCESS
-                    openContractManager.openSaleContract(customerBrokerSaleNegotiation, null);
+                    openContractManager.openSaleContract(customerBrokerSaleNegotiation, fiatIndexManager.getCurrentIndex(fiatIndexManager.getReferenceCurrency()));
                     //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
                     customerBrokerSale.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
                     userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
@@ -193,6 +198,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                         if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
                         {
                             //Si se detecta la realización de un pago se procede actulizar el estatus de la transacción y a monitorear la llegada de la mercadería.
+                            //Se verifica si el broker configuró procesar Restock de manera automática
                             customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
                             userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                         }
@@ -270,6 +276,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
             } catch (CantGetListCustomerBrokerContractSaleException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantCloseContractException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantGetIndexException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }

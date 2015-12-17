@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 public class NewContractOpened extends AbstractCBPFermatEvent {
 
     PlatformComponentType destinationPlatformComponentType;
+    String contractHash;
 
     public NewContractOpened(EventType eventType) {
         super(eventType);
@@ -21,5 +22,21 @@ public class NewContractOpened extends AbstractCBPFermatEvent {
 
     public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType){
         this.destinationPlatformComponentType = destinationPlatformComponentType;
+    }
+
+    /**
+     * This method set the contract hash from a opened contract.
+     * @param contractHash
+     */
+    public void setContractHash(String contractHash){
+        this.contractHash=contractHash;
+    }
+
+    /**
+     * This method returns the contract hash from a opened contract.
+     * @return
+     */
+    public String getContractHash(){
+        return this.contractHash;
     }
 }

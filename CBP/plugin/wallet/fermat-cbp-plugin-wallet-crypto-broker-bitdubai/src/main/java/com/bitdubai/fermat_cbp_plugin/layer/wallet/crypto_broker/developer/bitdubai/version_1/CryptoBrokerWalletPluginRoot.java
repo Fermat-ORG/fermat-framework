@@ -202,160 +202,160 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void testAddCredito(){
-        CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecordBook = new CryptoBrokerStockTransactionRecord() {
-            @Override
-            public float getRunningBookBalance() {
-                return 0;
-            }
-
-            @Override
-            public float getRunningAvailableBalance() {
-                return 0;
-            }
-
-            @Override
-            public UUID getTransactionId() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public BalanceType getBalanceType() {
-                return BalanceType.BOOK;
-            }
-
-            @Override
-            public TransactionType getTransactionType() {
-                return TransactionType.CREDIT;
-            }
-
-            @Override
-            public CurrencyType getCurrencyType() {
-                return CurrencyType.BANK_MONEY;
-            }
-
-            @Override
-            public FermatEnum getMerchandise() {
-                return FiatCurrency.US_DOLLAR;
-            }
-
-            @Override
-            public String getWalletPublicKey() {
-                return "walletPublicKeyTest";
-            }
-
-            @Override
-            public String getBrokerPublicKey() {
-                return "brokerPublicKeyTest";
-            }
-
-            @Override
-            public float getAmount() {
-                return 250;
-            }
-
-            @Override
-            public long getTimestamp() {
-                return new Date().getTime() / 1000;
-            }
-
-            @Override
-            public String getMemo() {
-                return "STOCK: compra";
-            }
-
-            @Override
-            public float getPriceReference() {
-                return 350;
-            }
-
-            @Override
-            public OriginTransaction getOriginTransaction() {
-                return OriginTransaction.STOCK_INITIAL;
-            }
-        };
-        CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecordAvailable = new CryptoBrokerStockTransactionRecord() {
-            @Override
-            public float getRunningBookBalance() {
-                return 0;
-            }
-
-            @Override
-            public float getRunningAvailableBalance() {
-                return 0;
-            }
-
-            @Override
-            public UUID getTransactionId() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public BalanceType getBalanceType() {
-                return BalanceType.AVAILABLE;
-            }
-
-            @Override
-            public TransactionType getTransactionType() {
-                return TransactionType.CREDIT;
-            }
-
-            @Override
-            public CurrencyType getCurrencyType() {
-                return CurrencyType.BANK_MONEY;
-            }
-
-            @Override
-            public FermatEnum getMerchandise() {
-                return FiatCurrency.US_DOLLAR;
-            }
-
-            @Override
-            public String getWalletPublicKey() {
-                return "walletPublicKeyTest";
-            }
-
-            @Override
-            public String getBrokerPublicKey() {
-                return "brokerPublicKeyTest";
-            }
-
-            @Override
-            public float getAmount() {
-                return 250;
-            }
-
-            @Override
-            public long getTimestamp() {
-                return new Date().getTime() / 1000;
-            }
-
-            @Override
-            public String getMemo() {
-                return "STOCK: compra";
-            }
-
-            @Override
-            public float getPriceReference() {
-                return 350;
-            }
-
-            @Override
-            public OriginTransaction getOriginTransaction() {
-                return OriginTransaction.STOCK_INITIAL;
-            }
-        };
-        try {
-            loadCryptoBrokerWallet(walletPublicKey).getStockBalance().credit(cryptoBrokerStockTransactionRecordBook, BalanceType.BOOK);
-            loadCryptoBrokerWallet(walletPublicKey).getStockBalance().credit(cryptoBrokerStockTransactionRecordAvailable, BalanceType.AVAILABLE);
-        } catch (CantAddCreditCryptoBrokerWalletException e) {
-            e.printStackTrace();
-        } catch (CantGetStockCryptoBrokerWalletException e) {
-            e.printStackTrace();
-        } catch (CryptoBrokerWalletNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void testAddCredito(){
+//        CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecordBook = new CryptoBrokerStockTransactionRecord() {
+//            @Override
+//            public float getRunningBookBalance() {
+//                return 0;
+//            }
+//
+//            @Override
+//            public float getRunningAvailableBalance() {
+//                return 0;
+//            }
+//
+//            @Override
+//            public UUID getTransactionId() {
+//                return UUID.randomUUID();
+//            }
+//
+//            @Override
+//            public BalanceType getBalanceType() {
+//                return BalanceType.BOOK;
+//            }
+//
+//            @Override
+//            public TransactionType getTransactionType() {
+//                return TransactionType.CREDIT;
+//            }
+//
+//            @Override
+//            public CurrencyType getCurrencyType() {
+//                return CurrencyType.BANK_MONEY;
+//            }
+//
+//            @Override
+//            public FermatEnum getMerchandise() {
+//                return FiatCurrency.US_DOLLAR;
+//            }
+//
+//            @Override
+//            public String getWalletPublicKey() {
+//                return "walletPublicKeyTest";
+//            }
+//
+//            @Override
+//            public String getBrokerPublicKey() {
+//                return "brokerPublicKeyTest";
+//            }
+//
+//            @Override
+//            public float getAmount() {
+//                return 250;
+//            }
+//
+//            @Override
+//            public long getTimestamp() {
+//                return new Date().getTime() / 1000;
+//            }
+//
+//            @Override
+//            public String getMemo() {
+//                return "STOCK: compra";
+//            }
+//
+//            @Override
+//            public float getPriceReference() {
+//                return 350;
+//            }
+//
+//            @Override
+//            public OriginTransaction getOriginTransaction() {
+//                return OriginTransaction.STOCK_INITIAL;
+//            }
+//        };
+//        CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecordAvailable = new CryptoBrokerStockTransactionRecord() {
+//            @Override
+//            public float getRunningBookBalance() {
+//                return 0;
+//            }
+//
+//            @Override
+//            public float getRunningAvailableBalance() {
+//                return 0;
+//            }
+//
+//            @Override
+//            public UUID getTransactionId() {
+//                return UUID.randomUUID();
+//            }
+//
+//            @Override
+//            public BalanceType getBalanceType() {
+//                return BalanceType.AVAILABLE;
+//            }
+//
+//            @Override
+//            public TransactionType getTransactionType() {
+//                return TransactionType.CREDIT;
+//            }
+//
+//            @Override
+//            public CurrencyType getCurrencyType() {
+//                return CurrencyType.BANK_MONEY;
+//            }
+//
+//            @Override
+//            public FermatEnum getMerchandise() {
+//                return FiatCurrency.US_DOLLAR;
+//            }
+//
+//            @Override
+//            public String getWalletPublicKey() {
+//                return "walletPublicKeyTest";
+//            }
+//
+//            @Override
+//            public String getBrokerPublicKey() {
+//                return "brokerPublicKeyTest";
+//            }
+//
+//            @Override
+//            public float getAmount() {
+//                return 250;
+//            }
+//
+//            @Override
+//            public long getTimestamp() {
+//                return new Date().getTime() / 1000;
+//            }
+//
+//            @Override
+//            public String getMemo() {
+//                return "STOCK: compra";
+//            }
+//
+//            @Override
+//            public float getPriceReference() {
+//                return 350;
+//            }
+//
+//            @Override
+//            public OriginTransaction getOriginTransaction() {
+//                return OriginTransaction.STOCK_INITIAL;
+//            }
+//        };
+//        try {
+//            loadCryptoBrokerWallet(walletPublicKey).getStockBalance().credit(cryptoBrokerStockTransactionRecordBook, BalanceType.BOOK);
+//            loadCryptoBrokerWallet(walletPublicKey).getStockBalance().credit(cryptoBrokerStockTransactionRecordAvailable, BalanceType.AVAILABLE);
+//        } catch (CantAddCreditCryptoBrokerWalletException e) {
+//            e.printStackTrace();
+//        } catch (CantGetStockCryptoBrokerWalletException e) {
+//            e.printStackTrace();
+//        } catch (CryptoBrokerWalletNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private boolean loadWalletMap() throws CantStartPluginException {
         PluginTextFile walletFile = getWalletFile();

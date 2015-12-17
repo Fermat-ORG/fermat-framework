@@ -168,7 +168,8 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
             cryptoMoneyTransaction.setStatus(CryptoTransactionStatus.ACKNOWLEDGED);
             cryptoMoneyTransaction.setPublicKeyActor(holdParameters.getPublicKeyActor());
             cryptoMoneyTransaction.setPublicKeyPlugin(holdParameters.getPublicKeyPlugin());
-            cryptoMoneyTransaction.setAmount(holdParameters.getAmount());
+            //TODO:Colocar BigDecimal
+            cryptoMoneyTransaction.setAmount(holdParameters.getAmount().floatValue());
             cryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
             cryptoMoneyTransaction.setMemo(holdParameters.getMemo());
              holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoMoneyTransaction);
@@ -229,82 +230,82 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         return cryptoTransactionStatus;
     }
 
-    private void testHold(){
-        try {
-            CryptoHoldTransactionParameters cryptoHoldTransactionParameters = new CryptoHoldTransactionParameters() {
-                @Override
-                public UUID getTransactionId() {
-                    return UUID.randomUUID();
-                }
-
-                @Override
-                public void setTransactionId(UUID transactionId) {
-
-                }
-
-                @Override
-                public String getPublicKeyWallet() {
-                    return "walletPublicKey";
-                }
-
-                @Override
-                public void setPublicKeyWallet(String publicKeyWallet) {
-
-                }
-
-                @Override
-                public String getPublicKeyActor() {
-                    return "actorWalletPublicKey";
-                }
-
-                @Override
-                public void setPublicKeyActor(String publicKeyActor) {
-
-                }
-
-                @Override
-                public String getPublicKeyPlugin() {
-                    return pluginId.toString();
-                }
-
-                @Override
-                public void setPublicKeyPlugin(String publicKeyPlugin) {
-
-                }
-
-                @Override
-                public float getAmount() {
-                    return 1500;
-                }
-
-                @Override
-                public void setAmount(float amount) {
-
-                }
-
-                @Override
-                public CryptoCurrency getCurrency() {
-                    return CryptoCurrency.BITCOIN;
-                }
-
-                @Override
-                public void setCurrency(CryptoCurrency currency) {
-
-                }
-
-                @Override
-                public String getMemo() {
-                    return "memo";
-                }
-
-                @Override
-                public void setMemo(String memo) {
-
-                }
-            };
-            createCryptoHoldTransaction(cryptoHoldTransactionParameters);
-        } catch (CantCreateHoldTransactionException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void testHold(){
+//        try {
+//            CryptoHoldTransactionParameters cryptoHoldTransactionParameters = new CryptoHoldTransactionParameters() {
+//                @Override
+//                public UUID getTransactionId() {
+//                    return UUID.randomUUID();
+//                }
+//
+//                @Override
+//                public void setTransactionId(UUID transactionId) {
+//
+//                }
+//
+//                @Override
+//                public String getPublicKeyWallet() {
+//                    return "walletPublicKey";
+//                }
+//
+//                @Override
+//                public void setPublicKeyWallet(String publicKeyWallet) {
+//
+//                }
+//
+//                @Override
+//                public String getPublicKeyActor() {
+//                    return "actorWalletPublicKey";
+//                }
+//
+//                @Override
+//                public void setPublicKeyActor(String publicKeyActor) {
+//
+//                }
+//
+//                @Override
+//                public String getPublicKeyPlugin() {
+//                    return pluginId.toString();
+//                }
+//
+//                @Override
+//                public void setPublicKeyPlugin(String publicKeyPlugin) {
+//
+//                }
+//
+//                @Override
+//                public float getAmount() {
+//                    return 1500;
+//                }
+//
+//                @Override
+//                public void setAmount(float amount) {
+//
+//                }
+//
+//                @Override
+//                public CryptoCurrency getCurrency() {
+//                    return CryptoCurrency.BITCOIN;
+//                }
+//
+//                @Override
+//                public void setCurrency(CryptoCurrency currency) {
+//
+//                }
+//
+//                @Override
+//                public String getMemo() {
+//                    return "memo";
+//                }
+//
+//                @Override
+//                public void setMemo(String memo) {
+//
+//                }
+//            };
+//            createCryptoHoldTransaction(cryptoHoldTransactionParameters);
+//        } catch (CantCreateHoldTransactionException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

@@ -60,8 +60,9 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
         }catch (CantRegisterCreditException e){
             throw new CantMakeDepositTransactionException(CantRegisterCreditException.DEFAULT_MESSAGE,e,null,null);
         }
+        //TODO: Colocar BigDecimal el valor Float bankTransactionParameters.getAmount().floatValue()
         return new BankTransactionImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),
-                bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.DEPOSIT, TransactionType.CREDIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
+                bankTransactionParameters.getAmount().floatValue(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.DEPOSIT, TransactionType.CREDIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
 
     }
 

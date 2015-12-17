@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -64,10 +65,10 @@ public interface CryptoMoneyTransaction {
     /**
      * The property <code>Amount</code>  represented the amount in transaction
      *
-     * @return the Sting
+     * @return the BigDecimal
      */
-    float getAmount();
-    void setAmount(float amount);
+    BigDecimal getAmount();
+    void setAmount(BigDecimal amount);
 
     /**
      * The property <code>Timestamp</code>  represented the Date in transaction
@@ -96,10 +97,10 @@ public interface CryptoMoneyTransaction {
 
     /**
      * The property <code>PriceReference</code>  represented the Price Reference
-     * @return float
+     * @return BigDecimal
      */
-    float getPriceReference();
-    void setPriceReference(float priceReference);
+    BigDecimal getPriceReference();
+    void setPriceReference(BigDecimal priceReference);
 
     /**
      * The property <code>OriginTransaction</code>  represented the Origin Transaction
