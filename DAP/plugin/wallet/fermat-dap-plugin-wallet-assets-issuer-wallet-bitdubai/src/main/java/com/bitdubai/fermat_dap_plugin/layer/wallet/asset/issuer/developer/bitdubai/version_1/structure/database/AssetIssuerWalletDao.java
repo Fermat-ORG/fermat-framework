@@ -790,7 +790,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            assetStatisticTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             assetStatisticTable.loadToMemory();
 
             if (assetStatisticTable.getRecords().isEmpty()) {
