@@ -31,6 +31,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.se
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.session.SessionConstants;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -265,9 +266,11 @@ public class CreateIdentityFragment extends FermatFragment {
                 try {
                     if(!isUpdate)
                         moduleManager.createNewIdentityAssetIssuer(brokerNameText, brokerImageByteArray);
-//                    else
-//                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(),brokerNameText,brokerImageByteArray);
+                    else
+                        moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewIdentityAssetIssuerException e) {
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                } catch (CantUpdateIdentityAssetIssuerException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 }
                 return CREATE_IDENTITY_SUCCESS;
