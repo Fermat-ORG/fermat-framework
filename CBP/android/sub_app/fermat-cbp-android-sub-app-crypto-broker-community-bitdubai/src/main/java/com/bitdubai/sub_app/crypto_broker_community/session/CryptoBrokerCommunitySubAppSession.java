@@ -25,6 +25,7 @@ public final class CryptoBrokerCommunitySubAppSession extends AbstractFermatSess
                 intraUserModuleManager  ,
                 null
         );
+
     }
 
 }
