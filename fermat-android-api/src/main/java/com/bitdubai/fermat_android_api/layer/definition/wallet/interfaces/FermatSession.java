@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2015.10.18..
  */
-public interface FermatSession{
+public interface FermatSession<A extends FermatApp>{
 
     /**
      *
@@ -34,4 +34,13 @@ public interface FermatSession{
     String getAppPublicKey();
 
     List<FermatApp> getPosibleConnections();
+
+    /**
+     * Devuelve el tipo de la app
+     *
+     * @return
+     */
+    A getFermatApp();
+
+
 }

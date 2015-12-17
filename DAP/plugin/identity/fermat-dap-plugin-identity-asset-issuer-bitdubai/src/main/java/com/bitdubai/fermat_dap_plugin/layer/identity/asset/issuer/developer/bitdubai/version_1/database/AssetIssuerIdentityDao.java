@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.AssetIssuerIdentityPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityPrivateKeyException;
@@ -176,6 +177,53 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
+    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantListAssetIssuersException {
+
+        // Setup method.
+        IdentityAssetIssuer IdentityAssetIssuerRecord = null;
+        DatabaseTable table; // Intra User table.
+
+        // Get Asset Issuers identities list.
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+            }
+
+
+            // 2) Find the Identity Issuers.
+
+//            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            // 3) Get Identity Issuers.
+
+            for (DatabaseTableRecord record : table.getRecords ()) {
+
+                // Add records to list.
+                IdentityAssetIssuerRecord = new IdentityAssetIssuerImpl(
+                        record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)));
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListAssetIssuersException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantListAssetIssuersException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant get Asset Issuer identity list, unknown failure.");
+        }
+
+        // Return the list values.
+        return IdentityAssetIssuerRecord;
+    }
+
     public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetIssuerIdentitiesException {
 
 
@@ -201,7 +249,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
 
             // 2) Find the Identity Issuers.
 
-            table.setStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             // 3) Get Identity Issuers.
@@ -333,7 +381,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Asset Issuer Identity", "");
             }
 
-            table.setStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords ().size () > 0;

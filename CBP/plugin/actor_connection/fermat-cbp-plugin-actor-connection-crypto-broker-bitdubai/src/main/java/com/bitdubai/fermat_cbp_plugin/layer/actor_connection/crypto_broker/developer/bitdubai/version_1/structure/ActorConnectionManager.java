@@ -23,6 +23,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.Cr
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
@@ -101,33 +103,33 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                             currentTime
                     );
 
-                    //cryptoBrokerNetworkService.requestConnection(connectionInformation);
+                    cryptoBrokerNetworkService.requestConnection(connectionInformation);
+                    break;
+                default:
+                    throw new UnsupportedActorTypeException("actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Unsupported actor type exception.");
             }
+
+        } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, unsupportedActorTypeException);
+            throw unsupportedActorTypeException;
 
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    actorConnectionAlreadyExistsException
-            );
-            throw new ConnectionAlreadyRequestedException(
-                    actorConnectionAlreadyExistsException,
-                    "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving,
-                    "The connection was already requested or exists."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
+            throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "The connection was already requested or exists.");
         } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantRegisterActorConnectionException
-            );
-            throw new ConnectionAlreadyRequestedException(
-                    cantRegisterActorConnectionException,
-                    "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving,
-                    "Problem registering the actor connection in DAO."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorConnectionException);
+            throw new CantRequestActorConnectionException(cantRegisterActorConnectionException, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Problem registering the actor connection in DAO.");
+        } catch (final CantRequestConnectionException cantRequestConnectionException) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRequestConnectionException);
+            throw new CantRequestActorConnectionException(cantRequestConnectionException, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Error trying to request the connection through the network service.");
+        } catch (final Exception exception) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantRequestActorConnectionException(exception, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Unhandled error.");
         }
 
     }
@@ -137,6 +139,54 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                                                            ActorConnectionNotFoundException   ,
                                                            UnexpectedConnectionStateException {
 
+        try {
+
+            ConnectionState currentConnectionState = dao.getConnectionState(connectionId);
+
+            switch (currentConnectionState) {
+
+                case DISCONNECTED_LOCALLY:
+                    // no action needed
+                    break;
+
+                case CONNECTED:
+
+                    // disconnect from an actor through network service and after that mark as DISCONNECTED LOCALLY
+                    // TODO HAVE IN COUNT THAT YOU HAVE TO DISCONNECT FROM AN SPECIFIC TYPE OF ACTOR,.
+                    cryptoBrokerNetworkService.disconnect(connectionId);
+
+                    dao.changeConnectionState(
+                            connectionId,
+                            ConnectionState.DISCONNECTED_LOCALLY
+                    );
+
+                    break;
+
+                default:
+                    throw new UnexpectedConnectionStateException("connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState, "Unexpected contact state for denying.");
+            }
+
+        } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
+            throw innerException;
+        } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            throw new CantDisconnectFromActorException(cantGetConnectionStateException, "connectionId: "+connectionId, "Error trying to get the connection state.");
+        } catch (final CantDisconnectException | ConnectionRequestNotFoundException networkServiceException ) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            throw new CantDisconnectFromActorException(networkServiceException, "connectionId: "+connectionId, "Error trying to disconnect from an actor through the network service.");
+        } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException ) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            throw new CantDisconnectFromActorException(cantChangeActorConnectionStateException, "connectionId: "+connectionId, "Error trying to change the actor connection state.");
+        } catch (final Exception exception) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantDisconnectFromActorException(exception, "connectionId: "+connectionId, "Unhandled error.");
+        }
     }
 
     @Override
@@ -167,68 +217,29 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                     break;
 
                 default:
-                    throw new UnexpectedConnectionStateException(
-                            "connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState,
-                            "Unexpected contact state for denying."
-                    );
+                    throw new UnexpectedConnectionStateException("connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState, "Unexpected contact state for denying.");
             }
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    innerException
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
             throw innerException;
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantGetConnectionStateException
-            );
-            throw new CantDenyActorConnectionRequestException(
-                    cantGetConnectionStateException,
-                    "connectionId: "+connectionId,
-                    "Error trying to get the connection state."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            throw new CantDenyActorConnectionRequestException(cantGetConnectionStateException, "connectionId: "+connectionId, "Error trying to get the connection state.");
         } catch (final CantDenyConnectionRequestException | ConnectionRequestNotFoundException networkServiceException ) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    networkServiceException
-            );
-            throw new CantDenyActorConnectionRequestException(
-                    networkServiceException,
-                    "connectionId: "+connectionId,
-                    "Error trying to deny the connection through the network service."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            throw new CantDenyActorConnectionRequestException(networkServiceException, "connectionId: "+connectionId, "Error trying to deny the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException ) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantChangeActorConnectionStateException
-            );
-            throw new CantDenyActorConnectionRequestException(
-                    cantChangeActorConnectionStateException,
-                    "connectionId: "+connectionId,
-                    "Error trying to change the actor connection state."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            throw new CantDenyActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: "+connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception
-            );
-            throw new CantDenyActorConnectionRequestException(
-                    exception,
-                    "connectionId: "+connectionId,
-                    "Unhandled error."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantDenyActorConnectionRequestException(exception, "connectionId: "+connectionId, "Unhandled error.");
         }
 
     }
@@ -277,52 +288,20 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
             throw innerException;
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantGetConnectionStateException
-            );
-            throw new CantCancelActorConnectionRequestException(
-                    cantGetConnectionStateException,
-                    "connectionId: "+connectionId,
-                    "Error trying to get the connection state."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            throw new CantCancelActorConnectionRequestException(cantGetConnectionStateException, "connectionId: "+connectionId, "Error trying to get the connection state.");
         } catch (final CantCancelConnectionRequestException | ConnectionRequestNotFoundException networkServiceException ) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    networkServiceException
-            );
-            throw new CantCancelActorConnectionRequestException(
-                    networkServiceException,
-                    "connectionId: "+connectionId,
-                    "Error trying to cancel the connection through the network service."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            throw new CantCancelActorConnectionRequestException(networkServiceException, "connectionId: "+connectionId, "Error trying to cancel the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException ) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantChangeActorConnectionStateException
-            );
-            throw new CantCancelActorConnectionRequestException(
-                    cantChangeActorConnectionStateException,
-                    "connectionId: "+connectionId,
-                    "Error trying to change the actor connection state."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            throw new CantCancelActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: "+connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception
-            );
-            throw new CantCancelActorConnectionRequestException(
-                    exception,
-                    "connectionId: "+connectionId,
-                    "Unhandled error."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantCancelActorConnectionRequestException(exception, "connectionId: "+connectionId, "Unhandled error.");
         }
     }
 
@@ -354,10 +333,7 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                     break;
 
                 default:
-                    throw new UnexpectedConnectionStateException(
-                            "connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState,
-                            "Unexpected contact state for cancelling."
-                    );
+                    throw new UnexpectedConnectionStateException("connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState, "Unexpected contact state for cancelling.");
             }
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
@@ -370,52 +346,20 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
             throw innerException;
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantGetConnectionStateException
-            );
-            throw new CantAcceptActorConnectionRequestException(
-                    cantGetConnectionStateException,
-                    "connectionId: "+connectionId,
-                    "Error trying to get the connection state."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            throw new CantAcceptActorConnectionRequestException(cantGetConnectionStateException, "connectionId: "+connectionId, "Error trying to get the connection state.");
         } catch (final CantAcceptConnectionRequestException | ConnectionRequestNotFoundException networkServiceException ) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    networkServiceException
-            );
-            throw new CantAcceptActorConnectionRequestException(
-                    networkServiceException,
-                    "connectionId: "+connectionId,
-                    "Error trying to accept the connection through the network service."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            throw new CantAcceptActorConnectionRequestException(networkServiceException, "connectionId: "+connectionId, "Error trying to accept the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException ) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantChangeActorConnectionStateException
-            );
-            throw new CantAcceptActorConnectionRequestException(
-                    cantChangeActorConnectionStateException,
-                    "connectionId: "+connectionId,
-                    "Error trying to change the actor connection state."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            throw new CantAcceptActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: "+connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception
-            );
-            throw new CantAcceptActorConnectionRequestException(
-                    exception,
-                    "connectionId: "+connectionId,
-                    "Unhandled error."
-            );
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantAcceptActorConnectionRequestException(exception, "connectionId: "+connectionId, "Unhandled error.");
         }
     }
 

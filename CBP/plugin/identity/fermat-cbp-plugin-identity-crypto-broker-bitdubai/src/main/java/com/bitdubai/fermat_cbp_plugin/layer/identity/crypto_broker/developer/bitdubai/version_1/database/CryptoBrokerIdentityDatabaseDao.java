@@ -123,7 +123,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
             final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
-            table.setStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             final List<CryptoBrokerIdentity> list = new ArrayList<>();
@@ -154,7 +154,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
             final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
-            table.setStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
 
@@ -183,7 +183,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
             final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
-            table.setStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
 
@@ -301,7 +301,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         try {
             DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
-            table.setStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             return table.getRecords ().size () > 0;
         } catch (CantLoadTableToMemoryException em) {

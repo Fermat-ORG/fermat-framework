@@ -134,7 +134,7 @@ public class CustomerBrokerSaleRequestDao {
 
     List<RequestCustomerBrokerSale> getRequestSaleSent(String requestSenderPublicKey) throws CantGetRequestListException, CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable RequestSaleTable = this.database.getTable(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_TABLE_NAME);
-        RequestSaleTable.setStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
+        RequestSaleTable.addStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
         RequestSaleTable.loadToMemory();
 
         List<DatabaseTableRecord> records = RequestSaleTable.getRecords();
@@ -151,7 +151,7 @@ public class CustomerBrokerSaleRequestDao {
 
     List<RequestCustomerBrokerSale> getReceivedRequestSale(String requestSenderPublicKey) throws CantGetRequestListException, CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable RequestSaleTable = this.database.getTable(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_TABLE_NAME);
-        RequestSaleTable.setStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
+        RequestSaleTable.addStringFilter(CustomerBrokerSaleRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_SALE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
         RequestSaleTable.loadToMemory();
 
         List<DatabaseTableRecord> records = RequestSaleTable.getRecords();
