@@ -23,8 +23,8 @@ android:
     # - sys-img-x86-android-17
 
 before_install:
- - sudo apt-get install -qq libstdc++6:i386 lib32z1
  - chmod +x gradlew
+ - git config core.autocrlf false
 
 install:
  - ./gradlew assemble
