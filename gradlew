@@ -77,14 +77,12 @@ if [ -n "$JAVA_HOME" ] ; then
     fi
     if [ ! -x "$JAVACMD" ] ; then
         die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
-
 Please set the JAVA_HOME variable in your environment to match the
 location of your Java installation."
     fi
 else
     JAVACMD="java"
     which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
-
 Please set the JAVA_HOME variable in your environment to match the
 location of your Java installation."
 fi
@@ -162,4 +160,3 @@ eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS
 JVM_OPTS[${#JVM_OPTS[*]}]="-Dorg.gradle.appname=$APP_BASE_NAME"
 
 exec "$JAVACMD" "${JVM_OPTS[@]}" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"
-set fileformat=unix
