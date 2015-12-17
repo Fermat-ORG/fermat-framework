@@ -15,7 +15,11 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.excepti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
@@ -367,4 +371,34 @@ public class BitcoinCurrencyCryptoVaultManager {
             return false;
         }
     }
+
+    /**
+     * gets a fresh un used crypto Address from the vault
+     */
+    public CryptoAddress getAddress() {
+        return null;
+    }
+
+    /**
+     * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
+     * and we must have enought funds to send this money. It allows including an Op_return output value.
+     * @param walletPublicKey
+     * @param FermatTrId
+     * @param addressTo
+     * @param satoshis
+     * @param op_Return
+     * @return
+     * @throws InsufficientCryptoFundsException
+     * @throws InvalidSendToAddressException
+     * @throws CouldNotSendMoneyException
+     * @throws CryptoTransactionAlreadySentException
+     */
+    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return)
+            throws InsufficientCryptoFundsException,
+            InvalidSendToAddressException,
+            CouldNotSendMoneyException,
+            CryptoTransactionAlreadySentException {
+        return null;
+    }
+
 }

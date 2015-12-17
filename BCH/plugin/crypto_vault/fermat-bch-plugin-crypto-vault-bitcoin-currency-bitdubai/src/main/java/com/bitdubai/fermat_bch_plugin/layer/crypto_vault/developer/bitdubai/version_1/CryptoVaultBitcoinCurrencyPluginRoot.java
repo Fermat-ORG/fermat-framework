@@ -139,7 +139,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     }
 
     /**
-     * Determines if the passsed CryptoAddress is valid.
+     * Determines if the passed CryptoAddress is valid.
      * @param addressTo the address to validate
      * @return true if valid, false if it is not.
      */
@@ -173,7 +173,6 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
          * the service is started.
          */
         this.serviceStatus = ServiceStatus.STARTED;
-        logManager.log(CryptoVaultBitcoinCurrencyPluginRoot.getLogLevelByClass(this.getClass().getName()), "PlatformCryptoVault started.", null, null);
     }
 
     /**
@@ -201,75 +200,24 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
 
 
     /**
-     * CryptoVaultManager interface implementation
+     * gets a fresh un used crypto Address from the vault
      */
     @Override
     public CryptoAddress getAddress() {
-        return vault.getAddress();
+        return bitcoinCurrencyCryptoVaultManager.getAddress();
     }
 
-    /**
-     * CryptoVaultManager interface implementation
-     */
-    @Override
-    public List<CryptoAddress> getAddresses(int amount) {
-        List<CryptoAddress> addresses = new ArrayList<CryptoAddress>();
-        for (int i=0; i < amount; i++){
-            addresses.add(getAddress());
-        }
-        return addresses;
-    }
-
-    // changed wallet id from UUID to Strubg representing a public key
-    // Ezequiel Postan August 15th 2015
     @Override
     public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return vault.sendBitcoins(FermatTrId, addressTo, satoshis, null);
+        return bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, FermatTrId, addressTo, satoshis, null);
     }
 
     @Override
     public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return vault.sendBitcoins(FermatTrId, addressTo, satoshis, op_Return);
-    }
-
-    @Override
-    public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return vault;
+        return bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, FermatTrId, addressTo, satoshis, op_Return);
     }
 
 
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return CryptoVaultBitcoinCurrencyPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
-
-    @Override
-    public CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException {
-        try {
-            return vault.getCryptoStatus(txHash);
-        } catch (CantExecuteQueryException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + txHash, "An error in the database plugin.");
-        } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + txHash, "Duplicated transaction Id in the database.");
-        }
-    }
 
     /**
      * PlatformCryptoVault interface implementations
@@ -283,4 +231,6 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     public Platforms getPlatform() {
         return Platforms.CRYPTO_CURRENCY_PLATFORM;
     }
+
+
 }

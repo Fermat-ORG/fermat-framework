@@ -18,11 +18,12 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 11/06/15.
  */
-public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>, PlatformCryptoVault {
-    public void connectToBitcoin() throws VaultNotConnectedToNetworkException;
-    public void disconnectFromBitcoin();
-    public CryptoAddress getAddress();
-    public List<CryptoAddress> getAddresses(int amount);
+public interface CryptoVaultManager extends PlatformCryptoVault {
+    /**
+     * gets a new fresh crypto address
+     * @return
+     */
+    CryptoAddress getAddress();
 
     /**
      * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
@@ -36,7 +37,7 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @throws InvalidSendToAddressException
      * @throws CouldNotSendMoneyException
      */
-    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+    String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
 
     /**
      * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
@@ -52,7 +53,7 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+    String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
 
 
 
@@ -62,14 +63,14 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @param addressTo
      * @return true if is valid and we can use it, or false if not.
      */
-    public boolean isValidAddress(CryptoAddress addressTo);
+    boolean isValidAddress(CryptoAddress addressTo);
 
 
-    /**
-     * returns the CryptoStatus of the passed transaction.
-     * @param txHash
-     * @return
-     * @throws CouldNotGetCryptoStatusException
-     */
-    CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException;
+//    /**
+//     * returns the CryptoStatus of the passed transaction.
+//     * @param txHash
+//     * @return
+//     * @throws CouldNotGetCryptoStatusException
+//     */
+//    CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException;
 }
