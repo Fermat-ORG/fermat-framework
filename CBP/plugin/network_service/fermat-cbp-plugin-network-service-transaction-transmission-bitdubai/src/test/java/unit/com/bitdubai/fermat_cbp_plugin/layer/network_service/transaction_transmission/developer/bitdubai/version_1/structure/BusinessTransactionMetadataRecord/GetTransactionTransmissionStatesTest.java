@@ -1,11 +1,11 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+
+import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -16,15 +16,15 @@ import static org.mockito.Mockito.when;
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/12/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetSenderTypeTest {
+public class GetTransactionTransmissionStatesTest {
 
-    private PlatformComponentType platformComponentType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+    private TransactionTransmissionStates transactionTransmissionStates = TransactionTransmissionStates.CONFIRM_CONTRACT;
 
     @Test
-    public void getSenderType() throws Exception{
+    public void getTransactionTransmissionStates() throws Exception{
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
-        when(businessTransactionMetadataRecord.getSenderType()).thenReturn(platformComponentType);
-        assertThat(businessTransactionMetadataRecord.getSenderType()).isNotNull();
+        when(businessTransactionMetadataRecord.getState()).thenReturn(transactionTransmissionStates).thenCallRealMethod();
+        assertThat(businessTransactionMetadataRecord.getState()).isNotNull();
         System.out.println("Test run");
     }
 }

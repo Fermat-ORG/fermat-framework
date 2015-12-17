@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -20,11 +20,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.IncomingMoneyEventWrapper;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +35,14 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
  */
-public class CustomerOnlinePaymentBusinessTransactionDao {
+public class BrokerAckOnlinePaymentBusinessTransactionDao {
     
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
 
     private Database database;
 
-    public CustomerOnlinePaymentBusinessTransactionDao(
+    public BrokerAckOnlinePaymentBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database) {
@@ -50,36 +52,36 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         this.database             = database            ;
     }
 
-    public void initialize() throws CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException {
+    public void initialize() throws CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException {
         try {
 
             database = this.pluginDatabaseSystem.openDatabase(
                     this.pluginId,
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME
             );
 
         } catch (DatabaseNotFoundException e) {
 
             try {
 
-                CustomerOnlinePaymentBusinessTransactionDatabaseFactory databaseFactory =
-                        new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseFactory databaseFactory =
+                        new BrokerAckOnlinePaymentBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(
                         pluginId,
-                        CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME
+                        BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME
                 );
 
             } catch (CantCreateDatabaseException f) {
 
-                throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
+                throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
                         CantCreateDatabaseException.DEFAULT_MESSAGE,
                         f,
                         "",
                         "There is a problem and i cannot create the database.");
             } catch (Exception z) {
 
-                throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
-                        CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
+                throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
+                        CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
                         z,
                         "",
                         "Generic Exception.");
@@ -87,15 +89,15 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
         } catch (CantOpenDatabaseException e) {
 
-            throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
+            throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
                     CantOpenDatabaseException.DEFAULT_MESSAGE,
                     e,
                     "",
                     "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
 
-            throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
-                    CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
+            throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
+                    CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
                     e,
                     "",
                     "Generic Exception.");
@@ -112,33 +114,49 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     }
 
     /**
-     * Returns the Open Contract DatabaseTable
+     * Returns the Ack Online Payment DatabaseTable
      *
      * @return DatabaseTable
      */
     private DatabaseTable getDatabaseContractTable() {
         return getDataBase().getTable(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME);
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TABLE_NAME);
     }
 
     /**
-     * Returns the Open Contract Events DatabaseTable
+     * Returns the Ack Online Payment Events DatabaseTable
      *
      * @return DatabaseTable
      */
     private DatabaseTable getDatabaseEventsTable() {
         return getDataBase().getTable(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
     }
 
+    /**
+     * Returns the Ack Online Incoming money event DatabaseTable
+     *
+     * @return DatabaseTable
+     */
+    private DatabaseTable getDatabaseIncomingMoneyTable() {
+        return getDataBase().getTable(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_NAME);
+    }
+
+    /**
+     * This method returns the contract transaction status
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
         try{
 
             String stringContractTransactionStatus=getValue(
                     contractHash,
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -148,13 +166,19 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }
     }
 
+    /**
+     * This method returns the recorded pending events
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
     public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
             databaseTable.addStringFilter(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -165,7 +189,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             }
             for(DatabaseTableRecord databaseTableRecord : records){
                 eventId=databaseTableRecord.getStringValue(
-                        CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME);
+                        BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
             return eventTypeList;
@@ -176,13 +200,19 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }
     }
 
+    /**
+     * This method returns the event type by event Id
+     * @param eventId
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public String getEventType(String eventId)
             throws
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
             databaseTable.addStringFilter(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -191,7 +221,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             String value=records
                     .get(0)
                     .getStringValue(
-                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -201,59 +231,59 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
     }
 
-    public List<String> getPendingToSubmitCryptoList() throws
+    public List<String> getPendingToAckCryptoList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getStringList(
                 ContractTransactionStatus.PENDING_PAYMENT.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    public List<CustomerOnlinePaymentRecord> getPendingToSubmitCryptoStatusList() throws
+    /*public List<CustomerOnlinePaymentRecord> getPendingToSubmitCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
                 CryptoStatus.PENDING_SUBMIT.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-    }
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }*/
 
     public List<CustomerOnlinePaymentRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
-                ContractTransactionStatus.PENDING_ONLINE_PAYMENT_NOTIFICATION.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+                ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION.getCode(),
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
     public List<CustomerOnlinePaymentRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
-                ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+                ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_CONFIRMATION.getCode(),
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    public List<CustomerOnlinePaymentRecord> getOnCryptoNetworkCryptoStatusList() throws
+    /*public List<CustomerOnlinePaymentRecord> getOnCryptoNetworkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
                 CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-    }
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }*/
 
-    public List<CustomerOnlinePaymentRecord> getOnBlockchainkCryptoStatusList() throws
+    /*public List<CustomerOnlinePaymentRecord> getOnBlockchainkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
                 CryptoStatus.ON_BLOCKCHAIN.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-    }
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }*/
 
     /**
      * This method returns a CustomerOnlinePaymentRecordList according the arguments.
@@ -287,15 +317,15 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
-    public List<CustomerOnlinePaymentRecord> getPendingCryptoTransactionList() throws
+    /*public List<CustomerOnlinePaymentRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
                 ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode(),
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
         );
-    }
+    }*/
 
     /**
      * This method returns a List with the parameter in the arguments.
@@ -338,8 +368,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         String contractHashFromDatabase=getValue(
                 contractHash,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         return contractHashFromDatabase!=null;
     }
 
@@ -401,6 +431,24 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     }
 
     /**
+     * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
+     * @param customerBrokerContractSale
+     * @throws CantInsertRecordException
+     */
+    public void persistContractInDatabase(
+            CustomerBrokerContractSale customerBrokerContractSale)
+            throws CantInsertRecordException {
+
+        DatabaseTable databaseTable=getDatabaseContractTable();
+        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+        databaseTableRecord= buildDatabaseTableRecord(
+                databaseTableRecord,
+                customerBrokerContractSale
+        );
+        databaseTable.insertRecord(databaseTableRecord);
+    }
+
+    /**
      * This method persists a basic record in database
      * @param customerBrokerContractPurchase
      * @throws CantInsertRecordException
@@ -424,7 +472,52 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         databaseTable.insertRecord(databaseTableRecord);
     }
 
-    public CustomerOnlinePaymentRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+    public IncomingMoneyEventWrapper getIncomingMoneyEventWrapper(
+            String eventId)
+            throws
+            UnexpectedResultReturnedFromDatabaseException{
+        try{
+            DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
+            databaseTable.addStringFilter(
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record = records.get(0);
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME),
+                    record.getLongValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME),
+                    CryptoCurrency.getByCode(
+                            record.getStringValue(
+                                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME)),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME),
+                    record.getLongValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME)
+                    );
+            return incomingMoneyEventWrapper;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Invalid parameter in ContractTransactionStatus");
+        }
+    }
+
+    public CustomerOnlinePaymentRecord getCustomerOnlinePaymentRecord(String contractHash)
+            throws
+            UnexpectedResultReturnedFromDatabaseException {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
@@ -433,7 +526,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             String cryptoAddressString;
             CustomerOnlinePaymentRecord customerOnlinePaymentRecord=new CustomerOnlinePaymentRecord();
             databaseTable.addStringFilter(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -442,38 +535,38 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             DatabaseTableRecord record = records.get(0);
             customerOnlinePaymentRecord.setBrokerPublicKey(
                     record.getStringValue(
-                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                                    ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME));
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                                    ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME));
             customerOnlinePaymentRecord.setContractHash(record.getStringValue(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
             contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             customerOnlinePaymentRecord.setContractTransactionStatus(contractTransactionStatus);
             customerOnlinePaymentRecord.setCustomerPublicKey(
                     record.getStringValue(
-                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                                    ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                                    ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
             customerOnlinePaymentRecord.setTransactionHash(contractHash);
             customerOnlinePaymentRecord.setTransactionId(
                     record.getStringValue(
-                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                                    ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                                    ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
             cryptoAddressString=record.getStringValue(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             customerOnlinePaymentRecord.setCryptoAddress(brokerCryptoAddress);
             customerOnlinePaymentRecord.setWalletPublicKey(
                     record.getStringValue(
-                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                    ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
             customerOnlinePaymentRecord.setCryptoAmount(
                     record.getLongValue(
-                            CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                    ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
             return customerOnlinePaymentRecord;
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -493,7 +586,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseContractTable();
             String contractHash=customerOnlinePaymentRecord.getContractHash();
             databaseTable.addStringFilter(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -515,7 +608,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param customerBrokerContractSale
      * @throws CantInsertRecordException
      */
-    public void persistContractInDatabase(
+    /*public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
 
@@ -526,7 +619,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 customerBrokerContractSale
         );
         databaseTable.insertRecord(databaseTableRecord);
-    }
+    }*/
 
     /**
      * This method creates a database table record in crypto broker side, only for backup
@@ -539,20 +632,20 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale){
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
         //For the business transaction this value represents the contract hash.
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 customerBrokerContractSale.getContractId());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractSale.getPublicKeyCustomer());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractSale.getPublicKeyBroker());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION.getCode());
 
         return record;
@@ -568,38 +661,38 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             DatabaseTableRecord record,
             CustomerOnlinePaymentRecord customerOnlinePaymentRecord){
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerOnlinePaymentRecord.getBrokerPublicKey());
         //For the business transaction this value represents the contract hash.
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 customerOnlinePaymentRecord.getContractHash());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 customerOnlinePaymentRecord.getContractTransactionStatus().getCode());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
                 customerOnlinePaymentRecord.getCryptoAddress().getAddress());
         record.setLongValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
                 customerOnlinePaymentRecord.getCryptoAmount());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
                 customerOnlinePaymentRecord.getCryptoStatus().getCode());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 customerOnlinePaymentRecord.getCustomerPublicKey());
         record.setLongValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME,
                 customerOnlinePaymentRecord.getTimestamp());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME,
                 customerOnlinePaymentRecord.getTransactionHash());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 customerOnlinePaymentRecord.getTransactionId());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 customerOnlinePaymentRecord.getWalletPublicKey());
 
         return record;
@@ -621,29 +714,29 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
         //For the business transaction this value represents the contract hash.
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 customerBrokerContractPurchase.getContractId());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractPurchase.getPublicKeyCustomer());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractPurchase.getPublicKeyBroker());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_PAYMENT.getCode());
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
                 brokerCryptoAddress);
         record.setStringValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 walletPublicKey);
         record.setLongValue(
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
                 cryptoAmount);
         return record;
     }
@@ -664,7 +757,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             databaseTable.addStringFilter(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -672,10 +765,10 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             checkDatabaseRecords(records);
             DatabaseTableRecord record=records.get(0);
             record.setUUIDValue(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                     cryptoTransactionUUID);
             record.setStringValue(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
                     CryptoStatus.PENDING_SUBMIT.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
@@ -692,7 +785,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
         updateRecordStatus(contractHash,
-                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 contractTransactionStatus.getCode());
     }
 
@@ -713,7 +806,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             databaseTable.addStringFilter(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -735,7 +828,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
             databaseTable.addStringFilter(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -743,13 +836,45 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             checkDatabaseRecords(records);
             DatabaseTableRecord record=records.get(0);
             record.setStringValue(
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter "+CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+                    "Updating parameter "+ BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }
+    }
+
+    /**
+     * This method save an incoming new event in database. You can set the event Id with this method
+     * @param eventType
+     * @param eventSource
+     * @param eventId
+     * @throws CantSaveEventException
+     */
+    public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
+            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+            long unixTime = System.currentTimeMillis();
+            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
+            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+            eventRecord.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+            databaseTable.insertRecord(eventRecord);
+
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Ack Online Payment database");
+        } catch(Exception exception){
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
         }
     }
 
@@ -761,29 +886,71 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
         try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
-            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             UUID eventRecordID = UUID.randomUUID();
-            long unixTime = System.currentTimeMillis();
-            eventRecord.setUUIDValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
-            eventRecord.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
-            eventRecord.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
-            eventRecord.setLongValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
-            databaseTable.insertRecord(eventRecord);
+            saveNewEvent(eventType, eventSource, eventRecordID.toString());
 
-
-        } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(
-                    exception,
-                    "Saving new event.",
-                    "Cannot insert a record in Online Payment database");
         } catch(Exception exception){
             throw new CantSaveEventException(
                     FermatException.wrapException(exception),
                     "Saving new event.",
                     "Unexpected exception");
         }
+    }
+
+    /**
+     * This method save an incoming money event in database. You can set the event Id with this method
+     * @param event
+     * @throws CantSaveEventException
+     */
+    public void saveIncomingMoneyEvent(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
+                    event);
+            eventRecord=buildDatabaseTableRecord(eventRecord, incomingMoneyEventWrapper);
+            databaseTable.insertRecord(eventRecord);
+
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Ack Online Payment database");
+        } catch(Exception exception){
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
+        }
+    }
+
+    private DatabaseTableRecord buildDatabaseTableRecord(
+            DatabaseTableRecord record,
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper){
+
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
+                incomingMoneyEventWrapper.getEventId());
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getReceiverPublicKey());
+        record.setLongValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME,
+                incomingMoneyEventWrapper.getCryptoAmount());
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getCryptoCurrency().getCode()
+        );
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getSenderPublicKey());
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
+                EventStatus.PENDING.getCode());
+        record.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME, incomingMoneyEventWrapper.getTimestamp());
+
+        return record;
+
     }
     
 }
