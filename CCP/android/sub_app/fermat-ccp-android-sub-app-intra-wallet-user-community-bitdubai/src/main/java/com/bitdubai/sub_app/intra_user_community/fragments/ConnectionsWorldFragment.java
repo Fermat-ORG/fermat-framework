@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -40,7 +39,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -114,7 +112,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         super.onCreate(savedInstanceState);
         try {
 
-            setHasOptionsMenu(true);
+            // setHasOptionsMenu(true);
             // setting up  module
             intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
@@ -257,10 +255,10 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.intra_user_menu, menu);
+       /* inflater.inflate(R.menu.intra_user_menu, menu);
 
         //MenuItem menuItem = new SearchView(getActivity());
-        /*try {
+        *//*try {
             MenuItem searchItem = menu.findItem(R.id.action_search);
             searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
             //MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -272,7 +270,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
         }catch (Exception e){
 
-        }*/
+        }*//*
 //        MenuItem menuItem = menu.add(0, IntraUserCommunityConstants.IC_ACTION_SEARCH, 0, "send");
 //        menuItem.setIcon(R.drawable.ic_action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 //        menuItem.setActionProvider(new SearchView(getActivity()))
@@ -298,7 +296,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 //
 //        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
 //        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-
+*/
     }
 
     @Override

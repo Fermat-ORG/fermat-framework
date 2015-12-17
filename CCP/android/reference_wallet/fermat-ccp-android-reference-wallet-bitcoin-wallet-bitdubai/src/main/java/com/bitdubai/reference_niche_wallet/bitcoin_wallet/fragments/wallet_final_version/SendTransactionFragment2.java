@@ -125,7 +125,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 //                byte[] byteArray = stream.toByteArray();
-                referenceWalletSession.getIntraUserModuleManager().createIntraUser("John Doe",null);
+                referenceWalletSession.getIntraUserModuleManager().createIntraUser("John Doe","",null);
             }
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);

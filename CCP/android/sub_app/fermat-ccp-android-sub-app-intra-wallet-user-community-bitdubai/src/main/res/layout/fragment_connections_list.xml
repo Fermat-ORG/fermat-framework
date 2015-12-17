@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="You dont have "
+            android:text="You don't have any"
             android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
@@ -45,7 +45,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="friends yet"
+            android:text="connections yet"
             android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
