@@ -251,98 +251,6 @@ public class BitcoinCurrencyCryptoVaultManager {
     }
 
     /**
-     * Gets the amount of unused keys that are available from the passed account.
-     * @param  account the hierarchy account to get the keys from
-     * @return
-     */
-    public int getAvailableKeyCount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
-        //todo implement: I will use this to validate when new assets are created in the factory the amount of available keys.
-        // if the amount of keys is less than the amount of assets to create, then I will invoke deriveKeys
-        return 0;
-    }
-
-
-    /**
-     * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
-     * @param pluginId the pluginId invoking this call. Might not have permissions to create new keys.
-     * @param account the account to derive keys from.
-     * @param keysToDerive thre amount of keys to derive.
-     * @throws CantDeriveNewKeysException
-     */
-    public void deriveKeys(UUID pluginId, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
-        //todo implement when creating assets, If I create more assets than available keys, then first I need to generate new keys.
-    }
-
-    /**
-     * * Creates a new hierarchy Account in the vault.
-     * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param description
-     * @param hierarchyAccountType
-     * @return
-     * @throws CantAddHierarchyAccountException
-     */
-    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
-        /**
-         * I will insert the record in the database. First I will get the next Id available from the database
-         */
-        int hierarchyAccountID;
-        try {
-            hierarchyAccountID = getDao().getNextAvailableHierarchyAccountId();
-        } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't get next available Id from the database.", "database issue");
-        }
-
-        /**
-         * I create the HierarchyAccount and add it to the database.
-         */
-        HierarchyAccount hierarchyAccount = new HierarchyAccount(hierarchyAccountID, description, hierarchyAccountType);
-
-        try {
-            this.getDao().addNewHierarchyAccount(hierarchyAccount);
-        } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't insert the next Hierarchy in the database.", "database issue");
-        }
-
-        /**
-         * Restart the Hierarchy Maintainer so that it loads the new added Hierarchy Account and start the monitoring.
-         */
-        this.vaultKeyHierarchyGenerator.vaultKeyHierarchyMaintainer.stop();
-        try {
-            this.vaultKeyHierarchyGenerator.vaultKeyHierarchyMaintainer.start();
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
-        }
-
-        return hierarchyAccount;
-    }
-
-    /**
-     * Gets the Extended Public Key from the specified account. Can't be from a master account.
-     * @param hierarchyAccount a Redeem Point account.
-     * @return the DeterministicKey that will be used by the redeem Points.
-     * @throws CantGetExtendedPublicKeyException
-     */
-    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
-        /**
-         * get the master account key
-         */
-        DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(hierarchyAccount);
-
-        // Serialize the pub key.
-        byte[] pubKeyBytes = accountMasterKey.getPubKey();
-        byte[] chainCode = accountMasterKey.getChainCode();
-
-
-        // Deserialize the pub key.
-        final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
-
-        /**
-         * return the extended public Key
-         */
-        return watchPubKeyAccountZero;
-    }
-
-    /**
      * Determines if the passsed CryptoAddress is valid.
      * @param addressTo the address to validate
      * @return true if valid, false if it is not.
@@ -353,7 +261,7 @@ public class BitcoinCurrencyCryptoVaultManager {
          */
         NetworkParameters networkParameters;
         try {
-            networkParameters = Address.getParametersFromAddress(addressTo.getAddress());
+            networkParameters = getNetworkParametersFromAddress(addressTo.getAddress());
         } catch (AddressFormatException e) {
             /**
              * If there is an error, I will use the default parameters.
@@ -376,13 +284,8 @@ public class BitcoinCurrencyCryptoVaultManager {
      * gets a fresh un used crypto Address from the vault
      */
     public CryptoAddress getAddress() {
-        /**
-         * I create the account manually instead of getting it from the database because this method always returns addresses
-         * from the bitcoin vault account with Id 0.
-         */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         try {
-            return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(BlockchainNetworkType.DEFAULT, vaultAccount);
+            return this.getNewBitcoinVaultCryptoAddress(BlockchainNetworkType.DEFAULT);
         } catch (GetNewCryptoAddressException e) {
             e.printStackTrace();
             return null;
