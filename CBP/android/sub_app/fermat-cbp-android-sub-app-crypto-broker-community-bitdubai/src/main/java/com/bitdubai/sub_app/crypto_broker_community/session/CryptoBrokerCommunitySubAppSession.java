@@ -27,30 +27,4 @@ public final class CryptoBrokerCommunitySubAppSession extends AbstractFermatSess
         );
     }
 
-    @Override
-    public final InstalledSubApp getSubAppSessionType() {
-
-        return getFermatApp();
-    }
-
-    public CryptoBrokerCommunityModuleManager getModuleManager() {
-        return moduleManager;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CryptoBrokerCommunitySubAppSession that = (CryptoBrokerCommunitySubAppSession) o;
-
-        return subApps == that.subApps;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return subApps.hashCode();
-    }
-
 }
