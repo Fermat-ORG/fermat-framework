@@ -163,10 +163,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#constructPlatformComponentProfileFactory(String, String, String, NetworkServiceType, PlatformComponentType, String)
+     * @see CommunicationsClientConnection#constructPlatformComponentProfileFactory(String, String, String,String, NetworkServiceType, PlatformComponentType, String)
      */
     @Override
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String phrase,String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
 
         try {
 
@@ -195,6 +195,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              * Construct a PlatformComponentProfile instance
              */
             return new PlatformComponentProfileCommunication(alias,
+                                                            phrase,
                                                              wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
                                                              identityPublicKey,
                                                              location,
@@ -229,6 +230,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
             return new PlatformComponentProfileCommunication(null,
+                                                            null,
                                                             wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
                                                             identityPublicKey,
                                                             null,

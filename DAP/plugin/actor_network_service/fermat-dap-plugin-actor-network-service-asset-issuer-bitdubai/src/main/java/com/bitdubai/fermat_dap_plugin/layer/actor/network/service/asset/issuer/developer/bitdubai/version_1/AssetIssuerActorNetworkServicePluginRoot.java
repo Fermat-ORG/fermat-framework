@@ -503,6 +503,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                  */
                 PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
+                        "",//phrase
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_ISSUER,
@@ -517,6 +518,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                  */
                 PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getActorPublicKey(),
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
+                        "",//phrase
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_ISSUER,

@@ -22,8 +22,8 @@ public interface IntraUserInformation extends IdentityUserInformation {
     public String getName();
 
     /**
-     *
-     * @return
+     *The method <code>getPhrase</code> returns the phrase of the intra user
+     * @return the phrase of the intra user
      */
     public String getPhrase();
     /**

@@ -36,6 +36,7 @@ public interface CommunicationsClientConnection {
      *
      * @param identityPublicKey
      * @param alias
+     * @param phrase
      * @param name
      * @param networkServiceType
      * @param platformComponentType
@@ -43,7 +44,7 @@ public interface CommunicationsClientConnection {
      *
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias,String phrase, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
 
     /**
      * Construct a PlatformComponentProfile instance, for use in the process
