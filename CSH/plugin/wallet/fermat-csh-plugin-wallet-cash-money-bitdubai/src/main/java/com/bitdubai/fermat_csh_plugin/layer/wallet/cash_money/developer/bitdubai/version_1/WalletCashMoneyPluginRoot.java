@@ -33,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,11 +85,11 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
 
         try {
             CashMoneyWallet wallet = loadCashMoneyWallet("publicKeyWalletMock");
-            wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 10000, "testCreditFromWallet");
-            wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 8000, "testDebitFromWallet");
+            wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(10000), "testCreditFromWallet");
+            wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(8000), "testDebitFromWallet");
 
-            wallet.getBookBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 4000, "testCreditFromWallet");
-            wallet.getBookBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 2000, "testDebitFromWallet");
+            wallet.getBookBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(4000), "testCreditFromWallet");
+            wallet.getBookBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(2000), "testDebitFromWallet");
 
         } catch (CantLoadCashMoneyWalletException e) {
             System.out.println("CASHWALLET - testCashWallet() - CantLoadCashMoneyWalletException");
@@ -139,7 +140,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         }
 
         createTestWalletIfNotExists();
-        testDeposits();
+        //testDeposits();
     }
 
 

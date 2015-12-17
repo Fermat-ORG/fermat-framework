@@ -4,6 +4,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -19,8 +20,8 @@ public class GetContractHashTest {
     @Test
     public void getContractHash() throws Exception{
 
-        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
-        when(businessTransactionMetadataRecord.getContractHash()).thenReturn("1");
+        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class, Mockito.RETURNS_DEEP_STUBS);
+        when(businessTransactionMetadataRecord.getContractHash()).thenReturn("1").thenCallRealMethod();
         assertThat(businessTransactionMetadataRecord.getContractHash()).isNotNull();
     }
 

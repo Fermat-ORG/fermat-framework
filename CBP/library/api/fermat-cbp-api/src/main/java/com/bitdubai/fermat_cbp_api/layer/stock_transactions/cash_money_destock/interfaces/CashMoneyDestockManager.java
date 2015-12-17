@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
 
+import java.math.BigDecimal;
+
 
 /**
  * Created by franklin on 16/11/15.
@@ -31,9 +33,9 @@ public interface CashMoneyDestockManager extends FermatManager {
             String cbpWalletPublicKey,
             String cshWalletPublicKey,
             String cashReference,
-            float amount,
+            BigDecimal amount,
             String memo,
-            float priceReference,
+            BigDecimal priceReference,
             OriginTransaction originTransaction
         ) throws CantCreateCashMoneyDestockException;
 }

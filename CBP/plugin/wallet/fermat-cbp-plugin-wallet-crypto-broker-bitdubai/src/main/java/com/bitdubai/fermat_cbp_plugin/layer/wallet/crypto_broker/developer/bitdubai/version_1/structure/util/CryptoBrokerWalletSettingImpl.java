@@ -42,8 +42,8 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
     }
 
     @Override
-    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(UUID id) throws CantGetCryptoBrokerWalletSettingException {
-        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerWalletSpreadSetting(id);
+    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting() throws CantGetCryptoBrokerWalletSettingException {
+        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerWalletSpreadSetting();
     }
 
     @Override

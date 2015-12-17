@@ -5,14 +5,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletBalanceRecord;
 
+import java.math.BigDecimal;
+
 /**
  * Created by franklin on 01/12/15.
  */
 public class CryptoBrokerWalletBalanceRecordImpl implements CryptoBrokerWalletBalanceRecord {
 
     private FermatEnum merchandise;
-    private float bookBalance;
-    private float availableBalance;
+    private BigDecimal bookBalance;
+    private BigDecimal availableBalance;
     private CurrencyType  currencyType;
     private String brokerPublicKey;
 
@@ -39,22 +41,22 @@ public class CryptoBrokerWalletBalanceRecordImpl implements CryptoBrokerWalletBa
     }
 
     @Override
-    public float getBookBalance() {
+    public BigDecimal getBookBalance() {
         return bookBalance;
     }
 
     @Override
-    public void setBookBalance(float bookBalance) {
+    public void setBookBalance(BigDecimal bookBalance) {
         this.bookBalance = bookBalance;
     }
 
     @Override
-    public float getAvailableBalance() {
+    public BigDecimal getAvailableBalance() {
         return availableBalance;
     }
 
     @Override
-    public void setAvilableBalance(float availableBalance) {
+    public void setAvilableBalance(BigDecimal availableBalance) {
         this.availableBalance = availableBalance;
     }
 
