@@ -1,6 +1,0 @@
-= Wallet Manager - Middleware Layer
-
-La modificación de este plugin es que debe escuchar un evento del crypto addresses network service
-que da inforrmación sobre una wallet y este módulo debe calcular cuales son las wallets del sistema
-que podrían intercambiar transacciones con dicha wallet. +
-Luego debería pasar la lista que calcula al crypto addresses network service nuevamente.
