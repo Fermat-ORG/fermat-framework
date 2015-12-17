@@ -79,10 +79,10 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                     case 2:
                         Picasso.with(context).load(R.drawable.btn_drawer_icon_request_fluor).into(holder.getIcon());
                         break;
+//                    case 3:
+//                        Picasso.with(context).load(R.drawable.btn_drawer_icon_setting_fluor).into(holder.getIcon());
+//                        break;
                     case 3:
-                        Picasso.with(context).load(R.drawable.btn_drawer_icon_setting_fluor).into(holder.getIcon());
-                        break;
-                    case 4:
                         Picasso.with(context).load(R.drawable.btn_drawer_icon_logout_fluor).into(holder.getIcon());
                         break;
                     default:
@@ -99,10 +99,10 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
                     case 2:
                         Picasso.with(context).load(R.drawable.btn_drawer_request_normal).into(holder.getIcon());
                         break;
+//                    case 3:
+//                        Picasso.with(context).load(R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
+//                        break;
                     case 3:
-                        Picasso.with(context).load(R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
-                        break;
-                    case 4:
                         Picasso.with(context).load(R.drawable.btn_drawer_logout_normal).into(holder.getIcon());
                         break;
                     default:

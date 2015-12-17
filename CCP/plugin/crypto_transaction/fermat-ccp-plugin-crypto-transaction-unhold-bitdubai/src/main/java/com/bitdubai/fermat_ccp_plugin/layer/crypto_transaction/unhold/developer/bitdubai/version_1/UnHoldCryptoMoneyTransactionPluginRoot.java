@@ -166,7 +166,8 @@ public class UnHoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  impl
             unHoldCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.ACKNOWLEDGED);
             unHoldCryptoMoneyTransaction.setPublicKeyActor(holdParameters.getPublicKeyActor());
             unHoldCryptoMoneyTransaction.setPublicKeyPlugin(holdParameters.getPublicKeyPlugin());
-            unHoldCryptoMoneyTransaction.setAmount(holdParameters.getAmount());
+            //TODO:Cambiar BigDecimal
+            unHoldCryptoMoneyTransaction.setAmount(holdParameters.getAmount().floatValue());
             unHoldCryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
             unHoldCryptoMoneyTransaction.setMemo(holdParameters.getMemo());
             unHoldCryptoMoneyTransactionManager.saveUnHoldCryptoMoneyTransactionData(unHoldCryptoMoneyTransaction);

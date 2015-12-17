@@ -11,8 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 
@@ -22,7 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
  * <p/>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 09/02/15.
- *
+ * Modified by Víctor Mars - (marsvicam@gmail.com) on 15/12/15.
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -55,31 +53,4 @@ public interface AssetTransmissionNetworkServiceManager extends TransactionProto
                                               PlatformComponentType receiverType,
                                               String transactionId,
                                               DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
-
-    /**
-     * Method that send the Transaction New Status Notification
-     * <p/>
-     * This method is deprecated, instead you should use its overload version that sends from an
-     * {@link DAPActor} to another one. This method would remain in there for compatibility. Probably this one will disappear soon.
-     *
-     * @param transactionId         (GenesisTransaction)
-     * @param newDistributionStatus
-     */
-    @Deprecated
-    void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender, String actorAssetIssuerReceiverPublicKey, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
-
-
-    /**
-     * Method that send DigitalAssetMetadata.
-     * This method is deprecated, instead you should use its overload version that sends from an
-     * {@link DAPActor} to another one. This method would remain in there for compatibility. Probably it will dissapear soon.
-     *
-     * @param actorAssetIssuerSender
-     * @param actorAssetUserReceiver
-     * @param digitalAssetMetadataToSend
-     * @throws CantSendDigitalAssetMetadataException
-     */
-    @Deprecated
-    void sendDigitalAssetMetadata(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException;
-
 }

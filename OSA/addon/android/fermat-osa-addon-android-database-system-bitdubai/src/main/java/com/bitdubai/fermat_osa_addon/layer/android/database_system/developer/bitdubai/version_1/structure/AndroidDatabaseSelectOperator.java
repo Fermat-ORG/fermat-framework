@@ -4,15 +4,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectO
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
 
 /**
- * Created by natalia on 08/07/15.
- */
-
-/**
  * This class define methods to sets the operators to apply on select field
  *
- *
+ *Created by natalia on 08/07/15.
  */
-
 public class AndroidDatabaseSelectOperator implements DatabaseSelectOperator {
 
     /**
@@ -22,6 +17,13 @@ public class AndroidDatabaseSelectOperator implements DatabaseSelectOperator {
     private DataBaseSelectOperatorType type;
     private String alias;
 
+    public AndroidDatabaseSelectOperator(final String                     column,
+                                         final DataBaseSelectOperatorType type  ,
+                                         final String                     alias ) {
+        this.column = column;
+        this.type = type;
+        this.alias = alias;
+    }
 
     /**
      * DatabaseSelectOperator interface implementation.

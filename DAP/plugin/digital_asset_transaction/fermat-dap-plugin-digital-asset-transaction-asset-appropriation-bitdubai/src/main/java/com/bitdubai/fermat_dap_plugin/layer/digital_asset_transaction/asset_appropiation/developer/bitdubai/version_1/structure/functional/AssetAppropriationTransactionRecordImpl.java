@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_app
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationTransactionRecord;
@@ -19,7 +20,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
 
     private AppropriationStatus status;
 
-    private DigitalAsset digitalAsset;
+    private DigitalAssetMetadata digitalAssetMetadata;
 
     private String bitcoinWalletPublicKey;
 
@@ -38,7 +39,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
 
     public AssetAppropriationTransactionRecordImpl(String transactionId,
                                                    AppropriationStatus status,
-                                                   DigitalAsset digitalAsset,
+                                                   DigitalAssetMetadata digitalAssetMetadata,
                                                    String bitcoinWalletPublicKey,
                                                    String userWalletPublicKey,
                                                    CryptoAddress addressTo,
@@ -47,7 +48,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
                                                    String genesisTransaction) {
         this.transactionId = transactionId;
         this.status = status;
-        this.digitalAsset = digitalAsset;
+        this.digitalAssetMetadata = digitalAssetMetadata;
         this.bitcoinWalletPublicKey = bitcoinWalletPublicKey;
         this.userWalletPublicKey = userWalletPublicKey;
         this.addressTo = addressTo;
@@ -64,7 +65,7 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
         return "AssetAppropriationTransactionRecordImpl{" +
                 "transactionId='" + transactionId + '\'' +
                 ", status=" + status +
-                ", digitalAsset=" + digitalAsset +
+                ", digitalAssetMetadata=" + digitalAssetMetadata +
                 ", bitcoinWalletPublicKey=" + bitcoinWalletPublicKey +
                 ", userWalletPublicKey='" + userWalletPublicKey + '\'' +
                 ", startTime=" + startTime +
@@ -84,7 +85,6 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
         if (endTime != that.endTime) return false;
         if (!transactionId.equals(that.transactionId)) return false;
         if (status != that.status) return false;
-        if (!digitalAsset.equals(that.digitalAsset)) return false;
         if (!bitcoinWalletPublicKey.equals(that.bitcoinWalletPublicKey)) return false;
         if (!userWalletPublicKey.equals(that.userWalletPublicKey)) return false;
         return genesisTransaction.equals(that.genesisTransaction);
@@ -95,7 +95,6 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
     public int hashCode() {
         int result = transactionId.hashCode();
         result = 31 * result + status.hashCode();
-        result = 31 * result + digitalAsset.hashCode();
         result = 31 * result + bitcoinWalletPublicKey.hashCode();
         result = 31 * result + userWalletPublicKey.hashCode();
         result = 31 * result + (int) (startTime ^ (startTime >>> 32));
@@ -124,7 +123,12 @@ public class AssetAppropriationTransactionRecordImpl implements AssetAppropriati
 
     @Override
     public DigitalAsset digitalAsset() {
-        return digitalAsset;
+        return digitalAssetMetadata.getDigitalAsset();
+    }
+
+    @Override
+    public DigitalAssetMetadata assetMetadata() {
+        return digitalAssetMetadata;
     }
 
     @Override

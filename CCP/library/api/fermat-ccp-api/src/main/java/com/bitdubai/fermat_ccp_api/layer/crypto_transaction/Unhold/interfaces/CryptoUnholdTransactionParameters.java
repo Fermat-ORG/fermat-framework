@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -41,8 +42,8 @@ public interface CryptoUnholdTransactionParameters {
      * Returns the amount of the transaction
      * @return      Amount of the transaction
      */
-    float getAmount();
-    void  setAmount(float amount);
+    BigDecimal getAmount();
+    void  setAmount(BigDecimal amount);
 
     /**
      * Returns the currency of the transaction

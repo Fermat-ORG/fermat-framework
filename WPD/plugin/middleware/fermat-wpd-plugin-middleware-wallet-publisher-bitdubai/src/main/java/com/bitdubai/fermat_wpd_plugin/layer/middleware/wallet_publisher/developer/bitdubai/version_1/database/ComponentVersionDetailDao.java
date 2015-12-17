@@ -99,7 +99,7 @@ public class ComponentVersionDetailDao {
              */
             getDataBase().openDatabase();
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -307,7 +307,7 @@ public class ComponentVersionDetailDao {
              */
             getDataBase().openDatabase();
             DatabaseTable walletPublishedMiddlewareInformationTable = getDatabaseTable();
-            walletPublishedMiddlewareInformationTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            walletPublishedMiddlewareInformationTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             walletPublishedMiddlewareInformationTable.loadToMemory();
 
             /*

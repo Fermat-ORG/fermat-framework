@@ -163,7 +163,7 @@ public class NetworkServicesWalletResourcesDAO {
 
             DatabaseTable repoTable= database.getTable(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME);
 
-            repoTable.setUUIDFilter(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+            repoTable.addUUIDFilter(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
 
             repoTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecordList = repoTable.getRecords();
@@ -201,8 +201,8 @@ public class NetworkServicesWalletResourcesDAO {
      * @throws com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException
      */
     private DatabaseTableRecord getRepositoryDatabaseTableRecord(DatabaseTable repositoryTable,UUID skinId,String repositoryName) throws CantLoadTableToMemoryException, com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
-        repositoryTable.setUUIDFilter(com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
-        repositoryTable.setStringFilter(com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
+        repositoryTable.addUUIDFilter(com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+        repositoryTable.addStringFilter(com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
         repositoryTable.loadToMemory();
         List<DatabaseTableRecord> databaseTableRecordList = repositoryTable.getRecords();
 

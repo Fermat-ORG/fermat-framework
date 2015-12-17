@@ -58,7 +58,7 @@ public class CryptoVaultDatabaseActions {
 
             DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
             cryptoTxTable.loadToMemory();
 
             if (cryptoTxTable.getRecords().isEmpty()){
@@ -103,7 +103,7 @@ public class CryptoVaultDatabaseActions {
         try {
             DatabaseTable fermatTxTable = database.getTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
 
-            fermatTxTable.setUUIDFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
+            fermatTxTable.addUUIDFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
             fermatTxTable.loadToMemory();
 
@@ -125,7 +125,7 @@ public class CryptoVaultDatabaseActions {
         try {
             DatabaseTable fermatTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-            fermatTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+            fermatTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
 
             fermatTxTable.loadToMemory();
 
@@ -203,8 +203,8 @@ public class CryptoVaultDatabaseActions {
 
             ProtocolStatus protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
 
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, protocolStatus.getCode(), DatabaseFilterType.EQUAL);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, protocolStatus.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
@@ -237,7 +237,7 @@ public class CryptoVaultDatabaseActions {
             DatabaseTable cryptoTxTable;
             cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-            cryptoTxTable.setUUIDFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
+            cryptoTxTable.addUUIDFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
@@ -283,7 +283,7 @@ public class CryptoVaultDatabaseActions {
         try {
             DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
@@ -316,9 +316,9 @@ public class CryptoVaultDatabaseActions {
 
             ProtocolStatus protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
 
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME    , protocolStatus.getCode() , DatabaseFilterType.EQUAL);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type          .getCode() , DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, protocolStatus.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
@@ -390,8 +390,8 @@ public class CryptoVaultDatabaseActions {
         try {
             DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME       , txHash                 , DatabaseFilterType.EQUAL);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.getCode() , DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+            cryptoTxTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
@@ -507,7 +507,7 @@ public class CryptoVaultDatabaseActions {
 
         DatabaseTable cryptoTransactionsTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-        cryptoTransactionsTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+        cryptoTransactionsTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         cryptoTransactionsTable.loadToMemory();
 
         List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();
