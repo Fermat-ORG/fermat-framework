@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -28,7 +29,9 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
@@ -169,13 +172,29 @@ public class AssetCryptoVaultManager  {
         /**
          * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
          */
-        final Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+
         if (genesisTransaction  == null){
-            StringBuilder output = new StringBuilder("The specified transaction hash ");
-            output.append(genesisTransactionId);
-            output.append(System.lineSeparator());
-            output.append("doesn't exists in the CryptoNetwork.");
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            /**
+             * Transaction might be null because we are sending from the user to appropiate or redeem an asset, and we don't have the GenesisTransaction
+             * stored in our wallet. If this is the case I will find a child that uses the GenesisTransaction as an input and use the child transaction
+             * to send the bitcoins.
+             */
+            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransaction(networkType, VaultType.CRYPTO_ASSET_VAULT);
+            for (Transaction transaction : transactions){
+                for (TransactionInput input : transaction.getInputs()){
+                    if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionId))
+                        genesisTransaction = transaction;
+                }
+            }
+
+            if (genesisTransaction  == null){
+                StringBuilder output = new StringBuilder("The specified transaction hash ");
+                output.append(genesisTransactionId);
+                output.append(System.lineSeparator());
+                output.append("doesn't exists in the CryptoNetwork.");
+                throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            }
         }
 
 
@@ -203,10 +222,11 @@ public class AssetCryptoVaultManager  {
         wallet.addWalletTransaction(walletTransaction);
 
         /**
-         * Calculates the amount to be sent by removing the fee from the passed value.
+         * Calculates the amount to be sent by removing the fee from the available balance.
+         * I'm ignoring the GenesisAmount passed because this might not be the right value.
          */
         Coin fee = Coin.valueOf(10000);
-        final Coin coinToSend = Coin.valueOf(amount).subtract(fee);
+        final Coin coinToSend = wallet.getBalance().subtract(fee);
 
         /**
          * creates the send request and broadcast it on the network.
