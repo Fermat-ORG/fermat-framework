@@ -2,7 +2,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *

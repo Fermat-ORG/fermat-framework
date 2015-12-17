@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao</code>
  * Class used to initialize the database and access and modify the saved data.<p/>
  * <p/>
  *

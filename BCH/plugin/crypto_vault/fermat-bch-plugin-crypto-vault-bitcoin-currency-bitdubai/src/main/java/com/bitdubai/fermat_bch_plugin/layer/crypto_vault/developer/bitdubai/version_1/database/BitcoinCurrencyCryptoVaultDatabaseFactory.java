@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDatabaseFactory</code>
+ *  The Class  <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *

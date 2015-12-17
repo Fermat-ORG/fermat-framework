@@ -37,6 +37,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -167,14 +168,8 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        try {
-            String userPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(userPublicKey, pluginId.toString());
-            return dbFactory.getDatabaseList(developerObjectFactory);
-        } catch (CantGetLoggedInDeviceUserException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-        return new ArrayList<>();
+        BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     /**
@@ -185,7 +180,8 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return DeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     /**
@@ -197,7 +193,8 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+        BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     @Override
@@ -326,12 +323,13 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         try {
             // the DeviceUserLogged
             String deviceUserLoggedPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-
+            System.out.println("Starting new BitcoinCurrency Crypto Vault.");
             BitcoinCurrencyCryptoVaultManager bitcoinCurrencyCryptoVaultManager = new BitcoinCurrencyCryptoVaultManager(this.pluginId,
                     this.pluginFileSystem,
                     this.pluginDatabaseSystem,
                     deviceUserLoggedPublicKey,
                     this.bitcoinNetworkManager);
+
         } catch (InvalidSeedException e) {
             e.printStackTrace();
         } catch (CantGetLoggedInDeviceUserException e) {

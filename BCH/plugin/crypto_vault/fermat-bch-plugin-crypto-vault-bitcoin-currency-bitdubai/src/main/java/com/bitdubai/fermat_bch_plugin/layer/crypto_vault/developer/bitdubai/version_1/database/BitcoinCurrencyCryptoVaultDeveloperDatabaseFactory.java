@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
@@ -115,7 +115,7 @@ public class BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory implements Deals
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("AssetsOverBitcoin", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("BitcoinCurrency", this.pluginId.toString()));
         return databases;
     }
 
