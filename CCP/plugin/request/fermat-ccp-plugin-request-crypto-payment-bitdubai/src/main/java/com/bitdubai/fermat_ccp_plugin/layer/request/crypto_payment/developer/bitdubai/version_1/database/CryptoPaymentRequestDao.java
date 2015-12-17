@@ -148,7 +148,7 @@ public class CryptoPaymentRequestDao {
 
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -180,7 +180,7 @@ public class CryptoPaymentRequestDao {
 
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -216,7 +216,7 @@ public class CryptoPaymentRequestDao {
 
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addUUIDFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -248,7 +248,7 @@ public class CryptoPaymentRequestDao {
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.setFilterTop(max.toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
@@ -281,8 +281,8 @@ public class CryptoPaymentRequestDao {
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME            , state.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME, state.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.setFilterTop   (max   .toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
@@ -315,8 +315,8 @@ public class CryptoPaymentRequestDao {
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME             , type.getCode() , DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.setFilterTop   (max   .toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
@@ -350,9 +350,9 @@ public class CryptoPaymentRequestDao {
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME            , state.getCode(), DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME             , type .getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME, state.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.setFilterTop   (max   .toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());

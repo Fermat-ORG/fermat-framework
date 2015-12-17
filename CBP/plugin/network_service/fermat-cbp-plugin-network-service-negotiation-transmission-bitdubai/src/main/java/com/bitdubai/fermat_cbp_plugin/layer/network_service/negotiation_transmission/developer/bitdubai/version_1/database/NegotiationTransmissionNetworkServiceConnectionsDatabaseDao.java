@@ -81,7 +81,7 @@ public class NegotiationTransmissionNetworkServiceConnectionsDatabaseDao {
         try {
 
             DatabaseTable metadataTable = database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_TABLE_NAME);
-            metadataTable.setUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            metadataTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
             metadataTable.loadToMemory();
             List<DatabaseTableRecord> records = metadataTable.getRecords();
             if (!records.isEmpty())

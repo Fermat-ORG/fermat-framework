@@ -414,6 +414,14 @@ public enum Activities {
                 return CSH_CASH_MONEY_WALLET_HOME;
             case "BNKBMWAD":
                 return BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS;
+            case "DWAIMA":
+                return DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY;
+            case "DWUIMA":
+                return DAP_WALLET_ASSET_USER_MAIN_ACTIVITY;
+            case "DWRPMA":
+                return DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY;
+            case "DAIWAD":
+                return DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

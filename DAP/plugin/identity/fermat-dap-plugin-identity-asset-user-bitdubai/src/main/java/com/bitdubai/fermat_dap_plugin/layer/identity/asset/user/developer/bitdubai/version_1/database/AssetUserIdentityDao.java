@@ -200,7 +200,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
 
             // 2) Find the Intra users.
-            table.setStringFilter(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
@@ -332,7 +332,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Asset User Identity", "");
             }
 
-            table.setStringFilter(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords ().size () > 0;

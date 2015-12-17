@@ -1217,6 +1217,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
+
         } catch (Exception e) {
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

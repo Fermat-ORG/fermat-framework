@@ -121,7 +121,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
                 throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("Cant Update Status Customer Broker New Negotiation Transaction, not exists.", "Customer Broker New Negotiation Transaction, Update State", "Cant Update State Customer Broker New Negotiation Transaction, not exists");
 
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            table.setUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             DatabaseTableRecord record = table.getEmptyRecord();
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME, statusTransaction.getCode());
             table.updateRecord(record);
@@ -144,7 +144,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
             }
-            table.setUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
@@ -379,7 +379,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new tablet exists", "Customer Broker New Negotiation Transaction", "");
             }
-            table.setUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {

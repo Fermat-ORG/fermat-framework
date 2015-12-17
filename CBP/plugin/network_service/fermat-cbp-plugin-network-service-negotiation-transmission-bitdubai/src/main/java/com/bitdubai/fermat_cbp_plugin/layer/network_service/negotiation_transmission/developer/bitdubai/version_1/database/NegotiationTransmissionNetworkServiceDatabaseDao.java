@@ -260,7 +260,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         try {
 
             DatabaseTable databaseTable = getDatabaseTable();
-            databaseTable.setUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            databaseTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
 
