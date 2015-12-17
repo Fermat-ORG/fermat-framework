@@ -21,6 +21,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
+import com.squareup.okhttp.internal.Network;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -335,5 +336,35 @@ public class BitcoinCurrencyCryptoVaultManager {
          * return the extended public Key
          */
         return watchPubKeyAccountZero;
+    }
+
+    /**
+     * Determines if the passsed CryptoAddress is valid.
+     * @param addressTo the address to validate
+     * @return true if valid, false if it is not.
+     */
+    public boolean isValidAddress(CryptoAddress addressTo) {
+        /**
+         * I extract the network Parameter from the address
+         */
+        NetworkParameters networkParameters;
+        try {
+            networkParameters = Address.getParametersFromAddress(addressTo.getAddress());
+        } catch (AddressFormatException e) {
+            /**
+             * If there is an error, I will use the default parameters.
+             */
+            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+        }
+
+        /**
+         * If the address is correct, then no exception raised.
+         */
+        try {
+            Address address = new Address(networkParameters, addressTo.getAddress());
+            return true;
+        } catch (AddressFormatException e) {
+            return false;
+        }
     }
 }

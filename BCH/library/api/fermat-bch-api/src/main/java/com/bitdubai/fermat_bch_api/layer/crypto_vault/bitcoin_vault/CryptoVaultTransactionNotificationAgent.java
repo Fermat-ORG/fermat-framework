@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.bitcoin_vault;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault;
 
 /**
  * Created by rodrigo on 2015.06.23..
