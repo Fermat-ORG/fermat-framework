@@ -79,9 +79,9 @@ public class CreateIdentityFragment extends FermatFragment {
             moduleManager = userIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            if(moduleManager.getIdentityAssetUsersFromCurrentDeviceUser().isEmpty()){
-                moduleManager.createNewIdentityAssetUser("Asset User John Doe", null);
-            }
+//            if(moduleManager.getIdentityAssetUsersFromCurrentDeviceUser().isEmpty()){
+//                moduleManager.createNewIdentityAssetUser("Asset User John Doe", null);
+//            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
