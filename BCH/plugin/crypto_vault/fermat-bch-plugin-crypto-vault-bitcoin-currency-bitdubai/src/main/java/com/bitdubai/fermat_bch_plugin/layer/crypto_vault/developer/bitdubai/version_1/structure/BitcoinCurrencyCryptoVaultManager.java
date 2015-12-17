@@ -376,7 +376,17 @@ public class BitcoinCurrencyCryptoVaultManager {
      * gets a fresh un used crypto Address from the vault
      */
     public CryptoAddress getAddress() {
-        return null;
+        /**
+         * I create the account manually instead of getting it from the database because this method always returns addresses
+         * from the bitcoin vault account with Id 0.
+         */
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        try {
+            return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(BlockchainNetworkType.DEFAULT, vaultAccount);
+        } catch (GetNewCryptoAddressException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
