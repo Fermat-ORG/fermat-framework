@@ -20,6 +20,7 @@ public class CryptoBrokerWalletDatabaseConstants {
     static final String CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME = "spread_id";
     static final String CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME = "spread";
     static final String CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
+    static final String CRYPTO_BROKER_WALLET_SPREAD_RESTOCK_AUTOMATIC = "restock_automatic";
 
     /**
      * Crypto Wallet Associated Setting table definition.

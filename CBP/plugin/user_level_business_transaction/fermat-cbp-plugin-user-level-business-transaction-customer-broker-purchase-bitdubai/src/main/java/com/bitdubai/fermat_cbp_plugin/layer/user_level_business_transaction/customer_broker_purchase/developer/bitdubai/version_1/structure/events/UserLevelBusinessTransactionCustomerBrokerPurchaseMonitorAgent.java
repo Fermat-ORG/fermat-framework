@@ -7,7 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -49,6 +52,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
     private final OpenContractManager openContractManager;
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+    private final FiatIndexManager fiatIndexManager;
 
     public UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(ErrorManager errorManager,
                                                                           CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
@@ -56,13 +60,15 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                                                                           UUID pluginId,
                                                                           OpenContractManager openContractManager,
                                                                           CloseContractManager closeContractManager,
-                                                                          CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager) {
+                                                                          CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
+                                                                          FiatIndexManager fiatIndexManager) {
 
         this.errorManager                                                  = errorManager;
         this.customerBrokerPurchaseNegotiationManager                      = customerBrokerPurchaseNegotiationManager;
         this.openContractManager                                           = openContractManager;
         this.closeContractManager                                          = closeContractManager;
         this.customerBrokerContractPurchaseManager                         = customerBrokerContractPurchaseManager;
+        this.fiatIndexManager                                              = fiatIndexManager;
         this.userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao(pluginDatabaseSystem, pluginId);
     }
     @Override
@@ -145,7 +151,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                 {
                     CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerPurchase.getTransactionId()));
                     //Registra el Open Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Purchase este IN_PROCESS
-                    openContractManager.openPurchaseContract(customerBrokerPurchaseNegotiation, null);
+                    openContractManager.openPurchaseContract(customerBrokerPurchaseNegotiation, fiatIndexManager.getCurrentIndex(fiatIndexManager.getReferenceCurrency()));
                     //Actualiza el Transaction_Status de la Transaction Customer Broker Purchase a IN_OPEN_CONTRACT
                     customerBrokerPurchase.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
                     userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
@@ -178,7 +184,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                             //Recorrer las clausulas del contrato
                             for (ContractClause contractClause : customerBrokerContractPurchase.getContractClause())
                             {
-
+                                if (contractClause.getStatus().getCode() != ContractClauseStatus.EXECUTED.getCode())
+                                {
+                                    //Debemos enviar notificacion de las distintas clausulas segun se estatus
+                                }
                             }
                         }
                     }
@@ -268,6 +277,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
             } catch (CantGetListCustomerBrokerContractPurchaseException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantCloseContractException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantGetIndexException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }

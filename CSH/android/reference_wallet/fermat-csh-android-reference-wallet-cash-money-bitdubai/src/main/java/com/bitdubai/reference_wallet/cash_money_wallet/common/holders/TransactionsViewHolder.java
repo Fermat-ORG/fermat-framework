@@ -13,6 +13,7 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -69,9 +70,9 @@ public class TransactionsViewHolder extends FermatViewHolder {
     /* HELPER FUNCTIONS */
     private Bitmap getImgBitmap(TransactionType transactionType) {
         if(transactionType == TransactionType.DEBIT)
-            return BitmapFactory.decodeResource(res, R.drawable.ic_action_upload_grey);
+            return BitmapFactory.decodeResource(res, R.drawable.csh_withdrawal);
         else
-            return BitmapFactory.decodeResource(res, R.drawable.ic_action_download_grey);
+            return BitmapFactory.decodeResource(res, R.drawable.csh_deposit);
     }
 
     private int getTransactionColor(TransactionType transactionType) {
@@ -88,9 +89,10 @@ public class TransactionsViewHolder extends FermatViewHolder {
             return res.getString(R.string.deposit_transaction_text);
     }
 
-    private String getTransactionAmountText(TransactionType transactionType, double amount)
+    private String getTransactionAmountText(TransactionType transactionType, BigDecimal amount)
     {
-        return (transactionType == TransactionType.CREDIT ? "+" : "-") + decimalFormat.format(amount);
+        //return (transactionType == TransactionType.CREDIT ? "+" : "-") + decimalFormat.format(amount);
+        return (transactionType == TransactionType.CREDIT ? "+" : "-") + amount;
     }
 
 }
