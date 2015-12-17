@@ -56,7 +56,6 @@ import java.util.regex.Pattern;
  */
 
 public class OpenContractPluginRoot extends AbstractPlugin implements
-        //OpenContractManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers{
 
