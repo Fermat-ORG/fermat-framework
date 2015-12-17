@@ -49,7 +49,7 @@ public class BalanceSummaryFragment extends FermatWalletListFragment<CashMoneyWa
 implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
 
     protected final String TAG = "BalanceSummaryFragment";
-    protected final String walletPublicKey = "publicKeyWalletMock";
+    protected final String walletPublicKey = "cash_wallet";
 
     // Fermat Managers
     private CashMoneyWalletModuleManager moduleManager;
