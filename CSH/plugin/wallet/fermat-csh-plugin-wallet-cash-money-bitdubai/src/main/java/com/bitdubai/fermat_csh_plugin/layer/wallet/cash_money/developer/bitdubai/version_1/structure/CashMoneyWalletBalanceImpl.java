@@ -15,6 +15,7 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -51,12 +52,12 @@ public class CashMoneyWalletBalanceImpl implements CashMoneyWalletBalance {
     }
 
     @Override
-    public double getBalance() throws CantGetCashMoneyWalletBalanceException {
+    public BigDecimal getBalance() throws CantGetCashMoneyWalletBalanceException {
         return dao.getWalletBalance(walletPublicKey, balanceType);
     }
 
     @Override
-    public void debit(UUID transactionId, String publicKeyActor, String publicKeyPlugin, float amount, String memo) throws CantRegisterDebitException {
+    public void debit(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterDebitException {
 
         try {
             CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.DEBIT, this.balanceType, amount, memo, (new Date().getTime() / 1000));
@@ -68,7 +69,7 @@ public class CashMoneyWalletBalanceImpl implements CashMoneyWalletBalance {
     }
 
     @Override
-    public void credit(UUID transactionId, String publicKeyActor, String publicKeyPlugin, float amount, String memo) throws CantRegisterCreditException {
+    public void credit(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterCreditException {
         try {
             CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.CREDIT, this.balanceType, amount, memo, (new Date().getTime() / 1000));
             dao.credit(this.walletPublicKey, this.balanceType, amount);

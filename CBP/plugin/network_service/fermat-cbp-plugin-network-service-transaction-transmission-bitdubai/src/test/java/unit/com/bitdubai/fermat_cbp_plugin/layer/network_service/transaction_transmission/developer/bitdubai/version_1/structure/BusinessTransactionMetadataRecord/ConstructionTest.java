@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -13,6 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by root on 12/12/15.
@@ -22,33 +25,27 @@ public class ConstructionTest {
 
     private String contractHash     = new String();
 
-    @Mock
-    private ContractTransactionStatus contractTransactionStatus;
+    private ContractTransactionStatus contractTransactionStatus = ContractTransactionStatus.CONTRACT_COMPLETED;
 
     private String receiverId       = new String();
 
-    @Mock
-    private PlatformComponentType receiverType;
+    private PlatformComponentType receiverType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
 
     private String senderId         = new String();
 
-    @Mock
-    private PlatformComponentType senderType;
+    private PlatformComponentType senderType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
 
     private String contractId       = new String();
 
     private String negotiationId    = new String();
 
-    @Mock
-    private BusinessTransactionTransactionType transactionType;
+    private BusinessTransactionTransactionType transactionType = BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE;
 
     private Long timestamp          = new Long(1);
 
-    @Mock
-    private UUID transactionId;
+    private UUID transactionId = UUID.randomUUID();
 
-    @Mock
-    TransactionTransmissionStates transactionTransmissionStates;
+    TransactionTransmissionStates transactionTransmissionStates = TransactionTransmissionStates.SENT;
 
     @Test
     public void Construction_ValidPArameters_NewObjectCreated(){

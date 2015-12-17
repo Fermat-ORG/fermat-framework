@@ -5,6 +5,7 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -18,13 +19,13 @@ public class CashMoneyWalletTransactionImpl implements CashMoneyWalletTransactio
     String publicKeyPlugin;
     TransactionType transactionType;
     BalanceType balanceType;
-    float amount;
+    BigDecimal amount;
     String memo;
     long timestamp;
 
 
     public CashMoneyWalletTransactionImpl(UUID transactionId, String publicKeyWallet, String publicKeyActor, String publicKeyPlugin,
-                                          TransactionType transactionType, BalanceType balanceType, float amount, String memo, long timestamp) {
+                                          TransactionType transactionType, BalanceType balanceType, BigDecimal amount, String memo, long timestamp) {
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
         this.publicKeyActor = publicKeyActor;
@@ -71,7 +72,7 @@ public class CashMoneyWalletTransactionImpl implements CashMoneyWalletTransactio
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

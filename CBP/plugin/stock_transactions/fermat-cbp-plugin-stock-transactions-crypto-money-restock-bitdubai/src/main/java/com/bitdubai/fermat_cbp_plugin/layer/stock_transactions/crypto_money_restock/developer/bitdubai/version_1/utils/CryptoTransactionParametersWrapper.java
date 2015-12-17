@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_res
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionParameters;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -13,7 +14,7 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
     private CryptoCurrency cryptoCurrency;
     private  String          walletPublicKey;
     private  String          publicActorKey;
-    private  float           amount;
+    private BigDecimal amount;
     private  String          memo;
     private  String          publicKeyPlugin;
 
@@ -21,7 +22,7 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
                                               CryptoCurrency cryptoCurrency,
                                               String walletPublicKey,
                                               String publicActorKey,
-                                              float amount,
+                                              BigDecimal amount,
                                               String memo,
                                               String publicKeyPlugin
     ){
@@ -77,12 +78,12 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     @Override
-    public void setAmount(float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
