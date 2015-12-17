@@ -12,4 +12,12 @@
     <string name="deposit_transaction_text" translatable="false">Deposit</string>
 
 
+
+    <string name="csh_ctd_title" translatable="false">transact_title_here</string>
+    <string name="csh_ctd_amount_tag" translatable="false">Enter amount</string>
+    <string name="csh_ctd_amount_hint" translatable="false">Amount</string>
+    <string name="csh_ctd_memo_tag" translatable="false">Enter memo</string>
+    <string name="csh_ctd_memo_hint" translatable="false">Memo</string>
+
+
 </resources>
