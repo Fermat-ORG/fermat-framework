@@ -28,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
@@ -110,6 +111,9 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                     break;
                 case CBP_CRYPTO_CUSTOMER_IDENTITY:
                     subAppsSession = new CryptoCustomerIdentitySubAppSession(subApp, errorManager, (CryptoCustomerIdentityModuleManager) moduleManager);
+                    break;
+                case CBP_CRYPTO_BROKER_COMMUNITY:
+                    subAppsSession = new CryptoBrokerCommunitySubAppSession(subApp, errorManager, (IntraUserModuleManager) moduleManager);
                     break;
                 default:
                     return null;
