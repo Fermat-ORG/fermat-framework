@@ -50,7 +50,7 @@ android {
     buildTypes {
 
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
 
@@ -106,6 +106,7 @@ dependencies {
     compile project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
     // CBP Projects
     compile project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
+    compile project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
     compile project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
     // DAP Projects
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')

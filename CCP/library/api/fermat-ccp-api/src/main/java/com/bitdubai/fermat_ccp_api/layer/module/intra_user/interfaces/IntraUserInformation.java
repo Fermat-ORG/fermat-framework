@@ -20,6 +20,12 @@ public interface IntraUserInformation extends IdentityUserInformation {
      * @return the name of the intra user
      */
     public String getName();
+
+    /**
+     *The method <code>getPhrase</code> returns the phrase of the intra user
+     * @return the phrase of the intra user
+     */
+    public String getPhrase();
     /**
      * The method <code>getCity</code> returns the City of the represented intra user
      *

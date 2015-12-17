@@ -99,7 +99,7 @@ public class CustomersMiddlewareDao {
         List<BrokerCustomerRelationship> brokerCustomers = new ArrayList<>();
 
         DatabaseTable customersTable = this.database.getTable(CustomersMiddlewareDatabaseConstants.CUSTOMERS_TABLE_NAME);
-        customersTable.setStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        customersTable.addStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
 
         customersTable.loadToMemory();
 
@@ -117,8 +117,8 @@ public class CustomersMiddlewareDao {
         List<BrokerCustomerRelationship> brokerCustomers = new ArrayList<>();
 
         DatabaseTable customersTable = this.database.getTable(CustomersMiddlewareDatabaseConstants.CUSTOMERS_TABLE_NAME);
-        customersTable.setStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-        customersTable.setStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CUSTOMER_TYPE_COLUMN_NAME, CustomerType.SPORADIC.getCode(), DatabaseFilterType.EQUAL);
+        customersTable.addStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        customersTable.addStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CUSTOMER_TYPE_COLUMN_NAME, CustomerType.SPORADIC.getCode(), DatabaseFilterType.EQUAL);
 
         customersTable.loadToMemory();
 
@@ -136,8 +136,8 @@ public class CustomersMiddlewareDao {
         List<BrokerCustomerRelationship> brokerCustomers = new ArrayList<>();
 
         DatabaseTable customersTable = this.database.getTable(CustomersMiddlewareDatabaseConstants.CUSTOMERS_TABLE_NAME);
-        customersTable.setStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-        customersTable.setStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CUSTOMER_TYPE_COLUMN_NAME, CustomerType.FREQUENT.getCode(), DatabaseFilterType.EQUAL);
+        customersTable.addStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        customersTable.addStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CUSTOMER_TYPE_COLUMN_NAME, CustomerType.FREQUENT.getCode(), DatabaseFilterType.EQUAL);
 
         customersTable.loadToMemory();
 
@@ -155,8 +155,8 @@ public class CustomersMiddlewareDao {
         List<BrokerCustomerRelationship> brokerCustomers = new ArrayList<>();
 
         DatabaseTable customersTable = this.database.getTable(CustomersMiddlewareDatabaseConstants.CUSTOMERS_TABLE_NAME);
-        customersTable.setStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-        customersTable.setStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        customersTable.addStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        customersTable.addStringFilter(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
 
         customersTable.loadToMemory();
 

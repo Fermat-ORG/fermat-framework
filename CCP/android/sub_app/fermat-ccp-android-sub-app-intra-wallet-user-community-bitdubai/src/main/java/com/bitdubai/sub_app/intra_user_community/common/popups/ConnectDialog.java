@@ -41,8 +41,11 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
     FermatButton negativeBtn;
     FermatTextView mDescription;
     FermatTextView mUsername;
+    FermatTextView mSecondDescription;
     FermatTextView mTitle;
     CharSequence description;
+
+    CharSequence secondDescription;
     CharSequence username;
     CharSequence title;
 
@@ -65,16 +68,22 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
 
         mDescription = (FermatTextView) findViewById(R.id.description);
         mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mTitle = (FermatTextView)findViewById(R.id.title);
+        mSecondDescription = (FermatTextView) findViewById(R.id.second_description);
+        mTitle = (FermatTextView) findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
-
+        mSecondDescription.setVisibility(View.VISIBLE);
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mDescription.setText(description!= null ? description : "");
-        mUsername.setText(username!= null ? username: "");
-        mTitle.setText(title != null ? title: "");
+        mSecondDescription.setText(secondDescription != null ? secondDescription : "");
+        mDescription.setText(description != null ? description : "");
+        mUsername.setText(username != null ? username : "");
+        mTitle.setText(title != null ? title : "");
 
+    }
+
+    public void setSecondDescription(CharSequence secondDescription) {
+        this.secondDescription = secondDescription;
     }
 
     public void setDescription(CharSequence description) {
@@ -110,7 +119,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
                     ((IntraUserSubAppSession) getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
-                    Toast.makeText(getContext(), "Conected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Connection request send", Toast.LENGTH_SHORT).show();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
@@ -124,7 +133,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
             }
 
             dismiss();
-        }else if( i == R.id.negative_button){
+        } else if (i == R.id.negative_button) {
             dismiss();
         }
     }

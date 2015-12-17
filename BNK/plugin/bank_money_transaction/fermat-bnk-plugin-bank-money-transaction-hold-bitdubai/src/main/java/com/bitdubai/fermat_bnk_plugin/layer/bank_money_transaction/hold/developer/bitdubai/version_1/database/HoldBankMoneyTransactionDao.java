@@ -158,7 +158,7 @@ public class HoldBankMoneyTransactionDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = database.getTable(HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
 
-        table.setStringFilter(HoldBankMoneyTransactionDatabaseConstants.HOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(HoldBankMoneyTransactionDatabaseConstants.HOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
 
@@ -173,7 +173,7 @@ public class HoldBankMoneyTransactionDao {
         DatabaseTable table = this.database.getTable(HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();
@@ -186,7 +186,8 @@ public class HoldBankMoneyTransactionDao {
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyWallet());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyActor());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyPlugin());
-        newRecord.setDoubleValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount());
+        //TODO: Colocar BigDecimal holdParameters.getAmount().floatValue()
+        newRecord.setDoubleValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount().floatValue());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, BankTransactionStatus.ACKNOWLEDGE.getCode());

@@ -127,7 +127,10 @@ public class IntraWalletUserIdentityDeveloperDatabaseFactory implements DealsWit
 
         intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME);
         intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME);
+        intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME);
         intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        intraUserColumns.add(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME);
+
         /**
          * Table Intra User addition.
          */

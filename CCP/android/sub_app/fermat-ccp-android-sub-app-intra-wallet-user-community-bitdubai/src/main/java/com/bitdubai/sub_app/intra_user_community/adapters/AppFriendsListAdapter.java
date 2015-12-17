@@ -3,20 +3,14 @@ package com.bitdubai.sub_app.intra_user_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppFriendsListHolder;
-import com.squareup.picasso.Picasso;
 
-import java.lang.annotation.Target;
 import java.util.List;
 
 /**
@@ -35,7 +29,7 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.intra_user_row_friend_list;
+        return R.layout.row_connection_list;
     }
 
     @Override

@@ -36,6 +36,8 @@ public interface PlatformComponentProfile extends Cloneable {
      */
     public String getAlias();
 
+    public String getPhrase();
+
     /**
      * Get the name
      *

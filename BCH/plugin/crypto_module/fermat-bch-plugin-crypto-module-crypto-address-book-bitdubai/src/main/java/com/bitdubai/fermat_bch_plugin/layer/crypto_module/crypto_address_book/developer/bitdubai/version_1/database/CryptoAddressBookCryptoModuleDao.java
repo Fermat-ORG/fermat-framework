@@ -13,7 +13,6 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_module.crypto_address_book.d
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -99,8 +98,8 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
 
         try {
             DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-            cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
-            //cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
+            cryptoAddressBookTable.addStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
+            //cryptoAddressBookTable.addStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
             cryptoAddressBookTable.loadToMemory();
 
             List<DatabaseTableRecord> records = cryptoAddressBookTable.getRecords();
@@ -129,7 +128,7 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
 
         try {
             DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-            cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+            cryptoAddressBookTable.addStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
             cryptoAddressBookTable.loadToMemory();
 
             List<DatabaseTableRecord> records = cryptoAddressBookTable.getRecords();
@@ -160,7 +159,7 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
 
         try {
             DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-            cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_PUBLIC_KEY_COLUMN_NAME, deliveredByActorPublicKey, DatabaseFilterType.EQUAL);
+            cryptoAddressBookTable.addStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_PUBLIC_KEY_COLUMN_NAME, deliveredByActorPublicKey, DatabaseFilterType.EQUAL);
             cryptoAddressBookTable.loadToMemory();
 
             List<DatabaseTableRecord> records = cryptoAddressBookTable.getRecords();
@@ -189,7 +188,7 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
 
         try {
             DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-            cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_PUBLIC_KEY_COLUMN_NAME, deliveredToActorPublicKey, DatabaseFilterType.EQUAL);
+            cryptoAddressBookTable.addStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_PUBLIC_KEY_COLUMN_NAME, deliveredToActorPublicKey, DatabaseFilterType.EQUAL);
             cryptoAddressBookTable.loadToMemory();
 
             List<DatabaseTableRecord> records = cryptoAddressBookTable.getRecords();

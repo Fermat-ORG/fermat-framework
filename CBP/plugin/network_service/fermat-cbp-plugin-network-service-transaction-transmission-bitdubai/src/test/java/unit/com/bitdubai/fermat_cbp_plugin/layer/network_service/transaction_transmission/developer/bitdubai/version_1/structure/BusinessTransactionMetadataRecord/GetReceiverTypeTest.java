@@ -19,8 +19,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetReceiverTypeTest {
 
-    @Mock
-    private PlatformComponentType platformComponentType = mock(PlatformComponentType.class);
+
+    private PlatformComponentType platformComponentType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
 
     @Test
     public void getReceiverType() throws Exception{
@@ -29,6 +29,5 @@ public class GetReceiverTypeTest {
         assertNotNull(businessTransactionMetadataRecord);
         when(businessTransactionMetadataRecord.getReceiverType()).thenReturn(platformComponentType);
         assertThat(businessTransactionMetadataRecord.getReceiverType()).isNotNull();
-        System.out.println("Test run");
     }
 }

@@ -155,7 +155,7 @@ public class UnholdBankMoneyTransactionDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = database.getTable(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
-        table.setStringFilter(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
 
@@ -170,7 +170,7 @@ public class UnholdBankMoneyTransactionDao {
         DatabaseTable table = this.database.getTable(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();
@@ -183,7 +183,8 @@ public class UnholdBankMoneyTransactionDao {
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyWallet());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyActor());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyPlugin());
-        newRecord.setDoubleValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount());
+        //TODO: Colocar BigDecimal holdParameters.getAmount().floatValue()
+        newRecord.setDoubleValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount().floatValue());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, BankTransactionStatus.ACKNOWLEDGE.getCode());

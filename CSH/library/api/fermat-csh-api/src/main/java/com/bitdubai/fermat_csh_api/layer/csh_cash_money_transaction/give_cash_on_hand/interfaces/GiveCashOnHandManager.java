@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public interface GiveCashOnHandManager {
     List<GiveCashOnHand> getAllGiveCashOnHandFromCurrentDeviceUser() throws CantGetGiveCashOnHandException;
-
+//TODO: delete THIS
     GiveCashOnHand createGiveCashOnHand(
          final String publicKeyActorTo
         ,final String publicKeyActorFrom
