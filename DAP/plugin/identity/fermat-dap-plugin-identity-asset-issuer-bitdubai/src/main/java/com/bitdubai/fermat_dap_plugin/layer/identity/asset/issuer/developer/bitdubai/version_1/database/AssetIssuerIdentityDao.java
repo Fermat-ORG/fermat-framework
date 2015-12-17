@@ -191,7 +191,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             }
 
             // 2) Find the Intra users.
-            table.setStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
