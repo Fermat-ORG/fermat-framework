@@ -72,7 +72,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
         this.poolConnectionsWaitingForResponse = new HashMap<>();
 
-            //TODO: crypto address comentado porque no funciona
+        //TODO: crypto address comentado porque no funciona
 //        Create a thread to send the messages
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -179,7 +179,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting()
                         )) {
-                             confirmRequest(aer.getRequestId());
+                            confirmRequest(aer.getRequestId());
                         }
 
                         break;
@@ -267,25 +267,25 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
                 if (cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
-                            PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                    .constructBasicPlatformComponentProfileFactory(
-                                            identityPublicKey,
-                                            NetworkServiceType.UNDEFINED,
-                                            platformComponentTypeSelectorByActorType(identityType));
-                            PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                                    .constructBasicPlatformComponentProfileFactory(
-                                            actorPublicKey,
-                                            NetworkServiceType.UNDEFINED,
-                                            platformComponentTypeSelectorByActorType(actorType));
+                    PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                            .constructBasicPlatformComponentProfileFactory(
+                                    identityPublicKey,
+                                    NetworkServiceType.UNDEFINED,
+                                    platformComponentTypeSelectorByActorType(identityType));
+                    PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                            .constructBasicPlatformComponentProfileFactory(
+                                    actorPublicKey,
+                                    NetworkServiceType.UNDEFINED,
+                                    platformComponentTypeSelectorByActorType(actorType));
 
-                            cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
-                                    applicantParticipant,
-                                    cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
-                                    remoteParticipant
-                            );
+                    cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
+                            applicantParticipant,
+                            cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
+                            remoteParticipant
+                    );
 
-                            // i put the actor in the pool of connections waiting for response-
-                            poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
+                    // i put the actor in the pool of connections waiting for response-
+                    poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
 
 
                     return false;
@@ -326,7 +326,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
             return true;
         }
-
+        poolConnectionsWaitingForResponse.remove(actorPublicKey);
         return false;
     }
 
@@ -342,8 +342,8 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
             case DAP_ASSET_REDEEM_POINT: return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT  ;
 
             default: throw new InvalidParameterException(
-                  " actor type: "+type.name()+"  type-code: "+type.getCode(),
-                  " type of actor not expected."
+                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
+                    " type of actor not expected."
             );
         }
     }
@@ -379,19 +379,19 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     }
 
     private void toPendingAction(final UUID requestId) throws CantChangeProtocolStateException,
-                                                              PendingRequestNotFoundException {
+            PendingRequestNotFoundException {
 
         dao.changeProtocolState(requestId, ProtocolState.PENDING_ACTION);
     }
 
     private void toWaitingResponse(final UUID requestId) throws CantChangeProtocolStateException,
-                                                                PendingRequestNotFoundException {
+            PendingRequestNotFoundException {
 
         dao.changeProtocolState(requestId, ProtocolState.WAITING_RESPONSE);
     }
 
     private void confirmRequest(final UUID requestId) throws CantConfirmAddressExchangeRequestException,
-                                                             PendingRequestNotFoundException           {
+            PendingRequestNotFoundException           {
 
         dao.confirmAddressExchangeRequest(requestId);
     }
