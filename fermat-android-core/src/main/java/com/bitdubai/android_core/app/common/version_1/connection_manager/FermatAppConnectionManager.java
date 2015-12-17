@@ -5,6 +5,13 @@ import android.app.Activity;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.app_connection.CommunityAssetIssuerFermatAppConnection;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.app_connection.AssetIssuerFermatAppConnection;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.app_connection.CommunityAssetUserFermatAppConnection;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.app_connection.AssetUserFermatAppConnection;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.app_connection.CommunityRedeemPointFermatAppConnection;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.app_connection.RedeemPointFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
@@ -26,6 +33,10 @@ public class FermatAppConnectionManager {
         switch (publicKey) {
             case "reference_wallet":
                 return new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
+            case "crypto_broker_wallet":
+                return new CryptoBrokerWalletFermatAppConnection(activity, null);
+            case "crypto_customer_wallet":
+                return new CryptoCustomerWalletFermatAppConnection(activity, null);
             case "public_key_dap_asset_issuer_identity":
                 return new AssetIssuerFermatAppConnection(activity);
             case "public_key_dap_asset_user_identity":
@@ -40,22 +51,6 @@ public class FermatAppConnectionManager {
                 return new CommunityAssetUserFermatAppConnection(activity);
             case "public_key_dap_reedem_point_community":
                 return new CommunityRedeemPointFermatAppConnection(activity);
-                return new BitcoinWalletFermatAppConnection(activity, intraUserLoginIdentity);
-            case "test_wallet":
-                return null;//return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();
-            case "crypto_broker_wallet":
-                return new CryptoBrokerWalletFermatAppConnection(activity, null);
-            case "crypto_customer_wallet":
-                return new CryptoCustomerWalletFermatAppConnection(activity, null);
-            case "redeem_point":
-//                fermatAppConnection = WalletRedeemPointFragmentFactory();
-                return null;
-            case "asset_issuer":
-//                fermatAppConnection = IssuerWalletFragmentFactory();
-                return null;
-            case "asset_user":
-//                fermatAppConnection = WalletAssetUserFragmentFactory();
-                return null;
             case "public_key_ccp_intra_user_identity":
                 return new CryptoWalletUserFermatAppConnection(activity);
             case "public_key_intra_user_commmunity":
