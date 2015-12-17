@@ -29,8 +29,6 @@ public class FermatAppConnectionManager {
         switch (publicKey){
             case "reference_wallet":
                 return new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
-            case "public_key_pip_developer_sub_app":
-                return new DeveloperFermatAppConnection(activity);
             case "public_key_dap_asset_issuer_identity":
                 return new AssetIssuerFermatAppConnection(activity);
             case "public_key_dap_asset_user_identity":
@@ -49,8 +47,6 @@ public class FermatAppConnectionManager {
                 return new CryptoWalletUserFermatAppConnection(activity);
             case "public_key_intra_user_commmunity":
                 return new CryptoWalletUserCommunityFermatAppConnection(activity);
-            case "sub_app_crypto_broker_community":
-                return new CryptoBrokerCommunityFermatAppConnection(activity);
         }
         return null;
     }
