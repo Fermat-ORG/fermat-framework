@@ -57,7 +57,8 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
     public BankTransaction makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException {
         withdrawBankMoneyTransactionDao.registerWithdrawTransaction(bankTransactionParameters);
         try{
-            if(bankTransactionParameters.getAmount()<bankMoneyWallet.getAvailableBalance().getBalance(bankTransactionParameters.getAccount())&& bankTransactionParameters.getAmount()<bankMoneyWallet.getBookBalance().getBalance(bankTransactionParameters.getAccount())){
+            //TODO: Revisar Guillermo BigDecimal
+            if(bankTransactionParameters.getAmount().floatValue()<bankMoneyWallet.getAvailableBalance().getBalance(bankTransactionParameters.getAccount())&& bankTransactionParameters.getAmount().floatValue()<bankMoneyWallet.getBookBalance().getBalance(bankTransactionParameters.getAccount())){
                 bankMoneyWallet.getAvailableBalance().debit(bankMoneyTransactionRecord);
                 bankMoneyWallet.getBookBalance().debit(bankMoneyTransactionRecord);
             }
@@ -67,8 +68,9 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
         }catch (CantRegisterDebitException |CantCalculateBalanceException e){
             throw new CantMakeWithdrawTransactionException(CantRegisterDebitException.DEFAULT_MESSAGE,e,null,null);
         }
+        //TODO: Revisar Guillermo BigDecimal
         return new BankTransactionImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),
-                bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.WITHDRAW, TransactionType.DEBIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
+                bankTransactionParameters.getAmount().floatValue(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.WITHDRAW, TransactionType.DEBIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
     }
     public void setBankMoneyWallet(BankMoneyWallet bankMoneyWallet) {
         this.bankMoneyWallet = bankMoneyWallet;

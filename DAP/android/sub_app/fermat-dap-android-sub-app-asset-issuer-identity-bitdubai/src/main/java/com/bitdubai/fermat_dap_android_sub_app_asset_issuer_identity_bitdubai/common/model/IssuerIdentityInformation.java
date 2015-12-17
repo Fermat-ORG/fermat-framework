@@ -27,7 +27,6 @@ public class IssuerIdentityInformation implements IdentityAssetIssuer {
         return this.publicKey;
     }
 
-
     @Override
     public byte[] getProfileImage() {
         return this.profileImage;

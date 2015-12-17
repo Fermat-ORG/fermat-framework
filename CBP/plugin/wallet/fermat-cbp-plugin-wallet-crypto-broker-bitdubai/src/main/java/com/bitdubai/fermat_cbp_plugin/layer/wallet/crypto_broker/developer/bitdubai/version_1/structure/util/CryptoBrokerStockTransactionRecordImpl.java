@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -20,15 +21,15 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private String ownerPublicKey;
     private BalanceType balanceType;
     private TransactionType transactionType;
-    private float amount;
+    private BigDecimal amount;
     private CurrencyType currencyType;
     private FermatEnum merchandise;
-    private float runningBookBalance;
-    private float runningAvailableBalance;
+    private BigDecimal runningBookBalance;
+    private BigDecimal runningAvailableBalance;
     private long timeStamp;
     private String memo;
     private OriginTransaction originTransaction;
-    private float priceReference;
+    private BigDecimal priceReference;
 
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
@@ -38,13 +39,13 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             TransactionType transactionType,
             CurrencyType currencyType,
             FermatEnum merchandise,
-            float amount,
-            float runningBookBalance,
-            float runningAvailableBalance,
+            BigDecimal amount,
+            BigDecimal runningBookBalance,
+            BigDecimal runningAvailableBalance,
             long timeStamp,
             String memo,
             OriginTransaction originTransaction,
-            float priceReference
+            BigDecimal priceReference
     ){
         this.transactionId = transactionId;
         this.walletKeyPair = walletKeyPair;
@@ -84,13 +85,13 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     public FermatEnum getMerchandise() { return this.merchandise; }
 
     @Override
-    public float getAmount() { return this.amount; }
+    public BigDecimal getAmount() { return this.amount; }
 
     @Override
-    public float getRunningBookBalance() { return this.runningBookBalance; }
+    public BigDecimal getRunningBookBalance() { return this.runningBookBalance; }
 
     @Override
-    public float getRunningAvailableBalance() { return this.runningAvailableBalance; }
+    public BigDecimal getRunningAvailableBalance() { return this.runningAvailableBalance; }
 
     @Override
     public long getTimestamp() { return this.timeStamp; }
@@ -99,7 +100,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     public String getMemo() { return this.memo; }
 
     @Override
-    public float getPriceReference() {
+    public BigDecimal getPriceReference() {
         return this.priceReference;
     }
 

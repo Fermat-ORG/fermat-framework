@@ -9,6 +9,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 23/11/15.
  */
+//TODO: Colocar BigDecimal
 public class HoldCryptoMoneyTransactionImpl implements CryptoHoldTransaction {
     private CryptoTransactionStatus status;
     private long                    timestampAcknowledged;
