@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
@@ -60,6 +61,9 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    private BitcoinNetworkManager bitcoinNetworkManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM        , layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
@@ -120,6 +124,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
             this.transactionHandlerFactory = new OutgoingIntraActorTransactionHandlerFactory(this.eventManager,this.bitcoinWalletManager, this.outgoingIntraActorDao);
             this.transactionProcessorAgent = new OutgoingIntraActorTransactionProcessorAgent(this.errorManager,
                                                                                             this.cryptoVaultManager,
+                                                                                            this.bitcoinNetworkManager,
                                                                                             this.bitcoinWalletManager,
                                                                                             this.outgoingIntraActorDao,
                                                                                             this.transactionHandlerFactory,
