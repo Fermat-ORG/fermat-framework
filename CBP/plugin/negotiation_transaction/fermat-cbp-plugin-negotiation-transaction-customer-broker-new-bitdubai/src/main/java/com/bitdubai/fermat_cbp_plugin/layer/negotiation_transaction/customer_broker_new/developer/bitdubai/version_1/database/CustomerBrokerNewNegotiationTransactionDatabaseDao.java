@@ -208,7 +208,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
             }
-            table.setStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),DatabaseFilterType.EQUAL);
+            table.addStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             if(records.isEmpty()){
@@ -286,7 +286,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
-            table.setStringFilter(
+            table.addStringFilter(
                     CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
                     DatabaseFilterType.EQUAL);
@@ -313,7 +313,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         try{
 
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
-            table.setStringFilter(
+            table.addStringFilter(
                     CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -359,7 +359,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
         try{
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
-            table.setUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
@@ -406,7 +406,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         try{
 
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            table.setStringFilter(keyColumn,key,DatabaseFilterType.EQUAL);
+            table.addStringFilter(keyColumn, key, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
@@ -431,7 +431,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             }
             List<String> negotiationList=new ArrayList<>();
             String negotiation;
-            table.setStringFilter(keyColumn,key,DatabaseFilterType.EQUAL);
+            table.addStringFilter(keyColumn,key,DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             if(records.isEmpty()){
