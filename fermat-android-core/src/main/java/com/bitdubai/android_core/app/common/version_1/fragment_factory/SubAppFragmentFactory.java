@@ -34,25 +34,25 @@ public class SubAppFragmentFactory {
             case CWP_WALLET_PUBLISHER:
                 return new WalletPublisherFragmentFactory();
             case CWP_DEVELOPER_APP:
-                return new DeveloperSubAppFragmentFactory();
+                return null;//new DeveloperSubAppFragmentFactory();
             case CWP_INTRA_USER_IDENTITY:
                 return null;//new IntraUserIdentityFragmentFactory();
             case CCP_INTRA_USER_COMMUNITY:
                 return null;//new IntraUserFragmentFactory();
             case DAP_ASSETS_FACTORY:
-                return new AssetFactoryFragmentFactory();
+                return null;//new AssetFactoryFragmentFactory();
             case DAP_ASSETS_COMMUNITY_ISSUER:
-                return new AssetIssuerCommunityFragmentFactory();
+                return null;//new AssetIssuerCommunityFragmentFactory();
             case DAP_ASSETS_COMMUNITY_USER:
-                return new CommunityUserFragmentFactory();
+                return null;//new CommunityUserFragmentFactory();
             case DAP_ASSETS_COMMUNITY_REDEEM_POINT:
-                return new AssetRedeemPointCommunityFragmentFactory();
+                return null;//new AssetRedeemPointCommunityFragmentFactory();
             case DAP_ASSETS_IDENTITY_ISSUER:
-                return new IssuerIdentityFragmentFactory();
+                return null;//new IssuerIdentityFragmentFactory();
             case DAP_ASSETS_IDENTITY_USER:
-                return new UserIdentityFragmentFactory();
+                return null;//new UserIdentityFragmentFactory();
             case DAP_REDEEM_POINT_IDENTITY:
-                return new RedeemPointIdentityFragmentFactory();
+                return null;//new RedeemPointIdentityFragmentFactory();
             case CBP_CRYPTO_BROKER_IDENTITY:
                 return new CryptoBrokerIdentityFragmentFactory();
             case CBP_CRYPTO_CUSTOMER_IDENTITY:
