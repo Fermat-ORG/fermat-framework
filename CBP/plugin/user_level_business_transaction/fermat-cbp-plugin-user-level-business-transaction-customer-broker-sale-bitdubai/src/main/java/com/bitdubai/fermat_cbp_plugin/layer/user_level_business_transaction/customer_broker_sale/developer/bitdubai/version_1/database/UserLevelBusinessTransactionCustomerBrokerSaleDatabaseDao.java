@@ -65,7 +65,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
         if (table.getRecords().isEmpty())
             return true;
@@ -89,7 +89,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, customerBrokerPurchaseRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, customerBrokerPurchaseRecord);
             }
 
@@ -143,7 +143,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, customerBrokerPurchaseRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, customerBrokerPurchaseRecord);
             }
 
@@ -162,7 +162,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
         DatabaseTable table = getDatabaseTable(UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
 

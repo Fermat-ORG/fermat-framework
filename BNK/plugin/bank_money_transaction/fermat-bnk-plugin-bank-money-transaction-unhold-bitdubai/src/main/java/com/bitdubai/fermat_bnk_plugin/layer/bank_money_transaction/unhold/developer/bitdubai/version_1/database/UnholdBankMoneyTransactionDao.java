@@ -155,7 +155,7 @@ public class UnholdBankMoneyTransactionDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = database.getTable(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
-        table.setStringFilter(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
 
@@ -170,7 +170,7 @@ public class UnholdBankMoneyTransactionDao {
         DatabaseTable table = this.database.getTable(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();

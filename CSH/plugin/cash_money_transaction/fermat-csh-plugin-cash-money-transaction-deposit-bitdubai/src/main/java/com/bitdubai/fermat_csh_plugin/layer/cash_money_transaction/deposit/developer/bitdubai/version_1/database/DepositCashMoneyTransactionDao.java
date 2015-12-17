@@ -132,7 +132,7 @@ public class DepositCashMoneyTransactionDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = database.getTable(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TABLE_NAME);
 
-        table.setStringFilter(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
 
@@ -147,7 +147,7 @@ public class DepositCashMoneyTransactionDao {
         DatabaseTable table = this.database.getTable(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();
