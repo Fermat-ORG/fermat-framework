@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.app_connection;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection;
 
 import android.app.Activity;
 
@@ -14,54 +14,62 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
-import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_community.preference_settings.CryptoBrokerCommunityPreferenceSettings;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.header.CryptoCustomerWalletHeaderPainter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.preference_settings.CryptoCustomerWalletPreferenceSettings;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 /**
- * Created by Matias Furszyfer on 2015.12.09..
+ * Created by Nelson Ramirez
+ *
+ * @since 2015.12.17
  */
-public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
+public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
 
-    public CryptoBrokerCommunityFermatAppConnection(Activity activity) {
+    ActorIdentity identity;
+
+    public CryptoCustomerWalletFermatAppConnection(Activity activity, ActorIdentity identity) {
         super(activity);
+        this.identity = identity;
     }
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
-        return new CryptoBrokerCommunityFragmentFactory();
+        return new CryptoCustomerWalletFragmentFactory();
     }
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
-                Layers.SUB_APP_MODULE,
-                Plugins.CRYPTO_BROKER_COMMUNITY,
+                Layers.WALLET_MODULE,
+                Plugins.CRYPTO_CUSTOMER,
                 Developers.BITDUBAI,
                 new Version()
         );
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new CryptoBrokerCommunitySubAppSession();
+    protected AbstractFermatSession getSession() {
+        return new CryptoCustomerWalletSession();
     }
 
     @Override
     public FermatSettings getSettings() {
-        return new CryptoBrokerCommunityPreferenceSettings();
+        return new CryptoCustomerWalletPreferenceSettings();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+        return new CustomerNavigationViewPainter(getActivity(), identity);
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return null;
+        return new CryptoCustomerWalletHeaderPainter();
     }
 
     @Override
