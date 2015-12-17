@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class CryptoCustomerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,CryptoCustomerIdentityModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class CryptoCustomerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp, CryptoCustomerIdentityModuleManager, SubAppResourcesProviderManager> implements SubAppsSession {
     public static final String IDENTITY_INFO = "CRYPTO_CUSTOMER_IDENTITY_INFORMATION";
 
     /**
@@ -38,10 +38,13 @@ public class CryptoCustomerIdentitySubAppSession extends AbstractFermatSession<I
     private CryptoCustomerIdentityModuleManager moduleManager;
 
 
+    public CryptoCustomerIdentitySubAppSession() {
+    }
+
     /**
      * Create a session for the Wallet Store SubApp
      *
-     * @param errorManager             the error manager
+     * @param errorManager  the error manager
      * @param moduleManager the module of this SubApp
      */
     public CryptoCustomerIdentitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, CryptoCustomerIdentityModuleManager moduleManager) {

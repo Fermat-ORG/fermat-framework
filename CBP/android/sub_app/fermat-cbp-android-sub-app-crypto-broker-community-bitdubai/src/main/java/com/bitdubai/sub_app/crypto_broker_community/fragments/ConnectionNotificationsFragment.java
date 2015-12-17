@@ -27,7 +27,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNotificationAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;

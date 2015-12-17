@@ -42,7 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.Views.Utils;
 import com.bitdubai.sub_app.crypto_broker_community.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;

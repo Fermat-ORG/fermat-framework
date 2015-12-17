@@ -14,13 +14,8 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class CryptoBrokerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,CryptoBrokerIdentityModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class CryptoBrokerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp, CryptoBrokerIdentityModuleManager, SubAppResourcesProviderManager> implements SubAppsSession {
     public static final String IDENTITY_INFO = "CRYPTO_IDENTITY_INFO";
-
-    /**
-     * SubApps type
-     */
-    SubApps subApps;
 
     /**
      * Active objects in wallet session
@@ -38,17 +33,18 @@ public class CryptoBrokerIdentitySubAppSession extends AbstractFermatSession<Ins
     private CryptoBrokerIdentityModuleManager moduleManager;
 
 
+    public CryptoBrokerIdentitySubAppSession() {
+    }
 
     /**
      * Create a session for the Wallet Store SubApp
-
-     * @param errorManager             the error manager
+     *
+     * @param errorManager  the error manager
      * @param moduleManager the module of this SubApp
      */
     public CryptoBrokerIdentitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, CryptoBrokerIdentityModuleManager moduleManager) {
         super(subApp.getAppPublicKey(), subApp, errorManager, moduleManager, null);
-        this.subApps = subApps;
-        data = new HashMap<String, Object>();
+        data = new HashMap<>();
         this.errorManager = errorManager;
         this.moduleManager = moduleManager;
     }
@@ -93,21 +89,5 @@ public class CryptoBrokerIdentitySubAppSession extends AbstractFermatSession<Ins
      */
     public CryptoBrokerIdentityModuleManager getModuleManager() {
         return moduleManager;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CryptoBrokerIdentitySubAppSession that = (CryptoBrokerIdentitySubAppSession) o;
-
-        return subApps == that.subApps;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return subApps.hashCode();
     }
 }

@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.adapters;
+package com.bitdubai.sub_app.crypto_broker_community.common.adapters;
 
 import android.graphics.drawable.Drawable;
 
