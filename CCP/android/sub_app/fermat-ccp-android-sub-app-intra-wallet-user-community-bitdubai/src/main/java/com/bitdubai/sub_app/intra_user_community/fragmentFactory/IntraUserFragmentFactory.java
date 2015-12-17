@@ -8,7 +8,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
-import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionSettingsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
@@ -49,9 +48,6 @@ public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSub
                 break;
             case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT:
                 currentFragment = ConnectionsListFragment.newInstance();
-                break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENT:
-                currentFragment = ConnectionSettingsFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");

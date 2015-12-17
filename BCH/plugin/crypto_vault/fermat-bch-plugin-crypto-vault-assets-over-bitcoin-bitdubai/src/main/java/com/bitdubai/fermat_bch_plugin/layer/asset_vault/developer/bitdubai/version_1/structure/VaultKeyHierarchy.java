@@ -68,7 +68,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * These are the m/n paths...for example m/0 , m/1, ... m m/n
      * @param account
      */
-    public void addVaultAccount(HierarchyAccount account){
+    public void addVaultAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
         DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), true, true, ChildNumber.ZERO);
         accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
@@ -78,7 +78,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccount
      * @return the fist key of the path m/HierarchyAccount/0. Example: m/0/0
      */
-    private DeterministicKey getAddressKeyFromAccount(HierarchyAccount hierarchyAccount){
+    public DeterministicKey getAddressKeyFromAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount){
         /**
          * gets the masterKey for this account
          */
@@ -98,7 +98,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccount
      * @return a new hierarchy used to generate bitcoin addresses
      */
-    public DeterministicHierarchy getKeyHierarchyFromAccount(HierarchyAccount hierarchyAccount){
+    public DeterministicHierarchy getKeyHierarchyFromAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount){
         DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(getAddressKeyFromAccount(hierarchyAccount));
         return deterministicHierarchy;
     }
@@ -109,7 +109,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param blockchainNetworkType
      * @return the crypto address
      */
-    public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
+    public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
         /**
          * I get the next available key for this account
          */
@@ -168,7 +168,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param account
      * @return
      */
-    public ECKey getNextAvailableKey(HierarchyAccount account) throws CantExecuteDatabaseOperationException {
+    public ECKey getNextAvailableKey(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account) throws CantExecuteDatabaseOperationException {
         /**
          * I get from database the next available key depth
          */
@@ -206,7 +206,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccount
      * @return
      */
-    private int getNextAvailableKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+    private int getNextAvailableKeyDepth(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
         int returnValue = 0;
         int currentUsedKey = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
         /**
@@ -243,12 +243,20 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param account
      * @return
      */
-    public List<ECKey> getDerivedKeys(HierarchyAccount account){
+    public List<ECKey> getDerivedKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
         DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
         List<ECKey> childKeys = new ArrayList<>();
 
-        //todo I need to get the value of generated keys from the database
-        for (int i = 0; i < 200; i++) {
+        /**
+         * I will get how many keys are already generated for this account.
+         */
+        int generatedKeys;
+        try {
+            generatedKeys  = this.getDao().getCurrentGeneratedKeys(account.getId());
+        } catch (CantExecuteDatabaseOperationException e) {
+            generatedKeys = 200;
+        }
+        for (int i = 0; i < generatedKeys; i++) {
             // I derive the key at position i
             DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
             // I add this key to the ECKey list

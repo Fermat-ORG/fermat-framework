@@ -790,13 +790,14 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         try {
             DatabaseTable assetStatisticTable;
             assetStatisticTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_TABLE_NAME);
-            DatabaseTableRecord record = assetStatisticTable.getRecordFromPk(assetPublicKey);
+            assetStatisticTable.addStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            assetStatisticTable.loadToMemory();
 
-            if (record == null) {
+            if (assetStatisticTable.getRecords().isEmpty()) {
                 throw new RecordsNotFoundException(null, context, "");
             }
 
-            return record.getStringValue(column);
+            return assetStatisticTable.getRecords().get(0).getStringValue(column);
         } catch (RecordsNotFoundException e) {
             throw e;
         } catch (Exception e) {
