@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount;
 
 import com.google.common.collect.ImmutableList;
 
@@ -7,7 +7,7 @@ import org.bitcoinj.crypto.ChildNumber;
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.HierarchyAccount</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.AssetsOverBitcoin.developer.bitdubai.version_1.structure.HierarchyAccount</code>
  * Defines the account object of the hierarchy. In standard BIP0032 notation, is the first derivation from the master key.
  * The asset vault account is always the first one (m/0) and new ones may be added when Redeem points are dependant on this vault.
  * New redeem points added are m/1, m/2 and so on.
@@ -21,6 +21,7 @@ import java.util.List;
 public class HierarchyAccount {
     private int id;
     private String description;
+    private HierarchyAccountType hierarchyAccountType;
     private String pathAsString;
     private List<ChildNumber> accountPath;
 
@@ -30,9 +31,10 @@ public class HierarchyAccount {
      * @param id the account id
      * @param description a description that identifies the account
      */
-    public HierarchyAccount(int id, String description) {
+    public HierarchyAccount(int id, String description, HierarchyAccountType hierarchyAccountType) {
         this.id = id;
         this.description = description;
+        this.hierarchyAccountType = hierarchyAccountType;
 
         /**
          * I set the account path, the m/path
@@ -55,6 +57,14 @@ public class HierarchyAccount {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public HierarchyAccountType getHierarchyAccountType() {
+        return hierarchyAccountType;
+    }
+
+    public void setHierarchyAccountType(HierarchyAccountType hierarchyAccountType) {
+        this.hierarchyAccountType = hierarchyAccountType;
     }
 
     public String getPathAsString() {
