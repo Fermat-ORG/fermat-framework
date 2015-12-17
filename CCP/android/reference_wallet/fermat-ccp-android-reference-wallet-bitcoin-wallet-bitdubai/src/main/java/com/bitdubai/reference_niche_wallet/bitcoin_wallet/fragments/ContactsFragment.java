@@ -188,7 +188,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                     if(walletContactRecords.isEmpty()){
                         setUpTutorial();
                     }
-                }}, 500);
+                }}, 300);
             return rootView;
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();

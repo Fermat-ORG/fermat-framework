@@ -126,7 +126,7 @@ public class CreateContactFragmentDialog extends Dialog implements
             contact_name = (AutoCompleteTextView) findViewById(R.id.contact_name);
             take_picture_btn = (ImageView) findViewById(R.id.take_picture_btn);
             txt_address = (EditText) findViewById(R.id.txt_address);
-            if(walletContact.name!=null){
+            if(walletContact!=null){
                 contact_name.setText(walletContact.name);
             }
 
