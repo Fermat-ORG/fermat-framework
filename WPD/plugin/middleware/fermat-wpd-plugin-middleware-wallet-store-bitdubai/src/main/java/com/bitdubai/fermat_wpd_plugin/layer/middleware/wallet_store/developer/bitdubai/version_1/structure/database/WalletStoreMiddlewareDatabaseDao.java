@@ -155,7 +155,7 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
                         // I define the filter for the update
                         DatabaseTable table = (DatabaseTable) entry.getKey();
                         DatabaseTableRecord record = (DatabaseTableRecord) entry.getValue();
-                        table.setStringFilter(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, record.getUUIDValue(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME).toString(), DatabaseFilterType.EQUAL);
+                        table.addStringFilter(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, record.getUUIDValue(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME).toString(), DatabaseFilterType.EQUAL);
                         transaction.addRecordToUpdate(table, record);
                         break;
                     default:
@@ -215,15 +215,15 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
         switch (catalogItem) {
             case LANGUAGE:
                 databaseTable = getDatabaseTable(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME);
-                databaseTable.setStringFilter(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME, itemId.toString(), DatabaseFilterType.EQUAL);
+                databaseTable.addStringFilter(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME, itemId.toString(), DatabaseFilterType.EQUAL);
                 break;
             case SKIN:
                 databaseTable = getDatabaseTable(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME);
-                databaseTable.setStringFilter(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, itemId.toString(), DatabaseFilterType.EQUAL);
+                databaseTable.addStringFilter(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, itemId.toString(), DatabaseFilterType.EQUAL);
                 break;
             case WALLET:
                 databaseTable = getDatabaseTable(WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME);
-                databaseTable.setStringFilter(WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_ID_COLUMN_NAME, itemId.toString(), DatabaseFilterType.EQUAL);
+                databaseTable.addStringFilter(WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_ID_COLUMN_NAME, itemId.toString(), DatabaseFilterType.EQUAL);
                 break;
             default:
                 throw new InvalidParameterException("Invalid CatalogItem argument.", null, null, null);

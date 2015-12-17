@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -13,39 +14,39 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  *  @since   08/07/2015
  * */
 
-public enum DataBaseSelectOperatorType {
+public enum DataBaseSelectOperatorType implements FermatEnum {
 
-    SUM("SUM"),
-    COUNT("COUNT");
+    COUNT("COUNT"),
+    SUM  ("SUM"),
 
-    private String code;
+    ;
 
-    DataBaseSelectOperatorType(String code){
+    private final String code;
 
-        this.code=code;
+    DataBaseSelectOperatorType(final String code){
 
+        this.code = code;
     }
 
-    public String getCode(){
-
-        return this.code;
-
-    }
-
-    public static DataBaseSelectOperatorType getByCode(String code)throws InvalidParameterException{
+    public static DataBaseSelectOperatorType getByCode(final String code) throws InvalidParameterException {
 
         switch (code){
 
-            case "SUM":
-                return DataBaseSelectOperatorType.SUM;
-            case "COUNT":
-                return DataBaseSelectOperatorType.COUNT;
+            case "COUNT": return COUNT;
+            case "SUM":   return SUM;
+
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the DataBaseSelectOperatorType enum");
-
-
+                throw new InvalidParameterException(
+                        "Code Received: " + code,
+                        "This Code Is Not Valid for the DataBaseSelectOperatorType enum"
+                );
         }
 
+    }
+
+    @Override
+    public String getCode() {
+        return this.code;
     }
 
 }

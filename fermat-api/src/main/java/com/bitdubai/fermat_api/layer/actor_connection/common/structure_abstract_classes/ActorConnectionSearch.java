@@ -41,7 +41,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
     public final void resetFilters() {
 
         this.databaseTable = dao.getActorConnectionsTable();
-        databaseTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
     public final void addAlias(final String alias) {
 
         String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME;
-        databaseTable.setStringFilter(field, alias, DatabaseFilterType.LIKE);
+        databaseTable.addStringFilter(field, alias, DatabaseFilterType.LIKE);
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
     public final void addActorType(final Actors actorType){
 
         String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME;
-        databaseTable.setFermatEnumFilter(field, actorType, DatabaseFilterType.EQUAL);
+        databaseTable.addFermatEnumFilter(field, actorType, DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
     public final void addConnectionState(final ConnectionState connectionState) {
 
         String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME;
-        databaseTable.setFermatEnumFilter(field, connectionState, DatabaseFilterType.EQUAL);
+        databaseTable.addFermatEnumFilter(field, connectionState, DatabaseFilterType.EQUAL);
     }
 
     /**

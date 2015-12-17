@@ -36,7 +36,7 @@ public class TransactionConfidenceCalculator {
 
     private CryptoStatus getPreviousCryptoStatus(String txHash) throws CantLoadTableToMemoryException {
         DatabaseTable cryptoTransactionsTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-        cryptoTransactionsTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+        cryptoTransactionsTable.addStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         cryptoTransactionsTable.loadToMemory();
 
         List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();

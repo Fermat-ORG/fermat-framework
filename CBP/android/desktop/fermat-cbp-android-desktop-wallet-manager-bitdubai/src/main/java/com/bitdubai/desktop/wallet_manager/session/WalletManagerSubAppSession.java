@@ -2,6 +2,7 @@ package com.bitdubai.desktop.wallet_manager.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.desktop.InstalledDesktop;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.interfaces.CryptoDesktopSubAppModuleManager;
@@ -106,6 +107,11 @@ public class WalletManagerSubAppSession implements SubAppsSession {
         return null;
     }
 
+    @Override
+    public FermatApp getFermatApp() {
+        return getFermatApp();
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -123,8 +129,4 @@ public class WalletManagerSubAppSession implements SubAppsSession {
         return subApp.hashCode();
     }
 
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return null;
-    }
 }

@@ -134,7 +134,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, defaultSkinRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, defaultSkinRecord);
             }
 
@@ -147,7 +147,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                     if (isNewRecord(table, filter))
                         transaction.addRecordToInsert(table, skinRecord);
                     else {
-                        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                         transaction.addRecordToUpdate(table, skinRecord);
                     }
                 }
@@ -180,7 +180,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, defaultLanguageRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, defaultLanguageRecord);
             }
 
@@ -192,7 +192,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                     if (isNewRecord(table, filter))
                         transaction.addRecordToInsert(table, record);
                     else{
-                        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                         transaction.addRecordToUpdate(table, record);
                     }
 
@@ -225,7 +225,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 transaction.addRecordToInsert(table, record);
             } else {
                 //if it exists, then I will update it.
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, record);
             }
         }
@@ -242,7 +242,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
         if (table.getRecords().isEmpty())
             return true;
@@ -273,7 +273,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, walletFactoryRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, walletFactoryRecord);
             }
 
@@ -300,7 +300,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
     private List<DatabaseTableRecord> getSkinsData(String walletFactoryPublicKey) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME);
-        table.setStringFilter(WalletFactoryMiddlewareDatabaseConstants.SKIN_PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryPublicKey, DatabaseFilterType.EQUAL);
+        table.addStringFilter(WalletFactoryMiddlewareDatabaseConstants.SKIN_PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryPublicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
@@ -308,7 +308,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
     private List<DatabaseTableRecord> getLanguagesData(String walletFactoryPublicKey) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME);
-        table.setStringFilter(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryPublicKey, DatabaseFilterType.EQUAL);
+        table.addStringFilter(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryPublicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
@@ -316,7 +316,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
     private DatabaseTableRecord getNavigationStructureData(String walletFactoryPublicKey) throws CantLoadTableToMemoryException, DatabaseOperationException {
         DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);
-        table.setStringFilter(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryPublicKey, DatabaseFilterType.EQUAL);
+        table.addStringFilter(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryPublicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         // I should only have 1 or none navigation structure for each project.
@@ -334,7 +334,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     private List<DatabaseTableRecord> getWalletFactoryProjectsData (DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
 
