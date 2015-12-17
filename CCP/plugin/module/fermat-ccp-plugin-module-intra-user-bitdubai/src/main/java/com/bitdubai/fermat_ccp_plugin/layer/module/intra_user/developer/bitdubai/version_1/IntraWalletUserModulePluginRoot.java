@@ -138,10 +138,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CouldNotCreateIntraUserException
      */
     @Override
-    public IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws CouldNotCreateIntraUserException {
+    public IntraUserLoginIdentity createIntraUser(String intraUserName,String phrase, byte[] profileImage) throws CouldNotCreateIntraUserException {
 
       try{
-           this.intraWalletUser =  this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, profileImage);
+           this.intraWalletUser =  this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName,phrase, profileImage);
 
 
           return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
@@ -551,9 +551,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage) throws CantUpdateIdentityException {
         try {
-             this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey,identityAlias,profileImage);
+             this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey,identityAlias,identityPhrase,profileImage);
         }
         catch (CantUpdateIdentityException e) {
             throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY",e,"","Error on IntraUserIdentity Manager");
