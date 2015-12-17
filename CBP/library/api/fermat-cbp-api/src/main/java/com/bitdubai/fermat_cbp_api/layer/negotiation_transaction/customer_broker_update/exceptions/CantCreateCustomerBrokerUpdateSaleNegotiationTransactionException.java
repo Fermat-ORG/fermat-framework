@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 13.11.2015.
  */
-public class CantReceiveCustomerBrokerUpdateNegotiationTransactionException extends FermatException {
+public class CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T RECEIVE INFORMATION THE NEGOTIATION TRANSMISSION NETWORK SERVICE";
+    public static final String DEFAULT_MESSAGE = "CAN'T CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantReceiveCustomerBrokerUpdateNegotiationTransactionException exte
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantReceiveCustomerBrokerUpdateNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
