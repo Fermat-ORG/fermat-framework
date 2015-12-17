@@ -430,7 +430,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Activity activity = getActivityUsedType();
             loadBasicUI(activity);
             hideBottonIcons();
-
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
@@ -457,10 +456,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         SubApp subApp = subAppRuntimeManager.getLastSubApp();
         String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
         FermatSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
-
         FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null);
         com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-
         try {
             if(fermatFragmentFactory !=null){
                     TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -480,9 +477,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                             .getDisplayMetrics());
                     pagertabs.setPageMargin(pageMargin);
-
                 }
-
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -495,15 +490,16 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Bundle bundle = getIntent().getExtras();
             InstalledSubApp installedSubApp=null;
             SubApps subAppType=null;
+            String publicKey=null;
             if(bundle!=null){
                 if(bundle.containsKey(INSTALLED_SUB_APP)){
                     installedSubApp  = ((InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP));
                 }else if(bundle.containsKey(ConnectionConstants.SUB_APP_CONNECTION)){
                     subAppType = (SubApps) bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION_TYPE);
+                    publicKey = bundle.getString(ConnectionConstants.SUB_APP_CONNECTION);
                 }
             }
-
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(installedSubApp.getAppPublicKey(), this, null);
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection((publicKey==null) ? installedSubApp.getAppPublicKey() : publicKey, this, null);
             ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
             if(installedSubApp!=null){
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {

@@ -43,20 +43,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 app:typeface="ROBOTO_REGULAR"
-                />
-
-            <ImageView
-                android:id="@+id/imageView_change_user"
-                android:layout_width="15dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="4dp"
-                android:layout_marginRight="8dp"
-                android:src="@drawable/ic_nav_arrow_down"
-                android:tint="#ffffff"
-                tools:ignore="ContentDescription,RtlHardcoded" />
-
+                tools:ignore="HardcodedText" />
         </RelativeLayout>
 
     </RelativeLayout>

@@ -130,9 +130,10 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
                 ConnectDialog connectDialog;
                 try {
                     connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
-                    connectDialog.setTitle("Connect");
-                    connectDialog.setDescription("Want connect with ");
+                    connectDialog.setTitle("Connection Request");
+                    connectDialog.setDescription("Do you want to send ");
                     connectDialog.setUsername(intraUserInformation.getName());
+                    connectDialog.setSecondDescription("a connection request");
                     connectDialog.show();
                 } catch (CantGetActiveLoginIdentityException e) {
                     e.printStackTrace();

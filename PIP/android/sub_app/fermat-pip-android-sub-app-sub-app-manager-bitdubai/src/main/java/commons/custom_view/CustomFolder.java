@@ -38,6 +38,7 @@ public class CustomFolder extends LinearLayout{
 //        inflater.inflate(R.layout.custom_folder_base, this);
 //        mRecyclerView = (RecyclerView) findViewById(R.id.grid_folder_view);
         update();
+
     }
 
     public CustomFolder(Context context, AttributeSet attrs) {
