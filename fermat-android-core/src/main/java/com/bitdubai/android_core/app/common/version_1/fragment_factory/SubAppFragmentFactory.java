@@ -57,7 +57,7 @@ public class SubAppFragmentFactory {
             case CBP_CRYPTO_BROKER_IDENTITY:
                 return new CryptoBrokerIdentityFragmentFactory();
             case CBP_CRYPTO_BROKER_COMMUNITY:
-                return new CryptoBrokerCommunityFragmentFactory();
+                return null;//new CryptoBrokerCommunityFragmentFactory();
             case CBP_CRYPTO_CUSTOMER_IDENTITY:
                 return new CryptoCustomerIdentityFragmentFactory();
             default:
