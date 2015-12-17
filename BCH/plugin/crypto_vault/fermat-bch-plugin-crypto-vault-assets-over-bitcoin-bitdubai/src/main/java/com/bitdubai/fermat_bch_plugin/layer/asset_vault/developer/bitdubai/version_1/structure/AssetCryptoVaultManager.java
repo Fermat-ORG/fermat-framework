@@ -253,7 +253,7 @@ public class AssetCryptoVaultManager  {
         try {
             bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx);
         } catch (CantBroadcastTransactionException e) {
-            e.printStackTrace();
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Cant broadcast the outgoing transaction", "CryptoNetwork issue.");
         }
 
         return sendRequest.tx.getHashAsString();

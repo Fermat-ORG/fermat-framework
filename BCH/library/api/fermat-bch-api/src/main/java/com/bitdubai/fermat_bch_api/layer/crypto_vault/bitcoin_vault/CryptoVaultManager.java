@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -18,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 11/06/15.
  */
-public interface CryptoVaultManager extends PlatformCryptoVault {
+public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
     /**
      * gets a new fresh crypto address
      * @return
