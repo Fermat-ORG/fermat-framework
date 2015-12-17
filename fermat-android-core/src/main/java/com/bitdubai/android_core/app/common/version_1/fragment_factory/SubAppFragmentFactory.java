@@ -37,9 +37,9 @@ public class SubAppFragmentFactory {
             case CWP_DEVELOPER_APP:
                 return new DeveloperSubAppFragmentFactory();
             case CWP_INTRA_USER_IDENTITY:
-                return new IntraUserIdentityFragmentFactory();
+                return null;//new IntraUserIdentityFragmentFactory();
             case CCP_INTRA_USER_COMMUNITY:
-                return new IntraUserFragmentFactory();
+                return null;//new IntraUserFragmentFactory();
             case DAP_ASSETS_FACTORY:
                 return new AssetFactoryFragmentFactory();
             case DAP_ASSETS_COMMUNITY_ISSUER:

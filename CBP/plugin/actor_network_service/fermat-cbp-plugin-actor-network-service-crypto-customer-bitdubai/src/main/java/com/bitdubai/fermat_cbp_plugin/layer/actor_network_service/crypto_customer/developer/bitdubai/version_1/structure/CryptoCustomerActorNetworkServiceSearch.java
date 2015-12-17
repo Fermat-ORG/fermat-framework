@@ -46,6 +46,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     PlatformComponentType.ACTOR_CRYPTO_CUSTOMER, // PlatformComponentType you want to find
                     NetworkServiceType   .UNDEFINED,           // NetworkServiceType you want to find
                     null,                                      // alias
+                    null,                                      // phrase
                     null,                                      // identityPublicKey
                     null,                                      // location
                     null,                                      // distance

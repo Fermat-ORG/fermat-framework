@@ -52,18 +52,6 @@ public class CryptoCustomerIdentitySubAppSession extends AbstractFermatSession<I
         this.moduleManager = moduleManager;
     }
 
-
-
-    /**
-     * Return the SubApp type
-     *
-     * @return SubApps instance indicating the type
-     */
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
-
     /**
      * Store any data you need to hold between the fragments of the sub app
      *

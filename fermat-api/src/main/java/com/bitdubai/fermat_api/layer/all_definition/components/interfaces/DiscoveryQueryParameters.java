@@ -35,6 +35,13 @@ public interface DiscoveryQueryParameters {
      */
     public String getAlias();
 
+
+    /**
+     * Get the intra user phrase
+     * @return String
+     */
+    public String getPhrase();
+
     /**
      * Get the name
      *

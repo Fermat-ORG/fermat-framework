@@ -42,6 +42,8 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      */
     private String alias;
 
+    private String phrase;
+
     /**
      * Represent the name
      */
@@ -78,6 +80,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     public PlatformComponentProfileCommunication() {
         super();
         this.alias = null;
+        this.phrase = null;
         this.communicationCloudClientIdentity = null;
         this.identityPublicKey = null;
         this.location = null;
@@ -97,9 +100,10 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      * @param networkServiceType
      * @param platformComponentType
      */
-    public PlatformComponentProfileCommunication(String alias, String communicationCloudClientIdentity, String identityPublicKey, Location location, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData) {
+    public PlatformComponentProfileCommunication(String alias, String phrase,String communicationCloudClientIdentity, String identityPublicKey, Location location, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData) {
         super();
         this.alias = alias;
+        this.phrase = phrase;
         this.communicationCloudClientIdentity = communicationCloudClientIdentity;
         this.identityPublicKey = identityPublicKey;
         this.location = (DeviceLocation) location;
@@ -133,6 +137,11 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     @Override
     public String getAlias() {
         return alias;
+    }
+
+    @Override
+    public String getPhrase() {
+        return phrase;
     }
 
     /**

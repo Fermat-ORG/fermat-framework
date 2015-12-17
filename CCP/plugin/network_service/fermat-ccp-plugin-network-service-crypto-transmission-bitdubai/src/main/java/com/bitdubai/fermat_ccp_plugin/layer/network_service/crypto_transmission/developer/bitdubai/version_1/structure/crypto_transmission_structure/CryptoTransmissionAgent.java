@@ -349,6 +349,8 @@ public class CryptoTransmissionAgent {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                        }else{
+                            poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                         }
                     }
                 }
