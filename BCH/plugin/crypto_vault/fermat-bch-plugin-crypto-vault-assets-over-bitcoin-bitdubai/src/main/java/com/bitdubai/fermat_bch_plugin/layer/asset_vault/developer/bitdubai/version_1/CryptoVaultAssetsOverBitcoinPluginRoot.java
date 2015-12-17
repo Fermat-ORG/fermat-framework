@@ -45,7 +45,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.PlatformCryptoVaultAssetsOverBitcoinPluginRoot</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot</code>
  * is the root plugin of the Assets over bitcoin Crypto Vault.
  * <p/>
  *
@@ -54,7 +54,7 @@ import javax.annotation.Nullable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
+public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
         AssetVaultManager,
         PlatformCryptoVault,
         DatabaseManagerForDevelopers {
@@ -78,7 +78,7 @@ public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlug
     private AssetCryptoVaultManager assetCryptoVaultManager;
 
 
-    public PlatformCryptoVaultAssetsOverBitcoinPluginRoot() {
+    public CryptoVaultAssetsOverBitcoinPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -154,8 +154,6 @@ public class PlatformCryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlug
          */
         //generateAddress();
         //sendBitcoinsTest();
-
-
 
         /**
          * Nothing left to do.

@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.bitcoin_vault.CryptoVaultManager;
@@ -42,7 +43,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
@@ -69,7 +69,7 @@ import javax.annotation.Nullable;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
+public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin implements
         CryptoVaultManager,
         PlatformCryptoVault,
         DatabaseManagerForDevelopers,
@@ -94,18 +94,18 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK)
-    private BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    private BitcoinNetworkManager bitcoinNetworkManager;
 
 
-    public BitcoinCryptoVaultPluginRoot() {
+    public CryptoVaultBitcoinCurrencyPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
     public static final EventSource EVENT_SOURCE = EventSource.CRYPTO_VAULT;
 
     /**
-     * BitcoinCryptoVaultPluginRoot member variables
+     * CryptoVaultBitcoinCurrencyPluginRoot member variables
      */
     BitcoinCryptoVault vault;
     TransactionNotificationAgent transactionNotificationAgent;
@@ -120,7 +120,7 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.CryptoVaultBitcoinCurrencyPluginRoot");
         returnedClasses.add("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
         returnedClasses.add("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault");
@@ -149,11 +149,11 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (BitcoinCryptoVaultPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                BitcoinCryptoVaultPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (CryptoVaultBitcoinCurrencyPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                CryptoVaultBitcoinCurrencyPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                CryptoVaultBitcoinCurrencyPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                CryptoVaultBitcoinCurrencyPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
@@ -319,7 +319,7 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
          * the service is started.
          */
         this.serviceStatus = ServiceStatus.STARTED;
-        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "PlatformCryptoVault started.", null, null);
+        logManager.log(CryptoVaultBitcoinCurrencyPluginRoot.getLogLevelByClass(this.getClass().getName()), "PlatformCryptoVault started.", null, null);
     }
 
     /**
@@ -423,7 +423,7 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return CryptoVaultBitcoinCurrencyPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.

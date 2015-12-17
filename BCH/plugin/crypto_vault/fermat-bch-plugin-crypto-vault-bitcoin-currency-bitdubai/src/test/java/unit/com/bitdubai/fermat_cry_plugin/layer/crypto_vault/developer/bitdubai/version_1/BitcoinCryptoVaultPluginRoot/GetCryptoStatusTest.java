@@ -8,9 +8,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.CryptoVaultBitcoinCurrencyPluginRoot;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -95,22 +95,22 @@ public class GetCryptoStatusTest {
 
     private UUID pluginId = UUID.randomUUID();
 
-    private BitcoinCryptoVaultPluginRoot bitcoinCryptoVaultPluginRoot;
+    private CryptoVaultBitcoinCurrencyPluginRoot cryptoVaultBitcoinCurrencyPluginRoot;
 
     private String userPublicKey = "replace_user_public_key";
 
     @Before
     public void setUp() throws Exception{
-        bitcoinCryptoVaultPluginRoot = new BitcoinCryptoVaultPluginRoot();
+        cryptoVaultBitcoinCurrencyPluginRoot = new CryptoVaultBitcoinCurrencyPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
-        bitcoinCryptoVaultPluginRoot.setErrorManager(errorManager);
-        bitcoinCryptoVaultPluginRoot.setEventManager(eventManager);
-        bitcoinCryptoVaultPluginRoot.setId(pluginId);
-        bitcoinCryptoVaultPluginRoot.setDeviceUserManager(mockDeviceUserManager);
-        bitcoinCryptoVaultPluginRoot.setLogManager(logManager);
-        bitcoinCryptoVaultPluginRoot.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-        bitcoinCryptoVaultPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
-        bitcoinCryptoVaultPluginRoot.setPluginFileSystem(pluginFileSystem);
+        cryptoVaultBitcoinCurrencyPluginRoot.setErrorManager(errorManager);
+        cryptoVaultBitcoinCurrencyPluginRoot.setEventManager(eventManager);
+        cryptoVaultBitcoinCurrencyPluginRoot.setId(pluginId);
+        cryptoVaultBitcoinCurrencyPluginRoot.setDeviceUserManager(mockDeviceUserManager);
+        cryptoVaultBitcoinCurrencyPluginRoot.setLogManager(logManager);
+        cryptoVaultBitcoinCurrencyPluginRoot.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
+        cryptoVaultBitcoinCurrencyPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
+        cryptoVaultBitcoinCurrencyPluginRoot.setPluginFileSystem(pluginFileSystem);
 
         when(pluginDatabaseSystem.openDatabase(pluginId, userPublicKey)).thenReturn(mockDatabase);
 
@@ -120,7 +120,7 @@ public class GetCryptoStatusTest {
 
         when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
 
-        bitcoinCryptoVaultPluginRoot.start();
+        cryptoVaultBitcoinCurrencyPluginRoot.start();
     }
 
     @Ignore
@@ -128,7 +128,7 @@ public class GetCryptoStatusTest {
 
         //TODO: necesito un mock que me retorne una lista de records con size = 1
         when(mockTable.getRecords()).thenReturn(mockRecords);
-        CryptoStatus status = bitcoinCryptoVaultPluginRoot.getCryptoStatus(UUID.randomUUID());
+        CryptoStatus status = cryptoVaultBitcoinCurrencyPluginRoot.getCryptoStatus(UUID.randomUUID());
 
         Assertions.assertThat(status)
                 .isNotNull();
@@ -136,7 +136,7 @@ public class GetCryptoStatusTest {
 
     @Test
     public void getCryptoStatusTest_GetError_ThrowsCouldNotGetCryptoStatusException() throws Exception {
-        catchException(bitcoinCryptoVaultPluginRoot).getCryptoStatus(UUID.randomUUID());
+        catchException(cryptoVaultBitcoinCurrencyPluginRoot).getCryptoStatus(UUID.randomUUID());
 
         assertThat(caughtException())
                 .isNotNull()

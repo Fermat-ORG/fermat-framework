@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.CryptoVaultBitcoinCurrencyPluginRoot;
 
 import org.junit.Test;
 
@@ -23,9 +23,9 @@ public class getClassesFullPathTest {
     @Test
     public void generateClassesTree() throws ClassNotFoundException {
 
-        String scannedPackage = BitcoinCryptoVaultPluginRoot.class.getPackage().getName();
-        List<Class<?>> classes = find(BitcoinCryptoVaultPluginRoot.class.getPackage().getName());
-        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
+        String scannedPackage = CryptoVaultBitcoinCurrencyPluginRoot.class.getPackage().getName();
+        List<Class<?>> classes = find(CryptoVaultBitcoinCurrencyPluginRoot.class.getPackage().getName());
+        CryptoVaultBitcoinCurrencyPluginRoot root = new CryptoVaultBitcoinCurrencyPluginRoot();
 
         for (Class<?> c : classes){
             System.out.println(c.getName());
