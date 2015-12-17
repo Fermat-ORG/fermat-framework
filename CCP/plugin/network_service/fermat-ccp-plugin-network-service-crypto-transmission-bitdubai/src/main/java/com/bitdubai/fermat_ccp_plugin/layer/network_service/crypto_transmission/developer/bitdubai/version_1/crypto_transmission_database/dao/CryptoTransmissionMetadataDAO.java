@@ -137,7 +137,7 @@ public class CryptoTransmissionMetadataDAO {
 
             DatabaseTable metadataTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
-            metadataTable.setUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            metadataTable.addUUIDFilter(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
 
             metadataTable.loadToMemory();
 
@@ -187,7 +187,7 @@ public class CryptoTransmissionMetadataDAO {
              * 1 - load the data base to memory with filters
              */
             DatabaseTable templateTable = getDatabaseTable();
-            templateTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            templateTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             templateTable.loadToMemory();
 
             /*

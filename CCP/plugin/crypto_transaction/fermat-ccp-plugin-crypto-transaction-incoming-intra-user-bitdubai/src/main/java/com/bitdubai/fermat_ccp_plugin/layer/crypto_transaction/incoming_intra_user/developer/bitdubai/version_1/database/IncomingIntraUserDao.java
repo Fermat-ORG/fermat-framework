@@ -85,8 +85,8 @@ public class IncomingIntraUserDao {
 
     public EventWrapper getNextPendingEvent(EventSource eventSource) throws CantLoadTableToMemoryException {
         DatabaseTable eventsTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_TABLE_NAME);
-        eventsTable.setStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_STATUS_COLUMN_NAME, "PENDING", DatabaseFilterType.EQUAL);
-        eventsTable.setStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+        eventsTable.addStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_STATUS_COLUMN_NAME, "PENDING", DatabaseFilterType.EQUAL);
+        eventsTable.addStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
 
         eventsTable.loadToMemory();
         eventsTable.clearAllFilters();
@@ -110,7 +110,7 @@ public class IncomingIntraUserDao {
 
     public void disableEvent(UUID eventId) throws CantLoadTableToMemoryException, IncomingIntraUserCantSaveEventException, CantUpdateRecordException {
         DatabaseTable eventsTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_TABLE_NAME);
-        eventsTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+        eventsTable.addUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
 
         eventsTable.loadToMemory();
         List<DatabaseTableRecord> records = eventsTable.getRecords();
@@ -130,7 +130,7 @@ public class IncomingIntraUserDao {
 
     public boolean isANewTransaction(Transaction<CryptoTransaction> transaction) throws CantLoadTableToMemoryException {
         DatabaseTable registryTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
-        registryTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+        registryTable.addUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
         registryTable.loadToMemory();
         registryTable.clearAllFilters();
         return registryTable.getRecords().isEmpty();
@@ -150,7 +150,7 @@ public class IncomingIntraUserDao {
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME,
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME);
 
-        registryTable.setUUIDFilter( IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+        registryTable.addUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
 
         recordToUpdate.setStringValue(
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME,
@@ -174,7 +174,7 @@ public class IncomingIntraUserDao {
 
     private Transaction<FermatCryptoTransaction> getAssociatedMetadata(String associatedCryptoTransactionHash) throws CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable       cryptoMetadataTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME);
-        cryptoMetadataTable.setStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME,
+        cryptoMetadataTable.addStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME,
                 associatedCryptoTransactionHash,
                 DatabaseFilterType.EQUAL);
         cryptoMetadataTable.loadToMemory();
@@ -213,14 +213,14 @@ public class IncomingIntraUserDao {
                 protocolStatus.getCode()
         );
 
-        registryTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+        registryTable.addUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
        registryTable.updateRecord(recordToUpdate);
     }
 
     private DatabaseTableRecord getTransactionRecordFromId(UUID id,String tableName, String columnName) throws CantLoadTableToMemoryException, com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserExpectedTransactionNotFoundException {
         DatabaseTable registryTable = database.getTable(tableName);
-        registryTable.setUUIDFilter(columnName, id, DatabaseFilterType.EQUAL);
+        registryTable.addUUIDFilter(columnName, id, DatabaseFilterType.EQUAL);
 
         registryTable.loadToMemory();
         registryTable.clearAllFilters();
@@ -277,12 +277,12 @@ public class IncomingIntraUserDao {
                                                            String protocolStatusColumnName) throws CantLoadTableToMemoryException {
         DatabaseTable registryTable = this.database.getTable(tableName);
 
-        registryTable.setStringFilter(transactionStatusColumnName,
+        registryTable.addStringFilter(transactionStatusColumnName,
                 transactionStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
 
-        registryTable.setStringFilter(protocolStatusColumnName,
+        registryTable.addStringFilter(protocolStatusColumnName,
                 protocolStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
@@ -329,7 +329,7 @@ public class IncomingIntraUserDao {
 
     public boolean isANewFermatTransaction(Transaction<FermatCryptoTransaction> transaction) throws CantLoadTableToMemoryException {
         DatabaseTable cryptoMetadataTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME);
-        cryptoMetadataTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+        cryptoMetadataTable.addUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
         cryptoMetadataTable.loadToMemory();
         cryptoMetadataTable.clearAllFilters();
         return cryptoMetadataTable.getRecords().isEmpty();
@@ -381,7 +381,7 @@ public class IncomingIntraUserDao {
                 protocolStatus.getCode()
         );
 
-        cryptoMetadataTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+        cryptoMetadataTable.addUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
         cryptoMetadataTable.updateRecord(recordToUpdate);
     }

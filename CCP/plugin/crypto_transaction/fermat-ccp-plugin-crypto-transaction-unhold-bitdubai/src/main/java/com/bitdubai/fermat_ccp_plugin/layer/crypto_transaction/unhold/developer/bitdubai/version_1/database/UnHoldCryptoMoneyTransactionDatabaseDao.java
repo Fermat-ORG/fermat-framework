@@ -86,7 +86,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
         if (table.getRecords().isEmpty())
             return true;
@@ -98,7 +98,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
         DatabaseTable table = getDatabaseTable(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
 
@@ -140,7 +140,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, unHoldCryptoRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, unHoldCryptoRecord);
             }
 

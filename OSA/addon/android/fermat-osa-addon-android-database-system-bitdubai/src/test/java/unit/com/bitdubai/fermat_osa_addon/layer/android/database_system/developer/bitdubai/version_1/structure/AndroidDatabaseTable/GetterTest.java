@@ -121,8 +121,8 @@ public class GetterTest {
     @Test
     public void getFiltersTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-       testDatabaseTable.setStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
-        testDatabaseTable.setUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
+       testDatabaseTable.addStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
 
         assertThat(testDatabaseTable.getFilters()).isInstanceOf(List.class);
 
@@ -133,7 +133,7 @@ public class GetterTest {
     @Test
     public void getTableSelectOperatorTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        testDatabaseTable.setSelectOperator("testColumn1", DataBaseSelectOperatorType.SUM, "total");
+        testDatabaseTable.addSelectOperator("testColumn1", DataBaseSelectOperatorType.SUM, "total");
 
         assertThat(testDatabaseTable.getTableSelectOperator()).isInstanceOf(List.class);
 
@@ -189,8 +189,8 @@ public class GetterTest {
         testDatabaseTable = testDatabase.getTable("otherTable");
 
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        testDatabaseTable.setStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
-        testDatabaseTable.setUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
+        testDatabaseTable.addStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
 
         testDatabaseTable.clearAllFilters();
 

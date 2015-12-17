@@ -185,7 +185,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
 
             // 2) Find the Intra users.
-            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
@@ -235,7 +235,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
 
             // 2) Find the Intra users.
-            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
@@ -287,8 +287,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
 
             // 2) Find the Intra users.
-            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
-            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "true", DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "true", DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -467,7 +467,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Intra User Identity", "");
             }
 
-            table.setStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords ().size () > 0;

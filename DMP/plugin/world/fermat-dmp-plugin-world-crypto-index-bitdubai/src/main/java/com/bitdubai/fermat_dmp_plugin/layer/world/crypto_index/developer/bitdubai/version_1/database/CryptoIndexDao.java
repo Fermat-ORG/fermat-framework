@@ -111,8 +111,8 @@ public class CryptoIndexDao implements Serializable {
              */
             throw new CantGetCryptoIndexIdentitiesException("Cant get Crypto Index list, table not found.", "Crypto Index", "");
         }
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, crypto, DatabaseFilterType.EQUAL);
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME, fiat, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, crypto, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME, fiat, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
             for (DatabaseTableRecord record : table.getRecords()){
@@ -141,9 +141,9 @@ public class CryptoIndexDao implements Serializable {
                  */
                 throw new CantGetCryptoIndexIdentitiesException("Cant get Crypto Index list, table not found.", "Crypto Index", "");
             }
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME,crypto,DatabaseFilterType.EQUAL);
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME,fiat,DatabaseFilterType.EQUAL);
-            table.setStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME, String.valueOf(time),DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, crypto, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, fiat, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME, String.valueOf(time), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
             System.out.println(table.getRecords().get(0));

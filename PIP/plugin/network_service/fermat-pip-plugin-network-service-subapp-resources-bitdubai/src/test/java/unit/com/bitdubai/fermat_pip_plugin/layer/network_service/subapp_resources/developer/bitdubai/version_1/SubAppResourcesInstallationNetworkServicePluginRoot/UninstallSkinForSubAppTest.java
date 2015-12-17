@@ -160,7 +160,7 @@ public class UninstallSkinForSubAppTest {
         skinId = UUID.randomUUID();
         subAppResourcesDAO.createRepository(repository, skinId);
         when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
-        mockDatabaseTable.setUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+        mockDatabaseTable.addUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
         mockDatabaseTable.loadToMemory();
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(anyInt())).thenReturn(mockDatabaseTableRecord);

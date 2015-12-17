@@ -81,9 +81,10 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
-                moduleManager.createNewIntraWalletUser("John Doe","xxxx", null);
-            }
+
+//            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+//                moduleManager.createNewIntraWalletUser("John Doe", null);
+//            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }

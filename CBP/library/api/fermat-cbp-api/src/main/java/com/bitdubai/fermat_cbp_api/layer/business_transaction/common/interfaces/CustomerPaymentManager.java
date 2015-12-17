@@ -14,13 +14,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 public interface CustomerPaymentManager extends FermatManager {
 
     /**
-     * This method send a payment according the contract elements.
-     * @param contractHash
-     * @throws CantSendPaymentException
-     */
-    void sendPayment(String walletPublicKey, String contractHash)throws CantSendPaymentException;
-
-    /**
      * This method returns the ContractTransactionStatus by contractHash
      * @param contractHash
      * @return
