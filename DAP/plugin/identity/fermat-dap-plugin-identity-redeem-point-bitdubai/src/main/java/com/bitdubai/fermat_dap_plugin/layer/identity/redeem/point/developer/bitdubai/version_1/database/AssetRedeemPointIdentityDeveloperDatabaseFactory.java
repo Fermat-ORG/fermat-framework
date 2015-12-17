@@ -71,7 +71,7 @@ public class AssetRedeemPointIdentityDeveloperDatabaseFactory implements DealsWi
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DB_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
