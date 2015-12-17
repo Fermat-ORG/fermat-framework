@@ -19,8 +19,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsFragment2;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsReceivedHistory;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsSendHistory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 /**
@@ -64,19 +62,15 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT:
-                    currentFragment = TransactionsSendHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED:
-                    currentFragment = TransactionsReceivedHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_REQUEST_RECEIVED:
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
-                    currentFragment = TransactionsReceivedHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY:
-                    currentFragment = TransactionsSendHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY:
                     currentFragment = RequestReceiveHistoryFragment.newInstance();

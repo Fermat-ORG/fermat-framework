@@ -62,12 +62,11 @@ import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
-import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
@@ -708,10 +707,8 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Method used from a Wallet to paint tabs
      */
-    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, AbstractFermatSession walletSession) {
-
-        //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
-        //pagerSlidingTabStrip.setShouldExpand(true);
+    protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, FermatSession walletSession,FermatFragmentFactory fermatFragmentFactory) {
+        WalletSettingsManager walletSettingsManager = getWalletSettingsManager();
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
@@ -719,10 +716,11 @@ public abstract class FermatActivity extends AppCompatActivity
         pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
+
         if (tabStrip.isHasIcon()) {
             adapterWithIcons = new TabsPagerAdapterWithIcons(getFragmentManager(),
                     getApplicationContext(),
-                    WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
+                    fermatFragmentFactory,
                     tabStrip,
                     walletSession,
                     getWalletResourcesProviderManager(),
@@ -732,7 +730,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             adapter = new TabsPagerAdapter(getFragmentManager(),
                     getApplicationContext(),
-                    WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
+                    fermatFragmentFactory,
                     tabStrip,
                     walletSession,
                     getWalletResourcesProviderManager(),
@@ -747,19 +745,11 @@ public abstract class FermatActivity extends AppCompatActivity
             }
         }
 
-        //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pagertabs.setPageMargin(pageMargin);
         pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
-
-        /**
-         * Put tabs in pagerSlidingTabsStrp
-         */
-        //pagerSlidingTabStrip.setViewPager(pagertabs);
-        //pagerSlidingTabStrip.setShouldExpand(true);
         tabLayout.setupWithViewPager(pagertabs);
-        // pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
 
     }
 
@@ -767,20 +757,12 @@ public abstract class FermatActivity extends AppCompatActivity
      * Method used from a subApp to paint tabs
      */
     protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, FermatSession subAppsSession) throws InvalidParameterException {
-        //comment by luis campo
-        //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         System.out.println("tabLayout: " + tabLayout);
         tabLayout.setVisibility(View.VISIBLE);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
-
-
-        SubApps subAppType = subApp.getType();
-
-        //com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
-
 
         FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null);
         com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
@@ -798,16 +780,8 @@ public abstract class FermatActivity extends AppCompatActivity
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pagertabs.setPageMargin(pageMargin);
-        /**
-         * Put tabs in pagerSlidingTabsStrp
-         */
-        //Comment by luis campo
-        //System.out.println("pagerSlidingTabStrip: " + pagerSlidingTabStrip);
-        //pagerSlidingTabStrip.setViewPager(pagertabs);
         tabLayout.setupWithViewPager(pagertabs);
         pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
-        System.out.println("se hizo bien si ");
-
 
     }
 
@@ -1023,18 +997,12 @@ public abstract class FermatActivity extends AppCompatActivity
                 ((TextView) tabLayout.getTabAt(position).getCustomView()).setTypeface(tf);
             }
             tabLayout.setVisibility(View.VISIBLE);
-
-            // paint tabs color
             if (tabs.getTabsColor() != null) {
                 tabLayout.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
             }
-
-            // paint tabs text color
             if (tabs.getTabsTextColor() != null) {
                 tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.WHITE);
             }
-
-            //paint tabs indicate color
             if (tabs.getTabsIndicateColor() != null) {
                 tabLayout.setSelectedTabIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
             }
@@ -1161,7 +1129,6 @@ public abstract class FermatActivity extends AppCompatActivity
             }
             System.gc();
 
-
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
             if (tabLayout != null) {
                 tabLayout.removeAllTabs();
@@ -1169,22 +1136,16 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
-
             removecallbacks();
-
             onRestart();
-
         } catch (Exception e) {
-
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
         }
     }
 
     protected void removecallbacks() {
-
         try {
 
             this.getNotificationManager().deleteObserver(this);
