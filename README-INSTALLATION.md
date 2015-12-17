@@ -28,9 +28,43 @@ Although there are many ways to configure these tools, we'll provide a recommend
 <br>
 ### Working on Linux
 
-Most Fermat developers are on Linux since compilation is faster there than in Windows. 
+Most Fermat developers are on Linux since compilation is faster there than in Windows. It is highly recommended that you use linux instead of windows. Developers that tried to set up a windows environment finally gave up and moved to Ubuntu. If you don't have Ubuntu installed, we recommed you to do so in a fresh disk partition.
+
+#### Automatic installation
+
+You can install all the needed software automatically using the script that you can find at the following URL:
+[FermatDeveloperInstaller.sh] (https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
+
+This script the downloads and installs all the software that you need for develop in Fermat.
+
+* To begin using the script, copy **_FermatDeveloperInstaller.sh_** in your _$HOME_ folder
+* You can edit the sctipt with gedit, eMacs or any text editor to set some variables (optional)
+
+```shell
+platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
+#plafform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
+
+gradleVersion=2.9 #Sets the version that you want to use in development, this version must be superior to 2.5.
+
+#If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
+#genymotion="genymotion-2.5.2_x86.bin" #Genymotion for 32 Bits OS
+genymotion="genymotion-2.5.2_x64.bin" #Genymotion for 64 Bits OS
+#If you want to use the default Android Studio emulator, please, leave the previous lines commented.
+```
+* To execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
+```shell
+cd $HOME
+./FermatDeveloperInstaller.sh
+```
+
+It takes some time to download all the software, please, be patient.
+
 
 <br>
+#### Manual installation
+
+In case the script goes wrong or does not do its intended job, you can go with the manual set up of the environment.
+
 #### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you will find in any Distro of Linux.
@@ -145,6 +179,146 @@ sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
 ```
 
 This will enable 64-bit linux distros to run 32-bit applications like adb and aapt (Android tools). More information found here: [Android Issue 82711](https://code.google.com/p/android/issues/detail?id=82711)
+
+### Cloning Repository
+
+#### Create your fork.
+
+* Enter to GitHub:
+https://github.com/bitDubai/fermat then create Fork:
+To fork you must press button “Fork” in the top-right corner of the url, and then, select your user.
+
+You have your Fork created!
+https://github.com/$YOUR_USER/fermat
+
+##### Create a local branch pointing to the original project.
+* Create a new local branch, pointing to the original project:
+```shell
+git remote add newbranch https://github.com/bitDubai/fermat
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/lnacosta/fermat (fetch)
+origin https://github.com/lnacosta/fermat (push)
+newbranch https://github.com/bitDubai/fermat (fetch)
+newbranch https://github.com/bitDubai/fermat (push)
+```
+
+#### Update your fork to the last release.
+
+* Open a command prompt and clone your fork:
+```shell
+git clone https://github.com/$YOUR_USER/fermat
+```
+* Enter your credentials
+
+* Well, you have cloned your fork.
+
+* Enter to your cloned repository folder and try this:
+```shell 
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/$YOUR_USER/fermat (fetch)
+origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+* Follow section: **“Create a local branch pointing to the original project”.**
+
+Now you have a local repository pointing to your fork, and a local repository pointing to the main fork.
+
+* Update your local repository to the last release:
+```shell
+git fetch newbranch
+```
+This will update all your code to the last release.
+
+* Point to the outdated local repository:
+```shell
+git checkout master
+```
+
+* Now merge the changes!
+```shell
+git merge newbranch/master
+```
+
+All changes will be updated in your oudated local repository with the last release.
+
+* Now push the changes to update your fork!
+```shell
+git push
+```
+
+If you have any problems to push then try: 
+```shell
+git config http.postBuffer 524288000
+```
+and push again.
+
+#### Pull your changes to the main fork (if you haven’t got a fork yet).
+
+If you don’t have a fork.
+
+Please go to **“Create your fork.”**
+
+Then, you must have a local repository pointing to your fork and one local repository pointing to the main fork.
+To do this then follow the next steps:
+
+* Open a command prompt and clone your fork:
+```shell
+git clone https://github.com/$YOUR_USER/fermat
+```
+Enter your credentials
+
+Well, you have cloned your fork.
+
+* Enter to your cloned repository folder and try this:
+```shell
+git remote -v
+```
+
+The console must return you something like this:
+```shell
+origin https://github.com/$YOUR_USER/fermat (fetch)
+origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+Follow section: **“Create a local branch pointing to the original project”**.
+
+Now you have a local repository pointing to your fork, and a local repository pointing to the main fork.
+
+* Point to your the repository that points to the fork:
+```shell
+git checkout master
+```
+
+Then overwrite the source code with your changes.
+
+* Commit the changes.
+
+Go to github and create a Pull Request:
+You have to go to your fork and then with the commits do the pull request.
+
+#### Pull your changes to the main fork (if you have a fork created and a branch pointing to main fork).
+
+* Update your local branch pointing to main fork to the last release:
+```shell
+git fetch mainforkbranch
+```
+This will update all your code to the last release.
+
+* Now merge the changes!
+```shell
+git merge mainforkbranch/master
+```
+
+* Commit the changes.
+
+* Go to github and create a Pull Request:
+You have to go to your fork and then with the commits do the pull request.
 
 
 <br>

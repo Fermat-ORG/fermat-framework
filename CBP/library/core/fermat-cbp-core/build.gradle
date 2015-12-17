@@ -86,7 +86,7 @@ dependencies {
 
     //User Level Business Transaction
     compile project(':fermat-cbp-plugin-user-level-business-transaction-customer-broker-purchase-bitdubai')
-
+    compile project(':fermat-cbp-plugin-user-level-business-transaction-customer-broker-sale-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

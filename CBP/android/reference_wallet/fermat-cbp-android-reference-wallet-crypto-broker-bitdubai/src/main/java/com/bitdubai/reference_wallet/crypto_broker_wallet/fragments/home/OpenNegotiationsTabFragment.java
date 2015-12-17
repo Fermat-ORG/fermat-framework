@@ -28,7 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -208,7 +208,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+                CryptoBrokerWalletManager cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
@@ -242,7 +242,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         if (moduleManager != null) {
             try {
-                CryptoBrokerWallet wallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+                CryptoBrokerWalletManager wallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
                 data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies());
 
             } catch (CantGetCryptoBrokerWalletException | CantGetCurrentIndexSummaryForStockCurrenciesException ex) {

@@ -158,7 +158,7 @@ public class HoldBankMoneyTransactionDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = database.getTable(HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
 
-        table.setStringFilter(HoldBankMoneyTransactionDatabaseConstants.HOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(HoldBankMoneyTransactionDatabaseConstants.HOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
 
@@ -173,7 +173,7 @@ public class HoldBankMoneyTransactionDao {
         DatabaseTable table = this.database.getTable(HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();

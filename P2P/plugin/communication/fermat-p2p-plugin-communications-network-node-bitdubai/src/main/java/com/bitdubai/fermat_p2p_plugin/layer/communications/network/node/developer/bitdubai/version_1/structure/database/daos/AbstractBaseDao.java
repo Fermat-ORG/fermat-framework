@@ -96,7 +96,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         try {
 
             final DatabaseTable table = getDatabaseTable();
-            table.setStringFilter(idTableName, id, DatabaseFilterType.EQUAL);
+            table.addStringFilter(idTableName, id, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             List<DatabaseTableRecord> records = table.getRecords();
@@ -167,7 +167,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
             // load the data base to memory with filters
             final DatabaseTable table = getDatabaseTable();
 
-            table.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            table.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             final List<DatabaseTableRecord> records = table.getRecords();
@@ -287,7 +287,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
 
             final DatabaseTable table = this.getDatabaseTable();
 
-            table.setStringFilter(idTableName, entity.getId(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(idTableName, entity.getId(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -326,7 +326,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
 
             final DatabaseTable table = this.getDatabaseTable();
 
-            table.setStringFilter(idTableName, id, DatabaseFilterType.EQUAL);
+            table.addStringFilter(idTableName, id, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 

@@ -82,7 +82,7 @@ public class ContractListViewHolder extends FermatViewHolder {
         String exchangeAmount = decimalFormat.format(itemInfo.getExchangeRateAmount());
         String paymentCurrency = itemInfo.getPaymentCurrency();
 
-        return res.getString(R.string.cbw_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
+        return res.getString(R.string.cbw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency);
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {

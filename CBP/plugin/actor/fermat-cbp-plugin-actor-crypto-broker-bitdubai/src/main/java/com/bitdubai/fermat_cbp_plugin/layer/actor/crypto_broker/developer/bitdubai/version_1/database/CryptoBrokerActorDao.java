@@ -111,7 +111,7 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
-                RelationshipTable.setStringFilter(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, identity.getPublicKey(), DatabaseFilterType.EQUAL);
+                RelationshipTable.addStringFilter(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, identity.getPublicKey(), DatabaseFilterType.EQUAL);
                 RelationshipTable.loadToMemory();
                 List<DatabaseTableRecord> records = RelationshipTable.getRecords();
                 RelationshipTable.clearAllFilters();
@@ -132,7 +132,7 @@ public class CryptoBrokerActorDao implements CryptoBrokerActorManager {
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
-                RelationshipTable.setUUIDFilter(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, wallet, DatabaseFilterType.EQUAL);
+                RelationshipTable.addUUIDFilter(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, wallet, DatabaseFilterType.EQUAL);
                 RelationshipTable.loadToMemory();
                 List<DatabaseTableRecord> records = RelationshipTable.getRecords();
                 RelationshipTable.clearAllFilters();
