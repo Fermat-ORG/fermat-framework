@@ -37,6 +37,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -258,6 +260,8 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             }
+
+
         }
 
         /**
@@ -314,6 +318,25 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
 
         // test method
         //sendTestBitcoins();
+
+
+        /**
+         * I'm starting the new Crypto Vault
+         */
+        try {
+            // the DeviceUserLogged
+            String deviceUserLoggedPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+
+            BitcoinCurrencyCryptoVaultManager bitcoinCurrencyCryptoVaultManager = new BitcoinCurrencyCryptoVaultManager(this.pluginId,
+                    this.pluginFileSystem,
+                    this.pluginDatabaseSystem,
+                    deviceUserLoggedPublicKey,
+                    this.bitcoinNetworkManager);
+        } catch (InvalidSeedException e) {
+            e.printStackTrace();
+        } catch (CantGetLoggedInDeviceUserException e) {
+            e.printStackTrace();
+        }
 
         /**
          * the service is started.
