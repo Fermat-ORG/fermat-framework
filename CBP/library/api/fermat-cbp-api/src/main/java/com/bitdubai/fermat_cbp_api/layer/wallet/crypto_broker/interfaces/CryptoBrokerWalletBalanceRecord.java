@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 
+import java.math.BigDecimal;
+
 /**
  * Created by franklin on 30/11/15.
  */
@@ -21,11 +23,11 @@ public interface CryptoBrokerWalletBalanceRecord {
     FermatEnum getMerchandise();
     void       setMerchandise(FermatEnum merchandise);
 
-    float getBookBalance();
-    void  setBookBalance(float bookBalance);
+    BigDecimal getBookBalance();
+    void  setBookBalance(BigDecimal bookBalance);
 
-    float getAvailableBalance();
-    void  setAvilableBalance(float availableBalance);
+    BigDecimal getAvailableBalance();
+    void  setAvilableBalance(BigDecimal availableBalance);
 
     CurrencyType getCurrencyType();
     void         setCurrencyType(CurrencyType currencyType);

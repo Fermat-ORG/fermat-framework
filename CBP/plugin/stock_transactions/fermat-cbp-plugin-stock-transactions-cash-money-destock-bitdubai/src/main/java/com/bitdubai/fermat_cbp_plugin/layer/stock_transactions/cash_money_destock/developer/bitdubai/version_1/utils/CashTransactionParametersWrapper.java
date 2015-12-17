@@ -5,6 +5,7 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionParameters;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -15,7 +16,7 @@ public class CashTransactionParametersWrapper implements CashUnholdTransactionPa
     private final FiatCurrency fiatCurrency;
     private final String          walletPublicKey;
     private final String          publicActorKey;
-    private final float           amount;
+    private final BigDecimal amount;
     private final String          memo;
     private final String          publicKeyPlugin;
 
@@ -23,7 +24,7 @@ public class CashTransactionParametersWrapper implements CashUnholdTransactionPa
                                             FiatCurrency fiatCurrency,
                                             String walletPublicKey,
                                             String publicActorKey,
-                                            float amount,
+                                            BigDecimal amount,
                                             String memo,
                                             String publicKeyPlugin
     ){
@@ -56,7 +57,7 @@ public class CashTransactionParametersWrapper implements CashUnholdTransactionPa
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

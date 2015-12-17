@@ -38,8 +38,18 @@
     <color name="card_title_color_status_confirm">#222</color>
     <color name="card_title_color_status_accepted">#fff</color>
     <color name="card_title_color_status_changed">#fff</color>
-    <color name="card_background_status_confirm">#f1f1f1</color>
+    <color name="cbw_card_background_status_confirm">#f1f1f1</color>
     <color name="card_background_status_accepted">#2e679c</color>
     <color name="card_background_status_changed">#39ab89</color>
     <color name="note_card_background">#363636</color>
+    <color name="cbw_negotiation_details_background">#222</color>
+
+    <color name="note_card_separator_background">#b5009dff</color>
+    <color name="description_text_status_changed">#ffffff</color>
+    <color name="description_text_status_confirm">#232323</color>
+    <color name="description_text_status_accepted">#ffffff</color>
+    <color name="text_value_status_changed">#27507b</color>
+    <color name="text_value_status_confirm">#27507b</color>
+    <color name="text_value_status_accepted">#0e0e0e</color>
+    <color name="activity_background">#222</color>
 </resources>

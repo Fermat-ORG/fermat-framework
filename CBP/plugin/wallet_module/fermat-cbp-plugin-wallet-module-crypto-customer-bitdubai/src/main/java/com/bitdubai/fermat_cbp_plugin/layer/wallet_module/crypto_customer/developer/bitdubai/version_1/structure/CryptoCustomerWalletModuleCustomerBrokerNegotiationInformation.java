@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Customer and Broker Negotiation Information
@@ -95,7 +96,42 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     }
 
     @Override
-    public long getLastUpdate() {
-        return date;
+    public String getMemo() {
+        return null;
+    }
+
+    @Override
+    public void setMemo(String memo) {
+
+    }
+
+    @Override
+    public long getLastNegotiationUpdateDate() {
+        return 0;
+    }
+
+    @Override
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
+
+    }
+
+    @Override
+    public long getNegotiationExpirationDate() {
+        return 0;
+    }
+
+    @Override
+    public UUID getNegotiationId() {
+        return null;
+    }
+
+    @Override
+    public void setCancelReason(String cancelReason) {
+
+    }
+
+    @Override
+    public String getCancelReason() {
+        return null;
     }
 }
