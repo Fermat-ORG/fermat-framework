@@ -76,6 +76,7 @@ public class AssetsOverBitcoinCryptoVaultDatabaseFactory implements DealsWithPlu
 
             table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.TRUE);
             table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
 
             table.addIndex(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_FIRST_KEY_COLUMN);
 

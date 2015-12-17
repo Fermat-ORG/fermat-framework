@@ -25,7 +25,7 @@ public class BankingWalletModuleImpl implements BankingWallet {
     private final HoldManager holdManager;
     private final UnholdManager unholdManager;
 
-    private UUID publicKey = UUID.fromString("bankingwallet");
+    private String publicKey = "testbankwallet";
 
     public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
@@ -37,13 +37,13 @@ public class BankingWalletModuleImpl implements BankingWallet {
 
     @Override
     public List<BankAccountNumber> getAccounts()throws CantLoadBankMoneyWalletException{
-        return bankMoneyWalletManager.loadBankMoneyWallet(publicKey.toString()).getAccounts();
+        return bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getAccounts();
     }
 
     @Override
     public void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency) {
         try {
-            bankMoneyWalletManager.loadBankMoneyWallet(publicKey.toString()).addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency));
+            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency));
         }catch (Exception e){
 
         }

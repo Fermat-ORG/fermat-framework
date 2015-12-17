@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
@@ -96,15 +97,15 @@ public class AssetAppropriationDAO implements AutoCloseable {
     *
     */
 
-    public String startAppropriation(DigitalAsset asset, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
-        String context = "Asset : " + asset.getPublicKey() + " - Btc Wallet: " + bitcoinWalletPublicKey
+    public String startAppropriation(DigitalAssetMetadata assetMetadata, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+        String context = "Asset : " + assetMetadata.getDigitalAsset().getPublicKey() + " - Btc Wallet: " + bitcoinWalletPublicKey
                 + " - User Wallet: " + userWalletPublicKey;
         try {
-            if (transactionExists(asset.getPublicKey(), userWalletPublicKey, bitcoinWalletPublicKey)) {
+            if (transactionExists(assetMetadata.getDigitalAsset().getPublicKey(), userWalletPublicKey, bitcoinWalletPublicKey)) {
                 throw new TransactionAlreadyStartedException(null, context, "You already started the transaction for this asset.");
             }
 
-            vault.persistDigitalAssetInLocalStorage(asset);
+            vault.persistDigitalAssetMetadataInLocalStorage(assetMetadata);
 
             DatabaseTable databaseTable = this.database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
             DatabaseTableRecord transactionRecord = databaseTable.getEmptyRecord();
@@ -113,7 +114,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
-            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, asset.getPublicKey());
+            transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, assetMetadata.getDigitalAsset().getPublicKey());
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey);
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, bitcoinWalletPublicKey);
             transactionRecord.setStringValue(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, "-");
@@ -550,12 +551,12 @@ public class AssetAppropriationDAO implements AutoCloseable {
                 cryptoAddress = new CryptoAddress(address, currency);
             }
             AppropriationStatus status = AppropriationStatus.getByCode(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, transactionId));
-            DigitalAsset asset = vault.getDigitalAssetFromLocalStorage(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, transactionId));
+            DigitalAssetMetadata assetMetadata = vault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, transactionId));
             long startTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_START_TIME_COLUMN_NAME, transactionId);
             long endTime = getLongFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, transactionId);
             String genesisTransaction = getStringFieldByTransactionId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, transactionId);
 
-            return new AssetAppropriationTransactionRecordImpl(transactionId, status, asset, bitcoinWalletPublicKey, userWalletPublicKey, cryptoAddress, startTime, endTime, genesisTransaction);
+            return new AssetAppropriationTransactionRecordImpl(transactionId, status, assetMetadata, bitcoinWalletPublicKey, userWalletPublicKey, cryptoAddress, startTime, endTime, genesisTransaction);
         } catch (InvalidParameterException | CantGetDigitalAssetFromLocalStorageException e) {
             throw new CantLoadAssetAppropriationTransactionListException(e, context, "There was an exception while constructing the record.");
         }
@@ -575,6 +576,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
         return EventType.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
+    public com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType getDAPEventTypeById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
+        return com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    }
+
     public EventSource getEventSourceById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
         return EventSource.getByCode(getStringFieldByEventId(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, id));
     }
@@ -585,6 +590,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
     public boolean isPendingActorAssetUserEvents() throws CantLoadAssetAppropriationEventListException {
         return isPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+    }
+
+    public List<String> getPendingIssuerNetworkServiceEvents() throws CantLoadAssetAppropriationEventListException {
+        return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER);
     }
 
 
