@@ -186,7 +186,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                         ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(),referenceWalletSession,null);
                         contactsTutorialPart1.show();
                     }
-                }}, 1000);
+                }}, 500);
             return rootView;
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
