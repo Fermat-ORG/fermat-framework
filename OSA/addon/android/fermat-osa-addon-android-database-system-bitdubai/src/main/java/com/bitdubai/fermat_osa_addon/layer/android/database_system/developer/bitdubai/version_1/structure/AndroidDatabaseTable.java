@@ -250,7 +250,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         try {
             database = this.database.getReadableDatabase();
             List<String> columns = getColumns(database);
-            cursor = database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+            cursor = database.rawQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
