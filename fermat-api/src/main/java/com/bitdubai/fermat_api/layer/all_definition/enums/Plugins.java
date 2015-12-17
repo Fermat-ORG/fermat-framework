@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
@@ -120,7 +119,6 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION          ("BRPRT"     ),
     BITDUBAI_USER_REDEMPTION_TRANSACTION                  ("BURT"      ),
     BITDUBAI_ASSET_APPROPRIATION_TRANSACTION              ("BAAT"      ),
-    BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION        ("BAAST"     ),
     BITDUBAI_ASSET_WALLET_ISSUER                          ("BASWI"     ),
     BITDUBAI_ASSET_FACTORY                                ("BASF"      ),
     BITDUBAI_ASSET_FACTORY_MODULE                         ("BASFM"     ),
@@ -177,7 +175,6 @@ public enum Plugins implements FermatPluginsEnum {
 
     // Init new Plugins
 
-    ASSET_APPROPRIATION_STATS   ("ASAPS"),
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
     ASSET_FACTORY               ("ASF"),
@@ -287,7 +284,6 @@ public enum Plugins implements FermatPluginsEnum {
         switch (code) {
 
             case "APR"  :   return SUB_APP_RUNTIME          ;
-            case "ASAPS":   return ASSET_APPROPRIATION_STATS;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
             case "ASF"  :   return ASSET_FACTORY            ;

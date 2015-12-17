@@ -82,7 +82,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
             try {
                 if (intraUserInformation != null && identity != null) {
                     ((IntraUserSubAppSession) getSession()).getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
-                    Toast.makeText(getContext(), intraUserInformation.getName() + " accepted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }

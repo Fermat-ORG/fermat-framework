@@ -28,12 +28,6 @@ public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<Ins
         this.manager = manager;
     }
 
-
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
-
     @Override
     public void setData(String key, Object object) {
         if (data == null)
