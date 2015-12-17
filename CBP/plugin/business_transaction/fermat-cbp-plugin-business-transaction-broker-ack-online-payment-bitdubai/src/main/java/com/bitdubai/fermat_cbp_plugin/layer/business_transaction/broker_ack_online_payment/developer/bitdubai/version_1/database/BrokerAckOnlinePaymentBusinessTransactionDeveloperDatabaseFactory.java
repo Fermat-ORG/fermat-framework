@@ -146,6 +146,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory i
         incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME);
         incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME);
         incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME);
 
         DeveloperDatabaseTable incomingMoneyTable = developerObjectFactory.getNewDeveloperDatabaseTable(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_NAME, incomingMoneyColumns);
         tables.add(incomingMoneyTable);

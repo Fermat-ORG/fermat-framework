@@ -75,7 +75,6 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     public void incomingMoneyNotification(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-
         this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
         //LOG.info("CHECK THE DATABASE");
     }

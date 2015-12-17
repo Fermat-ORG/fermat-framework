@@ -25,6 +25,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.IncomingMoneyEventWrapper;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +131,16 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     private DatabaseTable getDatabaseEventsTable() {
         return getDataBase().getTable(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
+    }
+
+    /**
+     * Returns the Ack Online Incoming money event DatabaseTable
+     *
+     * @return DatabaseTable
+     */
+    private DatabaseTable getDatabaseIncomingMoneyTable() {
+        return getDataBase().getTable(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_NAME);
     }
 
     /**
@@ -419,6 +431,24 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     }
 
     /**
+     * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
+     * @param customerBrokerContractSale
+     * @throws CantInsertRecordException
+     */
+    public void persistContractInDatabase(
+            CustomerBrokerContractSale customerBrokerContractSale)
+            throws CantInsertRecordException {
+
+        DatabaseTable databaseTable=getDatabaseContractTable();
+        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+        databaseTableRecord= buildDatabaseTableRecord(
+                databaseTableRecord,
+                customerBrokerContractSale
+        );
+        databaseTable.insertRecord(databaseTableRecord);
+    }
+
+    /**
      * This method persists a basic record in database
      * @param customerBrokerContractPurchase
      * @throws CantInsertRecordException
@@ -442,7 +472,52 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         databaseTable.insertRecord(databaseTableRecord);
     }
 
-    public CustomerOnlinePaymentRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+    public IncomingMoneyEventWrapper getIncomingMoneyEventWrapper(
+            String eventId)
+            throws
+            UnexpectedResultReturnedFromDatabaseException{
+        try{
+            DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
+            databaseTable.setStringFilter(
+                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record = records.get(0);
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME),
+                    record.getLongValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME),
+                    CryptoCurrency.getByCode(
+                            record.getStringValue(
+                                    BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME)),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME),
+                    record.getLongValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME)
+                    );
+            return incomingMoneyEventWrapper;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Invalid parameter in ContractTransactionStatus");
+        }
+    }
+
+    public CustomerOnlinePaymentRecord getCustomerOnlinePaymentRecord(String contractHash)
+            throws
+            UnexpectedResultReturnedFromDatabaseException {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
@@ -772,24 +847,23 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     }
 
     /**
-     * This method save an incoming new event in database.
+     * This method save an incoming new event in database. You can set the event Id with this method
      * @param eventType
      * @param eventSource
+     * @param eventId
      * @throws CantSaveEventException
      */
-    public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
+    public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
             DatabaseTable databaseTable = getDatabaseEventsTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
-            UUID eventRecordID = UUID.randomUUID();
             long unixTime = System.currentTimeMillis();
-            eventRecord.setUUIDValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
+            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
             eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
             eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
             eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
             eventRecord.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
             databaseTable.insertRecord(eventRecord);
-
 
         } catch (CantInsertRecordException exception) {
             throw new CantSaveEventException(
@@ -802,6 +876,81 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     "Saving new event.",
                     "Unexpected exception");
         }
+    }
+
+    /**
+     * This method save an incoming new event in database.
+     * @param eventType
+     * @param eventSource
+     * @throws CantSaveEventException
+     */
+    public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
+        try {
+            UUID eventRecordID = UUID.randomUUID();
+            saveNewEvent(eventType, eventSource, eventRecordID.toString());
+
+        } catch(Exception exception){
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
+     * This method save an incoming money event in database. You can set the event Id with this method
+     * @param event
+     * @throws CantSaveEventException
+     */
+    public void saveIncomingMoneyEvent(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
+                    event);
+            eventRecord=buildDatabaseTableRecord(eventRecord, incomingMoneyEventWrapper);
+            databaseTable.insertRecord(eventRecord);
+
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Ack Online Payment database");
+        } catch(Exception exception){
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
+        }
+    }
+
+    private DatabaseTableRecord buildDatabaseTableRecord(
+            DatabaseTableRecord record,
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper){
+
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
+                incomingMoneyEventWrapper.getEventId());
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getReceiverPublicKey());
+        record.setLongValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME,
+                incomingMoneyEventWrapper.getCryptoAmount());
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getCryptoCurrency().getCode()
+        );
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getSenderPublicKey());
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
+                EventStatus.PENDING.getCode());
+        record.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME, incomingMoneyEventWrapper.getTimestamp());
+
+        return record;
+
     }
     
 }
