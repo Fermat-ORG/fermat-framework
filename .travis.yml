@@ -24,7 +24,6 @@ android:
 
 before_install:
  - sudo apt-get install -qq libstdc++6:i386 lib32z1
- - sudo
  - chmod +x gradlew
 
 install:
