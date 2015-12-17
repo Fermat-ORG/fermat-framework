@@ -347,6 +347,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_ACK_ONLINE_PAYMENT_CONFIRMED);
             BrokerAckOnlinePaymentConfirmed brokerAckOnlinePaymentConfirmed = (BrokerAckOnlinePaymentConfirmed) fermatEvent;
             brokerAckOnlinePaymentConfirmed.setSource(EventSource.BROKER_ACK_ONLINE_PAYMENT);
+            brokerAckOnlinePaymentConfirmed.setContractHash(contractHash);
             eventManager.raiseEvent(brokerAckOnlinePaymentConfirmed);
         }
 
