@@ -86,6 +86,10 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
             addListener(onBlockChain);
 
 
+            FermatEventListener newNetworkServiceMessageListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+            newNetworkServiceMessageListener.setEventHandler(new AssetAppropriationEventHandler(this));
+            addListener(newNetworkServiceMessageListener);
+
         } catch (Exception e) {
             throw new CantStartServiceException(e, context, "An unexpected exception happened while trying to start the AssetAppropriationRecordeService.");
         }

@@ -45,31 +45,31 @@ public class WalletContactsMiddlewareSearch implements WalletContactsSearch {
     @Override
     public void resetFilters() {
         this.walletContactsTable = walletContactsMiddlewareDao.getWalletContactsTable();
-        walletContactsTable.setStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+        walletContactsTable.addStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
     }
 
     @Override
     public void setActorAlias(String value, boolean order) {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME;
-        walletContactsTable.setStringFilter(field, value, DatabaseFilterType.LIKE);
+        walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override
     public void setActorFirstName(String value, boolean order) {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME;
-        walletContactsTable.setStringFilter(field, value, DatabaseFilterType.LIKE);
+        walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override
     public void setActorLastName(String value, boolean order) {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME;
-        walletContactsTable.setStringFilter(field, value, DatabaseFilterType.LIKE);
+        walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override

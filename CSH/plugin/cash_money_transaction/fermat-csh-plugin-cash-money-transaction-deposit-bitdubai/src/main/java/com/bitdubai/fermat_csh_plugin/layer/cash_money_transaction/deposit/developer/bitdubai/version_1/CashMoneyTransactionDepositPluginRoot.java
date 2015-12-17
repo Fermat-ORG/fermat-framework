@@ -76,7 +76,7 @@ public class CashMoneyTransactionDepositPluginRoot extends AbstractPlugin implem
      * TEST METHODS
      */
     private void testCreateCashDepositTransaction() {
-        System.out.println("CASHDEPOSIT - testCreateCashDepositTransaction CALLED");
+        //System.out.println("CASHDEPOSIT - testCreateCashDepositTransaction CALLED");
 
         CashDepositTransactionParameters params = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", (float)200.3, FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD");
         CashDepositTransactionParameters params2 = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", (float)200.2, FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.2USD");

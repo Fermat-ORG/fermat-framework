@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -27,9 +29,12 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
+import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
@@ -167,13 +172,29 @@ public class AssetCryptoVaultManager  {
         /**
          * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
          */
-        final Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionId);
+
         if (genesisTransaction  == null){
-            StringBuilder output = new StringBuilder("The specified transaction hash ");
-            output.append(genesisTransactionId);
-            output.append(System.lineSeparator());
-            output.append("doesn't exists in the CryptoNetwork.");
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            /**
+             * Transaction might be null because we are sending from the user to appropiate or redeem an asset, and we don't have the GenesisTransaction
+             * stored in our wallet. If this is the case I will find a child that uses the GenesisTransaction as an input and use the child transaction
+             * to send the bitcoins.
+             */
+            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransaction(networkType, VaultType.CRYPTO_ASSET_VAULT);
+            for (Transaction transaction : transactions){
+                for (TransactionInput input : transaction.getInputs()){
+                    if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionId))
+                        genesisTransaction = transaction;
+                }
+            }
+
+            if (genesisTransaction  == null){
+                StringBuilder output = new StringBuilder("The specified transaction hash ");
+                output.append(genesisTransactionId);
+                output.append(System.lineSeparator());
+                output.append("doesn't exists in the CryptoNetwork.");
+                throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            }
         }
 
 
@@ -201,10 +222,11 @@ public class AssetCryptoVaultManager  {
         wallet.addWalletTransaction(walletTransaction);
 
         /**
-         * Calculates the amount to be sent by removing the fee from the passed value.
+         * Calculates the amount to be sent by removing the fee from the available balance.
+         * I'm ignoring the GenesisAmount passed because this might not be the right value.
          */
         Coin fee = Coin.valueOf(10000);
-        final Coin coinToSend = Coin.valueOf(amount).subtract(fee);
+        final Coin coinToSend = wallet.getBalance().subtract(fee);
 
         /**
          * creates the send request and broadcast it on the network.
@@ -369,14 +391,46 @@ public class AssetCryptoVaultManager  {
     }
 
     /**
-     * Creates a new hierarchy Account in the vault.
+     * * Creates a new hierarchy Account in the vault.
      * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param hierarchyAccount
+     * @param description
+     * @param hierarchyAccountType
+     * @return
      * @throws CantAddHierarchyAccountException
      */
-    public void addHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantAddHierarchyAccountException {
-        //todo implement adding a new account. It will add the record in the database.
-        // derive the standard amount of keys and monitor the network with this new account
+    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
+        /**
+         * I will insert the record in the database. First I will get the next Id available from the database
+         */
+        int hierarchyAccountID;
+        try {
+            hierarchyAccountID = getDao().getNextAvailableHierarchyAccountId();
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't get next available Id from the database.", "database issue");
+        }
+
+        /**
+         * I create the HierarchyAccount and add it to the database.
+         */
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(hierarchyAccountID, description, hierarchyAccountType);
+
+        try {
+            this.getDao().addNewHierarchyAccount(hierarchyAccount);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't insert the next Hierarchy in the database.", "database issue");
+        }
+
+        /**
+         * Restart the Hierarchy Maintainer so that it loads the new added Hierarchy Account and start the monitoring.
+         */
+        this.vaultKeyHierarchyGenerator.vaultKeyHierarchyMaintainer.stop();
+        try {
+            this.vaultKeyHierarchyGenerator.vaultKeyHierarchyMaintainer.start();
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }
+
+        return hierarchyAccount;
     }
 
     /**
@@ -386,7 +440,22 @@ public class AssetCryptoVaultManager  {
      * @throws CantGetExtendedPublicKeyException
      */
     public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
-        //todo implement will get the extendedpublic key used to create the new watch only vault
-        return null;
+        /**
+         * get the master account key
+         */
+        DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(hierarchyAccount);
+
+        // Serialize the pub key.
+        byte[] pubKeyBytes = accountMasterKey.getPubKey();
+        byte[] chainCode = accountMasterKey.getChainCode();
+
+
+        // Deserialize the pub key.
+        final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
+
+        /**
+         * return the extended public Key
+         */
+        return watchPubKeyAccountZero;
     }
 }

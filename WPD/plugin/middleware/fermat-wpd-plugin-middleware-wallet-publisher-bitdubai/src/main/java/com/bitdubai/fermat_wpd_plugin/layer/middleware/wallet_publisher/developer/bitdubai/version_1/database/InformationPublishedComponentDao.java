@@ -134,7 +134,7 @@ public class InformationPublishedComponentDao {
              */
             getDataBase().openDatabase();
             DatabaseTable incomingMessageTable = getDatabaseInformationPublishedComponentsTable();
-            incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_FIRST_KEY_COLUMN, id.toString(), DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_FIRST_KEY_COLUMN, id.toString(), DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -336,7 +336,7 @@ public class InformationPublishedComponentDao {
              */
             getDataBase().openDatabase();
             DatabaseTable walletPublishedMiddlewareInformationTable = getDatabaseInformationPublishedComponentsTable();
-            walletPublishedMiddlewareInformationTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            walletPublishedMiddlewareInformationTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             walletPublishedMiddlewareInformationTable.loadToMemory();
 
             /*

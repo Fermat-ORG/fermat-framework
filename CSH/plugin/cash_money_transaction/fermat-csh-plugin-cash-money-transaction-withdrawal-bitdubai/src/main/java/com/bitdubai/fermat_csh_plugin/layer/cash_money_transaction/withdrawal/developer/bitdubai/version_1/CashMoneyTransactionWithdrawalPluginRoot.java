@@ -76,7 +76,7 @@ public class CashMoneyTransactionWithdrawalPluginRoot extends AbstractPlugin imp
      * TEST METHODS
      */
     private void testCreateCashWithdrawalTransaction() {
-        System.out.println("CASHWITHDRAWAL - testCreateCashWithdrawalTransaction CALLED");
+        //System.out.println("CASHWITHDRAWAL - testCreateCashWithdrawalTransaction CALLED");
 
         CashWithdrawalTransactionParameters params = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", (float)1000, FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 1000USD");
         //CashWithdrawalTransactionParameters params2 = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", (float)10000, FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 10000USD");

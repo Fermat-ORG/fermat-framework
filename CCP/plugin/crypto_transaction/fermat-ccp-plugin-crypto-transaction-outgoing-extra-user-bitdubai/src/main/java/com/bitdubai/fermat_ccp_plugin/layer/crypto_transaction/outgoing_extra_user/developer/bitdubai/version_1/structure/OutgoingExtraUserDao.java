@@ -274,7 +274,7 @@ public class OutgoingExtraUserDao {
     private DatabaseTableRecord getByPrimaryKey(DatabaseTable transactionTable, UUID id) throws CantLoadTableToMemoryException, InconsistentTableStateException {
         List<DatabaseTableRecord> records;
 
-        transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
         records = transactionTable.getRecords();
 
@@ -290,7 +290,7 @@ public class OutgoingExtraUserDao {
         List<DatabaseTableRecord> records;
 
         if(transactionState != null)
-            transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+            transactionTable.addStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
 
         transactionTable.loadToMemory();
 

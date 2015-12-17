@@ -474,7 +474,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param blockchainNetworkType
      * @return
      */
-    private List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
         Wallet wallet = getWallet(blockchainNetworkType, null);
         return wallet.getTransactionsByTime();
     }
