@@ -24,8 +24,8 @@ import java.util.List;
 public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession,SubAppResourcesProviderManager> implements View.OnClickListener{
 
     private final Activity activity;
-    private FermatButton search_contact_btn;
-    private FermatButton cancel_btn;
+    private FermatButton add_fermat_user;
+    private FermatButton add_extra_user;
 
     /**
      * Constructor using Session and Resources
@@ -43,8 +43,11 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        search_contact_btn =(FermatButton) findViewById(R.id.search_contact_btn);
-        cancel_btn = (FermatButton) findViewById(R.id.cancel_btn);
+        add_fermat_user =(FermatButton) findViewById(R.id.add_fermat_user);
+        add_extra_user = (FermatButton) findViewById(R.id.add_extra_user);
+
+        add_fermat_user.setOnClickListener(this);
+        add_extra_user.setOnClickListener(this);
 
     }
 
@@ -62,7 +65,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
     public void onClick(View v) {
         int id = v.getId();
 
-        if(id == R.id.search_contact_btn){
+        if(id == R.id.add_fermat_user){
             try {
                 Object[] object = new Object[2];
                 changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
@@ -70,7 +73,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
                 e.printStackTrace();
             }
         }
-        else if(id == R.id.cancel_btn){
+        else if(id == R.id.add_extra_user){
             dismiss();
         }
     }

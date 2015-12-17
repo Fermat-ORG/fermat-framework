@@ -12,6 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 public class IntraUserModuleInformation implements IntraUserInformation {
 
     private String name;
+    private String phrase;
     private String publicKey;
     private byte[] profileImage;
 
@@ -39,6 +40,15 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * That method returns the Phrase of the intra user
+     * @return the Phrase of the intra user
+     */
+    @Override
+    public String getPhrase() {
+        return this.phrase;
     }
 
     /**

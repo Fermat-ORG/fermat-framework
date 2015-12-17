@@ -29,7 +29,7 @@ public interface WalletManager extends ModuleManager {
      * @throws WalletCreateNewIntraUserIdentityException
      */
 
-     void createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException;
+     void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException;
 
 
     /**

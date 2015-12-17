@@ -12,10 +12,13 @@ public class IntraUserNetworkService  implements IntraUserInformation {
     private byte[] profileImage;
     private String name;
 
-    public IntraUserNetworkService(String publicKey,byte[] profileImage,String name){
+    private String phrase;
+
+    public IntraUserNetworkService(String publicKey,byte[] profileImage,String name, String phrase){
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.name = name;
+        this.phrase = phrase;
     }
 
     @Override
@@ -33,6 +36,8 @@ public class IntraUserNetworkService  implements IntraUserInformation {
         return this.name;
     }
 
-
-
+    @Override
+    public String getPhrase() {
+        return this.phrase;
+    }
 }
