@@ -380,7 +380,7 @@ public class BitcoinCurrencyCryptoVaultManager {
     }
 
     /**
-     * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
+     * Send bitcoins to the specified address. The Address must be a valid address in the network being used
      * and we must have enought funds to send this money. It allows including an Op_return output value.
      * @param walletPublicKey
      * @param FermatTrId

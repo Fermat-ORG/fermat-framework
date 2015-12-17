@@ -64,13 +64,4 @@ public interface CryptoVaultManager extends PlatformCryptoVault {
      * @return true if is valid and we can use it, or false if not.
      */
     boolean isValidAddress(CryptoAddress addressTo);
-
-
-//    /**
-//     * returns the CryptoStatus of the passed transaction.
-//     * @param txHash
-//     * @return
-//     * @throws CouldNotGetCryptoStatusException
-//     */
-//    CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException;
 }

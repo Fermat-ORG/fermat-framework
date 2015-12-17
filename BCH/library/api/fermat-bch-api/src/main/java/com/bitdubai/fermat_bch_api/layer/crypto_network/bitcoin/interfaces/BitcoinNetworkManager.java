@@ -3,9 +3,11 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 
@@ -14,6 +16,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/30/15.
@@ -110,5 +113,14 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantGetCryptoTransactionException
      */
     List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException;
+
+
+    /**
+     * gets the current Crypto Status for the specified Transaction ID
+     * @param transactionId the internal fermat transaction id
+     * @return the current crypto status
+     * @throws CantGetTransactionCryptoStatusException
+     */
+    CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException;
 
 }

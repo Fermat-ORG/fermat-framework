@@ -31,8 +31,6 @@ public class SourceAdministrator {
   public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(EventSource eventSource) throws CantIdentifyEventSourceException {
         // This method will select the correct sender according to the specified source,
         switch (eventSource) {
-          case CRYPTO_VAULT: return cryptoVaultManager.getTransactionManager();
-
           case CRYPTO_NETWORK_BITCOIN_PLUGIN: return bitcoinNetworkManager.getTransactionManager();
           default:
             throw new CantIdentifyEventSourceException("I could not determine the transaction manager of this source",null,"Source: " +eventSource.name()+"with code: "+eventSource.getCode(),"Source not considered in switch statement");
