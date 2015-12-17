@@ -140,8 +140,8 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
          */
         List<String> customerBrokerNewEventColumns = new ArrayList<String>();
 
-        customerBrokerNewEventColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_EVENT_ID_COLUMN_NAME);
-        customerBrokerNewEventColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_EVENT_TYPE_COLUMN_NAME);
+        customerBrokerNewEventColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME);
+        customerBrokerNewEventColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME);
         customerBrokerNewEventColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_SOURCE_COLUMN_NAME);
         customerBrokerNewEventColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME);
         customerBrokerNewEventColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME);
