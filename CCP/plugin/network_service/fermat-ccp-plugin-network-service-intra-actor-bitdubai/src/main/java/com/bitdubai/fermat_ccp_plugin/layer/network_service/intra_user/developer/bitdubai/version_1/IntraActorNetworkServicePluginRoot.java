@@ -277,10 +277,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      */
     public static LogLevel getLogLevelByClass(String className) {
         try {
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
+
             String[] correctedClass = className.split((Pattern.quote("$")));
             return IntraActorNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
@@ -405,10 +402,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          * Listen and handle Complete Request List Component Registered Notification Event
          */
 
-//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new New(cryptoTransmissionAgent));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
 
         /**
          *Listen and handle the received messages
@@ -776,13 +769,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                             "MENSAJE LLEGO EXITOSAMENTE:" + actorNetworkServiceRecord
                             + "\n-------------------------------------------------");
 
-//                    String senderPublicKey = jsonObject.get(JsonObjectConstants.SENDER_PUBLIC_HEY).getAsString();
-//                    String destinationPublicKey = jsonObject.get(JsonObjectConstants.DESTINATION_PUBLIC_KEY).getAsString();
-//                    String destionationName = jsonObject.get(JsonObjectConstants.DESTINATION_NAME).getAsString();
-//                    String senderName = jsonObject.get(JsonObjectConstants.SENDER_NAME).getAsString();
-
-                    //byte[] profile_image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
-
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
 
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
@@ -792,8 +778,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
-
-
                     break;
                 case ACCEPTED:
                     //TODO: ver si me conviene guardarlo en el outogoing DAO o usar el incoming para las que llegan directamente
@@ -894,7 +878,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         incomingActorRequestConnectionNotificationEvent.setActorId(actorNetworkServiceRecord.getActorSenderPublicKey());
         incomingActorRequestConnectionNotificationEvent.setActorName(actorNetworkServiceRecord.getActorSenderAlias());
         incomingActorRequestConnectionNotificationEvent.setActorType(Actors.INTRA_USER);
-        //incomingActorRequestConnectionNotificationEvent.setProfileImage(actorNetworkServiceRecord.getActorSenderProfileImage());
         eventManager.raiseEvent(platformEvent);
     }
 
@@ -1129,21 +1112,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
         try {
-//                if(remoteNetworkServicesRegisteredList!=null) {
-//                    byte[] image = null;
-//                        for (PlatformComponentProfile platformComponentProfilePluginRoot : remoteNetworkServicesRegisteredList) {
-//                            if (platformComponentProfilePluginRoot.getExtraData() != null) {
-//                                JsonObject jsonObject = new JsonObject();
-//                                jsonObject =new JsonParser().parse(platformComponentProfilePluginRoot.getExtraData()).getAsJsonObject();
-//                                image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
-//                            }
-//
-//
-//                            IntraUserInformation intraUser = new IntraUserNSInformation(platformComponentProfilePluginRoot.getAlias(), platformComponentProfilePluginRoot.getIdentityPublicKey(), image);
-//
-//                            lstIntraUser.add(intraUser);
-//                        }
-//                }
 
             /* This is for test and example of how to use
                     * Construct the filter
