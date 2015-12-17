@@ -103,6 +103,7 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         walletSettingSpreadColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME);
         walletSettingSpreadColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_VALUE_COLUMN_NAME);
         walletSettingSpreadColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        walletSettingSpreadColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_RESTOCK_AUTOMATIC);
 
         /**
          * walletSettingSpreadColumns table

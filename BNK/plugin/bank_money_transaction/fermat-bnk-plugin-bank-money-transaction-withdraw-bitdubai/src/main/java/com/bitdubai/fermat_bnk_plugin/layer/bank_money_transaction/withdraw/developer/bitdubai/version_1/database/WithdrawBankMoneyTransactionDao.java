@@ -57,7 +57,8 @@ public class WithdrawBankMoneyTransactionDao {
     public void registerWithdrawTransaction(BankTransactionParameters bankTransactionParameters){
         DatabaseTable table = database.getTable(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_TABLE_NAME);
         DatabaseTableRecord record = table.getEmptyRecord();
-        record.setFloatValue(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_AMOUNT_COLUMN_NAME, bankTransactionParameters.getAmount());
+        //TODO: Revisar Guillermo BigDecimal
+        record.setFloatValue(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_AMOUNT_COLUMN_NAME, bankTransactionParameters.getAmount().floatValue());
         record.setStringValue(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_ID_COLUMN_NAME,bankTransactionParameters.getTransactionId().toString());
         record.setStringValue(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_PLUGIN_PUBLIC_KEY_COLUMN_NAME,bankTransactionParameters.getPublicKeyPlugin());
         record.setStringValue(WithdrawBankMoneyTransactionDatabaseConstants.WITHDRAW_ACCOUNT_NUMBER_COLUMN_NAME,bankTransactionParameters.getAccount());

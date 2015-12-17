@@ -22,6 +22,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.MissingCashMoneyRestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure.CashMoneyRestockTransactionImpl;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +85,9 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, cashMoneyTransaction.getConcept());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME, cashMoneyTransaction.getTimeStamp().toString());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME, cashMoneyTransaction.getMemo());
-        record.setFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cashMoneyTransaction.getAmount());
+        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cashMoneyTransaction.getAmount().toPlainString());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
-        record.setFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference());
+        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cashMoneyTransaction.getOriginTransaction().getCode());
 
         return record;
@@ -123,11 +124,11 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         cashMoneyRestockTransaction.setCashWalletPublicKey(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME));
         cashMoneyRestockTransaction.setCashReference(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CASH_REFERENCE_COLUMN_NAME));
         cashMoneyRestockTransaction.setConcept(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_CONCEPT_COLUMN_NAME));
-        cashMoneyRestockTransaction.setAmount(cashMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME));
+        cashMoneyRestockTransaction.setAmount(new BigDecimal(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_AMOUNT_COLUMN_NAME)));
         cashMoneyRestockTransaction.setTimeStamp(Timestamp.valueOf(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME)));
         cashMoneyRestockTransaction.setMemo(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_MEMO_COLUMN_NAME));
         cashMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
-        cashMoneyRestockTransaction.setPriceReference(cashMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME));
+        cashMoneyRestockTransaction.setPriceReference(new BigDecimal(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cashMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
 
         return cashMoneyRestockTransaction;

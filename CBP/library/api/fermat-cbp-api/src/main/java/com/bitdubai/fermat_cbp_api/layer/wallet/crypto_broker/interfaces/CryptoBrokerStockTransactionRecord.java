@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -13,8 +14,8 @@ import java.util.UUID;
 public interface CryptoBrokerStockTransactionRecord extends StockTransaction {
     //TODO: Documentar
 
-    float getRunningBookBalance();
+    BigDecimal getRunningBookBalance();
 
-    float getRunningAvailableBalance();
+    BigDecimal getRunningAvailableBalance();
 
 }
