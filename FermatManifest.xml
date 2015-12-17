@@ -3716,22 +3716,6 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin
-                        name="Appropriation Stats"
-                        description=""
-                        difficulty="10"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
                 </plugins>
             </layer>
 
@@ -6760,7 +6744,7 @@
             <layer name="Crypto Router" language="java">
                 <plugins>
                     <plugin
-                        name="Incomming Crypto"
+                        name="Incoming Crypto"
                         description=""
                         difficulty="10"
                         code-level="production"
