@@ -81,7 +81,7 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
         //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
 
         try {
-            ToolManager toolManager = ((DeveloperSubAppSession) appSession).getToolManager();
+            ToolManager toolManager = ((DeveloperSubAppSession) appSession).getModuleManager();
 
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {

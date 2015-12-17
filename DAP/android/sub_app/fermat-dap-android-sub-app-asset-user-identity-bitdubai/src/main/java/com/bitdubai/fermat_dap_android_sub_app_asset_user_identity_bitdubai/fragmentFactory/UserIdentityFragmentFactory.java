@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.fragmentFactory;
 
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -8,11 +8,12 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.frag
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.fragments.IdentityListFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.preference_settings.UserIdentitySubAppSettings;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.session.UserIdentitySubAppSession;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class UserIdentityFragmentFactory extends FermatSubAppFragmentFactory<UserIdentitySubAppSession, UserIdentitySubAppSettings, UserIdentityFragmentEnumType> {
+public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSession, UserIdentitySubAppSettings, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
 
 
     @Override

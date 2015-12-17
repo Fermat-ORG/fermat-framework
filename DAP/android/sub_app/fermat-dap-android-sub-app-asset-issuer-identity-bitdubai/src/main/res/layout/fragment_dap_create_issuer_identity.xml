@@ -3,26 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/create_identity_fragment_background">
+    android:background="@drawable/bg_my_identity">
 
-    <ImageView
-        android:id="@+id/crypto_broker_image"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:background="@android:color/darker_gray"
-        android:src="@android:drawable/ic_menu_camera" />
+    <RelativeLayout
+        android:id="@+id/user_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_circular_other_profile">
+
+        <ImageView
+            android:id="@+id/crypto_broker_image"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/crypto_broker_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/crypto_broker_image"
+        android:singleLine="true"
+        android:lines="1"
+        android:layout_below="@+id/user_image"
+        android:background="#66ffffff"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="8dp"
         android:hint="User name"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/darker_gray" />
@@ -31,11 +46,10 @@
         android:id="@+id/create_crypto_broker_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:background="@color/create_identity_button"
+        android:background="#0072bc"
         android:text="@string/create"
+        android:textSize="16sp"
         android:textColor="@android:color/white" />
 </RelativeLayout>

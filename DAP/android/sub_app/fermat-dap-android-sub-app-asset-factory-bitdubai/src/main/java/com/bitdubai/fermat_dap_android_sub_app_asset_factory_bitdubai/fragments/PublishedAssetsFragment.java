@@ -70,7 +70,7 @@ public class PublishedAssetsFragment extends FermatFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((AssetFactorySession) appSession).getManager();
+//            manager = ((AssetFactorySession) appSession).getManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);

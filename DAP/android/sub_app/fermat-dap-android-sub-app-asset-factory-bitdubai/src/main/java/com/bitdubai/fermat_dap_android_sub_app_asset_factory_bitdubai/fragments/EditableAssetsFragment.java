@@ -83,7 +83,7 @@ public class EditableAssetsFragment extends FermatFragment implements
         super.onCreate(savedInstanceState);
         try {
             selectedAsset = null;
-            manager = ((AssetFactorySession) appSession).getManager();
+//            manager = ((AssetFactorySession) appSession).getManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
