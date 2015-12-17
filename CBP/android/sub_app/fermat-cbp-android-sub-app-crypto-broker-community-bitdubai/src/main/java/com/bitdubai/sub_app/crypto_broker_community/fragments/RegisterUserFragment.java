@@ -295,7 +295,7 @@ public class RegisterUserFragment extends FermatFragment {
 
             //thread.start();
 
-            cryptoBrokerCommunitySubAppSession.getModuleManager().createIntraUser(editContactName.getText().toString(),identityImage);
+            cryptoBrokerCommunitySubAppSession.getModuleManager().createIntraUser(editContactName.getText().toString(), null,identityImage);
 
             Toast.makeText(getActivity(), "Identity sucessfully created", Toast.LENGTH_SHORT).show();
 
