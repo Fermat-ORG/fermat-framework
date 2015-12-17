@@ -81,9 +81,9 @@ public class CreateIdentityFragment extends FermatFragment {
             moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            if(moduleManager.getRedeemPointsFromCurrentDeviceUser().isEmpty()){
-                moduleManager.createNewRedeemPoint("Asset Redeem Point John Doe", null);
-            }
+//            if(moduleManager.getRedeemPointsFromCurrentDeviceUser().isEmpty()){
+//                moduleManager.createNewRedeemPoint("Asset Redeem Point John Doe", null);
+//            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
