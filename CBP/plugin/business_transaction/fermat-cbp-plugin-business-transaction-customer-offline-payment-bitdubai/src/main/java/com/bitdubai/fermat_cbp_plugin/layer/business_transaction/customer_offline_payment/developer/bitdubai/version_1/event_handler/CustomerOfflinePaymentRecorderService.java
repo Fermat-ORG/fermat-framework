@@ -95,7 +95,10 @@ public class CustomerOfflinePaymentRecorderService implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the AssetDistributionRecorderService", "The AssetDistributionRecorderService is probably null");
+            throw new CantStartServiceException(
+                    exception,
+                    "Starting the CustomerOfflinePaymentRecorderService",
+                    "The CustomerOfflinePaymentRecorderService is probably null");
         }
 
     }

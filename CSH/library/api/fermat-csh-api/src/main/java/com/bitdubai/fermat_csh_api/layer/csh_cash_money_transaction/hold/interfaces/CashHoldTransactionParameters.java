@@ -2,6 +2,7 @@ package com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -37,7 +38,7 @@ public interface CashHoldTransactionParameters {
      * Returns the amount of the transaction
      * @return      Amount of the transaction
      */
-    float getAmount();
+    BigDecimal getAmount();
 
     /**
      * Returns the currency of the transaction (e.g. USD, EUR)

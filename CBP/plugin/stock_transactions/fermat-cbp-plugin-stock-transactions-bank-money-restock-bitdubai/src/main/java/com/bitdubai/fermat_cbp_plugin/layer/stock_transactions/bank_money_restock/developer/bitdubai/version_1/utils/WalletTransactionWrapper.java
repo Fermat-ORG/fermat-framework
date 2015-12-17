@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -26,10 +27,10 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     private final CurrencyType      currencyType;
     private final String            walletPublicKey;
     private final String            brokerPublicKey;
-    private final float             amount;
+    private final BigDecimal        amount;
     private final long              timeStamp;
     private final String            memo;
-    private final float             priceReference;
+    private final BigDecimal        priceReference;
     private final OriginTransaction originTransaction;
 
     public WalletTransactionWrapper(UUID              transactionId,
@@ -39,10 +40,10 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
                                     CurrencyType      currencyType,
                                     String            walletPublicKey,
                                     String            brokerPublicKey,
-                                    float             amount,
+                                    BigDecimal        amount,
                                     long              timeStamp,
                                     String            memo,
-                                    float             priceReference,
+                                    BigDecimal        priceReference,
                                     OriginTransaction originTransaction){
 
         this.transactionId     = transactionId;
@@ -93,7 +94,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -108,7 +109,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     }
 
     @Override
-    public float getPriceReference() {
+    public BigDecimal getPriceReference() {
         return priceReference;
     }
 
@@ -118,12 +119,12 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     }
 
     @Override
-    public float getRunningBookBalance() {
-        return 0;
+    public BigDecimal getRunningBookBalance() {
+        return new BigDecimal(0);
     }
 
     @Override
-    public float getRunningAvailableBalance() {
-        return 0;
+    public BigDecimal getRunningAvailableBalance() {
+        return new BigDecimal(0);
     }
 }

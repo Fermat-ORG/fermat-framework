@@ -36,6 +36,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,8 +83,8 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
     private void testCreateCashUnholdTransaction() {
         //System.out.println("CASHUNHOLD - testCreateCashHoldTransaction CALLED");
 
-        CashUnholdTransactionParameters params = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", 60, FiatCurrency.US_DOLLAR, "testUnhold 60USD");
-        CashUnholdTransactionParameters params2 = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", 90, FiatCurrency.US_DOLLAR, "testUnhold 90USD");
+        CashUnholdTransactionParameters params = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(60), FiatCurrency.US_DOLLAR, "testUnhold 60USD");
+        CashUnholdTransactionParameters params2 = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(90), FiatCurrency.US_DOLLAR, "testUnhold 90USD");
 
         try {
             this.createCashUnholdTransaction(params);
@@ -131,7 +132,7 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
         processorAgent.start();
 
         serviceStatus = ServiceStatus.STARTED;
-        testCreateCashUnholdTransaction();
+        //testCreateCashUnholdTransaction();
     }
 
     @Override
