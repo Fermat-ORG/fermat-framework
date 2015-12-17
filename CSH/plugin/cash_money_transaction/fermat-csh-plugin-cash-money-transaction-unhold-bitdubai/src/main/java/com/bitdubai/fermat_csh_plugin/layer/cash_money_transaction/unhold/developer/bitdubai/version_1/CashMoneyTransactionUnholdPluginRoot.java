@@ -132,7 +132,7 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
         processorAgent.start();
 
         serviceStatus = ServiceStatus.STARTED;
-        testCreateCashUnholdTransaction();
+        //testCreateCashUnholdTransaction();
     }
 
     @Override

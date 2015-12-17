@@ -25,6 +25,7 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -103,13 +104,13 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
 
 
     @Override
-    public double getHeldFunds(String actorPublicKey) throws CantGetHeldFundsException {
+    public BigDecimal getHeldFunds(String actorPublicKey) throws CantGetHeldFundsException {
         return dao.getHeldFunds(walletPublicKey, actorPublicKey);
     }
 
 
     @Override
-    public void hold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, float amount, String memo) throws CantRegisterHoldException {
+    public void hold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterHoldException {
 
         try {
             CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.HOLD, BalanceType.AVAILABLE, amount, memo, (new Date().getTime() / 1000));
@@ -121,7 +122,7 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
     }
 
     @Override
-    public void unhold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, float amount, String memo) throws CantRegisterUnholdException {
+    public void unhold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterUnholdException {
         try {
             CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.UNHOLD, BalanceType.AVAILABLE, amount, memo, (new Date().getTime() / 1000));
             dao.credit(this.walletPublicKey, BalanceType.AVAILABLE, amount);
