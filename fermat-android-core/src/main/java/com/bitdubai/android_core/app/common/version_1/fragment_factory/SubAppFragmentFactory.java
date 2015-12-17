@@ -55,11 +55,11 @@ public class SubAppFragmentFactory {
             case DAP_REDEEM_POINT_IDENTITY:
                 return new RedeemPointIdentityFragmentFactory();
             case CBP_CRYPTO_BROKER_IDENTITY:
-                return new CryptoBrokerIdentityFragmentFactory();
+                return null; //new CryptoBrokerIdentityFragmentFactory();
             case CBP_CRYPTO_BROKER_COMMUNITY:
-                return null;//new CryptoBrokerCommunityFragmentFactory();
+                return null; //new CryptoBrokerCommunityFragmentFactory();
             case CBP_CRYPTO_CUSTOMER_IDENTITY:
-                return new CryptoCustomerIdentityFragmentFactory();
+                return null; //new CryptoCustomerIdentityFragmentFactory();
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + subAppType, "This Code Is Not Valid for the Plugins SubAppFragmentFactory");
         }
