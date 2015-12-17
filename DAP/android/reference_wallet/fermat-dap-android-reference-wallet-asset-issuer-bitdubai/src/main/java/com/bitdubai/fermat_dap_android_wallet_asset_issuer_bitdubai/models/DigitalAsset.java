@@ -112,7 +112,7 @@ public class DigitalAsset {
     }
 
     public Double getAvailableBalanceBitcoin() {
-        return Double.valueOf(availableBalance) / 1000000;
+        return Double.valueOf(availableBalance) / 100000000;
     }
 
     public String getFormattedAvailableBalanceBitcoin() {
