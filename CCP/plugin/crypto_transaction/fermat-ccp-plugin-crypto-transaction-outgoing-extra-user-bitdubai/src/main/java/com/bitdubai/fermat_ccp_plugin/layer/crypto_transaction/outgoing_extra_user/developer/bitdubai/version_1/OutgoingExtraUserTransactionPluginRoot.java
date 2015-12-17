@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 
@@ -57,6 +58,9 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    private BitcoinNetworkManager bitcoinNetworkManager;
+
 
     public OutgoingExtraUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -85,6 +89,7 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent(
                 bitcoinWalletManager,
                 cryptoVaultManager  ,
+                bitcoinNetworkManager,
                 errorManager        ,
                 dao
         );

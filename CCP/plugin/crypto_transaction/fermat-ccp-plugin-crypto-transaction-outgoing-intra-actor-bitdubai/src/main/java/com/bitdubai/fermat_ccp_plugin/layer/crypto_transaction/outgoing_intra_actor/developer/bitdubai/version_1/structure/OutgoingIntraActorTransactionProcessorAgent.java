@@ -6,32 +6,33 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantHandleTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantFindHandlerException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantHandleTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantSetTranactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentFundsException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorWalletNotSupportedException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,6 +44,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     private ErrorManager                               errorManager;
     private CryptoVaultManager cryptoVaultManager;
+    private BitcoinNetworkManager bitcoinNetworkManager;
     private BitcoinWalletManager                       bitcoinWalletManager;
     private OutgoingIntraActorDao                      outgoingIntraActorDao;
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
@@ -54,6 +56,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     public OutgoingIntraActorTransactionProcessorAgent(final ErrorManager errorManager,
                                                        final CryptoVaultManager cryptoVaultManager,
+                                                       final BitcoinNetworkManager bitcoinNetworkManager,
                                                        final BitcoinWalletManager bitcoinWalletManager,
                                                        final OutgoingIntraActorDao outgoingIntraActorDao,
                                                        final OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
@@ -62,6 +65,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
         this.errorManager                            = errorManager;
         this.cryptoVaultManager                      = cryptoVaultManager;
+        this.bitcoinNetworkManager                   = bitcoinNetworkManager;
         this.bitcoinWalletManager                    = bitcoinWalletManager;
         this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
@@ -72,7 +76,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     public void start() {
         this.transactionProcessorAgent = new TransactionProcessorAgent();
-        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager);
+        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
 
@@ -97,6 +101,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private ErrorManager                               errorManager;
         private BitcoinWalletManager                       bitcoinWalletManager;
         private CryptoVaultManager cryptoVaultManager;
+        private BitcoinNetworkManager bitcoinNetworkManager;
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager    cryptoTransmissionManager;
 
@@ -112,11 +117,13 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                  OutgoingIntraActorDao dao,
                                  BitcoinWalletManager                       bitcoinWalletManager,
                                  CryptoVaultManager cryptoVaultManager,
+                                 BitcoinNetworkManager bitcoinNetworkManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                  CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager) {
             this.dao                       = dao;
             this.errorManager              = errorManager;
             this.cryptoVaultManager        = cryptoVaultManager;
+            this.bitcoinNetworkManager     = bitcoinNetworkManager;
             this.bitcoinWalletManager      = bitcoinWalletManager;
             this.transactionHandlerFactory = transactionHandlerFactory;
             this.cryptoTransmissionManager = cryptoTransmissionNetworkServiceManager;
@@ -292,9 +299,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
                 for (OutgoingIntraActorTransactionWrapper transaction : transactionList) {
                     try {
-                        CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionHash());
+                        CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionId());
                         this.transactionHandlerFactory.getHandler(transaction.getReferenceWallet()).handleTransaction(transaction, cryptoStatus);
-                    } catch (CouldNotGetCryptoStatusException | OutgoingIntraActorCantFindHandlerException | OutgoingIntraActorCantHandleTransactionException e) {
+                    } catch (CantGetTransactionCryptoStatusException | OutgoingIntraActorCantFindHandlerException | OutgoingIntraActorCantHandleTransactionException e) {
                         reportUnexpectedException(e);
                     }
                 }
