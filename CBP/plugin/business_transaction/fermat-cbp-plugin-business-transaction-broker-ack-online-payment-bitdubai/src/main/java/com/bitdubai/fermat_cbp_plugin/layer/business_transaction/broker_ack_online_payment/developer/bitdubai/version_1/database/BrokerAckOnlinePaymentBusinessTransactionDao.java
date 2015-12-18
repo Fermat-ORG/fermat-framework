@@ -617,7 +617,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                                     ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
             cryptoAddressString=record.getStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
+                            ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             customerOnlinePaymentRecord.setCryptoAddress(brokerCryptoAddress);

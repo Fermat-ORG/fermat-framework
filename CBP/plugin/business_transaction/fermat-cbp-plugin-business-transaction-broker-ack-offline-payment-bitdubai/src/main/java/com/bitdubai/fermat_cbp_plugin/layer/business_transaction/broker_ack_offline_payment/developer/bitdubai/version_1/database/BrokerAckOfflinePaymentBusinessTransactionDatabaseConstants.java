@@ -24,25 +24,25 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants {
     public static final String ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
     public static final String ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
     public static final String ACK_OFFLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
-    public static final String ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
-    public static final String ACK_ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME = "timestamp";
-    public static final String ACK_ONLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME = "payment_amount";
-    public static final String ACK_ONLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME = "payment_type";
-    public static final String ACK_ONLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
+    public static final String ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
+    public static final String ACK_OFFLINE_PAYMENT_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME = "payment_amount";
+    public static final String ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME = "payment_type";
+    public static final String ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
 
-    public static final String ACK_ONLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
+    public static final String ACK_OFFLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
 
     /**
      * Events recorded database table definition.
      */
-    public static final String ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME = "ack_offline_payment_events_recorded";
+    public static final String ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME = "ack_offline_payment_events_recorded";
 
-    public static final String ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME = "event_id";
-    public static final String ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME = "event";
-    public static final String ACK_ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME = "source";
-    public static final String ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME = "status";
-    public static final String ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME = "event_id";
+    public static final String ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME = "event";
+    public static final String ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME = "source";
+    public static final String ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME = "status";
+    public static final String ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME = "timestamp";
 
-    public static final String ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
+    public static final String ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
 
 }
