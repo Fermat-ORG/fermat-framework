@@ -51,7 +51,7 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     }
 
     public AssetIssuerSession() {
-
+        data = new HashMap<String, Object>();
         installedWallet = null;
     }
 
