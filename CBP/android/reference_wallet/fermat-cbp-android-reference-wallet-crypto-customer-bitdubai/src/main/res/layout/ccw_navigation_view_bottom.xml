@@ -6,12 +6,12 @@
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true">
 
-    <!--
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/img_drawer_logo"
+        android:src="@drawable/logo_customer_wallet_navigation_drawer"
         />
-    -->
+
 
 </RelativeLayout>

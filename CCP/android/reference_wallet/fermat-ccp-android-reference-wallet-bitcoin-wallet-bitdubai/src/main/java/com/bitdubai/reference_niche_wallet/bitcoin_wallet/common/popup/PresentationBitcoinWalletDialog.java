@@ -97,7 +97,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 

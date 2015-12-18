@@ -57,7 +57,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 

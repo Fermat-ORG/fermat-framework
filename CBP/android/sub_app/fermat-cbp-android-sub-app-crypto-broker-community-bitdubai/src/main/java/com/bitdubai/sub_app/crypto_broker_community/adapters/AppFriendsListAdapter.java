@@ -14,7 +14,10 @@ import com.bitdubai.sub_app.crypto_broker_community.holders.AppFriendsListHolder
 import java.util.List;
 
 /**
- * @author Jose Manuel De Sousa
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, AppFriendsListHolder> {
 
@@ -29,7 +32,7 @@ public class AppFriendsListAdapter extends FermatAdapter<IntraUserInformation, A
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.intra_user_row_friend_list;
+        return R.layout.row_connection_list;
     }
 
     @Override
