@@ -1416,7 +1416,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
          */
         RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
         subAppIntraUser.setType(SubApps.CBP_CRYPTO_BROKER_COMMUNITY);
-        String communityPublicKey = "sub_app_crypto_broker_community";
+        String communityPublicKey = "public_key_crypto_broker_commmunity";
         subAppIntraUser.setPublicKey(communityPublicKey);
         listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
 
