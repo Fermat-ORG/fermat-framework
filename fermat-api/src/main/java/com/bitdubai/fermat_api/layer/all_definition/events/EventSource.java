@@ -19,6 +19,7 @@ public enum EventSource implements FermatEnum {
     ACTOR_ASSET_REDEEM_POINT                ("AAR"),
     ACTOR_NETWORK_SERVICE_CRYPTO_BROKER     ("ACB"),
     ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
+    BROKER_ACK_ONLINE_PAYMENT               ("BAOP"),
     BUSINESS_TRANSACTION_CLOSE_CONTRACT     ("BTCC"),
     BUSINESS_TRANSACTION_OPEN_CONTRACT      ("BTOC"),
     NEGOTIATION_TRANSACTION_NEW             ("NTNW"),
@@ -80,6 +81,7 @@ public enum EventSource implements FermatEnum {
             case "AAR":    return ACTOR_ASSET_REDEEM_POINT;
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
             case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
+            case "BAOP":   return BROKER_ACK_ONLINE_PAYMENT;
             case "BTCC":   return BUSINESS_TRANSACTION_CLOSE_CONTRACT;
             case "BTOC":   return BUSINESS_TRANSACTION_OPEN_CONTRACT;
             case "NTNW":   return NEGOTIATION_TRANSACTION_NEW;
