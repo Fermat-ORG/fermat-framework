@@ -95,15 +95,15 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseFactory implement
             }           /**
              * Create Customer Broker New Event table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
-            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
-            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
-            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 0, Boolean.TRUE);
+            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
+            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
+            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
+            table.addColumn(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 0, Boolean.TRUE);
 
-            table.addIndex(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_FIRST_KEY_COLUMN);
+            table.addIndex(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

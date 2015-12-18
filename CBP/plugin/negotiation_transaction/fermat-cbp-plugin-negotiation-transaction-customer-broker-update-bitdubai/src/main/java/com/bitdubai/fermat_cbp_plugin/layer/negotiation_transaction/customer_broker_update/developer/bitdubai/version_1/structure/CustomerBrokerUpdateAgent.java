@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerUpdateNegotiationTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -230,16 +232,45 @@ public class CustomerBrokerUpdateAgent implements
                 CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException,
                 CantUpdateRecordException
         {
+            try {
 
-            customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
+                customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
-            String                  negotiationXML;
-            NegotiationType         negotiationType;
-            UUID                    transactionId;
-            NegotiationTransaction  negotiationTransaction;
-            List<String>            negotiationPendingToSubmitList;
-            CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
-            CustomerBrokerSaleNegotiation      saleNegotiation     = new NegotiationSaleRecord();
+                String                              negotiationXML;
+                NegotiationType                     negotiationType;
+                UUID                                transactionId;
+                NegotiationTransaction              negotiationTransaction;
+                List<String>                        negotiationPendingToSubmitList;
+                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
+
+                //Check if exist negotiation for send (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
+                negotiationPendingToSubmitList = customerBrokerUpdateNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
+                if(!negotiationPendingToSubmitList.isEmpty()) {
+                    for (String negotiationToSubmit : negotiationPendingToSubmitList) {
+
+                    }
+                }
+
+                //Check if exist negotiation for confirm (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
+                negotiationPendingToSubmitList = customerBrokerUpdateNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
+                if(!negotiationPendingToSubmitList.isEmpty()) {
+                    for (String negotiationToSubmit : negotiationPendingToSubmitList) {
+
+                    }
+                }
+
+                //Check if pending events
+                List<String> pendingEventsIdList=customerBrokerUpdateNegotiationTransactionDatabaseDao.getPendingEvents();
+                for(String eventId : pendingEventsIdList){
+                    checkPendingEvent(eventId);
+                }
+
+            } catch (CantGetNegotiationTransactionListException e) {
+                throw new CantSendCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","Cannot get the Negotiation list from database");
+            } catch (Exception e) {
+                throw new CantSendCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
+            }
 
 
         }

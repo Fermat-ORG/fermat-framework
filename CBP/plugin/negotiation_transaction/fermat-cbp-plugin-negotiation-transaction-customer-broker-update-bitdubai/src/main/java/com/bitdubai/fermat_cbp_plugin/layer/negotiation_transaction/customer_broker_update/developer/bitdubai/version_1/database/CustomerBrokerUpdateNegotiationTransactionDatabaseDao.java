@@ -16,13 +16,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerUpdateNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure.CustomerBrokerUpdateImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -157,7 +161,56 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
 
         return getTransactions;
     }
-    
+
+    //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO SUBMIT
+    public List<String> getPendingToSubmitNegotiation() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
+
+        return getStringList(
+                NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),
+                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_NEGOTIATION_COLUMN_NAME,
+                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_ID_COLUMN_NAME);
+
+    }
+
+    //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO CONFIRM
+    public List<String> getPendingToConfirmtNegotiation() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
+
+        return getStringList(
+                NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode(),
+                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_NEGOTIATION_COLUMN_NAME,
+                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_ID_COLUMN_NAME);
+
+    }
+
+    //GET LIST PENDING EVENT
+    public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            List<String> eventTypeList=new ArrayList<>();
+            String eventId;
+            table.addStringFilter(
+                    CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME,
+                    EventStatus.PENDING.getCode(),
+                    DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return eventTypeList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                eventId=databaseTableRecord.getStringValue(
+                        CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME);
+                eventTypeList.add(eventId);
+            }
+            return eventTypeList;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting events in EventStatus.PENDING","Cannot load the table into memory");
+        }
+    }
+
     /*PRIVATE METHOD*/
     private CustomerBrokerUpdate getCustomerBrokerUpdateFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
@@ -170,5 +223,36 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
         long                            timestamp           = record.getLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME);
 
         return new CustomerBrokerUpdateImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status, negotiationXML,timestamp);
+    }
+
+    private List<String> getStringList(String key,String keyColumn,String valueColumn) throws CantGetNegotiationTransactionListException {
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
+            }
+            List<String> negotiationList=new ArrayList<>();
+            String negotiation;
+            table.addStringFilter(keyColumn,key,DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return negotiationList;
+            }
+
+            for(DatabaseTableRecord databaseTableRecord : records){
+                negotiation = databaseTableRecord.getStringValue(valueColumn);
+                negotiationList.add(negotiation);
+            }
+
+            return negotiationList;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e,"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
+        } catch (Exception e){
+            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+valueColumn+" based on "+key,"Cannot load the table into memory");
+        }
     }
 }
