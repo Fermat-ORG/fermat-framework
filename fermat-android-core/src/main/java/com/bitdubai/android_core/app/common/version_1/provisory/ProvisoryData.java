@@ -125,7 +125,7 @@ public class ProvisoryData {
                 null,
                 "sub_app_crypto_broker_community",
                 "Brokers",
-                "public_key_crypto_broker_commmunity",
+                "public_key_crypto_broker_community",
                 "sub_app_crypto_broker_community",
                 new Version(1, 0, 0));
         item1 = new Item(installedSubApp);
