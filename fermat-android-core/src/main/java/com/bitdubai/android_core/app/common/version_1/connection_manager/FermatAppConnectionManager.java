@@ -4,6 +4,7 @@ package com.bitdubai.android_core.app.common.version_1.connection_manager;
 import android.app.Activity;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.app_connection.CommunityAssetIssuerFermatAppConnection;
@@ -29,40 +30,55 @@ public class FermatAppConnectionManager {
 
 
     public static AppConnections getFermatAppConnection(String publicKey, Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) {
-
+        AppConnections fermatAppConnection = null;
         switch (publicKey) {
             case "reference_wallet":
-                return new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
+                fermatAppConnection = new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
+                break;
             case "crypto_broker_wallet":
-                return new CryptoBrokerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity, null);
+                break;
             case "crypto_customer_wallet":
-                return new CryptoCustomerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity, null);
+                break;
             case "public_key_dap_asset_issuer_identity":
-                return new AssetIssuerFermatAppConnection(activity);
+                fermatAppConnection = new AssetIssuerFermatAppConnection(activity);
+                break;
             case "public_key_dap_asset_user_identity":
-                return new AssetUserFermatAppConnection(activity);
+                fermatAppConnection = new AssetUserFermatAppConnection(activity);
+                break;
             case "public_key_dap_redeem_point_identity":
-                return new RedeemPointFermatAppConnection(activity);
+                fermatAppConnection = new RedeemPointFermatAppConnection(activity);
+                break;
             case "public_key_dap_factory":
-                return new AssetFactoryFermatAppConnection(activity);
+                fermatAppConnection = new AssetFactoryFermatAppConnection(activity);
+                break;
             case "public_key_dap_issuer_community":
-                return new CommunityAssetIssuerFermatAppConnection(activity);
+                fermatAppConnection = new CommunityAssetIssuerFermatAppConnection(activity);
+                break;
             case "public_key_dap_user_community":
-                return new CommunityAssetUserFermatAppConnection(activity);
+                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity);
+                break;
             case "public_key_dap_reedem_point_community":
-                return new CommunityRedeemPointFermatAppConnection(activity);
+                fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
+                break;
             case "public_key_ccp_intra_user_identity":
-                return new CryptoWalletUserFermatAppConnection(activity);
+                fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
+                break;
             case "public_key_intra_user_commmunity":
-                return new CryptoWalletUserCommunityFermatAppConnection(activity);
+                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
+                break;
             case "public_key_crypto_broker_community":
-                return new CryptoBrokerCommunityFermatAppConnection(activity);
+                fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity);
+                break;
             case "sub_app_crypto_broker_identity":
-                return new CryptoBrokerIdentityFermatAppConnection(activity);
+                fermatAppConnection = new CryptoBrokerIdentityFermatAppConnection(activity);
+                break;
             case "sub_app_crypto_customer_identity":
-                return new CryptoCustomerIdentityFermatAppConnection(activity);
+                fermatAppConnection = new CryptoCustomerIdentityFermatAppConnection(activity);
+                break;
         }
-        return null;
+        return fermatAppConnection;
     }
 
 
