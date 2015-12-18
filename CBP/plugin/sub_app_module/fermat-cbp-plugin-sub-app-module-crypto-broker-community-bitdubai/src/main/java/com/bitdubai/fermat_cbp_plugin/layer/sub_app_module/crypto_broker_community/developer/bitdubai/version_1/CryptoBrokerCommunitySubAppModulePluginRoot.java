@@ -25,7 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  * @author lnacosta
  * @version 1.0.0
  */
-public class CommunitySubAppModuleCryptoBrokenPluginRoot extends AbstractPlugin {
+public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin {
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE     , addon  = Addons .ERROR_MANAGER     )
     private ErrorManager errorManager;
@@ -42,7 +42,7 @@ public class CommunitySubAppModuleCryptoBrokenPluginRoot extends AbstractPlugin 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_BROKER     )
     private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
-    public CommunitySubAppModuleCryptoBrokenPluginRoot() {
+    public CryptoBrokerCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
