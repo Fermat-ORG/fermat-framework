@@ -188,7 +188,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
             wallet.addWalletTransaction(walletTransaction);
-
+            wallet.commitTx(tx);
             /**
              * save the added transaction in the wallet
              */
@@ -207,6 +207,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             broadcast.broadcast().get(2, TimeUnit.MINUTES);
             broadcast.future().get(2, TimeUnit.MINUTES);
+
+            wallet.saveToFile(walletFileName);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

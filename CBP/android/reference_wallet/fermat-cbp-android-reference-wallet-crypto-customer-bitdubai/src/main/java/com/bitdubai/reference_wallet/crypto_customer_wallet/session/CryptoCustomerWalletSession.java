@@ -12,30 +12,32 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.preference_settings.
 import java.util.HashMap;
 import java.util.Map;
 
-public class CryptoCustomerWalletSession extends AbstractFermatSession<InstalledWallet,CryptoCustomerWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class CryptoCustomerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoCustomerWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
 
-    private final WalletResourcesProviderManager providerManager;
+    private WalletResourcesProviderManager providerManager;
     /**
      * SubApps type
      */
-    private final InstalledWallet wallet;
+    private InstalledWallet wallet;
 
     /**
      * Active objects in wallet session
      */
-    private final Map<String, Object> data;
+    private Map<String, Object> data;
 
     /**
      * Error manager
      */
-    private final ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     /**
      * Crypto Customer Wallet Module
      */
-    private final CryptoCustomerWalletModuleManager moduleManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
 
 
+    public CryptoCustomerWalletSession() {
+    }
 
     public CryptoCustomerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager providerManager, CryptoCustomerWalletModuleManager moduleManager) {
         super(wallet.getWalletPublicKey(), wallet, errorManager, moduleManager, providerManager);
@@ -45,7 +47,6 @@ public class CryptoCustomerWalletSession extends AbstractFermatSession<Installed
         this.moduleManager = moduleManager;
         this.providerManager = providerManager;
     }
-
 
 
     /**

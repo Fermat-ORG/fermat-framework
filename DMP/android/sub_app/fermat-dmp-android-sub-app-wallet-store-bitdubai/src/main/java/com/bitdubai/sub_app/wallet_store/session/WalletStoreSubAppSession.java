@@ -58,18 +58,6 @@ public class WalletStoreSubAppSession extends AbstractFermatSession<InstalledSub
         this.walletStoreModuleManager = walletStoreModuleManager;
     }
 
-
-
-    /**
-     * Return the SubApp type
-     *
-     * @return SubApps instance indicating the type
-     */
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
-
     /**
      * Store any data you need to hold between the fragments of the sub app
      *

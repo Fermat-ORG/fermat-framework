@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_core.layer.sub_app_module;
 
+import com.bitdubai.fermat_cbp_core.layer.sub_app_module.crypto_broker_community.CryptoBrokerCommunityPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.sub_app_module.crypto_customer_community.CryptoCustomerCommunityPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
@@ -25,6 +27,8 @@ public class SubAppModuleLayer extends AbstractLayer {
 
             registerPlugin(new CryptoBrokerIdentityPluginSubsystem());
             registerPlugin(new CryptoCustomerIdentityPluginSubsystem());
+            registerPlugin(new CryptoBrokerCommunityPluginSubsystem());
+            registerPlugin(new CryptoCustomerCommunityPluginSubsystem());
 
         } catch(CantRegisterPluginException e) {
 

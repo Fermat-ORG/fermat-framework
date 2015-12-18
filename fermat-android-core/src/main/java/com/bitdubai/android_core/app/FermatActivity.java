@@ -54,6 +54,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
@@ -66,12 +67,15 @@ import com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFra
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -118,6 +122,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
@@ -761,7 +766,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Method used from a subApp to paint tabs
      */
-    protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, SubAppsSession subAppsSession) throws InvalidParameterException {
+    protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, FermatSession subAppsSession) throws InvalidParameterException {
         //comment by luis campo
         //PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -774,14 +779,17 @@ public abstract class FermatActivity extends AppCompatActivity
 
         SubApps subAppType = subApp.getType();
 
-        com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
+        //com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
 
+
+        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null);
+        com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
         adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),
                 getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity(),
                 subAppsSession,
                 getErrorManager(),
-                subAppFragmentFactory,
+                fermatFragmentFactory,
                 null,//getSubAppSettingSettingsManager(),
                 getSubAppResourcesProviderManager()
         );
@@ -1902,6 +1910,23 @@ public abstract class FermatActivity extends AppCompatActivity
 
             return null;
         }
+    }
+
+    public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
+        try {
+            return getApplicationSession().getFermatSystem().getModuleManager(pluginVersionReference);
+        } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+            return null;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+
+    protected FermatApplicationSession getApplicationSession(){
+        return (ApplicationSession)getApplication();
     }
 
     public CashMoneyWalletModuleManager getCashMoneyWalletModuleManager() {

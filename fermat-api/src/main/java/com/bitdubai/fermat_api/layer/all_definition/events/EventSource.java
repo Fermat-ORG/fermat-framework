@@ -22,6 +22,9 @@ public enum EventSource implements FermatEnum {
     BROKER_ACK_ONLINE_PAYMENT               ("BAOP"),
     BUSINESS_TRANSACTION_CLOSE_CONTRACT     ("BTCC"),
     BUSINESS_TRANSACTION_OPEN_CONTRACT      ("BTOC"),
+    NEGOTIATION_TRANSACTION_NEW             ("NTNW"),
+    NEGOTIATION_TRANSACTION_UPDATE          ("NTUP"),
+    NEGOTIATION_TRANSACTION_CLOSE           ("NTCL"),
     COMMUNICATION_CLOUD_PLUGIN              ("CCL"),
     CRYPTO_ADDRESS_BOOK                     ("CAB"),
     CRYPTO_NETWORK_BITCOIN_PLUGIN           ("CNB"),
@@ -81,6 +84,9 @@ public enum EventSource implements FermatEnum {
             case "BAOP":   return BROKER_ACK_ONLINE_PAYMENT;
             case "BTCC":   return BUSINESS_TRANSACTION_CLOSE_CONTRACT;
             case "BTOC":   return BUSINESS_TRANSACTION_OPEN_CONTRACT;
+            case "NTNW":   return NEGOTIATION_TRANSACTION_NEW;
+            case "NTUP":   return NEGOTIATION_TRANSACTION_UPDATE;
+            case "NTCL":   return NEGOTIATION_TRANSACTION_CLOSE;
             case "CCL":    return COMMUNICATION_CLOUD_PLUGIN;
             case "CAB":    return CRYPTO_ADDRESS_BOOK;
             case "CNB":    return CRYPTO_NETWORK_BITCOIN_PLUGIN;

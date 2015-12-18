@@ -31,7 +31,7 @@ import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develope
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = CustomBuildConfig.class, sdk = 21)
 public class SetFilterTest {private Activity mockActivity;
-    private Context mockContext;
+    private String mockContext;
 
     private AndroidDatabase testDatabase;
     private DatabaseTable testDatabaseTable;
@@ -45,7 +45,7 @@ public class SetFilterTest {private Activity mockActivity;
     @Before
     public  void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
         testDatabase = new AndroidDatabase(mockContext, testOwnerId, testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);

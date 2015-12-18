@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.AssetIssuerIdentityPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityPrivateKeyException;
@@ -141,10 +143,10 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser (String alias, String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
 
         try {
-            if (aliasExists (alias)) {
+            if (aliasExists(alias)) {
                 throw new CantCreateNewDeveloperException("Cant create new Asset Issuer, alias exists.", "Asset Issuer Identity", "Cant create new Asset Issuer, alias exists.");
             }
 
@@ -159,21 +161,56 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
 
             table.insertRecord(record);
 
-            if(profileImage!=null)
+            if (profileImage != null)
                 persistNewUserProfileImage(publicKey, profileImage);
 
-        } catch (CantInsertRecordException e){
+        } catch (CantInsertRecordException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Asset IssuerIdentity", "Cant create new Asset Issuer, insert database problems.");
-
-        } catch (CantPersistPrivateKeyException e){
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer, insert database problems.");
+        } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer,persist private key error.");
-
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer,persist private key error.");
         } catch (Exception e) {
             // Failure unknown.
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant create new Asset Issuer, unknown failure.");
+        }
+    }
 
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant create new Asset Issuer, unknown failure.");
+    public void updateIdentityAssetIssuer(String publicKey, String alias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
+        try {
+            /**
+             * 1) Get the table.
+             */
+            DatabaseTable table = this.database.getTable(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer Identity list, table not found.", "Asset Issuer Identity", "Cant get Asset Issuer Identity list, table not found.");
+            }
+
+            // 2) Find the Intra users.
+            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+
+            // 3) Get Intra users.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                //set new values
+                record.setStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, alias);
+                table.updateRecord(record);
+            }
+
+            if (profileImage != null)
+                persistNewUserProfileImage(publicKey, profileImage);
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateIdentityAssetIssuerException(e.getMessage(), e, "Asset Issuer Identity", "Cant update Asset Issuer Identity, database problems.");
+        } catch (CantPersistProfileImageException e) {
+            throw new CantUpdateIdentityAssetIssuerException(e.getMessage(), e, "Asset Issuer Identity", "Cant update Asset Issuer Identity, persist image error.");
+        } catch (Exception e) {
+            throw new CantUpdateIdentityAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant update Asset Issuer Identity, unknown failure.");
         }
     }
 
@@ -189,7 +226,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             /**
              * 1) Get the table.
              */
-            table = this.database.getTable (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
+            table = this.database.getTable(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
 
             if (table == null) {
                 /**
@@ -206,12 +243,12 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
 
             // 3) Get Identity Issuers.
 
-            for (DatabaseTableRecord record : table.getRecords ()) {
+            for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
                 IdentityAssetIssuerRecord = new IdentityAssetIssuerImpl(
                         record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)));
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -224,7 +261,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         return IdentityAssetIssuerRecord;
     }
 
-    public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetIssuerIdentitiesException {
+    public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListAssetIssuerIdentitiesException {
 
 
         // Setup method.
@@ -237,7 +274,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             /**
              * 1) Get the table.
              */
-            table = this.database.getTable (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
+            table = this.database.getTable(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
 
             if (table == null) {
                 /**
@@ -254,11 +291,11 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
 
             // 3) Get Identity Issuers.
 
-            for (DatabaseTableRecord record : table.getRecords ()) {
+            for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
                 list.add(new IdentityAssetIssuerImpl(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
@@ -296,14 +333,12 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         } catch (CantLoadFileException e) {
             throw new CantGetAssetIssuerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
 
-        }
-        catch (FileNotFoundException |CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             //Not image found return byte null
             profileImage = new byte[0];
             // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
-        }
-        catch (Exception e) {
-            throw  new CantGetAssetIssuerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ",FermatException.wrapException(e),"", "");
+        } catch (Exception e) {
+            throw new CantGetAssetIssuerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
         }
 
         return profileImage;
@@ -313,11 +348,11 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
      * Private Methods
      */
 
-    private void  persistNewUserPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
+    private void persistNewUserPrivateKeysFile(String publicKey, String privateKey) throws CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME  + "_" + publicKey,
+                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -330,13 +365,12 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantCreateFileException e) {
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
-        }
-        catch (Exception e) {
-            throw  new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ",FermatException.wrapException(e),"", "");
+        } catch (Exception e) {
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
     }
 
-    private void  persistNewUserProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
+    private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
@@ -353,19 +387,19 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantCreateFileException e) {
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
-        }
-        catch (Exception e) {
-            throw  new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ",FermatException.wrapException(e),"", "");
+        } catch (Exception e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
         }
     }
 
     /**
      * <p>Method that check if alias exists.
+     *
      * @param alias
      * @return boolean exists
      * @throws CantCreateNewDeveloperException
      */
-    private boolean aliasExists (String alias) throws CantCreateNewDeveloperException {
+    private boolean aliasExists(String alias) throws CantCreateNewDeveloperException {
 
 
         DatabaseTable table;
@@ -375,7 +409,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
          */
 
         try {
-            table = this.database.getTable (AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
+            table = this.database.getTable(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME);
 
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Asset Issuer Identity", "");
@@ -384,14 +418,14 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-            return table.getRecords ().size () > 0;
+            return table.getRecords().size() > 0;
 
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Asset Issuer  Identity", "unknown failure.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer  Identity", "unknown failure.");
         }
     }
 
@@ -400,7 +434,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME  + "_" + publicKey,
+                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -413,12 +447,10 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         } catch (CantLoadFileException e) {
             throw new CantGetAssetIssuerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
 
-        }
-        catch (FileNotFoundException |CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetAssetIssuerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
-        }
-        catch (Exception e) {
-            throw  new CantGetAssetIssuerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ",FermatException.wrapException(e),"", "");
+        } catch (Exception e) {
+            throw new CantGetAssetIssuerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
 
         return privateKey;

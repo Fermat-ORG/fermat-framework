@@ -28,7 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractHistoryAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.BrokerNavigationViewPainter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -104,7 +104,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.onActivityCreated(savedInstanceState);
 
         try {
-            BrokerNavigationViewPainter navigationViewPainter = new BrokerNavigationViewPainter(getActivity(), null);
+            CryptoBrokerNavigationViewPainter navigationViewPainter = new CryptoBrokerNavigationViewPainter(getActivity(), null);
             getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();

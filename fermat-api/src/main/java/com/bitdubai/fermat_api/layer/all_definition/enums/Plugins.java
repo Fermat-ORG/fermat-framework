@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
@@ -120,7 +119,6 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION          ("BRPRT"     ),
     BITDUBAI_USER_REDEMPTION_TRANSACTION                  ("BURT"      ),
     BITDUBAI_ASSET_APPROPRIATION_TRANSACTION              ("BAAT"      ),
-    BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION        ("BAAST"     ),
     BITDUBAI_ASSET_WALLET_ISSUER                          ("BASWI"     ),
     BITDUBAI_ASSET_FACTORY                                ("BASF"      ),
     BITDUBAI_ASSET_FACTORY_MODULE                         ("BASFM"     ),
@@ -177,7 +175,6 @@ public enum Plugins implements FermatPluginsEnum {
 
     // Init new Plugins
 
-    ASSET_APPROPRIATION_STATS   ("ASAPS"),
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
     ASSET_FACTORY               ("ASF"),
@@ -199,10 +196,12 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_ADDRESS_BOOK         ("CAB"),
     CRYPTO_BROKER               ("CB"),
     CRYPTO_BROKER_IDENTITY      ("CBI"),
+    CRYPTO_BROKER_COMMUNITY     ("CBC"),
     CRYPTO_BROKER_PURCHASE      ("CBP"),
     CRYPTO_BROKER_SALE          ("CBS"),
     CRYPTO_CUSTOMER             ("CC"),
     CRYPTO_CUSTOMER_IDENTITY    ("CCI"),
+    CRYPTO_CUSTOMER_COMMUNITY   ("CCC"),
     CRYPTO_PAYMENT_REQUEST      ("CPR"),
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
@@ -287,7 +286,6 @@ public enum Plugins implements FermatPluginsEnum {
         switch (code) {
 
             case "APR"  :   return SUB_APP_RUNTIME          ;
-            case "ASAPS":   return ASSET_APPROPRIATION_STATS;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
             case "ASF"  :   return ASSET_FACTORY            ;
@@ -311,8 +309,10 @@ public enum Plugins implements FermatPluginsEnum {
             case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
             case "CB"   :   return CRYPTO_BROKER            ;
             case "CBI"  :   return CRYPTO_BROKER_IDENTITY   ;
+            case "CBC"  :   return CRYPTO_BROKER_COMMUNITY  ;
             case "CC"   :   return CRYPTO_CUSTOMER          ;
             case "CCI"  :   return CRYPTO_CUSTOMER_IDENTITY ;
+            case "CCC"  :   return CRYPTO_CUSTOMER_COMMUNITY;
             case "CPR"  :   return CRYPTO_PAYMENT_REQUEST   ;
             case "CT"   :   return CRYPTO_TRANSMISSION      ;
             case "CW"   :   return CRYPTO_WALLET            ;

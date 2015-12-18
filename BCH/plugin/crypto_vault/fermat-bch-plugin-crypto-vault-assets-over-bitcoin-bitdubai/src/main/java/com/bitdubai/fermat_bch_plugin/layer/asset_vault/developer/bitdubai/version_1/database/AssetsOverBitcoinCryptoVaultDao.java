@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -16,10 +17,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import org.bitcoinj.core.ECKey;
@@ -121,6 +123,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
 
         record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME, hierarchyAccount.getId());
         record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, hierarchyAccount.getDescription());
+        record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME, hierarchyAccount.getHierarchyAccountType().getCode());
 
         try {
             databaseTable.insertRecord(record);
@@ -161,9 +164,15 @@ public class AssetsOverBitcoinCryptoVaultDao {
          * Iterate each record and form the HierarchyAccount object.
          */
         for (DatabaseTableRecord record : databaseTable.getRecords()){
-            HierarchyAccount hierarchyAccount = new HierarchyAccount(
-                    record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME),
-                    record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME));
+            HierarchyAccount hierarchyAccount = null;
+            try {
+                hierarchyAccount = new HierarchyAccount(
+                        record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME),
+                        record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME),
+                        HierarchyAccountType.getByCode(record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Invalid Account Type: " + record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME), null );
+            }
 
             /**
              * Adds the created HierarchyAccount into the list to be returned.
@@ -628,5 +637,36 @@ public class AssetsOverBitcoinCryptoVaultDao {
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error updating record", "database issue");
         }
     }
+
+    /**
+     * Gets the next It to be used to create a new HierarchyAccountId
+     * @return
+     */
+    public int getNextAvailableHierarchyAccountId() throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
+        }
+
+        /**
+         * returns the next available Id to be used.
+         */
+        List<DatabaseTableRecord> databaseTableRecords =  databaseTable.getRecords();
+        if (databaseTableRecords.isEmpty())
+            return 0;
+        else
+        {
+            int hierarchyAccountId = 0;
+            for (DatabaseTableRecord record : databaseTableRecords){
+                if (record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME) > hierarchyAccountId)
+                    hierarchyAccountId = record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
+            }
+
+            return hierarchyAccountId + 1;
+        }
+    }
+
 
 }
