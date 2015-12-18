@@ -194,11 +194,11 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO SUBMIT
     public List<String> getPendingToSubmitNegotiation() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
 
-        /*return getStringList(
+        return getStringList(
                 NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,
-                CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);*/
-
+                CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
+/*
         try{
 
             List<String> negotiationList=new ArrayList<>();
@@ -228,6 +228,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         } catch (Exception e){
             throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+NegotiationTransactionStatus.PENDING_SUBMIT.getCode()+" based on "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,"Cannot load the table into memory");
         }
+        */
 
     }
 
