@@ -43,6 +43,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     PeerGroup peerGroup;
     File walletFileName;
     BlockChain blockChain;
+    BitcoinNetworkEvents events;
     final NetworkParameters NETWORK_PARAMETERS;
 
 
@@ -132,7 +133,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * add the events
              */
-            BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
+            events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
             peerGroup.addEventListener(events);
             this.wallet.addEventListener(events);
             blockChain.addListener(events);
@@ -235,7 +236,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId
      */
     private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-
+        events.saveOutgoingTransaction(wallet, tx, transactionId);
     }
 
     /**

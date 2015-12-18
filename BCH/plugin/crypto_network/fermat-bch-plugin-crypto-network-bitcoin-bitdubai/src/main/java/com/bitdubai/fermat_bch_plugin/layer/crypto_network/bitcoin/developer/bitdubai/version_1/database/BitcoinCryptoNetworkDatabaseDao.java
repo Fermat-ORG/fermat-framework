@@ -194,7 +194,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
                                             String op_Return,
                                             ProtocolStatus protocolStatus)
             throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(hash, blockHash, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.INCOMING);
+        this.saveNewTransaction(null, hash, blockHash, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.INCOMING);
     }
 
     /**
@@ -210,7 +210,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param protocolStatus
      * @throws CantExecuteDatabaseOperationException
      */
-    private void saveNewTransaction( String hash,
+    private void saveNewTransaction(@Nullable UUID transactionId,
+                                    String hash,
                                      String blockHash,
                                     CryptoStatus cryptoStatus,
                                     int blockDepth,
@@ -226,9 +227,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
         /**
-         * generates the trx_id
+         * generates the trx_id if this is an incoming transaction or used the passed one.
          */
-        UUID trxId = UUID.randomUUID();
+        UUID trxId = null;
+        if (transactionId == null)
+                trxId = UUID.randomUUID();
+        else
+            trxId = transactionId;
 
         record.setUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, trxId);
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, hash);
@@ -298,6 +303,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
     /**
      * Saves and outgoing transaction into the database
+     * @param transactionId
      * @param hash
      * @param cryptoStatus
      * @param blockDepth
@@ -308,7 +314,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param protocolStatus
      * @throws CantExecuteDatabaseOperationException
      */
-    public void saveNewOutgoingTransaction(String hash,
+    public void saveNewOutgoingTransaction(UUID transactionId,
+                                           String hash,
                                            String blockHash,
                                            CryptoStatus cryptoStatus,
                                            int blockDepth,
@@ -318,7 +325,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
                                            String op_Return,
                                            ProtocolStatus protocolStatus)
             throws CantExecuteDatabaseOperationException{
-        this.saveNewTransaction(hash, blockHash, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.OUTGOING);
+        this.saveNewTransaction(transactionId, hash, blockHash, cryptoStatus, blockDepth, addressTo, addressFrom, value, op_Return, protocolStatus, TransactionTypes.OUTGOING);
     }
 
     /**
