@@ -29,16 +29,6 @@ public class FermatAppConnectionManager {
         switch (publicKey){
             case "reference_wallet":
                 return new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
-            case "test_wallet":
-                return null;//return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();
-            case "crypto_broker_wallet":
-                //fermatAppConnection = new CryptoBrokerWalletFragmentFactory();
-                return null;
-            case "crypto_customer_wallet":
-//                fermatAppConnection = CryptoCustomerWalletFragmentFactory();
-                break;
-            case "public_key_pip_developer_sub_app":
-                return new DeveloperFermatAppConnection(activity);
             case "public_key_dap_asset_issuer_identity":
                 return new AssetIssuerFermatAppConnection(activity);
             case "public_key_dap_asset_user_identity":
@@ -57,8 +47,6 @@ public class FermatAppConnectionManager {
                 return new CryptoWalletUserFermatAppConnection(activity);
             case "public_key_intra_user_commmunity":
                 return new CryptoWalletUserCommunityFermatAppConnection(activity);
-            case "sub_app_crypto_broker_community":
-                return new CryptoBrokerCommunityFermatAppConnection(activity);
         }
         return null;
     }
