@@ -70,7 +70,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 

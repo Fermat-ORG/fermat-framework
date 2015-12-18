@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
@@ -13,20 +14,20 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AppFriendsListHolder extends FermatViewHolder {
+public class AppWorldHolder extends FermatViewHolder {
 
-    public ImageView friendAvatar;
-    public FermatTextView friendName;
+    public SquareImageView thumbnail;
+    public FermatTextView name;
+    public ImageView imageView_connection;
 
     /**
      * Constructor
      *
-     * @param itemView cast ui elements
+     * @param itemView cast elements in layout
      */
-    public AppFriendsListHolder(View itemView) {
+    public AppWorldHolder(View itemView) {
         super(itemView);
-
-        friendName = (FermatTextView) itemView.findViewById(R.id.username);
-        friendAvatar = (ImageView) itemView.findViewById(R.id.user_avatar);
+        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
+        name = (FermatTextView) itemView.findViewById(R.id.community_name);
     }
 }

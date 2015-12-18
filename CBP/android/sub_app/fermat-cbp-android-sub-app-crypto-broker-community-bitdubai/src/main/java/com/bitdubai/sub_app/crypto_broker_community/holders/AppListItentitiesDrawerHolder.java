@@ -1,8 +1,8 @@
 package com.bitdubai.sub_app.crypto_broker_community.holders;
 
 import android.view.View;
+import android.widget.ImageView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_broker_community.R;
@@ -13,21 +13,21 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AppNotificationsHolder extends FermatViewHolder {
+public class AppListItentitiesDrawerHolder extends FermatViewHolder {
 
-    public FermatRoundedImageView userAvatar;
-    public FermatTextView userName;
+    public FermatTextView userIdentityName;
+    public ImageView userIdentityImage;
 
     /**
      * Constructor
      *
      * @param itemView cast ui elements
      */
-    public AppNotificationsHolder(View itemView) {
+    protected AppListItentitiesDrawerHolder(View itemView) {
         super(itemView);
 
-        userName = (FermatTextView)itemView.findViewById(R.id.userName);
-        userAvatar = (FermatRoundedImageView)itemView.findViewById(R.id.imageView_avatar);
+        userIdentityImage = (ImageView) itemView.findViewById(R.id.imageView_avatar);
+        userIdentityName = (FermatTextView)itemView.findViewById(R.id.textView_identity);
 
     }
 }
