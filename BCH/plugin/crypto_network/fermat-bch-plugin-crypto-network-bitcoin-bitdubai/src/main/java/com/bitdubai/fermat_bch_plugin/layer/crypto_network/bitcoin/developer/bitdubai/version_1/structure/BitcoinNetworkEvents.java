@@ -593,14 +593,17 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     }
 
     /**
-     * gets the value sent from me in a transaction
+     * gets the value that I'm sending in a transaction
      * @param wallet
      * @param tx
      * @return
      */
     private long getOutgoingTransactionValue(Wallet wallet, Transaction tx) {
+        /**
+         * I need to check the outputs for the value that is being sent
+         */
         try{
-            return tx.getValueSentFromMe(wallet).getValue();
+            return tx.getValue(wallet).getValue();
         } catch (Exception e){
             return 0;
         }
