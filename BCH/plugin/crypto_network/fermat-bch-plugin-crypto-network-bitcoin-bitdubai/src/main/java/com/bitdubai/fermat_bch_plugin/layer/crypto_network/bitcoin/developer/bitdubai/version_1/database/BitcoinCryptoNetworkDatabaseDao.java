@@ -285,7 +285,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             return null;
         else{
             try {
-                CryptoStatus cryptoStatus = CryptoStatus.getByCode(databaseTable.getRecords().get(0).getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME));
+                CryptoStatus cryptoStatus = CryptoStatus.getByCode(databaseTable.getRecords().get(0).getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME));
                 return cryptoStatus;
             } catch (InvalidParameterException e) {
                 throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Invalid parameter stored in database.", "database issue");
