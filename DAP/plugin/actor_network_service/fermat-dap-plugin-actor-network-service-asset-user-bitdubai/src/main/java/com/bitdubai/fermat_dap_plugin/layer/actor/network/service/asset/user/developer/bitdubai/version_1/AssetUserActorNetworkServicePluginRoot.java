@@ -1020,7 +1020,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     }
 
     /*
-     * get a string and convert it into array bytes
+     * Convert a string to array bytes
      */
     private static byte[] convertoByteArrayfromString(String arrengebytes) {
 
