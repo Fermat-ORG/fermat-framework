@@ -8,7 +8,10 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
 /**
- * Created by josemanueldsds on 29/11/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class AppNotificationsHolder extends FermatViewHolder {
 
@@ -18,7 +21,7 @@ public class AppNotificationsHolder extends FermatViewHolder {
     /**
      * Constructor
      *
-     * @param itemView
+     * @param itemView cast ui elements
      */
     public AppNotificationsHolder(View itemView) {
         super(itemView);

@@ -132,18 +132,22 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        /**
-         * register the new outgoing transaction into the database
-         */
-        saveOutgoingTransaction(wallet, tx);
+
     }
 
-    private void saveOutgoingTransaction(Wallet wallet, Transaction tx) {
+    /**
+     * Saves into database a transaction that we are sending.
+     * @param wallet
+     * @param tx
+     * @param transactionId
+     */
+    public void saveOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
         /**
          * Register the new outgoing transaction into the database
          */
         try {
-            getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+            getDao().saveNewOutgoingTransaction(transactionId,
+                    tx.getHashAsString(),
                     getBlockHash(tx),
                     getTransactionCryptoStatus(tx),
                     tx.getConfidence().getDepthInBlocks(),
@@ -161,7 +165,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             e.printStackTrace();
             try{
                 CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
-                getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                getDao().saveNewOutgoingTransaction(transactionId,
+                        tx.getHashAsString(),
                         getBlockHash(tx),
                         getTransactionCryptoStatus(tx),
                         0,
@@ -427,7 +432,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 /**
                  * Register the new incoming transaction into the database
                  */
-               saveOutgoingTransaction(wallet,tx);
+               saveOutgoingTransaction(wallet,tx, null);
                 break;
         }
     }
@@ -559,7 +564,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param missedCryptoStatus
      */
     private void saveMissingOutgoingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
-        getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+        getDao().saveNewOutgoingTransaction(null, tx.getHashAsString(),
                 getBlockHash(tx),
                 missedCryptoStatus,
                 tx.getConfidence().getDepthInBlocks(),

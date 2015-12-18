@@ -2,12 +2,16 @@ package com.bitdubai.sub_app.crypto_broker_community.common.utils;
 
 import android.view.View;
 import android.view.animation.AnimationUtils;
+
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
 import java.util.List;
 
 /**
- * Created by mati on 2015.10.27..
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class FernatAnimationUtils {
 

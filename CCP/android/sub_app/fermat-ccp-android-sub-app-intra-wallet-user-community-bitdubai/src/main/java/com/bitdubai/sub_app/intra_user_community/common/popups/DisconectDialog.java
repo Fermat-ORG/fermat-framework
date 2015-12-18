@@ -97,7 +97,7 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 
