@@ -101,7 +101,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/bitcoin_wallet_2"
+                        android:src="@drawable/bitcoin_wallet_2"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="15dp"
                         />
@@ -139,7 +139,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/ic_04"
+                        android:src="@drawable/ic_04"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="15dp"
                         />
@@ -234,7 +234,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/bitcoin_wallet_2"
+                    android:src="@drawable/bitcoin_wallet_2"
                     android:layout_gravity="center_horizontal" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
@@ -255,7 +255,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/ic_04"
+                    android:src="@drawable/ic_04"
                     android:layout_gravity="center_horizontal"
                     />
 
