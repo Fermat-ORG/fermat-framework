@@ -6,6 +6,9 @@ jdk:
 cache: false
 # Use the Travis Container-Based Infrastructure (see #203)
 sudo: false
+env:
+  global:
+  - TERM=dumb
 android:
   components:
     # Uncomment the lines below if you want to
