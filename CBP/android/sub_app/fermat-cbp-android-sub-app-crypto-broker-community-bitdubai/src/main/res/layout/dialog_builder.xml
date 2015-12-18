@@ -20,13 +20,12 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
-            android:text="Conection"
+            android:text="Connection"
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingBottom="8dp"
             android:paddingEnd="8dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
@@ -55,7 +53,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingBottom="16dp"
             android:paddingEnd="8dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
@@ -65,9 +62,25 @@
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
 
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/second_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingEnd="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:text="Description of dialog"
+            android:textColor="#2d3e50"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginTop="16dp"
             android:background="#e1e1e1" />
 
         <LinearLayout

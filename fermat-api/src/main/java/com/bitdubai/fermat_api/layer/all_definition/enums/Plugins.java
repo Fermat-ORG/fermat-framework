@@ -195,8 +195,8 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_ADDRESSES            ("CA"),
     CRYPTO_ADDRESS_BOOK         ("CAB"),
     CRYPTO_BROKER               ("CB"),
-    CRYPTO_BROKER_IDENTITY      ("CBI"),
     CRYPTO_BROKER_COMMUNITY     ("CBC"),
+    CRYPTO_BROKER_IDENTITY      ("CBI"),
     CRYPTO_BROKER_PURCHASE      ("CBP"),
     CRYPTO_BROKER_SALE          ("CBS"),
     CRYPTO_CUSTOMER             ("CC"),
@@ -309,8 +309,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "CA"   :   return CRYPTO_ADDRESSES         ;
             case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
             case "CB"   :   return CRYPTO_BROKER            ;
-            case "CBI"  :   return CRYPTO_BROKER_IDENTITY   ;
             case "CBC"  :   return CRYPTO_BROKER_COMMUNITY  ;
+            case "CBI"  :   return CRYPTO_BROKER_IDENTITY   ;
             case "CC"   :   return CRYPTO_CUSTOMER          ;
             case "CCI"  :   return CRYPTO_CUSTOMER_IDENTITY ;
             case "CCC"  :   return CRYPTO_CUSTOMER_COMMUNITY;

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantRegisterCustomerBrokerUpdateNegotiationTransactionException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T REGISTER NEGOTIATION TRANSACTION CUSTOMER BROKER UPDATE";
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER UPDATE. CAN'T REGISTER NEGOTIATION TRANSACTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement

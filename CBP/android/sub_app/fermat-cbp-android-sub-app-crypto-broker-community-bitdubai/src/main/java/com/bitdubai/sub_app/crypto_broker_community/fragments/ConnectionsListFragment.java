@@ -25,8 +25,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppFriendsListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
@@ -35,9 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creado por Jose manuel De Sousa el 30/11/2015
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
-@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ConnectionsListFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
@@ -51,7 +53,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     private boolean isRefreshing = false;
     private View rootView;
     private AppFriendsListAdapter adapter;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
+    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -64,8 +66,8 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
+        intraUserSubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
+        moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
     }
@@ -73,7 +75,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.intra_user_connection_friend_list, container, false);
+            rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
@@ -95,9 +97,9 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getActiveIntraUserIdentity()));
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
-        setNavigationDrawer(navigationViewAdapter);
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override

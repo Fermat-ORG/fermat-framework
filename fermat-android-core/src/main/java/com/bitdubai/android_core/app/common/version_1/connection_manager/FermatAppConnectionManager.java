@@ -55,7 +55,7 @@ public class FermatAppConnectionManager {
                 return new CryptoWalletUserFermatAppConnection(activity);
             case "public_key_intra_user_commmunity":
                 return new CryptoWalletUserCommunityFermatAppConnection(activity);
-            case "sub_app_crypto_broker_community":
+            case "public_key_crypto_broker_community":
                 return new CryptoBrokerCommunityFermatAppConnection(activity);
             case "sub_app_crypto_broker_identity":
                 return new CryptoBrokerIdentityFermatAppConnection(activity);

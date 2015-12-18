@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView
@@ -29,12 +30,9 @@
             android:layout_height="wrap_content"
             android:background="#010c12"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingBottom="14dp"
             android:paddingLeft="4dp"
             android:paddingRight="8dp"
-            android:paddingTop="14dp"
             android:singleLine="true"
             android:text="UserName"
             android:textColor="#0072bb"

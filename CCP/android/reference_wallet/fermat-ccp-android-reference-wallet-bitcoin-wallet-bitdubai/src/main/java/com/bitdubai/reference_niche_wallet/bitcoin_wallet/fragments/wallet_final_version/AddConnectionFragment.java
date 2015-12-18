@@ -182,7 +182,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey()
+                                    referenceWalletSession.getIntraUserModuleManager().getPublicKey()
                                     ,appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     BlockchainNetworkType.DEFAULT);
