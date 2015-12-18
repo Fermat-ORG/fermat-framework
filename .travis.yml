@@ -6,7 +6,6 @@ jdk:
 cache: false
 # Use the Travis Container-Based Infrastructure (see #203)
 sudo: false
-USE_DEB:false
 env:
   global:
   - TERM=dumb
