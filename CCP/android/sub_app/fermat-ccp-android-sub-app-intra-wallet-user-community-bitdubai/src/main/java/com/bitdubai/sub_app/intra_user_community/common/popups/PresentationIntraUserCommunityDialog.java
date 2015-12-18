@@ -52,9 +52,9 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
     }
 
     @Override
-    protected int setWindowFeacture() {
-        return Window.FEATURE_NO_TITLE;
-    }
+    protected int setWindowFeature() {
+        return Window.FEATURE_NO_TITLE;    }
+
 
     @Override
     public void onClick(View v) {

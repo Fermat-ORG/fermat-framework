@@ -84,11 +84,11 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     }
 
     private void setUpListeners(){
-        container_john_doe.setOnClickListener(this);
-        container_jane_doe.setOnClickListener(this);
-        btn_left.setOnClickListener(this);
-        btn_right.setOnClickListener(this);
-        checkbox_not_show.setOnCheckedChangeListener(this);
+//        container_john_doe.setOnClickListener(this);
+//        container_jane_doe.setOnClickListener(this);
+//        btn_left.setOnClickListener(this);
+//        btn_right.setOnClickListener(this);
+//        checkbox_not_show.setOnCheckedChangeListener(this);
     }
 
     @Override

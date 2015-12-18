@@ -52,9 +52,10 @@ public class PresentationDialog extends FermatDialog<FermatSession,ResourceProvi
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
+
 
     @Override
     public void onClick(View v) {

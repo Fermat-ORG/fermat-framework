@@ -153,7 +153,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:paddingBottom="10dp"
                     android:text="To begin, choose an avatar below. You might change later it with any picture and your own alias."
                     android:gravity="center"
