@@ -13,7 +13,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
  */
 public final class IntraActorNetworkServiceDataBaseConstants {
 
-    public static final String DATA_BASE_NAME  = "template_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "cache_table";
 
     /**
      * Intra Actor Network Service Cache database table definition.

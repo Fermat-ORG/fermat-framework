@@ -82,7 +82,7 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
                   /*
                    * We create the new database
                    */
-                database = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+                database = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
