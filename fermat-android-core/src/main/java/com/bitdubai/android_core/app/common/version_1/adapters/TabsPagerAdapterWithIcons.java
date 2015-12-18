@@ -49,7 +49,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
     private TabStrip tabStrip;
 
 
-    private AbstractFermatSession walletSession;
+    private FermatSession walletSession;
 
     private ErrorManager errorManager;
 
@@ -94,7 +94,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
     }
 
-    public TabsPagerAdapterWithIcons(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+    public TabsPagerAdapterWithIcons(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
         super(fm);
         this.context=context;
 

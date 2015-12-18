@@ -20,7 +20,10 @@ import com.bitdubai.sub_app.crypto_broker_community.preference_settings.CryptoBr
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
- * Created by Matias Furszyfer on 2015.12.09..
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
@@ -36,9 +39,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.CRYPTO_BROKER_PLATFORM,
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.SUB_APP_MODULE,
-                Plugins.CRYPTO_BROKER_COMMUNITY,
+                Plugins.INTRA_WALLET_USER,
                 Developers.BITDUBAI,
                 new Version()
         );

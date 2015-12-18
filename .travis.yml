@@ -1,12 +1,20 @@
-language: android
-jdk: oraclejdk7
+language:
+ - android
+jdk:
+ - oraclejdk7
+# Turn off caching to avoid any caching problems
+cache: false
+# Use the Travis Container-Based Infrastructure (see #203)
 sudo: false
+env:
+  global:
+  - TERM=dumb
 android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    - platform-tools
-    - tools
+    #- platform-tools
+    #- tools
 
     # The BuildTools version used by your project
     - build-tools-23.0.1
@@ -15,8 +23,8 @@ android:
     - android-23
 
     # Additional components
-    - extra
-    - add-on
+    #- extra
+    #- add-on
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
@@ -26,3 +34,10 @@ android:
 before_install:
  - chmod +x gradlew
  - git config core.autocrlf false
+
+install:
+  - 'echo "Download Gradle Wrapper"; chmod +x ./gradlew; ls -l gradlew; ./gradlew -v'
+
+script:
+  - ./gradlew build
+
