@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -157,6 +158,16 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
             e.printStackTrace();
         }
+    }
+
+    public IdentityAssetUser getIdentityAssetUser() throws CantGetAssetUserIdentitiesException {
+        IdentityAssetUser identityAssetUser = null;
+        try {
+            identityAssetUser = getAssetUserIdentityDao().getIdentityAssetUser();
+        } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+        return identityAssetUser;
     }
 
     public boolean hasIntraUserIdentity() throws CantListAssetUsersException {

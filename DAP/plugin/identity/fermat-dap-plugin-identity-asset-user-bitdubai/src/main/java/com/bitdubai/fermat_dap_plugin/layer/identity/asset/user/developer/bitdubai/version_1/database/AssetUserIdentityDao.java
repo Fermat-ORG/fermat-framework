@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.AssetUserIdentityPluginRoot;
@@ -214,6 +215,53 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
         } catch (Exception e) {
             throw new CantUpdateIdentityAssetUserException(e.getMessage(), FermatException.wrapException(e), "Asset User Identity", "Cant update Asset User Identity, unknown failure.");
         }
+    }
+
+    public IdentityAssetUser getIdentityAssetUser() throws CantGetAssetUserIdentitiesException {
+
+        // Setup method.
+        IdentityAssetUser IdentityAssetUserrRecord = null;
+        DatabaseTable table; // Intra User table.
+
+        // Get Asset Issuers identities list.
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+            }
+
+
+            // 2) Find the Identity Issuers.
+
+//            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            // 3) Get Identity Issuers.
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+
+                // Add records to list.
+                IdentityAssetUserrRecord = new IdentityAssetUsermpl(
+                        record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)));
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetUserIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset User Identity", "Cant get Asset User identity list, unknown failure.");
+        }
+
+        // Return the list values.
+        return IdentityAssetUserrRecord;
     }
 
     public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListAssetUserIdentitiesException {
