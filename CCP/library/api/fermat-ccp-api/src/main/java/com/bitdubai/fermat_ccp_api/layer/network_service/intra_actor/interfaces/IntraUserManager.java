@@ -12,6 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDisconnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantGetNotificationsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorInIntraUserSearchException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingCacheSuggestionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 
 import java.util.List;
@@ -40,13 +41,25 @@ public interface IntraUserManager extends FermatManager {
      */
     public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
 
+
     /**
-     * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.
-     *
-     * @param intraUserLoggedInPublicKey The public key of the intra user sending the request
-     * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
-     * @param myProfileImage             The profile image of the user sending the request
+     * The method <code>getCacheIntraUsersSuggestions</code> returns a cache list of intra users that the logged in
+     * intra user may want to add as connections.
+     * @param max
+     * @param offset
+     * @return
+     * @throws ErrorSearchingCacheSuggestionsException
      */
+    List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException;
+
+
+    /**
+         * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.
+         *
+         * @param intraUserLoggedInPublicKey The public key of the intra user sending the request
+         * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
+         * @param myProfileImage             The profile image of the user sending the request
+         */
     void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException;
 
     /**
