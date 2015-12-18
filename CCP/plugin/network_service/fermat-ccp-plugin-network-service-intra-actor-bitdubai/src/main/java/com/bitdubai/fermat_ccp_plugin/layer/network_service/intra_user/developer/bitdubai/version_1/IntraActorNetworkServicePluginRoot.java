@@ -217,7 +217,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     /**
      * Represent the dataBase
      */
+    private Database dataBaseCommunication;
+
     private Database dataBase;
+
 
     /**
      * Represent the identity
@@ -349,7 +352,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * because at this moment, is create the platformComponentProfilePluginRoot for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBaseCommunication, errorManager, eventManager);
     }
 
     /**
@@ -503,9 +506,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDao(dataBase);
+            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication);
 
-            outgoingNotificationDao = new OutgoingNotificationDao(dataBase);
+            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication);
 
             intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(pluginDatabaseSystem,pluginId);
 
@@ -1591,7 +1594,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBaseCommunication = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -1614,7 +1617,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBaseCommunication = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
