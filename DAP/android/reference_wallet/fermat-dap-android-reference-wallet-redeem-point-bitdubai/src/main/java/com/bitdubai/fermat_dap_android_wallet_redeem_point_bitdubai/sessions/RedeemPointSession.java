@@ -45,6 +45,10 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
         this.manager = manager;
     }
 
+    public RedeemPointSession() {
+
+        installedWallet = null;
+    }
 
 
     public InstalledWallet getWalletSessionType() {

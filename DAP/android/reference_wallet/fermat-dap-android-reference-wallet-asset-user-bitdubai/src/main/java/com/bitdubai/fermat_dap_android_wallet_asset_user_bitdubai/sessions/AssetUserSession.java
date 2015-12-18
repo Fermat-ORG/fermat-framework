@@ -43,6 +43,10 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
         this.resourceManager = resourceManager;
     }
 
+    public AssetUserSession() {
+
+    }
+
 
     public InstalledWallet getWalletSessionType() {
         return installedWallet;
