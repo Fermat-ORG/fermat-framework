@@ -50,7 +50,7 @@
                     android:textSize="20sp"
                     android:textColor="#00a99d"
                     app:typeface="CAVIAR_DREAMS_BOLD"
-                    android:gravity="left"
+                    android:gravity="center_horizontal"
                     android:layout_gravity="center"
 
                     />
@@ -59,7 +59,6 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
-                    android:src="@drawable/bitcoin_wallet_2"
                     android:paddingBottom="2dp"/>
 
             </LinearLayout>
@@ -76,20 +75,20 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="85dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp">
+                android:layout_height="85dp">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:id="@+id/image_banner"
                     android:scaleType="fitXY"
-                    android:src="@drawable/banner_bitcoin_wallet"/>
+                    />
             </RelativeLayout>
 
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/txt_sub_title"
                 android:textSize="14sp"
                 android:paddingBottom="5dp"
                 android:paddingTop="7sp"
@@ -122,9 +121,10 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/txt_body"
                     android:textSize="12sp"
                     android:paddingBottom="5dp"
-                    android:text="* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history."
+                    android:text="* See your balance.\n* Send and receive bitcoins from your contacts.\n* Request bitcoins from your contacts.\n* Browse your transaction history."
                     android:gravity="left"
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="16dp"
@@ -153,7 +153,8 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:id="@+id/footer_title"
+                    android:textSize="14sp"
                     android:paddingBottom="10dp"
                     android:text="To begin, choose an avatar below. You might change later it with any picture and your own alias."
                     android:gravity="center"
@@ -183,9 +184,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:id="@+id/checkbox_not_show"
-                    android:buttonTint="@color/black_overlay"
-                    />
+                    android:id="@+id/checkbox_not_show"/>
+                    <!--android:buttonTint="@color/black_overlay"-->
+
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -225,7 +226,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile_image_standard"
+                        android:id="@+id/image_view_left"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
                         />
@@ -239,7 +240,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_john_doe"
+                    android:id="@+id/btn_left"
                     android:text="Be John Doe"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
@@ -263,8 +264,8 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile_image_standard"
                         android:layout_gravity="center_horizontal"
+                        android:id="@+id/image_view_right"
                         android:padding="6dp"
                         />
                     <ImageView
@@ -277,7 +278,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_jane_doe"
+                    android:id="@+id/btn_right"
                     android:text="Be Jane Doe"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
