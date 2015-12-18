@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.ReedemPointIdentityPluginRoot;
@@ -250,8 +251,8 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                 // Add records to list.
                 list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        getAssetRedeemPointIdentityPrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId));
             }
@@ -269,7 +270,54 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         return list;
     }
 
-    public byte[] getAssetIssuerProfileImagePrivateKey(String publicKey) throws CantGetAssetRedeemPointIdentityProfileImageException {
+    public RedeemPointIdentity getIdentityRedeemPoint() throws CantGetRedeemPointIdentitiesException {
+
+        // Setup method.
+        RedeemPointIdentity redeemPointIdentityRecord = null;
+        DatabaseTable table; // Intra User table.
+
+        // Get Asset Issuers identities list.
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+            }
+
+
+            // 2) Find the Identity Issuers.
+
+//            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            // 3) Get Identity Issuers.
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+
+                // Add records to list.
+                redeemPointIdentityRecord = new IdentityAssetRedeemPointImpl(
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)));
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetRedeemPointIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Redeem Point identity list, unknown failure.");
+        }
+
+        // Return the list values.
+        return redeemPointIdentityRecord;
+    }
+
+    public byte[] getAssetRedeemPointProfileImagePrivateKey(String publicKey) throws CantGetAssetRedeemPointIdentityProfileImageException {
         byte[] profileImage;
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -383,7 +431,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public String getAssetIssuerIdentityPrivateKey(String publicKey) throws CantGetAssetRedeemPointIdentityPrivateKeyException {
+    public String getAssetRedeemPointIdentityPrivateKey(String publicKey) throws CantGetAssetRedeemPointIdentityPrivateKeyException {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,

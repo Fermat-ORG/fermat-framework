@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
@@ -127,6 +128,16 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         } catch (Exception e) {
             throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT IDENTITIES", FermatException.wrapException(e), "", "");
         }
+    }
+
+    public RedeemPointIdentity getIdentityRedeemPoint() throws CantGetRedeemPointIdentitiesException {
+        RedeemPointIdentity redeemPointIdentity = null;
+        try {
+            redeemPointIdentity = getAssetRedeemPointIdentityDao().getIdentityRedeemPoint();
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+        return redeemPointIdentity;
     }
 
     public RedeemPointIdentity createNewIdentityAssetRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
