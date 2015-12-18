@@ -38,9 +38,6 @@ import java.util.UUID;
  */
 public class DesktopDatabase implements Database, DatabaseFactory {
 
-
-
-
     /**
      * Database Interface member variables.
      */
@@ -108,8 +105,6 @@ public class DesktopDatabase implements Database, DatabaseFactory {
         return databaseTransaction = new DesktopDatabaseTransaction();
     }
 
-
-
     /**
      * <p>Return a DatabaseTable definition
      *
@@ -120,7 +115,6 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     public DatabaseTable getTable(String tableName){
 
         databaseTable = new DesktopDatabaseTable(this.Database, tableName);
-
         return databaseTable;
     }
 
