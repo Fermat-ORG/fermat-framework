@@ -29,7 +29,7 @@ public abstract class FermatFragmentFactory  <S extends FermatSession,J extends 
         return fermatFragment;
     }
 
-    public abstract AbstractFermatFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
+    protected abstract AbstractFermatFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
 
     public abstract F getFermatFragmentEnumType(String key);
 
