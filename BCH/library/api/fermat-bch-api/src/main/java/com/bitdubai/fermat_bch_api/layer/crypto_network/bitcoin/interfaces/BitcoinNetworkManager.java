@@ -53,9 +53,10 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param blockchainNetworkType
      * @param tx
+     * @param transactionId the internal Fermat Transaction
      * @throws CantBroadcastTransactionException
      */
-    void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException;
+    void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException;
 
     /**
      * Gets the UTXO provider from the CryptoNetwork on the specified Network

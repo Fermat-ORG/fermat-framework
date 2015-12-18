@@ -156,11 +156,12 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param blockchainNetworkType
      * @param tx
+     * @param transactionId the internal Fermat Transaction
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx, transactionId);
     }
 
     /**

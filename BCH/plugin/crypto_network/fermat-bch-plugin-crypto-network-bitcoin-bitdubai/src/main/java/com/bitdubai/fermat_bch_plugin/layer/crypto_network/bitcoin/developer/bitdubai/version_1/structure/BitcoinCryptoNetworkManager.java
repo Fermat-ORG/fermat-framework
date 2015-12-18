@@ -373,10 +373,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param blockchainNetworkType
      * @param tx
+     * @param transactionId the internal fermat transaction id
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-        runningAgents.get(blockchainNetworkType).broadcastTransaction(tx);
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+        runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
 

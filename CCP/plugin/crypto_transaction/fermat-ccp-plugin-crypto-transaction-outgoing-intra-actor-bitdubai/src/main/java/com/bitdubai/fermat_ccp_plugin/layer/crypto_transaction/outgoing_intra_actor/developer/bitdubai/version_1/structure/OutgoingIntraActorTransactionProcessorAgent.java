@@ -56,8 +56,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
     private ErrorManager errorManager;
     private CryptoVaultManager cryptoVaultManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
-    private BitcoinWalletManager                       bitcoinWalletManager;
-    private OutgoingIntraActorDao                      outgoingIntraActorDao;
     private BitcoinWalletManager bitcoinWalletManager;
     private OutgoingIntraActorDao outgoingIntraActorDao;
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
@@ -143,11 +141,13 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                  BitcoinNetworkManager bitcoinNetworkManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                  CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager) {
-            this.dao                       = dao;
-            this.errorManager              = errorManager;
-            this.cryptoVaultManager        = cryptoVaultManager;
-            this.bitcoinNetworkManager     = bitcoinNetworkManager;
-            this.bitcoinWalletManager      = bitcoinWalletManager;
+            this.dao = dao;
+            this.errorManager = errorManager;
+            this.cryptoVaultManager = cryptoVaultManager;
+            this.bitcoinNetworkManager = bitcoinNetworkManager;
+            this.bitcoinWalletManager = bitcoinWalletManager;
+        }
+
         private void initialize(ErrorManager errorManager,
                                 OutgoingIntraActorDao dao,
                                 BitcoinWalletManager bitcoinWalletManager,

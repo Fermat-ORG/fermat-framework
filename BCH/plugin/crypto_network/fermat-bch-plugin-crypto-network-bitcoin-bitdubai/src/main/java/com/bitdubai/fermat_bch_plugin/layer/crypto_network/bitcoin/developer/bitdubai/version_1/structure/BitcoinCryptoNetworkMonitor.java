@@ -179,16 +179,17 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     /**
      * Broadcast a well formed, commited and signed transaction into the network
      * @param tx
+     * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
              */
             WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
             wallet.addWalletTransaction(walletTransaction);
-            wallet.commitTx(tx);
+
             /**
              * save the added transaction in the wallet
              */
@@ -209,6 +210,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             broadcast.future().get(2, TimeUnit.MINUTES);
 
             wallet.saveToFile(walletFileName);
+
+            /**
+             * Store this outgoing transaction in the table
+             */
+            storeOutgoingTransaction(wallet, tx, transactionId);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -218,6 +225,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         } catch (Exception exception){
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
         }
+
+    }
+
+    /**
+     * Stores and outgoing transaction into the database
+     * @param wallet
+     * @param tx
+     * @param transactionId
+     */
+    private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
 
     }
 
