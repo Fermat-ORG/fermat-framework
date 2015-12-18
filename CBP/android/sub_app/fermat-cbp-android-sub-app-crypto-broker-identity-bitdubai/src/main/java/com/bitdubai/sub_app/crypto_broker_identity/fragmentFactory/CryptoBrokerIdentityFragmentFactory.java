@@ -1,9 +1,17 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory;
 
+import android.app.Fragment;
+
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateCryptoBrokerIdentityFragment;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CryptoBrokerIdentityListFragment;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.EditCryptoBrokerIdentityFragment;
@@ -17,12 +25,10 @@ import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.Crypto
 /**
  * Created by Nelson Ramirez on 2015.09
  */
-public class CryptoBrokerIdentityFragmentFactory extends FermatSubAppFragmentFactory<CryptoBrokerIdentitySubAppSession, CryptoBrokerIdentityPreferenceSettings, CryptoBrokerIdentityFragmentsEnumType> {
-
+public class CryptoBrokerIdentityFragmentFactory extends FermatFragmentFactory<CryptoBrokerIdentitySubAppSession, CryptoBrokerIdentityPreferenceSettings, SubAppResourcesProviderManager, CryptoBrokerIdentityFragmentsEnumType> {
 
     @Override
-    public FermatFragment getFermatFragment(CryptoBrokerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
-
+    public AbstractFermatFragment getFermatFragment(CryptoBrokerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
         if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT)
             return CryptoBrokerIdentityListFragment.newInstance();
 

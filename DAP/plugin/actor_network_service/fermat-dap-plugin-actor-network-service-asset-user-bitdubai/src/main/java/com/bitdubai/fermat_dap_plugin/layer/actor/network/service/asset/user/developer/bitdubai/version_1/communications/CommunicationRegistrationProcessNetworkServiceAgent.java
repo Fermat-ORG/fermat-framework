@@ -71,6 +71,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetUserActorNetworkServicePluginRoot.getIdentityPublicKey(),
                             assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase(),
+                            "",//phrase
                             assetUserActorNetworkServicePluginRoot.getName(),
                             assetUserActorNetworkServicePluginRoot.getNetworkServiceType(),
                             assetUserActorNetworkServicePluginRoot.getPlatformComponentType(),

@@ -16,22 +16,53 @@ import java.util.UUID;
  */
 public interface CustomerBrokerUpdateManager {
 
-    //UPDATE THE PURCHASE NEGOTIATION TRANSACTION
+    /**
+     * Create an Update Negotiation Transaction for the customer
+     *
+     * @param customerBrokerPurchaseNegotiation the updated negotiation
+     * @throws CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException
+     */
     void createCustomerBrokerUpdatePurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
 
-    //UPDATE THE SALE NEGOTIATION TRANSACTION
+    /**
+     * Create an Update Negotiation Transaction for the broker
+     *
+     * @param customerBrokerSaleNegotiation the updated negotiation
+     * @throws CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException
+     */
     void createCustomerBrokerUpdateSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
 
-    //CANCEL THE PURCHASE NEGOTIATION INDICATE
+    /**
+     * Create an Cancel Negotiation Transaction for the customer
+     *
+     * @param customerBrokerPurchaseNegotiation the cancel negotiation
+     * @throws CantCancelNegotiationException
+     */
     void cancelNegotiation(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCancelNegotiationException;
 
-    //CANCEL THE SALE NEGOTIATION INDICATE
+    /**
+     * Create an Cancel Negotiation Transaction for the broker
+     *
+     * @param customerBrokerSaleNegotiation the cancel negotiation
+     * @throws CantCancelNegotiationException
+     */
     void cancelNegotiation(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCancelNegotiationException;
 
-    //GET THE NEW NEGOTIATION TRANSACTION FOR THE INDICATE ID
+    /**
+     * Get the Update Negotiation Transaction data for the given transaction ID
+     *
+     * @param transactionId the transaction ID
+     * @return the Negotiation Transaction data
+     * @throws CantGetCustomerBrokerUpdateNegotiationTransactionException
+     */
     CustomerBrokerUpdate getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerUpdateNegotiationTransactionException;
 
-    //LIST THE UPDATE NEGOTIATION TRANSACTION
+    /**
+     * Return the list of Update Negotiation Transactions
+     *
+     * @return the list of Update Negotiation Transactions
+     * @throws CantGetListCustomerBrokerUpdateNegotiationTransactionException
+     */
     List<CustomerBrokerUpdate> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerUpdateNegotiationTransactionException;
 
 }

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @author Matias Furszyfer
  */
 
-public interface SubAppFragmentFactory<S extends SubAppsSession,J extends SubAppSettings>{
+public interface SubAppFragmentFactory<S extends FermatSession,J extends SubAppSettings>{
 
     /**
      * This method takes a reference (string) to a fragment and returns the corresponding fragment.

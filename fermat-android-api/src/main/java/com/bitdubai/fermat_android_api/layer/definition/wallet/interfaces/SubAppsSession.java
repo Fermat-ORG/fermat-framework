@@ -7,8 +7,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
  */
 public interface SubAppsSession extends FermatSession{
 
-    public InstalledSubApp getSubAppSessionType();
-
     //public ToolManager getToolManager();
     //public WalletFactoryProjectManager getWalletFactoryManager();
 

@@ -20,7 +20,7 @@ public class AssetStatisticImpl implements AssetStatistic {
         assetPublicKey = Validate.DEFAULT_STRING;
     }
 
-    private ActorAssetUser assetOwner;
+    private String assetOwner;
 
     private AssetCurrentStatus status;
 
@@ -45,7 +45,7 @@ public class AssetStatisticImpl implements AssetStatistic {
     }
 
     public AssetStatisticImpl(String assetPublicKey,
-                              ActorAssetUser assetOwner,
+                              String assetOwner,
                               AssetCurrentStatus status,
                               Date distributionDate,
                               Date usageDate,
@@ -85,7 +85,7 @@ public class AssetStatisticImpl implements AssetStatistic {
      * this asset has not been delivered yet.
      */
     @Override
-    public ActorAssetUser getAssetOwner() {
+    public String getAssetOwnerPublicKey() {
         return assetOwner;
     }
 
@@ -144,7 +144,7 @@ public class AssetStatisticImpl implements AssetStatistic {
         return assetName;
     }
 
-    public void setAssetOwner(ActorAssetUser assetOwner) {
+    public void setAssetOwner(String assetOwner) {
         this.assetOwner = assetOwner;
     }
 

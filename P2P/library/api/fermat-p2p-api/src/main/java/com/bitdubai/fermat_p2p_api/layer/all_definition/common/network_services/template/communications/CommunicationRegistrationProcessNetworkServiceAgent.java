@@ -71,6 +71,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
                                                                                                                                                  networkService.getAlias().toLowerCase(),
+                                                                                                                                                 "", //phrase
                                                                                                                                                  networkService.getName(),
                                                                                                                                                  networkService.getNetworkServiceType(),
                                                                                                                                                  networkService.getPlatformComponentType(),
