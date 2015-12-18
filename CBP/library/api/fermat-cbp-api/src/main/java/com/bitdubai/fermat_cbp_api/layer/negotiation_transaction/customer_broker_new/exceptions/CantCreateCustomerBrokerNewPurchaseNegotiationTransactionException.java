@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by Yordin Alayn on 13.11.2015.
  */
-public class CantSendCustomerBrokerUpdateNegotiationTransactionException extends FermatException {
+public class CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T SEND INFORMATION THE NEGOTIATION TRANSMISSION NETWORK SERVICE";
+    public static final String DEFAULT_MESSAGE = "CAN'T CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantSendCustomerBrokerUpdateNegotiationTransactionException extends
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantSendCustomerBrokerUpdateNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

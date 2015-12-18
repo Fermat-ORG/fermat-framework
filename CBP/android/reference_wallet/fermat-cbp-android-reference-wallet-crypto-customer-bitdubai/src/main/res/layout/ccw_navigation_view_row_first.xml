@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="180dp"
     >
 
 
-
     <ImageView
-        android:id="@+id/image_view_profile"
+        android:id="@+id/ccw_image_view_profile"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        android:src="@drawable/profile_image"
-        />
+        tools:background="@drawable/profile_image_standard"
+    />
 
     <FrameLayout
         android:layout_width="match_parent"

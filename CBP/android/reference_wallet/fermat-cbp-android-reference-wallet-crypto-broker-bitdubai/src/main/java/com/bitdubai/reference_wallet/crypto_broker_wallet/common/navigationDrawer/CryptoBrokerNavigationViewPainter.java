@@ -20,12 +20,12 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 /**
  * Created by mati on 2015.11.24..
  */
-public class BrokerNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class CryptoBrokerNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     private final ActorIdentity actorIdentity;
     private Activity activity;
 
-    public BrokerNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
+    public CryptoBrokerNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
         this.activity = activity;
         this.actorIdentity = actorIdentity;
     }
