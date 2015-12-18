@@ -39,7 +39,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -233,13 +232,12 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         System.out.print("-------------- sendBitcoins to cryptoVaultManager");
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
-                        // Le setie el hash, mati
-                        //       we will
+                        // Set the hash
                         // just send the metadata in this place. This MUST be corrected.
                         transaction.setTransactionHash(hash);
                         dao.setToSTCV(transaction);
 
-                        //check if a request payment accept
+                        //check if a request payment was accepted
                         if (transaction.getRequestId() == null) {
                             this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
                                     transaction.getAddressTo().getCryptoCurrency(),
@@ -357,8 +355,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     case BASIC_WALLET_BITCOIN_WALLET:
                         //TODO: hay que disparar un evento para que la wallet avise que la transaccion no se completo y eliminarla
                         bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).credit(transaction);
-
-                        //if transaction is a payment request, rollback it state too
+                        bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey()).deleteTransaction(transaction.getTransactionId());
+                        //if the transaction is a payment request, rollback it state too
                         if (transaction.getRequestId() != null)
                             revertPaymentRequest(transaction.getRequestId());
                         break;
@@ -395,7 +393,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
             }
             catch(Exception e)
             {
-                throw new CantProcessRequestAcceptedException("I couldn't update request payment accepted",FermatException.wrapException(e),"","unknown error");
+                throw new CantProcessRequestAcceptedException("I couldn't update the payment request that was accepted",FermatException.wrapException(e),"","unknown error");
             }
         }
 

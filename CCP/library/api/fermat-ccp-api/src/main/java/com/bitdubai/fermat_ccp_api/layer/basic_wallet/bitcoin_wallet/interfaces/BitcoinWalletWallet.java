@@ -121,4 +121,15 @@ public interface BitcoinWalletWallet {
     BitcoinWalletTransactionSummary getActorTransactionSummary(String      actorPublicKey,
                                                                BalanceType balanceType) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 
+
+    /**
+     * Throw the method <code>deleteTransaction</code> you can delete an existent transaction.
+     *
+     * @param transactionID to identify the transaction.
+     *
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException if something goes wrong.
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException if we cant find the transaction.
+     */
+    void deleteTransaction(UUID   transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
+
 }
