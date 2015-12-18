@@ -1,10 +1,15 @@
 package com.bitdubai.sub_app.crypto_broker_community.common.models;
 
 /**
- * Created by Matias Furszyfer on 2015.08.31..
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public interface Item {
 
-    public boolean isSection();
-    public boolean isConnection();
+    boolean isSection();
+
+    boolean isConnection();
+
 }

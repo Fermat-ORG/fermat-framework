@@ -36,7 +36,6 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
 
     @Override
     protected void bindHolder(AppWorldHolder holder, IntraUserInformation data, int position) {
-        holder.locationContainer.setVisibility(View.GONE);
         holder.name.setText(data.getName());
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null) {

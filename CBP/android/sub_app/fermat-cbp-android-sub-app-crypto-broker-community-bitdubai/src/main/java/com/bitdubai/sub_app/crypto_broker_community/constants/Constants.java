@@ -1,7 +1,10 @@
 package com.bitdubai.sub_app.crypto_broker_community.constants;
 
 /**
- * Created by josemanueldsds on 12/12/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class Constants {
 

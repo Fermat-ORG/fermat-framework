@@ -15,8 +15,10 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.squareup.picasso.Picasso;
 
 /**
- * @author Created by mati on 2015.11.12..
- * @author Modified byJose Manuel De Sousa 08/12/2015
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class FragmentsCommons {
 
@@ -28,7 +30,7 @@ public class FragmentsCommons {
         RelativeLayout relativeLayout = new RelativeLayout(activity);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
-        View view = inflater.inflate(R.layout.intra_user_community_navigation_first_row, relativeLayout, true);
+        View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         if (intraUserLoginIdentity != null) {
             if (intraUserLoginIdentity.getProfileImage() != null) {
