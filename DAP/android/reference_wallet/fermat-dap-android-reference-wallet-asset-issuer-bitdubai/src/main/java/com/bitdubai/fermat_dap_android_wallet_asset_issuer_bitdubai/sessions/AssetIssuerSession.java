@@ -50,6 +50,10 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
         this.manager = manager;
     }
 
+    public AssetIssuerSession() {
+
+        installedWallet = null;
+    }
 
 
     public InstalledWallet getWalletSessionType() {

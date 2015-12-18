@@ -5,7 +5,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 /**
  * Created by Nerio on 07/09/15.
  */
-public class CantGetUserAssetUserIdentitiesException extends DAPException {
+public class CantGetAssetUserIdentitiesException extends DAPException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -13,7 +13,7 @@ public class CantGetUserAssetUserIdentitiesException extends DAPException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetUserAssetUserIdentitiesException(String message, String context, String possibleReason) {
+    public CantGetAssetUserIdentitiesException(String message, String context, String possibleReason) {
         this(message, null, context, possibleReason);
     }
 
@@ -25,7 +25,7 @@ public class CantGetUserAssetUserIdentitiesException extends DAPException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetUserAssetUserIdentitiesException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetAssetUserIdentitiesException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
