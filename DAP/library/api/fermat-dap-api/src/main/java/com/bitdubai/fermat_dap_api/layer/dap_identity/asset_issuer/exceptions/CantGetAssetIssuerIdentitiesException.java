@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public class CantGetUserRedeemPointIdentitiesException extends DAPException {
+public class CantGetAssetIssuerIdentitiesException extends DAPException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -13,7 +13,7 @@ public class CantGetUserRedeemPointIdentitiesException extends DAPException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetUserRedeemPointIdentitiesException(String message, String context, String possibleReason) {
+    public CantGetAssetIssuerIdentitiesException(String message, String context, String possibleReason) {
         this(message, null, context, possibleReason);
     }
 
@@ -25,7 +25,7 @@ public class CantGetUserRedeemPointIdentitiesException extends DAPException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetUserRedeemPointIdentitiesException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetAssetIssuerIdentitiesException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

@@ -14,17 +14,18 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 
 /**
  * Created by frank on 12/9/15.
  */
-public class IssuerWalletNavigationViewPainter implements NavigationViewPainter {
+public class RedeemPointWalletNavigationViewPainter implements NavigationViewPainter {
     private Activity activity;
-    private final ActorIdentity actorIdentity;
+    private final RedeemPointIdentity redeemPointIdentity;
 
-    public IssuerWalletNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
+    public RedeemPointWalletNavigationViewPainter(Activity activity, RedeemPointIdentity redeemPointIdentity) {
         this.activity = activity;
-        this.actorIdentity = actorIdentity;
+        this.redeemPointIdentity = redeemPointIdentity;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new IssuerWalletNavigationViewAdapter(activity);
+            return new RedeemPointWalletNavigationViewAdapter(activity);
         } catch (Exception e) {
             e.printStackTrace();
         }
