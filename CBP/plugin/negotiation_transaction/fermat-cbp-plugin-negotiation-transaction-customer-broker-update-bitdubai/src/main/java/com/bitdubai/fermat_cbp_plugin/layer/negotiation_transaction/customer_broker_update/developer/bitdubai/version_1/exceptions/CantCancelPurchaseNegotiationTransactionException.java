@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Yordin Alayn on 16.12.15.
  */
 public class CantCancelPurchaseNegotiationTransactionException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "CAN'T PROCESS PURCHASE NEGOTIATION TRANSACTION CUSTOMER BROKER UPDATE";
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER UPDATE. CAN'T CANCEL THE PURCHASE NEGOTIATION TRANSACTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
