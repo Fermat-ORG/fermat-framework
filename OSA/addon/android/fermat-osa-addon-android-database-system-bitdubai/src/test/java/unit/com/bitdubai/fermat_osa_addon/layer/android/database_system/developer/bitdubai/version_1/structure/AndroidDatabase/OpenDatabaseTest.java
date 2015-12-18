@@ -33,7 +33,7 @@ import java.util.UUID;
 public class OpenDatabaseTest {
 
     private Activity mockActivity;
-    private Context mockContext;
+    private String mockContext;
 
     private AndroidDatabase testDatabase;
     private String testDatabaseName = "testDatabase";
@@ -41,7 +41,7 @@ public class OpenDatabaseTest {
     @Before
     public void setUpContext(){
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
     }
 
     @Test

@@ -13,12 +13,10 @@ import android.widget.Toast;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
-import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -328,50 +326,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
     }
 
-    private void setOneFragmentInScreen() throws InvalidParameterException {
 
-        SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
-        SubApp subApp = subAppRuntimeManager.getLastSubApp();
-        SubApps subAppType =subApp.getType();
-
-        com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
-        String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
-        FermatSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
-
-        try {
-            if(subAppFragmentFactory !=null){
-
-
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-                tabLayout.setVisibility(View.GONE);
-
-                ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-                pagertabs.setVisibility(View.VISIBLE);
-
-                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null);
-                com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-
-                adapter = new TabsPagerAdapter(getFragmentManager(),
-                        getApplicationContext(),
-                        fermatFragmentFactory,
-                        fragment,
-                        subAppsSession,
-                        getSubAppResourcesProviderManager(),
-                        getResources());
-                pagertabs.setAdapter(adapter);
-
-                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                        .getDisplayMetrics());
-                pagertabs.setPageMargin(pageMargin);
-
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-    }
 //    private SubAppsSession createOrCallSubAppSession(){
 //        SubAppsSession subAppSession = null;
 //        try {

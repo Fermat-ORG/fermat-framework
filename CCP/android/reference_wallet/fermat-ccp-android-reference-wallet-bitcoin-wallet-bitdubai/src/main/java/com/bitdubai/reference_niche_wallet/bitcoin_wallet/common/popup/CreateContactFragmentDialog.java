@@ -126,7 +126,10 @@ public class CreateContactFragmentDialog extends Dialog implements
             contact_name = (AutoCompleteTextView) findViewById(R.id.contact_name);
             take_picture_btn = (ImageView) findViewById(R.id.take_picture_btn);
             txt_address = (EditText) findViewById(R.id.txt_address);
-            contact_name.setText(walletContact.name);
+            if(walletContact!=null){
+                contact_name.setText(walletContact.name);
+            }
+
 
 
 
@@ -135,7 +138,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             if(contactImageBitmap!=null){
                 contactImageBitmap = Bitmap.createScaledBitmap(contactImageBitmap,65,65,true);
-                take_picture_btn.setBackground(new BitmapDrawable(contactImageBitmap));
+                take_picture_btn.setBackground(new BitmapDrawable(getContext().getResources(),contactImageBitmap));
                 take_picture_btn.setImageDrawable(null);
             }
 

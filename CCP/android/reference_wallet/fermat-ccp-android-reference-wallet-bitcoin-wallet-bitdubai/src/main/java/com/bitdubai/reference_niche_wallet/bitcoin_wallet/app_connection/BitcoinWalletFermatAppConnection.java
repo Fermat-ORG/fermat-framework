@@ -10,6 +10,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppCon
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
@@ -37,7 +42,13 @@ public class BitcoinWalletFermatAppConnection extends AppConnections{
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return null;
+        return  new PluginVersionReference(
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Layers.WALLET_MODULE,
+                Plugins.CRYPTO_WALLET,
+                Developers.BITDUBAI,
+                new Version()
+            );
     }
 
     @Override

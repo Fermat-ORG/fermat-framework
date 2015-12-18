@@ -51,7 +51,7 @@
                         android:paddingBottom="4dp"/>
 
                     <ImageView
-                        android:layout_width="50dp"
+                        android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:paddingBottom="10dp"
                         android:src="@drawable/ic_contact_question"
@@ -62,7 +62,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.7dp"
-                    android:layout_marginRight="64dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:background="@drawable/round_corner_line_dialog"/>
 
 
@@ -71,8 +72,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5sp"
-                    android:text="In this wallet you can have two different kind of contacts"
+                    android:paddingTop="7sp"
+                    android:text="In this wallet you can have two different types of contacts:"
                     android:gravity="center_horizontal"
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="20dp"
@@ -84,8 +85,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#dad9d9"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     />
 
@@ -102,6 +103,7 @@
                         android:layout_height="50dp"
                         android:background="@drawable/bitcoin_wallet_2"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="15dp"
                         />
 
 
@@ -110,11 +112,10 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:paddingBottom="5dp"
-                        android:paddingTop="5sp"
-                        android:text="Users of other Fermat wallets: you don´t need to mannually exchange addresses with them"
-                        android:gravity="center_horizontal"
+                        android:text="Users of other Fermat wallets: you don't need to manually exchange addresses with them"
+                        android:gravity="right"
                         android:layout_gravity="center_horizontal"
-                        android:paddingLeft="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="#1d1d26"
                         android:paddingRight="30dp"
                         />
@@ -126,8 +127,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#dad9d9"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"/>
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -140,6 +141,7 @@
                         android:layout_height="50dp"
                         android:background="@drawable/ic_04"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="15dp"
                         />
 
 
@@ -148,11 +150,10 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:paddingBottom="5dp"
-                        android:paddingTop="12sp"
                         android:text="Users of other wallets outside Fermat: You need to exchange addresses manually"
-                        android:gravity="center_horizontal"
+                        android:gravity="right"
                         android:layout_gravity="center_horizontal"
-                        android:paddingLeft="20dp"
+                        android:paddingLeft="16dp"
                         android:textColor="#1d1d26"
                         android:paddingRight="30dp"/>
 
@@ -163,8 +164,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#dad9d9"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"/>
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"/>
 
 
 
@@ -174,7 +175,7 @@
                     android:textSize="14sp"
                     android:paddingBottom="5dp"
                     android:paddingTop="12sp"
-                    android:text="Select which kind of contact you want to add:"                    android:gravity="center_horizontal"
+                    android:text="Select below which type of contact you want to add:"                    android:gravity="center_horizontal"
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="20dp"
                     android:textColor="#1d1d26"
@@ -185,15 +186,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#dad9d9"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     >
                     <CheckBox
                         android:layout_width="wrap_content"
@@ -212,7 +214,11 @@
                         android:layout_marginRight="32dp"
                         android:gravity="center_vertical"/>
                 </RelativeLayout>
+
+
             </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -234,15 +240,17 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
+                    android:id="@+id/add_fermat_user"
                     android:text="Add Fermat Contact"
                     android:textSize="12dp"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginLeft="16dp">
+                android:layout_marginLeft="20dp">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -255,6 +263,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="Add External Contact"
+                    android:id="@+id/add_extra_user"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
                     />

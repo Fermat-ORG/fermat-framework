@@ -30,7 +30,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.OutgoingIntraActorTransactionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.OutgoingIntraActorTransactionProcessorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -123,7 +123,8 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
                                                                                             this.bitcoinWalletManager,
                                                                                             this.outgoingIntraActorDao,
                                                                                             this.transactionHandlerFactory,
-                                                                                            this.cryptoTransmissionNetworkServiceManager);
+                                                                                            this.cryptoTransmissionNetworkServiceManager,
+                                                                                            this.eventManager);
             this.transactionProcessorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;

@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +34,14 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -49,6 +53,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.IndexBarView;
@@ -153,7 +158,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         super.onCreate(savedInstanceState);
         referenceWalletSession =(ReferenceWalletSession) appSession;
         setRetainInstance(true);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
         cryptoWalletManager = referenceWalletSession.getModuleManager();
@@ -183,10 +188,9 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             handlerTimer.postDelayed(new Runnable(){
                 public void run() {
                     if(walletContactRecords.isEmpty()){
-                        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(),referenceWalletSession,null);
-                        contactsTutorialPart1.show();
+                        setUpTutorial();
                     }
-                }}, 500);
+                }}, 300);
             return rootView;
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -252,10 +256,24 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
-        } catch (CantGetActiveLoginIdentityException e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            final CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
+            IntraUserLoginIdentity intraUserLoginIdentity = new IntraUserLoginIdentity() {
+                @Override
+                public String getAlias() {
+                    return cryptoWalletIntraUserIdentity.getAlias();
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return cryptoWalletIntraUserIdentity.getPublicKey();
+                }
+
+                @Override
+                public byte[] getProfileImage() {
+                    return cryptoWalletIntraUserIdentity.getProfileImage();
+                }
+            };
+            getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), intraUserLoginIdentity));
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -276,6 +294,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                     mPinnedHeaderAdapter.notifyDataSetChanged();
                 }
             }
+
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
@@ -287,13 +306,39 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         // Apply any required UI change now that the Fragment is visible.
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.ic_contact_question)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //inflater.inflate(R.menu.home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            int id = item.getItemId();
+
+            if(id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT){
+                setUpTutorial();
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void onRefresh(){
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
         } catch (CantGetAllWalletContactsException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
-        } catch (CantGetActiveLoginIdentityException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         } catch (Exception e) {
@@ -309,6 +354,17 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             mEmptyView.setVisibility(View.GONE);
         }
         refreshAdapter();
+    }
+
+    private void setUpTutorial(){
+        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(),referenceWalletSession,null);
+        contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                lauchCreateContactDialog(false);
+            }
+        });
+        contactsTutorialPart1.show();
     }
 
     private void refreshAdapter(){

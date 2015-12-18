@@ -3,6 +3,7 @@ package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.develop
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionParameters;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -14,13 +15,13 @@ public class CashHoldTransactionParametersImpl implements CashHoldTransactionPar
     private String publicKeyWallet;
     private String publicKeyActor;
     private String publicKeyPlugin;
-    private float amount;
+    private BigDecimal amount;
     FiatCurrency currency;
     private String memo;
 
 
     public CashHoldTransactionParametersImpl( UUID transactionId, String publicKeyWallet, String publicKeyActor,
-                                              String publicKeyPlugin, float amount, FiatCurrency currency, String memo)
+                                              String publicKeyPlugin, BigDecimal amount, FiatCurrency currency, String memo)
     {
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
@@ -51,7 +52,7 @@ public class CashHoldTransactionParametersImpl implements CashHoldTransactionPar
     public String getPublicKeyPlugin() { return this.publicKeyPlugin; }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
