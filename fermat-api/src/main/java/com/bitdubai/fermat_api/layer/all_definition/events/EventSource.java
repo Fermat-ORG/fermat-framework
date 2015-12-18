@@ -31,6 +31,7 @@ public enum EventSource implements FermatEnum {
     DEVICE_CONNECTIVITY                     ("DCO"),
     DISCOUNT_WALLET_BASIC_WALLET_PLUGIN     ("DWB"),
     INCOMING_EXTRA_USER                     ("IEU"),
+    OUTGOING_INTRA_USER                     ("OIU"),
     INCOMING_INTRA_USER                     ("IIU"),
     MIDDLEWARE_APP_RUNTIME_PLUGIN           ("MAR"),
     MIDDLEWARE_MONEY_REQUEST_PLUGIN         ("MMR"),
