@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -52,7 +53,7 @@ public class CryptoBrokerNavigationViewPainter implements com.bitdubai.fermat_an
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        return (RelativeLayout) layoutInflater.inflate(R.layout.cbw_navigation_view_bottom, base, true);
+        return (LinearLayout) layoutInflater.inflate(R.layout.cbw_navigation_view_bottom, base, true);
     }
 
     @Override
