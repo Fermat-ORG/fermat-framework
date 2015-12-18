@@ -55,6 +55,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.Anima
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -131,6 +132,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable(){
+                public void run() {
+                        setUpPresentation();
+                }}, 500);
         } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
@@ -138,6 +144,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+    }
+
+    private void setUpPresentation() {
+        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog = new PresentationBitcoinWalletDialog(getActivity(),referenceWalletSession,null);
+        presentationBitcoinWalletDialog.show();
     }
 
     @Override

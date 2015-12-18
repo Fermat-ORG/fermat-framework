@@ -12,7 +12,12 @@ import android.graphics.drawable.Drawable;
 
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
-
+/**
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
+ */
 public class BadgeDrawable extends Drawable {
 
     private float mTextSize;

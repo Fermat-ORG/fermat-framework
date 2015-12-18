@@ -19,8 +19,10 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
- * Created by Joaquin C on 12/11/15.
- * Modified by Jose Manuel De Sousa 08/12/2015
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
@@ -38,8 +40,8 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
     private FermatButton positiveBtn;
     private FermatButton negativeBtn;
 
-    public AcceptDialog(Activity a, CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+    public AcceptDialog(Activity a, CryptoBrokerCommunitySubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
+        super(a, intraUserSubAppSession, subAppResources);
         this.intraUserInformation = intraUserInformation;
         this.identity = identity;
     }
@@ -58,7 +60,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Conect");
+        title.setText("Connect");
         description.setText("Do you want to accept");
         userName.setText(intraUserInformation.getName());
 
@@ -70,7 +72,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 
@@ -82,7 +84,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
             try {
                 if (intraUserInformation != null && identity != null) {
                     ((CryptoBrokerCommunitySubAppSession) getSession()).getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
-                    Toast.makeText(getContext(), intraUserInformation.getName() + " accepted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
