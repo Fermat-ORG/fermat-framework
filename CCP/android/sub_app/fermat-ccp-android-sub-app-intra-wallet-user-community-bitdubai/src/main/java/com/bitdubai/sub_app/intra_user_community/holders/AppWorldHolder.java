@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.intra_user_community.holders;
 
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
@@ -15,11 +14,8 @@ import com.bitdubai.sub_app.intra_user_community.R;
  */
 public class AppWorldHolder extends FermatViewHolder {
 
-    public FermatTextView city;
-    public FermatTextView country;
     public SquareImageView thumbnail;
     public FermatTextView name;
-    public LinearLayout locationContainer;
     public ImageView imageView_connection;
 
     /**
@@ -29,11 +25,7 @@ public class AppWorldHolder extends FermatViewHolder {
      */
     public AppWorldHolder(View itemView) {
         super(itemView);
-        locationContainer = (LinearLayout) itemView.findViewById(R.id.location);
-        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_Image);
+        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
-        imageView_connection = (ImageView) itemView.findViewById(R.id.imageView_connection);
-        city =(FermatTextView)itemView.findViewById(R.id.community_city);
-        country = (FermatTextView)itemView.findViewById(R.id.community_country);
     }
 }

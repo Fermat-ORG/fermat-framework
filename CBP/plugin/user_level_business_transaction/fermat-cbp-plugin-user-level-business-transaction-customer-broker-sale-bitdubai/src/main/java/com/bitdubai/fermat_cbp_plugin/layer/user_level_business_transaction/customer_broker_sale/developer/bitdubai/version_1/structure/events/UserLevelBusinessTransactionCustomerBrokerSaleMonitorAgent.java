@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cus
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -10,8 +12,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -22,8 +26,19 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_sale.interfaces.CustomerBrokerSale;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
@@ -51,6 +66,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
     private final FiatIndexManager fiatIndexManager;
+    private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private final BankMoneyRestockManager bankMoneyRestockManager;
+    private final CashMoneyRestockManager cashMoneyRestockManager;
+    private final CryptoMoneyRestockManager cryptoMoneyRestockManager;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
                                                                       CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
@@ -59,7 +78,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                                                       OpenContractManager openContractManager,
                                                                       CloseContractManager closeContractManager,
                                                                       CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-                                                                      FiatIndexManager fiatIndexManager) {
+                                                                      FiatIndexManager fiatIndexManager,
+                                                                      CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                                      BankMoneyRestockManager bankMoneyRestockManager,
+                                                                      CashMoneyRestockManager cashMoneyRestockManager,
+                                                                      CryptoMoneyRestockManager cryptoMoneyRestockManager) {
 
         this.errorManager                                              = errorManager;
         this.customerBrokerSaleNegotiationManager                      = customerBrokerSaleNegotiationManager;
@@ -67,6 +90,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
         this.closeContractManager                                      = closeContractManager;
         this.customerBrokerContractSaleManager                         = customerBrokerContractSaleManager;
         this.fiatIndexManager                                          = fiatIndexManager;
+        this.cryptoBrokerWalletManager                                 = cryptoBrokerWalletManager;
+        this.bankMoneyRestockManager                                   = bankMoneyRestockManager;
+        this.cashMoneyRestockManager                                   = cashMoneyRestockManager;
+        this.cryptoMoneyRestockManager                                 = cryptoMoneyRestockManager;
+
         this.userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao(pluginDatabaseSystem, pluginId);
     }
     @Override
@@ -132,6 +160,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
 
         private void doTheMainTask(){
             try {
+                CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
+                //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
+                CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0);
                 //Se verifica el cierre de la negociacion
                 for (CustomerBrokerSaleNegotiation records : customerBrokerSaleNegotiationManager.getNegotiationsByStatus(NegotiationStatus.CLOSED))
                 {
@@ -180,13 +211,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
 
                             }
                             //Recorrer las clausulas del contrato
-                            for (ContractClause contractClause : customerBrokerContractSale.getContractClause())
-                            {
-                                if (contractClause.getStatus().getCode() != ContractClauseStatus.EXECUTED.getCode())
-                                {
-                                    //Debemos enviar notificacion de las distintas clausulas segun se estatus
-                                }
-                            }
+//                            for (ContractClause contractClause : customerBrokerContractSale.getContractClause())
+//                            {
+//                                if (contractClause.getStatus().getCode() != ContractClauseStatus.EXECUTED.getCode())
+//                                {
+//                                    //Debemos enviar notificacion de las distintas clausulas segun se estatus
+//                                }
+//                            }
                         }
                     }
                 }
@@ -199,6 +230,62 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                         {
                             //Si se detecta la realización de un pago se procede actulizar el estatus de la transacción y a monitorear la llegada de la mercadería.
                             //Se verifica si el broker configuró procesar Restock de manera automática
+                            int sw = 0;
+                            if (cryptoBrokerWalletSettingSpread.getRestockAutomatic())
+                            {
+                                //Recorrer las clausulas del contrato
+                                for (ContractClause contractClause : customerBrokerContractSale.getContractClause())
+                                {
+                                    if (contractClause.getType().getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode())
+                                    {
+                                        sw = 1;
+                                    }
+                                    if (contractClause.getType().getCode() == ContractClauseType.BANK_TRANSFER.getCode())
+                                    {
+                                        sw = 2;
+                                    }
+                                    if (contractClause.getType().getCode() == ContractClauseType.CAHS_DELIVERY.getCode() && contractClause.getType().getCode() == ContractClauseType.CASH_ON_HAND.getCode())
+                                    {
+                                        sw = 3;
+                                    }
+                                }
+                                //TODO: Datos de amount, priceReference, CryptoCurrency, FiatCurrency, cbpWalletPublicKey, bnkWalletPublicKey, cshWalletPublicKey, cryWalletPublicKey de donde sale
+                                //
+                                if (sw == 1) {
+                                    cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
+                                            CryptoCurrency.BITCOIN,
+                                            "walletPublicKey",
+                                            "walletPublicKey",
+                                            null,
+                                            "memo",
+                                            null,
+                                            OriginTransaction.STOCK_INITIAL);
+                                }
+                                //
+                                if (sw == 2) {
+                                    bankMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
+                                            FiatCurrency.US_DOLLAR,
+                                            "walletPublicKey",
+                                            "walletPublicKey",
+                                            "bankAccount",
+                                            null,
+                                            "memo",
+                                            null,
+                                            OriginTransaction.STOCK_INITIAL);
+                                }
+                                //
+                                if (sw == 3) {
+                                    cashMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
+                                            FiatCurrency.US_DOLLAR,
+                                            "walletPublicKey",
+                                            "walletPublicKey",
+                                            "cashReference",
+                                            null,
+                                            "memo",
+                                            null,
+                                            OriginTransaction.STOCK_INITIAL);
+                                }
+                            }
                             customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
                             userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                         }
@@ -278,6 +365,16 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
             } catch (CantCloseContractException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantGetIndexException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantGetCryptoBrokerWalletSettingException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CryptoBrokerWalletNotFoundException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantCreateCryptoMoneyRestockException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantCreateBankMoneyRestockException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantCreateCashMoneyRestockException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
