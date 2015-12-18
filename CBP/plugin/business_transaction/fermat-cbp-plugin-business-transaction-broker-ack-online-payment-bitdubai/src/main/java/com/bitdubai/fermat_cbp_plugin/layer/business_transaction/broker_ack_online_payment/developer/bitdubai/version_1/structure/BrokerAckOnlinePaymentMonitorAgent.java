@@ -33,7 +33,9 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
@@ -474,6 +476,16 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                     }
                     brokerAckOnlinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
+                if(eventTypeCode.equals(EventType.NEW_CONTRACT_OPENED.getCode())){
+                    //the eventId from this event is the contractId - Broker side
+                    CustomerBrokerContractSale customerBrokerContractSale=
+                            customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
+                                    eventId);
+                    brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
+                            customerBrokerContractSale);
+
+                }
+
             } catch (CantUpdateRecordException e) {
                 e.printStackTrace();
             } catch (CantConfirmTransactionException e) {
@@ -485,6 +497,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             } catch (CantInsertRecordException e) {
                 e.printStackTrace();
             } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+                e.printStackTrace();
+            } catch (CantGetListCustomerBrokerContractSaleException e) {
                 e.printStackTrace();
             }
 

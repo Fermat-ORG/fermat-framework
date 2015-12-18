@@ -726,7 +726,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 customerBrokerContractSale.getPublicKeyBroker());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION.getCode());
+                ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT.getCode());
 
         return record;
     }
