@@ -22,8 +22,11 @@ public interface CustomerBrokerUpdateManager {
     //UPDATE THE SALE NEGOTIATION TRANSACTION
     void createCustomerBrokerUpdateSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
 
-    //CANCEL THE NEGOTIATION INDICATE
-    void cancelNegotiation(UUID negotiationId) throws CantCancelNegotiationException;
+    //CANCEL THE PURCHASE NEGOTIATION INDICATE
+    void cancelNegotiation(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCancelNegotiationException;
+
+    //CANCEL THE SALE NEGOTIATION INDICATE
+    void cancelNegotiation(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCancelNegotiationException;
 
     //GET THE NEW NEGOTIATION TRANSACTION FOR THE INDICATE ID
     CustomerBrokerUpdate getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerUpdateNegotiationTransactionException;

@@ -15,6 +15,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdateManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantCancelPurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantCancelSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerUpdateNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantUpdatePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantUpdateSaleNegotiationTransactionException;
@@ -65,12 +67,15 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
         } catch (Exception e){
             throw new CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
+
     }
 
     //UPDATE THE SALE NEGOTIATION TRANSACTION
     public void createCustomerBrokerUpdateSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation)
         throws CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException{
+
         try {
+
             customerBrokerUpdateSaleNegotiationTransaction = new CustomerBrokerUpdateSaleNegotiationTransaction(
                 customerBrokerSaleNegotiationManager,
                 customerBrokerUpdateNegotiationTransactionDatabaseDao
@@ -82,10 +87,43 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
         } catch (Exception e){
             throw new CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
+
     }
 
-    //CANCEL THE NEGOTIATION INDICATE
-    public void cancelNegotiation(UUID negotiationId) throws CantCancelNegotiationException{
+    //CANCEL THE PURCHASE NEGOTIATION INDICATE
+    public void cancelNegotiation(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCancelNegotiationException{
+
+        try {
+
+            customerBrokerUpdatePurchaseNegotiationTransaction = new CustomerBrokerUpdatePurchaseNegotiationTransaction(
+                    customerBrokerPurchaseNegotiationManager,
+                    customerBrokerUpdateNegotiationTransactionDatabaseDao
+            );
+            customerBrokerUpdatePurchaseNegotiationTransaction.cancelPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+
+        } catch (CantCancelPurchaseNegotiationTransactionException e){
+            throw new CantCancelNegotiationException(e.getMessage(), e, CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+        } catch (Exception e){
+            throw new CantCancelNegotiationException(e.getMessage(), FermatException.wrapException(e), CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+        }
+
+    }
+
+    //CANCEL THE SALE NEGOTIATION INDICATE
+    public void cancelNegotiation(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCancelNegotiationException{
+
+        try {
+            customerBrokerUpdateSaleNegotiationTransaction = new CustomerBrokerUpdateSaleNegotiationTransaction(
+                    customerBrokerSaleNegotiationManager,
+                    customerBrokerUpdateNegotiationTransactionDatabaseDao
+            );
+            customerBrokerUpdateSaleNegotiationTransaction.cancelSaleNegotiationTranasction(customerBrokerSaleNegotiation);
+
+        } catch (CantCancelSaleNegotiationTransactionException e){
+            throw new CantCancelNegotiationException(e.getMessage(), e, CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+        } catch (Exception e){
+            throw new CantCancelNegotiationException(e.getMessage(), FermatException.wrapException(e), CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
+        }
         
     }
 
