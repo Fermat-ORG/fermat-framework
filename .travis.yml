@@ -6,6 +6,7 @@ jdk:
 cache: false
 # Use the Travis Container-Based Infrastructure (see #203)
 sudo: false
+USE_DEB=false
 env:
   global:
   - TERM=dumb
@@ -23,8 +24,8 @@ android:
     - android-23
 
     # Additional components
-    - extra
-    - add-on
+    #- extra
+    #- add-on
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
@@ -39,5 +40,5 @@ install:
   - 'echo "Download Gradle Wrapper"; chmod +x ./gradlew; ls -l gradlew; ./gradlew -v'
 
 script:
-  - ./gradlew build --info
+  - ./gradlew build
 
