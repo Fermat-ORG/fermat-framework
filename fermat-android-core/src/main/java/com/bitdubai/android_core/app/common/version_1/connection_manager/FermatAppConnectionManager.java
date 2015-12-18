@@ -77,6 +77,9 @@ public class FermatAppConnectionManager {
             case "sub_app_crypto_customer_identity":
                 fermatAppConnection = new CryptoCustomerIdentityFermatAppConnection(activity);
                 break;
+            case "public_key_pip_developer_sub_app":
+                fermatAppConnection = new DeveloperFermatAppConnection(activity);
+                break;
         }
         return fermatAppConnection;
     }
