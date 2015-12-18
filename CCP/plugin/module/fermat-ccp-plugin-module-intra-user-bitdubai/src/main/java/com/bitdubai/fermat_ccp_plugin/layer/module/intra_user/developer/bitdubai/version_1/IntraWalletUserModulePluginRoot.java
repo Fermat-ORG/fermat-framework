@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingCacheSuggestionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -272,6 +273,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             return  intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
         }
         catch (ErrorSearchingSuggestionsException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+        }
+    }
+
+    @Override
+    public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
+        try {
+            return  intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
+        }
+        catch (ErrorSearchingCacheSuggestionsException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
         }
         catch (Exception e) {
