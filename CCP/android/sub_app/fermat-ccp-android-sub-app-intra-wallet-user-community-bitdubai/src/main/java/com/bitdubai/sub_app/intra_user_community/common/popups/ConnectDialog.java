@@ -105,7 +105,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 

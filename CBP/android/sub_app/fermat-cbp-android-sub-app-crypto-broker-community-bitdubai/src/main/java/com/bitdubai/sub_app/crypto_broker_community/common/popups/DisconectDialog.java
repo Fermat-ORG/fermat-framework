@@ -24,11 +24,11 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
 
 
 /**
- * Created by Matias Furszyfer on 2015.08.12..
- * Changed by Jose Manuel De Sousa Dos Santos on 2015.12.03
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
-
-@SuppressWarnings("FieldCanBeLocal")
 public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
@@ -49,8 +49,8 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
     IntraUserLoginIdentity identity;
 
 
-    public DisconectDialog(Activity a, CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+    public DisconectDialog(Activity a, CryptoBrokerCommunitySubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
+        super(a, intraUserSubAppSession, subAppResources);
         this.intraUserInformation = intraUserInformation;
         this.identity = identity;
     }
@@ -94,7 +94,7 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 
