@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 13.11.2015.
  */
-public class CantCreateCustomerBrokerUpdateNegotiationTransactionException extends FermatException {
+public class CantCancelNegotiationException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE CUSTOMER BROKER NEW NEGOTIATION TRANSACTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T CANCEL NEGOTIATION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantCreateCustomerBrokerUpdateNegotiationTransactionException exten
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateCustomerBrokerUpdateNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantCancelNegotiationException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

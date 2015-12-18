@@ -41,6 +41,9 @@ public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWa
     private CryptoBrokerWalletModuleManager moduleManager;
 
 
+    public CryptoBrokerWalletSession() {
+    }
+
     /**
      * Create a session for the Wallet Store SubApp
      *

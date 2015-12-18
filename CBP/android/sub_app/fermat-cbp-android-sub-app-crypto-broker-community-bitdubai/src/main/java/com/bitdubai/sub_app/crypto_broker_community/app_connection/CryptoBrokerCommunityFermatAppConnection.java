@@ -39,9 +39,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
-                Plugins.INTRA_WALLET_USER,
+                Plugins.CRYPTO_BROKER_COMMUNITY,
                 Developers.BITDUBAI,
                 new Version()
         );
