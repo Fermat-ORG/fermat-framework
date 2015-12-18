@@ -8,8 +8,8 @@
     <!-- Home transactions -->
     <string name="no_transactions">There are no transactions</string>
     <string name="transaction_img" translatable="false">transaction_img</string>
-    <string name="withdrawal_transaction_text" translatable="false">Withdrawal</string>
-    <string name="deposit_transaction_text" translatable="false">Deposit</string>
+    <string name="withdrawal_transaction_text" translatable="false">WITHDRAWAL</string>
+    <string name="deposit_transaction_text" translatable="false">DEPOSIT</string>
 
 
 
