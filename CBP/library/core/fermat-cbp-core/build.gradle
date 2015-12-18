@@ -73,6 +73,8 @@ dependencies {
     //Sub App Module
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai')
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai')
 
     //Wallet Module
     compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')

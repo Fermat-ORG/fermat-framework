@@ -58,7 +58,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Conect");
+        title.setText("Connect");
         description.setText("Do you want to accept");
         userName.setText(intraUserInformation.getName());
 
@@ -70,7 +70,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 

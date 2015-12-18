@@ -1,6 +1,9 @@
 package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,22 +28,26 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.DisconectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
+import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
+import com.bitdubai.sub_app.crypto_broker_community.interfaces.MessageReceiver;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
- * Creado por Jose Manuel De Sousa on 29/11/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
-@SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionOtherProfileFragment extends FermatFragment {
+public class ConnectionOtherProfileFragment extends FermatFragment implements MessageReceiver {
 
-    private Resources res;
     public static final String INTRA_USER_SELECTED = "intra_user";
+    private Resources res;
     private View rootView;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
+    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
@@ -65,9 +72,9 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
+        intraUserSubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
         intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
-        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
+        moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         intraUserInformation = (IntraUserInformation) appSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
 
@@ -77,7 +84,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.intra_user_other_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_connections_other_profile, container, false);
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
         userEmail = (FermatTextView) rootView.findViewById(R.id.email);
@@ -125,9 +132,10 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
                 ConnectDialog connectDialog;
                 try {
                     connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
-                    connectDialog.setTitle("Connect");
-                    connectDialog.setDescription("Want connect with ");
+                    connectDialog.setTitle("Connection Request");
+                    connectDialog.setDescription("Do you want to send ");
                     connectDialog.setUsername(intraUserInformation.getName());
+                    connectDialog.setSecondDescription("a connection request");
                     connectDialog.show();
                 } catch (CantGetActiveLoginIdentityException e) {
                     e.printStackTrace();
@@ -165,13 +173,31 @@ public class ConnectionOtherProfileFragment extends FermatFragment {
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items
          */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
-        setNavigationDrawer(navigationViewAdapter);
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
+    }
+
+    @Override
+    public void onMessageReceive(Context context, Intent data) {
+        Bundle extras = data != null ? data.getExtras() : null;
+        if (extras != null && extras.containsKey(Constants.BROADCAST_CONNECTED_UPDATE)) {
+            disconnect.setVisibility(View.VISIBLE);
+            connect.setVisibility(View.GONE);
+        }
+        if(extras != null && extras.containsKey(Constants.BROADCAST_DISCONNECTED_UPDATE)){
+            disconnect.setVisibility(View.GONE);
+            connect.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public IntentFilter getBroadcastIntentChannel() {
+        return new IntentFilter(Constants.LOCAL_BROADCAST_CHANNEL);
     }
 
 }

@@ -5,7 +5,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -147,8 +151,8 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         return this.paymentRequest;
     }
 
-    public IntraUserModuleManager getIntraUserModuleManager() {
-        return intraUserModuleManager;
+    public CryptoWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
+        return getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
     }
 
 

@@ -14,7 +14,10 @@ import com.bitdubai.sub_app.crypto_broker_community.holders.AppNotificationsHold
 import java.util.List;
 
 /**
- * @author Jose Manuel De Sousa.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, AppNotificationsHolder> {
 
@@ -29,7 +32,7 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.wallet_notification_row;
+        return R.layout.row_connection_notification;
     }
 
     @Override

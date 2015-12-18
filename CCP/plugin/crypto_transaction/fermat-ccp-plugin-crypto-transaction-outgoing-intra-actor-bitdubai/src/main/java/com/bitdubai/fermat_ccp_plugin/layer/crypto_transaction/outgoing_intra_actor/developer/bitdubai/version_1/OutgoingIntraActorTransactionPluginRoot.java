@@ -128,7 +128,8 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
                                                                                             this.bitcoinWalletManager,
                                                                                             this.outgoingIntraActorDao,
                                                                                             this.transactionHandlerFactory,
-                                                                                            this.cryptoTransmissionNetworkServiceManager);
+                                                                                            this.cryptoTransmissionNetworkServiceManager,
+                                                                                            this.eventManager);
             this.transactionProcessorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
