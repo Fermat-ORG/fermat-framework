@@ -1,4 +1,0 @@
-[[Platform-SubApps-CashOutPoint]]
-= Cash Out Point
-
-Similar to <<Platform-SubApps-TopUpPoint,top up point>>, this subapp let actors provide the service of buying crypto currency in exchange of fiat currency.
