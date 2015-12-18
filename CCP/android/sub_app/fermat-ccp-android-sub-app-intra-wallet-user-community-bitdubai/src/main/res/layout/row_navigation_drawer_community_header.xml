@@ -35,17 +35,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#33ffffff"
-                android:paddingBottom="14dip"
-                android:paddingLeft="8dip"
-                android:paddingRight="8dip"
-                android:paddingTop="14dip"
+                android:paddingBottom="12dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="12dp"
                 android:text="Unknown"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 app:typeface="ROBOTO_REGULAR"
                 tools:ignore="HardcodedText" />
         </RelativeLayout>
-
     </RelativeLayout>
-
 </RelativeLayout>
