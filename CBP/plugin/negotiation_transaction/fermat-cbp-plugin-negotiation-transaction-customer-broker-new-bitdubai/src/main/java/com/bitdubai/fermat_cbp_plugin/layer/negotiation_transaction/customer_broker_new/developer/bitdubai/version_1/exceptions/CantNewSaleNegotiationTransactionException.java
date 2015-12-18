@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Yordin Alayn on 08.12.15.
  */
 public class CantNewSaleNegotiationTransactionException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "CAN'T PROCESS NEW SALE NEGOTIATION TRANSACTION";
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER NEW. CAN'T PROCESS NEW SALE NEGOTIATION TRANSACTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
