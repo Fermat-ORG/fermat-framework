@@ -58,7 +58,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Conect");
+        title.setText("Connect");
         description.setText("Do you want to accept");
         userName.setText(intraUserInformation.getName());
 
