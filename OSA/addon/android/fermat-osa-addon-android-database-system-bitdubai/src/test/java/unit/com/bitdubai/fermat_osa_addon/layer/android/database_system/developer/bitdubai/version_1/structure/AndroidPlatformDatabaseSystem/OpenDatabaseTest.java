@@ -46,8 +46,6 @@ public class OpenDatabaseTest {
 
     @Test
     public void openDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
-        testDatabase = new AndroidPlatformDatabaseSystem();
-        testDatabase.setContext(mockContext);
         testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).openDatabase(testDatabaseName);
         assertThat(caughtException()).isNull();
@@ -55,8 +53,6 @@ public class OpenDatabaseTest {
 
     @Test
     public void openDatabase_DatabaseInAlreadyOpen_InvokedSuccesfully() throws Exception{
-        testDatabase = new AndroidPlatformDatabaseSystem();
-        testDatabase.setContext(mockContext);
         testDatabase.createDatabase(testDatabaseName);
 
         catchException(testDatabase).openDatabase(testDatabaseName);
@@ -65,8 +61,6 @@ public class OpenDatabaseTest {
 
     @Test
     public void openDatabase_NoDatabaseInPath_ThrowException() throws Exception{
-        testDatabase = new AndroidPlatformDatabaseSystem();
-        testDatabase.setContext(mockContext);
         catchException(testDatabase).openDatabase(testDatabaseName);
         assertThat(caughtException()).isInstanceOf(CantOpenDatabaseException.class);
 
@@ -74,8 +68,6 @@ public class OpenDatabaseTest {
 
     @Test
     public void openDatabase_DatabaseInPath_InvokedSuccesfully1() throws Exception{
-        testDatabase = new AndroidPlatformDatabaseSystem();
-        testDatabase.setContext(mockContext);
         testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).openDatabase(testDatabaseName);
         assertThat(caughtException()).isNull();

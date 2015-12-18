@@ -17,7 +17,7 @@ public interface BrokerAckPaymentManager extends FermatManager {
      * @param contractHash
      * @throws CantAckPaymentException
      */
-    void ackPayment(String walletPublicKey, String contractHash)throws CantAckPaymentException;
+    //void ackPayment(String walletPublicKey, String contractHash)throws CantAckPaymentException;
 
     /**
      * This method returns the ContractTransactionStatus by contractHash

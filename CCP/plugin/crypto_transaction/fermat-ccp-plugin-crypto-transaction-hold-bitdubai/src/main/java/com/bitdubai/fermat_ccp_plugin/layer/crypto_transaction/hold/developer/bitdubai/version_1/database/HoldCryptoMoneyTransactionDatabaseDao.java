@@ -87,7 +87,7 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
 
         return table.getRecords().isEmpty();
@@ -97,7 +97,7 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         DatabaseTable table = getDatabaseTable(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
 
@@ -139,7 +139,7 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, holdCryptoRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, holdCryptoRecord);
             }
 

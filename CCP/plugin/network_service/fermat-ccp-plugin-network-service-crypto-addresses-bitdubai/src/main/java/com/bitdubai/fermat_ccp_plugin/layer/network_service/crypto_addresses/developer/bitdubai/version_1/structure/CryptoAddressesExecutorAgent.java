@@ -326,7 +326,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
             return true;
         }
-
+        poolConnectionsWaitingForResponse.remove(actorPublicKey);
         return false;
     }
 

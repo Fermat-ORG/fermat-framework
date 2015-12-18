@@ -224,7 +224,7 @@ public class OpenContractBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -248,7 +248,7 @@ public class OpenContractBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -326,7 +326,7 @@ public class OpenContractBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseContractTable();
             List<String> contractHashList=new ArrayList<>();
             String contractHash;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -353,7 +353,7 @@ public class OpenContractBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseEventsTable();
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
                     DatabaseFilterType.EQUAL);
@@ -379,7 +379,7 @@ public class OpenContractBusinessTransactionDao {
     public void updateEventStatus(String eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -415,7 +415,7 @@ public class OpenContractBusinessTransactionDao {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -468,9 +468,15 @@ public class OpenContractBusinessTransactionDao {
             //LOG.info("record:" + eventRecord.getStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME));
             
         } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Open Contract database");
         } catch(Exception exception){
-            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
         }
     }
 

@@ -18,8 +18,8 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetTypeTest {
-    @Mock
-    private BusinessTransactionTransactionType platformComponentType = mock(BusinessTransactionTransactionType.class);
+
+    private BusinessTransactionTransactionType platformComponentType = BusinessTransactionTransactionType.CONFIRM_MESSAGE;
 
     @Test
     public void getType() throws Exception{

@@ -150,7 +150,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseEventsTable();
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
                     DatabaseFilterType.EQUAL);
@@ -178,7 +178,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -309,7 +309,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseContractTable();
             List<String> contractHashList=new ArrayList<>();
             String contractHash;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -355,7 +355,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -422,7 +422,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
             CustomerOfflinePaymentRecord customerOfflinePaymentRecord=new CustomerOfflinePaymentRecord();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -468,7 +468,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             String contractHash=customerOfflinePaymentRecord.getContractHash();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -615,7 +615,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -661,7 +661,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -683,7 +683,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             CantUpdateRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -723,9 +723,15 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
 
         } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Offline Payment database");
         } catch(Exception exception){
-            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
         }
     }
     

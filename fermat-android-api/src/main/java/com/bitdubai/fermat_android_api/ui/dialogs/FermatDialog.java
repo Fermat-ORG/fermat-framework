@@ -55,7 +55,7 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            requestWindowFeature(setWindowFeacture());
+            requestWindowFeature(setWindowFeature());
             setContentView(setLayoutId());
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH,e);
@@ -83,7 +83,7 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      * Window feacture
      * @return
      */
-    protected abstract int setWindowFeacture();
+    protected abstract int setWindowFeature();
 
     /**
      *

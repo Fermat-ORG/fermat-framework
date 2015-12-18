@@ -19,11 +19,11 @@ public interface CryptoBrokerWalletSetting {
     void saveCryptoBrokerWalletSpreadSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread) throws CantSaveCryptoBrokerWalletSettingException;
     /**
      * This method load the instance saveCryptoBrokerWalletSpreadSetting
-     * @param id
+     * @param
      * @return CryptoBrokerWalletSettingSpread
      * @exception CantSaveCryptoBrokerWalletSettingException
      */
-    CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(UUID id) throws CantGetCryptoBrokerWalletSettingException;
+    CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting() throws CantGetCryptoBrokerWalletSettingException;
 
     /**
      * This method save the instance CryptoBrokerWalletAssociatedSetting

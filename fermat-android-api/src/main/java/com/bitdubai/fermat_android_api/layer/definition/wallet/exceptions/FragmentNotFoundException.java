@@ -4,8 +4,11 @@ import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by eze on 2015.07.20..
+ * updated by lnacosta
  */
 public class FragmentNotFoundException extends FermatException {
+
+    private static final String DEFAULT_MESSAGE = "FRAGMENT NOT FOUND EXCEPTION";
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -17,4 +20,10 @@ public class FragmentNotFoundException extends FermatException {
     public FragmentNotFoundException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public FragmentNotFoundException(String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
+
 }

@@ -83,7 +83,7 @@ public class OutgoingMessageDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -208,7 +208,7 @@ public class OutgoingMessageDao {
              * 1 - load the data base to memory with filters
              */
             DatabaseTable templateTable = getDatabaseTable();
-            templateTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            templateTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             templateTable.loadToMemory();
 
             /*

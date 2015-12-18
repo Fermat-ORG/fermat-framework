@@ -4,13 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +22,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
@@ -40,16 +36,14 @@ import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.MessageReceiver;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
-import java.util.List;
-
 /**
  * Creado por Jose Manuel De Sousa on 29/11/15.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ConnectionOtherProfileFragment extends FermatFragment implements MessageReceiver {
 
-    private Resources res;
     public static final String INTRA_USER_SELECTED = "intra_user";
+    private Resources res;
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
     private ImageView userProfileAvatar;
@@ -88,7 +82,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.intra_user_other_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_connections_other_profile, container, false);
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
         userEmail = (FermatTextView) rootView.findViewById(R.id.email);
@@ -136,9 +130,10 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
                 ConnectDialog connectDialog;
                 try {
                     connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
-                    connectDialog.setTitle("Connect");
-                    connectDialog.setDescription("Want connect with ");
+                    connectDialog.setTitle("Connection Request");
+                    connectDialog.setDescription("Do you want to send ");
                     connectDialog.setUsername(intraUserInformation.getName());
+                    connectDialog.setSecondDescription("a connection request");
                     connectDialog.show();
                 } catch (CantGetActiveLoginIdentityException e) {
                     e.printStackTrace();
@@ -181,8 +176,8 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         /**
          * Navigation view items
          */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
-        setNavigationDrawer(navigationViewAdapter);
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override

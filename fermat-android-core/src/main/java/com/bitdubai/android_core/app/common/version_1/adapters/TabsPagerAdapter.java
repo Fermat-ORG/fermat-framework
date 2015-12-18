@@ -11,6 +11,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
@@ -46,7 +47,7 @@ import java.util.List;
         private TabStrip tabStrip;
 
 
-        private AbstractFermatSession walletSession;
+        private FermatSession walletSession;
 
         private ErrorManager errorManager;
 
@@ -54,18 +55,18 @@ import java.util.List;
 
         private WalletResourcesProviderManager walletResourcesProviderManager;
 
-        private SubAppFragmentFactory subAppFragmentFactory;
+        private FermatFragmentFactory subAppFragmentFactory;
 
         private SubAppSettings subAppSettings;
 
         private SubAppResourcesProviderManager subAppResourcesProviderManager;
 
-        private SubAppsSession subAppsSession;
+        private FermatSession subAppsSession;
 
         private Resources resources;
 
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,SubAppsSession subAppSession,ErrorManager errorManager,SubAppFragmentFactory subAppFragmentFactory,SubAppSettings subAppSettings,SubAppResourcesProviderManager subAppResourcesProviderManager) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,FermatSession subAppSession,ErrorManager errorManager,FermatFragmentFactory subAppFragmentFactory,SubAppSettings subAppSettings,SubAppResourcesProviderManager subAppResourcesProviderManager) {
             super(fm);
             this.context=context;
 
@@ -91,22 +92,20 @@ import java.util.List;
 
         }
 
-    public TabsPagerAdapter(FragmentManager fragmentManager, Context applicationContext, SubAppFragmentFactory subAppFragmentFactory, String fragment, SubAppsSession subAppsSession, SubAppResourcesProviderManager subAppResourcesProviderManager, Resources resources) {
+    public TabsPagerAdapter(FragmentManager fragmentManager, Context applicationContext, FermatFragmentFactory subAppFragmentFactory, String fragment, FermatSession subAppsSession, SubAppResourcesProviderManager subAppResourcesProviderManager, Resources resources) {
         super(fragmentManager);
         this.context=applicationContext;
 
         this.subAppFragmentFactory =subAppFragmentFactory;
         this.subAppsSession = subAppsSession;
         this.onlyFragment = fragment;
-
-        this.subAppFragmentFactory=subAppFragmentFactory;
         this.subAppSettings = subAppSettings;
         this.subAppResourcesProviderManager = subAppResourcesProviderManager;
 
 
     }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
             super(fm);
             this.context=context;
 
@@ -127,7 +126,7 @@ import java.util.List;
 
         }
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
         super(fm);
         this.context=context;
 
@@ -222,7 +221,7 @@ import java.util.List;
 
             try {
                 if(subAppFragmentFactory !=null){
-                    currentFragment= subAppFragmentFactory.getFragment(fragmentCodeType,subAppsSession,subAppSettings,subAppResourcesProviderManager);
+                    currentFragment= subAppFragmentFactory.getFragment(fragmentCodeType, (AbstractFermatSession) subAppsSession,subAppSettings,subAppResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();

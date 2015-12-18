@@ -93,7 +93,7 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
         }
         errorManager = developerSubAppSession.getErrorManager();
         try {
-            ToolManager toolManager = developerSubAppSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getModuleManager();
             logTool = toolManager.getLogTool();
 
         } catch (CantGetLogToolException e) {

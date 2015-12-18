@@ -7,16 +7,17 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
  * Created by franklin on 04/12/15.
  */
 public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransaction {
-    float              runningBookBalance;
-    float              runningAvailableBalance;
-    float              previousBookBalance;
-    float              previousAvailableBalance;
+    BigDecimal              runningBookBalance;
+    BigDecimal              runningAvailableBalance;
+    BigDecimal              previousBookBalance;
+    BigDecimal              previousAvailableBalance;
     UUID               transactionId;
     BalanceType        balanceType;
     TransactionType    transactionType;
@@ -24,16 +25,16 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     FermatEnum         merchandise;
     String             walletPublicKey;
     String             brokerPublicKey;
-    float              amount;
+    BigDecimal         amount;
     long               timestamp;
     String             memo;
-    float              priceReference;
+    BigDecimal         priceReference;
     OriginTransaction originTransaction;
 
-    public CryptoBrokerStockTransactionImpl(float              runningBookBalance,
-                                            float              runningAvailableBalance,
-                                            float              previousBookBalance,
-                                            float              previousAvailableBalance,
+    public CryptoBrokerStockTransactionImpl(BigDecimal         runningBookBalance,
+                                            BigDecimal         runningAvailableBalance,
+                                            BigDecimal         previousBookBalance,
+                                            BigDecimal         previousAvailableBalance,
                                             UUID               transactionId,
                                             BalanceType        balanceType,
                                             TransactionType    transactionType,
@@ -41,10 +42,10 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
                                             FermatEnum         merchandise,
                                             String             walletPublicKey,
                                             String             brokerPublicKey,
-                                            float              amount,
+                                            BigDecimal              amount,
                                             long               timestamp,
                                             String             memo,
-                                            float              priceReference,
+                                            BigDecimal              priceReference,
                                             OriginTransaction originTransaction)
     {
         this.runningBookBalance       = runningBookBalance;
@@ -64,22 +65,22 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
         this.priceReference           = priceReference;
     }
     @Override
-    public float getRunningBookBalance() {
+    public BigDecimal getRunningBookBalance() {
         return runningBookBalance;
     }
 
     @Override
-    public float getRunningAvailableBalance() {
+    public BigDecimal getRunningAvailableBalance() {
         return runningAvailableBalance;
     }
 
     @Override
-    public float getPreviousBookBalance() {
+    public BigDecimal getPreviousBookBalance() {
         return previousBookBalance;
     }
 
     @Override
-    public float getPreviousAvailableBalance() {
+    public BigDecimal getPreviousAvailableBalance() {
         return previousAvailableBalance;
     }
 
@@ -119,7 +120,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -134,7 +135,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     }
 
     @Override
-    public float getPriceReference() {
+    public BigDecimal getPriceReference() {
         return priceReference;
     }
 

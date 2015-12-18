@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
 
+import java.math.BigDecimal;
+
 
 /**
  * Created by franklin on 16/11/15.
@@ -16,9 +18,9 @@ public interface CryptoMoneyRestockManager  extends FermatManager {
             CryptoCurrency cryptoCurrency,
             String cbpWalletPublicKey,
             String cryWalletPublicKey,
-            float amount,
+            BigDecimal amount,
             String memo,
-            float priceReference,
+            BigDecimal priceReference,
             OriginTransaction originTransaction
     ) throws CantCreateCryptoMoneyRestockException;
 }

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -28,13 +29,13 @@ public interface StockTransaction {
 
     String getBrokerPublicKey();
 
-    float getAmount();
+    BigDecimal getAmount();
 
     long getTimestamp();
 
     String getMemo();
 
-    float getPriceReference();
+    BigDecimal getPriceReference();
 
     OriginTransaction getOriginTransaction();
 }

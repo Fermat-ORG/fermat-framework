@@ -152,6 +152,14 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager);
             openContractMonitorAgent.start();
+            /**
+             * Init plugin Manager
+             */
+            closeContractTransactionManager=new CloseContractTransactionManager(
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    transactionTransmissionManager,
+                    closeContractBusinessTransactionDao);
 
             //System.out.println("Close contract starting");
             //Test method
@@ -162,19 +170,37 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting open contract plugin",
-                    "Cannot initialize");
+                    "Cannot initialize plugin database");
         } catch (CantInitializeCloseContractBusinessTransactionDatabaseException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    exception,
+                    "Starting open contract plugin",
+                    "Unexpected Exception");
+        } catch (CantStartServiceException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    exception,
+                    "Starting open contract plugin",
+                    "Cannot start recorder service");
+        } catch (CantSetObjectException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    exception,
+                    "Starting open contract plugin",
+                    "Cannot set an object");
+        } catch (CantStartAgentException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    "Starting open contract plugin",
+                    "Cannot start the monitor agent");
+        } catch (Exception exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting open contract plugin",
                     "Unexpected Exception");
-        } catch (CantStartServiceException e) {
-            e.printStackTrace();
-        } catch (CantSetObjectException e) {
-            e.printStackTrace();
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
         }
 
     }

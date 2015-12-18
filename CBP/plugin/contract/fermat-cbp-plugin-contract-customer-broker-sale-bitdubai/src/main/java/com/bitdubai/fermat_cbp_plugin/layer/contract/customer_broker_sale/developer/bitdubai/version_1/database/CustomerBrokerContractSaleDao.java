@@ -107,7 +107,7 @@ public class CustomerBrokerContractSaleDao {
 
             try {
                 DatabaseTable SaleTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_TABLE_NAME);
-                SaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
+                SaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
                 DatabaseTableRecord recordToUpdate = SaleTable.getEmptyRecord();
                 recordToUpdate.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, status.getCode());
                 SaleTable.updateRecord(recordToUpdate);
@@ -138,7 +138,7 @@ public class CustomerBrokerContractSaleDao {
 
         public CustomerBrokerContractSale getCustomerBrokerSaleContractForcontractID(String contractID) throws CantGetListCustomerBrokerContractSaleException {
             DatabaseTable ContractSaleTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_TABLE_NAME);
-            ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
+            ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
             try {
                 ContractSaleTable.loadToMemory();
             } catch (CantLoadTableToMemoryException e) {
@@ -159,8 +159,8 @@ public class CustomerBrokerContractSaleDao {
 
         public Collection<CustomerBrokerContractSale> getCustomerBrokerContractSaleForStatus(ContractStatus status) throws CantGetListCustomerBrokerContractSaleException {
             DatabaseTable ContractSaleTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_TABLE_NAME);
-            ContractSaleTable.setFilterOrder(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-            ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            ContractSaleTable.addFilterOrder(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATA_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
             try {
                 ContractSaleTable.loadToMemory();
                 List<DatabaseTableRecord> records = ContractSaleTable.getRecords();
@@ -188,7 +188,7 @@ public class CustomerBrokerContractSaleDao {
 
                     SortedMap listHistory  = new TreeMap(reverseOrder());
 
-                    ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.COMPLETED.getCode(), DatabaseFilterType.EQUAL);
+                    ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.COMPLETED.getCode(), DatabaseFilterType.EQUAL);
                     ContractSaleTable.loadToMemory();
                     Collection<DatabaseTableRecord> r1 = ContractSaleTable.getRecords();
                     ContractSaleTable.clearAllFilters();
@@ -200,7 +200,7 @@ public class CustomerBrokerContractSaleDao {
                         );
                     }
 
-                    ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.CANCELLED.getCode(), DatabaseFilterType.EQUAL);
+                    ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.CANCELLED.getCode(), DatabaseFilterType.EQUAL);
                     ContractSaleTable.loadToMemory();
                     Collection<DatabaseTableRecord> r2 = ContractSaleTable.getRecords();
                     ContractSaleTable.clearAllFilters();
@@ -227,7 +227,7 @@ public class CustomerBrokerContractSaleDao {
                  */
                     SortedMap listWaitingForBroker  = new TreeMap(reverseOrder());
 
-                    ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.PAYMENT_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
+                    ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.PAYMENT_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
                     ContractSaleTable.loadToMemory();
                     Collection<DatabaseTableRecord> r3 = ContractSaleTable.getRecords();
                     ContractSaleTable.clearAllFilters();
@@ -239,7 +239,7 @@ public class CustomerBrokerContractSaleDao {
                         );
                     }
 
-                    ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.PENDING_MERCHANDISE.getCode(), DatabaseFilterType.EQUAL);
+                    ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.PENDING_MERCHANDISE.getCode(), DatabaseFilterType.EQUAL);
                     ContractSaleTable.loadToMemory();
                     Collection<DatabaseTableRecord> r4 = ContractSaleTable.getRecords();
                     ContractSaleTable.clearAllFilters();
@@ -266,7 +266,7 @@ public class CustomerBrokerContractSaleDao {
                  */
                     SortedMap listWaitingForCustomer  = new TreeMap(reverseOrder());
 
-                    ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.MERCHANDISE_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
+                    ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.MERCHANDISE_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
                     ContractSaleTable.loadToMemory();
                     Collection<DatabaseTableRecord> r5 = ContractSaleTable.getRecords();
                     ContractSaleTable.clearAllFilters();
@@ -278,7 +278,7 @@ public class CustomerBrokerContractSaleDao {
                         );
                     }
 
-                    ContractSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.PENDING_PAYMENT.getCode(), DatabaseFilterType.EQUAL);
+                    ContractSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, ContractStatus.PENDING_PAYMENT.getCode(), DatabaseFilterType.EQUAL);
                     ContractSaleTable.loadToMemory();
                     Collection<DatabaseTableRecord> r6 = ContractSaleTable.getRecords();
                     ContractSaleTable.clearAllFilters();
@@ -317,7 +317,7 @@ public class CustomerBrokerContractSaleDao {
         public void createCustomerBrokerSaleContractClauses(String contractID, Collection<ContractClause> clauses) throws CantCreateCustomerBrokerContractSaleException{
             for(ContractClause clause : clauses){
                 DatabaseTable ContractClauseSaleTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
-                ContractClauseSaleTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
+                ContractClauseSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
                 DatabaseTableRecord recordToInsert = ContractClauseSaleTable.getEmptyRecord();;
                 loadRecordAsNewClause(
                         recordToInsert,
@@ -338,8 +338,8 @@ public class CustomerBrokerContractSaleDao {
         public void updateStatusCustomerBrokerSaleContractClauseStatus(String contractID, ContractClause clause) throws CantupdateCustomerBrokerContractSaleException{
             DatabaseTable ContractSaleClauseTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
 
-            ContractSaleClauseTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
-            ContractSaleClauseTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CLAUSE_CONTRACT_TYPE_COLUMN_NAME, clause.getType().getCode(), DatabaseFilterType.EQUAL);
+            ContractSaleClauseTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
+            ContractSaleClauseTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CLAUSE_CONTRACT_TYPE_COLUMN_NAME, clause.getType().getCode(), DatabaseFilterType.EQUAL);
             DatabaseTableRecord recordToUpdate = ContractSaleClauseTable.getEmptyRecord();
 
             recordToUpdate.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CLAUSE_CONTRACT_CURRENT_STATUS_COLUMN_NAME, clause.getStatus().getCode());
@@ -354,7 +354,7 @@ public class CustomerBrokerContractSaleDao {
         public List<ContractClause> getAllCustomerBrokerSaleContractClauses(String contractID) throws CantGetListCustomerBrokerContractSaleException {
             try {
                 DatabaseTable ContractSaleClauseTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
-                ContractSaleClauseTable.setStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
+                ContractSaleClauseTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
                 ContractSaleClauseTable.loadToMemory();
                 List<DatabaseTableRecord> records = ContractSaleClauseTable.getRecords();
                 ContractSaleClauseTable.clearAllFilters();
