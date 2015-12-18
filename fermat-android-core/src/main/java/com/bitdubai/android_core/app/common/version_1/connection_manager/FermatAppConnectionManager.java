@@ -6,6 +6,7 @@ import android.app.Activity;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -18,6 +19,9 @@ public class FermatAppConnectionManager {
         switch (publicKey){
             case "reference_wallet":
                 fermatAppConnection = new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
+                break;
+            case "cash_wallet":
+                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity,intraUserLoginIdentity);
                 break;
             case "test_wallet":
                 fermatAppConnection = null;//return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();

@@ -38,6 +38,8 @@ public class CashMoneyWalletSession extends AbstractFermatSession<InstalledWalle
      */
     private CashMoneyWalletModuleManager moduleManager;
 
+    public CashMoneyWalletSession() {}
+
     public CashMoneyWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager resourcesProviderManager, CashMoneyWalletModuleManager moduleManager) {
         super(wallet.getWalletPublicKey(), wallet, errorManager, moduleManager, resourcesProviderManager);
         this.wallet = wallet;
