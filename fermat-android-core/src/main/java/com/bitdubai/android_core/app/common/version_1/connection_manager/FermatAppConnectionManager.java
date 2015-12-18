@@ -31,7 +31,12 @@ public class FermatAppConnectionManager {
 
         switch (publicKey) {
 
+            // CCP
             case "reference_wallet"                      :return new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
+            case "public_key_ccp_intra_user_identity"    :return new CryptoWalletUserFermatAppConnection(activity);
+            case "public_key_intra_user_commmunity"      :return new CryptoWalletUserCommunityFermatAppConnection(activity);
+
+            // DAP
             case "public_key_dap_asset_issuer_identity"  :return new AssetIssuerFermatAppConnection(activity);
             case "public_key_dap_asset_user_identity"    :return new AssetUserFermatAppConnection(activity);
             case "public_key_dap_redeem_point_identity"  :return new RedeemPointFermatAppConnection(activity);
@@ -39,8 +44,8 @@ public class FermatAppConnectionManager {
             case "public_key_dap_issuer_community"       :return new CommunityAssetIssuerFermatAppConnection(activity);
             case "public_key_dap_user_community"         :return new CommunityAssetUserFermatAppConnection(activity);
             case "public_key_dap_reedem_point_community" :return new CommunityRedeemPointFermatAppConnection(activity);
-            case "public_key_ccp_intra_user_identity"    :return new CryptoWalletUserFermatAppConnection(activity);
-            case "public_key_intra_user_commmunity"      :return new CryptoWalletUserCommunityFermatAppConnection(activity);
+
+            //CBP
             case "crypto_broker_wallet"                  :return new CryptoBrokerWalletFermatAppConnection(activity, null);
             case "crypto_customer_wallet"                :return new CryptoCustomerWalletFermatAppConnection(activity, null);
             case "public_key_crypto_broker_community"    :return new CryptoBrokerCommunityFermatAppConnection(activity);
