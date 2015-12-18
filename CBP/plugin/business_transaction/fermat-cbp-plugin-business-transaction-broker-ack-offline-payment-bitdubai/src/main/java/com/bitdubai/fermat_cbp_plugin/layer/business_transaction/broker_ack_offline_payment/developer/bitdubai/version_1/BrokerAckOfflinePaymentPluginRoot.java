@@ -233,10 +233,11 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             this.brokerAckOfflinePaymentTransactionManager=new
                     BrokerAckOfflinePaymentTransactionManager(
                     brokerAckOfflinePaymentBusinessTransactionDao,
-                    customerBrokerContractSaleManager);
+                    customerBrokerContractSaleManager,
+                    errorManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Broker Ack Offline Payment Starting");
+            //System.out.println("Broker Ack Offline Payment Starting");
         } catch (Exception exception) {
             //TODO: handle correctly this method exceptions
             throw new CantStartPluginException(
