@@ -1,13 +1,16 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.factory;
 
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.AssetEditorFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.EditableAssetsFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.PublishedAssetsFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.settings.AssetFactorySettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * AssetFactoryFragmentFactory
@@ -15,26 +18,36 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.settings.A
  * @author Francisco Vasquez on 15/09/15.
  * @version 1.0
  */
-public class AssetFactoryFragmentFactory extends FermatSubAppFragmentFactory<AssetFactorySession, AssetFactorySettings, AssetFactoryFragmentsEnumType> {
-
+public class AssetFactoryFragmentFactory extends FermatFragmentFactory<AssetFactorySession, AssetFactorySettings, SubAppResourcesProviderManager, AssetFactoryFragmentsEnumType> {
 
     @Override
     public FermatFragment getFermatFragment(AssetFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
-        switch (fragments) {
-            case DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT:
+        if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT))
                 return EditableAssetsFragment.newInstance();
-            case DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT:
+        if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT))
                 return PublishedAssetsFragment.newInstance();
-            case DAP_SUB_APP_ASSET_EDITOR_ACTIVITY:
+        if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY))
                 return AssetEditorFragment.newInstance(EditableAssetsFragment.getAssetForEdit());
-            default:
-                throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
-                        new Exception(), "fermat-dap-android-wallet-asset-issuer", "fragment not found");
-        }
+
+        throw createFragmentNotFoundException(fragments);
     }
 
     @Override
     public AssetFactoryFragmentsEnumType getFermatFragmentEnumType(String key) {
         return AssetFactoryFragmentsEnumType.getValue(key);
+    }
+
+    private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {
+        String possibleReason, context;
+
+        if (fragments == null) {
+            possibleReason = "The parameter 'fragments' is NULL";
+            context = "Null Value";
+        } else {
+            possibleReason = "Not found in switch block";
+            context = fragments.toString();
+        }
+
+        return new FragmentNotFoundException("Fragment not found", new Exception(), context, possibleReason);
     }
 }

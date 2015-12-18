@@ -64,7 +64,7 @@ public class AndroidDatabaseSelectOperatorTest{
             String alias,
             DataBaseSelectOperatorType type
     ){
-        AndroidDatabaseSelectOperator selector = new AndroidDatabaseSelectOperator();
+        AndroidDatabaseSelectOperator selector = new AndroidDatabaseSelectOperator( column, type, alias );
 
         selector.setColumn(column);
         selector.setAliasColumn(alias);

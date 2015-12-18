@@ -14,6 +14,7 @@ public class IntraUserNSInformation implements IntraUserInformation {
     private String name;
     private String publicKey;
     private byte[] profileImage;
+    private String phrase;
 
 
     public IntraUserNSInformation(String name, String publicKey, byte[] profileImage)
@@ -39,6 +40,16 @@ public class IntraUserNSInformation implements IntraUserInformation {
     @Override
     public String getName() {
         return this.name;
+    }
+
+
+    /**
+     * That method returns the Phrase of the intra user
+     * @return the Phrase of the intra user
+     */
+    @Override
+    public String getPhrase() {
+        return this.phrase;
     }
 
     /**
