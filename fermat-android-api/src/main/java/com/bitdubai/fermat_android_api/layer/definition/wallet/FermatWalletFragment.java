@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.26.21..
  */
-public class FermatWalletFragment extends AbstractFermatFragment implements FermatFragments {
+public class FermatWalletFragment extends AbstractFermatFragment {
 
 
     /**

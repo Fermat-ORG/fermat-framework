@@ -202,88 +202,19 @@
 
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="15dp"
-            >
-            <LinearLayout
+            android:layout_height="wrap_content">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:id="@+id/btn_dismiss"
+                android:text="Dismiss"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                />
 
-                <FrameLayout
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:id="@+id/container_john_doe"
-                    android:layout_gravity="center_horizontal"
-                    >
-
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/profile_image_standard"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="6dp"
-                        />
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/image_round_corners"/>
-
-                </FrameLayout>
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_left"
-                    android:text="Be John Doe"
-                    android:textSize="12dp"
-                    android:layout_gravity="center_horizontal"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="16dp"
-                >
-
-                <FrameLayout
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:id="@+id/container_jane_doe"
-                    android:layout_gravity="center_horizontal"
-                    >
-
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/profile_image_standard"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="6dp"
-                        />
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/image_round_corners"/>
-
-                </FrameLayout>
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_right"
-                    android:text="Be Jane ADoe"
-                    android:textSize="12dp"
-                    android:layout_gravity="center_horizontal"
-                    />
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
