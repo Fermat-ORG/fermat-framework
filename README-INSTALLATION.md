@@ -34,7 +34,7 @@ Although there are many ways to configure these tools, we suggest to follow the 
 #### Automatic installation
 
 You can install all the needed software automatically using the script that you can find at the following URL:
-[FermatDeveloperInstaller.sh] (https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
+[FermatDeveloperInstaller.sh] (https://github.com/bitDubai/fermat/blob/master/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
 
 This script the downloads and installs all the software that you need for develop in Fermat.
 
