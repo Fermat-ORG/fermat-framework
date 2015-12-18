@@ -10,14 +10,14 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 /**
  * Created by frank on 12/9/15.
  */
-public class IssuerWalletNavigationViewAdapter extends FermatAdapter<MenuItem, IssuerWalletNavigationItemMenuViewHolder> {
-    protected IssuerWalletNavigationViewAdapter(Context context) {
+public class UserWalletNavigationViewAdapter extends FermatAdapter<MenuItem, UserWalletNavigationItemMenuViewHolder> {
+    protected UserWalletNavigationViewAdapter(Context context) {
         super(context);
     }
 
     @Override
-    protected IssuerWalletNavigationItemMenuViewHolder createHolder(View itemView, int type) {
-        return new IssuerWalletNavigationItemMenuViewHolder(itemView);
+    protected UserWalletNavigationItemMenuViewHolder createHolder(View itemView, int type) {
+        return new UserWalletNavigationItemMenuViewHolder(itemView);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class IssuerWalletNavigationViewAdapter extends FermatAdapter<MenuItem, I
     }
 
     @Override
-    protected void bindHolder(IssuerWalletNavigationItemMenuViewHolder holder, MenuItem data, int position) {
+    protected void bindHolder(UserWalletNavigationItemMenuViewHolder holder, MenuItem data, int position) {
         try {
 
             holder.getLabel().setText(data.getLabel());

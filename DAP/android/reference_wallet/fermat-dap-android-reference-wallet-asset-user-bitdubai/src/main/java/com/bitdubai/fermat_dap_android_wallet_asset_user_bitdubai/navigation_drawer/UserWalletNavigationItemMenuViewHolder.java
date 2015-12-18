@@ -10,7 +10,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 /**
  * Created by frank on 12/9/15.
  */
-public class IssuerWalletNavigationItemMenuViewHolder extends FermatViewHolder {
+public class UserWalletNavigationItemMenuViewHolder extends FermatViewHolder {
     private TextView label;
     private ImageView icon;
     /**
@@ -18,7 +18,7 @@ public class IssuerWalletNavigationItemMenuViewHolder extends FermatViewHolder {
      *
      * @param itemView
      */
-    protected IssuerWalletNavigationItemMenuViewHolder(View itemView) {
+    protected UserWalletNavigationItemMenuViewHolder(View itemView) {
         super(itemView);
         label = (TextView) itemView.findViewById(R.id.menuItemText);
         icon = (ImageView) itemView.findViewById(R.id.menuItemImage);
