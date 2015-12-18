@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +56,9 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException
+     * @throws CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException {
+    public void initializeDatabase() throws CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException {
         try {
              /*
               * Open new database connection
@@ -68,7 +68,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException(cantOpenDatabaseException.getMessage());
         } catch (DatabaseNotFoundException e) {
              /*
               * The database no exist may be the first time the plugin is running on this device,
@@ -84,7 +84,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -103,21 +103,21 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
          */
         List<String> onlinePaymentColumns = new ArrayList<String>();
 
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
+
         /**
          * Table Online Payment addition.
          */
-        DeveloperDatabaseTable onlinePaymentTable = developerObjectFactory.getNewDeveloperDatabaseTable(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TABLE_NAME, onlinePaymentColumns);
+        DeveloperDatabaseTable onlinePaymentTable = developerObjectFactory.getNewDeveloperDatabaseTable(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_TABLE_NAME, onlinePaymentColumns);
         tables.add(onlinePaymentTable);
 
         /**
@@ -133,23 +133,6 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
 
         DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
         tables.add(eventsRecorderTable);
-
-        /**
-         * Incoming money table
-         * */
-        List<String> incomingMoneyColumns = new ArrayList<String>();
-
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME);
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME);
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME);
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME);
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME);
-        incomingMoneyColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME);
-
-        DeveloperDatabaseTable incomingMoneyTable = developerObjectFactory.getNewDeveloperDatabaseTable(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_NAME, incomingMoneyColumns);
-        tables.add(incomingMoneyTable);
 
         return tables;
     }
