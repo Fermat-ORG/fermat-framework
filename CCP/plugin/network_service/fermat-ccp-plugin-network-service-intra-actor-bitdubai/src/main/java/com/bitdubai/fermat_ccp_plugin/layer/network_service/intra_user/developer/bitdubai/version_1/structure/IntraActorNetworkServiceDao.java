@@ -35,43 +35,14 @@ import java.util.UUID;
  */
 public class IntraActorNetworkServiceDao {
 
-    private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID pluginId            ;
-
-    public IntraActorNetworkServiceDao(final PluginDatabaseSystem pluginDatabaseSystem,
-                                   final UUID pluginId) {
-
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-    }
-
     private Database database;
 
-    public void initializeDatabase() throws CantInitializeNetworkIntraUserDataBaseException {
+    public IntraActorNetworkServiceDao(Database database) {
 
-        try {
-
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            throw new CantInitializeNetworkIntraUserDataBaseException("",cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        } catch (DatabaseNotFoundException e) {
-
-            IntraActorNetworkServiceDatabaseFactory databaseFactory = new IntraActorNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                database = databaseFactory.createDatabase(this.pluginId, this.pluginId.toString());
-
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-                throw new CantInitializeNetworkIntraUserDataBaseException("",cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
-            }
-        } catch (Exception e) {
-            throw new CantInitializeNetworkIntraUserDataBaseException("",e, "", "Exception not handled by the plugin, there is a unknown problem and i cannot open the database.");
-        }
+        this.database = database;
     }
+
+
 
     public void saveIntraUserCache(List<IntraUserInformation> intraUserInformationList) throws CantAddIntraWalletCacheUserException {
 
@@ -91,6 +62,7 @@ public class IntraActorNetworkServiceDao {
                  */
                 Date d = new Date();
                 long milliseconds = d.getTime();
+
 
             for (IntraUserInformation intraUserInformation : intraUserInformationList) {
                 DatabaseTableRecord record = table.getEmptyRecord();
