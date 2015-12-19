@@ -72,8 +72,6 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
      */
     private ReferenceWalletSession referenceWalletSession;
     private CryptoWallet cryptoWallet;
-    private IntraUserModuleManager intraUserModuleManager;
-
     /**
      * UI
      */
@@ -375,7 +373,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                             validAddress,
                             notes,
                             referenceWalletSession.getAppPublicKey(),
-                            intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
+                            cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
                             Actors.INTRA_USER,
                             cryptoWalletWalletContact.getActorPublicKey(),
                             cryptoWalletWalletContact.getActorType(),

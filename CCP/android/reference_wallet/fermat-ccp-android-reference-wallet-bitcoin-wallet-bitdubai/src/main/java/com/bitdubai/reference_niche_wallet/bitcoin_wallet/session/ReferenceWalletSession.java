@@ -32,11 +32,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     /**
      * Navigation Estructure
      */
-    /**
-     * Intra User Module
-     */
-    private IntraUserModuleManager intraUserModuleManager;
-
 
     /**
      *  Wallet Settings
@@ -67,11 +62,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     public ReferenceWalletSession() {
     }
 
-    public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager){//,EventManager eventManager){
-        super(installedWallet.getWalletPublicKey(),installedWallet,errorManager,cryptoWalletManager,walletResourcesProviderManager);
-        this.walletSettings=walletSettings;
-        this.intraUserModuleManager = intraUserModuleManager;
-    }
 
 
 
@@ -154,7 +144,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     public CryptoWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
         return getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
     }
-
 
     public String getCommunityConnection() {
         //return searchConnectionPublicKey(SubApps.CCP_INTRA_USER_COMMUNITY.getCode());
