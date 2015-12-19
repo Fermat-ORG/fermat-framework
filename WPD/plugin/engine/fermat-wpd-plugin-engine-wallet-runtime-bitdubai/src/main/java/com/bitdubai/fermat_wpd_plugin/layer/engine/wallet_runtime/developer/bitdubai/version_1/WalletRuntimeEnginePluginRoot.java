@@ -1289,8 +1289,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#ffffff");
-        runtimeSideMenu.setNavigationIconColor("#ffffff");
         runtimeSideMenu.setHasFooter(true);
 
         runtimeMenuItem = new MenuItem();
@@ -1588,8 +1586,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#ffffff");
-        runtimeSideMenu.setNavigationIconColor("#ffffff");
         runtimeSideMenu.setHasFooter(true);
 
         runtimeMenuItem = new MenuItem();
@@ -1906,7 +1902,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
 
-	    runtimeTitleBar = new TitleBar();
+        runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Banking Wallet");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
@@ -1923,7 +1919,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
 
         //account detail activity
-	    runtimeActivity = new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS);
         runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
@@ -1949,7 +1945,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         return runtimeWalletNavigationStructure;
     }
 
-    public WalletNavigationStructure createCashMoneyWalletNavigationStructure(){
+    public WalletNavigationStructure createCashMoneyWalletNavigationStructure() {
         WalletNavigationStructure runtimeWalletNavigationStructure;
         Activity runtimeActivity;
         Fragment runtimeFragment;

@@ -4,37 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFF">
+    android:orientation="vertical"
+    tools:background="@drawable/cbw_navigation_drawer_background">
 
 
-    <ImageView
-        android:id="@+id/imageView_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#FFF"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/btn_drawer_home_normal"
-        tools:ignore="contentDescription"
-        />
-
-    <TextView
-        android:id="@+id/textView_label"
+    <LinearLayout
+        android:id="@+id/cbw_row_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFF"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal"
+        tools:background="@color/cbw_navigation_view_menu_item_overlay">
 
-        android:paddingBottom="14dip"
-        android:paddingLeft="8dip"
-        android:paddingRight="8dip"
-        android:paddingTop="14dip"
-        android:textColor="#2d2d2d"
-        android:textSize="16sp"
-        tools:text="Home"
-        >
-    </TextView>
+        <ImageView
+            android:id="@+id/imageView_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/btn_drawer_home_normal"
+            tools:ignore="contentDescription"
+            />
+
+        <TextView
+            android:id="@+id/textView_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="14dip"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="14dip"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:text="Home"
+            >
+        </TextView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/cbw_list_divider"/>
 
 
 </LinearLayout>
