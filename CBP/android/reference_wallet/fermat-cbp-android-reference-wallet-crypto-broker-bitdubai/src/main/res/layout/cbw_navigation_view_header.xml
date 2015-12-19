@@ -6,12 +6,12 @@
     android:layout_height="180dp">
 
     <ImageView
-        android:id="@+id/ccw_image_view_profile"
+        android:id="@+id/cbw_image_view_profile"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:scaleType="centerCrop"
-        tools:background="@drawable/profile_image_standard"
-        tools:ignore="contentDescription"/>
+        tools:ignore="contentDescription"
+        tools:src="@drawable/profile_image_standard"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/txt_name"
@@ -23,7 +23,7 @@
         android:gravity="center"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
-        android:text="@string/ccw_identity_alias_default_text"
+        android:text="@string/cbw_identity_alias_default_text"
         android:textColor="#ffffff"
         android:textSize="20sp"/>
 

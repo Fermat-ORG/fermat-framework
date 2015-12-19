@@ -64,5 +64,6 @@
     <string name="yours">Yours:</string>
     <string name="expiration_date_text">Expiration Date:</string>
     <string name="expiration_date_title">Negotiation Expiration Date</string>
+    <string name="cbw_identity_alias_default_text">Crypto Broker</string>
 
 </resources>

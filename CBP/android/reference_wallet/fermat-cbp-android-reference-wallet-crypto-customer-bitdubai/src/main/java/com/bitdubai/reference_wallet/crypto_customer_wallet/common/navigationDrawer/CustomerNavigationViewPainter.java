@@ -64,8 +64,8 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.ccw_navigation_drawer_background,options);
-        }catch (OutOfMemoryError error){
+                    activity.getResources(), R.drawable.ccw_navigation_drawer_background, options);
+        } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
         return drawable;
@@ -73,7 +73,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return 0;
     }
 
     @Override
