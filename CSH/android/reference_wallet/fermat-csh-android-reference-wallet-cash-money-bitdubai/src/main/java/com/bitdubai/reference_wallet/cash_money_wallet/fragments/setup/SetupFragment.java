@@ -30,8 +30,8 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
     //UI
     Spinner currencySpinner;
     ArrayAdapter<String> currencySpinnerAdapter;
-    Button applyBtn;
-    Button cancelBtn;
+    Button okBtn;
+    Button backBtn;
 
 
     public SetupFragment() {}
@@ -50,9 +50,10 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.setup_page, container, false);
 
-        applyBtn = (Button) layout.findViewById(R.id.csh_ctd_apply_transaction_btn);
-        cancelBtn = (Button) layout.findViewById(R.id.csh_ctd_cancel_transaction_btn);
-        applyBtn.setOnClickListener(this);
+        okBtn = (Button) layout.findViewById(R.id.csh_setup_ok_btn);
+        backBtn = (Button) layout.findViewById(R.id.csh_setup_back_btn);
+        backBtn.setOnClickListener(this);
+        okBtn.setOnClickListener(this);
 
 
 
@@ -74,11 +75,9 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         int i = view.getId();
-        if (i == R.id.csh_setup_ok_btn) {
-            //TODO: Go back!
+        if (i == R.id.csh_setup_back_btn) {
             changeActivity(Activities.WPD_DESKTOP);
-
-        }else if( i == R.id.csh_setup_back_btn){
+        }else if( i == R.id.csh_setup_ok_btn){
             changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
         }
     }

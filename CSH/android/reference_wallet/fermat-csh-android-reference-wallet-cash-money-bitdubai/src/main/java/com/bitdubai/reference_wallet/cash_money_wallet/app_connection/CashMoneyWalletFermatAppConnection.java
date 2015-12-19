@@ -49,9 +49,7 @@ public class CashMoneyWalletFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new CashMoneyWalletSession();
-    }
+    public AbstractFermatSession getSession() { return new CashMoneyWalletSession(); }
 
     @Override
     public FermatSettings getSettings() {

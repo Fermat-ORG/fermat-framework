@@ -4,9 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -20,10 +18,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
@@ -31,7 +25,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashDepositTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.adapters.TransactionsAdapter;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
@@ -40,7 +33,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/9/2015.

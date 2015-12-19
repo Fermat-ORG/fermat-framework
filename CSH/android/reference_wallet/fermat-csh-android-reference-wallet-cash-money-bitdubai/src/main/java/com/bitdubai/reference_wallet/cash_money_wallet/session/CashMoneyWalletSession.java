@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class CashMoneyWalletSession extends AbstractFermatSession<InstalledWallet,CashMoneyWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class CashMoneyWalletSession extends AbstractFermatSession<InstalledWallet,CashMoneyWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
     InstalledWallet wallet;
 
     /**
