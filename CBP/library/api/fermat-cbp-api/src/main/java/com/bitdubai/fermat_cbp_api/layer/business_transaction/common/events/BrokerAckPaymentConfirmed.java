@@ -1,18 +1,21 @@
-package com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_online_payment.events;
+package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.AbstractCBPFermatEvent;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 17/12/15.
  */
-public class BrokerAckOnlinePaymentConfirmed extends AbstractCBPFermatEvent {
+public class BrokerAckPaymentConfirmed extends AbstractCBPFermatEvent {
 
     PlatformComponentType destinationPlatformComponentType;
     String contractHash;
 
-    public BrokerAckOnlinePaymentConfirmed(EventType eventType) {
+    PaymentType paymentType;
+
+    public BrokerAckPaymentConfirmed(EventType eventType) {
         super(eventType);
     }
 
@@ -38,6 +41,22 @@ public class BrokerAckOnlinePaymentConfirmed extends AbstractCBPFermatEvent {
      */
     public String getContractHash(){
         return this.contractHash;
+    }
+
+    /**
+     * This method returns the payment type
+     * @return
+     */
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    /**
+     * This method sets the payment type
+     * @param paymentType
+     */
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
     }
 
 }
