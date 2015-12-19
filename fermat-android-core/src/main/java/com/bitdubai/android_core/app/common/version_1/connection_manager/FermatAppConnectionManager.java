@@ -18,6 +18,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Id
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
 import com.bitdubai.sub_app.crypto_broker_community.app_connection.CryptoBrokerCommunityFermatAppConnection;
@@ -53,7 +54,6 @@ public class FermatAppConnectionManager {
             case "public_key_intra_user_commmunity":
                 fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
                 break;
-
 
             //DAP WALLETS
             case "asset_issuer" :
@@ -110,6 +110,10 @@ public class FermatAppConnectionManager {
             case "sub_app_crypto_customer_identity":
                 fermatAppConnection = new CryptoCustomerIdentityFermatAppConnection(activity);
                 break;
+
+            //CASH WALLET
+            case "cash_wallet":
+                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
         }
         return fermatAppConnection;
     }

@@ -83,8 +83,8 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
     private void testCreateCashUnholdTransaction() {
         //System.out.println("CASHUNHOLD - testCreateCashHoldTransaction CALLED");
 
-        CashUnholdTransactionParameters params = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(60), FiatCurrency.US_DOLLAR, "testUnhold 60USD");
-        CashUnholdTransactionParameters params2 = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(90), FiatCurrency.US_DOLLAR, "testUnhold 90USD");
+        CashUnholdTransactionParameters params = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(60), FiatCurrency.US_DOLLAR, "testUnhold 60USD");
+        CashUnholdTransactionParameters params2 = new CashUnholdTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(90), FiatCurrency.US_DOLLAR, "testUnhold 90USD");
 
         try {
             this.createCashUnholdTransaction(params);
