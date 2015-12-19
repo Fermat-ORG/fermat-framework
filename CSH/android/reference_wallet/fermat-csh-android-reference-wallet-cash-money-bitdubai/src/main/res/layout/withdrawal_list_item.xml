@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout_deposit"
+    android:id="@+id/relativeLayout_withdrawal"
     android:layout_width="wrap_content"
     android:layout_height="80dp"
     android:background="@color/csh_transaction_item_background"
@@ -15,73 +16,6 @@
     android:visibility="visible">
 
     <ImageView
-        android:id="@+id/imageView_deposit"
-        android:layout_width="@dimen/csh_transaction_image_width_and_height"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="8dp"
-        android:contentDescription="@string/transaction_img"
-        android:visibility="gone"
-        android:src="@drawable/csh_deposit"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/textView_deposit_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_vertical"
-        android:layout_toEndOf="@+id/imageView_deposit"
-        android:layout_toRightOf="@+id/imageView_deposit"
-        android:singleLine="true"
-        android:textColor="#000"
-        android:textSize="@dimen/csh_large_text_size"
-        android:visibility="gone"
-        android:text="1.293,82 USD"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/textView_deposit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView_deposit_amount"
-        android:layout_marginEnd="@dimen/csh_margin_text"
-        android:layout_marginRight="@dimen/csh_margin_text"
-        android:layout_toEndOf="@+id/imageView_deposit"
-        android:layout_toRightOf="@+id/imageView_deposit"
-        android:singleLine="true"
-        android:textColor="@color/csh_transaction_deposit_color"
-        android:textSize="@dimen/csh_regular_text_size"
-        android:visibility="gone"
-        android:text="DEPOSIT"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/textView_deposit_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_alignBottom="@id/textView_deposit"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:singleLine="true"
-        android:textColor="@color/csh_transaction_date_text_color"
-        android:textSize="@dimen/csh_regular_text_size"
-        android:visibility="gone"
-        android:text="3 Feb 2015"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/textView_deposit_memo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/csh_transaction_date_text_color"
-        android:textSize="@dimen/csh_regular_text_size"
-        android:visibility="gone"
-        android:text="Memo for deposit"/>
-
-
-    <ImageView
         android:id="@+id/imageView_withdrawal"
         android:layout_width="@dimen/csh_transaction_image_width_and_height"
         android:layout_height="match_parent"
@@ -89,8 +23,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="8dp"
         android:contentDescription="@string/transaction_img"
-        android:visibility="gone"
-        android:src="@drawable/csh_withdrawal"/>
+        tools:src="@drawable/csh_withdrawal"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/textView_withdrawal_amount"
@@ -104,8 +37,7 @@
         android:singleLine="true"
         android:textColor="#000"
         android:textSize="@dimen/csh_large_text_size"
-        android:visibility="gone"
-        android:text="1.293,82 USD"/>
+        tools:text="1.293,82 USD"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/textView_withdrawal"
@@ -119,21 +51,19 @@
         android:singleLine="true"
         android:textColor="@color/csh_transaction_withdrawal_color"
         android:textSize="@dimen/csh_regular_text_size"
-        android:visibility="gone"
         android:text="WITHDRAWAL"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/textView_withdrawal_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
         android:layout_alignBottom="@id/textView_withdrawal"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:singleLine="true"
         android:textColor="@color/csh_transaction_date_text_color"
         android:textSize="@dimen/csh_regular_text_size"
-        android:visibility="gone"
         android:text="3 Feb 2015"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -145,6 +75,7 @@
         android:layout_alignParentLeft="true"
         android:textColor="@color/csh_transaction_date_text_color"
         android:textSize="@dimen/csh_regular_text_size"
-        android:visibility="gone"
-        android:text="Memo for withdrawal"/>
+        tools:text="Memo for withdrawal"/>
+
 </RelativeLayout>
+
