@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,9 +17,19 @@ import java.util.List;
  * @since 18/12/2015
  */
 public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
+    private static final int TYPE_MENU_ITEMS = 0;
+    private static final int TYPE_EARNING_TITLE = 1;
+    private static final int TYPE_EARNING_ITEM = 2;
+    private static final int TYPE_STOCK_TITLE = 3;
+    private static final int TYPE_STOCK_ITEM = 4;
+
+    private List<String> earningsItems;
+    private List<String> stockItems;
 
     protected CryptoBrokerNavigationViewAdapter(Context context) {
         super(context);
+        earningsItems = new ArrayList<>();
+        stockItems = new ArrayList<>();
     }
 
     /**

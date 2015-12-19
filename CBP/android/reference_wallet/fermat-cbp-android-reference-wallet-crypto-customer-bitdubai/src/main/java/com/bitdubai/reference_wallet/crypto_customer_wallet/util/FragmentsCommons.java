@@ -35,7 +35,7 @@ public class FragmentsCommons {
             } else {
                 Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
-                fermatTextView.setText("Fermat User");
+                fermatTextView.setText(R.string.ccw_identity_alias_default_text);
             }
 
             return view;
