@@ -3,7 +3,7 @@
 <br><br>
 
 # NETWORK SERVICES
-
+## all links tested-laderuner
 ## Introduction
 
 Communication is a vital need among systems to expand their functionality and interaction between different devices. Fermat in this case is no exception. Communication is important for the transmission of data and sending relevant information.
