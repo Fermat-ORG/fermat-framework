@@ -126,7 +126,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
             if(cryptoPaymentRequestNetworkServicePluginRoot.isRegister()) {
 
-                // function to process and send the rigth message to the counterparts.
+                // function to process and send the right message to the counterparts.
                 processSend();
             }
 

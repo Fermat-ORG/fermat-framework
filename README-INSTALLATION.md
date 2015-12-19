@@ -1,18 +1,32 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-
-#Installation Guide
+# Installation and Configuration Guide for Fermat Development Environment 
 
 <br>
 ## Introduction
 
-Currently Fermat is targeting the Android OS, once there we are going to move fordward to other OS. You will notice that this guide covers everything you need to do to set up the environmet and start using Fermat.
+Currently Fermat is targeting the Android OS (other OS will come later on).
+
+This guide covers *everything* you need to know to set up the development environment to start programming within Fermat.
+## System Requirements
+A minimum advisable requirement for ensure enough CPU power to run the project is:
+CPU = Intel i5 or higher
+RAM = 8 Gb
 
 <br>
 ## Part I: Setting up the Environment
 
 <br>
-### Overview
+### Working on Linux - PLEASE READ THIS FIRST- 
+
+It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution). 
+To use Ubuntu, you will need:
+* a) 30 Gb Free space in you hard disk, to allocate a new *partition* to install Ubuntu (this will NOT affect your Windows partition)
+* b) A valid UBUNTU disc image ( you can download it here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) )     
+* c) A free DVD to create the UBUNTU installation disk.
+
+<br>
+### Tools Overview
 
 You will need the following tools in order to develop in Fermat
 
@@ -23,26 +37,21 @@ You will need the following tools in order to develop in Fermat
 * **Android build-tools 23.01**
 * **Android Development Studio or IntelliJ IDEA**
 
-Although there are many ways to configure these tools, we'll provide a recommended configuration for your development environment.
+Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team, by means of the automatic installationscript or following the manual installation steps.
 
-<br>
-### Working on Linux
-
-Most Fermat developers are on Linux since compilation is faster there than in Windows. It is highly recommended that you use linux instead of windows. Developers that tried to set up a windows environment finally gave up and moved to Ubuntu. If you don't have Ubuntu installed, we recommed you to do so in a fresh disk partition.
 
 #### Automatic installation
 
-You can install all the needed software automatically using the script that you can find at the following URL:
-[FermatDeveloperInstaller.sh] (https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
+* You can install all the needed software automatically using the following script: (please use "right-clic" and "save as.." and save it in your _$HOME_ folder ) 
+[FermatDeveloperInstaller.sh] (https://raw.githubusercontent.com/bitDubai/fermat/master/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
 
-This script the downloads and installs all the software that you need for develop in Fermat.
+* If you are running Ubuntu in 64 bit mode, skip next step and go directly to executing the script.
 
-* To begin using the script, copy **_FermatDeveloperInstaller.sh_** in your _$HOME_ folder
-* You can edit the sctipt with gedit, eMacs or any text editor to set some variables (optional)
+* If you are running Ubuntu in 32-bit mode, you need to EDIT the script before. You can use Gedit, eMacs or any text editor to set some variables on and off by commenting (# symbol before the line) or uncommenting ( deleting the # before the line), eg.
 
 ```shell
 platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
-#plafform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
+#platfform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
 
 gradleVersion=2.9 #Sets the version that you want to use in development, this version must be superior to 2.5.
 
@@ -51,7 +60,7 @@ gradleVersion=2.9 #Sets the version that you want to use in development, this ve
 genymotion="genymotion-2.5.2_x64.bin" #Genymotion for 64 Bits OS
 #If you want to use the default Android Studio emulator, please, leave the previous lines commented.
 ```
-* To execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
+* Then, to execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
 ```shell
 cd $HOME
 ./FermatDeveloperInstaller.sh

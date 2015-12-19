@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions;
+package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Matias Furszyfer on 2015.08.10..
+ * Created by natalia on 18/12/15.
  */
-public class CantLoadSubAppSettings extends FermatException{
+public class ErrorSearchingCacheSuggestionsException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantLoadSubAppSettings extends FermatException{
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantLoadSubAppSettings(String message, Exception cause, String context, String possibleReason) {
+    public ErrorSearchingCacheSuggestionsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

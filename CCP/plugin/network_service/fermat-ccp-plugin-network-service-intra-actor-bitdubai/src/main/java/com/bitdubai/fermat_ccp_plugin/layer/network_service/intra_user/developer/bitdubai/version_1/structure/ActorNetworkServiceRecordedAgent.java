@@ -220,22 +220,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                             e.printStackTrace();
                         }
 
-//                        Gson gson = new Gson();
-//
-//                        cpr.changeDescriptor(NotificationDescriptor.ACCEPTED);
-//                        String message = gson.toJson(cpr);
-//
-//                        // El destination soy yo porque me lo estan enviando
-//                        // El sender es el otro y es a quien le voy a responder
-//                        NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cpr.getActorSenderPublicKey());
-//
-//                        // los cambio porque el sender es el destino y el destination soy yo al estar recibiendo
-//                        communicationNetworkServiceLocal.sendMessage(cpr.getActorSenderPublicKey(),cpr.getActorDestinationPublicKey(), message);
-//
-//
-//                        System.out.print("-----------------------\n" +
-//                                "ENVIANDO RESPUESTA !!!!! -----------------------\n" +
-//                                "-----------------------\n NOTIFICATION: " + cpr);
                         break;
                     case ACCEPTED:
 
