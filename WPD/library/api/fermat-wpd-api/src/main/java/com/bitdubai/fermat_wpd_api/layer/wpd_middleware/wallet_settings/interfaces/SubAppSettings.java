@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 2015.08.19..
  */
-public interface SubAppSettings extends FermatSettings{
+public interface SubAppSettings extends com.bitdubai.fermat_api.layer.modules.FermatSettings {
 
     /**
      * This method let us know the default language of a wallet
