@@ -3,7 +3,7 @@
 <br><br>
 
 # NETWORK SERVICES
-
+## all links tested-laderuner
 ## Introducción
 
 Comunicarse es una necesidad vital entre sistemas para ampliar sus funcionalidades e interacción entre dispositivos diferentes. En este caso Fermat no es la excepción. La comunicación es importante para la transmisión de datos y envío de información relevante.
