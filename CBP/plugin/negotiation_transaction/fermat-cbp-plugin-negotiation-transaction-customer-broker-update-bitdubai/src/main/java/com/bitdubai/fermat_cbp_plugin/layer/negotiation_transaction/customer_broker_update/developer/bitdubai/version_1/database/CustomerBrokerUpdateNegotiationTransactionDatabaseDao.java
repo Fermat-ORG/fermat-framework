@@ -19,6 +19,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionS
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
@@ -232,6 +233,18 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
 
     }
 
+    //GET TRANSACTION ID OF NEGOTIATION TRANSACTION
+    public UUID getTransactionId(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
+
+        String transactionId= getValue(
+                negotiationId,
+                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_ID_COLUMN_NAME,
+                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TRANSACTION_ID_COLUMN_NAME);
+
+        return UUID.fromString(transactionId);
+
+    }
+    
     //GET LIST PENDING EVENT
     public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
         try{
@@ -261,16 +274,28 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
         }
     }
 
-    //GET TRANSACTION ID OF NEGOTIATION TRANSACTION
-    public UUID getTransactionId(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
+    /*PUBLIC METHOD*/
+    public void saveNewEventTansaction(String eventType, String eventSource) throws CantSaveEventException {
+        try {
 
-        String transactionId= getValue(
-                negotiationId,
-                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_ID_COLUMN_NAME,
-                CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TRANSACTION_ID_COLUMN_NAME);
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            DatabaseTableRecord eventRecord = table.getEmptyRecord();
+            UUID eventRecordID = UUID.randomUUID();
+            long unixTime = System.currentTimeMillis();
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("Distribution DAO:\nUUID:" + eventRecordID + "\n" + unixTime);
+            eventRecord.setUUIDValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME, eventRecordID);
+            eventRecord.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TYPE_COLUMN_NAME, eventType);
+            eventRecord.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_SOURCE_COLUMN_NAME, eventSource);
+            eventRecord.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+            eventRecord.setLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TIMESTAMP_COLUMN_NAME, unixTime);
+            table.insertRecord(eventRecord);
 
-        return UUID.fromString(transactionId);
-
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+        } catch(Exception exception){
+            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+        }
     }
 
     /*PRIVATE METHOD*/
