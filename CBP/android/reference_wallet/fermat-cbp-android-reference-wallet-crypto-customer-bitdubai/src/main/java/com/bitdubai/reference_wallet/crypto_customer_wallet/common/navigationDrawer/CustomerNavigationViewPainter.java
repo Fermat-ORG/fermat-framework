@@ -3,8 +3,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDr
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +42,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new NavigationViewAdapter(activity);
+            return new CryptoCustomerWalletNavigationViewAdapter(activity);
         } catch (Exception e) {
             e.printStackTrace();
         }
