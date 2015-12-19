@@ -30,6 +30,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.events.NewNegotiationTransactionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_sale.interfaces.CustomerBrokerSale;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseConstants;
@@ -259,6 +260,7 @@ public class CustomerBrokerUpdateAgent implements
                         negotiationTransaction  = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiationToSubmit);
                         transactionId           = negotiationTransaction.getTransactionId();
                         negotiationXML          = negotiationTransaction.getNegotiationXML();
+                        //AGREGAR EL NEGOTIATION TYPE A negotiationTransaction
                         negotiationType         = NegotiationType.PURCHASE;
 
                         switch (negotiationType){
@@ -291,6 +293,7 @@ public class CustomerBrokerUpdateAgent implements
                         negotiationTransaction  = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiationToSubmit);
                         transactionId           = negotiationTransaction.getTransactionId();
                         negotiationXML          = negotiationTransaction.getNegotiationXML();
+                        //AGREGAR EL NEGOTIATION TYPE A negotiationTransaction
                         negotiationType         = NegotiationType.PURCHASE;
 
                         switch (negotiationType){
@@ -332,9 +335,9 @@ public class CustomerBrokerUpdateAgent implements
 
         private void raiseNewContractEvent(){
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NEGOTIATION_TRANSACTION_NEW);
-            NewNegotiationTransactionNewEvent newNegotiationTransactionNewEvent = (NewNegotiationTransactionNewEvent) fermatEvent;
-            newNegotiationTransactionNewEvent.setSource(EventSource.NEGOTIATION_TRANSACTION_UPDATE);
-            eventManager.raiseEvent(newNegotiationTransactionNewEvent);
+            NewNegotiationTransactionUpdateEvent newNegotiationTransactionUpdateEvent = (NewNegotiationTransactionUpdateEvent) fermatEvent;
+            newNegotiationTransactionUpdateEvent.setSource(EventSource.NEGOTIATION_TRANSACTION_UPDATE);
+            eventManager.raiseEvent(newNegotiationTransactionUpdateEvent);
         }
 
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
