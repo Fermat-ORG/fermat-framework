@@ -2,8 +2,6 @@ package com.bitdubai.sub_app.customers.preference_settings;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
@@ -21,7 +19,7 @@ public class CustomersPreferenceSettings implements SubAppSettings {
      * @throws CantGetDefaultLanguageException
      */
     @Override
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
+    public UUID getDefaultLanguage() {
         return null;
     }
 
@@ -32,7 +30,7 @@ public class CustomersPreferenceSettings implements SubAppSettings {
      * @throws CantGetDefaultSkinException
      */
     @Override
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
+    public UUID getDefaultSkin()  {
         return null;
     }
 
@@ -43,7 +41,7 @@ public class CustomersPreferenceSettings implements SubAppSettings {
      * @throws CantSetDefaultLanguageException
      */
     @Override
-    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
+    public void setDefaultLanguage(UUID languageId)  {
 
     }
 
@@ -54,7 +52,7 @@ public class CustomersPreferenceSettings implements SubAppSettings {
      * @throws CantSetDefaultSkinException
      */
     @Override
-    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
+    public void setDefaultSkin(UUID skinId)  {
 
     }
 
@@ -66,7 +64,7 @@ public class CustomersPreferenceSettings implements SubAppSettings {
      * @throws CantSetDefaultSkinException
      */
     @Override
-    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveWalletSettings {
+    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) {
 
     }
 
@@ -78,7 +76,7 @@ public class CustomersPreferenceSettings implements SubAppSettings {
      * @throws CantGetDefaultSkinException
      */
     @Override
-    public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings {
+    public String getPreferenceSettings(String walletPublicKey){
         return null;
     }
 }

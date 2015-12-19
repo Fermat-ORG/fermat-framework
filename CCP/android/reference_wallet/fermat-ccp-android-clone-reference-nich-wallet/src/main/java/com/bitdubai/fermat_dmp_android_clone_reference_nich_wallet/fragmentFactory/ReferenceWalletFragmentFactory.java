@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory;
 
-import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
@@ -8,13 +8,14 @@ import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragments.wal
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragments.wallet_v2.ReceiveFragment;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragments.wallet_v2.SendFragment;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<ReferenceWalletSession, WalletSettings, ReferenceFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
+public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager, ReferenceFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
 
 
     @Override

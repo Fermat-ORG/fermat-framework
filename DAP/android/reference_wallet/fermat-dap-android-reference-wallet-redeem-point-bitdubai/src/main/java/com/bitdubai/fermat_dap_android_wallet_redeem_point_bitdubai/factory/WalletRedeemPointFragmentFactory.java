@@ -15,7 +15,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
  * @author Francisco Vasquez on 15/09/15.
  * @version 1.0
  */
-public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<RedeemPointSession, RedeemPointSettings,WalletResourcesProviderManager, WalletRedeemPointFragmentsEnumType> {
+public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<RedeemPointSession,WalletResourcesProviderManager, WalletRedeemPointFragmentsEnumType> {
 
 
     @Override

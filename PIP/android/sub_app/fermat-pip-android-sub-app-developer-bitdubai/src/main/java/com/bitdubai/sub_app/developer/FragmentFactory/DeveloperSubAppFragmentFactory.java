@@ -20,7 +20,7 @@ import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<DeveloperSubAppSession,DeveloperPreferenceSettings, SubAppResourcesProviderManager, DeveloperFragmentsEnumType> {
+public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<DeveloperSubAppSession, SubAppResourcesProviderManager, DeveloperFragmentsEnumType> {
 
     public DeveloperSubAppFragmentFactory(){}
 
