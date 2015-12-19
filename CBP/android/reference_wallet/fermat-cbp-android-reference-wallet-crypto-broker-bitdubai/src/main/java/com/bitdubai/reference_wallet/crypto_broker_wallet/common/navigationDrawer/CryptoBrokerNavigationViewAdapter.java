@@ -97,15 +97,7 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
     public void onBindViewHolder(FermatViewHolder holder, int position) {
 
         if (holder instanceof NavigationItemMenuViewHolder) {
-            NavigationItemMenuViewHolder itemMenuViewHolder = (NavigationItemMenuViewHolder) holder;
-
-            MenuItem menuItem = getItem(position);
-            itemMenuViewHolder.getLabel().setText(menuItem.getLabel());
-            if (menuItem.isSelected()) {
-                bindSelectedMenuItem(itemMenuViewHolder, position);
-            } else {
-                bindMenuItem(itemMenuViewHolder, position);
-            }
+            super.onBindViewHolder(holder, position);
 
         } else if (holder instanceof NavTitleFooterViewHolder) {
             NavTitleFooterViewHolder titleFooterViewHolder = (NavTitleFooterViewHolder) holder;
@@ -125,7 +117,15 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
     @Override
     protected void bindHolder(FermatViewHolder holder, MenuItem data, int position) {
-        // NOTING...
+        NavigationItemMenuViewHolder itemMenuViewHolder = (NavigationItemMenuViewHolder) holder;
+
+        MenuItem menuItem = getItem(position);
+        itemMenuViewHolder.getLabel().setText(menuItem.getLabel());
+        if (menuItem.isSelected()) {
+            bindSelectedMenuItem(itemMenuViewHolder, position);
+        } else {
+            bindMenuItem(itemMenuViewHolder, position);
+        }
     }
 
     private void bindMenuItem(NavigationItemMenuViewHolder holder, int position) {
@@ -168,7 +168,7 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
     }
 
     private int getEarningsItemPosition(int position) {
-        return Math.abs( dataSet.size() + 1 + stockItems.size() + 1 - position);
+        return Math.abs(dataSet.size() + 1 + stockItems.size() + 1 - position);
     }
 
     private int getStockItemPosition(int position) {
