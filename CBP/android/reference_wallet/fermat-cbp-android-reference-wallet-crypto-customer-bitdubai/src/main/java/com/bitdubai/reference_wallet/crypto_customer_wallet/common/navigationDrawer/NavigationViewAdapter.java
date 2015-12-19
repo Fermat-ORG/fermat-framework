@@ -1,15 +1,11 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.List;
 
@@ -44,7 +40,7 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.navigation_row;
+        return R.layout.ccw_navigation_row;
     }
 
     /**

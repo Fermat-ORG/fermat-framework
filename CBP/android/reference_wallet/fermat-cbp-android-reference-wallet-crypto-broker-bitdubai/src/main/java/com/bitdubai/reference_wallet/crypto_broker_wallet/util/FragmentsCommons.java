@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity, ActorIdentity identity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActorIdentity identity) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.cbw_navigation_view_row_first, null, true);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.cbw_image_view_profile);
@@ -32,10 +32,14 @@ public class FragmentsCommons {
                 }
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(identity.getAlias());
+            } else {
+                Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
+                fermatTextView.setText("Fermat User");
             }
 
             return view;
-        }catch (OutOfMemoryError outOfMemoryError){
+        } catch (OutOfMemoryError outOfMemoryError) {
             Toast.makeText(activity, "Error: out of memory ", Toast.LENGTH_SHORT).show();
         }
         return view;

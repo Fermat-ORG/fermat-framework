@@ -1289,6 +1289,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#ffffff");
+        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1585,6 +1588,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#ffffff");
+        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
