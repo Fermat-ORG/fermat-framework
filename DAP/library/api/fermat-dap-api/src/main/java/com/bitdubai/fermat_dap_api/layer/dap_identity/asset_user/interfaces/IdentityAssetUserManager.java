@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 
@@ -20,6 +21,13 @@ public interface IdentityAssetUserManager extends ModuleManager {
      */
     List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListAssetUsersException;
 
+    /**
+     * The method <code>getIdentityAssetIssuer</code> will give Identity Asset Issuer associated
+     *
+     * @return Identity Asset User associated.
+     * @throws CantGetAssetUserIdentitiesException if something goes wrong.
+     */
+    IdentityAssetUser getIdentityAssetUser() throws CantGetAssetUserIdentitiesException;
 
     /**
      * The method <code>createNewIntraWalletUser</code> creates a new intra wallet user Identity for the logged in Device User and returns the

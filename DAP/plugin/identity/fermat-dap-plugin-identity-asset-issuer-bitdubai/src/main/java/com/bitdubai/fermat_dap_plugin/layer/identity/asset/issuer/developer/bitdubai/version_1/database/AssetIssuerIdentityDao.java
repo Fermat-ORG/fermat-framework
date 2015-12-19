@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -214,7 +215,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantListAssetIssuersException {
+    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantGetAssetIssuerIdentitiesException {
 
         // Setup method.
         IdentityAssetIssuer IdentityAssetIssuerRecord = null;
@@ -252,9 +253,9 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
                         getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListAssetIssuersException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantGetAssetIssuerIdentitiesException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantListAssetIssuersException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant get Asset Issuer identity list, unknown failure.");
+            throw new CantGetAssetIssuerIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant get Asset Issuer identity list, unknown failure.");
         }
 
         // Return the list values.
