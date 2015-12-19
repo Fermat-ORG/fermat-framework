@@ -189,7 +189,7 @@ function installIDE(){
     
 }
 function installGenymotion(){
-    if[ ! genymotion ]; then
+    if[ ! $genymotion ]; then
         timestamp
         genymotionURL="http://files2.genymotion.com/genymotion/genymotion-2.5.2/"
         echo "Downloading Genymotion"
