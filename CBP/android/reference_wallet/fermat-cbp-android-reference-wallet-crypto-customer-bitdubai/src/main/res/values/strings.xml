@@ -34,5 +34,6 @@
     <string name="receiving">Receiving</string>
     <string name="ccw_selling_merchandise">Selling %1$s</string>
     <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
-    <string name="ccw_identity_alias_default_text">Fermat User</string>
+    <string name="ccw_identity_alias_default_text">Crypto Customer</string>
+    <string name="ccw_navigation_view_bitcoin_balance">Bitcoin Balance</string>
 </resources>

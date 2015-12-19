@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
@@ -498,5 +499,28 @@ public class BitcoinWalletBasicWalletDao {
 
         return new BitcoinWalletTransactionWrapper(transactionId, transactionHash, transactionType, addressFrom, addressTo,
                 actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
+    }
+
+    public void deleteTransaction(UUID transactionID)throws CantFindTransactionException{
+
+        try {
+            // create the database objects
+            DatabaseTable bitcoinwalletTable = getBitcoinWalletTable();
+            /**
+             *  I will load the information of table into a memory structure, filter for transaction id
+             */
+            bitcoinwalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+
+            bitcoinwalletTable.loadToMemory();
+
+            // Read record data and create transactions list
+            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
+                bitcoinwalletTable.deleteRecord(record);
+            }
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
+        } catch (CantDeleteRecordException e) {
+            e.printStackTrace();
+        }
     }
 }

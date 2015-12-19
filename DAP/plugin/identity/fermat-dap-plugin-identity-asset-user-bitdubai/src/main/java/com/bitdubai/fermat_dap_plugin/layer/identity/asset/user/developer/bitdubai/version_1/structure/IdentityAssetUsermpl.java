@@ -63,6 +63,16 @@ public class  IdentityAssetUsermpl implements DealsWithPluginFileSystem, DealsWi
         this.pluginId = pluginId;
     }
 
+    public IdentityAssetUsermpl(String alias, String publicKey, byte[] profileImage) {
+        this.alias = alias;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+    }
+
+    public IdentityAssetUsermpl() {
+
+    }
+
     @Override
     public String getAlias() {
         return this.alias;

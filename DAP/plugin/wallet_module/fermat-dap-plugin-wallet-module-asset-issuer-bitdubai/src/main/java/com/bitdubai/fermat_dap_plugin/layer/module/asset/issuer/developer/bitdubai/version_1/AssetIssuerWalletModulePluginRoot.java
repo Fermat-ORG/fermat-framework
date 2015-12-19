@@ -22,9 +22,13 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
@@ -66,6 +70,9 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.ASSET_FACTORY)
     AssetFactoryManager assetFactoryManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_ISSUER  )
+    private IdentityAssetIssuerManager identityAssetIssuerManager;
 
     private AssetIssuerWallet wallet;
 
@@ -172,6 +179,16 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public void toggleShowUsersOutsideTheirGroup() {
         showUsersOutsideGroup = !showUsersOutsideGroup;
+    }
+
+    @Override
+    public IdentityAssetIssuer getAssetIssuerIdentity() throws CantGetIdentityAssetIssuerException {
+        try {
+            return identityAssetIssuerManager.getIdentityAssetIssuer();
+        } catch (CantGetAssetIssuerIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetIdentityAssetIssuerException(e);
+        }
     }
 
     @Override

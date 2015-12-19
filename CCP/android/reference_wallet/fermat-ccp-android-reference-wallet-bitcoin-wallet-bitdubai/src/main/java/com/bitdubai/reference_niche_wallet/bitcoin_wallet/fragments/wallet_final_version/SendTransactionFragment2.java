@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -58,6 +59,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_draw
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,13 +124,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             errorManager = appSession.getErrorManager();
 
             CryptoWalletIntraUserIdentity lst = referenceWalletSession.getIntraUserModuleManager();
-            if(lst==null){
-//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.profile_image);
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                byte[] byteArray = stream.toByteArray();
-                referenceWalletSession.getModuleManager().getCryptoWallet().createIntraUser("John Doe", "", null);
-            }
+
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
@@ -147,7 +143,25 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void setUpPresentation() {
-        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog = new PresentationBitcoinWalletDialog(getActivity(),referenceWalletSession,null);
+        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
+                new PresentationBitcoinWalletDialog(
+                        getActivity(),
+                        referenceWalletSession,
+                        null,
+                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+        presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                if(o!=null){
+                    if((Boolean)(o)){
+                        invalidate();
+                        referenceWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                    }
+                }
+
+            }
+        });
         presentationBitcoinWalletDialog.show();
     }
 
@@ -325,6 +339,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help").setIcon(R.drawable.ic_contact_question)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
 
@@ -337,7 +354,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             if(id == BitcoinWalletConstants.IC_ACTION_SEND){
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
                 return true;
+            }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT){
+                setUpPresentation();
+                return true;
             }
+
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

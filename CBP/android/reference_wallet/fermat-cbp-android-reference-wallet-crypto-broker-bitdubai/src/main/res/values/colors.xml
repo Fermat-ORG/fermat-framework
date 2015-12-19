@@ -22,6 +22,7 @@
     <color name="cbw_toolbar_end_background">#1375a7</color>
     <color name="cbw_header_start_background">#097168</color>
     <color name="cbw_header_end_background">#09364d</color>
+    <color name="cbw_navigation_view_menu_item_overlay">#60000000</color>
     <color name="contract_completed_list_item_background">#f3f3f3</color>
     <color name="contract_cancelled_list_item_background">#f3f3f3</color>
     <color name="dark_grey">#7b7b7b</color>

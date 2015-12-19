@@ -129,7 +129,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 //            android.app.Fragment fragment = subAppFragmentFactory.getFragment(
 //                    fragmentType,
 //                    subAppsSession,
-//                    null, //getSubAppSettingsManager().getSettings(xxx),
+//                    null, //getSubAppSettingsManager().getAndLoadSettingsFile(xxx),
 //                    getSubAppResourcesProviderManager()
 //            );
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
@@ -204,7 +204,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 SubApp subApp = subAppRuntimeManager.getLastSubApp();
                 activity= subApp.getLastActivity();
                 fragment  = activity.getLastFragment();
-                fermatAppConnection = new WeakReference<FermatAppConnection>(FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity())) ;
+                fermatAppConnection = new WeakReference<FermatAppConnection>(FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getAssetIssuerIdentity(), getAssetUserWalletModuleManager().getAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getAssetRedeemPointIdentity())) ;
 
             }catch (NullPointerException nullPointerException){
                 fragment=null;
@@ -277,7 +277,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
 
             SubApp subApp = subAppRuntimeManager.getLastSubApp();
-            loadFragment(subApp.getType(), idContainer, screen,FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity()).getFragmentFactory());
+            loadFragment(subApp.getType(), idContainer, screen,FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getAssetIssuerIdentity(), getAssetUserWalletModuleManager().getAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getAssetRedeemPointIdentity()).getFragmentFactory());
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
@@ -462,7 +462,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         SubApp subApp = subAppRuntimeManager.getLastSubApp();
         String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
         FermatSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
-        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null);
+        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null, null, null, null);
         com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
         try {
             if(fermatFragmentFactory !=null){
@@ -505,7 +505,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     publicKey = bundle.getString(ConnectionConstants.SUB_APP_CONNECTION);
                 }
             }
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection((publicKey==null) ? installedSubApp.getAppPublicKey() : publicKey, this, null);
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection((publicKey==null) ? installedSubApp.getAppPublicKey() : publicKey, this, null, null, null, null);
             ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
             if(installedSubApp!=null){
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {

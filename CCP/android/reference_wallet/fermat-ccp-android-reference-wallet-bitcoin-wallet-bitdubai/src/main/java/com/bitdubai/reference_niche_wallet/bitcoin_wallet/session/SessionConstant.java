@@ -7,6 +7,7 @@ public class SessionConstant {
 
 
     public static final String FROM_ACTIONBAR_SEND_ICON_CONTACTS = "from_contacts";
+    public static final String PRESENTATION_IDENTITY_CREATED = "identity_created";
 
 
 }

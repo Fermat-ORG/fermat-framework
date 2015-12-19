@@ -20,7 +20,7 @@ public class FragmentsCommons {
 
 
     public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActorIdentity identity) throws CantGetActiveLoginIdentityException {
-        View view = inflater.inflate(R.layout.cbw_navigation_view_row_first, null, true);
+        View view = inflater.inflate(R.layout.cbw_navigation_view_header, null, true);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.cbw_image_view_profile);
             if (identity != null) {
@@ -35,7 +35,7 @@ public class FragmentsCommons {
             } else {
                 Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
-                fermatTextView.setText("Fermat User");
+                fermatTextView.setText(R.string.cbw_identity_alias_default_text);
             }
 
             return view;
