@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offl
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -216,7 +217,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init Monitor Agent
              */
-            /*BrokerAckOnlinePaymentMonitorAgent brokerAckOnlinePaymentMonitorAgent=new BrokerAckOnlinePaymentMonitorAgent(
+            BrokerAckOfflinePaymentMonitorAgent brokerAckOfflinePaymentMonitorAgent=new BrokerAckOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -225,7 +226,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager);
-            brokerAckOnlinePaymentMonitorAgent.start();*/
+            brokerAckOfflinePaymentMonitorAgent.start();
 
             /**
              * Initialize plugin manager
