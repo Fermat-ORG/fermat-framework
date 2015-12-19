@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -18,6 +20,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationSaleRecord;
@@ -328,7 +331,10 @@ public class CustomerBrokerUpdateAgent implements
         }
 
         private void raiseNewContractEvent(){
-
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NEGOTIATION_TRANSACTION_NEW);
+            NewNegotiationTransactionNewEvent newNegotiationTransactionNewEvent = (NewNegotiationTransactionNewEvent) fermatEvent;
+            newNegotiationTransactionNewEvent.setSource(EventSource.NEGOTIATION_TRANSACTION_UPDATE);
+            eventManager.raiseEvent(newNegotiationTransactionNewEvent);
         }
 
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
