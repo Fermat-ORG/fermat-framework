@@ -50,10 +50,6 @@ public class AssetFactoryFermatAppConnection extends AppConnections {
         return new AssetFactorySession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new AssetFactorySettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

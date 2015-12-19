@@ -57,10 +57,6 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
         return new CryptoCustomerWalletSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new CryptoCustomerWalletPreferenceSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

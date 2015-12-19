@@ -51,11 +51,6 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public FermatSettings getSettings() {
-        return new Settings();
-    }
-
-    @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return null;
     }

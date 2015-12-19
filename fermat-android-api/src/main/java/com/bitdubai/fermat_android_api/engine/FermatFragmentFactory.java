@@ -15,16 +15,15 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class FermatFragmentFactory  <S extends FermatSession,J extends FermatSettings,R extends ResourceProviderManager,F extends FermatFragmentsEnumType> implements AppFragmentFactory<S,J,R> {
+public abstract class FermatFragmentFactory  <S extends FermatSession,R extends ResourceProviderManager,F extends FermatFragmentsEnumType> implements AppFragmentFactory<S,R> {
 
-    protected AbstractFermatFragment<S,J,R> fermatFragment;
+    protected AbstractFermatFragment<S,R> fermatFragment;
 
     @Override
-    public Fragment getFragment(String code, S AppsSession, J settingsManager, R resourceProviderManager) throws FragmentNotFoundException {
+    public Fragment getFragment(String code, S AppsSession, R resourceProviderManager) throws FragmentNotFoundException {
         F fragments = getFermatFragmentEnumType(code);
         fermatFragment = getFermatFragment(fragments);
         fermatFragment.setAppSession(AppsSession);
-        fermatFragment.setAppSettings(settingsManager);
         fermatFragment.setAppResourcesProviderManager(resourceProviderManager);
         return fermatFragment;
     }

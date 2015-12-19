@@ -50,10 +50,6 @@ public class AssetIssuerFermatAppConnection extends AppConnections{
         return new IssuerIdentitySubAppSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new IssuerIdentityPreferenceSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

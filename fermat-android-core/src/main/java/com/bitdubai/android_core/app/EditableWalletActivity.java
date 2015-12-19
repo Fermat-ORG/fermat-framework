@@ -304,7 +304,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
             if (walletFragmentFactory != null) {
                 String fragment = walletRuntime.getLastActivity().getLastFragment().getType();
                 FermatSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
-                android.app.Fragment fragmet = walletFragmentFactory.getFragment(fragment.toString(),walletSession, getWalletSettingsManager().getSettings(walletPublicKey), getWalletResourcesProviderManager());
+                android.app.Fragment fragmet = walletFragmentFactory.getFragment(fragment.toString(),walletSession, getWalletResourcesProviderManager());
                 FragmentTransaction FT = getFragmentManager().beginTransaction();
                 FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 FT.replace(R.id.only_fragment_container, fragmet);
@@ -318,8 +318,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
-        } catch (CantLoadWalletSettings cantLoadWalletSettings) {
-            cantLoadWalletSettings.printStackTrace();
         }
 
     }

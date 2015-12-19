@@ -57,11 +57,6 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public FermatSettings getSettings() {
-        return new AssetIssuerSettings();
-    }
-
-    @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return new IssuerWalletNavigationViewPainter(getActivity(), identityAssetIssuer);
     }

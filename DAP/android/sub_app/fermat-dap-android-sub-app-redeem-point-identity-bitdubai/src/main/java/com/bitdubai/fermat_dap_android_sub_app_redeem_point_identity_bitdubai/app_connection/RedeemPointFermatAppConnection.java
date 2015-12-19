@@ -51,11 +51,6 @@ public class RedeemPointFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public FermatSettings getSettings() {
-        return new RedeemPointIdentitySubAppSettings();
-    }
-
-    @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return null;
     }

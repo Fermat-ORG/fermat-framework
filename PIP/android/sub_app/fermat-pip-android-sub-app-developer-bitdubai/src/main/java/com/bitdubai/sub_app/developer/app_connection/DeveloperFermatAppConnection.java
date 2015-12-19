@@ -50,11 +50,6 @@ public class DeveloperFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public FermatSettings getSettings() {
-        return new DeveloperPreferenceSettings();
-    }
-
-    @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return null;
     }

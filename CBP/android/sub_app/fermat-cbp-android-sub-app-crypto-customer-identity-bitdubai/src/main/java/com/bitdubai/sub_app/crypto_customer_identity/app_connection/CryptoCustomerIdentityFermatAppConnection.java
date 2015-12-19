@@ -52,11 +52,6 @@ public class CryptoCustomerIdentityFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public FermatSettings getSettings() {
-        return new CryptoCustomerIdentityPreferenceSettings();
-    }
-
-    @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return null;
     }

@@ -56,10 +56,6 @@ public class WalletAssetUserFermatAppConnection extends AppConnections{
         return new AssetUserSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new AssetUserSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

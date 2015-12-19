@@ -17,7 +17,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class AbstractFermatFragment<S extends FermatSession,PS extends FermatSettings,R extends ResourceProviderManager> extends Fragment{
+public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment{
 
     /**
      * FLAGS
@@ -28,7 +28,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
      * Platform
      */
     protected S appSession;
-    protected PS appSettings;
     protected R appResourcesProviderManager;
 
 
@@ -82,10 +81,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
 
     public void setAppSession(S appSession) {
         this.appSession = appSession;
-    }
-
-    public void setAppSettings(PS appSettings) {
-        this.appSettings = appSettings;
     }
 
     public void setAppResourcesProviderManager(R appResourcesProviderManager) {
