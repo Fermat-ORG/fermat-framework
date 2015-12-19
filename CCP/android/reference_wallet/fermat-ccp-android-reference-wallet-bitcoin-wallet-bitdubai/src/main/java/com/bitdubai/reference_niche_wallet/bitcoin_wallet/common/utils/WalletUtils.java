@@ -43,7 +43,7 @@ public class WalletUtils {
 
             stringBalance = BTCFormat ;//+ " BTC";
         }else if(typeAmount== ShowMoneyType.BITS.getCode()){
-            stringBalance = (int) (balance / 100) + " bits";
+            stringBalance = String.valueOf(balance / 100);
         }
         showMoneyType=!showMoneyType;
 
@@ -105,15 +105,4 @@ public class WalletUtils {
         alertDialog.show();
     }
 
-    public static void setNavigatitDrawer(PaintActivityFeatures paintActivityFeatures,IntraUserLoginIdentity intraUserInformation){
-        Context context =(Context) paintActivityFeatures;
-        List<String> list = new ArrayList<>();
-        list.add("profile_image");
-        list.add("Home");
-        list.add("Contacts");
-        list.add("Payment request");
-        list.add("Settings");
-        list.add("Logout");
-       // paintActivityFeatures.changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(context, list,intraUserInformation));
-    }
 }
