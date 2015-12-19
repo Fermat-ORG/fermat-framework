@@ -636,7 +636,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          * I need to check the outputs for the value that is being sent
          */
         try{
-            return tx.getValueSentToMe(wallet).getValue();
+            return tx.getValue(wallet).negate().getValue();
         } catch (Exception e){
             return 0;
         }
