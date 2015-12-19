@@ -11,11 +11,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -26,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
@@ -48,6 +51,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.UUID;
 
@@ -124,6 +128,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
         public final int DELAY_HOURS = 2;
         int iterationNumber = 0;
         boolean threadWorking;
+        private BigDecimal priceReference = null;
+        private BigDecimal amount         = null;
+        private String bankAccount        = null;
         CustomerBrokerSaleImpl customerBrokerSale = null;
         //UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 
@@ -210,14 +217,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                             {
 
                             }
-                            //Recorrer las clausulas del contrato
-//                            for (ContractClause contractClause : customerBrokerContractSale.getContractClause())
-//                            {
-//                                if (contractClause.getStatus().getCode() != ContractClauseStatus.EXECUTED.getCode())
-//                                {
-//                                    //Debemos enviar notificacion de las distintas clausulas segun se estatus
-//                                }
-//                            }
                         }
                     }
                 }
@@ -234,6 +233,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                             if (cryptoBrokerWalletSettingSpread.getRestockAutomatic())
                             {
                                 //Recorrer las clausulas del contrato
+                                CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
                                 for (ContractClause contractClause : customerBrokerContractSale.getContractClause())
                                 {
                                     if (contractClause.getType().getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode())
@@ -249,17 +249,36 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                         sw = 3;
                                     }
                                 }
-                                //TODO: Datos de amount, priceReference, CryptoCurrency, FiatCurrency, cbpWalletPublicKey, bnkWalletPublicKey, cshWalletPublicKey, cryWalletPublicKey de donde sale
+                                //TODO: Datos cbpWalletPublicKey, bnkWalletPublicKey, cshWalletPublicKey, cryWalletPublicKey de donde sale
                                 //
+                                for (Clause clause : customerBrokerSaleNegotiation.getClauses())
+                                {
+                                    if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode())
+                                    {
+                                        priceReference = new BigDecimal(clause.getValue());
+                                    }
+                                    if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY_QUANTITY.getCode())
+                                    {
+                                        amount = new BigDecimal(clause.getValue());
+                                    }
+                                    if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY_QUANTITY.getCode())
+                                    {
+                                        amount = new BigDecimal(clause.getValue());
+                                    }
+                                    if (clause.getType().getCode() == ClauseType.BROKER_BANK_ACCOUNT.getCode())
+                                    {
+                                        bankAccount = clause.getValue();
+                                    }
+                                }
                                 if (sw == 1) {
                                     cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
                                             CryptoCurrency.BITCOIN,
                                             "walletPublicKey",
                                             "walletPublicKey",
-                                            null,
-                                            "memo",
-                                            null,
-                                            OriginTransaction.STOCK_INITIAL);
+                                            amount,
+                                            "RESTOCK AUTOMATIC",
+                                            priceReference,
+                                            OriginTransaction.RESTOCK_AUTOMATIC);
                                 }
                                 //
                                 if (sw == 2) {
@@ -267,11 +286,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                             FiatCurrency.US_DOLLAR,
                                             "walletPublicKey",
                                             "walletPublicKey",
-                                            "bankAccount",
-                                            null,
-                                            "memo",
-                                            null,
-                                            OriginTransaction.STOCK_INITIAL);
+                                            bankAccount,
+                                            amount,
+                                            "RESTOCK AUTOMATIC",
+                                            priceReference,
+                                            OriginTransaction.RESTOCK_AUTOMATIC);
                                 }
                                 //
                                 if (sw == 3) {
@@ -280,10 +299,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                             "walletPublicKey",
                                             "walletPublicKey",
                                             "cashReference",
-                                            null,
+                                            amount,
                                             "memo",
-                                            null,
-                                            OriginTransaction.STOCK_INITIAL);
+                                            priceReference,
+                                            OriginTransaction.RESTOCK_AUTOMATIC);
                                 }
                             }
                             customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
@@ -375,6 +394,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
             } catch (CantCreateBankMoneyRestockException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantCreateCashMoneyRestockException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantGetListClauseException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
