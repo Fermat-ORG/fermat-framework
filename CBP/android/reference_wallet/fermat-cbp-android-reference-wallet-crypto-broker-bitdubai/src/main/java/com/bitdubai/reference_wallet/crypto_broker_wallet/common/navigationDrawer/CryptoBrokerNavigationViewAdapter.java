@@ -28,14 +28,15 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
     protected CryptoBrokerNavigationViewAdapter(Context context) {
         super(context);
-        earningsItems = new ArrayList<>();
-        earningsItems.add(new NavViewFooterItem("US Dollar", "1,400.01"));
-        earningsItems.add(new NavViewFooterItem("Bolivar", "350,251.87"));
 
         stockItems = new ArrayList<>();
         stockItems.add(new NavViewFooterItem("Bitcoin", "145.32"));
         stockItems.add(new NavViewFooterItem("US Dollar", "14.04"));
         stockItems.add(new NavViewFooterItem("Bolivar", "350,400.25"));
+
+        earningsItems = new ArrayList<>();
+        earningsItems.add(new NavViewFooterItem("US Dollar", "1,400.01"));
+        earningsItems.add(new NavViewFooterItem("Bolivar", "350,251.87"));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
             return TYPE_MENU_ITEMS;
         if (isStockTitleItemPosition(position))
             return TYPE_FOOTER_TITLE;
-        if (isPositionEarningsTitleItem(position))
+        if (isEarningsTitleItemPosition(position))
             return TYPE_FOOTER_TITLE;
         else
             return TYPE_FOOTER_ITEM;
@@ -113,9 +114,9 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
         } else {
             NavItemFooterViewHolder itemFooterViewHolder = (NavItemFooterViewHolder) holder;
-            NavViewFooterItem item = isStockItemPosition(position) ?
-                    stockItems.get(getStockItemPosition(position)) :
-                    earningsItems.get(getEarningsItemPosition(position));
+            NavViewFooterItem item = isEarningsItemPosition(position) ?
+                    earningsItems.get(getEarningsItemPosition(position)) :
+                    stockItems.get(getStockItemPosition(position));
 
             itemFooterViewHolder.getNavFooterItemCurrency().setText(item.getCurrency());
             itemFooterViewHolder.getNavFooterItemCurrencyAmount().setText(item.getValue());
@@ -125,26 +126,6 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
     @Override
     protected void bindHolder(FermatViewHolder holder, MenuItem data, int position) {
         // NOTING...
-    }
-
-    private boolean isStockTitleItemPosition(int position) {
-        return position == dataSet.size();
-    }
-
-    private boolean isStockItemPosition(int position) {
-        return position > dataSet.size() && position <= dataSet.size() + stockItems.size();
-    }
-
-    private int getStockItemPosition(int position) {
-        return dataSet.size() + 1 - position;
-    }
-
-    private boolean isPositionEarningsTitleItem(int position) {
-        return position == dataSet.size() + 1 + stockItems.size();
-    }
-
-    private int getEarningsItemPosition(int position) {
-        return dataSet.size() + 1 + stockItems.size() + 1 - position;
     }
 
     private void bindMenuItem(NavigationItemMenuViewHolder holder, int position) {
@@ -184,5 +165,25 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private int getEarningsItemPosition(int position) {
+        return Math.abs( dataSet.size() + 1 + stockItems.size() + 1 - position);
+    }
+
+    private int getStockItemPosition(int position) {
+        return Math.abs(dataSet.size() + 1 - position);
+    }
+
+    private boolean isEarningsTitleItemPosition(int position) {
+        return position == dataSet.size() + 1 + stockItems.size();
+    }
+
+    private boolean isStockTitleItemPosition(int position) {
+        return position == dataSet.size();
+    }
+
+    private boolean isEarningsItemPosition(int position) {
+        return position >= getItemCount() - earningsItems.size() && position < getItemCount();
     }
 }
