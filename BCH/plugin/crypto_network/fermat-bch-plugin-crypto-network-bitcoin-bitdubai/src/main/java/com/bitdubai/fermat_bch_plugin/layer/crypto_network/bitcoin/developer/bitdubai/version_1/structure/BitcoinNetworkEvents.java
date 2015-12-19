@@ -151,8 +151,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     getBlockHash(tx),
                     getTransactionCryptoStatus(tx),
                     tx.getConfidence().getDepthInBlocks(),
-                    getOutgoingTransactionAddressTo(tx),
-                    getOutgoingTransactionAddressFrom(wallet, tx),
+                    getOutgoingTransactionAddressTo(wallet,tx),
+                    getOutgoingTransactionAddressFrom(tx),
                     getOutgoingTransactionValue(wallet,tx),
                     getTransactionOpReturn(tx),
                     ProtocolStatus.NO_ACTION_REQUIRED);
@@ -338,8 +338,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param tx
      * @return
      */
-    private CryptoAddress getOutgoingTransactionAddressFrom (Wallet wallet, Transaction tx){
-        return getIncomingTransactionAddressTo(wallet, tx);
+    private CryptoAddress getOutgoingTransactionAddressFrom (Transaction tx){
+        return getIncomingTransactionAddressFrom(tx);
     }
 
     /**
@@ -347,8 +347,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param tx
      * @return
      */
-    private CryptoAddress getOutgoingTransactionAddressTo (Transaction tx){
-        return getIncomingTransactionAddressFrom(tx);
+    private CryptoAddress getOutgoingTransactionAddressTo (Wallet wallet, Transaction tx){
+        return getIncomingTransactionAddressTo(wallet, tx);
     }
 
     /**
@@ -603,7 +603,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          * I need to check the outputs for the value that is being sent
          */
         try{
-            return tx.getValue(wallet).getValue();
+            return tx.getValueSentFromMe(wallet).getValue();
         } catch (Exception e){
             return 0;
         }
