@@ -3,6 +3,7 @@
 # Installation and Configuration Guide for Fermat Development Environment 
 
 <br>
+## all links tested-laderuner
 ## Introduction
 
 Currently Fermat is targeting the Android OS (other OS will come later on).
