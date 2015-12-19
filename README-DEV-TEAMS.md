@@ -22,7 +22,6 @@ Currently we are a small team dedicated to the development of a communications l
     Email:   rart3001@gmail.com
     Skype:   Rart3001
     Github:  https://github.com/Rart3001
-    Country: Venezuela
     
 ![alt text](https://avatars3.githubusercontent.com/u/13169230?v=3&s=460 "Image Profile")
     
@@ -31,7 +30,6 @@ Currently we are a small team dedicated to the development of a communications l
       Email:   elnegroevaristo@gmail.com
       Skype:   Hendry19901990
       Github:  https://github.com/hendry19901990
-      Country: Venezuela  
 
 We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
