@@ -139,7 +139,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "WalletCashMoneyPluginRoot", null);
         }
 
-        createTestWalletIfNotExists();
+        //createTestWalletIfNotExists();
         //testDeposits();
     }
 

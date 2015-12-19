@@ -426,7 +426,7 @@ public abstract class FermatActivity extends AppCompatActivity
     private void paintFooter(FermatFooter footer) {
         if (footer != null) {
             FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
-            LinearLayout footer_container = (LinearLayout) findViewById(R.id.footer_container);
+            RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
             if (footer_container != null && footerViewPainter != null && slide_container != null) {
                 footerViewPainter.addNavigationViewFooterElementVisible(getLayoutInflater(), slide_container);
                 footerViewPainter.addFooterViewContainer(getLayoutInflater(), footer_container);
@@ -764,7 +764,7 @@ public abstract class FermatActivity extends AppCompatActivity
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
-        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null);
+        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null, null, null, null);
         com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
         adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),

@@ -42,7 +42,7 @@ public class CashMoneyWalletFermatAppConnection extends AppConnections{
         return new PluginVersionReference(
                 Platforms.CASH_PLATFORM,
                 Layers.WALLET_MODULE,
-                Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY,
+                Plugins.BITDUBAI_CSH_MONEY_WALLET_MODULE,
                 Developers.BITDUBAI,
                 new Version()
         );

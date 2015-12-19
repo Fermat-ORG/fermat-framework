@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="csh_summary_top_background_color">#0d47a1</color>
+    <color name="csh_summary_top_background_color">#1565c0</color>
     <color name="csh_transactions_background_color">#c5cae9</color>
 
     <color name="csh_summary_top_balance_text_color">#ffffff</color>
     <color name="csh_summary_top_balance_amount_text_color">#c5cae9</color>
+
+    <color name="csh_setup_background_color">#1565c0</color>
 
 
     <color name="background_tab_pressed">#6633B5E5</color>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="#12aca1"
+    android:background="@color/csh_setup_background_color"
     >
 
 
@@ -44,20 +43,19 @@
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="#12aca1"
         android:layout_marginTop="60dp"
         android:paddingLeft="60dp"
         android:paddingRight="60dp"
         >
 
         <Spinner
-            android:spinnerMode="dropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dip"
             android:layout_marginLeft="15dip"
             android:id="@+id/csh_setup_currency_spinner"
             android:layout_gravity="center_horizontal"
+            android:textColor="#2c648f"
             android:background="#FFF"/>
 
         <!--<View
@@ -69,7 +67,7 @@
             />-->
 
 
-        <Button
+        <!--<Button
             android:id="@+id/csh_setup_back_btn"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -79,18 +77,19 @@
             android:background="#efefef"
             android:text="Go back"
             android:textColor="#666666"
-            android:textSize="14sp" />
+            android:textSize="14sp" />-->
 
 
         <Button
             android:id="@+id/csh_setup_ok_btn"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginTop="190dip"
             android:layout_marginRight="15dip"
             android:layout_marginLeft="15dip"
-            android:background="#1173aa"
+            android:background="#FFF"
             android:text="OK"
-            android:textColor="#FFFFFF"
+            android:textColor="#2c648f"
             android:textSize="14sp" />
 
     </LinearLayout>

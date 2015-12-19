@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
@@ -372,10 +373,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param blockchainNetworkType
      * @param tx
+     * @param transactionId the internal fermat transaction id
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-        runningAgents.get(blockchainNetworkType).broadcastTransaction(tx);
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+        runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
 
@@ -567,5 +569,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
         //todo implementar esto lo voy a necesitar cuando el redeem point recibe el digital asset metadata y quiere buscar la transaccion.
         return null;
+    }
+
+    /**
+     * Gets the current Crypto Status for the specified internal Fermat transaction id
+     * @param transactionId the internal fermat transaction id
+     * @return
+     * @throws CantGetTransactionCryptoStatusException
+     */
+    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException {
+        try {
+            return getDao().getTransactionCryptoStatus(transactionId);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + transactionId.toString(), "database issue");
+        }
     }
 }

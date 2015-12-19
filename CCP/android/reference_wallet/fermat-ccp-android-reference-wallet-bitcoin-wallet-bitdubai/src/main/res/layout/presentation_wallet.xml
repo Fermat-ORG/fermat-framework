@@ -44,20 +44,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_title"
-                    android:text="Welcome to\nthe bitcoin wallet!"
+                    android:text="Welcome!"
                     android:paddingLeft="5dp"
+                    android:layout_weight="1"
                     android:textSize="20sp"
                     android:textColor="#00a99d"
                     app:typeface="CAVIAR_DREAMS_BOLD"
                     android:gravity="left"
+                    android:layout_gravity="center"
 
                     />
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_weight="0.4"
                     android:src="@drawable/bitcoin_wallet_2"
-                    android:layout_weight="1"
                     android:paddingBottom="2dp"/>
 
             </LinearLayout>
@@ -68,11 +70,15 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog"
+                android:layout_marginBottom="12dp"
                 />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="85dp">
+                android:layout_height="85dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -116,9 +122,9 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:paddingBottom="5dp"
-                    android:text="* See your balance.\n* Send and receive bitcoins from your contacts.\n* Request bitcoins from your contacts.\n* Browse your transaction history."
+                    android:text="* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history."
                     android:gravity="left"
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="16dp"
@@ -131,10 +137,12 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dad9d9"
-                android:layout_marginRight="42dp"
-                android:layout_marginLeft="42dp"/>
+                android:layout_height="0.7dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/round_corner_line_dialog"
+                />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -145,7 +153,7 @@
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:paddingBottom="10dp"
                     android:text="To begin, choose an avatar below. You might change later it with any picture and your own alias."
                     android:gravity="center"
