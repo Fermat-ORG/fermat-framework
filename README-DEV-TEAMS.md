@@ -2,9 +2,7 @@
 
 # Dev Teams
 
-In bitDubai we have extensive manpower, composed of many people from different parts of lationamerica. That they have different technical and non-technical skills dedicated to teamwork, and all working for the same purpose to make our dream project Fermat.
-
-We java developers, web and graphic designers ...
+Here you will fin a list of teams working at Fermat. Feel free to contact their team leaders in order to join them.
 
 # Our Teams
 
@@ -19,7 +17,7 @@ Currently we are a small team dedicated to the development of a communications l
 
 ![alt text](https://avatars1.githubusercontent.com/u/12099493?v=3&s=460 "Image Profile")
 
-* **Roberto Requena**<br/>
+* **Roberto Requena [Team Leader]**<br/>
 ---
     Email:   rart3001@gmail.com
     Skype:   Rart3001
