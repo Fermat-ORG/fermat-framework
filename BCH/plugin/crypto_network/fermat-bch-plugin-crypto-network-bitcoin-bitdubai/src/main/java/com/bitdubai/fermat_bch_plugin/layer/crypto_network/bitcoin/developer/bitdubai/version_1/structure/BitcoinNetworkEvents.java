@@ -155,7 +155,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     getOutgoingTransactionAddressFrom(tx),
                     getOutgoingTransactionValue(wallet,tx),
                     getTransactionOpReturn(tx),
-                    ProtocolStatus.NO_ACTION_REQUIRED);
+                    ProtocolStatus.TO_BE_NOTIFIED);
         } catch (Exception e) {
             /**
              * if there is an error in getting information from the transaction object.
@@ -603,7 +603,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          * I need to check the outputs for the value that is being sent
          */
         try{
-            return tx.getValueSentFromMe(wallet).getValue();
+            return tx.getValueSentToMe(wallet).getValue();
         } catch (Exception e){
             return 0;
         }
