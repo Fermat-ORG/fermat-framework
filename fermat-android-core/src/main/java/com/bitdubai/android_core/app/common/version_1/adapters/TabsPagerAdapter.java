@@ -22,8 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.List;
@@ -51,13 +49,9 @@ import java.util.List;
 
         private ErrorManager errorManager;
 
-        private WalletSettings walletSettings;
-
         private WalletResourcesProviderManager walletResourcesProviderManager;
 
         private FermatFragmentFactory subAppFragmentFactory;
-
-        private SubAppSettings subAppSettings;
 
         private SubAppResourcesProviderManager subAppResourcesProviderManager;
 
@@ -66,7 +60,7 @@ import java.util.List;
         private Resources resources;
 
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,FermatSession subAppSession,ErrorManager errorManager,FermatFragmentFactory subAppFragmentFactory,SubAppSettings subAppSettings,SubAppResourcesProviderManager subAppResourcesProviderManager) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,FermatSession subAppSession,ErrorManager errorManager,FermatFragmentFactory subAppFragmentFactory,SubAppResourcesProviderManager subAppResourcesProviderManager) {
             super(fm);
             this.context=context;
 
@@ -77,7 +71,6 @@ import java.util.List;
             this.activity=activity;
             tabStrip=activity.getTabStrip();
             this.subAppFragmentFactory=subAppFragmentFactory;
-            this.subAppSettings = subAppSettings;
             this.subAppResourcesProviderManager = subAppResourcesProviderManager;
 
 
@@ -99,7 +92,6 @@ import java.util.List;
         this.subAppFragmentFactory =subAppFragmentFactory;
         this.subAppsSession = subAppsSession;
         this.onlyFragment = fragment;
-        this.subAppSettings = subAppSettings;
         this.subAppResourcesProviderManager = subAppResourcesProviderManager;
 
 
@@ -199,20 +191,12 @@ import java.util.List;
                     }
                 }
 
-
-
             }else{
                 fragmentCodeType = onlyFragment;
             }
-
-
-
-
-
-
             try {
                 if(walletFragmentFactory !=null){
-                    currentFragment= walletFragmentFactory.getFragment(fragmentCodeType, walletSession,walletSettings,walletResourcesProviderManager);
+                    currentFragment= walletFragmentFactory.getFragment(fragmentCodeType, walletSession,walletResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -221,7 +205,7 @@ import java.util.List;
 
             try {
                 if(subAppFragmentFactory !=null){
-                    currentFragment= subAppFragmentFactory.getFragment(fragmentCodeType, (AbstractFermatSession) subAppsSession,subAppSettings,subAppResourcesProviderManager);
+                    currentFragment= subAppFragmentFactory.getFragment(fragmentCodeType, subAppsSession,subAppResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();

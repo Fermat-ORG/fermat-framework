@@ -14,8 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.intra_user_community.preference_settings.IntraUserPreferenceSettings;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
@@ -48,11 +47,6 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
     @Override
     public AbstractFermatSession getSession() {
         return new IntraUserSubAppSession();
-    }
-
-    @Override
-    public FermatSettings getSettings() {
-        return new IntraUserPreferenceSettings();
     }
 
     @Override

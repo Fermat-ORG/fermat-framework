@@ -1,4 +1,0 @@
-= Bitcoin wallet
-
-Además de agregar el tab de money requests (enviados y recibidos) debemos incorporar los métodos para
-aceptar, rechazar y posponer la decisión sobre las solicitudes de contactos.

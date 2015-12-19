@@ -8,7 +8,6 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -18,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.fragmentFactory.RedeemPointIdentityFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.preference_settings.RedeemPointIdentitySubAppSettings;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.session.RedeemPointIdentitySubAppSession;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -48,11 +47,6 @@ public class RedeemPointFermatAppConnection extends AppConnections{
     @Override
     public AbstractFermatSession getSession() {
         return new RedeemPointIdentitySubAppSession();
-    }
-
-    @Override
-    public FermatSettings getSettings() {
-        return new RedeemPointIdentitySubAppSettings();
     }
 
     @Override

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
  *
  * @author Matias Furszyfer
  */
-public interface WalletFragmentFactory<S extends FermatSession,J extends WalletSettings> {
+public interface WalletFragmentFactory<S extends FermatSession> {
 
     /**
      * This method takes a reference (string) to a fragment and returns the corresponding fragment.
@@ -21,5 +21,5 @@ public interface WalletFragmentFactory<S extends FermatSession,J extends WalletS
      * @param code the reference used to identify the fragment
      * @return the fragment referenced
      */
-    public Fragment getFragment(String code,S walletSession,J WalletSettings,WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException;
+    public Fragment getFragment(String code,S walletSession,WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException;
 }

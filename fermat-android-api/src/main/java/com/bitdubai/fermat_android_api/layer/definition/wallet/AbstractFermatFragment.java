@@ -11,14 +11,13 @@ import android.view.MenuInflater;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class AbstractFermatFragment<S extends FermatSession,PS extends FermatSettings,R extends ResourceProviderManager> extends Fragment implements FermatFragments{
+public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment{
 
     /**
      * FLAGS
@@ -29,7 +28,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
      * Platform
      */
     protected S appSession;
-    protected PS appSettings;
     protected R appResourcesProviderManager;
 
 
@@ -85,13 +83,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,PS extends 
         this.appSession = appSession;
     }
 
-    public void setAppSettings(PS appSettings) {
-        this.appSettings = appSettings;
-    }
-
     public void setAppResourcesProviderManager(R appResourcesProviderManager) {
         this.appResourcesProviderManager = appResourcesProviderManager;
     }
-
 
 }

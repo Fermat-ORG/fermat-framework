@@ -122,16 +122,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             //com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subApp);
 
             FermatFragmentsEnumType fermatFragmentsEnumType = fermatFragmentFactory.getFermatFragmentEnumType(fragmentType);
-            android.app.Fragment fragment =  fermatFragmentFactory.getFragment(fragmentType,subAppsSession,null,null);
+            android.app.Fragment fragment =  fermatFragmentFactory.getFragment(fragmentType,subAppsSession,null);
 
 
-
-//            android.app.Fragment fragment = subAppFragmentFactory.getFragment(
-//                    fragmentType,
-//                    subAppsSession,
-//                    null, //getSubAppSettingsManager().getSettings(xxx),
-//                    getSubAppResourcesProviderManager()
-//            );
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(idContainer, fragment);

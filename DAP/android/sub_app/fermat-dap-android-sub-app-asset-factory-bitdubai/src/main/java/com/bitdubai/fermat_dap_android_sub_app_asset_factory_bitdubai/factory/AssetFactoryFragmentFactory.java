@@ -18,7 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @author Francisco Vasquez on 15/09/15.
  * @version 1.0
  */
-public class AssetFactoryFragmentFactory extends FermatFragmentFactory<AssetFactorySession, AssetFactorySettings, SubAppResourcesProviderManager, AssetFactoryFragmentsEnumType> {
+public class AssetFactoryFragmentFactory extends FermatFragmentFactory<AssetFactorySession, SubAppResourcesProviderManager, AssetFactoryFragmentsEnumType> {
 
     @Override
     public FermatFragment getFermatFragment(AssetFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
