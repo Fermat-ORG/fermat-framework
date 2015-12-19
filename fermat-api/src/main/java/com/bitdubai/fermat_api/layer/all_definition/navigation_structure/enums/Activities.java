@@ -128,6 +128,7 @@ public enum Activities {
 
     // Cas Money Wallet
     CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
+    CSH_CASH_MONEY_WALLET_SETUP("CSHCMWS"),
 
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
@@ -147,8 +148,6 @@ public enum Activities {
     CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD("CCPSAIUCCW"),
     CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST("CCPSAIUCCFL"),
     CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS("CCPSAIUCCS"),
-
-
 
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
@@ -412,6 +411,8 @@ public enum Activities {
                 return BNK_BANK_MONEY_WALLET_HOME;
             case "CSHCMWH":
                 return CSH_CASH_MONEY_WALLET_HOME;
+            case "CSHCMWS":
+                return CSH_CASH_MONEY_WALLET_SETUP;
             case "BNKBMWAD":
                 return BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS;
             case "DWAIMA":
