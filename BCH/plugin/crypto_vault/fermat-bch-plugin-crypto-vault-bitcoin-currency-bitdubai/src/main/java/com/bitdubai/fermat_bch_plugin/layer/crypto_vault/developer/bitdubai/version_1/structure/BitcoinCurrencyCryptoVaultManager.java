@@ -34,6 +34,8 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
@@ -365,6 +367,13 @@ public class BitcoinCurrencyCryptoVaultManager {
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
+
+        /**
+         * I will add the OP_Return output if any
+         */
+        if (op_Return != null){
+            sendRequest.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
+        }
 
         try {
             wallet.completeTx(sendRequest);
