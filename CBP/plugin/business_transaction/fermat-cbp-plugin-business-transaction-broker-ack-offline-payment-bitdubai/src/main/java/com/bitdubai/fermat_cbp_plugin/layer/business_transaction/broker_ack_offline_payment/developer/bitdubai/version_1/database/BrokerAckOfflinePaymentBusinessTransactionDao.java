@@ -22,11 +22,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -451,6 +453,246 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         }  catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter "+statusColumnName,"");
         }
+    }
+
+    /**
+     * This method returns the pending to submit notification list.
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<CustomerOnlinePaymentRecord> getPendingToSubmitNotificationList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        return getCustomerOnlinePaymentRecordList(
+                ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION.getCode(),
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }
+
+    /**
+     * This method returns a CustomerOnlinePaymentRecordList according the arguments.
+     * @param key String with the search key.
+     * @param keyColumn String with the key column name.
+     * @param valueColumn String with the value searched column name.
+     * @return List<CustomerOnlinePaymentRecord>
+     * @throws CantGetContractListException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    private List<CustomerOnlinePaymentRecord> getCustomerOnlinePaymentRecordList(
+            String key,
+            String keyColumn,
+            String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
+        List<String> pendingContractHash= getStringList(
+                key,
+                keyColumn,
+                valueColumn);
+        List<CustomerOnlinePaymentRecord> customerOnlinePaymentRecordList=new ArrayList<>();
+        CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+        for(String contractHash : pendingContractHash){
+            customerOnlinePaymentRecord= getCustomerOnlinePaymentRecordByContractHash(contractHash);
+            customerOnlinePaymentRecordList.add(customerOnlinePaymentRecord);
+        }
+        return customerOnlinePaymentRecordList;
+    }
+
+    /**
+     * This method returns a List with the parameter in the arguments.
+     * @param key
+     * @param keyColumn
+     * @param valueColumn
+     * @return
+     */
+    private List<String> getStringList(
+            String key,
+            String keyColumn,
+            String valueColumn) throws CantGetContractListException {
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            List<String> contractHashList=new ArrayList<>();
+            String contractHash;
+            databaseTable.addStringFilter(
+                    keyColumn,
+                    key,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return contractHashList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                contractHash=databaseTableRecord.getStringValue(valueColumn);
+                contractHashList.add(contractHash);
+            }
+            return contractHashList;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetContractListException(e,
+                    "Getting "+valueColumn+" based on "+key,
+                    "Cannot load the table into memory");
+        }
+    }
+
+    /**
+     * This method returns the recorded pending events
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<String> getPendingEvents() throws CantGetContractListException {
+        DatabaseTable databaseTable=getDatabaseEventsTable();
+        return getPendingGenericsEvents(
+                databaseTable,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME
+        );
+    }
+
+    /**
+     * This method returns pending generic events by given parameters
+     * @return
+     */
+    private List<String> getPendingGenericsEvents(
+            DatabaseTable databaseTable,
+            String statusColumn,
+            String idColumn) throws
+            CantGetContractListException {
+        try{
+            List<String> eventTypeList=new ArrayList<>();
+            String eventId;
+            databaseTable.addStringFilter(
+                    statusColumn,
+                    EventStatus.PENDING.getCode(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return eventTypeList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                eventId=databaseTableRecord.getStringValue(
+                        idColumn);
+                eventTypeList.add(eventId);
+            }
+            return eventTypeList;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetContractListException(e,
+                    "Getting events in EventStatus.PENDING in table "+databaseTable.getTableName(),
+                    "Cannot load the table into memory");
+        }
+    }
+
+    /**
+     * This method returns the event type by event Id
+     * @param eventId
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public String getEventType(String eventId)
+            throws
+            UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            databaseTable.addStringFilter(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            String value=records
+                    .get(0)
+                    .getStringValue(
+                            BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+            return value;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        }
+
+    }
+
+    /**
+     * This method updates the event status
+     * @param eventId
+     * @param eventStatus
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateEventStatus(
+            String eventId,
+            EventStatus eventStatus) throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            databaseTable.addStringFilter(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    eventStatus.getCode());
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter "+ BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }
+    }
+
+    /**
+     * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
+     * @param customerBrokerContractPurchase
+     * @throws CantInsertRecordException
+     */
+    public void persistContractInDatabase(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase)
+            throws CantInsertRecordException {
+
+        DatabaseTable databaseTable=getDatabaseContractTable();
+        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+        databaseTableRecord= buildDatabaseTableRecord(
+                databaseTableRecord,
+                customerBrokerContractPurchase
+        );
+        databaseTable.insertRecord(databaseTableRecord);
+    }
+
+    /**
+     * This method creates a database table record in crypto broker side, only for backup
+     * @param record
+     * @param customerBrokerContractPurchase
+     * @return
+     */
+    private DatabaseTableRecord buildDatabaseTableRecord(
+            DatabaseTableRecord record,
+            CustomerBrokerContractPurchase customerBrokerContractPurchase){
+        UUID transactionId=UUID.randomUUID();
+        record.setUUIDValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
+                transactionId);
+        //For the business transaction this value represents the contract hash.
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                customerBrokerContractPurchase.getContractId());
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+                customerBrokerContractPurchase.getPublicKeyCustomer());
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+                customerBrokerContractPurchase.getPublicKeyBroker());
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION.getCode());
+
+        return record;
     }
 
 }
