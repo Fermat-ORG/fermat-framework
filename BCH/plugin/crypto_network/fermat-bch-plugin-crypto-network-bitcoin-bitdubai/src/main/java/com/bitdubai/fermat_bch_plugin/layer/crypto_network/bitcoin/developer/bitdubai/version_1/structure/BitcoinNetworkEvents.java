@@ -1,10 +1,13 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -276,9 +279,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
             if (depth == 0)
                 return CryptoStatus.ON_CRYPTO_NETWORK;
-            else if(depth == 1)
+            else if(depth > 0 && depth < BitcoinNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
                 return CryptoStatus.ON_BLOCKCHAIN;
-            else if (depth >= 2)
+            else if (depth >= BitcoinNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
                 return CryptoStatus.IRREVERSIBLE;
             else
                 return CryptoStatus.PENDING_SUBMIT;
@@ -339,7 +342,20 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoAddress getOutgoingTransactionAddressFrom (Transaction tx){
-        return getIncomingTransactionAddressFrom(tx);
+        Address address = null;
+        for (TransactionInput input : tx.getInputs()){
+            if (input.getScriptSig().isSentToAddress())
+                address = input.getScriptSig().getToAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT));
+        }
+
+        CryptoAddress cryptoAddress = null;
+
+        if (address != null)
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        else
+            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
+
+        return cryptoAddress;
     }
 
     /**
@@ -348,7 +364,24 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoAddress getOutgoingTransactionAddressTo (Wallet wallet, Transaction tx){
-        return getIncomingTransactionAddressTo(wallet, tx);
+        Address address = null;
+
+        /**
+         * look for the transactions outputs that are for keys not mine.
+         */
+        for (TransactionOutput output : tx.getOutputs()){
+            if (!output.isMine(wallet)){
+                address = output.getScriptPubKey().getToAddress(wallet.getNetworkParameters());
+            }
+        }
+
+        CryptoAddress cryptoAddress = null;
+        if (address != null)
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        else
+            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
+
+        return cryptoAddress;
     }
 
     /**
