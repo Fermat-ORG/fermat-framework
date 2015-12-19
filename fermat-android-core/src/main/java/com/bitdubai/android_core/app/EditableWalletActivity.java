@@ -328,7 +328,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         AbstractFermatSession walletSession = null;
         try {
             //TODO: hacerlo con lo nuevo de appConnection cuando esta actividad vuelva a usarse
-            //WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
+            //WalletSettings walletSettings = getWalletSettingsManager().getAndLoadSettingsFile(lastWallet.getWalletPublicKey());
             //walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(), null, getWalletResourcesProviderManager(), getErrorManager(), getCryptoBrokerWalletModuleManager(), getCryptoCustomerWalletModuleManager(), getAssetIssuerWalletModuleManager(), getAssetUserWalletModuleManager(), getAssetRedeemPointWalletModuleManager(), getIntraUserModuleManager(),getBankMoneyWalletModuleManager(), getCashMoneyWalletModuleManager());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -490,7 +490,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         try {
 //            getWalletRuntimeManager().getLastWallet().getLastActivity().getFragment(fragmentType);
 //            FermatFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
-//            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()), getWalletSettingsManager().getSettings(walletPublicKey), getWalletResourcesProviderManager());
+//            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()), getWalletSettingsManager().getAndLoadSettingsFile(walletPublicKey), getWalletResourcesProviderManager());
 //            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
 //            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 //            FT.replace(R.id.fragment_container2, fragment);

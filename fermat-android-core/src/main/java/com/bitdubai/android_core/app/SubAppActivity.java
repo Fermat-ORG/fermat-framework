@@ -129,7 +129,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 //            android.app.Fragment fragment = subAppFragmentFactory.getFragment(
 //                    fragmentType,
 //                    subAppsSession,
-//                    null, //getSubAppSettingsManager().getSettings(xxx),
+//                    null, //getSubAppSettingsManager().getAndLoadSettingsFile(xxx),
 //                    getSubAppResourcesProviderManager()
 //            );
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();

@@ -1,84 +1,73 @@
-package com.bitdubai.desktop.wallet_manager.preference_settings;
+package com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantLoadSubAppSettings;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSaveSubAppSettings;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultSkinException;
-import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 
 import java.util.UUID;
 
 /**
- * Created by mati on 2015.08.24..
+ * Created by Matias Furszyfer on 2015.08.19..
+ * Updated by lnacosta on 18/12/2015.
  */
-public class WalletManagerPreferenceSettings implements SubAppSettings {
+public interface SubAppSettings extends FermatSettings {
+
     /**
      * This method let us know the default language of a wallet
      *
      * @return the identifier of the default language of the wallet
-     * @throws CantGetDefaultLanguageException
+     *
+     * @throws CantGetDefaultLanguageException if something goes wrong.
      */
-    @Override
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
-        return null;
-    }
+    UUID getDefaultLanguage() throws CantGetDefaultLanguageException;
 
     /**
      * This method let us know the default skin of a wallet
      *
      * @return the identifier of the default skin of the wallet
-     * @throws CantGetDefaultSkinException
+     *
+     * @throws CantGetDefaultSkinException if something goes wrong.
      */
-    @Override
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
-        return null;
-    }
+    UUID getDefaultSkin() throws CantGetDefaultSkinException;
 
     /**
      * This method let us set the default language for a wallet
      *
      * @param languageId the identifier of the language to set as default
-     * @throws CantSetDefaultLanguageException
+     *
+     * @throws CantSetDefaultLanguageException if something goes wrong.
      */
-    @Override
-    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
-
-    }
+    void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException;
 
     /**
      * This method let us set the default skin for a wallet
      *
      * @param skinId the identifier of the skin to set as default
-     * @throws CantSetDefaultSkinException
+     *
+     * @throws CantSetDefaultSkinException if something goes wrong.
      */
-    @Override
-    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
-
-    }
+    void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException;
 
     /**
      * This method let us set the preference settings for a wallet
      *
      * @param walletPreferenceSettings
-     * @param walletPublicKey
+     *
      * @throws CantSetDefaultSkinException
      */
-    @Override
-    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings {
-
-    }
+    @Deprecated // todo this is done through the module manager
+    public void setPreferenceSettings(String walletPreferenceSettings,String walletPublicKey) throws CantSaveSubAppSettings;
 
     /**
      * This method let us get the preference settings for a wallet
      *
-     * @param walletPublicKey
      * @return preference settings of a wallet
      * @throws CantGetDefaultSkinException
      */
-    @Override
-    public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings {
-        return null;
-    }
+    @Deprecated // todo this is done through the module manager
+    public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings;
 }
