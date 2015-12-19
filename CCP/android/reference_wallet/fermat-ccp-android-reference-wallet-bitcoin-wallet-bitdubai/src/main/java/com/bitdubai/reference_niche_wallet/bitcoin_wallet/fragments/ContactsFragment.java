@@ -361,7 +361,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                lauchCreateContactDialog(false);
+                getActivity().onBackPressed();
             }
         });
         contactsTutorialPart1.show();

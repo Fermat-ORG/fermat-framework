@@ -112,4 +112,8 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
+
+    public void removeData(String string){
+        data.remove(string);
+    }
 }
