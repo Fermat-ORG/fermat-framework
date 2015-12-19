@@ -255,7 +255,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }
 
     //GET NEGOTIATION TYPE OF NEGOTIATION TRANSACTION
-    public NegotiationType getContractType(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
+    public NegotiationType getNegotiationType(String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
 
         try {
 

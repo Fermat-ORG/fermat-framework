@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -14,6 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -25,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_sale.interfaces.CustomerBrokerSale;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseFactory;
@@ -249,6 +253,30 @@ public class CustomerBrokerUpdateAgent implements
                 if(!negotiationPendingToSubmitList.isEmpty()) {
                     for (String negotiationToSubmit : negotiationPendingToSubmitList) {
 
+                        negotiationTransaction  = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiationToSubmit);
+                        transactionId           = negotiationTransaction.getTransactionId();
+                        negotiationXML          = negotiationTransaction.getNegotiationXML();
+                        negotiationType         = NegotiationType.PURCHASE;
+
+                        switch (negotiationType){
+                            case PURCHASE:
+                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML,purchaseNegotiation);
+                                //SEND NEGOTIATION TO BROKER
+                                negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                //CHANGE STATUS PURCHASE NEGOTIATION
+                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                break;
+                            case SALE:
+                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML,saleNegotiation);
+                                //SEND NEGOTIATION TO CUSTOMER
+                                negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                //CHANGE STATUS SALE NEGOTIATION
+                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
+                                break;
+                        }
+
+                        //Update the Negotiation Transaction
+                        customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
                     }
                 }
 
@@ -257,6 +285,30 @@ public class CustomerBrokerUpdateAgent implements
                 if(!negotiationPendingToSubmitList.isEmpty()) {
                     for (String negotiationToSubmit : negotiationPendingToSubmitList) {
 
+                        negotiationTransaction  = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiationToSubmit);
+                        transactionId           = negotiationTransaction.getTransactionId();
+                        negotiationXML          = negotiationTransaction.getNegotiationXML();
+                        negotiationType         = NegotiationType.PURCHASE;
+
+                        switch (negotiationType){
+                            case PURCHASE:
+                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML,purchaseNegotiation);
+                                //SEND NEGOTIATION TO BROKER
+                                negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                //CHANGE STATUS PURCHASE NEGOTIATION
+//                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                break;
+                            case SALE:
+                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML,saleNegotiation);
+                                //SEND NEGOTIATION TO CUSTOMER
+                                negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                //CHANGE STATUS SALE NEGOTIATION
+//                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
+                                break;
+                        }
+
+                        //Update the Negotiation Transaction
+                        customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
                     }
                 }
 
