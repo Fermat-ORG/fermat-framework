@@ -27,12 +27,12 @@
     <string name="sell_text_and_price">Sell: %1$s</string>
     <string name="buy_text_and_price">Buy: %1$s</string>
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
-    <string name="cbw_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_exchange_rate_summary">1 %1$s @ %2$s %3$s</string>
+    <string name="cbw_buying_details">Buying %1$s %2$s</string>
     <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
     <string name="cbw_contract_history_action_no_filter_text">No filter</string>
     <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
     <string name="cbw_contract_history_action_filter_canceled_text">Canceled</string>
-
     <string name="title_activity_broker_list">BrokerListActivity</string>
     <string name="delivery_date_title">Delivery Date</string>
     <string name="delivery_date_text">Delivery Date: </string>
@@ -58,4 +58,12 @@
     <string name="payment_date_title">PAYMENT DATE</string>
     <string name="payment_date">Payment Date: </string>
     <string name="add_a_note_button">ADD A NOTE</string>
+    <string name="payment_methods_title">Payment Methods</string>
+    <string name="payment_method">Method: </string>
+    <string name="payment_date_text">Payment Date: </string>
+    <string name="yours">Yours:</string>
+    <string name="expiration_date_text">Expiration Date:</string>
+    <string name="expiration_date_title">Negotiation Expiration Date</string>
+    <string name="cbw_identity_alias_default_text">Crypto Broker</string>
+
 </resources>

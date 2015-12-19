@@ -48,11 +48,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * database Interface member variables.
      */
-    private String path;
-
-    private String databaseName;
-
-    private UUID ownerId;
+    private final String path        ;
+    private final String databaseName;
+    private       UUID   ownerId     ;
 
     /**
      * <p>Plugin implementation constructor
@@ -61,9 +59,12 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * @param ownerId      PlugIn owner id
      * @param databaseName name database using
      */
-    public AndroidDatabase(String path, UUID ownerId, String databaseName) {
-        this.path = path;
-        this.ownerId = ownerId;
+    public AndroidDatabase(final String path        ,
+                           final UUID   ownerId     ,
+                           final String databaseName) {
+
+        this.path         = path        ;
+        this.ownerId      = ownerId     ;
         this.databaseName = databaseName;
     }
 
@@ -73,17 +74,15 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      * @param path         Android path
      * @param databaseName name database using
      */
-    public AndroidDatabase(String path, String databaseName) {
-        this.path = path;
+    public AndroidDatabase(final String path        ,
+                           final String databaseName) {
+
+        this.path         = path        ;
         this.databaseName = databaseName;
     }
 
     public String getDatabaseName() {
         return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
     }
 
     /**
@@ -193,9 +192,14 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         }
     }
 
-    public List<DatabaseVariable> selectTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record) throws CantSelectRecordException {
+    public List<DatabaseVariable> selectTransactionRecord(final SQLiteDatabase      database,
+                                                          final DatabaseTable       table   ,
+                                                          final DatabaseTableRecord record  ) throws CantSelectRecordException {
+
         List<DatabaseVariable> variablesResult = new ArrayList<>();
+
         try {
+
             StringBuilder strRecords = new StringBuilder("");
 
             List<DatabaseRecord> records = record.getValues();

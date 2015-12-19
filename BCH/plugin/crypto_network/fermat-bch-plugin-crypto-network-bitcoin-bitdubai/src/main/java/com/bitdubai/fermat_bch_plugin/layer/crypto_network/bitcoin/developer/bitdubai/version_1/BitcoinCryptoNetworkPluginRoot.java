@@ -16,11 +16,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
@@ -36,6 +38,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/23/15.
@@ -153,11 +156,12 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param blockchainNetworkType
      * @param tx
+     * @param transactionId the internal Fermat Transaction
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx, transactionId);
     }
 
     /**
@@ -192,7 +196,8 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, VaultType vaultType) {
-        return null;
+        //todo improve this to obtain only transactions from the specified vaultype.
+        return bitcoinCryptoNetworkManager.getBitcoinTransactions(blockchainNetworkType);
     }
 
     /**
@@ -218,5 +223,28 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public List<CryptoTransaction> getChildCryptoTransaction(String parentHash) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getChildCryptoTransaction(parentHash);
+    }
+
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash the parent transaction
+     * @param depth the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getChildCryptoTransaction(parentHash, depth);
+    }
+
+    /**
+     * Gets the current Crypto Status for the specified internal Fermat transaction id
+     * @param transactionId the internal fermat transaction id
+     * @return
+     * @throws CantGetTransactionCryptoStatusException
+     */
+    @Override
+    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException {
+        return bitcoinCryptoNetworkManager.getCryptoStatus(transactionId);
     }
 }

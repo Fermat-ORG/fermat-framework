@@ -76,16 +76,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
 
     /**
-     * <p>This method return a new empty instance of DatabaseTableColumn object
-     *
-     * @return DatabaseTableColumn object
-     */
-    @Override
-    public DatabaseTableColumn newColumn() {
-        return new AndroidDatabaseTableColumn();
-    }
-
-    /**
      * <p>This method return a list of table columns names
      *
      * @return List<String> of columns names
@@ -125,12 +115,16 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public DatabaseTableFilter getEmptyTableFilter() {
-        return new AndroidDatabaseTableFilter();
+        return
+                new AndroidDatabaseTableFilter();
 
     }
 
     @Override
-    public DatabaseTableFilter getNewFilter(String column, DatabaseFilterType type, String value) {
+    public DatabaseTableFilter getNewFilter(final String             column,
+                                            final DatabaseFilterType type  ,
+                                            final String             value ) {
+
         return new AndroidDatabaseTableFilter(column, type, value);
     }
 
@@ -146,26 +140,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
     public void clearAllFilters() {
         this.tableFilter = null;
         this.tableFilterGroup = null;
-    }
-
-    /**
-     * <p>This method return a list of DatabaseTableFilter objects
-     *
-     * @return List<DatabaseTableFilter> object
-     */
-    @Override
-    public List<DatabaseTableFilter> getFilters() {
-        return this.tableFilter;
-    }
-
-    /**
-     * <p>This method return a DatabaseTableFilterGroup objects
-     *
-     * @return DatabaseTableFilterGroup object
-     */
-    @Override
-    public DatabaseTableFilterGroup getFilterGroup() {
-        return this.tableFilterGroup;
     }
 
     /**
@@ -276,7 +250,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         try {
             database = this.database.getReadableDatabase();
             List<String> columns = getColumns(database);
-            cursor = database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+            cursor = database.rawQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
@@ -385,34 +359,36 @@ public class AndroidDatabaseTable implements DatabaseTable {
     /**
      * <p>Sets the filter on a string field
      *
-     * @param columName column name to filter
+     * @param columnName column name to filter
      * @param value     value to filter
      * @param type      DatabaseFilterType object
      */
     @Override
-    public void setStringFilter(String columName, String value, DatabaseFilterType type) {
+    public void addStringFilter(String columnName, String value, DatabaseFilterType type) {
 
         if (this.tableFilter == null)
             this.tableFilter = new ArrayList<>();
 
-        DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
-
-        filter.setColumn(columName);
-        filter.setValue(value);
-        filter.setType(type);
+        DatabaseTableFilter filter = new AndroidDatabaseTableFilter(
+                columnName,
+                type      ,
+                value
+        );
 
         this.tableFilter.add(filter);
     }
 
     @Override
-    public void setFermatEnumFilter(String columName, FermatEnum value, DatabaseFilterType type) {
+    public void addFermatEnumFilter(final String             columnName,
+                                    final FermatEnum         value     ,
+                                    final DatabaseFilterType type      ) {
 
         if (this.tableFilter == null)
             this.tableFilter = new ArrayList<>();
 
         this.tableFilter.add(
                 new AndroidDatabaseTableFilter(
-                        columName,
+                        columnName,
                         type,
                         value.getCode()
                 )
@@ -427,7 +403,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @param type      DatabaseFilterType object
      */
     @Override
-    public void setUUIDFilter(String columName, UUID value, DatabaseFilterType type) {
+    public void addUUIDFilter(String columName, UUID value, DatabaseFilterType type) {
 
         if (this.tableFilter == null)
             this.tableFilter = new ArrayList<>();
@@ -448,16 +424,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @param direction  DatabaseFilterOrder object
      */
     @Override
-    public void setFilterOrder(String columnName, DatabaseFilterOrder direction) {
+    public void addFilterOrder(final String              columnName,
+                               final DatabaseFilterOrder direction ) {
 
         if (this.tableOrder == null)
             this.tableOrder = new ArrayList<>();
 
-        DataBaseTableOrder order = new AndroidDatabaseTableOrder();
-
-        order.setColumName(columnName);
-        order.setDirection(direction);
-
+        DataBaseTableOrder order = new AndroidDatabaseTableOrder(columnName, direction);
 
         this.tableOrder.add(order);
     }
@@ -469,17 +442,16 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @param operator   DataBaseSelectOperatorType type
      */
     @Override
-    public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
+    public void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
 
         if (this.tableSelectOperator == null)
             this.tableSelectOperator = new ArrayList<>();
 
-        DatabaseSelectOperator selectOperator = new AndroidDatabaseSelectOperator();
-
-        selectOperator.setColumn(columnName);
-        selectOperator.setType(operator);
-        selectOperator.setAliasColumn(alias);
-
+        DatabaseSelectOperator selectOperator = new AndroidDatabaseSelectOperator(
+                columnName,
+                operator,
+                alias
+        );
 
         this.tableSelectOperator.add(selectOperator);
     }
@@ -490,7 +462,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @param filterGroup DatabaseTableFilterGroup object
      */
     @Override
-    public void setFilterGroup(DatabaseTableFilterGroup filterGroup) {
+    public void setFilterGroup(final DatabaseTableFilterGroup filterGroup) {
         this.tableFilterGroup = filterGroup;
     }
 
@@ -515,16 +487,28 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 strFilter.append(tableFilter.get(i).getColumn());
 
                 switch (tableFilter.get(i).getType()) {
+                    case NOT_EQUALS:
+                        strFilter.append(" <> '")
+                                .append(tableFilter.get(i).getValue())
+                                .append("'");
+                        break;
                     case EQUAL:
                         strFilter.append(" ='")
                                 .append(tableFilter.get(i).getValue())
                                 .append("'");
                         break;
+                    case GREATER_OR_EQUAL_THAN:
+                        strFilter.append(" >= '")
+                                .append(tableFilter.get(i).getValue())
+                                .append("'");
                     case GREATER_THAN:
                         strFilter.append(" >'")
                                 .append(tableFilter.get(i).getValue())
-                                .append("'");;
+                                .append("'");
                         break;
+                    case LESS_OR_EQUAL_THAN:
+                        strFilter.append(" <= ")
+                                .append(tableFilter.get(i).getValue());
                     case LESS_THAN:
                         strFilter.append(" < ")
                                 .append(tableFilter.get(i).getValue());
@@ -534,6 +518,15 @@ public class AndroidDatabaseTable implements DatabaseTable {
                                 .append(tableFilter.get(i).getValue())
                                 .append("%'");
                         break;
+                    case STARTS_WITH:
+                        strFilter.append(" Like '")
+                                .append(tableFilter.get(i).getValue())
+                                .append("%'");
+                        break;
+                    case ENDS_WITH:
+                        strFilter.append(" Like '%")
+                                .append(tableFilter.get(i).getValue())
+                                .append("'");
                     default:
                         strFilter.append(" ");
                         break;
@@ -734,11 +727,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
                 switch (tableOrder.get(i).getDirection()) {
                     case DESCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName())
+                        strOrder.append(tableOrder.get(i).getColumnName())
                                 .append(" DESC ");
                         break;
                     case ASCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName());
+                        strOrder.append(tableOrder.get(i).getColumnName());
                         break;
                     default:
                         strOrder.append(" ");
@@ -769,8 +762,21 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append(filter.getValue())
                         .append("'");
                 break;
+            case NOT_EQUALS:
+                strFilter.append(" <> '")
+                        .append(filter.getValue())
+                        .append("'");
+                break;
+            case GREATER_OR_EQUAL_THAN:
+                strFilter.append(" >= ")
+                        .append(filter.getValue());
+                break;
             case GREATER_THAN:
                 strFilter.append(" > ")
+                        .append(filter.getValue());
+                break;
+            case LESS_OR_EQUAL_THAN:
+                strFilter.append(" <= ")
                         .append(filter.getValue());
                 break;
             case LESS_THAN:
@@ -781,6 +787,16 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 strFilter.append(" Like '%")
                         .append(filter.getValue())
                         .append("%'");
+                break;
+            case STARTS_WITH:
+                strFilter.append(" Like '")
+                        .append(filter.getValue())
+                        .append("%'");
+                break;
+            case ENDS_WITH:
+                strFilter.append(" Like '%")
+                        .append(filter.getValue())
+                        .append("'");
                 break;
             default:
                 strFilter.append(" ");

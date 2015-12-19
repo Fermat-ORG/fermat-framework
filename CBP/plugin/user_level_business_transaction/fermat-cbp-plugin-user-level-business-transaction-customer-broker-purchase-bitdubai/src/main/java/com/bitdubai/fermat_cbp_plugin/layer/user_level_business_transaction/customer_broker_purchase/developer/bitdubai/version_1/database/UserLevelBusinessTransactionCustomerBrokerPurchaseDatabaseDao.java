@@ -64,7 +64,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
         if (table.getRecords().isEmpty())
             return true;
@@ -88,7 +88,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, customerBrokerPurchaseRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, customerBrokerPurchaseRecord);
             }
 
@@ -142,7 +142,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, customerBrokerPurchaseRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, customerBrokerPurchaseRecord);
             }
 
@@ -161,7 +161,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         DatabaseTable table = getDatabaseTable(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
 

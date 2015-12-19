@@ -114,7 +114,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((AssetFactorySession) appSession).getManager();
+            manager = ((AssetFactorySession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             if (!isEdit) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());

@@ -1,11 +1,10 @@
 package com.bitdubai.reference_wallet.cash_money_wallet.fragments.home;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -19,10 +18,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
@@ -30,23 +25,23 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashDepositTransactionParametersImpl;
-import com.bitdubai.reference_wallet.cash_money_wallet.common.CashWithdrawalTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.adapters.TransactionsAdapter;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
 public class BalanceSummaryFragment extends FermatWalletListFragment<CashMoneyWalletTransaction>
-implements FermatListItemListeners<CashMoneyWalletTransaction> {
+implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
 
     protected final String TAG = "BalanceSummaryFragment";
-    protected final String walletPublicKey = "publicKeyWalletMock";
+    protected final String walletPublicKey = "cash_wallet";
 
     // Fermat Managers
     private CashMoneyWalletModuleManager moduleManager;
@@ -59,6 +54,12 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
 
     //UI
     private View noTransactionsView;
+    FermatTextView bookTextView;
+    FermatTextView availableTextView;
+    com.getbase.floatingactionbutton.FloatingActionsMenu fab;
+    CreateTransactionFragmentDialog dialog;
+    private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+
 
 
     public BalanceSummaryFragment() {}
@@ -88,7 +89,10 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        updateWalletBalances(layout);
+        this.bookTextView = (FermatTextView) layout.findViewById(R.id.textView_book_amount);
+        this.availableTextView = (FermatTextView) layout.findViewById(R.id.textView_available_amount);
+        this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.fab_multiple_actions);
+        updateWalletBalances();
 
         //configureToolbar();
         getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_summary_top_background_color));
@@ -104,31 +108,14 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
         layout.findViewById(R.id.fab_withdraw).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Making 500USD Withdrawal!", Toast.LENGTH_SHORT).show();
-                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), walletPublicKey, "pkeyActorRefWallet", "pkeyPluginRefWallet", 500, FiatCurrency.US_DOLLAR, "500USD RefWallet withdrawal");
-                try {
-                    moduleManager.createCashWithdrawalTransaction(t);
-                    updateWalletBalances(view.getRootView());
-
-                } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(getActivity(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
-                }
+                lauchCreateTransactionDialog(TransactionType.DEBIT);
             }
         });
 
         layout.findViewById(R.id.fab_deposit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Making 500USD Deposit!", Toast.LENGTH_SHORT).show();
-                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), walletPublicKey, "pkeyActorRefWallet", "pkeyPluginRefWallet", 500, FiatCurrency.US_DOLLAR, "500USD RefWallet deposit");
-                try {
-                    moduleManager.createCashDepositTransaction(t);
-                    updateWalletBalances(view.getRootView());
-
-                } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(getActivity(), "Error on deposit!", Toast.LENGTH_SHORT).show();
-
-                }
+                lauchCreateTransactionDialog(TransactionType.CREDIT);
             }
         });
     }
@@ -244,6 +231,23 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
     }
 
     /* MISC FUNCTIONS */
+    private void lauchCreateTransactionDialog(TransactionType transactionType){
+        dialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType);
+        dialog.setOnDismissListener(this);
+        dialog.show();
+    }
+
+
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        fab.collapse();
+        getWalletBalances();
+        updateWalletBalances();
+        onRefresh();
+    }
+
+
     @Override
     public List<CashMoneyWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CashMoneyWalletTransaction> data = new ArrayList<>();
@@ -270,6 +274,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
     }
 
 
+
+
     private void getWalletBalances() {
         try {
             this.walletBalances = moduleManager.getWalletBalances(walletPublicKey);
@@ -285,28 +291,26 @@ implements FermatListItemListeners<CashMoneyWalletTransaction> {
         }
     }
 
-    private void updateWalletBalances(View view) {
-        FermatTextView bookTextView = (FermatTextView) view.findViewById(R.id.textView_book_amount);
-        FermatTextView availableTextView = (FermatTextView) view.findViewById(R.id.textView_available_amount);
+    private void updateWalletBalances() {
+
+
+        //bookTextView.setText(String.valueOf(decimalFormat.format(this.walletBalances.getBookBalance()) + " " + this.walletCurrency.getCode()));
+        //availableTextView.setText(String.valueOf(decimalFormat.format(this.walletBalances.getAvailableBalance()) + " " + this.walletCurrency.getCode()));
 
         bookTextView.setText(String.valueOf(this.walletBalances.getBookBalance() + " " + this.walletCurrency.getCode()));
         availableTextView.setText(String.valueOf(this.walletBalances.getAvailableBalance() + " " + this.walletCurrency.getCode()));
-        Toast.makeText(getActivity(), this.walletBalances.getBookBalance() + " " + this.walletCurrency.getCode(), Toast.LENGTH_SHORT).show();
 
         bookTextView.invalidate();
         availableTextView.invalidate();
-
     }
 
     @Override
     public void onItemClickListener(CashMoneyWalletTransaction data, int position) {
-        Toast.makeText(getActivity(), "onItemClickListener", Toast.LENGTH_SHORT).show();
-
+        //Toast.makeText(getActivity(), "onItemClickListener", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLongItemClickListener(CashMoneyWalletTransaction data, int position) {
-        Toast.makeText(getActivity(), "onLongItemClickListener", Toast.LENGTH_SHORT).show();
-
+        //Toast.makeText(getActivity(), "onLongItemClickListener", Toast.LENGTH_SHORT).show();
     }
 }

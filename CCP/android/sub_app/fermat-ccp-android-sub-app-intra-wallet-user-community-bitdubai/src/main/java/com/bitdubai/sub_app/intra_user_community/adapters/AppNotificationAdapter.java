@@ -10,10 +10,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppNotificationsHolder;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,20 +29,29 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.wallet_notification_row;
+        return R.layout.row_connection_notification;
     }
 
     @Override
     protected void bindHolder(AppNotificationsHolder holder, IntraUserInformation data, int position) {
-        holder.userName.setText(data.getName());
-        Bitmap bitmap;
-        if (data.getProfileImage().length > 0) {
-            bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
-        } else {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+        if (data.getPublicKey() != null) {
+            holder.userName.setText(data.getName());
+            if (data.getProfileImage() != null) {
+                Bitmap bitmap;
+                if (data.getProfileImage().length > 0) {
+                    bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
+                } else {
+                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+                }
+                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+                holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            } else {
+                Bitmap bitmap;
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+                holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }
         }
-        bitmap = Bitmap.createScaledBitmap(bitmap, 40,40, true);
-        holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
     }
 
     public int getSize() {

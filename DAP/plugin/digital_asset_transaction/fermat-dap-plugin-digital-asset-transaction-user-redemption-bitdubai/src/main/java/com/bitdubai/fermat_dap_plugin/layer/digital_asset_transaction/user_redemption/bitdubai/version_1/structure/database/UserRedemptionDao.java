@@ -98,7 +98,7 @@ public class UserRedemptionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
-            databaseTable.setStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -156,7 +156,7 @@ public class UserRedemptionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -184,7 +184,7 @@ public class UserRedemptionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             return !databaseTable.getRecords().isEmpty();
@@ -240,7 +240,7 @@ public class UserRedemptionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(tableName);
-            databaseTable.setStringFilter(indexColumn, value, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(indexColumn, value, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -266,7 +266,7 @@ public class UserRedemptionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -305,9 +305,9 @@ public class UserRedemptionDao {
             this.database = openDatabase();
             List<String> eventIdList = new ArrayList<>();
             DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
@@ -354,7 +354,7 @@ public class UserRedemptionDao {
             DatabaseTable databaseTable;
             List<String> returningList = new ArrayList<>();
             databaseTable = database.getTable(table);
-            databaseTable.setStringFilter(referenceColumn, referenceValue, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(referenceColumn, referenceValue, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
                 returningList.add(record.getStringValue(returningColumn));
@@ -378,7 +378,7 @@ public class UserRedemptionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -408,7 +408,7 @@ public class UserRedemptionDao {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             DatabaseTableRecord databaseTableRecord;
@@ -437,8 +437,8 @@ public class UserRedemptionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             return !databaseTable.getRecords().isEmpty();
@@ -464,8 +464,8 @@ public class UserRedemptionDao {
             this.database = openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             return !databaseTable.getRecords().isEmpty();

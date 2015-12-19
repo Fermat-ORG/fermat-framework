@@ -44,7 +44,7 @@ public class NegotiationTransmissionNetworkServiceConnectionsDatabaseDao {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId,this.pluginId.toString());
         } catch (DatabaseNotFoundException e) {
             try {
-                CommunicationNetworkServiceDatabaseFactory databaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+                NegotiationTransmissionNetworkServiceDatabaseFactory databaseFactory = new NegotiationTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(pluginId,pluginId.toString());
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
@@ -63,7 +63,7 @@ public class NegotiationTransmissionNetworkServiceConnectionsDatabaseDao {
 
         try {
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_TABLE_NAME);
+            DatabaseTable addressExchangeRequestTable = database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_TABLE_NAME);
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
             entityRecord = buildDatabaseRecord(entityRecord, transactionTransmissionConnectionRecord);
             addressExchangeRequestTable.insertRecord(entityRecord);
@@ -80,8 +80,8 @@ public class NegotiationTransmissionNetworkServiceConnectionsDatabaseDao {
             throw new CantGetNegotiationTransmissionException("",null, "requestId, can not be null","");
         try {
 
-            DatabaseTable metadataTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_TABLE_NAME);
-            metadataTable.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            DatabaseTable metadataTable = database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_TABLE_NAME);
+            metadataTable.addUUIDFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
             metadataTable.loadToMemory();
             List<DatabaseTableRecord> records = metadataTable.getRecords();
             if (!records.isEmpty())
@@ -98,20 +98,20 @@ public class NegotiationTransmissionNetworkServiceConnectionsDatabaseDao {
 
     private NegotiationTransmissionConnectionRecord buildTransactionTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID id = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME);
-        String actorPublicKey = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
-        String ipkNetworkService = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_IPK_COLUMN_NAME);
-        String lastConnection = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_LAST_CONNECTION_COLUMN_NAME);
+        UUID id = record.getUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME);
+        String actorPublicKey = record.getStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+        String ipkNetworkService = record.getStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_IPK_COLUMN_NAME);
+        String lastConnection = record.getStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_LAST_CONNECTION_COLUMN_NAME);
         return new NegotiationTransmissionConnectionRecord(id,actorPublicKey,ipkNetworkService,lastConnection);
 
     }
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record,NegotiationTransmissionConnectionRecord transactionTransmissionConnectionRecord){
         
-        record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME, transactionTransmissionConnectionRecord.getId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME, transactionTransmissionConnectionRecord.getActorPublicKey());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_IPK_COLUMN_NAME, transactionTransmissionConnectionRecord.getIpkNetworkService());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_LAST_CONNECTION_COLUMN_NAME, transactionTransmissionConnectionRecord.getLastConnection());
+        record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ID_COLUMN_NAME, transactionTransmissionConnectionRecord.getId());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME, transactionTransmissionConnectionRecord.getActorPublicKey());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_IPK_COLUMN_NAME, transactionTransmissionConnectionRecord.getIpkNetworkService());
+        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_DETAILS_LAST_CONNECTION_COLUMN_NAME, transactionTransmissionConnectionRecord.getLastConnection());
         return record;
         
     }

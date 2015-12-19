@@ -134,6 +134,23 @@ public class BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory i
         DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
         tables.add(eventsRecorderTable);
 
+        /**
+         * Incoming money table
+         * */
+        List<String> incomingMoneyColumns = new ArrayList<String>();
+
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME);
+        incomingMoneyColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable incomingMoneyTable = developerObjectFactory.getNewDeveloperDatabaseTable(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_NAME, incomingMoneyColumns);
+        tables.add(incomingMoneyTable);
+
         return tables;
     }
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {

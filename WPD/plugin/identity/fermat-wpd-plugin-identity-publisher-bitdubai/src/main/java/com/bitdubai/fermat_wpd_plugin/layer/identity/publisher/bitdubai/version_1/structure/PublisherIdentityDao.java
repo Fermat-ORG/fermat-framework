@@ -179,7 +179,7 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
             // 2) Find the developers.
             logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Applying filter to " + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + " table by developer alias key [" + alias.trim() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
-            table.setStringFilter(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
+            table.addStringFilter(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
@@ -394,7 +394,7 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
             // 2) Find the publishers.
             logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Applying filter to " + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + " table by developer public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
-            table.setStringFilter(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 

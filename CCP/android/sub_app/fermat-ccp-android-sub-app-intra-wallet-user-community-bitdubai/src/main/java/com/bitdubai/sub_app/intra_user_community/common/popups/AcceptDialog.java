@@ -58,7 +58,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Conect");
+        title.setText("Connect");
         description.setText("Do you want to accept");
         userName.setText(intraUserInformation.getName());
 
@@ -70,7 +70,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
     }
 
     @Override
-    protected int setWindowFeacture() {
+    protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
     }
 
@@ -82,7 +82,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
             try {
                 if (intraUserInformation != null && identity != null) {
                     ((IntraUserSubAppSession) getSession()).getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
-                    Toast.makeText(getContext(), intraUserInformation.getName() + " accepted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }

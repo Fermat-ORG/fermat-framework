@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,11 +38,11 @@ public class CreateDatabaseTest {
 
     private UUID testId;
     private String testDataBaseName;
-    private CommunicationNetworkServiceDatabaseFactory testExtraUserDataBaseFactory;
+    private NegotiationTransmissionNetworkServiceDatabaseFactory testExtraUserDataBaseFactory;
 
     public void setUpTestValues(){
         testId = UUID.randomUUID();
-        testDataBaseName = CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME;
+        testDataBaseName = NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME;
     }
 
     public void setUpGeneralMockitoRules() throws Exception{
@@ -59,7 +59,7 @@ public class CreateDatabaseTest {
 
     @Test
     public void CreateDatabase_SuccessfulInvocation_ReturnsDatabase() throws Exception{
-        testExtraUserDataBaseFactory = new CommunicationNetworkServiceDatabaseFactory(mockPluginDatabaseSystem);
+        testExtraUserDataBaseFactory = new NegotiationTransmissionNetworkServiceDatabaseFactory(mockPluginDatabaseSystem);
         Database checkDatabase = testExtraUserDataBaseFactory.createDatabase(testId, testDataBaseName);
         assertThat(checkDatabase).isNotNull();
     }

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantReceiveCustomerBrokerNewNegotiationTransactionException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T RECEIVE INFORMATION THE NEGOTIATION TRANSMISSION NETWORK SERVICE";
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER NEW. CAN'T RECEIVE INFORMATION THE NEGOTIATION TRANSMISSION NETWORK SERVICE";
 
     /**
      * This is the constructor that every inherited FermatException must implement

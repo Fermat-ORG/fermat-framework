@@ -1,0 +1,174 @@
+package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database;
+
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerUpdateNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure.CustomerBrokerUpdateImpl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Created by Yordin Alayn on 16.12.15.
+ */
+public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
+
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    private UUID pluginId;
+
+    private Database database;
+
+    public CustomerBrokerUpdateNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
+        this.pluginDatabaseSystem   = pluginDatabaseSystem;
+        this.pluginId               = pluginId;
+        this.database               = database;
+    }
+
+    /*INITIALIZE DATABASE*/
+    public void initialize() throws CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException {
+        try {
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+        } catch (DatabaseNotFoundException e) {
+            try {
+                CustomerBrokerUpdateNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerUpdateNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
+                database = databaseFactory.createDatabase(pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+            } catch (CantCreateDatabaseException f) {
+                throw new CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+            } catch (Exception z) {
+                throw new CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
+            }
+        } catch (CantOpenDatabaseException e) {
+            throw new CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+        } catch (Exception e) {
+            throw new CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
+        }
+    }
+
+    //CREATE NEW NEGOTIATION TRANSACTION
+    public void createRegisterCustomerBrokerUpdateNegotiationTranasction(Negotiation negotiation, NegotiationType negotiationType) throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
+
+        UUID transactionId = UUID.randomUUID();
+        Date time = new Date();
+        long timestamp = time.getTime();
+        NegotiationTransactionStatus statusTransaction = NegotiationTransactionStatus.PENDING_SUBMIT;
+        NegotiationTransmissionState stateTransmission = NegotiationTransmissionState.PROCESSING_SEND;
+        String negotiationXML = XMLParser.parseObject(negotiation);
+
+        try {
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+
+            record.setUUIDValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TRANSACTION_ID_COLUMN_NAME, transactionId);
+            record.setUUIDValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_BROKER_COLUMN_NAME, negotiation.getBrokerPublicKey());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, negotiation.getCustomerPublicKey());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, statusTransaction.getCode());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_NEGOTIATION_COLUMN_NAME, negotiation.getStatus().getCode());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATE_TRANSMISSION_COLUMN_NAME, stateTransmission.getCode());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationType.getCode());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_XML_COLUMN_NAME, negotiationXML);
+            record.setLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME, timestamp);
+
+            table.insertRecord(record);
+
+        } catch (CantInsertRecordException e){
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException (e.getMessage(), e, "Customer Broker Update Negotiation Transaction", "Cant create new Customer Broker Update Negotiation Transaction, insert database problems.");
+        } catch (Exception e) {
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException (e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction", "Cant create new Customer Broker Update Negotiation Transaction, unknown failure.");
+        }
+
+    }
+
+    //GET NEW NEGOTIATION TRANSACTION
+    public CustomerBrokerUpdate getRegisterCustomerBrokerUpdateNegotiationTranasction(UUID transactionId) throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
+        CustomerBrokerUpdate getTransaction = null;
+
+        try {
+
+            List<DatabaseTableRecord> record;
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if Customer Broker Update exists", "Customer Broker Update Negotiation Transaction", "");
+            }
+            table.addUUIDFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            record = table.getRecords();
+            if (record.size() == 0)
+                throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException("The number of records is 0 ", null, "", "");
+
+            for (DatabaseTableRecord records : record) {
+                getTransaction = getCustomerBrokerUpdateFromRecord(records);
+            }
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
+        }
+
+        return getTransaction;
+    }
+
+    //GET LIST NEW NEGOTIATION TRANSACTION
+    public List<CustomerBrokerUpdate> getAllRegisterCustomerBrokerUpdateNegotiationTranasction() throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
+        List<CustomerBrokerUpdate> getTransactions = null;
+
+        try {
+            List<DatabaseTableRecord> record;
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if Customer Broker Update exists", "Customer Broker Update Negotiation Transaction", "");
+            }
+            table.loadToMemory();
+            record = table.getRecords();
+            if (record.size() == 0)
+                throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException("The number of records is 0 ", null, "", "");
+
+            for (DatabaseTableRecord records : record) {
+                getTransactions.add(getCustomerBrokerUpdateFromRecord(records));
+            }
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
+        }
+
+        return getTransactions;
+    }
+    
+    /*PRIVATE METHOD*/
+    private CustomerBrokerUpdate getCustomerBrokerUpdateFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
+
+        UUID                            transactionId       = record.getUUIDValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TRANSACTION_ID_COLUMN_NAME);
+        UUID                            negotiationId       = record.getUUIDValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_ID_COLUMN_NAME);
+        String                          publicKeyBroker     = record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        String                          publicKeyCustomer   = record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
+        NegotiationTransactionStatus    status              = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME));
+        String                          negotiationXML      = record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_XML_COLUMN_NAME);
+        long                            timestamp           = record.getLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME);
+
+        return new CustomerBrokerUpdateImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status, negotiationXML,timestamp);
+    }
+}

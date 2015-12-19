@@ -16,42 +16,38 @@ import java.util.Map;
  */
 public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetIssuerCommunitySubAppModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
 
-    private AssetIssuerCommunitySubAppModuleManager manager;
+    public AssetIssuerCommunitySubAppSession() {}
 
-    private ErrorManager errorManager;
-    private SubApps subAppType;
-    private Map<String, Object> data;
-
-    public AssetIssuerCommunitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, AssetIssuerCommunitySubAppModuleManager manager) {
-        super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
-        this.errorManager = errorManager;
-        this.manager = manager;
-    }
-
-
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return getFermatApp();
-    }
-
-    @Override
-    public void setData(String key, Object object) {
-        if (data == null)
-            data = new HashMap<>();
-        data.put(key, object);
-    }
-
-    @Override
-    public Object getData(String key) {
-        return data.get(key);
-    }
-
-    @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-    public AssetIssuerCommunitySubAppModuleManager getManager() {
-        return manager;
-    }
+    //    private AssetIssuerCommunitySubAppModuleManager manager;
+//
+//    private ErrorManager errorManager;
+//    private SubApps subAppType;
+//    private Map<String, Object> data;
+//
+//    public AssetIssuerCommunitySubAppSession(InstalledSubApp subApp, ErrorManager errorManager, AssetIssuerCommunitySubAppModuleManager manager) {
+//        super(subApp.getAppPublicKey(),subApp,errorManager,manager,null);
+//        this.errorManager = errorManager;
+//        this.manager = manager;
+//    }
+//
+//    @Override
+//    public void setData(String key, Object object) {
+//        if (data == null)
+//            data = new HashMap<>();
+//        data.put(key, object);
+//    }
+//
+//    @Override
+//    public Object getData(String key) {
+//        return data.get(key);
+//    }
+//
+//    @Override
+//    public ErrorManager getErrorManager() {
+//        return errorManager;
+//    }
+//
+//    public AssetIssuerCommunitySubAppModuleManager getManager() {
+//        return manager;
+//    }
 }

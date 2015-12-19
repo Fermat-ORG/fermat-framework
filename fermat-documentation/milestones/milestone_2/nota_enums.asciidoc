@@ -1,4 +1,0 @@
-el enum de niche wallets referencia al enum de reference wallets porque hereda la estructura de
-referencias dentro de la plataforma y eso impacta en el proceso de instalación en el wallet manager
-
-el enum de las branded wallets referencia a la niche o reference porque reutiliza el código java

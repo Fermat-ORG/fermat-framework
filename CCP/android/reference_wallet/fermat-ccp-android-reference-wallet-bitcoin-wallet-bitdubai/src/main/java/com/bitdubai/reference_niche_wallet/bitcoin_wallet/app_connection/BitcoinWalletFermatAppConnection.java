@@ -1,19 +1,38 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 
+import android.app.Activity;
+
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceWalletFragmentFactory;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 /**
- * Created by mati on 2015.12.09..
+ * Created by Matias Furszyfer on 2015.12.09..
  */
 public class BitcoinWalletFermatAppConnection extends AppConnections{
 
+    IntraUserLoginIdentity intraUserLoginIdentity;
+
+    public BitcoinWalletFermatAppConnection(Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) {
+        super(activity);
+        this.intraUserLoginIdentity = intraUserLoginIdentity;
+    }
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
@@ -21,23 +40,34 @@ public class BitcoinWalletFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public FermatSession getSession() {
-        return null;
+    public PluginVersionReference getPluginVersionReference() {
+        return  new PluginVersionReference(
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Layers.WALLET_MODULE,
+                Plugins.CRYPTO_WALLET,
+                Developers.BITDUBAI,
+                new Version()
+            );
+    }
+
+    @Override
+    public AbstractFermatSession getSession() {
+        return new ReferenceWalletSession();
     }
 
     @Override
     public FermatSettings getSettings() {
-        return null;
+        return new ReferenceWalletPreferenceSettings();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+        return new BitcoinWalletNavigationViewPainter(getActivity(),intraUserLoginIdentity);
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return null;
+        return new BitcoinWalletHeaderPainter();
     }
 
     @Override

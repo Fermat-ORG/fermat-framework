@@ -83,7 +83,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
 
         errorManager = developerSubAppSession.getErrorManager();
         try {
-            ToolManager toolManager = developerSubAppSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getModuleManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

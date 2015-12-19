@@ -105,6 +105,27 @@ public class BrokerAckOnlinePaymentBusinessTransactionDatabaseFactory implements
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+ BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
+
+            DatabaseTableFactory incomingMoneyTable = databaseFactory.newTableFactory(ownerId, BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_NAME);
+
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.TRUE);
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
+            incomingMoneyTable.addColumn(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.TRUE);
+
+            incomingMoneyTable.addIndex(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, incomingMoneyTable);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+ BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

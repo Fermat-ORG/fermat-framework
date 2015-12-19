@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVault;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVault;
 
 import org.bitcoinj.core.Transaction;
 

@@ -207,7 +207,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     EventWrapper getNextPendingEvent() throws CantReadEvent {
 
             DatabaseTable eventsTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_NAME);
-            eventsTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
+            eventsTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
             try {
                 eventsTable.loadToMemory();
             } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -234,7 +234,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         try {
             DatabaseTransaction dbTrx = this.database.newTransaction();
             DatabaseTable eventsTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_NAME);
-            eventsTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventId, DatabaseFilterType.EQUAL);
+            eventsTable.addUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventId, DatabaseFilterType.EQUAL);
             try {
                 eventsTable.loadToMemory();
             } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -270,7 +270,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 // We first check if we have this transaction registered as (A,TBN). This would not be
                 // a mistake. It just mean that the system shut down before we could confirm reception to
                 // the sender and the sender sent it again.
-                registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+                registryTable.addUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
                 registryTable.loadToMemory();
 
@@ -303,11 +303,11 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         List<Transaction<CryptoTransaction>> tbaList = new ArrayList<>();
         try {
             DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
-                                          TransactionStatus.ACKNOWLEDGED.getCode(),
-                                          DatabaseFilterType.EQUAL
-                                         );
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
+                    TransactionStatus.ACKNOWLEDGED.getCode(),
+                    DatabaseFilterType.EQUAL
+            );
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
                     ProtocolStatus.TO_BE_NOTIFIED.getCode(),
                     DatabaseFilterType.EQUAL
             );
@@ -338,7 +338,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         try {
             // We look for the record to update
-            registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+            registryTable.addUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
             registryTable.loadToMemory();
 
@@ -381,11 +381,11 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         List<Transaction<CryptoTransaction>> narList = new ArrayList<>();
         try {
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
                     TransactionStatus.RESPONSIBLE.getCode(),
                     DatabaseFilterType.EQUAL
             );
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
                     ProtocolStatus.NO_ACTION_REQUIRED.getCode(),
                     DatabaseFilterType.EQUAL
             );
@@ -415,7 +415,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         try {
             // We look for the record to update
-            registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, id, DatabaseFilterType.EQUAL);
+            registryTable.addUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, id, DatabaseFilterType.EQUAL);
 
 
                 registryTable.loadToMemory();
@@ -482,7 +482,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
 
                 // We look for the record to update
-                registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+                registryTable.addUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
 
                 registryTable.loadToMemory();
@@ -549,7 +549,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     public void confirmReception(UUID transactionId) throws CantConfirmTransactionException {
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transactionId, DatabaseFilterType.EQUAL);
+        registryTable.addUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transactionId, DatabaseFilterType.EQUAL);
         DatabaseTableRecord recordToUpdate;
 
         try {
@@ -604,10 +604,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         List<Transaction<CryptoTransaction>> returnList = new ArrayList<>();
         try {
             DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, ProtocolStatus.SENDING_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, TransactionStatus.RESPONSIBLE.getCode(), DatabaseFilterType.EQUAL);
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, ProtocolStatus.SENDING_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, TransactionStatus.RESPONSIBLE.getCode(), DatabaseFilterType.EQUAL);
 
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.getCode(),DatabaseFilterType.EQUAL);
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName, specialist.getCode(), DatabaseFilterType.EQUAL);
 
 
             registryTable.loadToMemory();
@@ -645,7 +645,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     private DatabaseTableRecord getRecordByPrimaryKey(UUID transactionId) throws CantGetRecordException {
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transactionId, DatabaseFilterType.EQUAL);
+        registryTable.addUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transactionId, DatabaseFilterType.EQUAL);
 
         try {
             registryTable.loadToMemory();
@@ -719,12 +719,12 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         try {
 
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
                     transactionStatus.getCode(),
                     DatabaseFilterType.EQUAL
             );
 
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
+            registryTable.addStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
                     protocolStatus.getCode(),
                     DatabaseFilterType.EQUAL
             );
