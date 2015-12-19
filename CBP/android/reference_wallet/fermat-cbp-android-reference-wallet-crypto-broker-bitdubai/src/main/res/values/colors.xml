@@ -30,7 +30,7 @@
     <color name="negotiation_closed_list_item_background">#c6c6c6</color>
     <color name="negotiation_cancelled_list_item_background">#ff8b8b</color>
     <color name="market_rate_text">#31beff</color>
-    <color name="withe">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="waiting_for_text">#6b7378</color>
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#f3f3f3</color>
