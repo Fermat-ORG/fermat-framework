@@ -380,7 +380,7 @@ public class BitcoinCurrencyCryptoVaultManager {
         } catch (InsufficientMoneyException e) {
             StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
             output.append(System.lineSeparator());
-            output.append("Current balance available for this transaction: " + wallet.getBalance().getValue());
+            output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
             throw new InsufficientCryptoFundsException(InsufficientCryptoFundsException.DEFAULT_MESSAGE, e, output.toString(), null);
