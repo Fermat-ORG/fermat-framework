@@ -4,8 +4,8 @@
 
 Here you will fin a list of teams working at Fermat. Feel free to contact their team leaders in order to join them.
 
-# Our Teams
 
+<br>
 ## Disruptor Team:
 -----------------------------------
 
@@ -13,7 +13,7 @@ We want to assemble a team that wants to combines its technical capacity with it
 
 Currently we are a small team dedicated to the development of a communications layer based on a peer-to-peer network with all its complications, and the development of some network services.
 
-### Our Members:
+### Team Members:
 
 ![alt text](https://avatars1.githubusercontent.com/u/12099493?v=3&s=460 "Image Profile")
 
