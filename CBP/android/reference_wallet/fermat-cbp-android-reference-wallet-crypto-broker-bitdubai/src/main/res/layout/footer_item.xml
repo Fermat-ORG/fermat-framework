@@ -37,5 +37,5 @@
         android:gravity="center"
         android:text="SEND"
         android:textAllCaps="true"
-        android:textColor="@color/withe"/>
+        android:textColor="@color/white"/>
 </LinearLayout>
