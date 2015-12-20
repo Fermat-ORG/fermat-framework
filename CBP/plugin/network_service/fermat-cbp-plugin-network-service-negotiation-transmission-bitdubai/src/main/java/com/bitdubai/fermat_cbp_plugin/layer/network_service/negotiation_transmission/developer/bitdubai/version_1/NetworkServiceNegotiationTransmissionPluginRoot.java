@@ -264,7 +264,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try{
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_SEND;
+            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
             NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
         } catch (CantConstructNegotiationTransmissionException e){
@@ -282,7 +282,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try{
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_SEND;
+            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
             NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
         } catch (CantConstructNegotiationTransmissionException e){
@@ -597,7 +597,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         //Tell the manager to handler the new connection established
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n A: " + remoteComponentProfile.getAlias() +"\n-----------------------\n");
+        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n A: " + remoteComponentProfile.getAlias() + "\n-----------------------\n");
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
             System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n-----------------------\n A: " + remoteComponentProfile.getAlias());
@@ -632,7 +632,26 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
 
     public void handleNewMessages(final FermatMessage fermatMessage){
-        Gson gson = new Gson();
+
+        try{
+
+            Gson gson = new Gson();
+            NegotiationTransmission negotiationTransmissionReceived = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
+
+            switch (negotiationTransmissionReceived.getTransmissionType()){
+                case TRANSMISSION_NEGOTIATION:
+                    receiveNegotiation(negotiationTransmissionReceived);
+                    break;
+
+                case TRANSMISSION_CONFIRM:
+                    receiveConfirm(negotiationTransmissionReceived);
+                    break;
+            }
+
+        } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        }
+        /*Gson gson = new Gson();
         System.out.println("-----------------------\n  Negotiation Transmission gets a new message \n -----------------------\n");
         try{
             NegotiationTransmission negotiationTransmissionReceived = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
@@ -670,7 +689,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         } catch(Exception exception){
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        }
+        }*/
     }
     /*END PUBLIC METHOD*/
 
@@ -810,6 +829,14 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw new CantConstructNegotiationTransmissionException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
         }
         return negotiationTransmission;
+    }
+
+    private void receiveNegotiation(NegotiationTransmission negotiationTransmissionReceived){
+
+    }
+
+    private void receiveConfirm(NegotiationTransmission negotiationTransmissionReceived){
+
     }
     /*END PRIVATE METHOD*/
 }

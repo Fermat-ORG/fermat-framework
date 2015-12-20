@@ -28,7 +28,7 @@ public class NegotiationTransmissionResponseMessage {
         return transmissionId;
     }
 
-    public void setTransactionId(UUID transmissionId) {
+    public void setTransmissionId(UUID transmissionId) {
         this.transmissionId = transmissionId;
     }
 
