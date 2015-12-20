@@ -188,6 +188,7 @@ function installIDE(){
     sudo mv android-studio /opt/android-studio
     
 }
+
 function installGenymotion(){
     if[ ! $genymotion ]; then
         timestamp
