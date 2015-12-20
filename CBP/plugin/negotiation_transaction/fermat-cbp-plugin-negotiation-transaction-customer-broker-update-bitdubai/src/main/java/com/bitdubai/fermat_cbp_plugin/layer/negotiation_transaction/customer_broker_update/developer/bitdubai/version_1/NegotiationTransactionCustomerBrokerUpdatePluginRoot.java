@@ -148,7 +148,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-
+            System.out.print("-----------------------\n CUSTOMER BROKER UPDATE: SUCCESSFUL START \n-----------------------\n");
 
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Error Starting Customer Broker New PluginRoot","Unexpected Exception");

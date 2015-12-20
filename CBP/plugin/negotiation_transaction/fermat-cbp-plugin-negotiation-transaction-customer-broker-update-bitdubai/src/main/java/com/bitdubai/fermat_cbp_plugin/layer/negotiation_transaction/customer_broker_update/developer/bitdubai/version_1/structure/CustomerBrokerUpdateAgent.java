@@ -89,7 +89,7 @@ public class CustomerBrokerUpdateAgent implements
     private CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager;
 
     /*Represent the Monitor Agent*/
-//    private MonitorAgentTransaction                     monitorAgentTransaction;
+    private MonitorAgentTransaction                     monitorAgentTransaction;
 
     public CustomerBrokerUpdateAgent(
         PluginDatabaseSystem                        pluginDatabaseSystem,
@@ -118,7 +118,7 @@ public class CustomerBrokerUpdateAgent implements
     /*IMPLEMENTATION CBPTransactionAgent*/
     @Override
     public void start() throws CantStartAgentException {
-/*
+
 //        Logger LOG = Logger.getGlobal();
 //        LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
         monitorAgentTransaction = new MonitorAgentTransaction();
@@ -131,11 +131,9 @@ public class CustomerBrokerUpdateAgent implements
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
-*/
-//        this.agentThread = new Thread(monitorAgentTransaction);
+        this.agentThread = new Thread(monitorAgentTransaction);
         this.agentThread.start();
-
-
+        System.out.print("-----------------------\n CUSTOMER BROKER UPDATE AGENT: SUCCESSFUL START \n-----------------------\n");
     }
 
     @Override
