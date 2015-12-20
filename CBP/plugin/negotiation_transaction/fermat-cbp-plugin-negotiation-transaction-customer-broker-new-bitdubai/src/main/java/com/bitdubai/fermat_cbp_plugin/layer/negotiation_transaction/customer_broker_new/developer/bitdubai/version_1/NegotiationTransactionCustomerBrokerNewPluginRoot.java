@@ -236,8 +236,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             return DEFAULT_LOG_LEVEL;
         }
     }
-
-
     /*END IMPLEMENTATION LogManagerForDevelopers*/
 
     /*PUBLIC METHOD*/
