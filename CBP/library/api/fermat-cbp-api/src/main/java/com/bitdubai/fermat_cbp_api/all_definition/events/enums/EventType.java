@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_online_payment.events.BrokerAckOnlinePaymentConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.events.NewNegotiationTransactionNewEvent;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.events.NewNegotiationTransactionUpdateEvent;
@@ -38,8 +38,8 @@ public enum EventType implements FermatEventEnum {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
-    BROKER_ACK_ONLINE_PAYMENT_CONFIRMED("BAOPC"){
-        public final FermatEvent getNewEvent() { return new BrokerAckOnlinePaymentConfirmed(this); }
+    BROKER_ACK_PAYMENT_CONFIRMED("BAOPC"){
+        public final FermatEvent getNewEvent() { return new BrokerAckPaymentConfirmed(this); }
     },
     CRYPTO_BROKER_CONNECTION_REQUEST_NEWS("CBCRNWS") {
         public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionRequestNewsEvent(this); }

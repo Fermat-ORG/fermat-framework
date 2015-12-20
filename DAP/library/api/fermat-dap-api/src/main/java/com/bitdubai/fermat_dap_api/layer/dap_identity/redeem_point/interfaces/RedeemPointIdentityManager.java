@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 
@@ -20,6 +21,13 @@ public interface RedeemPointIdentityManager extends ModuleManager {
      */
     List<RedeemPointIdentity> getRedeemPointsFromCurrentDeviceUser() throws CantListAssetRedeemPointException;
 
+    /**
+     * The method <code>getIdentityAssetIssuer</code> will give Identity Asset Issuer associated
+     *
+     * @return Identity Asset Redeem Point associated.
+     * @throws CantGetRedeemPointIdentitiesException if something goes wrong.
+     */
+    RedeemPointIdentity getIdentityAssetRedeemPoint() throws CantGetRedeemPointIdentitiesException;
 
     /**
      * The method <code>createNewIntraWalletUser</code> creates a new intra wallet user Identity for the logged in Device User and returns the

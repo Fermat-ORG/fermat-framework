@@ -39,12 +39,12 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.Views.Utils;
-import com.bitdubai.sub_app.crypto_broker_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.views.Utils;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
@@ -58,10 +58,11 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by Matias Furszyfer on 15/09/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
-
-
 public class ConnectionsFragment extends FermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         ActionBar.OnNavigationListener,
@@ -103,7 +104,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
     private ProgressDialog dialog;
     private LinearLayout emptyView;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
+    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
 
 
     /**
@@ -155,7 +156,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
         try {
 
-            rootView = inflater.inflate(R.layout.world_main, container, false);
+            rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
@@ -171,7 +172,6 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
 
-            empty = (LinearLayout) rootView.findViewById(R.id.empty);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             showEmpty(true, rootView);
             //onRefresh();
@@ -203,13 +203,13 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
         /**
          * Navigation view items
          */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null);
-        setNavigationDrawer(navigationViewAdapter);
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
     }
     @Override
     public void onRefresh() {
@@ -262,7 +262,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.intra_user_menu, menu);
+        inflater.inflate(R.menu.crypto_broker_user_menu, menu);
 
         //MenuItem menuItem = new SearchView(getActivity());
 

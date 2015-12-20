@@ -22,18 +22,21 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_online_payment.events.BrokerAckOnlinePaymentConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
@@ -175,7 +178,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
             threadWorking=true;
             logManager.log(BrokerAckOnlinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()),
-                    "Customer Online Payment Monitor Agent: running...", null, null);
+                    "Broker Ack Online Payment Monitor Agent: running...", null, null);
             while(threadWorking){
                 /**
                  * Increase the iteration counter
@@ -344,11 +347,12 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
         }
 
         private void raiseAckConfirmationEvent(String contractHash){
-            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_ACK_ONLINE_PAYMENT_CONFIRMED);
-            BrokerAckOnlinePaymentConfirmed brokerAckOnlinePaymentConfirmed = (BrokerAckOnlinePaymentConfirmed) fermatEvent;
-            brokerAckOnlinePaymentConfirmed.setSource(EventSource.BROKER_ACK_ONLINE_PAYMENT);
-            brokerAckOnlinePaymentConfirmed.setContractHash(contractHash);
-            eventManager.raiseEvent(brokerAckOnlinePaymentConfirmed);
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_ACK_PAYMENT_CONFIRMED);
+            BrokerAckPaymentConfirmed brokerAckPaymentConfirmed = (BrokerAckPaymentConfirmed) fermatEvent;
+            brokerAckPaymentConfirmed.setSource(EventSource.BROKER_ACK_ONLINE_PAYMENT);
+            brokerAckPaymentConfirmed.setContractHash(contractHash);
+            brokerAckPaymentConfirmed.setPaymentType(PaymentType.CRYPTO_MONEY);
+            eventManager.raiseEvent(brokerAckPaymentConfirmed);
         }
 
         private void checkPendingMoneyEvents(String eventId) throws
@@ -474,6 +478,16 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                     }
                     brokerAckOnlinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
+                if(eventTypeCode.equals(EventType.NEW_CONTRACT_OPENED.getCode())){
+                    //the eventId from this event is the contractId - Broker side
+                    CustomerBrokerContractSale customerBrokerContractSale=
+                            customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
+                                    eventId);
+                    brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
+                            customerBrokerContractSale);
+
+                }
+
             } catch (CantUpdateRecordException e) {
                 e.printStackTrace();
             } catch (CantConfirmTransactionException e) {
@@ -485,6 +499,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             } catch (CantInsertRecordException e) {
                 e.printStackTrace();
             } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+                e.printStackTrace();
+            } catch (CantGetListCustomerBrokerContractSaleException e) {
                 e.printStackTrace();
             }
 

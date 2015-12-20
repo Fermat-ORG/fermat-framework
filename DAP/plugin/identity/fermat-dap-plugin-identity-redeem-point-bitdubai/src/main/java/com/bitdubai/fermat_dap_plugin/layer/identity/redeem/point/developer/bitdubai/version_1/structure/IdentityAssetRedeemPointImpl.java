@@ -63,6 +63,12 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
         this.pluginId = pluginId;
     }
 
+    public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage) {
+        this.alias = alias;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+    }
+
     @Override
     public String getAlias() {
         return this.alias;

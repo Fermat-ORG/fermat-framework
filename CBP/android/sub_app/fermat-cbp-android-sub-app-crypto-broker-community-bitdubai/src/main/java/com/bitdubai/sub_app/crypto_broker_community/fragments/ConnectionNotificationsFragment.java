@@ -27,8 +27,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppNotificationAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
@@ -38,7 +38,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creado por Jose manuel De Sousa el 30/11/2015
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
@@ -52,7 +55,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
+    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -76,9 +79,9 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
+        intraUserSubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
         intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
-        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
+        moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
     }
@@ -92,7 +95,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.intra_user_notification_center, container, false);
+            rootView = inflater.inflate(R.layout.fragment_connections_notifications, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -144,13 +147,13 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 //        /**
 //         * add navigation header
 //         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 //
 //        /**
 //         * Navigation view items
 //         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
-        setNavigationDrawer(navigationViewAdapter);
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override
@@ -215,7 +218,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
             moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoBrokerCommunitySubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
             notificationAcceptDialog.show();
         } catch (CantAcceptRequestException | CantGetActiveLoginIdentityException e) {
             e.printStackTrace();

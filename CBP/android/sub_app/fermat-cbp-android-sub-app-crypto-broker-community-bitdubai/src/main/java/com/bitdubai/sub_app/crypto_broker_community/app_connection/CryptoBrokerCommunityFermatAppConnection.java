@@ -14,13 +14,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_community.preference_settings.CryptoBrokerCommunityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
- * Created by Matias Furszyfer on 2015.12.09..
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
 public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
@@ -36,9 +39,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.CRYPTO_BROKER_PLATFORM,
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.SUB_APP_MODULE,
-                Plugins.CRYPTO_BROKER_COMMUNITY,
+                Plugins.INTRA_WALLET_USER,
                 Developers.BITDUBAI,
                 new Version()
         );

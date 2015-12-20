@@ -79,8 +79,8 @@ public class CashMoneyTransactionWithdrawalPluginRoot extends AbstractPlugin imp
     private void testCreateCashWithdrawalTransaction() {
         //System.out.println("CASHWITHDRAWAL - testCreateCashWithdrawalTransaction CALLED");
 
-        CashWithdrawalTransactionParameters params = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(1000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 1000USD");
-        //CashWithdrawalTransactionParameters params2 = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(10000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 10000USD");
+        CashWithdrawalTransactionParameters params = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(1000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 1000USD");
+        //CashWithdrawalTransactionParameters params2 = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(10000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 10000USD");
 
         try {
             this.createCashWithdrawalTransaction(params);

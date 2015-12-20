@@ -3716,22 +3716,6 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin
-                        name="Appropriation Stats"
-                        description=""
-                        difficulty="10"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
                 </plugins>
             </layer>
 
@@ -4306,26 +4290,6 @@
                 </androids>
             </layer>
 
-            <layer name="Desktop" language="java-android">
-                <androids>
-                    <android name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                </androids>
-            </layer>
-
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin	name="Cash Money"
@@ -4346,37 +4310,17 @@
                 </plugins>
             </layer>
 
-            <layer name="Desktop Module" language="java">
-                <plugins>
-                    <plugin	name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                </plugins>
-            </layer>
-
             <layer name="Cash Money Transaction" language="java">
                 <plugins>
                     <plugin name="Deposit"
                         description=""
                         difficulty="6"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="90"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
@@ -4386,7 +4330,7 @@
                     <plugin name="Withdrawal"
                         description=""
                         difficulty="6"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4476,52 +4420,12 @@
                 </androids>
             </layer>
 
-            <layer name="Desktop" language="java-android">
-                <androids>
-                    <android name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="guillermo20" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                </androids>
-            </layer>
-
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin	name="Bank Money"
                         description=""
                         difficulty="4"
                         code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="guillermo20" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                </plugins>
-            </layer>
-
-            <layer name="Desktop Module" language="java">
-                <plugins>
-                    <plugin	name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="concept"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4740,41 +4644,6 @@
                 </androids>
             </layer>
 
-            <layer name="Desktop" language="java-android">
-                <androids>
-                    <android name="Sub App Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nelsonalfo" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                    <android name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nelsonalfo" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </android>
-                </androids>
-            </layer>
-
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin	name="Crypto Broker"
@@ -4893,41 +4762,6 @@
                 </plugins>
             </layer>
 
-            <layer name="Desktop Module" language="java">
-                <plugins>
-                    <plugin	name="Sub App Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nattyco" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin	name="Wallet Manager"
-                        description=""
-                        difficulty="4"
-                        code-level="qa"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="nattyco" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                </plugins>
-            </layer>
-
             <layer name="Actor" language="java">
                 <plugins>
                     <plugin	name="Crypto Broker"
@@ -4967,21 +4801,6 @@
 
             <layer name="Middleware" language="java">
                 <plugins>
-                    <plugin	name="Wholesalers"
-                        description=""
-                        difficulty="4"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="vlzangel" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
                     <plugin	name="Wallet Manager"
                         description=""
                         difficulty="6"
@@ -5021,6 +4840,21 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="lnacosta" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <mantainers>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
+                    <plugin	name="Wholesalers"
+                        description=""
+                        difficulty="4"
+                        code-level="concept"
+                        >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="vlzangel" scope="implementation" percentage="10"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
@@ -5072,7 +4906,7 @@
                     <plugin	name="Customer Online Payment"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5263,7 +5097,7 @@
                     <plugin	name="Customer Broker New"
                         description=""
                         difficulty="8"
-                        code-level="development">
+                        code-level="q"a>
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -5444,7 +5278,7 @@
                     <plugin name="Customer Broker Purchase"
                         description=""
                         difficulty="4"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
@@ -5479,7 +5313,7 @@
                     <plugin name="Crypto Broker"
                         description=""
                         difficulty="2"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -6910,7 +6744,7 @@
             <layer name="Crypto Router" language="java">
                 <plugins>
                     <plugin
-                        name="Incomming Crypto"
+                        name="Incoming Crypto"
                         description=""
                         difficulty="10"
                         code-level="production"
@@ -7558,7 +7392,7 @@
                     </next>
                 </step>
                 <step id="1" title="Wallet Store invokes the Wallet Manager Middleware Plugin"
-                      description="The Wallet Store notifies the Wallet Manager Middleware Plugin so it can install the Wallet"
+                      description="Notifies the Wallet Manager Middleware Plugin so it can install the Wallet"
                       type="activity"
                       component="Plugin"
                       name="Wallet Store"
@@ -7570,7 +7404,7 @@
                     </next>
                 </step>
                 <step id="2" title="Wallet Manager Middleware Plugin processes installation request"
-                      description="The Wallet Manager Middleware Plugin sends a request to the Wallet Resources Network Service, to gather the resources of the Reference Wallet to be installed"
+                      description="Sends a request to the Wallet Resources Network Service, to gather the resources of the Reference Wallet to be installed"
                       type="activity"
                       component="Plugin"
                       name="Wallet Manager"
@@ -7582,7 +7416,7 @@
                     </next>
                 </step>
                 <step id="3" title="Wallet Resources Network Service downloads wallet's resources"
-                      description="The Wallet Resources Network Service downloads the Crypto Broker Reference Wallet's resources, from the GitHub repository"
+                      description="Downloads the Crypto Broker Reference Wallet's resources, from the GitHub repository"
                       type="activity"
                       component="Plugin"
                       name="Wallet Resources"
@@ -7594,7 +7428,7 @@
                     </next>
                 </step>
                 <step id="4" title="Processing of the Wallet's Navigation Structure"
-                      description="The Wallet Runtime processes the Navigation Structure of the Reference Wallet and fires an event which effectively registers the Reference Wallet"
+                      description="Processes the Navigation Structure of the Reference Wallet and fires an event which effectively registers the Reference Wallet"
                       type="activity"
                       component="Plugin"
                       name="Wallet Runtime"
@@ -7606,7 +7440,7 @@
                     </next>
                 </step>
                 <step id="5" title="Setting the Crypto Broker Reference Wallet as Installed"
-                      description="The Wallet Manager Middleware sets the Crypto Broker Reference Wallet as installed, and fires an event"
+                      description="Sets the Crypto Broker Reference Wallet as installed, and fires an event"
                       type="activity"
                       component="Plugin"
                       name="Wallet Manager"
@@ -7618,7 +7452,7 @@
                     </next>
                 </step>
                 <step id="6" title="Sub App Manager requests resources for the Wallet's Sub Apps"
-                      description="Sub App Manager sends a request to the Sub App Resources Network Service so it can download the necessary resources (Crypto Broker Identity and Crypto Customer Community Sub Apps)"
+                      description="Sends a request to the Sub App Resources Network Service so it can download the necessary resources (Crypto Broker Identity and Crypto Customer Community Sub Apps)"
                       type="activity"
                       component="Plugin"
                       name="Sub App Manager"
@@ -7630,7 +7464,7 @@
                     </next>
                 </step>
                 <step id="7" title="Sub App Resources Network Service downloads Sub App's resources"
-                      description="The Sub App Resources Network Service downloads resources for Crypto Broker Identity and Crypto Customer Community Sub Apps"
+                      description="Downloads resources for Crypto Broker Identity and Crypto Customer Community Sub Apps"
                       type="activity"
                       component="Plugin"
                       name="Sub App Resources"
@@ -7642,7 +7476,7 @@
                     </next>
                 </step>
                 <step id="8" title="Sub App Runtime parses the Navigation Structure and activates the Sub Apps"
-                      description="The Sub App Runtime processes the Navigation Structure of the Crypto Broker Identity and Crypto Customer Community Sub Apps and fires a event to activate them"
+                      description="Processes the Navigation Structure of the Crypto Broker Identity and Crypto Customer Community Sub Apps and fires a event to activate them"
                       type="activity"
                       component="Plugin"
                       name="Sub App Runtime"
@@ -7694,7 +7528,7 @@
                     </next>
                 </step>
                 <step id="2" title="Wallet Manager Middleware Plugin processes installation request"
-                      description="The Wallet Manager Middleware Plugin sends a request to the Wallet Resources Network Service, to gather the resources of the Reference Wallet to be installed"
+                      description="Sends a request to the Wallet Resources Network Service, to gather the resources of the Reference Wallet to be installed"
                       type="activity"
                       component="Plugin"
                       name="Wallet Manager"
@@ -7706,7 +7540,7 @@
                     </next>
                 </step>
                 <step id="3" title="Wallet Resources Network Service downloads wallet's resources"
-                      description="The Wallet Resources Network Service downloads the Crypto Customer Reference Wallet's resources, from the GitHub repository"
+                      description="Downloads the Crypto Customer Reference Wallet's resources, from the GitHub repository"
                       type="activity"
                       component="Plugin"
                       name="Wallet Resources"
@@ -7718,7 +7552,7 @@
                     </next>
                 </step>
                 <step id="4" title="Processing of the Wallet's Navigation Structure"
-                      description="The Wallet Runtime processes the Navigation Structure of the Reference Wallet and fires an event which effectively registers the Reference Wallet"
+                      description="Processes the Navigation Structure of the Reference Wallet and fires an event which effectively registers this"
                       type="activity"
                       component="Plugin"
                       name="Wallet Runtime"
@@ -7730,7 +7564,7 @@
                     </next>
                 </step>
                 <step id="5" title="Setting the Crypto Customer Reference Wallet as Installed"
-                      description="The Wallet Manager Middleware sets the Crypto Customer Reference Wallet as installed, and fires an event"
+                      description="Sets the Crypto Customer Reference Wallet as installed, and fires an event"
                       type="activity"
                       component="Plugin"
                       name="Wallet Manager"
@@ -7742,7 +7576,7 @@
                     </next>
                 </step>
                 <step id="6" title="Sub App Manager requests resources for the Wallet's Sub Apps"
-                      description="Sub App Manager sends a request to the Sub App Resources Network Service so it can download the necessary resources (Crypto Customer Identity and Crypto Broker Community Sub Apps)"
+                      description="Sends a request to the Sub App Resources Network Service so it can download the necessary resources (Crypto Customer Identity and Crypto Customer Community Sub Apps)"
                       type="activity"
                       component="Plugin"
                       name="Sub App Manager"
@@ -7754,7 +7588,7 @@
                     </next>
                 </step>
                 <step id="7" title="Sub App Resources Network Service downloads Sub App's resources"
-                      description="The Sub App Resources Network Service downloads resources for Crypto Customer Identity and Crypto Broker Community Sub Apps"
+                      description="Downloads resources for Crypto Customer Identity and Crypto Customer Community Sub Apps"
                       type="activity"
                       component="Plugin"
                       name="Sub App Resources"
@@ -7766,7 +7600,7 @@
                     </next>
                 </step>
                 <step id="8" title="Sub App Runtime parses the Navigation Structure and activates the Sub Apps"
-                      description="The Sub App Runtime processes the Navigation Structure of the Crypto Customer Identity and Crypto Broker Community Sub Apps and fires a event to activate them"
+                      description="Processes the Navigation Structure of the Crypto Customer Identity and Crypto Customer Community Sub Apps and fires a event to activate them"
                       type="activity"
                       component="Plugin"
                       name="Sub App Runtime"
@@ -7821,7 +7655,7 @@
                     </next>
                 </step>
                 <step id="2" title="Crypto Broker Identity creates the new identity"
-                    description="The Crypto Broker Identity receives the request and creates a new identity for the Crypto Broker"
+                    description="Receives the request and creates a new identity for the Crypto Broker"
                     type="end"
                     platform="CBP"
                     name="Crypto Broker"
@@ -7865,7 +7699,7 @@
                     </next>
                 </step>
                 <step id="2" title="Crypto Customer Identity creates the new identity"
-                    description="The Crypto Customer Identity receives the request and creates a new identity for the Crypto Customer"
+                    description="Receives the request and creates a new identity for the Crypto Customer"
                     type="end"
                     platform="CBP"
                     name="Crypto Customer"
@@ -7919,8 +7753,8 @@
                         <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="3" title="Return the list of Identities"
-                    description="Return the list of Identities"
+                <step id="3" title="Returns the list of Identities"
+                    description="Returns the list of Identities to the Identity Sub App"
                     type="activity"
                     platform="CBP"
                     name="Crypto Broker Identity"
@@ -7932,8 +7766,8 @@
                         <step id="4" type="direct call"></step>
                     </next>
                 </step>
-                <step id="4" title="Show the list of Identities"
-                    description="Show the list of his Identities"
+                <step id="4" title="Shows the list of Identities"
+                    description="Shows the Broker the list of his Identities"
                     type="end"
                     platform="CBP"
                     name="Crypto Broker Identity"
@@ -7943,8 +7777,8 @@
                 </step>
             </steps>
         </process>
-
-       <process platform="CBP" name="Listing of Crypto Customer Identities"
+        
+        <process platform="CBP" name="Listing of Crypto Customer Identities"
             description="Shows a list of Crypto Customer Identities"
             previous="Crypto Customer Identity creation">
             <steps>
@@ -7975,7 +7809,7 @@
                     </next>
                 </step>
                 <step id="2" title="Fetches and returns the list of identities"
-                    description="The Crypto Customer Identity returns the list of identities associated to the broker"
+                    description="The Crypto Customer Identity returns the list of identities associated to the Customer"
                     type="activity"
                     platform="CBP"
                     name="Crypto Customer"
@@ -7986,8 +7820,8 @@
                         <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="3" title="Return the list of Identities"
-                    description="Return the list of Identities"
+                <step id="3" title="Returns the list of Identities"
+                    description="Returns the list of Identities to the Identity Sub App"
                     type="activity"
                     platform="CBP"
                     name="Crypto Customer Identity"
@@ -7999,8 +7833,8 @@
                         <step id="4" type="direct call"></step>
                     </next>
                 </step>
-                <step id="4" title="Show the list of Identities"
-                    description="Show the list of his Identities"
+                <step id="4" title="Shows the list of Identities"
+                    description="Shows the Customer the list of his Identities"
                     type="end"
                     platform="CBP"
                     name="Crypto Customer Identity"
@@ -8016,7 +7850,7 @@
             previous="List of Crypto Broker Identities">
             <steps>
                 <step id="0" title="Broker selects a Crypto Broker Reference Wallet and requests the list of Identities"
-                    description="The Broker selects a Crypto Broker Reference Wallet from the Desktop of the Fermat app to associate and requests the list of identities associated to himself"
+                    description="The Broker enter in a Crypto Broker Reference Wallet and requests the list of his identities to associate with this wallet"
                     type="start"
                     component=""
                     platform="CBP"
@@ -8063,8 +7897,8 @@
                         <step id="4" type="direct call"></step>
                     </next>
                 </step>
-                <step id="4" title="Reference Wallet shows the list of Identities on which the Broker selects an identity to associate"
-                    description="The Crypto Broker Reference Wallet displays the list to the Broker, he then selects one, requesting the wallet module to commit the association"
+                <step id="4" title="Reference Wallet shows the list of Identities andthe Broker selects one"
+                    description="Displays the list to the Broker, he then selects one, requesting the wallet module to commit the association"
                     type="activity"
                     component=""
                     platform="CBP"
@@ -8104,7 +7938,7 @@
             previous="List of Crypto Customer Identities">
             <steps>
                 <step id="0" title="Customer selects a Crypto Customer Reference Wallet and requests the list of Identities"
-                    description="The Customer selects a Crypto Customer Reference Wallet from the Desktop of the Fermat app to associate and requests the list of identities associated to himself"
+                    description="The Customer enter in a Crypto Customer Reference Wallet and requests the list of his identities to associate with this wallet"
                     type="start"
                     component=""
                     platform="CBP"
@@ -8151,8 +7985,8 @@
                         <step id="4" type="direct call"></step>
                     </next>
                 </step>
-                <step id="4" title="Reference Wallet shows the list of Identities on which the Customer selects an identity to associate"
-                    description="The Crypto Customer Reference Wallet displays the list to the Customer, he then selects one, requesting the wallet module to commit the association"
+                <step id="4" title="Reference Wallet shows the list of Identities and the Customer selects one"
+                    description="Displays the list to the Customer, he then selects one, requesting the wallet module to commit the association"
                     type="activity"
                     component=""
                     platform="CBP"
@@ -8263,13 +8097,15 @@
             </steps>
         </process>
 
-        <process platform="CBP" name="Connection request from customer to broker"
-            description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
-            previous="List of Crypto Broker Identities">
+        <process platform="CBP" name="Customer requests a connection to a Broker"
+            description="A Crypto Customer sends a connection request to a Crypto Broker, in order to be able to see his products and start a negotiation"
+            previous="Listing of Crypto Broker Identities"
+            >
             <steps>
-                <step id="0" title="Select broker and submit request"
-                    description="The customer selects a broker from the list and submits the request to connect to him."
+                <step id="0"
                     type="start"
+                    title="Broker selection and request submission"
+                    description="The Customer selects a Broker from the list of Brokers, and submits the request to make a connection"
                     platform="CBP"
                     superlayer=""
                     layer="Sub App"
@@ -8279,93 +8115,104 @@
                         <step id="1" type="direct call"></step>
                     </next>
                 </step>
-                <step id="1" title="Forward the request to the Network Service"
-                    description="The module routes this request to the Actor Network Service to reach the selected broker."
+                <step id="1"
                     type="activity"
+                    title="Route request to Network Service"
+                    description="The module routes this request to the Network Service so that it reaches the selected Broker"
                     platform="CBP"
-                    name="Crypto Broker Community"
-                    layer="Sub App Module"
                     superlayer=""
-                    component="Plugin">
+                    component="Plugin"
+                    layer="Sub App Module"
+                    name="Crypto Broker Community"
+                    >
                     <next>
                         <step id="2" type="direct call"></step>
                     </next>
                 </step>
-                <step id="2" title="Call the broker to deliver the request"
-                    description="The Actor Network Service places a call to the broker and then it delivers the request via the Fermat network."
+                <step id="2"
                     type="activity"
+                    title="Call the Broker to deliver the request"
+                    description="The network service places a call to the broker, delivering the request via the Fermat Network."
                     platform="CBP"
-                    name="Crypto Broker"
-                    layer="Actor Network Service"
                     superlayer=""
-                    component="Plugin">
+                    layer="Actor Network Service"
+                    name="Crypto Broker"
+                    >
                     <next>
                         <step id="3" type="direct call"></step>
                     </next>
                 </step>
-                <step id="3" title="Transport request"
-                    description="The request is transported through the communication layer and one of the available channels."
+                <step id="3"
                     type="communication"
+                    title="Routing of the Customer's request through the network"
+                    description="The request is then transported through the communication layer, using one of the available channels"
                     platform=""
-                    name="Communication Layer"
+                    superlayer="P2P"
                     layer="communication"
-                    superlayer="P2P">
+                    name="Communication Layer"
+                    >
                     <next>
                         <step id="4" type="fermat message"></step>
                     </next>
                 </step>
-                <step id="4" title="Receive the request"
-                    description="The network service receives the request and informs the Crypto Broker Actor."
+                <step id="4"
                     type="activity"
+                    title="Request reception on the Broker's side"
+                    description="The Network Service receives the request and informs the Crypto Broker Actor"
                     platform="CBP"
-                    name="Crypto Broker"
-                    layer="Actor Network Service"
                     superlayer=""
+                    layer="Actor Network Service"
+                    name="Crypto Broker"
                     >
                     <next>
                         <step id="5" type="event"></step>
                     </next>
                 </step>
-                <step id="5" title="Records the request"
-                    description="The request is saved and a notification for the end user is created."
+                <step id="5"
                     type="activity"
+                    title="Request recording and notification"
+                    description="The request is saved and a notification to the Broker is generated"
                     platform="CBP"
-                    name="Crypto Broker"
-                    layer="Actor"
                     superlayer=""
-                    component="Plugin">
+                    layer="Actor"
+                    name="Crypto Broker"
+                    >
                     <next>
                         <step id="6" type="direct call"></step>
                     </next>
                 </step>
-                <step id="6" title="Records the notification"
-                    description="The the notification is saved and the OS core library is notified."
+                <step id="6"
                     type="activity"
+                    title="Records the notification"
+                    description="The the notification is saved, and the OS core library is notified."
                     platform="PIP"
-                    name="Notification"
+                    superlayer=""
                     layer="Middleware"
-                    superlayer="">
+                    name="Notification"
+                    >
                     <next>
                         <step id="7" type="event"></step>
                     </next>
                 </step>
-                <step id="7" title="Send notification to the OS"
-                    description="Sends the notification to the OS and this in turn shows it to the end user."
+                <step id="7"
                     type="end"
+                    title="Sends notification to the OS"
+                    description="The notification manager displays the notification to the OS, notifying the Broker of the connection request"
                     platform="COR"
                     superlayer=""
                     layer="core"
-                    name="Notification Manager">
+                    name="Notification Manager"
+                    >
                 </step>
             </steps>
         </process>
 
-        <process platform="CBP" name="Broker Accept a Connection from a Customer"
-             description="A Crypto Broker accept a connection request send by a Crypto Customer"
+        <process platform="CBP" name="Broker accepts a connection from a Customer"
+             description="A Crypto Broker accepts a connection request send by a Crypto Customer"
              previous="">
         <steps>
             <step id="0" title="Request list of Crypto Customers waiting for connection"
-                  description="The Broker request the list of Crypto Customers waiting to connect with him"
+                  description="The Broker requests a list of Crypto Customers waiting to connect to him"
                   type="start"
                   name="Crypto Customer Community"
                   platform="CBP"
@@ -8376,8 +8223,8 @@
                     <step id="1" type="direct call"></step>
                 </next>
             </step>
-            <step id="1" title="Request list of Crypto Customers waiting for connection"
-                  description="The module routes this request to the Actor to get the list"
+            <step id="1" title="Forward request of list of Crypto Customers waiting for connection"
+                  description="The module routes this request to the Actor Plugin to get the list"
                   type="activity"
                   name="Crypto Customer Community"
                   platform="CBP"
@@ -8388,8 +8235,8 @@
                     <step id="2" type="direct call"></step>
                 </next>
             </step>
-            <step id="2" title="Return of Crypto Customers waiting for connection"
-                  description="Consult its Data Base to get the Crypto Customers waiting for connection and return it has a list."
+            <step id="2" title="Returns list of Crypto Customers waiting for connection"
+                  description="Plugin consults its database to get the Crypto Customers waiting for connection"
                   type="activity"
                   name="Crypto Broker"
                   platform="CBP"
@@ -8401,7 +8248,7 @@
                 </next>
             </step>
             <step id="3" title="Return the list of Crypto Customers waiting for connection"
-                  description="The module return to the Sub App the list of Crypto Customers waiting for connection"
+                  description="The module returns the list of Crypto Customers waiting for connection"
                   type="activity"
                   name="Crypto Customer Community"
                   platform="CBP"
@@ -8412,8 +8259,8 @@
                     <step id="4" type="direct call"></step>
                 </next>
             </step>
-            <step id="4" title="Show the list of Crypto Customers waiting for connection and Broker accept one of them"
-                  description="Show the list of Crypto Customers waiting for connection returned by the module. The Broker accept one of this request"
+            <step id="4" title="Customer selection from returned Customer list"
+                  description="Shows the Broker the list of Crypto Customers waiting for connection so that he can select one to accept"
                   type="start"
                   name="Crypto Customer Community"
                   platform="CBP"
@@ -8424,8 +8271,8 @@
                     <step id="5" type="direct call"></step>
                 </next>
             </step>
-            <step id="5" title="Register that the connection has been accepted"
-                  description="The module routes this request to the Actor to register this update"
+            <step id="5" title="Register the acceptance of the connection"
+                  description="The Crypto Customer Community Module routes this request to the Actor so it can register the new connection"
                   type="activity"
                   name="Crypto Customer Community"
                   platform="CBP"
@@ -8436,8 +8283,8 @@
                     <step id="6" type="direct call"></step>
                 </next>
             </step>
-            <step id="6" title="Return of Crypto Customers waiting for connection"
-                  description="Register in its Data Base to get the state of the connection change to Accepted. Tell the Network Service to notify the Crypto Customer that the Broker has accepted the connection"
+            <step id="6" title="Register the new connection in database"
+                  description="Changes in database the state of the connection to Accepted, while also notifying the Network Service to forward the change to the Crypto Customer"
                   type="activity"
                   name="Crypto Broker"
                   platform="CBP"
@@ -8448,8 +8295,8 @@
                     <step id="7" type="direct call"></step>
                 </next>
             </step>
-            <step id="7" title="Send the message of the update to the Crypto Customer"
-                  description="Send to the Crypto Customer device that the connection request has been accepted"
+            <step id="7" title="Sends the message of the accepted connection to the Crypto Customer"
+                  description="Forwards the change of state to the Crypto Customer's device, that the connection request has been accepted"
                   type="activity"
                   name="Crypto Customer"
                   platform="CBP"
@@ -8460,8 +8307,8 @@
                     <step id="8" type="fermat message"></step>
                 </next>
             </step>
-            <step id="8" title="Receive the message send by the Crypto Broker"
-                  description="Receive the message send by the Crypto telling him that the connection request has been accepted. Send a event to the plugins notifying about this"
+            <step id="8" title="Receives the accepted changed state"
+                  description="Receives the state change of the acceptance of the connection by the Broker, while also sending an event to the OS"
                   type="activity"
                   name="Crypto Customer"
                   platform="CBP"
@@ -8472,10 +8319,9 @@
                     <step id="9" type="event"></step>
                 </next>
             </step>
-            <step id="9"
+            <step id="9" title="Sends notification to the OS"
                   type="end"
-                  title="Send notification to the OS"
-                  description="Sends the notification to the OS and this in turn shows it to the end user."
+                  description="Sends the notification to the OS, to notify the Customer of the state change"
                   platform="COR"
                   superlayer=""
                   layer="Core"
@@ -8487,9 +8333,9 @@
 
         <process platform="CBP" name="Bank Account Restock">
             <steps>
-                <step id="0" title="Broker declare a new merchandise"
-                    description="Start Bank Money Restock"
-                    type="start"
+                <step id="0" title="CBP-Reference Wallet-Crypto Broker"
+                    description="The Broker indicates he want to increase  the stock of merchandise in Bank indicating the amount and account concept."
+                    type="activity"
                     platform="CBP"
                     name="Crypto Broker"
                     layer="Reference Wallet"
@@ -8498,29 +8344,18 @@
                         <step id="1" type="direct call" name="Crypto Broker"></step>
                     </next>
                 </step>
-                <step id="1" title="CBP-Reference Wallet-Crypto Broker"
-                    description="The Crypto Broker indicates that you want to declare an increase in the stock of merchandise Bank. Then indicates the amount and account concept."
-                    type="activity"
-                    platform="CBP"
-                    name="Crypto Broker"
-                    layer="Reference Wallet"
-                    component="">
-                    <next>
-                        <step id="2" type="direct call" name="Crypto Broker"></step>
-                    </next>
-                </step>
-                <step id="2" title="CBP-Wallet Module-Crypto Broker"
-                    description="Transaction processing a Business."
+                <step id="1" title="Create a Restock Business Transaction"
+                    description="Process the request and execute a Bank Money Restock Business Transaction"
                     type="activity"
                     platform="CBP"
                     name="Crypto Broker"
                     layer="Wallet Module"
                     component="Plugin">
                     <next>
-                        <step id="3" type="direct call" name="Bank Money Restock"></step>
+                        <step id="2" type="direct call" name="Bank Money Restock"></step>
                     </next>
                 </step>
-                <step id="3" title="CBP-Business Transaction-Bank Money Restock"
+                <step id="2" title="CBP-Business Transaction-Bank Money Restock"
                     description="Transaction register"
                     type="activity"
                     platform="CBP"
@@ -8528,7 +8363,7 @@
                     layer="Stock Transactions"
                     component="Plugin">
                     <next>
-                        <step id="4" type="direct call" name="Bank Money Restock"></step>
+                        <step id="3" type="direct call" name="Bank Money Restock"></step>
                     </next>
                 </step>
                 <step id="4" title="CBP-Business Transaction-Bank Money Restock"
@@ -8643,7 +8478,7 @@
             </steps>
         </process>
 
-        <process platform="CBP" name="Cash Restock"	>
+        <process platform="CBP" name="Cash Restock">
             <steps>
                 <step id="0" title="Broker declare a new merchandise"
                     description="Start Cash Money Restock"

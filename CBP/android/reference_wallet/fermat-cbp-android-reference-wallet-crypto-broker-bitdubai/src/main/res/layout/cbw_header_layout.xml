@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/cbw_no_market_exchange_rates_to_show"
-        android:textColor="@color/withe"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone"/>
 
