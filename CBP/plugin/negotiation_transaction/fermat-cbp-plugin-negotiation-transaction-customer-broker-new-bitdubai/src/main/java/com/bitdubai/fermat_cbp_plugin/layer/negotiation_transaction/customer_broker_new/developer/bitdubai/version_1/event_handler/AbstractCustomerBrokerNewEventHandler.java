@@ -7,7 +7,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
  * Created by Yordin Alayn 10.12.15
  * Based on AbstractOpenContractEventHandler Created by Manuel Perez
  */
-public abstract class AbstractNegotiationTransactionEventHandler implements FermatEventHandler {
+public abstract class AbstractCustomerBrokerNewEventHandler implements FermatEventHandler {
 
     public CustomerBrokerNewServiceEventHandler CustomerBrokerNewServiceEventHandler;
 

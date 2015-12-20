@@ -84,6 +84,11 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
     }
 
     @Override
+    public Boolean getNearExpirationDatetime() {
+        return null;
+    }
+
+    @Override
     public Collection<Clause> getClauses() {
         return this.clauses;
     }

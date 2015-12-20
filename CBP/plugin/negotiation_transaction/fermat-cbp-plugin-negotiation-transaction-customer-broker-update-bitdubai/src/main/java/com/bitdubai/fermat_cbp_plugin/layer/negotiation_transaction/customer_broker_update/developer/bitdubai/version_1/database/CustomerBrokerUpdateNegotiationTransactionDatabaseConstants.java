@@ -34,14 +34,15 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseConstants {
     /**
      * Customer Broker New Event database table definition.
      */
-    static final String CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME = "customer_broker_new_event";
+//    static final String CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME = "customer_broker_new_event";
+    static final String CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME = "customer_broker_update_event";
 
-    static final String CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME = "event_id";
-    static final String CUSTOMER_BROKER_NEW_EVENT_TYPE_COLUMN_NAME = "event_type";
-    static final String CUSTOMER_BROKER_NEW_EVENT_SOURCE_COLUMN_NAME = "source";
-    static final String CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME = "status";
-    static final String CUSTOMER_BROKER_NEW_EVENT_TIMESTAMP_COLUMN_NAME = "timestamp";
+    static final String CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME = "event_id";
+    static final String CUSTOMER_BROKER_UPDATE_EVENT_TYPE_COLUMN_NAME = "event_type";
+    static final String CUSTOMER_BROKER_UPDATE_EVENT_SOURCE_COLUMN_NAME = "source";
+    static final String CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME = "status";
+    static final String CUSTOMER_BROKER_UPDATE_EVENT_TIMESTAMP_COLUMN_NAME = "timestamp";
 
-    static final String CUSTOMER_BROKER_NEW_EVENT_FIRST_KEY_COLUMN = "event_id";
+    static final String CUSTOMER_BROKER_UPDATE_EVENT_FIRST_KEY_COLUMN = "event_id";
 
 }

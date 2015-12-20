@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces;
+package com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -14,7 +14,7 @@ import java.util.UUID;
 public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiation {
 
     String              customerPublicKey;
-    
+
     String              brokerPublicKey;
 
     UUID                negotiationId;
@@ -24,14 +24,17 @@ public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiat
     Long                lastNegotiationUpdateDate;
 
     Long                negotiationExpirationDate;
-            
+
     NegotiationStatus   status;
-            
+
     Collection<Clause>  clauses;
 
     String              cancelReason;
 
     String              memo;
+
+    // TODO Revisar este campo, lo coloque para implementar el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+    Boolean nearExpirationDatetime;
 
     public String getCustomerPublicKey(){
         return this.customerPublicKey;
@@ -63,6 +66,17 @@ public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiat
 
     public NegotiationStatus getStatus(){
         return this.status;
+    }
+
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        //TODO Revisar esta implementacion, este es el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+        return nearExpirationDatetime;
+    }
+
+    public void setNearExpirationDatetime(Boolean nearExpirationDatetime) {
+        //TODO Revisar esta implementacion, lo coloque como un setter para el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+        this.nearExpirationDatetime = nearExpirationDatetime;
     }
 
     public Collection<Clause> getClauses() throws CantGetListClauseException{
