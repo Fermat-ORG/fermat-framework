@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler;
+package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -8,16 +8,16 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventExcept
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 
 /**
- * Created by Yordin Alayn 10.12.15
+ * Created by Yordin Alayn 18.12.15
  */
-public class IncomingNegotiationTransmissionConfirmResponseEventHandler extends AbstractCustomerBrokerNewEventHandler {
+public class IncomingNegotiationTransmissionConfirmResponseEventHandler extends AbstractCustomerBrokerUpdateEventHandler{
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.CustomerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
+        if(this.customerBrokerUpdateServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
 
             try {
-                this.CustomerBrokerNewServiceEventHandler.incomingNegotiationTransactionConfirmResponseEventHandler((IncomingNegotiationTransmissionConfirmResponseEvent) fermatEvent);
+                this.customerBrokerUpdateServiceEventHandler.incomingNegotiationTransactionConfirmResponseEventHandler((IncomingNegotiationTransmissionConfirmResponseEvent) fermatEvent);
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the incomingNegotiationTransactionConfirmResponseEventHandler", "Check the cause");
             } catch(ClassCastException exception){

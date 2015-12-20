@@ -158,6 +158,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
+            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
 
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Error Starting Customer Broker New PluginRoot","Unexpected Exception");
@@ -236,8 +237,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             return DEFAULT_LOG_LEVEL;
         }
     }
-
-
     /*END IMPLEMENTATION LogManagerForDevelopers*/
 
     /*PUBLIC METHOD*/

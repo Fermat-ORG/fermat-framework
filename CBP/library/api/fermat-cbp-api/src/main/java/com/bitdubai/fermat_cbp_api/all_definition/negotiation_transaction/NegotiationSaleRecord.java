@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces;
+package com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 
 import java.util.Collection;
@@ -11,10 +11,10 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 10.12.15.
  */
-public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiation {
+public class NegotiationSaleRecord implements CustomerBrokerSaleNegotiation {
 
     String              customerPublicKey;
-    
+
     String              brokerPublicKey;
 
     UUID                negotiationId;
@@ -24,9 +24,9 @@ public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiat
     Long                lastNegotiationUpdateDate;
 
     Long                negotiationExpirationDate;
-            
+
     NegotiationStatus   status;
-            
+
     Collection<Clause>  clauses;
 
     String              cancelReason;
@@ -65,7 +65,7 @@ public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiat
         return this.status;
     }
 
-    public Collection<Clause> getClauses() throws CantGetListClauseException{
+    public Collection<Clause> getClauses() throws CantGetListClauseException {
         return this.clauses;
     }
 
@@ -84,5 +84,4 @@ public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiat
     public String getMemo(){
         return this.memo;
     }
-
 }

@@ -223,7 +223,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw pluginStartException;
 
         }
-        System.out.println("********* Negotiation Transmission: Successful start. ");
+        System.out.print("-----------------------\n Negotiation Transmission: Successful start.\n-----------------------\n");
     }
 
     @Override
@@ -477,7 +477,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
-        System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
+        System.out.println("-----------------------\nTemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList\n-----------------------\n");
          //Request the list of component registers
         try {
 
@@ -549,9 +549,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NEGOTIATION_TRANSMISSION &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
-            System.out.print("-----------------------\n" +
-                    "NEGOTIATION TRANSMISSION REGISTERED  -----------------------\n" +
-                    "-----------------------\n TO: " + getName());
+            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION REGISTERED \n-----------------------\n TO: " + getName());
 
             //Mark as register
             this.register = Boolean.TRUE;
@@ -570,9 +568,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 eventManager
             );
 
-            System.out.print("-----------------------\n" +
-                    "NEGOTIATION TRANSMISSION CALL AGENT  -----------------------\n" +
-                    "-----------------------\n TO: " + getName());
+            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION CALL AGENT \n-----------------------\n TO: " + getName());
             //Start agent
             negotiationTransmissionAgent.start();
         }
@@ -581,9 +577,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService) {
 
-        System.out.println("----------------------------------\n" +
-                "FAILED CONNECTION WITH "+remoteNetworkService.getAlias()+"\n" +
-                "--------------------------------------------------------");
+        System.out.print("-----------------------\n FAILED CONNECTION WITH " + remoteNetworkService.getAlias() + "\n-----------------------\n");
         negotiationTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
 
     }
@@ -591,10 +585,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-        System.out.println("NegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
-        System.out.print("-----------------------\n" +
-                "NEGOTIATION TRANSMISSION: SUCCESSFUL CONNECTION!  -----------------------\n" +
-                "-----------------------\n A: " + getName());
+        System.out.print("-----------------------\n NegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent \n-----------------------\n");
+        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION: SUCCESSFUL CONNECTION! \n A: \n" + getName() + "\n-----------------------\n");
         //save into the cache
         remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
         //Add remote network service register List
@@ -607,14 +599,10 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         //Tell the manager to handler the new connection established
 
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-        System.out.print("-----------------------\n" +
-                "NEGOTIATION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
-                "-----------------------\n A: " + remoteComponentProfile.getAlias());
+        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n A: " + remoteComponentProfile.getAlias() +"\n-----------------------\n");
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-            System.out.print("-----------------------\n" +
-                    "NEGOTIATION TRANSMISSION INCOMING CONNECTION  -----------------------\n" +
-                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
+            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n-----------------------\n A: " + remoteComponentProfile.getAlias());
         }
     }
 
@@ -624,8 +612,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-                System.out.println("KKKKKKKKKKKKKKKKKKKKK SE CAYO LA VPN PUBLIC KEY  " + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                System.out.print("-----------------------\n SE CAYO LA VPN PUBLIC KEY \n" + vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey() +"\n-----------------------\n");
+                        communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
             }
 
         }
@@ -636,7 +624,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            System.out.println("*( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( ");
+            System.out.println("-----------------------\n *( *( *( *( *( *( *( *( *(  SE CAYO LA CONEXION *( *( *( *( *( *( *( *( *( *( \n-----------------------\n");
             this.register = false;
             communicationNetworkServiceConnectionManager.closeAllConnection();
         }
@@ -645,7 +633,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     public void handleNewMessages(final FermatMessage fermatMessage){
         Gson gson = new Gson();
-        System.out.println("Negotiation Transmission gets a new message");
+        System.out.println("-----------------------\n  Negotiation Transmission gets a new message \n -----------------------\n");
         try{
             NegotiationTransmission negotiationTransmissionReceived = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
             if(negotiationTransmissionReceived.getTransmissionId()!=null){
@@ -659,9 +647,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 switch (negotiationTransmissionResponseMessage.getNegotiationTransmissionState()){
                     case CONFIRM_NEGOTIATION:
                         databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_NEGOTIATION);
-                        System.out.print("-----------------------\n" +
-                                "NEGOTIATION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
-                                "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_NEGOTIATION);
+                        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER \n STATE: " + NegotiationTransmissionState.CONFIRM_NEGOTIATION + "-----------------------\n");
                         fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
                         IncomingNegotiationTransmissionConfirmNegotiationEvent incomingNegotiationTransmissionConfirmNegotiationEvent = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
                         incomingNegotiationTransmissionConfirmNegotiationEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
@@ -670,9 +656,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                         break;
                     case CONFIRM_RESPONSE:
                         databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_RESPONSE);
-                        System.out.print("-----------------------\n" +
-                                "NEGOTIATION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
-                                "-----------------------\n STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE);
+                        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE +" -----------------------\n");
                         fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
                         IncomingNegotiationTransmissionConfirmResponseEvent incomingNegotiationTransmissionConfirmResponseEvent = (IncomingNegotiationTransmissionConfirmResponseEvent) fermatEvent;
                         incomingNegotiationTransmissionConfirmResponseEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
