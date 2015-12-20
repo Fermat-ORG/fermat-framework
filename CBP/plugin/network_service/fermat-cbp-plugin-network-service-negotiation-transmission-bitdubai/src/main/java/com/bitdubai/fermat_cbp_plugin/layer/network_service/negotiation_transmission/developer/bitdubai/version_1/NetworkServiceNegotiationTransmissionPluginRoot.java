@@ -70,6 +70,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantConstructNegotiationTransmissionException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -636,16 +637,19 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         try{
 
             Gson gson = new Gson();
-            NegotiationTransmission negotiationTransmissionReceived = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
+            NegotiationTransmission negotiationTransmission = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
 
-            switch (negotiationTransmissionReceived.getTransmissionType()){
+            switch (negotiationTransmission.getTransmissionType()){
                 case TRANSMISSION_NEGOTIATION:
-                    receiveNegotiation(negotiationTransmissionReceived);
+                    receiveNegotiation(negotiationTransmission);
                     break;
 
                 case TRANSMISSION_CONFIRM:
-                    receiveConfirm(negotiationTransmissionReceived);
+                    receiveConfirm(negotiationTransmission.getTransmissionId());
                     break;
+
+                default:
+                    throw new CantHandleNewMessagesException("message type: " +negotiationTransmission.getTransmissionType().name(),"Message type not handled.");
             }
 
         } catch(Exception exception){
@@ -829,13 +833,34 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw new CantConstructNegotiationTransmissionException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
         }
         return negotiationTransmission;
-    }
-
-    private void receiveNegotiation(NegotiationTransmission negotiationTransmissionReceived){
 
     }
 
-    private void receiveConfirm(NegotiationTransmission negotiationTransmissionReceived){
+    private void receiveNegotiation(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException{
+
+        try {
+
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+
+        } catch (CantRegisterSendNegotiationTransmissionException e) {
+            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
+        } catch (Exception e) {
+            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
+        }
+
+    }
+
+    private void receiveConfirm(UUID transmissionId) throws CantHandleNewMessagesException{
+
+        try {
+
+            databaseDao.confirmReception(transmissionId);
+
+        } catch (CantRegisterSendNegotiationTransmissionException e) {
+            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
+        } catch (Exception e) {
+            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
+        }
 
     }
     /*END PRIVATE METHOD*/

@@ -121,17 +121,16 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
     public void confirmReception(UUID transmissionId) throws CantRegisterSendNegotiationTransmissionException {
         try {
 
-            NegotiationTransmission negotiationTransmission = getNegotiationTransmissionRecord(transmissionId);
-            negotiationTransmission.confirmRead();
-            updateRegisterSendNegotiatioTransmission(negotiationTransmission);
+//            NegotiationTransmission negotiationTransmission = getNegotiationTransmissionRecord(transmissionId);
+//            negotiationTransmission.confirmRead();
+//            updateRegisterSendNegotiatioTransmission(negotiationTransmission);
+            NegotiationTransmissionState state = NegotiationTransmissionState.CONFIRM_NEGOTIATION;
+            this.changeState(transmissionId, state);
 
-        } catch (CantGetNegotiationTransmissionException e) {
-            throw new CantRegisterSendNegotiationTransmissionException(null, "RequestID: "+transmissionId.toString(), "Can not find an address exchange request with the given request id.");
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Table Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE + ". CAN'T CONFIRM RECEPTION IN REGISTER OF DATABSE NEGOTIATION TRANSMISSION", e, contextBuffer.toString(), "The record do not exist");
-
         }
     }
 
