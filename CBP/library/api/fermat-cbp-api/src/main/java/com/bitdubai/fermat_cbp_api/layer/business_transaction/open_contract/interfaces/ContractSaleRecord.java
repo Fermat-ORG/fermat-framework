@@ -32,6 +32,10 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
     float referencePrice;
     ContractStatus status;
     String contractHash;
+
+    // TODO Revisar este campo, lo coloque para implementar el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+    Boolean nearExpirationDatetime;
+
     /**
      * Represents the contract id/hash
      * @return
@@ -96,7 +100,8 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
     }
 
     @Override
-    public long getDateTime() {
+    public Long getDateTime() {
+        //TODO Revisar esta implementacion, se cambio el tipo de retorno de long a Long tal como esta ahora en CustomerBrokerPurchaseNegotiation
         return this.dayTime;
     }
 
@@ -125,7 +130,18 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         return this.contractClauses;
     }
 
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        return nearExpirationDatetime;
+    }
+
+    public void setNearExpirationDatetime(Boolean nearExpirationDatetime) {
+        //TODO Revisar esta implementacion, este es el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+        this.nearExpirationDatetime = nearExpirationDatetime;
+    }
+
     public void setContractClauses(Collection<ContractClause> contractClauses){
+        //TODO Revisar esta implementacion, lo coloque como un setter para el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
         this.contractClauses=contractClauses;
     }
 
