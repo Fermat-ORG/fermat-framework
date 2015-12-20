@@ -27,6 +27,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.app_connection.CryptoCustom
 import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
+import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -114,6 +115,11 @@ public class FermatAppConnectionManager {
             //CASH WALLET
             case "cash_wallet":
                 fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
+                break;
+
+            // WPD Sub Apps
+            case "public_key_store":
+                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
         }
         return fermatAppConnection;
     }
