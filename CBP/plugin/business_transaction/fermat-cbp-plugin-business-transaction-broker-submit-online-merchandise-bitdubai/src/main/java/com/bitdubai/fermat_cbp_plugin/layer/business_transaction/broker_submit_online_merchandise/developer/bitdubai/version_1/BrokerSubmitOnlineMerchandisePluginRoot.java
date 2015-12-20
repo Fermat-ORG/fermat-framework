@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants;
@@ -87,7 +88,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
     //TODO: Need reference to contract plugin
-    //private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
      * Represents the plugin manager.
@@ -227,13 +228,11 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             /**
              * Init the plugin manager
              */
-        //TODO: this instance is Temporal
-            this.brokerSubmitOnlineMerchandiseTransactionManager=new BrokerSubmitOnlineMerchandiseTransactionManager();
-            /*this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
-                    this.customerBrokerContractPurchaseManager,
+            this.brokerSubmitOnlineMerchandiseTransactionManager=new BrokerSubmitOnlineMerchandiseTransactionManager(
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao,
-                    this.transactionTransmissionManager,
-                    this.customerBrokerPurchaseNegotiationManager);*/
+                    this.customerBrokerContractSaleManager,
+                    this.customerBrokerSaleNegotiationManager
+                    );
 
             /**
              * Init event recorder service.

@@ -189,14 +189,20 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     "Sending online payment",
                     "Cannot insert a database record.");
         } catch (CantGetCryptoAddressException e) {
-            e.printStackTrace();
+            throw new CantSendPaymentException(
+                    e,
+                    "Sending online payment",
+                    "Cannot get the Broker Crypto Address");
         } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot get the CustomerBrokerPurchaseNegotiation list");
         } catch (CantGetCryptoAmountException e) {
-            e.printStackTrace();
+            throw new CantSendPaymentException(
+                    e,
+                    "Sending online payment",
+                    "Cannot get the Crypto Amount");
         }
 
     }
