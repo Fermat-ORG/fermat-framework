@@ -256,11 +256,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
-
     /*END IMPLEMENTATION Service*/
 
     /*IMPLEMENTATION NegotiationTransmissionManager*/
-
     //Crypto Broker Send negotiation To Crypto Customer
     public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
 
@@ -596,14 +594,15 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
-        //Tell the manager to handler the new connection established
 
+        //Tell the manager to handler the new connection established
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
         System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n A: " + remoteComponentProfile.getAlias() +"\n-----------------------\n");
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
             remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
             System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n-----------------------\n A: " + remoteComponentProfile.getAlias());
         }
+
     }
 
     @Override
@@ -630,6 +629,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         }
 
     }
+
 
     public void handleNewMessages(final FermatMessage fermatMessage){
         Gson gson = new Gson();
@@ -715,9 +715,16 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     //This method initialize the listener
     private void initializeListener(){
+
          //Listen and handle Complete Component Registration Notification Event
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        //failure connection
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -733,18 +740,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        //failure connection
-        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
-        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        //new message
-        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
         //Listen and handle VPN Connection Close Notification Event
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
         fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
@@ -756,6 +751,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        //new message
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
 
     }
 
