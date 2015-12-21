@@ -44,11 +44,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionS
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
-import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantConfirmReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendConfirmToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.exceptions.CantSendNegotiationToCryptoBrokerException;
@@ -74,7 +72,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionResponseMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.ConfirmMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
@@ -264,10 +264,14 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException{
 
         try{
-            PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
-            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+
+            PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+            NegotiationTransmissionType     transmissionType        = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
+            NegotiationTransmissionState    transmissionState       = NegotiationTransmissionState.PROCESSING_SEND;
+            NegotiationTransmission         negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
@@ -282,10 +286,14 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void sendNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoBrokerException{
 
         try{
-            PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
-            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+
+            PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            NegotiationTransmissionType     transmissionType        = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
+            NegotiationTransmissionState    transmissionState       = NegotiationTransmissionState.PROCESSING_SEND;
+            NegotiationTransmission         negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
@@ -300,10 +308,14 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void sendConfirmNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException{
 
         try{
-            PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
-            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+
+            PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+            NegotiationTransmissionType     transmissionType        = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
+            NegotiationTransmissionState    transmissionState       = NegotiationTransmissionState.PROCESSING_SEND;
+            NegotiationTransmission         negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendConfirmToCryptoCustomerException(CantSendConfirmToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
@@ -318,10 +330,14 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void sendConfirmNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoBrokerException {
 
         try{
-            PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
-            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+
+            PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            NegotiationTransmissionType     transmissionType        = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
+            NegotiationTransmissionState    transmissionState       = NegotiationTransmissionState.PROCESSING_SEND;
+            NegotiationTransmission         negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+
         } catch (CantConstructNegotiationTransmissionException e){
             throw new CantSendConfirmToCryptoBrokerException(CantSendConfirmToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO BROKER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
@@ -335,14 +351,18 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void confirmNegotiation(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantConfirmNegotiationException {
 
         try{
-            PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-            NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
-            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
+
+            PlatformComponentType           actorSendType           = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            NegotiationTransmissionType     transmissionType        = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
+            NegotiationTransmissionState    transmissionState       = NegotiationTransmissionState.PROCESSING_SEND;
+            NegotiationTransmission         negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+
         } catch (CantConstructNegotiationTransmissionException e){
-            throw new CantConfirmNegotiationException("CAN'T CONFIRM THE CREATION OF NEGOTIATION", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+            throw new CantConfirmNegotiationException(CantConfirmNegotiationException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
         } catch (CantRegisterSendNegotiationTransmissionException e){
-            throw new CantConfirmNegotiationException("CAN'T CONFIRM THE CREATION OF NEGOTIATION", e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+            throw new CantConfirmNegotiationException(CantConfirmNegotiationException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
         } catch (Exception e){
             throw new CantConfirmNegotiationException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND CONFIRM TO CRYPTO BROKER, UNKNOWN FAILURE.");
         }
@@ -637,67 +657,91 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         try{
 
             Gson gson = new Gson();
-            NegotiationTransmission negotiationTransmission = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
+            NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
 
-            switch (negotiationTransmission.getTransmissionType()){
+            switch (negotiationTransmissionMessage.getMessageType()){
                 case TRANSMISSION_NEGOTIATION:
-                    receiveNegotiation(negotiationTransmission);
+                    NegotiationMessage negotiationMessage =  gson.fromJson(fermatMessage.getContent(), NegotiationMessage.class);
+                    receiveNegotiation(negotiationMessage);
                     break;
 
                 case TRANSMISSION_CONFIRM:
-                    receiveConfirm(negotiationTransmission.getTransmissionId());
+                    ConfirmMessage confirmMessage =  gson.fromJson(fermatMessage.getContent(), ConfirmMessage.class);
+                    receiveConfirm(confirmMessage);
                     break;
 
                 default:
-                    throw new CantHandleNewMessagesException("message type: " +negotiationTransmission.getTransmissionType().name(),"Message type not handled.");
+                    throw new CantHandleNewMessagesException("message type: " +negotiationTransmissionMessage.getMessageType().name(),"Message type not handled.");
             }
 
         } catch(Exception exception){
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
-        /*Gson gson = new Gson();
-        System.out.println("-----------------------\n  Negotiation Transmission gets a new message \n -----------------------\n");
-        try{
-            NegotiationTransmission negotiationTransmissionReceived = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionImpl.class);
-            if(negotiationTransmissionReceived.getTransmissionId()!=null){
-                //aca ira confirm o send
-                negotiationTransmissionReceived.setTransmissionType(NegotiationTransmissionType.TRANSMISSION_CONFIRM);
-                databaseDao.registerSendNegotiatioTransmission(negotiationTransmissionReceived);
-            }else{
-
-                NegotiationTransmissionResponseMessage negotiationTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionResponseMessage.class);
-                FermatEvent fermatEvent;
-                switch (negotiationTransmissionResponseMessage.getNegotiationTransmissionState()){
-                    case CONFIRM_NEGOTIATION:
-                        databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_NEGOTIATION);
-                        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER \n STATE: " + NegotiationTransmissionState.CONFIRM_NEGOTIATION + "-----------------------\n");
-                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
-                        IncomingNegotiationTransmissionConfirmNegotiationEvent incomingNegotiationTransmissionConfirmNegotiationEvent = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
-                        incomingNegotiationTransmissionConfirmNegotiationEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-                        incomingNegotiationTransmissionConfirmNegotiationEvent.setDestinationPlatformComponentType(negotiationTransmissionReceived.getActorReceiveType());
-                        eventManager.raiseEvent(incomingNegotiationTransmissionConfirmNegotiationEvent);
-                        break;
-                    case CONFIRM_RESPONSE:
-                        databaseDao.changeState(negotiationTransmissionResponseMessage.getTransmissionId(), NegotiationTransmissionState.CONFIRM_RESPONSE);
-                        System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE +" -----------------------\n");
-                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
-                        IncomingNegotiationTransmissionConfirmResponseEvent incomingNegotiationTransmissionConfirmResponseEvent = (IncomingNegotiationTransmissionConfirmResponseEvent) fermatEvent;
-                        incomingNegotiationTransmissionConfirmResponseEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-                        incomingNegotiationTransmissionConfirmResponseEvent.setDestinationPlatformComponentType(negotiationTransmissionReceived.getActorReceiveType());
-                        eventManager.raiseEvent(incomingNegotiationTransmissionConfirmResponseEvent);
-                        break;
-                }
-
-            }
-        } catch (CantRegisterSendNegotiationTransmissionException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        }*/
     }
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/
+    private void receiveNegotiation(NegotiationMessage negotiationMessage) throws CantHandleNewMessagesException{
+
+        try {
+
+            FermatEvent fermatEvent;
+
+            NegotiationTransmissionImpl negotiationTransmission = new NegotiationTransmissionImpl(
+                negotiationMessage.getTransmissionId(),
+                negotiationMessage.getTransactionId(),
+                negotiationMessage.getNegotiationId(),
+                negotiationMessage.getNegotiationTransactionType(),
+                negotiationMessage.getPublicKeyActorSend(),
+                negotiationMessage.getActorSendType(),
+                negotiationMessage.getPublicKeyActorReceive(),
+                negotiationMessage.getActorReceiveType(),
+                negotiationMessage.getTransmissionType(),
+                negotiationMessage.getTransmissionState(),
+                negotiationMessage.getTimestamp()
+            );
+            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
+
+            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER \n STATE: " + NegotiationTransmissionState.PENDING_ACTION + "-----------------------\n");
+            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSACTION);
+            IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) fermatEvent;
+            event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+            event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
+            eventManager.raiseEvent(event);
+
+        } catch (CantRegisterSendNegotiationTransmissionException e) {
+            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
+        } catch (Exception e) {
+            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
+        }
+
+    }
+
+    private void receiveConfirm(ConfirmMessage confirmMessage) throws CantHandleNewMessagesException {
+
+        try {
+
+            FermatEvent fermatEvent;
+            UUID                    transmissionId      = confirmMessage.getTransmissionId();
+            PlatformComponentType   actorReceiveType    = confirmMessage.getActorReceiveType();
+
+            databaseDao.confirmReception(transmissionId);
+
+            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE +" -----------------------\n");
+            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
+            IncomingNegotiationTransmissionConfirmNegotiationEvent event = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
+            event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+            event.setDestinationPlatformComponentType(actorReceiveType);
+            eventManager.raiseEvent(event);
+
+        } catch (CantRegisterSendNegotiationTransmissionException e) {
+            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
+        } catch (Exception e) {
+            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
+        }
+
+    }
+
     //This method validate is all required resource are injected into the plugin root by the platform
     private void validateInjectedResources() throws CantStartPluginException {
         //If all resources are inject
@@ -833,34 +877,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             throw new CantConstructNegotiationTransmissionException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
         }
         return negotiationTransmission;
-
-    }
-
-    private void receiveNegotiation(NegotiationTransmission negotiationTransmission) throws CantHandleNewMessagesException{
-
-        try {
-
-            databaseDao.registerSendNegotiatioTransmission(negotiationTransmission);
-
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
-        } catch (Exception e) {
-            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
-        }
-
-    }
-
-    private void receiveConfirm(UUID transmissionId) throws CantHandleNewMessagesException{
-
-        try {
-
-            databaseDao.confirmReception(transmissionId);
-
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
-        } catch (Exception e) {
-            throw new CantHandleNewMessagesException(e.getMessage(), FermatException.wrapException(e), "Network Service Negotiation Transmission", "Cant Construc Negotiation Transmission, unknown failure.");
-        }
 
     }
     /*END PRIVATE METHOD*/

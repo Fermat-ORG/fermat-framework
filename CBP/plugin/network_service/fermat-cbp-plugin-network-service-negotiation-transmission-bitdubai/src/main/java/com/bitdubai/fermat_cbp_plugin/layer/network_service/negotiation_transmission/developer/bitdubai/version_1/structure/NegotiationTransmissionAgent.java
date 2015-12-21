@@ -19,7 +19,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionResponseMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -336,7 +336,7 @@ public class NegotiationTransmissionAgent {
 
                                 launchNotification();
 
-                                NegotiationTransmissionResponseMessage transmissionResponseMessage = new NegotiationTransmissionResponseMessage(
+                                NegotiationTransmissionMessage transmissionResponseMessage = new NegotiationTransmissionMessage(
                                         negotiationTransmission.getTransactionId(),
                                         NegotiationTransmissionState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
                                         negotiationTransmission.getNegotiationTransactionType());
