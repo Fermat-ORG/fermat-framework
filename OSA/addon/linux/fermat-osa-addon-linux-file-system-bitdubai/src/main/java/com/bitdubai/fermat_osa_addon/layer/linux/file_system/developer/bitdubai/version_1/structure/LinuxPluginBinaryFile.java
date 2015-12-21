@@ -25,7 +25,7 @@ import java.util.UUID;
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
-public class DesktopPluginBinaryFile implements PluginBinaryFile {
+public class LinuxPluginBinaryFile implements PluginBinaryFile {
 
     /**
      * PluginBinaryFile Interface member variables.
@@ -37,7 +37,7 @@ public class DesktopPluginBinaryFile implements PluginBinaryFile {
     FileLifeSpan lifeSpan;
     UUID ownerId;
 
-    public DesktopPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public LinuxPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.ownerId = ownerId;
         this.directoryName = directoryName;

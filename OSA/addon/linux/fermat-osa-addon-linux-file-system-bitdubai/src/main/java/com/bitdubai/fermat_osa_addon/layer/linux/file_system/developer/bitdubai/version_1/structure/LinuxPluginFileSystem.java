@@ -23,7 +23,7 @@ import java.util.UUID;
  * from the Platform File System in that this one requires the plug in to identify itself.
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */
-public class DesktopPluginFileSystem implements PluginFileSystem {
+public class LinuxPluginFileSystem implements PluginFileSystem {
 
 
     /**
@@ -50,10 +50,10 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException,CantCreateFileException {
 
-        DesktopPluginTextFile newFile = null;
+        LinuxPluginTextFile newFile = null;
         try {
             //execute AndroidPluginTextFile constructor
-             newFile = new DesktopPluginTextFile(ownerId,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+             newFile = new LinuxPluginTextFile(ownerId,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
             throw new CantCreateFileException();
@@ -83,7 +83,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginTextFile createTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
         try {
-            return new DesktopPluginTextFile(ownerId,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            return new LinuxPluginTextFile(ownerId,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
             throw new CantCreateFileException();
@@ -105,9 +105,9 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException,CantCreateFileException{
 
-        DesktopPluginBinaryFile newFile = null;
+        LinuxPluginBinaryFile newFile = null;
         try {
-             newFile = new DesktopPluginBinaryFile(ownerId, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+             newFile = new LinuxPluginBinaryFile(ownerId, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
             throw new CantCreateFileException();
@@ -138,7 +138,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
     public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
 
        try {
-            return new DesktopPluginBinaryFile(ownerId,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+            return new LinuxPluginBinaryFile(ownerId,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
             e.printStackTrace();
@@ -151,7 +151,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
 
         try {
 
-            final DesktopPluginTextFile textFile =  new DesktopPluginTextFile(ownerId, directoryName,  fileName,  privacyLevel,  lifeSpan);
+            final LinuxPluginTextFile textFile =  new LinuxPluginTextFile(ownerId, directoryName,  fileName,  privacyLevel,  lifeSpan);
             textFile.delete();
 
         } catch (Exception e){
@@ -165,7 +165,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
 
         try {
 
-            final DesktopPluginBinaryFile binaryFile =  new DesktopPluginBinaryFile(ownerId, directoryName,  fileName,  privacyLevel,  lifeSpan);
+            final LinuxPluginBinaryFile binaryFile =  new LinuxPluginBinaryFile(ownerId, directoryName,  fileName,  privacyLevel,  lifeSpan);
             binaryFile.delete();
 
         } catch (Exception e){

@@ -45,13 +45,13 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
         try{
             DesktopDatabase database;
-            String hasDBName = hashDataBaseName(databaseName);
-            database = new DesktopDatabase(ownerId, hasDBName);
-            database.openDatabase(hasDBName);
+            //String hasDBName = hashDataBaseName(databaseName);
+            database = new DesktopDatabase(ownerId, databaseName);
+            database.openDatabase(databaseName);
 
             return database;
         }
-        catch (NoSuchAlgorithmException e)
+        catch (Exception e)
         {
             throw new CantOpenDatabaseException();
         }
@@ -71,13 +71,13 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
     public void deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
         try{
             DesktopDatabase database;
-            String hasDBName = hashDataBaseName(databaseName);
-            database = new DesktopDatabase(ownerId, hasDBName);
-            database.deleteDatabase(hasDBName);
+            //String hasDBName = hashDataBaseName(databaseName);
+            database = new DesktopDatabase(ownerId, databaseName);
+            database.deleteDatabase(databaseName);
 
 
         }
-        catch (NoSuchAlgorithmException e)
+        catch (Exception e)
         {
             throw new CantOpenDatabaseException();
         }
@@ -97,13 +97,13 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
     public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         try{
             DesktopDatabase database;
-            String hasDBName = hashDataBaseName(databaseName);
-            database = new DesktopDatabase(ownerId, hasDBName);
-            database.createDatabase(hasDBName);
+           // String hasDBName = hashDataBaseName(databaseName);
+            database = new DesktopDatabase(ownerId, databaseName);
+            database.createDatabase(databaseName);
 
             return database;
         }
-        catch (NoSuchAlgorithmException e){
+        catch (Exception e){
             throw new CantCreateDatabaseException();
         }
 
@@ -125,7 +125,7 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
      * @return String hashed database file name
      * @throws NoSuchAlgorithmException
      */
-    private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
+ /*   private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
         String encryptedString = databaseName;
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -145,5 +145,5 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
             throw e;
         }
         return encryptedString.replace("/","");
-    }
+    }*/
 }

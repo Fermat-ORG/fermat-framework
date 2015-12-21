@@ -38,9 +38,6 @@ import java.util.UUID;
  */
 public class DesktopDatabase implements Database, DatabaseFactory {
 
-
-
-
     /**
      * Database Interface member variables.
      */
@@ -108,8 +105,6 @@ public class DesktopDatabase implements Database, DatabaseFactory {
         return databaseTransaction = new DesktopDatabaseTransaction();
     }
 
-
-
     /**
      * <p>Return a DatabaseTable definition
      *
@@ -120,7 +115,6 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     public DatabaseTable getTable(String tableName){
 
         databaseTable = new DesktopDatabaseTable(this.Database, tableName);
-
         return databaseTable;
     }
 
@@ -183,10 +177,15 @@ public class DesktopDatabase implements Database, DatabaseFactory {
          */
         if(ownerId != null)
             //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-            databasePath = EnvironmentVariables.getExternalStorageDirectory()+ownerId.toString();
+            databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
         else
             //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
             databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+
+        File storagePath = new File(databasePath);
+        if (!storagePath.exists()){
+            storagePath.mkdirs();
+        }
 
         databasePath += "/" + this.databaseName.replace("-","") + ".db";
 
@@ -212,10 +211,14 @@ public class DesktopDatabase implements Database, DatabaseFactory {
              */
             if(ownerId != null)
                 //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-                databasePath = EnvironmentVariables.getExternalStorageDirectory()+ownerId.toString();
+                databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
             else
-                //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
                 databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+
+            File storagePath = new File(databasePath);
+            if (!storagePath.exists()){
+                storagePath.mkdirs();
+            }
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
 
@@ -258,7 +261,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
              * because it comes from platformdatabase
              */
             if(ownerId != null)
-                databasePath = EnvironmentVariables.getExternalStorageDirectory()+ownerId.toString();
+                databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
                 //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
             else
                 databasePath =String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
@@ -304,15 +307,15 @@ public class DesktopDatabase implements Database, DatabaseFactory {
             //preguntar si conviene más centralizar la carpeta de base de datos o hacer un contexto individual
 
             if(ownerId != null)
-                databasePath = EnvironmentVariables.getExternalStorageDirectory()+ownerId.toString();
+                databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
                 //databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
             else
                 databasePath =String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
-            //databasePath = "mati";
             //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
+
             File storagePath = new File(databasePath);
-            if (!storagePath.exists() && storagePath.mkdirs()){
-                storagePath = null;
+            if (!storagePath.exists()){
+                storagePath.mkdirs();
             }
 
             /**
