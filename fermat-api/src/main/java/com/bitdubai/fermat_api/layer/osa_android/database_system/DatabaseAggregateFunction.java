@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 /**
- *  <p>The enum <code>DatabaseSelectOperator</code>
+ *  <p>The enum <code>DatabaseAggregateFunction</code>
  *     defined operators that can be applied in a select statement
  *
  *
@@ -11,11 +11,11 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
  * */
 
 
-public interface DatabaseSelectOperator {
+public interface DatabaseAggregateFunction {
 
     public void setColumn (String column);
 
-    public void setType (DataBaseSelectOperatorType type);
+    public void setType (DataBaseAggregateFunctionType type);
 
     public void setAliasColumn (String alias);
 
@@ -23,5 +23,7 @@ public interface DatabaseSelectOperator {
 
     public String  getColumn ();
 
-    public DataBaseSelectOperatorType getType ();
+    public DataBaseAggregateFunctionType getType ();
+
+    public String toSQLQuery();
 }

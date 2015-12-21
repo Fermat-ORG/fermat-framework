@@ -6,17 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggregateFunction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
@@ -204,7 +203,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
             List<DatabaseRecord> records = record.getValues();
 
-            List<DatabaseSelectOperator> tableSelectOperator = table.getTableSelectOperator();
+            List<DatabaseAggregateFunction> tableSelectOperator = table.getTableAggregateFunction();
 
             //check if declared operators to apply on select or only define some fields
 
