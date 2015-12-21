@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,13 +108,13 @@ public class CloseContractDetailsFragment extends FermatWalletFragment {
         LinearLayout cancellationReasonContainer = (LinearLayout) rootView.findViewById(R.id.cbw_cancellation_reason_container);
         if (status.equals(ContractStatus.CANCELLED)) {
             cancellationReasonContainer.setVisibility(View.VISIBLE);
-        } else {
             FermatTextView cancellationReasonText = (FermatTextView) rootView.findViewById(R.id.cbw_cancellation_reason_text);
             cancellationReasonText.setText(contractBasicInfo.getCancellationReason());
         }
 
         FermatTextView contractDetailsCloseDate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_close_date);
-        contractDetailsCloseDate.setText(getResources().getString(R.string.cbw_contract_details_last_update_date, "15/02/2015"));
+        CharSequence formattedDate = DateFormat.getDateFormat(getActivity()).format(contractBasicInfo.getLastUpdate());
+        contractDetailsCloseDate.setText(getResources().getString(R.string.cbw_contract_details_last_update_date, formattedDate));
 
         FermatButton checkNegotiationDetails = (FermatButton) rootView.findViewById(R.id.cbw_contract_details_check_negotiation_details);
         checkNegotiationDetails.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +147,7 @@ public class CloseContractDetailsFragment extends FermatWalletFragment {
         BigDecimal exchangeRate = BigDecimal.valueOf(contractBasicInfo.getExchangeRateAmount());
 
         double amountToReceive = amountToSell.multiply(exchangeRate).doubleValue();
-        return DecimalFormat.getNumberInstance().format(amountToReceive);
+        return NumberFormat.getInstance().format(amountToReceive);
     }
 
 
