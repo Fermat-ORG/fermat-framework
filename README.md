@@ -1,7 +1,8 @@
+<!-- all links tested by laderuner -->
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 # Welcome to Fermat!
-## all links tested-laderuner
+
 In the last 20 years virtually everything went digital: pictures, music, videos, mails, etc. Nevertheless we still have cash as paper money. 
 
 #### Why isn't cash money digital yet?

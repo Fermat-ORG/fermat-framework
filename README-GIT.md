@@ -1,4 +1,6 @@
-## all links tested-laderuner
+
+<!-- all links tested - laderuner -->
+
 # Git Management
 
 In order to have a better understanding of the content, please read the following document: [Contributing](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md)
