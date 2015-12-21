@@ -47,6 +47,11 @@ public interface ContractBasicInformation {
     String getMerchandise();
 
     /**
+     * @return the negotiation ID
+     */
+    UUID getNegotiationId();
+
+    /**
      * @return the payment currency
      */
     String getPaymentCurrency();

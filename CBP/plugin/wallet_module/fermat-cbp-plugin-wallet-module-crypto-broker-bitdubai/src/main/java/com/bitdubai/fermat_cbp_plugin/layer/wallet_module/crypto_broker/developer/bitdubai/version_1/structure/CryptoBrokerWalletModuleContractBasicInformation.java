@@ -75,6 +75,12 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
+    public UUID getNegotiationId() {
+        //TODO
+        return null;
+    }
+
+    @Override
     public String getTypeOfPayment() {
         return typeOfPayment;
     }
