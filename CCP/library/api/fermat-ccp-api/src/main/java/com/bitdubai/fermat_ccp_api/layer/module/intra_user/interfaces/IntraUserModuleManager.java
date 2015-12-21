@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
@@ -20,11 +21,12 @@ public interface IntraUserModuleManager extends ModuleManager {
      * The method <code>createIntraUser</code> is used to create a new intra user
      *
      * @param intraUserName the name of the intra user to create
+     * @param phrase the phrase of the intra user to create
      * @param profileImage  the profile image of the intra user to create
      * @return the login identity generated for the said intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException
      */
-     IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
+     IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 
     /**
      * The method <code>setProfileImage</code> let the current logged in intra user set its profile
@@ -58,6 +60,17 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
      List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
+
+    /**
+     * The method <code>getCacheSuggestionsToContact</code> get cache list of intra users that the logged in
+     * intra user could be interested to add.
+     *
+     * @return a list with information of intra users
+     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
+     */
+    List<IntraUserInformation> getCacheSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
 
     /**
      * The method <code>searchIntraUser</code> gives us an interface to manage a search for a particular
@@ -160,10 +173,11 @@ public interface IntraUserModuleManager extends ModuleManager {
      * The method <code>updateIntraUserIdentity</code> change a identity information data
      * @param identityPublicKey
      * @param identityAlias
+     * @param identityPhrase
      * @param profileImage
      * @throws CantUpdateIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase,byte[] profileImage) throws CantUpdateIdentityException;
 
 
     /**
@@ -172,4 +186,6 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @throws CantListIntraWalletUsersException
      */
     void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException;
+
+    boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException;
 }

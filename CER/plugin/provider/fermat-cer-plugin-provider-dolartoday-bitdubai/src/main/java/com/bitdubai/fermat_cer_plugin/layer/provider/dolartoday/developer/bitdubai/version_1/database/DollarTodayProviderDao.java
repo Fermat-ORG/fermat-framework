@@ -122,7 +122,7 @@ public class DollarTodayProviderDao {
         DatabaseTable table = this.database.getTable(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();

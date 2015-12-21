@@ -1,16 +1,17 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.factory;
 
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.fragments.HomeFragment;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.settings.Settings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * CommunityAssetRedeemPointFragmentFactory
  */
-public class AssetRedeemPointCommunityFragmentFactory extends FermatSubAppFragmentFactory<AssetRedeemPointCommunitySubAppSession, Settings, FragmentFactoryEnumType> {
+public class AssetRedeemPointCommunityFragmentFactory extends FermatFragmentFactory<AssetRedeemPointCommunitySubAppSession, Settings, SubAppResourcesProviderManager, FragmentFactoryEnumType> {
 
     @Override
     public FermatFragment getFermatFragment(FragmentFactoryEnumType fragments) throws FragmentNotFoundException {

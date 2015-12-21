@@ -41,7 +41,7 @@ public class OpenContractRecorderService implements CBPService {
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception,
-                    "Cannot set the asset distribution database handler",
+                    "Cannot set the open contract database handler",
                     "The database handler is null");
         }
     }
@@ -111,7 +111,10 @@ public class OpenContractRecorderService implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the AssetDistributionRecorderService", "The AssetDistributionRecorderService is probably null");
+            throw new CantStartServiceException(
+                    exception,
+                    "Starting the OpenContractRecorderService",
+                    "The OpenContractRecorderService is probably null");
         }
 
     }

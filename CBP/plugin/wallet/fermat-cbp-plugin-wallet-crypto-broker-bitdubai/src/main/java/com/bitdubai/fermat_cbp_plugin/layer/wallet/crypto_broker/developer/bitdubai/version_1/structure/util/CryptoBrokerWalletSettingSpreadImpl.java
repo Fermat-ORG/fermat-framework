@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -9,9 +10,10 @@ import java.util.UUID;
  */
 public class CryptoBrokerWalletSettingSpreadImpl implements CryptoBrokerWalletSettingSpread {
 
-    UUID   id;
-    String brokerPublicKey;
-    float  spread;
+    UUID        id;
+    String      brokerPublicKey;
+    float       spread;
+    boolean     restockAutomatic;
 
     public CryptoBrokerWalletSettingSpreadImpl(){};
     @Override
@@ -42,5 +44,15 @@ public class CryptoBrokerWalletSettingSpreadImpl implements CryptoBrokerWalletSe
     @Override
     public void setSpread(float spread) {
         this.spread = spread;
+    }
+
+    @Override
+    public boolean getRestockAutomatic() {
+        return restockAutomatic;
+    }
+
+    @Override
+    public void setRestockAutomatic(boolean restockAutomatic) {
+        this.restockAutomatic = restockAutomatic;
     }
 }

@@ -27,8 +27,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
@@ -92,7 +92,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.intra_user_notification_center, container, false);
+            rootView = inflater.inflate(R.layout.fragment_connections_notifications, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -149,8 +149,8 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 //        /**
 //         * Navigation view items
 //         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
-        setNavigationDrawer(navigationViewAdapter);
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override

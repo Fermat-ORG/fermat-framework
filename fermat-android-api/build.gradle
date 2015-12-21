@@ -40,6 +40,7 @@ dependencies {
     compile project(':fermat-bnk-api')
     compile project(':fermat-csh-api')
     compile project(':fermat-api')
+    compile project(':fermat-core')
     compile project(':fermat-pip-api')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'

@@ -22,6 +22,7 @@
     <color name="cbw_toolbar_end_background">#1375a7</color>
     <color name="cbw_header_start_background">#097168</color>
     <color name="cbw_header_end_background">#09364d</color>
+    <color name="cbw_navigation_view_menu_item_overlay">#60000000</color>
     <color name="contract_completed_list_item_background">#f3f3f3</color>
     <color name="contract_cancelled_list_item_background">#f3f3f3</color>
     <color name="dark_grey">#7b7b7b</color>
@@ -29,7 +30,7 @@
     <color name="negotiation_closed_list_item_background">#c6c6c6</color>
     <color name="negotiation_cancelled_list_item_background">#ff8b8b</color>
     <color name="market_rate_text">#31beff</color>
-    <color name="withe">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="waiting_for_text">#6b7378</color>
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#f3f3f3</color>
@@ -38,8 +39,18 @@
     <color name="card_title_color_status_confirm">#222</color>
     <color name="card_title_color_status_accepted">#fff</color>
     <color name="card_title_color_status_changed">#fff</color>
-    <color name="card_background_status_confirm">#f1f1f1</color>
+    <color name="cbw_card_background_status_confirm">#f1f1f1</color>
     <color name="card_background_status_accepted">#2e679c</color>
     <color name="card_background_status_changed">#39ab89</color>
     <color name="note_card_background">#363636</color>
+    <color name="cbw_negotiation_details_background">#222</color>
+
+    <color name="note_card_separator_background">#b5009dff</color>
+    <color name="description_text_status_changed">#ffffff</color>
+    <color name="description_text_status_confirm">#232323</color>
+    <color name="description_text_status_accepted">#ffffff</color>
+    <color name="text_value_status_changed">#27507b</color>
+    <color name="text_value_status_confirm">#27507b</color>
+    <color name="text_value_status_accepted">#0e0e0e</color>
+    <color name="activity_background">#222</color>
 </resources>

@@ -373,6 +373,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         System.out.println("Actor Asset Redeem Point name: " + dapActorSender.getName());
         System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
         System.out.println("***************************************************************");
+
+        //todo rodrigo Obtener extended public Key e inicializar Watch Only Vault
     }
 
     @Override

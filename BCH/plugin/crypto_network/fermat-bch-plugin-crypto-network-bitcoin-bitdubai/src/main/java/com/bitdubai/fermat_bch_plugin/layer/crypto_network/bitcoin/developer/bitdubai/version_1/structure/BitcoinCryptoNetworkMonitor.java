@@ -43,6 +43,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     PeerGroup peerGroup;
     File walletFileName;
     BlockChain blockChain;
+    BitcoinNetworkEvents events;
     final NetworkParameters NETWORK_PARAMETERS;
 
 
@@ -132,7 +133,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * add the events
              */
-            BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
+            events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
             peerGroup.addEventListener(events);
             this.wallet.addEventListener(events);
             blockChain.addListener(events);
@@ -179,9 +180,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     /**
      * Broadcast a well formed, commited and signed transaction into the network
      * @param tx
+     * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -207,6 +209,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             broadcast.broadcast().get(2, TimeUnit.MINUTES);
             broadcast.future().get(2, TimeUnit.MINUTES);
+
+            wallet.saveToFile(walletFileName);
+
+            /**
+             * Store this outgoing transaction in the table
+             */
+            storeOutgoingTransaction(wallet, tx, transactionId);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -217,6 +227,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
         }
 
+    }
+
+    /**
+     * Stores and outgoing transaction into the database
+     * @param wallet
+     * @param tx
+     * @param transactionId
+     */
+    private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
+        events.saveOutgoingTransaction(wallet, tx, transactionId);
     }
 
     /**

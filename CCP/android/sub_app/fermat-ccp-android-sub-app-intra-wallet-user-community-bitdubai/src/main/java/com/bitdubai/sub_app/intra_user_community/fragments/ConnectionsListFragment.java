@@ -26,7 +26,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -55,7 +55,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
-    private List<IntraUserInformation> lstIntraUserInformations;
+    private ArrayList<IntraUserInformation> lstIntraUserInformations;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
@@ -73,7 +73,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.intra_user_connection_friend_list, container, false);
+            rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
@@ -81,6 +81,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new AppFriendsListAdapter(getActivity(), lstIntraUserInformations);
+            adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
@@ -95,8 +96,8 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
         addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
-        setNavigationDrawer(navigationViewAdapter);
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override
@@ -125,7 +126,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            lstIntraUserInformations = (List<IntraUserInformation>) result[0];
+                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -183,7 +184,6 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-        Toast.makeText(getActivity(),"Action Clicked",Toast.LENGTH_SHORT).show();
         appSession.setData(INTRA_USER_SELECTED, data);
         changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }

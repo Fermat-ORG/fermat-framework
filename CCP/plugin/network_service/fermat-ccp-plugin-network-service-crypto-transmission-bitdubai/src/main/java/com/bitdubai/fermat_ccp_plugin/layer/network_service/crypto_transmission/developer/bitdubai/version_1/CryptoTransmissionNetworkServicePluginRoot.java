@@ -136,32 +136,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
 
-
-    /**
-     * Represent the platformComponentType
-     */
-    private PlatformComponentType platformComponentType;
-
-    /**
-     * Represent the networkServiceType
-     */
-    private NetworkServiceType networkServiceType;
-
-    /**
-     * Represent the name
-     */
-    private String name;
-
-    /**
-     * Represent the alias
-     */
-    private String alias;
-
-    /**
-     * Represent the extraData
-     */
-    private String extraData;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
@@ -209,10 +183,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
      */
     private ECCKeyPair identity;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
 
     /**
      * Represent the communicationRegistrationProcessNetworkServiceAgent
@@ -259,11 +229,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION
 
                 );
-        //TODO: sacar esta basura cuando funcione bien
-        this.networkServiceType    = NetworkServiceType.CRYPTO_TRANSMISSION;
-        this.name                  = "Crypto Transmission Network Service";
-        this.alias                 = "CryptoTransmissionNetworkService";
-        this.extraData             = null;
         this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
     }
@@ -375,24 +340,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         listenersAdded.add(fermatEventListener);
 
 
-
-
-
-
     }
 
     /**
      * Messages listeners
      */
     private void initializeMessagesListeners(){
-        /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-
-//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new New(cryptoTransmissionAgent));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
 
         /**
          *
@@ -529,6 +482,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              * Initialize the data base
              */
             initializeDb();
+            initializeCryptoTransmissionDb();
 
             /*
              * Initialize Developer Database Factory
@@ -571,8 +525,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
-
-
 
 
 
@@ -854,47 +806,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     "-----------------------\n A: " + remoteComponentProfile.getAlias());
         }
 
-//        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-//
-//            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-//
-//            cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(remoteNetworkServicesRegisteredList);
-//
-//            System.out.print("-----------------------\n" +
-//                    "CRYPTO TRANSMISSION CONEXION ENTRANTE AGREGADA AL AGENTE  -----------------------\n" +
-//                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
-
-            /* -------------------------------------------------------------------------------------------------
-             * This is for test and example of how to use
-             * Get the local representation of the remote network service
-             */
-            //CryptoTransmissionNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            //PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
-
-            /**
-             * Create the message content
-             * RECOMMENDATION: the content have to be a json string
-             */
-//            String messageContent = "*********************************************************************************\n " +
-//                                    "* HELLO TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
-//                                    "*********************************************************************************";
-
-            /*
-             * Send a message using the local representation
-             */
-            //templateNetworkServiceLocal.sendMessage(messageContent, identity);
-
-       // }
-
-
-//        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-     //   System.out.println("NETWORK SERVICE CRYPTO TRANSMISSION, Estoy conectado Roberto ;) ");
-
     }
 
 
@@ -907,20 +818,20 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         System.out.println("CRYPTO TRANSMISSION - handleVpnConnectionCloseNotificationEvent");
         VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-        cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+        //cryptoTransmissionAgent.connectionFailure(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
-//        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
-//
-//
-//
-//            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-//
-//                if(communicationNetworkServiceConnectionManager != null)
-//                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-//
-//            }
-//
-//        }
+        if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
+
+
+
+            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+
+                if(communicationNetworkServiceConnectionManager != null)
+                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+
+            }
+
+        }
 
     }
 
@@ -931,6 +842,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
+        //TODO: esto lo comento porque cierra las conexiones, tiene que decirnos de quien es
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             this.register = false;
 
@@ -987,12 +899,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String,String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String phrase,String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType,
-                networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+                networkServiceType, alias,phrase, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     /**

@@ -14,12 +14,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
@@ -57,6 +60,7 @@ public final class AssetFactoryMiddlewareManager {
     private final PluginFileSystem     pluginFileSystem    ;
     private final UUID                 pluginId            ;
     private final WalletManagerManager walletManagerManager;
+    private final IdentityAssetIssuerManager identityAssetIssuerManager;
 
     /**
      * Constructor with params.
@@ -67,17 +71,19 @@ public final class AssetFactoryMiddlewareManager {
      * @param assetIssuingManager   transaction manager instance.
      * @param walletManagerManager  wallet manager instance.
      */
-    public AssetFactoryMiddlewareManager(final AssetIssuingManager  assetIssuingManager ,
-                                         final PluginDatabaseSystem pluginDatabaseSystem,
-                                         final PluginFileSystem     pluginFileSystem    ,
-                                         final UUID                 pluginId            ,
-                                         final WalletManagerManager walletManagerManager) {
+    public AssetFactoryMiddlewareManager(final AssetIssuingManager  assetIssuingManager         ,
+                                         final PluginDatabaseSystem pluginDatabaseSystem        ,
+                                         final PluginFileSystem     pluginFileSystem            ,
+                                         final UUID                 pluginId                    ,
+                                         final WalletManagerManager walletManagerManager        ,
+                                         final IdentityAssetIssuerManager identityAssetIssuerManager  ) {
 
-        this.assetIssuingManager  = assetIssuingManager ;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem     = pluginFileSystem    ;
-        this.pluginId             = pluginId            ;
-        this.walletManagerManager = walletManagerManager;
+        this.assetIssuingManager        = assetIssuingManager       ;
+        this.pluginDatabaseSystem       = pluginDatabaseSystem      ;
+        this.pluginFileSystem           = pluginFileSystem          ;
+        this.pluginId                   = pluginId                  ;
+        this.walletManagerManager       = walletManagerManager      ;
+        this.identityAssetIssuerManager    = identityAssetIssuerManager   ;
     }
 
     private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao() {
@@ -110,10 +116,15 @@ public final class AssetFactoryMiddlewareManager {
             contractProperties.add(expirationDate);
             assetFactory.setContractProperties(contractProperties);
             //TODO: Borrar luego cuado funcione el Identity debe venir desde el dispositivo
-            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
-            assetIssuerIdentity.setAlias("Franklin Marcano");
-            assetIssuerIdentity.setPublicKey("ASDS-10087982");
-            assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
+//            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
+//            assetIssuerIdentity.setAlias("Franklin Marcano");
+//            assetIssuerIdentity.setPublicKey("ASDS-10087982");
+//            assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
+            try {
+                assetFactory.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
+            } catch (CantGetAssetIssuerIdentitiesException cantCreateFileException) {
+                throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "Failed Identity Asset Issuer");
+            }
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             if (assetFactory.getResources() != null){
                 for (Resource resource : assetFactory.getResources()) {
@@ -363,6 +374,10 @@ public final class AssetFactoryMiddlewareManager {
         }
     }
 
+    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
+        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+    }
+
     public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException
     {
         try {
@@ -405,11 +420,11 @@ public final class AssetFactoryMiddlewareManager {
                 digitalAsset.setPublicKey(assetFactory.getPublicKey());
                 digitalAsset.setGenesisAmount(assetFactory.getAmount());
                 digitalAsset.setState(assetFactory.getState());
-                AssetIssuerIdentity aseetIssuerIdentity = new AssetIssuerIdentity();
-                aseetIssuerIdentity.setAlias(assetFactory.getIdentyAssetIssuer().getAlias());
-                aseetIssuerIdentity.setPublicKey(assetFactory.getIdentyAssetIssuer().getPublicKey());
-                aseetIssuerIdentity = (AssetIssuerIdentity)assetFactory.getIdentyAssetIssuer();
-                digitalAsset.setIdentityAssetIssuer(aseetIssuerIdentity);
+//                AssetIssuerIdentity aseetIssuerIdentity = new AssetIssuerIdentity();
+//                aseetIssuerIdentity.setAlias(assetFactory.getIdentyAssetIssuer().getAlias());
+//                aseetIssuerIdentity.setPublicKey(assetFactory.getIdentyAssetIssuer().getPublicKey());
+//                aseetIssuerIdentity = (AssetIssuerIdentity)assetFactory.getIdentyAssetIssuer();
+                digitalAsset.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
                 digitalAsset.setResources(assetFactory.getResources());
                 markAssetFactoryState(State.PENDING_FINAL, assetFactory.getPublicKey());
                 //Method the DealsWithAssetIssuing

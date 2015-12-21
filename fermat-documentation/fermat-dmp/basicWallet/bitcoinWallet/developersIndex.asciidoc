@@ -1,6 +1,0 @@
-= Discount Wallet
-
-== Versions developed by BitDubai
-
-:leveloffset: 4
-include::bitDubai/version-1/version1.asciidoc[]

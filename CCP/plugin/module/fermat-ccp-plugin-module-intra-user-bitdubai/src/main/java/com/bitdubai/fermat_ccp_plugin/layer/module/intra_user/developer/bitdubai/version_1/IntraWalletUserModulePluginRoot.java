@@ -2,7 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingCacheSuggestionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -137,10 +139,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CouldNotCreateIntraUserException
      */
     @Override
-    public IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws CouldNotCreateIntraUserException {
+    public IntraUserLoginIdentity createIntraUser(String intraUserName,String phrase, byte[] profileImage) throws CouldNotCreateIntraUserException {
 
       try{
-           this.intraWalletUser =  this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, profileImage);
+           this.intraWalletUser =  this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName,phrase, profileImage);
 
 
           return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
@@ -271,6 +273,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             return  intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
         }
         catch (ErrorSearchingSuggestionsException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+        }
+    }
+
+    @Override
+    public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
+        try {
+            return  intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
+        }
+        catch (ErrorSearchingCacheSuggestionsException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
         }
         catch (Exception e) {
@@ -550,9 +565,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage) throws CantUpdateIdentityException {
         try {
-             this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey,identityAlias,profileImage);
+             this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey,identityAlias,identityPhrase,profileImage);
         }
         catch (CantUpdateIdentityException e) {
             throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY",e,"","Error on IntraUserIdentity Manager");
@@ -573,6 +588,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         catch (Exception e) {
             throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY",FermatException.wrapException(e),"","Error on IntraUserIdentity Manager");
         }
+    }
+
+    @Override
+    public boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException {
+        return intraWalletUserManager.isActorConnected(publicKey);
     }
 
 

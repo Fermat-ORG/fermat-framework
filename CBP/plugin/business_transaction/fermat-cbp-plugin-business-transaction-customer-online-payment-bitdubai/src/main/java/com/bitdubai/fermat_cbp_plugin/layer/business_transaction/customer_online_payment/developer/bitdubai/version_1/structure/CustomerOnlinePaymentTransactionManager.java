@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_onlin
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -20,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClaus
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantGetCryptoAddressException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantgetCryptoAmountException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantGetCryptoAmountException;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -110,7 +109,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      */
     private long getCryptoAmount(
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws
-            CantgetCryptoAmountException{
+            CantGetCryptoAmountException {
         try{
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
@@ -120,15 +119,15 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     return cryptoAmount;
                 }
             }
-            throw new CantgetCryptoAmountException(
+            throw new CantGetCryptoAmountException(
                     "The Negotiation clauses doesn't include the broker crypto amount");
         } catch (CantGetListClauseException e) {
-            throw new CantgetCryptoAmountException(
+            throw new CantGetCryptoAmountException(
                     e,
                     "Getting the broker crypto amount",
                     "Cannot get the clauses list");
         } catch (InvalidParameterException e) {
-            throw new CantgetCryptoAmountException(
+            throw new CantGetCryptoAmountException(
                     e,
                     "Getting the broker crypto amount",
                     "There is an error parsing a String to long.");
@@ -190,14 +189,20 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     "Sending online payment",
                     "Cannot insert a database record.");
         } catch (CantGetCryptoAddressException e) {
-            e.printStackTrace();
+            throw new CantSendPaymentException(
+                    e,
+                    "Sending online payment",
+                    "Cannot get the Broker Crypto Address");
         } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot get the CustomerBrokerPurchaseNegotiation list");
-        } catch (CantgetCryptoAmountException e) {
-            e.printStackTrace();
+        } catch (CantGetCryptoAmountException e) {
+            throw new CantSendPaymentException(
+                    e,
+                    "Sending online payment",
+                    "Cannot get the Crypto Amount");
         }
 
     }

@@ -42,6 +42,8 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      */
     private String alias;
 
+    private String phrase;
+
     /**
      * Represent the name
      */
@@ -99,6 +101,7 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
     public DiscoveryQueryParametersCommunication() {
         super();
         this.alias = null;
+        this.phrase = null;
         this.identityPublicKey = null;
         this.location = null;
         this.distance = null;
@@ -128,9 +131,10 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      * @param fromOtherPlatformComponentType
      * @param fromOtherNetworkServiceType
      */
-    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Location location, Double distance, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+    public DiscoveryQueryParametersCommunication(String alias, String phrase,String identityPublicKey, Location location, Double distance, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
         super();
         this.alias = alias;
+        this.phrase = phrase;
         this.identityPublicKey = identityPublicKey;
         this.location = (DeviceLocation) location;
         this.distance = distance;
@@ -162,6 +166,11 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
         return alias;
     }
 
+
+    @Override
+    public String getPhrase() {
+        return this.phrase;
+    }
     /**
      * (non-javadoc)
      * @see DiscoveryQueryParameters#getName()

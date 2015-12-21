@@ -8,12 +8,12 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.holders.IntraUserInformationHolder;
+import com.bitdubai.sub_app.intra_user_community.holders.AppWorldHolder;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUserInformationHolder> {
+public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorldHolder> {
 
 
     public AppListAdapter(Context context) {
@@ -25,28 +25,18 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
     }
 
     @Override
-    protected IntraUserInformationHolder createHolder(View itemView, int type) {
-        return new IntraUserInformationHolder(itemView);
+    protected AppWorldHolder createHolder(View itemView, int type) {
+        return new AppWorldHolder(itemView);
     }
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.world_frament_row;
+        return R.layout.row_connections_world;
     }
 
     @Override
-    protected void bindHolder(IntraUserInformationHolder holder, IntraUserInformation data, int position) {
-        if (data.getName().isEmpty())
-            holder.name.setText("Hola");
+    protected void bindHolder(AppWorldHolder holder, IntraUserInformation data, int position) {
         holder.name.setText(data.getName());
-        /*if (!data.getCity().isEmpty())
-            holder.city.setText(data.getCity());
-        else
-            holder.city.setText("");
-        if (!data.getCountry().isEmpty())
-            holder.country.setText(data.getCountry());
-        else
-            holder.country.setText("");*/
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null) {
             if(profileImage.length>0) {

@@ -1,7 +1,6 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableOrder;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableOrder;
 
 import org.junit.Before;
@@ -35,7 +34,7 @@ public class AndroidDatabaseTableOrderTest {
                 DatabaseFilterOrder.ASCENDING
         );
 
-        assertThat(order1.getColumName()).isEqualTo(order2.getColumName());
+        assertThat(order1.getColumnName()).isEqualTo(order2.getColumnName());
         assertThat(order1.getDirection()).isEqualTo(order2.getDirection());
     }
 
@@ -46,7 +45,7 @@ public class AndroidDatabaseTableOrderTest {
                 DatabaseFilterOrder.DESCENDING
         );
 
-        assertThat(order1.getColumName()).isNotEqualTo(order2.getColumName());
+        assertThat(order1.getColumnName()).isNotEqualTo(order2.getColumnName());
         assertThat(order1.getDirection()).isNotEqualTo(order2.getDirection());
     }
 
@@ -54,9 +53,7 @@ public class AndroidDatabaseTableOrderTest {
             String columnName,
             DatabaseFilterOrder direction
     ){
-        AndroidDatabaseTableOrder tableOrder = new AndroidDatabaseTableOrder();
-        tableOrder.setColumName(columnName);
-        tableOrder.setDirection(direction);
+        AndroidDatabaseTableOrder tableOrder = new AndroidDatabaseTableOrder(columnName, direction);
         return tableOrder;
     }
 }

@@ -45,7 +45,7 @@ import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develope
 public class LoadToMemoryTest {
 
     private Activity mockActivity;
-    private Context mockContext;
+    private String mockContext;
 
     private AndroidDatabase testDatabase;
     private DatabaseTable testDatabaseTable;
@@ -58,7 +58,7 @@ public class LoadToMemoryTest {
 
     public  void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
         testDatabase = new AndroidDatabase(mockContext, testOwnerId, testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
@@ -88,7 +88,7 @@ public class LoadToMemoryTest {
     @Test
     public void loadTable_TableFilters_RecordsListLoaded() throws Exception{
         testDatabaseTable = testDatabase.getTable(testTableName);
-        testDatabaseTable.setStringFilter("testColumn1","1", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addStringFilter("testColumn1", "1", DatabaseFilterType.EQUAL);
         testDatabaseTable.loadToMemory();
         assertThat(testDatabaseTable.getRecords()).isNotNull();
     }
@@ -96,7 +96,7 @@ public class LoadToMemoryTest {
     @Test
     public void loadTable_TableOrder_RecordsListLoaded() throws Exception{
         testDatabaseTable = testDatabase.getTable(testTableName);
-        testDatabaseTable.setFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
+        testDatabaseTable.addFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
         testDatabaseTable.loadToMemory();
         assertThat(testDatabaseTable.getRecords()).isNotNull();
     }

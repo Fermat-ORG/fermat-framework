@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends ActorConnection<Z>> {
+public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
 
     protected final Z                        actorIdentity;
     protected final ActorConnectionDao<Z, T> dao          ;
@@ -42,7 +41,7 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
     public final void resetFilters() {
 
         this.databaseTable = dao.getActorConnectionsTable();
-        databaseTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -53,7 +52,7 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
     public final void addAlias(final String alias) {
 
         String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME;
-        databaseTable.setStringFilter(field, alias, DatabaseFilterType.LIKE);
+        databaseTable.addStringFilter(field, alias, DatabaseFilterType.LIKE);
     }
 
     /**
@@ -64,7 +63,7 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
     public final void addActorType(final Actors actorType){
 
         String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME;
-        databaseTable.setFermatEnumFilter(field, actorType, DatabaseFilterType.EQUAL);
+        databaseTable.addFermatEnumFilter(field, actorType, DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -75,7 +74,7 @@ public abstract class ActorConnectionSearch<Z extends ActorIdentity, T extends A
     public final void addConnectionState(final ConnectionState connectionState) {
 
         String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME;
-        databaseTable.setFermatEnumFilter(field, connectionState, DatabaseFilterType.EQUAL);
+        databaseTable.addFermatEnumFilter(field, connectionState, DatabaseFilterType.EQUAL);
     }
 
     /**

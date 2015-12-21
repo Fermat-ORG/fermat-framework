@@ -60,7 +60,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
     public void bind(CustomerBrokerNegotiationInformation itemInfo) {
 
-        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
+        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastNegotiationUpdateDate());
         lastUpdateDate.setText(date);
 
         ActorIdentity customer = itemInfo.getCustomer();

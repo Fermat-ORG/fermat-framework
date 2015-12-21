@@ -6,6 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 
+import java.math.BigDecimal;
+
 
 /**
  * Created by franklin on 16/11/15.
@@ -33,9 +35,9 @@ public interface BankMoneyDestockManager  extends FermatManager {
             String cbpWalletPublicKey,
             String bankWalletPublicKey,
             String bankAccount,
-            float amount,
+            BigDecimal amount,
             String memo,
-            float priceReference,
+            BigDecimal priceReference,
             OriginTransaction originTransaction
         ) throws CantCreateBankMoneyDestockException;
 }

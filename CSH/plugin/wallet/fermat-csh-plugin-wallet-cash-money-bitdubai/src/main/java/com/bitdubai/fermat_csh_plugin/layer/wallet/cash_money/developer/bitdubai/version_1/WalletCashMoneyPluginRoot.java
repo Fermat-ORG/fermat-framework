@@ -33,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,25 +71,25 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
      * TEST METHODS
      */
     private void createTestWalletIfNotExists() {
-        System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
+        //System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
 
-        if(!cashMoneyWalletExists("publicKeyWalletMock")) {
+        if(!cashMoneyWalletExists("cash_wallet")) {
             try {
-                createCashMoneyWallet("publicKeyWalletMock", FiatCurrency.US_DOLLAR);
+                createCashMoneyWallet("cash_wallet", FiatCurrency.US_DOLLAR);
             } catch (CantCreateCashMoneyWalletException e) {}
         }
     }
 
     private void testDeposits() {
-        System.out.println("CASHWALLET - testDeposits CALLED");
+        //System.out.println("CASHWALLET - testDeposits CALLED");
 
         try {
-            CashMoneyWallet wallet = loadCashMoneyWallet("publicKeyWalletMock");
-            wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 10000, "testCreditFromWallet");
-            wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 8000, "testDebitFromWallet");
+            CashMoneyWallet wallet = loadCashMoneyWallet("cash_wallet");
+            wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(10000), "testCreditFromWallet");
+            wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(8000), "testDebitFromWallet");
 
-            wallet.getBookBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 4000, "testCreditFromWallet");
-            wallet.getBookBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", 2000, "testDebitFromWallet");
+            wallet.getBookBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(4000), "testCreditFromWallet");
+            wallet.getBookBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(2000), "testDebitFromWallet");
 
         } catch (CantLoadCashMoneyWalletException e) {
             System.out.println("CASHWALLET - testCashWallet() - CantLoadCashMoneyWalletException");
@@ -138,8 +139,8 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "WalletCashMoneyPluginRoot", null);
         }
 
-        createTestWalletIfNotExists();
-        testDeposits();
+        //createTestWalletIfNotExists();
+        //testDeposits();
     }
 
 

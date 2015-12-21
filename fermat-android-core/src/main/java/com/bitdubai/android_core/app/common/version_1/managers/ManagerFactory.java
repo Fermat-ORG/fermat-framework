@@ -36,6 +36,8 @@ public class ManagerFactory {
                 return getModuleManager(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY, Plugins.INTRA_WALLET_USER);
             case CCP_INTRA_USER_COMMUNITY:
                 return getModuleManager(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.SUB_APP_MODULE, Plugins.INTRA_WALLET_USER);
+            case CBP_CRYPTO_BROKER_COMMUNITY:
+                return getModuleManager(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.SUB_APP_MODULE, Plugins.INTRA_WALLET_USER);
             case CWP_DEVELOPER_APP:
                 return getModuleManager(Platforms.PLUG_INS_PLATFORM, Layers.SUB_APP_MODULE, Plugins.DEVELOPER);
             case CWP_WALLET_FACTORY:

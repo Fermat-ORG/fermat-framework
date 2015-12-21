@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
@@ -21,5 +23,7 @@ public interface AssetRedeemPointWalletSubAppModule extends ModuleManager {
     AssetRedeemPointWallet loadAssetRedeemPointWallet(String walletPublicKey) throws CantLoadWalletException;
 
     void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException;
+
+    RedeemPointIdentity getAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException;
 
 }

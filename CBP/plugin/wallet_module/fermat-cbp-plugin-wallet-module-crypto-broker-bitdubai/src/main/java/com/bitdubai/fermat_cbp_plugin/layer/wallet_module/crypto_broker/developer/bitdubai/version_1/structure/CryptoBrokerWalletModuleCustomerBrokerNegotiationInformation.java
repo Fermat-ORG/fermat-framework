@@ -1,22 +1,14 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
+import java.util.UUID;
 
 /**
  * Customer and Broker Negotiation Information
@@ -27,47 +19,55 @@ import java.util.Random;
  */
 public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation {
 
-    // -- for test purposes
-    private static final Random random = new Random(321515131);
-    private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-    private static final Calendar calendar = Calendar.getInstance();
-    // for test purposes --
-
     private ActorIdentity customerIdentity;
     private ActorIdentity brokerIdentity;
     private Map<ClauseType, String> summary;
     private Map<ClauseType, ClauseInformation> clauses;
     private NegotiationStatus status;
-    private long date;
+    private String note;
+    private long lastNegotiationUpdateDate;
+    private long expirationDatetime;
+    private UUID negotiationId;
+    private String cancelReason;
 
+    public CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(CustomerBrokerNegotiationInformation data) {
+        customerIdentity = data.getCustomer();
+        brokerIdentity = data.getBroker();
+        summary = data.getNegotiationSummary();
+        clauses = data.getClauses();
+        status = data.getStatus();
+        note = data.getMemo();
+        lastNegotiationUpdateDate = data.getNegotiationExpirationDate();
+        expirationDatetime = data.getNegotiationExpirationDate();
+        negotiationId = data.getNegotiationId();
+    }
 
-    public CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
+    public CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(String customerAlias, NegotiationStatus status) {
 
-        this.customerIdentity = new ActorIdentityImpl(customerAlias, new byte[0]);
-        this.brokerIdentity = new ActorIdentityImpl("BrokerAlias", new byte[0]);
+        this.customerIdentity = new CryptoBrokerWalletActorIdentity(customerAlias, new byte[0]);
+        this.brokerIdentity = new CryptoBrokerWalletActorIdentity("BrokerAlias", new byte[0]);
+        this.status = status;
 
-        String currencyQty = decimalFormat.format(random.nextFloat() * 100);
-        String exchangeRate = decimalFormat.format(random.nextFloat());
+        negotiationId = UUID.randomUUID();
 
         summary = new HashMap<>();
-        summary.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty);
-        summary.put(ClauseType.CUSTOMER_CURRENCY, merchandise);
-        summary.put(ClauseType.EXCHANGE_RATE, exchangeRate);
-        summary.put(ClauseType.BROKER_CURRENCY, paymentCurrency);
-        summary.put(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod);
-
-        this.status = status;
-        date = calendar.getTimeInMillis();
-
         clauses = new HashMap<>();
-        clauses.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty, ClauseStatus.DRAFT));
-        clauses.put(ClauseType.CUSTOMER_CURRENCY, new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, merchandise, ClauseStatus.DRAFT));
-        clauses.put(ClauseType.BROKER_BANK_ACCOUNT, new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, "Banesco\n2165645454654", ClauseStatus.DRAFT));
-        clauses.put(ClauseType.BROKER_CURRENCY, new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, paymentCurrency, ClauseStatus.DRAFT));
-        clauses.put(ClauseType.BROKER_PAYMENT_METHOD, new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod, ClauseStatus.DRAFT));
-        clauses.put(ClauseType.EXCHANGE_RATE, new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        clauses.put(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, "18-11-2015", ClauseStatus.DRAFT));
-        clauses.put(ClauseType.BROKER_DATE_TIME_TO_DELIVER, new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, "20-11-2015", ClauseStatus.DRAFT));
+    }
+
+    public void addClause(ClauseInformation clause) {
+        clauses.put(clause.getType(), clause);
+    }
+
+    public long getNegotiationExpirationDate() {
+        return expirationDatetime;
+    }
+
+    public void setExpirationDatetime(long expirationDatetime) {
+        this.expirationDatetime = expirationDatetime;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override
@@ -82,6 +82,12 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
 
     @Override
     public Map<ClauseType, String> getNegotiationSummary() {
+        summary.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+        summary.put(ClauseType.CUSTOMER_CURRENCY, clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue());
+        summary.put(ClauseType.EXCHANGE_RATE, clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+        summary.put(ClauseType.BROKER_CURRENCY, clauses.get(ClauseType.BROKER_CURRENCY).getValue());
+        summary.put(ClauseType.BROKER_PAYMENT_METHOD, clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue());
+
         return summary;
     }
 
@@ -96,54 +102,41 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
     }
 
     @Override
-    public long getLastUpdate() {
-        return date;
+    public UUID getNegotiationId() {
+        return negotiationId;
     }
 
+    @Override
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
+    }
 
-    private class ActorIdentityImpl implements ActorIdentity {
+    @Override
+    public String getCancelReason() {
+        return cancelReason;
+    }
 
-        private String alias;
-        private byte[] img;
+    @Override
+    public String getMemo() {
+        return note;
+    }
 
-        public ActorIdentityImpl(String alias, byte[] img) {
-            this.alias = alias;
-            this.img = img;
-        }
+    @Override
+    public void setMemo(String memo) {
+        note = memo;
+    }
 
-        @Override
-        public String getAlias() {
-            return alias;
-        }
+    @Override
+    public long getLastNegotiationUpdateDate() {
+        return lastNegotiationUpdateDate;
+    }
 
-        @Override
-        public String getPublicKey() {
-            return "54as65d4a8sd4ds8fv2vr3as2df6a85";
-        }
+    @Override
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
+    }
 
-        @Override
-        public byte[] getProfileImage() {
-            return img;
-        }
-
-        @Override
-        public void setNewProfileImage(byte[] imageBytes) {
-
-        }
-
-        @Override
-        public boolean isPublished() {
-            return true;
-        }
-
-        @Override
-        public ExposureLevel getExposureLevel() {
-            return ExposureLevel.PUBLISH;
-        }
-
-        @Override
-        public String createMessageSignature(String message) throws CantCreateMessageSignatureException {
-            return null;
-        }
+    public void setStatus(NegotiationStatus status) {
+        this.status = status;
     }
 }

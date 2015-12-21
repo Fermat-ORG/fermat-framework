@@ -131,6 +131,7 @@ public class AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory implements Dea
 
         key_accountsColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
         key_accountsColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME);
+        key_accountsColumns.add(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME);
         /**
          * Table key_accounts addition.
          */

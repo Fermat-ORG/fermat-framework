@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -39,7 +40,10 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -86,7 +90,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
     /**
      * Represents the plugin manager.
      */
-    //CustomerOfflinePaymentTransactionManager customerOfflinePaymentTransactionManager;
+    CustomerOfflinePaymentTransactionManager customerOfflinePaymentTransactionManager;
 
     /**
      * Represents the plugin CustomerOfflinePaymentBusinessTransactionDatabaseFactory
@@ -132,7 +136,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
              * The database exists but cannot be open. I can not handle this situation.
              */
             errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -161,7 +165,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                  * The database cannot be created. I can not handle this situation.
                  */
                 errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
+                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
                         UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -183,7 +187,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             }
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
         }
@@ -201,7 +205,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
              */
             initializeDb();
 
-            /*
+            /**
              * Initialize Developer Database Factory
              */
             customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory = new
@@ -220,24 +224,22 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init the plugin manager
              */
-            /*this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
+            this.customerOfflinePaymentTransactionManager=new CustomerOfflinePaymentTransactionManager(
                     this.customerBrokerContractPurchaseManager,
-                    customerOnlinePaymentBusinessTransactionDao,
-                    this.transactionTransmissionManager,
-                    this.customerBrokerPurchaseNegotiationManager);*/
+                    customerOnlinePaymentBusinessTransactionDao);
 
             /**
              * Init event recorder service.
              */
-            /*CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService=new CustomerOnlinePaymentRecorderService(
+            CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService=new CustomerOfflinePaymentRecorderService(
                     customerOnlinePaymentBusinessTransactionDao,
                     eventManager);
-            customerOnlinePaymentRecorderService.start();*/
+            customerOfflinePaymentRecorderService.start();
 
             /**
              * Init monitor Agent
              */
-            /*CustomerOnlinePaymentMonitorAgent openContractMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
+            CustomerOfflinePaymentMonitorAgent customerOnlinePaymentMonitorAgent=new CustomerOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -245,23 +247,19 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager,
-                    outgoingIntraActorManager);
-            openContractMonitorAgent.start();*/
+                    customerBrokerContractSaleManager);
+            customerOnlinePaymentMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer offline payment starting");
-        } catch (CantInitializeDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException e) {
-            e.printStackTrace();
-        } /*catch (CantStartServiceException e) {
-            e.printStackTrace();
-        } catch (CantSetObjectException e) {
-            e.printStackTrace();
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
-        }*/
+        } catch (Exception exception) {
+            //TODO: handle correctly this method exceptions
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    null,
+                    null);
+        }
     }
 
     @Override
@@ -281,7 +279,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return this.customerOfflinePaymentTransactionManager;
     }
 
     public static LogLevel getLogLevelByClass(String className) {

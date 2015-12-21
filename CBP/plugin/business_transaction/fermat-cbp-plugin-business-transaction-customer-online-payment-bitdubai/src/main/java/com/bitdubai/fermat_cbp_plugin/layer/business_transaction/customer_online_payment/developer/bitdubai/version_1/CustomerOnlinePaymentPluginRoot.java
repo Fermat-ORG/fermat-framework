@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_onlin
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -166,7 +167,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                  * The database cannot be created. I can not handle this situation.
                  */
                 errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
                         UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -257,16 +258,13 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer online payment starting");
-        } catch (CantInitializeDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantStartServiceException e) {
-            e.printStackTrace();
-        } catch (CantSetObjectException e) {
-            e.printStackTrace();
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            //TODO: handle correctly this method exceptions
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    null,
+                    null);
         }
     }
 

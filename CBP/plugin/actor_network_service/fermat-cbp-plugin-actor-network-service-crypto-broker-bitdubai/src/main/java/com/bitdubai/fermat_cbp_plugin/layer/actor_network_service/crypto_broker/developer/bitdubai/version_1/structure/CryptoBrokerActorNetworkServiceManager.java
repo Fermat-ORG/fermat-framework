@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.uti
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -82,6 +84,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         cryptoBroker.getPublicKey(),
                         (cryptoBroker.getAlias().toLowerCase()),
+                        "", //phrase
                         (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
@@ -202,11 +205,9 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * - Type          : SENT.
      */
     @Override
-    public final void disconnect(final String identityPublicKey,
-                                 final Actors identityActorType,
-                                 final String brokerPublicKey  ) throws CantDisconnectException {
+    public final void disconnect(final UUID requestId) throws CantDisconnectException, ConnectionRequestNotFoundException {
 
-        try {
+       /* try {
 
             final UUID newId    = UUID.randomUUID();
             final long sentTime = System.currentTimeMillis();
@@ -234,7 +235,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDisconnectException(e, null, "Unhandled Exception.");
-        }
+        }*/
     }
 
     /**
@@ -275,8 +276,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
-                                                                    ConnectionRequestNotFoundException  ,
-                                                                    UnexpectedProtocolStateException    {
+                                                                    ConnectionRequestNotFoundException  {
 
     }
 
@@ -365,6 +365,28 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException {
+
+        try {
+
+            connectionNewsDao.confirmActorConnectionRequest(requestId);
+
+        } catch (final ConnectionRequestNotFoundException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final CantConfirmConnectionRequestException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantConfirmException(e, "", "Error in DAO, trying to confirm the request.");
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantConfirmException(e, null, "Unhandled Exception.");
         }
     }
 }

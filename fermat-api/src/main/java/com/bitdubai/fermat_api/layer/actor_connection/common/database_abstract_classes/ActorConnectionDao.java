@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInit
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorIdentity;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -43,7 +43,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends ActorConnection<Z>> {
+public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
 
     protected final PluginDatabaseSystem pluginDatabaseSystem;
     private   final UUID                 pluginId            ;
@@ -111,8 +111,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
         return database.getTable(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TABLE_NAME);
     }
 
-    public final T registerActorConnection(final T               actorConnection,
-                                           final ConnectionState connectionState) throws CantRegisterActorConnectionException  ,
+    public final T registerActorConnection(final T               actorConnection) throws CantRegisterActorConnectionException  ,
                                                                                          ActorConnectionAlreadyExistsException {
 
         try {
@@ -121,7 +120,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
             if (connectionExists)
                 throw new ActorConnectionAlreadyExistsException(
-                        "actorConnection: "+actorConnection+ " - "+ "connectionState to register: "+connectionState,
+                        "actorConnection: "+actorConnection,
                         "The connection already exists..."
                 );
 
@@ -131,8 +130,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
             entityRecord = buildDatabaseRecord(
                     entityRecord   ,
-                    actorConnection,
-                    connectionState
+                    actorConnection
             );
 
             actorConnectionsTable.insertRecord(entityRecord);
@@ -151,6 +149,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
         }
     }
 
+    // TODO ADD UPDATETIME
     public void changeConnectionState(final Z               linkedIdentity ,
                                       final String          publicKey      ,
                                       final Actors          actorType      ,
@@ -170,9 +169,9 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME, actorType, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -209,6 +208,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
         }
     }
 
+    // TODO ADD UPDATETIME
     public void changeConnectionState(final UUID            connectionId   ,
                                       final ConnectionState connectionState) throws CantChangeActorConnectionStateException  ,
                                                                                     ActorConnectionNotFoundException {
@@ -224,7 +224,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -278,9 +278,9 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , publicKey                    , DatabaseFilterType.EQUAL);
-            actorConnectionsTable.setFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorType                    , DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, linkedIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME, actorType, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -307,7 +307,7 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            actorConnectionsTable.setUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+            actorConnectionsTable.addUUIDFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
 
             actorConnectionsTable.loadToMemory();
 
@@ -377,22 +377,6 @@ public abstract class ActorConnectionDao<Z extends ActorIdentity, T extends Acto
         record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorConnection.getActorType()                    );
         record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                        );
         record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , actorConnection.getConnectionState()              );
-        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                 );
-        record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                   );
-
-        return record;
-    }
-
-    protected DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord record         ,
-                                                      final ActorConnection     actorConnection,
-                                                      final ConnectionState     connectionState) {
-
-        record.setUUIDValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , actorConnection.getConnectionId()                 );
-        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity().getPublicKey());
-        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , actorConnection.getPublicKey()                    );
-        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , actorConnection.getActorType()                    );
-        record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , actorConnection.getAlias()                        );
-        record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , connectionState                                   );
         record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , actorConnection.getCreationTime()                 );
         record.setLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , actorConnection.getUpdateTime()                   );
 

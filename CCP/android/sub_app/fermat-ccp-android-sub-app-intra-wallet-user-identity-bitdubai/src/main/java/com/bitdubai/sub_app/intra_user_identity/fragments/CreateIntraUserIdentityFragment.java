@@ -80,6 +80,11 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
+
+//            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+//                moduleManager.createNewIntraWalletUser("John Doe", null);
+//            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -107,6 +112,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
 
+        createButton.setText((!isUpdate) ? "Create" : "Update" );
+
         mBrokerName.requestFocus();
 
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +135,11 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        Toast.makeText(getActivity(),"Changes saved",Toast.LENGTH_SHORT).show();
+                        if(!isUpdate){
+                            Toast.makeText(getActivity(),"Identity created",Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -257,8 +268,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             if (moduleManager != null) {
                 try {
                     if(!isUpdate)
-                    moduleManager.createNewIntraWalletUser(brokerNameText, brokerImageByteArray);
-                    else moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(),brokerNameText,brokerImageByteArray);
+                    moduleManager.createNewIntraWalletUser(brokerNameText,"phrase", brokerImageByteArray);
+                    else moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(),brokerNameText,"phrase",brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                 } catch (CantUpdateIdentityException e) {
