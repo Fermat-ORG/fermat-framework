@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest> {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
 
     /**
      * MANAGERS
@@ -121,7 +123,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             super.onActivityCreated(savedInstanceState);
             lstPaymentRequest = new ArrayList<PaymentRequest>();
             final CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
-            IntraUserLoginIdentity intraUserLoginIdentity = new IntraUserLoginIdentity() {
+            ActiveIdentity intraUserLoginIdentity = new ActiveIdentity() {
                 @Override
                 public String getAlias() {
                     return cryptoWalletIntraUserIdentity.getAlias();
@@ -135,6 +137,16 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                 @Override
                 public byte[] getProfileImage() {
                     return cryptoWalletIntraUserIdentity.getProfileImage();
+                }
+
+                @Override
+                public void setNewProfileImage(byte[] newProfileImage) {
+
+                }
+
+                @Override
+                public String createMessageSignature(String message) {
+                    return null;
                 }
             };
             getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), intraUserLoginIdentity));
@@ -176,7 +188,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
         }
