@@ -5,10 +5,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -18,19 +16,15 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransacti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantHandleTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantFindHandlerException;
@@ -46,6 +40,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -270,23 +265,25 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         dao.setToSTCV(transaction);
 
                         //check if a request payment was accepted
-                        if (transaction.getRequestId() == null) {
-                            this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
-                                    transaction.getAddressTo().getCryptoCurrency(),
-                                    transaction.getAmount(),
-                                    transaction.getActorFromPublicKey(),
-                                    transaction.getActorToPublicKey(),
-                                    transaction.getTransactionHash(),
-                                    transaction.getMemo());
-                        } else {
-                            this.cryptoTransmissionManager.acceptCryptoRequest(transaction.getTransactionId(),
-                                    transaction.getRequestId(),
-                                    transaction.getAddressTo().getCryptoCurrency(),
-                                    transaction.getAmount(),
-                                    transaction.getActorFromPublicKey(),
-                                    transaction.getActorToPublicKey(),
-                                    transaction.getTransactionHash(),
-                                    transaction.getMemo());
+                        if (!transaction.isSameDevice()) {
+                            if (transaction.getRequestId() == null) {
+                                this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
+                                        transaction.getAddressTo().getCryptoCurrency(),
+                                        transaction.getAmount(),
+                                        transaction.getActorFromPublicKey(),
+                                        transaction.getActorToPublicKey(),
+                                        transaction.getTransactionHash(),
+                                        transaction.getMemo());
+                            } else {
+                                this.cryptoTransmissionManager.acceptCryptoRequest(transaction.getTransactionId(),
+                                        transaction.getRequestId(),
+                                        transaction.getAddressTo().getCryptoCurrency(),
+                                        transaction.getAmount(),
+                                        transaction.getActorFromPublicKey(),
+                                        transaction.getActorToPublicKey(),
+                                        transaction.getTransactionHash(),
+                                        transaction.getMemo());
+                            }
                         }
 
 
