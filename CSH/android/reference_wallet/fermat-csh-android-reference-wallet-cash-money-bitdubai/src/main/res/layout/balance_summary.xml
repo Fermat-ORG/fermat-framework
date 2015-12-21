@@ -134,7 +134,7 @@
             fab:fab_title="Withdraw"
             fab:fab_colorPressed="@color/csh_fab_color_pressed"
             fab:fab_size="mini"
-            fab:fab_icon="@drawable/ic_arrow_up_grey"/>
+            fab:fab_icon="@drawable/csh_withdrawal"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_deposit"
@@ -144,7 +144,7 @@
             fab:fab_title="Deposit"
             fab:fab_colorPressed="@color/csh_fab_color_pressed"
             fab:fab_size="mini"
-            fab:fab_icon="@drawable/ic_arrow_down_grey"/>
+            fab:fab_icon="@drawable/csh_deposit"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
