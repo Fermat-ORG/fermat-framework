@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
@@ -17,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 21/11/15.
  */
-public interface WalletManager extends ModuleManager {
+public interface WalletManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
 
     /**
      * Add a new clause to the negotiation

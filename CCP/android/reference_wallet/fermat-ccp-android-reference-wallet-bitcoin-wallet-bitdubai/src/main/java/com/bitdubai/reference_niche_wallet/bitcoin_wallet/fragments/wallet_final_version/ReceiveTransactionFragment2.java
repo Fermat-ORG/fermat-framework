@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,7 +46,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,8 +99,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         super.onCreate(savedInstanceState);
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
-
-        setHasOptionsMenu(true);
 
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
@@ -152,10 +153,12 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.clear();
-
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help").setIcon(R.drawable.ic_contact_question)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //inflater.inflate(R.menu.home_menu, menu);
     }
 
     @Override
@@ -164,19 +167,22 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
             int id = item.getItemId();
 
-            if (id == BitcoinWalletConstants.IC_ACTION_SEND) {
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
-                    return true;
-                }
-
-            }catch(Exception e){
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-                makeText(getActivity(), "Oooops! recovering from system error",
-                        Toast.LENGTH_SHORT).show();
+            if(id == BitcoinWalletConstants.IC_ACTION_SEND){
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
+                return true;
+            }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT){
+                setUpPresentation();
+                return true;
             }
-            return super.onOptionsItemSelected(item);
-        }
 
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void initViews(View layout) {
@@ -194,7 +200,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -301,7 +307,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,ex);
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
         }
     }
 
@@ -394,6 +400,29 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 view.startAnimation(anim);
             }
         }
+    }
+
+    private void setUpPresentation() {
+        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
+                new PresentationBitcoinWalletDialog(
+                        getActivity(),
+                        referenceWalletSession,
+                        null,
+                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+        presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                if(o!=null){
+                    if((Boolean)(o)){
+                        invalidate();
+                        referenceWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                    }
+                }
+
+            }
+        });
+        presentationBitcoinWalletDialog.show();
     }
 }
 

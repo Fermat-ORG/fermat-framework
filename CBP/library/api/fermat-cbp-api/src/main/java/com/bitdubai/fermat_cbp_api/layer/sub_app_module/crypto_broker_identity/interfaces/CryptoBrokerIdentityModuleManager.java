@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
@@ -15,7 +17,7 @@ import java.util.List;
  * <p/>
  * Created by natalia on 16/09/15.
  */
-public interface CryptoBrokerIdentityModuleManager extends ModuleManager {
+public interface CryptoBrokerIdentityModuleManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
 
     /**
      * The method <code>createCryptoBrokerIdentity</code> is used to create a new crypto Broker identity
