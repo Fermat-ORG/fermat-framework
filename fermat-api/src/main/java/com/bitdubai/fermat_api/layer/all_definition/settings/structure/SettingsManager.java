@@ -153,6 +153,8 @@ public abstract class SettingsManager<Z extends FermatSettings> {
     /**
      * Through the method <code>buildSettingsObject</code> you can build a new settings object.
      *
+     * You must override this method to generate a settings object with the default behaviour.
+     *
      * @param publicKey  of the wallet or sub-app.
      *
      * @return an instance of the settings object.
