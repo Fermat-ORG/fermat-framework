@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -177,6 +178,16 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    @Override
+    public ActiveIdentity getActiveIdentity() {
+        try {
+            return getCryptoWallet().getActiveIdentities().get(0);
+        } catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

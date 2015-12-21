@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
@@ -24,8 +26,9 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,IntraUserLoginIdentity intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,ActiveIdentity intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
+        FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (intraUserLoginIdentity != null) {
@@ -45,8 +48,9 @@ public class FragmentsCommons {
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
                 }
-                FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
+            }else{
+                fermatTextView.setText("");
             }
 
             return view;
