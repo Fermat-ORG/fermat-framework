@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
