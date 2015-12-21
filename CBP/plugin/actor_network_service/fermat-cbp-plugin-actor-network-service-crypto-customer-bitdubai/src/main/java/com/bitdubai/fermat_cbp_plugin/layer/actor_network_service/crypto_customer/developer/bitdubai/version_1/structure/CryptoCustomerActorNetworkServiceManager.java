@@ -61,6 +61,7 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         cryptoCustomer.getPublicKey(),
                         (cryptoCustomer.getAlias().toLowerCase()),
+                        "",//phrase
                         (cryptoCustomer.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,

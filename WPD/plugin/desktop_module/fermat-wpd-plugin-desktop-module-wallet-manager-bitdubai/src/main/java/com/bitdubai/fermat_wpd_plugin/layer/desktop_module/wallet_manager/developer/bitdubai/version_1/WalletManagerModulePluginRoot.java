@@ -409,10 +409,10 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
+    public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-           intraWalletUserIdentityManager.createNewIntraWalletUser(alias,profileImage);
+           intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage);
 
         }
         catch( CantCreateNewIntraWalletUserException e)

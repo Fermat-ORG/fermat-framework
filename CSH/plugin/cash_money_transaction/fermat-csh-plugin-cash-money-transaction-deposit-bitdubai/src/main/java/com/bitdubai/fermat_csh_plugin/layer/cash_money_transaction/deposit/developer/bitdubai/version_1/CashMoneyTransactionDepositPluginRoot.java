@@ -33,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,10 +77,10 @@ public class CashMoneyTransactionDepositPluginRoot extends AbstractPlugin implem
      * TEST METHODS
      */
     private void testCreateCashDepositTransaction() {
-        System.out.println("CASHDEPOSIT - testCreateCashDepositTransaction CALLED");
+        //System.out.println("CASHDEPOSIT - testCreateCashDepositTransaction CALLED");
 
-        CashDepositTransactionParameters params = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", (float)200.3, FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD");
-        CashDepositTransactionParameters params2 = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", (float)200.2, FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.2USD");
+        CashDepositTransactionParameters params = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD");
+        CashDepositTransactionParameters params2 = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(200.2), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.2USD");
 
         try {
             this.createCashDepositTransaction(params);
@@ -118,7 +119,7 @@ public class CashMoneyTransactionDepositPluginRoot extends AbstractPlugin implem
         }
 
         serviceStatus = ServiceStatus.STARTED;
-        testCreateCashDepositTransaction();
+        //testCreateCashDepositTransaction();
     }
 
 

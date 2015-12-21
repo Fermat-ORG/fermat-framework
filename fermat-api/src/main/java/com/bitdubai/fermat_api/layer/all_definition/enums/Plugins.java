@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
@@ -120,7 +119,6 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION          ("BRPRT"     ),
     BITDUBAI_USER_REDEMPTION_TRANSACTION                  ("BURT"      ),
     BITDUBAI_ASSET_APPROPRIATION_TRANSACTION              ("BAAT"      ),
-    BITDUBAI_ASSET_APPROPRIATION_STATS_TRANSACTION        ("BAAST"     ),
     BITDUBAI_ASSET_WALLET_ISSUER                          ("BASWI"     ),
     BITDUBAI_ASSET_FACTORY                                ("BASF"      ),
     BITDUBAI_ASSET_FACTORY_MODULE                         ("BASFM"     ),
@@ -177,7 +175,6 @@ public enum Plugins implements FermatPluginsEnum {
 
     // Init new Plugins
 
-    ASSET_APPROPRIATION_STATS   ("ASAPS"),
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
     ASSET_FACTORY               ("ASF"),
@@ -198,11 +195,13 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_ADDRESSES            ("CA"),
     CRYPTO_ADDRESS_BOOK         ("CAB"),
     CRYPTO_BROKER               ("CB"),
+    CRYPTO_BROKER_COMMUNITY     ("CBC"),
     CRYPTO_BROKER_IDENTITY      ("CBI"),
     CRYPTO_BROKER_PURCHASE      ("CBP"),
     CRYPTO_BROKER_SALE          ("CBS"),
     CRYPTO_CUSTOMER             ("CC"),
     CRYPTO_CUSTOMER_IDENTITY    ("CCI"),
+    CRYPTO_CUSTOMER_COMMUNITY   ("CCC"),
     CRYPTO_PAYMENT_REQUEST      ("CPR"),
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
@@ -243,32 +242,34 @@ public enum Plugins implements FermatPluginsEnum {
     WS_CLOUD_CLIENT             ("WCL"),
 
     //CBP
-    BANK_MONEY_RESTOCK          ("BMRE"),
-    BANK_MONEY_DESTOCK          ("BMDE"),
-    CASH_MONEY_RESTOCK          ("CMDE"),
-    CASH_MONEY_DESTOCK          ("CMRE"),
-    CONTRACT_PURCHASE           ("CONTP"),
-    CONTRACT_SALE               ("CONTS"),
-    CRYPTO_BROKER_WALLET        ("CBWA"),
-    CRYPTO_BROKER_ACTOR         ("CBAC"),
-    CRYPTO_CUSTOMER_ACTOR       ("CCAC"),
-    CRYPTO_MONEY_DESTOCK        ("CRDE"),
-    CRYPTO_MONEY_RESTOCK        ("CRRE"),
-    CUSTOMER_BROKER_CLOSE       ("CBCL"),
-    CUSTOMER_BROKER_NEW         ("CBNE"),
-    CUSTOMER_BROKER_UPDATE      ("CBUP"),
-    FIAT_INDEX                  ("FI"),
-    NEGOTIATION_PURCHASE        ("NGP"),
-    NEGOTIATION_SALE            ("NGS"),
-    NEGOTIATION_TRANSMISSION    ("NGTR"),
-    OPEN_CONTRACT               ("OPC"),
-    TRANSACTION_TRANSMISSION    ("TRTX"),
-    CLOSE_CONTRACT              ("CLC"),
-    CUSTOMER_ONLINE_PAYMENT     ("CONP"),
-    CUSTOMER_OFFLINE_PAYMENT    ("COFP"),
+    BANK_MONEY_RESTOCK              ("BMRE"),
+    BANK_MONEY_DESTOCK              ("BMDE"),
+    CASH_MONEY_RESTOCK              ("CMDE"),
+    CASH_MONEY_DESTOCK              ("CMRE"),
+    CONTRACT_PURCHASE               ("CONTP"),
+    CONTRACT_SALE                   ("CONTS"),
+    CRYPTO_BROKER_WALLET            ("CBWA"),
+    CRYPTO_BROKER_ACTOR             ("CBAC"),
+    CRYPTO_CUSTOMER_ACTOR           ("CCAC"),
+    CRYPTO_MONEY_DESTOCK            ("CRDE"),
+    CRYPTO_MONEY_RESTOCK            ("CRRE"),
+    CUSTOMER_BROKER_CLOSE           ("CBCL"),
+    CUSTOMER_BROKER_NEW             ("CBNE"),
+    CUSTOMER_BROKER_UPDATE          ("CBUP"),
+    FIAT_INDEX                      ("FI"),
+    NEGOTIATION_PURCHASE            ("NGP"),
+    NEGOTIATION_SALE                ("NGS"),
+    NEGOTIATION_TRANSMISSION        ("NGTR"),
+    OPEN_CONTRACT                   ("OPC"),
+    TRANSACTION_TRANSMISSION        ("TRTX"),
+    CLOSE_CONTRACT                  ("CLC"),
+    CUSTOMER_ONLINE_PAYMENT         ("CONP"),
+    CUSTOMER_OFFLINE_PAYMENT        ("COFP"),
+    BROKER_ACK_ONLINE_PAYMENT       ("BAOP"),
+    CUSTOMER_ACK_ONLINE_MERCHANDISE ("CAOM"),
 
-    CUSTOMER_BROKER_PURCHASE    ("CBPU"),
-    CUSTOMER_BROKER_SALE        ("CBSA"),
+    CUSTOMER_BROKER_PURCHASE        ("CBPU"),
+    CUSTOMER_BROKER_SALE            ("CBSA"),
 
     // End  new Plugins
 
@@ -285,7 +286,6 @@ public enum Plugins implements FermatPluginsEnum {
         switch (code) {
 
             case "APR"  :   return SUB_APP_RUNTIME          ;
-            case "ASAPS":   return ASSET_APPROPRIATION_STATS;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
             case "ASF"  :   return ASSET_FACTORY            ;
@@ -308,9 +308,11 @@ public enum Plugins implements FermatPluginsEnum {
             case "CA"   :   return CRYPTO_ADDRESSES         ;
             case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
             case "CB"   :   return CRYPTO_BROKER            ;
+            case "CBC"  :   return CRYPTO_BROKER_COMMUNITY  ;
             case "CBI"  :   return CRYPTO_BROKER_IDENTITY   ;
             case "CC"   :   return CRYPTO_CUSTOMER          ;
             case "CCI"  :   return CRYPTO_CUSTOMER_IDENTITY ;
+            case "CCC"  :   return CRYPTO_CUSTOMER_COMMUNITY;
             case "CPR"  :   return CRYPTO_PAYMENT_REQUEST   ;
             case "CT"   :   return CRYPTO_TRANSMISSION      ;
             case "CW"   :   return CRYPTO_WALLET            ;
@@ -368,18 +370,20 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
             case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
-            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
-            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
-            case ("NGTR"):  return NEGOTIATION_TRANSMISSION ;
-            case ("CBNE"):  return CUSTOMER_BROKER_NEW      ;
-            case ("CBUP"):  return CUSTOMER_BROKER_UPDATE   ;
-            case ("CBCL"):  return CUSTOMER_BROKER_CLOSE    ;
-            case ("NGS"):   return NEGOTIATION_SALE         ;
-            case ("NGP"):   return NEGOTIATION_PURCHASE     ;
-            case "OPC":     return OPEN_CONTRACT            ;
-            case "CLC":     return CLOSE_CONTRACT           ;
-            case "CONP":    return CUSTOMER_ONLINE_PAYMENT  ;
-            case "COFP":    return CUSTOMER_OFFLINE_PAYMENT ;
+            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE ;
+            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY   ;
+            case ("NGTR"):  return NEGOTIATION_TRANSMISSION         ;
+            case ("CBNE"):  return CUSTOMER_BROKER_NEW              ;
+            case ("CBUP"):  return CUSTOMER_BROKER_UPDATE           ;
+            case ("CBCL"):  return CUSTOMER_BROKER_CLOSE            ;
+            case ("NGS"):   return NEGOTIATION_SALE                 ;
+            case ("NGP"):   return NEGOTIATION_PURCHASE             ;
+            case "OPC":     return OPEN_CONTRACT                    ;
+            case "CLC":     return CLOSE_CONTRACT                   ;
+            case "CONP":    return CUSTOMER_ONLINE_PAYMENT          ;
+            case "COFP":    return CUSTOMER_OFFLINE_PAYMENT         ;
+            case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
+            case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

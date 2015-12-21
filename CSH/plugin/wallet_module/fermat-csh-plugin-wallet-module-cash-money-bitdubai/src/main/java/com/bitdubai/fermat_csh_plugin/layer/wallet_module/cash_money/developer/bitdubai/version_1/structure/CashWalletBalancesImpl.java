@@ -2,27 +2,29 @@ package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.
 
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Alejandro Bicelis on 12/10/2015.
  */
 public class CashWalletBalancesImpl implements CashWalletBalances {
 
-    private double availableBalance;
-    private double bookBalance;
+    private BigDecimal availableBalance;
+    private BigDecimal bookBalance;
 
-    public CashWalletBalancesImpl(double availableBalance, double bookBalance)
+    public CashWalletBalancesImpl(BigDecimal availableBalance, BigDecimal bookBalance)
     {
         this.availableBalance = availableBalance;
         this.bookBalance = bookBalance;
     }
 
     @Override
-    public double getAvailableBalance() {
+    public BigDecimal getAvailableBalance() {
         return this.availableBalance;
     }
 
     @Override
-    public double getBookBalance() {
+    public BigDecimal getBookBalance() {
         return this.bookBalance;
     }
 }

@@ -2,8 +2,9 @@ package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -39,8 +40,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
-import com.bitdubai.sub_app.intra_user_community.common.navigation_drawer.NavigationViewAdapter;
+import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -79,7 +80,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private SearchView mSearchView;
 
     private AppListAdapter adapter;
-    private boolean isStartList=false;
+    private boolean isStartList = false;
 
 
     private ProgressDialog mDialog;
@@ -114,7 +115,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         super.onCreate(savedInstanceState);
         try {
 
-            setHasOptionsMenu(true);
+            // setHasOptionsMenu(true);
             // setting up  module
             intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
@@ -143,7 +144,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
-            rootView = inflater.inflate(R.layout.world_main, container, false);
+            rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
@@ -160,6 +161,11 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             onRefresh();
+            SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+            if (!pref.getBoolean("isChecked", false)) {
+                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null);
+                presentationIntraUserCommunityDialog.show();
+            }
 
 
         } catch (Exception ex) {
@@ -195,14 +201,18 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         /**
          * Navigation view items
          */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(), null);
-        setNavigationDrawer(navigationViewAdapter);
+        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
+        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Please wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -219,6 +229,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
+                        progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
@@ -234,6 +245,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
+                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -251,10 +263,10 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.intra_user_menu, menu);
+       /* inflater.inflate(R.menu.intra_user_menu, menu);
 
         //MenuItem menuItem = new SearchView(getActivity());
-        /*try {
+        *//*try {
             MenuItem searchItem = menu.findItem(R.id.action_search);
             searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
             //MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -266,7 +278,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
         }catch (Exception e){
 
-        }*/
+        }*//*
 //        MenuItem menuItem = menu.add(0, IntraUserCommunityConstants.IC_ACTION_SEARCH, 0, "send");
 //        menuItem.setIcon(R.drawable.ic_action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 //        menuItem.setActionProvider(new SearchView(getActivity()))
@@ -292,7 +304,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 //
 //        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
 //        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-
+*/
     }
 
     @Override

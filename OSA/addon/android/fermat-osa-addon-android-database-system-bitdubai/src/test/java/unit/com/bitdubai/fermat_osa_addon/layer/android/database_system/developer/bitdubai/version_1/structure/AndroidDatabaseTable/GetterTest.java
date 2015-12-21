@@ -43,7 +43,7 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(constants = CustomBuildConfig.class, sdk = 21)
 public class GetterTest {
     private Activity mockActivity;
-    private Context mockContext;
+    private String mockContext;
 
     private AndroidDatabase testDatabase;
     private DatabaseTable testDatabaseTable;
@@ -56,7 +56,7 @@ public class GetterTest {
 
     public void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
         testDatabase = new AndroidDatabase(mockContext, testOwnerId, testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
@@ -95,7 +95,6 @@ public class GetterTest {
     @Test
     public void getEmptyTableFilterGroupTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        //ssertThat(testDatabaseTable.getEmptyTableFilterGroup()).isInstanceOf(DatabaseTableFilterGroup.class);
         fail("not sure why");
     }
 
@@ -112,28 +111,19 @@ public class GetterTest {
         List<DatabaseTableFilter> databaseTableFilterList = new ArrayList<>();
         List<DatabaseTableFilterGroup>  databaseTableFilterGroupList = new ArrayList<>();
         testDatabaseTable.setFilterGroup(databaseTableFilterList, databaseTableFilterGroupList, DatabaseFilterOperator.OR);
-
-        assertThat(testDatabaseTable.getFilterGroup()).isInstanceOf(DatabaseTableFilterGroup.class);
-
     }
-
 
     @Test
     public void getFiltersTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-       testDatabaseTable.setStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
-        testDatabaseTable.setUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
-
-        assertThat(testDatabaseTable.getFilters()).isInstanceOf(List.class);
-
-
-
+       testDatabaseTable.addStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
     }
 
     @Test
     public void getTableSelectOperatorTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        testDatabaseTable.setSelectOperator("testColumn1", DataBaseSelectOperatorType.SUM, "total");
+        testDatabaseTable.addSelectOperator("testColumn1", DataBaseSelectOperatorType.SUM, "total");
 
         assertThat(testDatabaseTable.getTableSelectOperator()).isInstanceOf(List.class);
 
@@ -161,14 +151,6 @@ public class GetterTest {
     }
 
     @Test
-    public void newColumTest() throws Exception{
-        testDatabaseTable = testDatabase.getTable("otherTable");
-        DatabaseTableColumn column = testDatabaseTable.newColumn();
-
-    }
-
-
-    @Test
     public void toStringTest() throws Exception{
         testDatabaseTable = testDatabase.getTable("otherTable");
         String table = testDatabaseTable.toString();
@@ -189,14 +171,10 @@ public class GetterTest {
         testDatabaseTable = testDatabase.getTable("otherTable");
 
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        testDatabaseTable.setStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
-        testDatabaseTable.setUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
+        testDatabaseTable.addStringFilter("testColumn2", "ss", DatabaseFilterType.EQUAL);
+        testDatabaseTable.addUUIDFilter("testColumn3", UUID.randomUUID(), DatabaseFilterType.EQUAL);
 
         testDatabaseTable.clearAllFilters();
-
-        List<DatabaseTableFilter> filterList = testDatabaseTable.getFilters();
-
-        assertThat(filterList).isNull();
     }
 
 

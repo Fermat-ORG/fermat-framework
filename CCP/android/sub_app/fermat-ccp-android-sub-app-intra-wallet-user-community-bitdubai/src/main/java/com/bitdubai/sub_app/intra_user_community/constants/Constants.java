@@ -1,6 +1,8 @@
 package com.bitdubai.sub_app.intra_user_community.constants;
 
 /**
+ * Constantes
+ *
  * Created by josemanueldsds on 12/12/15.
  */
 public class Constants {

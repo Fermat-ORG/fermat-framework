@@ -4,6 +4,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
+import java.util.UUID;
+
 /**
  * Created by nelson on 05/11/15.
  */
@@ -16,6 +18,11 @@ public class CryptoCustomerWalletModuleClauseInformation implements ClauseInform
         this.clauseType = clauseType;
         this.value = value;
         this.status = status;
+    }
+
+    @Override
+    public UUID getClauseID() {
+        return null;
     }
 
     @Override

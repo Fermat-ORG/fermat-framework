@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public interface SendCashDeliveryManager {
     List<SendCashDelivery> getAllSendCashDeliveryFromCurrentDeviceUser() throws CantGetSendCashDeliveryException;
-
+//TODO: DE LE TE
     SendCashDelivery createSendCashDelivery(
              final String publicKeyCustomer
             ,final String publicKeyBroker

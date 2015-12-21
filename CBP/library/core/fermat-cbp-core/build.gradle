@@ -35,6 +35,7 @@ dependencies {
     compile project(':fermat-cbp-plugin-actor-connection-crypto-customer-bitdubai')
 
     //Business Transaction
+    compile project(':fermat-cbp-plugin-business-transaction-broker-ack-online-payment-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-customer-offline-payment-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-customer-online-payment-bitdubai')
@@ -72,6 +73,8 @@ dependencies {
     //Sub App Module
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai')
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai')
 
     //Wallet Module
     compile project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
@@ -85,7 +88,7 @@ dependencies {
 
     //User Level Business Transaction
     compile project(':fermat-cbp-plugin-user-level-business-transaction-customer-broker-purchase-bitdubai')
-
+    compile project(':fermat-cbp-plugin-user-level-business-transaction-customer-broker-sale-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

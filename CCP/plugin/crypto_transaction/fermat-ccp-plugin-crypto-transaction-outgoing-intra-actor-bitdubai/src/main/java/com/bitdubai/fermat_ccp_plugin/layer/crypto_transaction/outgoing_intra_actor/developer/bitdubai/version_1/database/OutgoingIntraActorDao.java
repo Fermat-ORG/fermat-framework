@@ -185,7 +185,7 @@ public class OutgoingIntraActorDao {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
             DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getTransactionId());
             recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME, hash);
-            transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getTransactionId().toString(), DatabaseFilterType.EQUAL);
 
             transactionTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
@@ -252,7 +252,7 @@ public class OutgoingIntraActorDao {
 
         recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
 
-        transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getTransactionId().toString(), DatabaseFilterType.EQUAL);
         transactionTable.updateRecord(recordToUpdate);
     }
 
@@ -260,7 +260,7 @@ public class OutgoingIntraActorDao {
     private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
 
-        transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
 
         List<DatabaseTableRecord> records = transactionTable.getRecords();
@@ -276,7 +276,7 @@ public class OutgoingIntraActorDao {
     private List<OutgoingIntraActorTransactionWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-        transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
         List<DatabaseTableRecord> records = transactionTable.getRecords();
         transactionTable.clearAllFilters();
@@ -290,7 +290,7 @@ public class OutgoingIntraActorDao {
             DatabaseTableRecord recordToUpdate   = getByPrimaryKey(transactionWrapper.getTransactionId());
 
             recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
-            transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionWrapper.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionWrapper.getTransactionId().toString(), DatabaseFilterType.EQUAL);
 
             transactionTable.updateRecord(recordToUpdate);
 
@@ -372,7 +372,7 @@ public class OutgoingIntraActorDao {
     public CryptoStatus getCryptoStatus(String transactionHash) throws OutgoingIntraActorCantGetCryptoStatusException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            transactionTable.setStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
+            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
             List<DatabaseTableRecord> records = transactionTable.getRecords();
             transactionTable.clearAllFilters();
@@ -394,7 +394,7 @@ public class OutgoingIntraActorDao {
     public String getSendCryptoTransactionHash(UUID transactionId) throws OutgoingIntraActorCantGetTransactionHashException {
         try{
             DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            transactionTable.setUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
 
             transactionTable.loadToMemory();
             List<DatabaseTableRecord> records = transactionTable.getRecords();

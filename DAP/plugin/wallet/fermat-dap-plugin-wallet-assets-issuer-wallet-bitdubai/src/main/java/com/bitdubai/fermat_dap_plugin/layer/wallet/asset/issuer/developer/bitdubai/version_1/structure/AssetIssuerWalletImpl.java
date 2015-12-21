@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
@@ -42,6 +43,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTra
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.developer_utils.mocks.MockActorAssetUserForTesting;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.developer_utils.mocks.MockDigitalAssetForTesting;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -107,6 +110,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             assetIssuerWalletDao = new AssetIssuerWalletDao(database);
             assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
             assetIssuerWalletDao.setPlugin(pluginId);
+//            test();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -133,6 +137,33 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             throw new CantCreateWalletException(CantCreateWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
 
+    }
+
+
+    private void test() throws CantGetAssetStatisticException, RecordsNotFoundException, CantSaveStatisticException, CantDefineContractPropertyException {
+
+        DigitalAsset asset = new MockDigitalAssetForTesting();
+        ActorAssetUser user = new MockActorAssetUserForTesting();
+
+        debug("creating new asset");
+        createdNewAsset(asset);
+        debug("distributing new asset");
+        assetDistributed(asset.getPublicKey(), user.getActorPublicKey());
+        debug("appropriating new asset");
+        assetAppropriated(asset.getPublicKey(), user.getActorPublicKey());
+        debug("redeemed new asset");
+        assetRedeemed(asset.getPublicKey(), user.getActorPublicKey(), "RePoPk");
+
+        debug("testing queries");
+        debug(getAllStatisticForAllAssets().toString());
+        debug(getAllStatisticForGivenAsset(asset.getName()).toString());
+        debug(getStatisticForAllAssetsByStatus(AssetCurrentStatus.ASSET_REDEEMED).toString());
+        debug(getStatisticForGivenAssetByStatus(asset.getName(), AssetCurrentStatus.ASSET_REDEEMED).toString());
+
+    }
+
+    private void debug(String message) {
+        System.out.println("ASSET STATISTIC - " + message);
     }
 
     private PluginTextFile createAssetIssuerWalletFile() throws CantCreateWalletException {
@@ -394,8 +425,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         assetStatistic.setAssetName(assetIssuerWalletDao.getAssetName(assetPublicKey));
 
         try {
-            ActorAssetUser user = actorAssetUserManager.getActorByPublicKey(assetIssuerWalletDao.getUserPublicKey(assetPublicKey));
-            assetStatistic.setAssetOwner(user);
+            assetStatistic.setAssetOwner(assetIssuerWalletDao.getUserPublicKey(assetPublicKey));
         } catch (Exception e) {
             e.printStackTrace();
             //If this happen it means we couldn't get the user or there were none. So we'll keep it as null.

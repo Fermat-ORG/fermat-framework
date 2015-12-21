@@ -14,7 +14,7 @@ import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession, DesktopSettings, ResourceProviderManager,IntraUserIdentityFragmentsEnumType> {
+public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession, ResourceProviderManager,IntraUserIdentityFragmentsEnumType> {
 
 
     @Override

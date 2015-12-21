@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 
 import java.util.List;
 
@@ -15,11 +17,17 @@ public interface RedeemPointIdentityManager extends ModuleManager {
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
      *
      * @return the list of Asset Issuer users associated to the current logged in Device User.
-     *
      * @throws CantListAssetRedeemPointException if something goes wrong.
      */
     List<RedeemPointIdentity> getRedeemPointsFromCurrentDeviceUser() throws CantListAssetRedeemPointException;
 
+    /**
+     * The method <code>getIdentityAssetIssuer</code> will give Identity Asset Issuer associated
+     *
+     * @return Identity Asset Redeem Point associated.
+     * @throws CantGetRedeemPointIdentitiesException if something goes wrong.
+     */
+    RedeemPointIdentity getIdentityAssetRedeemPoint() throws CantGetRedeemPointIdentitiesException;
 
     /**
      * The method <code>createNewIntraWalletUser</code> creates a new intra wallet user Identity for the logged in Device User and returns the
@@ -27,13 +35,21 @@ public interface RedeemPointIdentityManager extends ModuleManager {
      *
      * @param alias        the alias that the user choose as intra user identity
      * @param profileImage the profile image to identify this identity
-     *
      * @return the intra user created
-     *
      * @throws CantCreateNewRedeemPointException if something goes wrong.
      */
-    RedeemPointIdentity createNewRedeemPoint(String alias       ,
-                                                   byte[] profileImage) throws CantCreateNewRedeemPointException;
+    RedeemPointIdentity createNewRedeemPoint(String alias,
+                                             byte[] profileImage) throws CantCreateNewRedeemPointException;
+
+    /**
+     * The method <code>updateIdentityAssetIssuer</code> change a identity information data
+     *
+     * @param identityPublicKey
+     * @param identityAlias
+     * @param profileImage
+     * @throws CantUpdateIdentityRedeemPointException
+     */
+    void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityRedeemPointException;
 
     /**
      * The method <code>hasAssetUserIdentity</code> returns if has a intra user identity created
@@ -41,7 +57,7 @@ public interface RedeemPointIdentityManager extends ModuleManager {
      * @return
      * @throws CantListAssetRedeemPointException
      */
-    boolean  hasRedeemPointIdentity() throws CantListAssetRedeemPointException ;
+    boolean hasRedeemPointIdentity() throws CantListAssetRedeemPointException;
 
 
 }

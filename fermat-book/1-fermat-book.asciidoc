@@ -1,12 +1,11 @@
 :bookseries: animal
 :numbered:
-:toc:
 
-= Fermat: expanding the cryptoworld
+= Fermat: Expanding The Cryptoworld
 
 Gustavo H. Corradi <book@fermat.org>
 
-v.0.0 (draft), november, 2015.
+v.0.0 (draft), December, 2015.
 
 
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20book%20logotype/FermatBookLogotype3D/PNG_fermat_book_logo_3D_Low_800x813.png[FermatBookLogo]
@@ -58,8 +57,6 @@ include::book-chapter-21.asciidoc[]
 
 include::book-glossary.asciidoc[]
 
-include::book-index.asciidoc[]
-
 include::book-appendix-01-principles.asciidoc[]
 
 include::book-appendix-02-history.asciidoc[]
@@ -68,6 +65,7 @@ include::book-appendix-03-money.asciidoc[]
 
 ////
 include::conventions.asciidoc[]
+include::book-index.asciidoc[]
 ////
 
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]

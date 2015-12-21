@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
@@ -11,7 +10,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.excepti
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.util.List;
@@ -53,8 +51,8 @@ public class AssetUserWalletModule {
     public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;
         try {
-            DigitalAsset digitalAsset = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest").getDigitalAssetMetadata(digitalAssetPublicKey).getDigitalAsset();
-            assetAppropriationManager.appropriateAsset(digitalAsset, "walletPublicKeyTest", bitcoinWalletPublicKey);
+            DigitalAssetMetadata assetMetadata = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest").getDigitalAssetMetadata(digitalAssetPublicKey);
+            assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException e) {
             throw new CantExecuteAppropriationTransactionException(e, context, null);
         }

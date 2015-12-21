@@ -1,9 +1,11 @@
 package com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory;
 
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CreateCryptoCustomerIdentityFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerIdentityListFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.EditCryptoCustomerIdentityFragment;
@@ -15,7 +17,7 @@ import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.Cryp
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerIdentityFragmentFactory extends FermatSubAppFragmentFactory<CryptoCustomerIdentitySubAppSession, CryptoCustomerIdentityPreferenceSettings, CryptoCustomerIdentityFragmentsEnumType> {
+public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory<CryptoCustomerIdentitySubAppSession, SubAppResourcesProviderManager, CryptoCustomerIdentityFragmentsEnumType> {
 
 
     @Override

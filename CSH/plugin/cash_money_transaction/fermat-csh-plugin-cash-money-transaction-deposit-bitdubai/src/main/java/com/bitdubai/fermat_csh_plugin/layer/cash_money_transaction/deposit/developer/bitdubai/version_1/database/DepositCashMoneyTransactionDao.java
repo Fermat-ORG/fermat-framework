@@ -25,6 +25,7 @@ import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.deposit.devel
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -132,7 +133,7 @@ public class DepositCashMoneyTransactionDao {
         List<DatabaseTableRecord> records;
         DatabaseTable table = database.getTable(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TABLE_NAME);
 
-        table.setStringFilter(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
 
@@ -147,7 +148,7 @@ public class DepositCashMoneyTransactionDao {
         DatabaseTable table = this.database.getTable(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
         return table.getRecords();
@@ -160,7 +161,7 @@ public class DepositCashMoneyTransactionDao {
         newRecord.setStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_WALLET_PUBLIC_KEY_COLUMN_NAME, depositParameters.getPublicKeyWallet());
         newRecord.setStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_ACTOR_PUBLIC_KEY_COLUMN_NAME, depositParameters.getPublicKeyActor());
         newRecord.setStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_PLUGIN_PUBLIC_KEY_COLUMN_NAME, depositParameters.getPublicKeyPlugin());
-        newRecord.setDoubleValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_AMOUNT_COLUMN_NAME, depositParameters.getAmount());
+        newRecord.setStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_AMOUNT_COLUMN_NAME, depositParameters.getAmount().toPlainString());
         newRecord.setStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_CURRENCY_COLUMN_NAME, depositParameters.getCurrency().getCode());
         newRecord.setStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_MEMO_COLUMN_NAME, depositParameters.getMemo());
         newRecord.setLongValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
@@ -172,7 +173,7 @@ public class DepositCashMoneyTransactionDao {
         String publicKeyWallet = record.getStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyActor = record.getStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyPlugin = record.getStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_PLUGIN_PUBLIC_KEY_COLUMN_NAME);
-        float amount = record.getFloatValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_AMOUNT_COLUMN_NAME);
+        BigDecimal amount = new BigDecimal(record.getStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_AMOUNT_COLUMN_NAME));
         String memo = record.getStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_MEMO_COLUMN_NAME);
         long timestamp = record.getLongValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TIMESTAMP_COLUMN_NAME);
 

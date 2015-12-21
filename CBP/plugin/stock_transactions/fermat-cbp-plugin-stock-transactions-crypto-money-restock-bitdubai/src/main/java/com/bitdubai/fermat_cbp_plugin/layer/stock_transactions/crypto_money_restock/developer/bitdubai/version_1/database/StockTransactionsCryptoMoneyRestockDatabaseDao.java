@@ -21,6 +21,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_rest
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyRestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.CryptoMoneyRestockTransactionImpl;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,16 +83,16 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CONCEPT_COLUMN_NAME, cryptoMoneyTransaction.getConcept());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME, cryptoMoneyTransaction.getTimeStamp().toString());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_MEMO_COLUMN_NAME, cryptoMoneyTransaction.getMemo());
-        record.setFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cryptoMoneyTransaction.getAmount());
+        record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_AMOUNT_COLUMN_NAME, cryptoMoneyTransaction.getAmount().toPlainString());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cryptoMoneyTransaction.getTransactionStatus().getCode());
-        record.setFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cryptoMoneyTransaction.getPriceReference());
+        record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cryptoMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransaction().getCode());
 
         return record;
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
         if (table.getRecords().isEmpty())
             return true;
@@ -103,7 +104,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         DatabaseTable table = getDatabaseTable(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
 
@@ -120,11 +121,11 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         cryptoMoneyRestockTransaction.setCbpWalletPublicKey(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME));
         cryptoMoneyRestockTransaction.setCryWalletPublicKey(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CRY_WALLET_PUBLIC_KEY_COLUMN_NAME));
         cryptoMoneyRestockTransaction.setConcept(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_CONCEPT_COLUMN_NAME));
-        cryptoMoneyRestockTransaction.setAmount(cryptoMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_AMOUNT_COLUMN_NAME));
+        cryptoMoneyRestockTransaction.setAmount(new BigDecimal(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_AMOUNT_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setTimeStamp(Timestamp.valueOf(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TIMESTAMP_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setMemo(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_MEMO_COLUMN_NAME));
         cryptoMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
-        cryptoMoneyRestockTransaction.setPriceReference(cryptoMoneyRestockTransactionRecord.getFloatValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME));
+        cryptoMoneyRestockTransaction.setPriceReference(new BigDecimal(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
 
         return cryptoMoneyRestockTransaction;
@@ -147,7 +148,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, bankMoneyRestockRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, bankMoneyRestockRecord);
             }
 

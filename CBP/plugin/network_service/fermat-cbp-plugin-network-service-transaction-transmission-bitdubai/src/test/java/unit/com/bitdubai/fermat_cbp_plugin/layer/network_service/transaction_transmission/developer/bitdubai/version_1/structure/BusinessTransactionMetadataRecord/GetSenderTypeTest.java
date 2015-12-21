@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetSenderTypeTest {
-    @Mock
-    private PlatformComponentType platformComponentType = mock(PlatformComponentType.class);
+
+    private PlatformComponentType platformComponentType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
 
     @Test
     public void getSenderType() throws Exception{
