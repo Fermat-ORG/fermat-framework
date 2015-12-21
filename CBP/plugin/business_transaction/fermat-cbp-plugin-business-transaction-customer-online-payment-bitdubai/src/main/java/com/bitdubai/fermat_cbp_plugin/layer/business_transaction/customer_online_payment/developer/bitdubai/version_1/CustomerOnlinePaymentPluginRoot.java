@@ -244,7 +244,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init monitor Agent
              */
-            CustomerOnlinePaymentMonitorAgent openContractMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
+            CustomerOnlinePaymentMonitorAgent customerOnlinePaymentMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -254,7 +254,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     outgoingIntraActorManager);
-            openContractMonitorAgent.start();
+            customerOnlinePaymentMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer online payment starting");
