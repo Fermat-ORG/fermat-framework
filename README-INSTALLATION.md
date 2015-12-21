@@ -1,8 +1,4 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
-
-#all links tested-laderuner
-
-
 # Installation and Configuration Guide for Fermat Development Environment 
 
 <br>
@@ -57,8 +53,6 @@ Although there are many ways to configure these tools, we suggest to follow the 
 platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
 #platfform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
 ```
-
-# There are also other options to choose (see the script) by the same method of commenting/uncommenting the corresponding lines ( additional installation of Genymotion 
 
 * Then, to execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
 
