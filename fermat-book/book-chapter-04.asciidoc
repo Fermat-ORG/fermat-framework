@@ -2,7 +2,7 @@
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Coins/OSA.jpg[OperatingSystems]
 
 [[superlayers]]
-== Chapter 4: Fermat Superlayer Operating Systems 
+== Chapter 4: Fermat Operating Systems Superlayer 
 
 NOTE: We call Fermat *Superlayer* to a group of layers whose components offer services to be consumed system-wide, i.e. offering an infrastructure that holds different *platforms* running over Fermat. (its like a "common ground" where different "towers" (the platforms) are built, sharing basic level services)
 
