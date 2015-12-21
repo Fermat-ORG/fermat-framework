@@ -13,7 +13,7 @@ import org.apache.commons.lang.NotImplementedException;
 /**
  * Created by francisco on 21/10/15.
  */
-public class AssetIssuerCommunityFragmentFactory extends FermatFragmentFactory<AssetIssuerCommunitySubAppSession, AssetIssuerSubAppSettings, SubAppResourcesProviderManager, AssetIssuerCommunityFragmentEnumTypes> {
+public class AssetIssuerCommunityFragmentFactory extends FermatFragmentFactory<AssetIssuerCommunitySubAppSession, SubAppResourcesProviderManager, AssetIssuerCommunityFragmentEnumTypes> {
 
 
     @Override

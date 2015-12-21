@@ -11,7 +11,7 @@ import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSessio
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class WalletPublisherFragmentFactory extends FermatSubAppFragmentFactory<WalletPublisherSubAppSession,WalletPublisherPreferenceSettings,WalletPublisherFragmentsEnumType> {
+public class WalletPublisherFragmentFactory extends FermatSubAppFragmentFactory<WalletPublisherSubAppSession,WalletPublisherFragmentsEnumType> {
 
 
     public WalletPublisherFragmentFactory(){

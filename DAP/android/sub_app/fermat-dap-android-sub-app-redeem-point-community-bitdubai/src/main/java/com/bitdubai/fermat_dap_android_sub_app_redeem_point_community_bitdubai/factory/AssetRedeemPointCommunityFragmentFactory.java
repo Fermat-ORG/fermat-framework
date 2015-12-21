@@ -11,7 +11,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 /**
  * CommunityAssetRedeemPointFragmentFactory
  */
-public class AssetRedeemPointCommunityFragmentFactory extends FermatFragmentFactory<AssetRedeemPointCommunitySubAppSession, Settings, SubAppResourcesProviderManager, FragmentFactoryEnumType> {
+public class AssetRedeemPointCommunityFragmentFactory extends FermatFragmentFactory<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager, FragmentFactoryEnumType> {
 
     @Override
     public FermatFragment getFermatFragment(FragmentFactoryEnumType fragments) throws FragmentNotFoundException {

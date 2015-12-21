@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 /**
@@ -53,11 +52,6 @@ public class BitcoinWalletFermatAppConnection extends AppConnections{
     @Override
     public AbstractFermatSession getSession() {
         return new ReferenceWalletSession();
-    }
-
-    @Override
-    public FermatSettings getSettings() {
-        return new ReferenceWalletPreferenceSettings();
     }
 
     @Override
