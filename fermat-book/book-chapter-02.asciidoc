@@ -1,6 +1,6 @@
 :numbered!:
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
-== Chapter 2: Fermat as a Stack Framework Platform 
+== Chapter 2: Fermat as a Platform Stack Framework 
 *Fermat* is, technically speaking, an Open Source P2P (Peer-to-Peer) Stack Framework Platform built on a Plug-ins architecture running on an end-user's device. 
 
 [horizontal]
