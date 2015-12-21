@@ -49,10 +49,6 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections{
         return new AssetIssuerCommunitySubAppSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new AssetIssuerSubAppSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

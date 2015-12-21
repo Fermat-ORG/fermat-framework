@@ -53,16 +53,11 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections {
         );
 
     }
-
     @Override
     protected AbstractFermatSession getSession() {
         return new CryptoBrokerWalletSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new CryptoBrokerWalletPreferenceSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

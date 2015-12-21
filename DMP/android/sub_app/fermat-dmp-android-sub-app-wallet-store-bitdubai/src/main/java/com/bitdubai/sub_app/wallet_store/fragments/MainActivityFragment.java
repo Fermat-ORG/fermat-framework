@@ -291,7 +291,6 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
                     final DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
                     fragment.setAppSession(appSession);
-                    fragment.setAppSettings(appSettings);
                     fragment.setAppResourcesProviderManager(appResourcesProviderManager);
 
                     changeActivity(WalletStoreFragmentsEnumType.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());

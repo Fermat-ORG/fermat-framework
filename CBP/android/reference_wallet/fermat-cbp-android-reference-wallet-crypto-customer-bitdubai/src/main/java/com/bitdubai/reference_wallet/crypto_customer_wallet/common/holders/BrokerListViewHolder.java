@@ -14,7 +14,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerExchangeRatesAdapter;
 
@@ -31,7 +31,7 @@ import java.util.List;
 public class BrokerListViewHolder extends FermatViewHolder {
     private Resources res;
     private BrokerExchangeRatesAdapter adapter;
-    private CryptoCustomerWallet walletManager;
+    private CryptoCustomerWalletManager walletManager;
 
     public ImageView brokerImage;
     public FermatTextView brokerName;
@@ -45,7 +45,7 @@ public class BrokerListViewHolder extends FermatViewHolder {
      * @param itemView      the item view
      * @param walletManager the wallet manager to get the list of exchange rates for the broker merchandise
      */
-    public BrokerListViewHolder(View itemView, CryptoCustomerWallet walletManager) {
+    public BrokerListViewHolder(View itemView, CryptoCustomerWalletManager walletManager) {
         super(itemView);
         res = itemView.getResources();
         this.walletManager = walletManager;

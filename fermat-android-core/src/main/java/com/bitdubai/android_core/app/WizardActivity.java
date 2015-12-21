@@ -173,7 +173,7 @@ public class WizardActivity extends FermatActivity
                 FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getAssetRedeemPointIdentity());
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), getWalletSessionManager().getWalletSession(wallet.getPublicKey()), null, getWalletResourcesProviderManager()));
+                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), getWalletSessionManager().getWalletSession(wallet.getPublicKey()), getWalletResourcesProviderManager()));
 //                    switch (page.getType()) {
 //                        case CWP_WALLET_FACTORY_CREATE_STEP_1:
 //                            fragments.add(new CreateWalletFragment());

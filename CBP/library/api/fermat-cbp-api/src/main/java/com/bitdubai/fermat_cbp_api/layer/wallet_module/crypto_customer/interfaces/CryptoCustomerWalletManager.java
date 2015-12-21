@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/09/15.
  */
-public interface CryptoCustomerWallet extends WalletManager {
+public interface CryptoCustomerWalletManager extends WalletManager {
 
     /**
      * associate an Identity to this wallet

@@ -52,11 +52,6 @@ public class WalletStoreFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public FermatSettings getSettings() {
-        return new WalletStorePreferenceSettings();
-    }
-
-    @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return null;
     }

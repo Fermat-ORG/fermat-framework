@@ -11,5 +11,5 @@ public interface CryptoCustomerWalletModuleManager extends ModuleManager {
      * @param walletPublicKey the public key of the wallet
      * @return an interface the contain the methods to manipulate the selected wallet
      */
-    CryptoCustomerWallet getCryptoCustomerWallet(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
+    CryptoCustomerWalletManager getCryptoCustomerWallet(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
 }

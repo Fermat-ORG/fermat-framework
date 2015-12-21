@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -68,6 +71,11 @@ public interface AssetFactoryModuleManager extends ModuleManager {
      * This method returns the information stored about the all Asset Factory
      */
     List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException;
+
+    /**
+     * This method returns the resource of an asset factory object
+     */
+    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
 
     /**
      * TThis method list all wallet installed in device, start the transaction
