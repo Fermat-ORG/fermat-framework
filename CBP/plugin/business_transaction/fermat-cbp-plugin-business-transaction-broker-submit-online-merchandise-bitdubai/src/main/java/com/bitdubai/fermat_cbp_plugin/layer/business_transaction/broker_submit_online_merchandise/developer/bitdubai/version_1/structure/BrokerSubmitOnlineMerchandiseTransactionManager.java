@@ -150,12 +150,15 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
 
     /**
      * This method creates the Broker Submit Online Merchandise Business Transaction
+     * @param cbpWalletPublicKey
      * @param walletPublicKey
      * @param contractHash
      * @throws CantSubmitMerchandiseException
      */
     @Override
-    public void submitMerchandise(String walletPublicKey, String contractHash)
+    public void submitMerchandise(String cbpWalletPublicKey,
+                                  String walletPublicKey,
+                                  String contractHash)
             throws CantSubmitMerchandiseException {
         try {
             CustomerBrokerContractSale customerBrokerContractSale=

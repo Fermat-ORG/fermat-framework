@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -16,9 +18,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -280,8 +285,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale,
             String brokerCryptoAddress,
-            String walletPublicKey,
-            long cryptoAmount)
+            String cryptoWalletPublicKey,
+            long cryptoAmount,
+            String cbpWalletPublicKey)
             throws CantInsertRecordException {
 
         DatabaseTable databaseTable=getDatabaseSubmitTable();
@@ -290,8 +296,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 databaseTableRecord,
                 customerBrokerContractSale,
                 brokerCryptoAddress,
-                walletPublicKey,
-                cryptoAmount
+                cryptoWalletPublicKey,
+                cryptoAmount,
+                cbpWalletPublicKey
         );
         databaseTable.insertRecord(databaseTableRecord);
     }
@@ -309,7 +316,8 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale,
             String brokerCryptoAddress,
             String walletPublicKey,
-            long cryptoAmount) {
+            long cryptoAmount,
+            String cbpWalletPublicKey) {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
@@ -332,11 +340,15 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME,
                 brokerCryptoAddress);
         record.setStringValue(
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 walletPublicKey);
         record.setLongValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME,
                 cryptoAmount);
+        record.setStringValue(
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                cbpWalletPublicKey
+        );
         return record;
     }
 
@@ -369,5 +381,183 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
         return record;
     }
+
+    /**
+     * This method returns a BusinessTransactionRecord list from the pending Crypto De Stock transactions
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<BusinessTransactionRecord> getPendingDeStockTransactionList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        return getCustomerOnlinePaymentRecordList(
+                ContractTransactionStatus.PENDING_ONLINE_DE_STOCK.getCode(),
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+        );
+    }
+
+    /**
+     * This method returns a BusinessTransactionRecord list from the pending Crypto transactions
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<BusinessTransactionRecord> getPendingCryptoTransactionList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        return getCustomerOnlinePaymentRecordList(
+                //TODO: check the real status here
+                ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode(),
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+        );
+    }
+
+    /**
+     * This method returns a BusinessTransactionRecord List according the arguments.
+     * @param key String with the search key.
+     * @param keyColumn String with the key column name.
+     * @param valueColumn String with the value searched column name.
+     * @return List<BusinessTransactionRecord>
+     * @throws CantGetContractListException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    private List<BusinessTransactionRecord> getCustomerOnlinePaymentRecordList(
+            String key,
+            String keyColumn,
+            String valueColumn) throws
+            CantGetContractListException,
+            UnexpectedResultReturnedFromDatabaseException {
+        List<String> pendingContractHash= getStringList(
+                key,
+                keyColumn,
+                valueColumn);
+        List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
+        BusinessTransactionRecord businessTransactionRecord;
+        for(String contractHash : pendingContractHash){
+            businessTransactionRecord =getCustomerOnlinePaymentRecord(contractHash);
+            businessTransactionRecordList.add(businessTransactionRecord);
+        }
+        return businessTransactionRecordList;
+    }
+
+    /**
+     * This method returns a <code>List<String></code> with the parameter in the arguments.
+     * @param key
+     * @param keyColumn
+     * @param valueColumn
+     * @return
+     */
+    private List<String> getStringList(
+            String key,
+            String keyColumn,
+            String valueColumn) throws CantGetContractListException {
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            List<String> contractHashList=new ArrayList<>();
+            String contractHash;
+            databaseTable.addStringFilter(
+                    keyColumn,
+                    key,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //There is no records in database, I'll return an empty list.
+                return contractHashList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                contractHash=databaseTableRecord.getStringValue(valueColumn);
+                contractHashList.add(contractHash);
+            }
+            return contractHashList;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetContractListException(e,
+                    "Getting "+valueColumn+" based on "+key,
+                    "Cannot load the table into memory");
+        }
+    }
+
+    /**
+     * This method returns the BusinessTransactionRecord from a given contractHashId.
+     * The BusinessTransactionRecord contains all the Submit Online Merchandise table record.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public BusinessTransactionRecord getCustomerOnlinePaymentRecord(String contractHash)
+            throws
+            UnexpectedResultReturnedFromDatabaseException {
+
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            ContractTransactionStatus contractTransactionStatus;
+            CryptoAddress brokerCryptoAddress;
+            String cryptoAddressString;
+            BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
+            databaseTable.addStringFilter(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record = records.get(0);
+            businessTransactionRecord.setBrokerPublicKey(
+                    record.getStringValue(
+                            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                                    SUBMIT_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
+            businessTransactionRecord.setContractHash(record.getStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
+            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+            businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
+            businessTransactionRecord.setCustomerPublicKey(
+                    record.getStringValue(
+                            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                                    SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+            businessTransactionRecord.setTransactionHash(contractHash);
+            businessTransactionRecord.setTransactionId(
+                    record.getStringValue(
+                            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                                    SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
+            cryptoAddressString=record.getStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME);
+            //I going to set the money as bitcoin in this version
+            brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
+            businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+            businessTransactionRecord.setCryptoWalletPublicKey(
+                    record.getStringValue(
+                            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                                    SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME));
+            businessTransactionRecord.setCryptoAmount(
+                    record.getLongValue(
+                            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                                    SUBMIT_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME));
+            businessTransactionRecord.setCBPWalletPublicKey(
+                    record.getStringValue(
+                            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                                    SUBMIT_ONLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME
+                    )
+            );
+            return businessTransactionRecord;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Invalid parameter in ContractTransactionStatus");
+        }
+
+    }
+
 
 }

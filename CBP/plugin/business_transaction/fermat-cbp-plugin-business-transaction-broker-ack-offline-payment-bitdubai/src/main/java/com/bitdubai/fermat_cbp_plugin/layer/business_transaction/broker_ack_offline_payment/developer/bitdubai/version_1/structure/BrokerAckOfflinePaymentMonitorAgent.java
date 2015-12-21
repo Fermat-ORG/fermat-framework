@@ -30,7 +30,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
@@ -253,7 +253,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         pluginId,
                         database);
 
-                CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+                BusinessTransactionRecord businessTransactionRecord;
                 String contractHash;
 
                 /**
@@ -261,9 +261,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                  * The status to verify is PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION, it represents that the payment is
                  * acknowledge by the broker.
                  */
-                List<CustomerOnlinePaymentRecord> pendingToSubmitNotificationList=
+                List<BusinessTransactionRecord> pendingToSubmitNotificationList=
                         brokerAckOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOnlinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+                for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotificationToCryptoCustomer(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
@@ -281,9 +281,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 /**
                  * Check pending notifications - Customer side
                  */
-                List<CustomerOnlinePaymentRecord> pendingToSubmitConfirmationList=
+                List<BusinessTransactionRecord> pendingToSubmitConfirmationList=
                         brokerAckOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOnlinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+                for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
@@ -349,7 +349,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
-                CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+                BusinessTransactionRecord businessTransactionRecord;
                 if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
                     //This will happen in customer side
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
@@ -386,12 +386,12 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         businessTransactionMetadata=record.getInformation();
                         contractHash=businessTransactionMetadata.getContractHash();
                         if(brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            customerOnlinePaymentRecord=
+                            businessTransactionRecord =
                                     brokerAckOfflinePaymentBusinessTransactionDao.
                                             getCustomerOnlinePaymentRecordByContractHash(contractHash);
-                            contractTransactionStatus=customerOnlinePaymentRecord.getContractTransactionStatus();
+                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
                             if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_ACK.getCode())){
-                                customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT);
+                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT);
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PENDING_MERCHANDISE);

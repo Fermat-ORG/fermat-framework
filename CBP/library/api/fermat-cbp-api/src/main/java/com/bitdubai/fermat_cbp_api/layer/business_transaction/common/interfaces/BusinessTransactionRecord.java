@@ -7,11 +7,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 
 /**
+ * This class represents the Contract Basic information persisted in Business Transactions plugins database.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
  */
-public class CustomerOnlinePaymentRecord {
+public class BusinessTransactionRecord {
 
     private String brokerPublicKey;
+
+    private String cbpWalletPublicKey;
 
     private String contractHash;
 
@@ -31,41 +34,23 @@ public class CustomerOnlinePaymentRecord {
 
     private String transactionId;
 
-    private String walletPublicKey;
+    private String cryptoWalletPublicKey;
 
     //Offline fields
+    private FiatCurrency currencyType;
+
     private long paymentAmount;
 
     private CurrencyType paymentType;
 
-    private FiatCurrency currencyType;
-
-    public long getPaymentAmount() {
-        return paymentAmount;
-    }
-
-    public void setPaymentAmount(long paymentAmount) {
-        this.paymentAmount = paymentAmount;
-    }
-
-    public CurrencyType getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(CurrencyType paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    public FiatCurrency getCurrencyType() {
-        return currencyType;
-    }
-
-    public void setCurrencyType(FiatCurrency currencyType) {
-        this.currencyType = currencyType;
-    }
+    //Getters
 
     public String getBrokerPublicKey() {
         return brokerPublicKey;
+    }
+
+    public String getCBPWalletPublicKey(){
+        return cbpWalletPublicKey;
     }
 
     public String getContractHash() {
@@ -88,8 +73,20 @@ public class CustomerOnlinePaymentRecord {
         return cryptoStatus;
     }
 
+    public FiatCurrency getCurrencyType() {
+        return currencyType;
+    }
+
     public String getCustomerPublicKey() {
         return customerPublicKey;
+    }
+
+    public long getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public CurrencyType getPaymentType() {
+        return paymentType;
     }
 
     public long getTimestamp() {
@@ -104,13 +101,20 @@ public class CustomerOnlinePaymentRecord {
         return transactionId;
     }
 
-    public String getWalletPublicKey() {
-        return walletPublicKey;
+    public String getCryptoWalletPublicKey() {
+        return cryptoWalletPublicKey;
     }
+
+    //Setters
 
     public void setBrokerPublicKey(String brokerPublicKey) {
         this.brokerPublicKey = brokerPublicKey;
     }
+
+    public void setCBPWalletPublicKey(String cbpWalletPublicKey){
+        this.cbpWalletPublicKey = cbpWalletPublicKey;
+    }
+
 
     public void setContractHash(String contractHash) {
         this.contractHash = contractHash;
@@ -132,8 +136,20 @@ public class CustomerOnlinePaymentRecord {
         this.cryptoStatus = cryptoStatus;
     }
 
+    public void setCurrencyType(FiatCurrency currencyType) {
+        this.currencyType = currencyType;
+    }
+
     public void setCustomerPublicKey(String customerPublicKey) {
         this.customerPublicKey = customerPublicKey;
+    }
+
+    public void setPaymentAmount(long paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public void setPaymentType(CurrencyType paymentType) {
+        this.paymentType = paymentType;
     }
 
     public void setTimestamp(long timestamp) {
@@ -148,14 +164,15 @@ public class CustomerOnlinePaymentRecord {
         this.transactionId = transactionId;
     }
 
-    public void setWalletPublicKey(String walletPublicKey) {
-        this.walletPublicKey = walletPublicKey;
+    public void setCryptoWalletPublicKey(String cryptoWalletPublicKey) {
+        this.cryptoWalletPublicKey = cryptoWalletPublicKey;
     }
 
     @Override
     public String toString() {
-        return "CustomerOnlinePaymentRecord{" +
+        return "BusinessTransactionRecord{" +
                 "brokerPublicKey='" + brokerPublicKey + '\'' +
+                ", cbpWalletPublicKey='" + cbpWalletPublicKey + '\'' +
                 ", contractHash='" + contractHash + '\'' +
                 ", contractTransactionStatus=" + contractTransactionStatus +
                 ", cryptoAddress=" + cryptoAddress +
@@ -165,10 +182,10 @@ public class CustomerOnlinePaymentRecord {
                 ", timestamp=" + timestamp +
                 ", transactionHash='" + transactionHash + '\'' +
                 ", transactionId='" + transactionId + '\'' +
-                ", walletPublicKey='" + walletPublicKey + '\'' +
+                ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' +
+                ", currencyType=" + currencyType +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +
-                ", currencyType=" + currencyType +
                 '}';
     }
 }

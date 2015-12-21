@@ -14,10 +14,11 @@ public interface BrokerSubmitMerchandiseManager extends FermatManager {
 
     /**
      * This method send a payment according the contract elements.
+     * @param cbpWalletPublicKey
+     * @param cryptoWalletPublicKey
      * @param contractHash
-     * @throws CantSubmitMerchandiseException
      */
-    void submitMerchandise(String walletPublicKey, String contractHash)throws CantSubmitMerchandiseException;
+    void submitMerchandise(String cbpWalletPublicKey, String cryptoWalletPublicKey, String contractHash)throws CantSubmitMerchandiseException;
 
     /**
      * This method returns the ContractTransactionStatus by contractHash
