@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.int
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
@@ -131,6 +133,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
         private BigDecimal priceReference = null;
         private BigDecimal amount         = null;
         private String bankAccount        = null;
+        private FiatCurrency fiatCurrency = null;
         CustomerBrokerSaleImpl customerBrokerSale = null;
         //UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 
@@ -215,7 +218,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                             long timeStampToday =  ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
                             if (timeStampToday <= DELAY_HOURS)
                             {
-
+                                customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             }
                         }
                     }
@@ -269,6 +272,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                     {
                                         bankAccount = clause.getValue();
                                     }
+                                    if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY.getCode())
+                                    {
+                                        fiatCurrency = FiatCurrency.valueOf(clause.getValue());
+                                    }
                                 }
                                 if (sw == 1) {
                                     cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
@@ -283,7 +290,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                 //
                                 if (sw == 2) {
                                     bankMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                            FiatCurrency.US_DOLLAR,
+                                            fiatCurrency,
                                             "walletPublicKey",
                                             "walletPublicKey",
                                             bankAccount,
@@ -295,7 +302,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                 //
                                 if (sw == 3) {
                                     cashMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                            FiatCurrency.US_DOLLAR,
+                                            fiatCurrency,
                                             "walletPublicKey",
                                             "walletPublicKey",
                                             "cashReference",
@@ -332,7 +339,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                             long timeStampToday =  ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
                             if (timeStampToday <= DELAY_HOURS)
                             {
-
+                                customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             }
                         }
                     }
@@ -397,6 +404,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantGetListClauseException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantupdateCustomerBrokerContractSaleException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
             }
         }
 
