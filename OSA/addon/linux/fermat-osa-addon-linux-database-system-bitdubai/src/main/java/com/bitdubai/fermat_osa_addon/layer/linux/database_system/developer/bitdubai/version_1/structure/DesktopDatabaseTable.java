@@ -90,7 +90,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
      *
      * @return DatabaseTableColumn object
      */
-    @Override
+
     public DatabaseTableColumn newColumn(){
         return new DesktopDatabaseTableColumn();
     }
@@ -170,7 +170,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
      *
      * @return List<DatabaseTableFilter> object
      */
-    @Override
+
     public List<DatabaseTableFilter> getFilters()
     {
         return this.tableFilter;
@@ -181,7 +181,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
      *
      * @return DatabaseTableFilterGroup object
      */
-    @Override
+
     public DatabaseTableFilterGroup getFilterGroup()
     {
         return this.tableFilterGroup;
@@ -359,7 +359,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
      * @param value value to filter
      * @param type DatabaseFilterType object
      */
-    @Override
+
     public void setStringFilter(String columName, String value,DatabaseFilterType type){
 
         if(this.tableFilter == null)
@@ -374,7 +374,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
         this.tableFilter.add(filter);
     }
 
-    @Override
+
     public void setFermatEnumFilter(String columnName, FermatEnum value, DatabaseFilterType type) {
 
     }
@@ -391,7 +391,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
      * @param value value to filter
      * @param type DatabaseFilterType object
      */
-    @Override
+
     public void setUUIDFilter(String columName, UUID value,DatabaseFilterType type){
 
         if(this.tableFilter == null)
@@ -413,16 +413,16 @@ public class DesktopDatabaseTable implements  DatabaseTable{
      * @param columnName    Name of the column to sort
      * @param direction  DatabaseFilterOrder object
      */
-    @Override
+
     public void setFilterOrder(String columnName, DatabaseFilterOrder direction){
 
         if(this.tableOrder == null)
             this.tableOrder = new ArrayList<DataBaseTableOrder>();
 
-        DataBaseTableOrder order = new DesktopDatabaseTableOrder();
+        DataBaseTableOrder order = new DesktopDatabaseTableOrder(columnName,direction);
 
-        order.setColumName(columnName);
-        order.setDirection(direction);
+       // order.setColumName(columnName);
+        //order.setDirection(direction);
 
 
         this.tableOrder.add(order);
@@ -444,6 +444,31 @@ public class DesktopDatabaseTable implements  DatabaseTable{
     }
 
     @Override
+    public void addStringFilter(String columnName, String value, DatabaseFilterType type) {
+
+    }
+
+    @Override
+    public void addFermatEnumFilter(String columnName, FermatEnum value, DatabaseFilterType type) {
+
+    }
+
+    @Override
+    public void addFilterOrder(String columnName, DatabaseFilterOrder direction) {
+
+    }
+
+    @Override
+    public void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type) {
+
+    }
+
+    @Override
+    public void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
+
+    }
+
+
     public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
 
         if (this.tableSelectOperator == null)
@@ -551,33 +576,32 @@ public class DesktopDatabaseTable implements  DatabaseTable{
 
         // I check the definition for the oder object, order direction, order columns names
         // and build the ORDER BY statement
-        String order= "";
-        StringBuffer strOrder = new StringBuffer();
+        String order;
+        StringBuilder strOrder = new StringBuilder();
 
-        if(this.tableOrder != null)
-        {
+        if (this.tableOrder != null) {
             for (int i = 0; i < tableOrder.size(); ++i) {
 
                 switch (tableOrder.get(i).getDirection()) {
                     case DESCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName() + " DESC ");
+                        strOrder.append(tableOrder.get(i).getColumnName())
+                                .append(" DESC ");
                         break;
                     case ASCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName());
+                        strOrder.append(tableOrder.get(i).getColumnName());
                         break;
                     default:
                         strOrder.append(" ");
                         break;
 
                 }
-                if(i < tableOrder.size()-1)
+                if (i < tableOrder.size() - 1)
                     strOrder.append(" , ");
-
             }
         }
 
         order = strOrder.toString();
-        if(strOrder.length() > 0 ) order = " ORDER BY " + order;
+        if (strOrder.length() > 0) order = " ORDER BY " + order;
 
         return order;
     }
@@ -585,22 +609,51 @@ public class DesktopDatabaseTable implements  DatabaseTable{
 
     private String makeInternalCondition(DatabaseTableFilter filter){
 
-        StringBuffer strFilter = new StringBuffer();
+        StringBuilder strFilter = new StringBuilder();
 
         strFilter.append(filter.getColumn());
 
         switch (filter.getType()) {
             case EQUAL:
-                strFilter.append(" ='" + filter.getValue() + "'");
+                strFilter.append(" ='")
+                        .append(filter.getValue())
+                        .append("'");
+                break;
+            case NOT_EQUALS:
+                strFilter.append(" <> '")
+                        .append(filter.getValue())
+                        .append("'");
+                break;
+            case GREATER_OR_EQUAL_THAN:
+                strFilter.append(" >= ")
+                        .append(filter.getValue());
                 break;
             case GREATER_THAN:
-                strFilter.append(" > " + filter.getValue());
+                strFilter.append(" > ")
+                        .append(filter.getValue());
+                break;
+            case LESS_OR_EQUAL_THAN:
+                strFilter.append(" <= ")
+                        .append(filter.getValue());
                 break;
             case LESS_THAN:
-                strFilter.append(" < " + filter.getValue());
+                strFilter.append(" < ")
+                        .append(filter.getValue());
                 break;
             case LIKE:
-                strFilter.append(" Like '%" + filter.getValue() + "%'");
+                strFilter.append(" Like '%")
+                        .append(filter.getValue())
+                        .append("%'");
+                break;
+            case STARTS_WITH:
+                strFilter.append(" Like '")
+                        .append(filter.getValue())
+                        .append("%'");
+                break;
+            case ENDS_WITH:
+                strFilter.append(" Like '%")
+                        .append(filter.getValue())
+                        .append("'");
                 break;
             default:
                 strFilter.append(" ");
