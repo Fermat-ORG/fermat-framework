@@ -3,14 +3,13 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDraw
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -20,7 +19,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 /**
  * Created by mati on 2015.11.24..
  */
-public class CryptoBrokerNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter {
 
     private final ActorIdentity actorIdentity;
     private Activity activity;
@@ -43,7 +42,7 @@ public class CryptoBrokerNavigationViewPainter implements com.bitdubai.fermat_an
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new NavigationViewAdapter(activity);
+            return new CryptoBrokerNavigationViewAdapter(activity);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,8 +62,8 @@ public class CryptoBrokerNavigationViewPainter implements com.bitdubai.fermat_an
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.cbw_navigation_drawer_background,options);
-        }catch (OutOfMemoryError error){
+                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
+        } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
         return drawable;
@@ -72,7 +71,7 @@ public class CryptoBrokerNavigationViewPainter implements com.bitdubai.fermat_an
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.parseColor("#1375a7");
+        return 0;
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantRegisterCustomerBrokerNewNegotiationTransactionException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T REGISTER CRYPTO CUSTOMER ACTOR";
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER NEW. CAN'T REGISTER CRYPTO CUSTOMER ACTOR";
 
     /**
      * This is the constructor that every inherited FermatException must implement
