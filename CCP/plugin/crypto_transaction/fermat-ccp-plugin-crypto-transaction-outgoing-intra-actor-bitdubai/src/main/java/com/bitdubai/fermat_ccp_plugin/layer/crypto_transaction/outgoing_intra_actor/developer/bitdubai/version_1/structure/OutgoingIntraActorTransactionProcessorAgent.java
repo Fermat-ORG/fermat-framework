@@ -234,6 +234,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                             System.out.print("Debit new transaction.");
                         } else {
                             dao.cancelTransaction(transaction);
+                            roolback(transaction);
                             // TODO: Lanzar un evento de fondos insuficientes
                             System.out.print("fondos insuficientes");
                         }

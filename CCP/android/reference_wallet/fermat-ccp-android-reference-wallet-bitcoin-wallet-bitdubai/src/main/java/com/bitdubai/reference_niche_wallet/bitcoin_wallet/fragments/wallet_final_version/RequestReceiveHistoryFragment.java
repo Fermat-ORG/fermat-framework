@@ -214,7 +214,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     @Override
     public void onItemClickListener(PaymentRequest item, int position) {
         selectedItem = item;
-
+        onRefresh();
         //showDetailsActivityFragment(selectedItem);
     }
 
