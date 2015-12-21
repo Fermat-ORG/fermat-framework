@@ -1,14 +1,12 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTable;
 
 import android.app.Activity;
-import android.content.Context;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseAggregateFunctionType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
@@ -30,7 +28,6 @@ import java.util.UUID;
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
@@ -123,9 +120,9 @@ public class GetterTest {
     @Test
     public void getTableSelectOperatorTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        testDatabaseTable.addSelectOperator("testColumn1", DataBaseSelectOperatorType.SUM, "total");
+        testDatabaseTable.addAggregateFunction("testColumn1", DataBaseAggregateFunctionType.SUM, "total");
 
-        assertThat(testDatabaseTable.getTableSelectOperator()).isInstanceOf(List.class);
+        assertThat(testDatabaseTable.getTableAggregateFunction()).isInstanceOf(List.class);
 
     }
 

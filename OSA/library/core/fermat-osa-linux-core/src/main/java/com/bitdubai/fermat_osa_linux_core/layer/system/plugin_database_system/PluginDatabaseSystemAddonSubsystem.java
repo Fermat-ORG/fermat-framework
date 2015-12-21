@@ -4,6 +4,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.PluginDatabaseSystemDeveloperBitDubai;
 
 /**
  *  Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
@@ -20,7 +21,7 @@ public class PluginDatabaseSystemAddonSubsystem extends AbstractAddonSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-           // registerDeveloper(new DeveloperBitDubai());
+           registerDeveloper(new PluginDatabaseSystemDeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

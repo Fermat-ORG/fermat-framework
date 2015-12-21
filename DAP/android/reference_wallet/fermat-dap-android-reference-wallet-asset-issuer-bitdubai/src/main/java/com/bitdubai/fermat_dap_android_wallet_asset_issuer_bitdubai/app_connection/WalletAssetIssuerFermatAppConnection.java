@@ -27,7 +27,7 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections {
 
     IdentityAssetIssuer identityAssetIssuer;
 
-    public WalletAssetIssuerFermatAppConnection(Activity activity, IdentityAssetIssuer identityAssetIssuer) {
+    public WalletAssetIssuerFermatAppConnection(Activity activity) {
         super(activity);
         this.identityAssetIssuer = identityAssetIssuer;
     }

@@ -56,7 +56,7 @@ public interface DatabaseTable {
 
     void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type);
 
-    void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
+    void addAggregateFunction(String columnName, DataBaseAggregateFunctionType operator, String alias);
 
     void setFilterGroup(DatabaseTableFilterGroup filterGroup);
 
@@ -70,6 +70,6 @@ public interface DatabaseTable {
     // todo try to substract this method from here, they don't belong
     String makeFilter();
     String getTableName();
-    List<DatabaseSelectOperator> getTableSelectOperator();
+    List<DatabaseAggregateFunction> getTableAggregateFunction();
 
 }

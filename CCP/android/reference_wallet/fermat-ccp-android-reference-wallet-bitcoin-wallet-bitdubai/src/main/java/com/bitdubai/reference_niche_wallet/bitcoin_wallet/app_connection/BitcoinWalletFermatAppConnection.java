@@ -25,11 +25,9 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
  */
 public class BitcoinWalletFermatAppConnection extends AppConnections{
 
-    IntraUserLoginIdentity intraUserLoginIdentity;
 
-    public BitcoinWalletFermatAppConnection(Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) {
+    public BitcoinWalletFermatAppConnection(Activity activity) {
         super(activity);
-        this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new BitcoinWalletNavigationViewPainter(getActivity(),intraUserLoginIdentity);
+        return new BitcoinWalletNavigationViewPainter(getActivity(),getActiveIdentity());
     }
 
     @Override
