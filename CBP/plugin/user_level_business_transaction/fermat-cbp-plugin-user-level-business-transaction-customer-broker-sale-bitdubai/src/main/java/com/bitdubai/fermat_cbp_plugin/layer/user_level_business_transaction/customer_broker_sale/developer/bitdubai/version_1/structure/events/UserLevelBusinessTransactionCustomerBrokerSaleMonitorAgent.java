@@ -76,6 +76,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
     private final BankMoneyRestockManager bankMoneyRestockManager;
     private final CashMoneyRestockManager cashMoneyRestockManager;
     private final CryptoMoneyRestockManager cryptoMoneyRestockManager;
+    private CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread;
+    private CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
                                                                       CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
@@ -102,6 +104,15 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
         this.cryptoMoneyRestockManager                                 = cryptoMoneyRestockManager;
 
         this.userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao(pluginDatabaseSystem, pluginId);
+        try {
+            //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
+            this.cryptoBrokerWalletSettingSpread     = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
+            this.cryptoBrokerWalletAssociatedSetting = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0);
+        } catch (CantGetCryptoBrokerWalletSettingException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CryptoBrokerWalletNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -170,9 +181,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
 
         private void doTheMainTask(){
             try {
-                CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
-                //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
-                CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0);
                 //Se verifica el cierre de la negociacion
                 for (CustomerBrokerSaleNegotiation records : customerBrokerSaleNegotiationManager.getNegotiationsByStatus(NegotiationStatus.CLOSED))
                 {
@@ -391,10 +399,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
             } catch (CantCloseContractException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantGetIndexException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantGetCryptoBrokerWalletSettingException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CryptoBrokerWalletNotFoundException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantCreateCryptoMoneyRestockException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
