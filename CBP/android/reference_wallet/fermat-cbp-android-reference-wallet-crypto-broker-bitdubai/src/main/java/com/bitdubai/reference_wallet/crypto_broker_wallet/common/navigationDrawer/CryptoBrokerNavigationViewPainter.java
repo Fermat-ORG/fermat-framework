@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -30,7 +31,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     }
 
     @Override
-    public View addNavigationViewHeader() {
+    public View addNavigationViewHeader(ActiveIdentity intraUserLoginIdentity) {
         try {
             return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
