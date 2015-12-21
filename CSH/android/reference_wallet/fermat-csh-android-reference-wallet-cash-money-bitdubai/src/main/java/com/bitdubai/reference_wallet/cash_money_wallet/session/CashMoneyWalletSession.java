@@ -15,107 +15,17 @@ import java.util.Map;
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class CashMoneyWalletSession extends AbstractFermatSession<InstalledWallet,CashMoneyWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
-    InstalledWallet wallet;
+public class CashMoneyWalletSession extends AbstractFermatSession<InstalledWallet,CashMoneyWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
 
-    /**
-     * Active objects in wallet session
-     */
-    Map<String, Object> data;
-
-    /**
-     * Wallet Resources
-     */
-    private WalletResourcesProviderManager resourcesProviderManager;
-
-    /**
-     * Error manager
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * Wallet Store Module
-     */
-    private CashMoneyWalletModuleManager moduleManager;
-
-    public CashMoneyWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager resourcesProviderManager, CashMoneyWalletModuleManager moduleManager) {
-        super(wallet.getWalletPublicKey(), wallet, errorManager, moduleManager, resourcesProviderManager);
-        this.wallet = wallet;
-        data = new HashMap<>();
-        this.resourcesProviderManager = resourcesProviderManager;
-        this.errorManager = errorManager;
-        this.moduleManager = moduleManager;
-    }
-
-    /**
-     * Store any data you need to hold between the fragments of the sub app
-     *
-     * @param key    key to reference the object
-     * @param object the object yo want to store
-     */
-    @Override
-    public void setData(String key, Object object) {
-        data.put(key, object);
-    }
-
-    @Override
-    public String getIdentityConnection() {
-        return null;
-    }
-
-    /**
-     * Return the data referenced by the key
-     *
-     * @param key the key to access de data
-     * @return the data you want
-     */
-    @Override
-    public Object getData(String key) {
-        return data.get(key);
-    }
-
-
-    /**
-     * Return the Error Manager
-     *
-     * @return reference to the Error Manager
-     */
-    @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
+    public CashMoneyWalletSession() {}
 
     @Override
     public WalletSettings getWalletSettings() {
         return new CashMoneyWalletPreferenceSettings();
     }
 
-    /**
-     * Return the Wallet Store Module
-     *
-     * @return reference to the Wallet Store Module
-     */
-    public CashMoneyWalletModuleManager getModuleManager() {
-        return moduleManager;
-    }
-
-    public WalletResourcesProviderManager getResourcesProviderManager() {
-        return resourcesProviderManager;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CashMoneyWalletSession that = (CashMoneyWalletSession) o;
-
-        return wallet == that.wallet;
-    }
-
-    @Override
-    public int hashCode() {
-        return wallet.hashCode();
+    public String getIdentityConnection() {
+        return null;
     }
 }

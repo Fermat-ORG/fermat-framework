@@ -33,15 +33,20 @@ public interface CustomerBrokerUpdateManager {
     void createCustomerBrokerUpdateSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
 
     /**
-     * Cancel the given Negotiation, indicating the reason why
+     * Create an Cancel Negotiation Transaction for the customer
      *
-     * @param negotiationId      the negotiation ID
-     * @param cancellationReason the reason of the cancellation
+     * @param customerBrokerPurchaseNegotiation the cancel negotiation
      * @throws CantCancelNegotiationException
      */
-    void cancelNegotiation(UUID negotiationId, String cancellationReason) throws CantCancelNegotiationException;
+    void cancelNegotiation(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCancelNegotiationException;
 
-    //GET THE NEW NEGOTIATION TRANSACTION FOR THE INDICATE ID
+    /**
+     * Create an Cancel Negotiation Transaction for the broker
+     *
+     * @param customerBrokerSaleNegotiation the cancel negotiation
+     * @throws CantCancelNegotiationException
+     */
+    void cancelNegotiation(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCancelNegotiationException;
 
     /**
      * Get the Update Negotiation Transaction data for the given transaction ID

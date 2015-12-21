@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.structure.DesktopPluginFileSystem;
+import com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.structure.LinuxPluginFileSystem;
 
 /**
  * This addon handles a layer of file representation.
@@ -30,7 +30,7 @@ public class PluginFileSystemLinuxAddonRoot extends AbstractAddon {
 
         try {
 
-            fermatManager = new DesktopPluginFileSystem();
+            fermatManager = new LinuxPluginFileSystem();
 
             super.start();
 

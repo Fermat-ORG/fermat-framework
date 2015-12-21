@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
-import com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.structure.DesktopPlatformFileSystem;
+import com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.structure.LinuxPlatformFileSystem;
 
 /**
  * This addon handles a layer of file representation.
@@ -33,7 +33,7 @@ public class PlatformFileSystemLinuxAddonRoot extends AbstractAddon {
 
         try {
 
-            fermatManager = new DesktopPlatformFileSystem();
+            fermatManager = new LinuxPlatformFileSystem();
 
             super.start();
 

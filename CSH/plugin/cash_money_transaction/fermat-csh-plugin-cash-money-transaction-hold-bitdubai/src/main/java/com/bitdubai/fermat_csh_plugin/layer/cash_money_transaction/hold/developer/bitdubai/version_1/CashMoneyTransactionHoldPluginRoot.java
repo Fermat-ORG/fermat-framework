@@ -83,8 +83,8 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
     private void testCreateCashHoldTransaction() {
         //System.out.println("CASHHOLD - testCreateCashHoldTransaction CALLED");
 
-        CashHoldTransactionParameters params = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(20), FiatCurrency.US_DOLLAR, "testHold 20USD");
-        CashHoldTransactionParameters params2 = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActor", "pkeyPlugin", new BigDecimal(50), FiatCurrency.US_DOLLAR, "testHold 50USD");
+        CashHoldTransactionParameters params = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(20), FiatCurrency.US_DOLLAR, "testHold 20USD");
+        CashHoldTransactionParameters params2 = new CashHoldTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(50), FiatCurrency.US_DOLLAR, "testHold 50USD");
 
         try {
             this.createCashHoldTransaction(params);
