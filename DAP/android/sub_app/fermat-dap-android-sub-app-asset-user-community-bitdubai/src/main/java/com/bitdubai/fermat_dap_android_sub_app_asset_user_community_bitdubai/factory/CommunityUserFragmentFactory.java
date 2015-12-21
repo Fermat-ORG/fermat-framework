@@ -11,7 +11,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 /**
  * CommunityUserFragmentFactory
  */
-public class CommunityUserFragmentFactory extends FermatFragmentFactory<AssetUserCommunitySubAppSession, Settings, SubAppResourcesProviderManager, FragmentFactoryEnumType> {
+public class CommunityUserFragmentFactory extends FermatFragmentFactory<AssetUserCommunitySubAppSession, SubAppResourcesProviderManager, FragmentFactoryEnumType> {
 
 
     @Override

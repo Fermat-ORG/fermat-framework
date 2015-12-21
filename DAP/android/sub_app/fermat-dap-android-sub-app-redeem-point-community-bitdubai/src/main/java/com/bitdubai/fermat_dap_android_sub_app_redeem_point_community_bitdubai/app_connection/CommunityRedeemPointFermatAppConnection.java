@@ -16,8 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.factory.AssetRedeemPointCommunityFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
-import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.settings.Settings;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -47,11 +45,6 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections{
     @Override
     public AbstractFermatSession getSession() {
         return new AssetRedeemPointCommunitySubAppSession();
-    }
-
-    @Override
-    public FermatSettings getSettings() {
-        return new Settings();
     }
 
     @Override

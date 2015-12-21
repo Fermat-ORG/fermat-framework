@@ -1,9 +1,16 @@
 package com.bitdubai.sub_app.wallet_store.fragmentFactory;
 
+import android.app.Fragment;
+
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.wallet_store.fragments.DetailsActivityFragment;
 import com.bitdubai.sub_app.wallet_store.fragments.MainActivityFragment;
 import com.bitdubai.sub_app.wallet_store.fragments.MoreDetailsActivityFragment;
@@ -17,8 +24,7 @@ import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragm
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class WalletStoreFragmentFactory extends FermatSubAppFragmentFactory<WalletStoreSubAppSession, WalletStorePreferenceSettings, WalletStoreFragmentsEnumType> {
-
+public class WalletStoreFragmentFactory extends FermatFragmentFactory<WalletStoreSubAppSession, SubAppResourcesProviderManager, WalletStoreFragmentsEnumType> {
 
     @Override
     public FermatFragment getFermatFragment(WalletStoreFragmentsEnumType fragments) throws FragmentNotFoundException {

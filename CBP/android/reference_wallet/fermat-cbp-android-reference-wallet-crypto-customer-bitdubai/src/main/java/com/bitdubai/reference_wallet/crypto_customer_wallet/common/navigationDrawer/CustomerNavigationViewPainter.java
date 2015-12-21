@@ -3,8 +3,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDr
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -32,7 +32,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     }
 
     @Override
-    public View addNavigationViewHeader() {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
             return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
@@ -44,7 +44,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new NavigationViewAdapter(activity);
+            return new CryptoCustomerWalletNavigationViewAdapter(activity);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +53,11 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        return (RelativeLayout) layoutInflater.inflate(R.layout.ccw_navigation_view_bottom, base, true);
+        RelativeLayout layout = (RelativeLayout) layoutInflater.inflate(R.layout.ccw_navigation_view_bottom, base, true);
+        FermatTextView bitcoinBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_bitcoin_balance);
+        bitcoinBalance.setText("0.3521 BTC");
+
+        return layout;
     }
 
     @Override
@@ -64,8 +68,8 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.ccw_navigation_drawer_background,options);
-        }catch (OutOfMemoryError error){
+                    activity.getResources(), R.drawable.ccw_navigation_drawer_background, options);
+        } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
         return drawable;
@@ -73,7 +77,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return 0;
     }
 
     @Override

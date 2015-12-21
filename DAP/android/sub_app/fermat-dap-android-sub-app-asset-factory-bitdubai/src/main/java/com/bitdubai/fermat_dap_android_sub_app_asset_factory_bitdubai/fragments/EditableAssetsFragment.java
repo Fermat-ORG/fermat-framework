@@ -26,7 +26,9 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
@@ -230,7 +232,7 @@ public class EditableAssetsFragment extends FermatFragment implements
         }
     }
 
-    public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException {
+    public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException, FileNotFoundException {
         List<AssetFactory> items = new ArrayList<>();
         List<AssetFactory> draftItems = manager.getAssetFactoryByState(State.DRAFT);
         List<AssetFactory> pendingFinalItems = manager.getAssetFactoryByState(State.PENDING_FINAL);
@@ -238,6 +240,13 @@ public class EditableAssetsFragment extends FermatFragment implements
             items.addAll(draftItems);
         if (pendingFinalItems != null && !pendingFinalItems.isEmpty())
             items.addAll(pendingFinalItems);
+        List<Resource> resources;
+        for(AssetFactory item : items) {
+            resources = item.getResources();
+            for(Resource resource : resources) {
+                resource.setResourceBinayData(manager.getAssetFactoryResource(resource).getContent());
+            }
+        }
         return items;
     }
 

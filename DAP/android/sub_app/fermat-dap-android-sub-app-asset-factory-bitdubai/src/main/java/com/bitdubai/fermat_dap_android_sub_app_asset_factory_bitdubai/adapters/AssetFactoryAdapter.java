@@ -15,6 +15,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.holders.As
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -72,8 +73,14 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
                 holder.itemView.setLongClickable(false);
                 break;
         }
+        List<Resource> resources = data.getResources();
+        if (resources != null && resources.size() > 0) {
+            holder.thumbnail.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(resources.get(0).getResourceBinayData())));
+        } else {
+            holder.thumbnail.setImageResource(R.drawable.img_asset_image);
+        }
         // loading image resource in background
-        new FermatWorker((android.app.Activity) context, new FermatWorkerCallBack() {
+        /*new FermatWorker((android.app.Activity) context, new FermatWorkerCallBack() {
             @Override
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
@@ -105,7 +112,7 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
                 }
                 return drawable;
             }
-        }.execute();
+        }.execute();*/
     }
 
     private void renderPendingFinal(AssetHolder holder, AssetFactory data, int position) {

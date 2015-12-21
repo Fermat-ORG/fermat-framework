@@ -234,7 +234,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/bitcoin_wallet_2"
+                    android:src="@drawable/intra_user_xxhdpi"
                     android:layout_gravity="center_horizontal" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
@@ -255,7 +255,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_04"
+                    android:src="@drawable/extra_user_xxhdpi"
                     android:layout_gravity="center_horizontal"
                     />
 

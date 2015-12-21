@@ -13,7 +13,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class RedeemPointIdentityFragmentFactory extends FermatFragmentFactory<RedeemPointIdentitySubAppSession, RedeemPointIdentitySubAppSettings, SubAppResourcesProviderManager, RedeemPointIdentityFragmentEnumType> {
+public class RedeemPointIdentityFragmentFactory extends FermatFragmentFactory<RedeemPointIdentitySubAppSession, SubAppResourcesProviderManager, RedeemPointIdentityFragmentEnumType> {
 
 
     @Override

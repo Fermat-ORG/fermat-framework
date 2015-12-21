@@ -186,11 +186,13 @@
                         android:background="@null"
                         />
 
-                    <ImageView
-                        android:layout_width="match_parent"
+                    <Spinner
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_action_add_to_queue_grey"
-                        android:layout_weight="1"/>
+                        android:id="@+id/spinner"
+                        >
+
+                    </Spinner>
 
                 </LinearLayout>
 

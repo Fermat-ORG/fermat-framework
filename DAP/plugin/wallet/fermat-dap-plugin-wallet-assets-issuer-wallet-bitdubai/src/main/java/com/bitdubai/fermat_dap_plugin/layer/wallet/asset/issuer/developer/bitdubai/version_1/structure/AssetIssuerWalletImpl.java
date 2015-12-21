@@ -110,7 +110,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             assetIssuerWalletDao = new AssetIssuerWalletDao(database);
             assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
             assetIssuerWalletDao.setPlugin(pluginId);
-            test();
+//            test();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {

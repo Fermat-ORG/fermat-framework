@@ -181,7 +181,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
         try {
             if(walletFragmentFactory !=null){
-                currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettings,walletResourcesProviderManager);
+                currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletResourcesProviderManager);
             }
         } catch (FragmentNotFoundException e) {
             e.printStackTrace();
@@ -190,7 +190,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
         try {
             if(subAppFragmentFactory !=null){
-                currentFragment= subAppFragmentFactory.getFragment(fragmentType.getKey(),subAppsSession,subAppSettings,subAppResourcesProviderManager);
+                currentFragment= subAppFragmentFactory.getFragment(fragmentType.getKey(),subAppsSession,subAppResourcesProviderManager);
             }
         } catch (FragmentNotFoundException e) {
             e.printStackTrace();
