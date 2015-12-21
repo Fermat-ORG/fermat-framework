@@ -72,7 +72,7 @@ public class IssuerRedemptionDatabaseFactory implements DealsWithPluginDatabaseS
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME,DatabaseDataType.STRING, 200, Boolean.FALSE);
 
             table.addIndex(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_FIRST_KEY_COLUMN);
 
@@ -85,7 +85,7 @@ public class IssuerRedemptionDatabaseFactory implements DealsWithPluginDatabaseS
 
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
 
-            eventsRecorderTable.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.TRUE);
             eventsRecorderTable.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             eventsRecorderTable.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             eventsRecorderTable.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);

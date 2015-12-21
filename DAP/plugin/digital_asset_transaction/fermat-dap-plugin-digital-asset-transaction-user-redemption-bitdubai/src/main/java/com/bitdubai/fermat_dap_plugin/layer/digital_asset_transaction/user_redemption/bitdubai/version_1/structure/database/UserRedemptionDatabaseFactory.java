@@ -74,7 +74,7 @@ public class UserRedemptionDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_BITCOIN_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
 
             table.addIndex(UserRedemptionDatabaseConstants.USER_REDEMPTION_FIRST_KEY_COLUMN);
 
@@ -87,7 +87,7 @@ public class UserRedemptionDatabaseFactory implements DealsWithPluginDatabaseSys
 
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
 
-            eventsRecorderTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.TRUE);
             eventsRecorderTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             eventsRecorderTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             eventsRecorderTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
@@ -108,7 +108,7 @@ public class UserRedemptionDatabaseFactory implements DealsWithPluginDatabaseSys
             assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            assetDeliveringTable.addColumn(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
 
             assetDeliveringTable.addIndex(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_FIRST_KEY_COLUMN);
 

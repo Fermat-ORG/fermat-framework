@@ -58,7 +58,7 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
              */
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
 
-            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.TRUE);
             eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
@@ -78,7 +78,7 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
              */
             DatabaseTableFactory metadataTable = databaseFactory.newTableFactory(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
 
-            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_FIRST_KEY_COLUMN, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_FIRST_KEY_COLUMN, DatabaseDataType.STRING, 200, Boolean.TRUE);
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);

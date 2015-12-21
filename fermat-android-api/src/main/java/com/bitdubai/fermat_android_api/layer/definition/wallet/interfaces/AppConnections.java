@@ -3,10 +3,9 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 import android.app.Activity;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;

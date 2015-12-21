@@ -74,7 +74,7 @@ public class AssetReceptionDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME,DatabaseDataType.STRING, 200, Boolean.FALSE);
 
             table.addIndex(AssetReceptionDatabaseConstants.ASSET_RECEPTION_FIRST_KEY_COLUMN);
 
@@ -87,7 +87,7 @@ public class AssetReceptionDatabaseFactory implements DealsWithPluginDatabaseSys
 
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TABLE_NAME);
 
-            eventsRecorderTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.TRUE);
             eventsRecorderTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             eventsRecorderTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             eventsRecorderTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
@@ -104,7 +104,7 @@ public class AssetReceptionDatabaseFactory implements DealsWithPluginDatabaseSys
 
             DatabaseTableFactory assetDeliveringTable = databaseFactory.newTableFactory(ownerId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TABLE_NAME);
 
-            assetDeliveringTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            assetDeliveringTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.TRUE);
             assetDeliveringTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             assetDeliveringTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             assetDeliveringTable.addColumn(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);

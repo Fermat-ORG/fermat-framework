@@ -25,7 +25,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/market_rate_container"
             android:layout_toStartOf="@+id/market_rate_container"
-            android:textColor="@color/withe"
+            android:textColor="@color/white"
             tools:text="Buy: Bs 800,00"/>
 
         <LinearLayout
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/withe"
+                android:textColor="@color/white"
                 tools:text="BTC / USD"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -63,7 +63,7 @@
             android:layout_toEndOf="@+id/market_rate_container"
             android:layout_toRightOf="@+id/market_rate_container"
             android:gravity="end"
-            android:textColor="@color/withe"
+            android:textColor="@color/white"
             tools:text="Buy: Bs 840,25"/>
     </RelativeLayout>
 

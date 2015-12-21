@@ -5,13 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
 
 /**
  * Created by Yordin Alayn 10.12.15
  */
-public class IncomingNegotiationTransmissionConfirmResponseEventHandler extends AbstractNegotiationTransactionEventHandler {
+public class IncomingNegotiationTransmissionConfirmResponseEventHandler extends AbstractCustomerBrokerNewEventHandler {
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
