@@ -1,5 +1,5 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
-
+## all links tested-laderuner-
 #Contributing Guide
 
 <br>
@@ -63,7 +63,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 <br>
 ### Adding a New Plug-in
 
-For the details on this process, you can check the [Adding a New Plug-in to Fermat](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.MD) document.
+For the details on this process, you can check the [Adding a New Plug-in to Fermat](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md) document.
 
 <br>
 ### Adding a New Reference Wallet
