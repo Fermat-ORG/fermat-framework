@@ -5,15 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseAggregateFunctionType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggregateFunction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -55,7 +54,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
     private String offset = "";
     private DatabaseTableFilterGroup tableFilterGroup;
 
-    private List<DatabaseSelectOperator> tableSelectOperator;
+    private List<DatabaseAggregateFunction> tableAggregateFunction;
 
     // Public constructor declarations.
 
@@ -230,6 +229,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
     @Override
     public void loadToMemory() throws CantLoadTableToMemoryException {
 
+        if (tableAggregateFunction != null && !tableAggregateFunction.isEmpty()) {
+            for (DatabaseAggregateFunction dso : tableAggregateFunction) {
+                System.out.println(dso);
+            }
+        }
         this.records = new ArrayList<>();
 
         String topSentence = "";
@@ -250,7 +254,9 @@ public class AndroidDatabaseTable implements DatabaseTable {
         try {
             database = this.database.getReadableDatabase();
             List<String> columns = getColumns(database);
-            cursor = database.rawQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+            String queryString = "SELECT *" + makeOutputColumns() + " FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence;
+            System.out.println(queryString);
+            cursor = database.rawQuery(queryString, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
@@ -439,21 +445,21 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * <p>Sets the operator to apply on select statement
      *
      * @param columnName Name of the column to apply operator
-     * @param operator   DataBaseSelectOperatorType type
+     * @param operator   DataBaseAggregateFunctionType type
      */
     @Override
-    public void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
+    public void addAggregateFunction(String columnName, DataBaseAggregateFunctionType operator, String alias) {
 
-        if (this.tableSelectOperator == null)
-            this.tableSelectOperator = new ArrayList<>();
+        if (this.tableAggregateFunction == null)
+            this.tableAggregateFunction = new ArrayList<>();
 
-        DatabaseSelectOperator selectOperator = new AndroidDatabaseSelectOperator(
+        DatabaseAggregateFunction AggregateFunction = new AndroidDatabaseAggregateFunction(
                 columnName,
                 operator,
                 alias
         );
 
-        this.tableSelectOperator.add(selectOperator);
+        this.tableAggregateFunction.add(AggregateFunction);
     }
 
     /**
@@ -551,7 +557,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
-
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
         StringBuilder strFilter = new StringBuilder();
@@ -595,6 +600,22 @@ public class AndroidDatabaseTable implements DatabaseTable {
         return filter;
     }
 
+    public String makeOutputColumns() {
+
+    if (tableAggregateFunction != null) {
+
+        String filter = ", ";
+        for (DatabaseAggregateFunction AggregateFunction : tableAggregateFunction) {
+            filter += AggregateFunction.toSQLQuery() + ", ";
+        }
+
+        return filter.substring(0, filter.length() - 2);
+        }
+
+    else
+        return "";
+    }
+
     @Override
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
         SQLiteDatabase database = null;
@@ -633,7 +654,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
-    //testear haber si funciona así de abstracto o hay que hacerlo más especifico
+    //testear a ver si funciona así de abstracto o hay que hacerlo más especifico
     @Override
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception {
         SQLiteDatabase database = null;
@@ -705,8 +726,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     @Override
-    public List<DatabaseSelectOperator> getTableSelectOperator() {
-        return tableSelectOperator;
+    public List<DatabaseAggregateFunction> getTableAggregateFunction() {
+        return tableAggregateFunction;
     }
 
     @Override
