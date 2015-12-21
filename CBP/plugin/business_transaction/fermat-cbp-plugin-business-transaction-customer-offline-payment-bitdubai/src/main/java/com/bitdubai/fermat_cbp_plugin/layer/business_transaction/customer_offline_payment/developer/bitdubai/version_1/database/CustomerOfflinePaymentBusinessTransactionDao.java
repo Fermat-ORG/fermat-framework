@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -151,7 +150,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseEventsTable();
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
                     DatabaseFilterType.EQUAL);
@@ -179,7 +178,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -199,7 +198,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     }
 
-    public List<String> getPendingToSubmitCryptoList() throws
+    /*public List<String> getPendingToSubmitCryptoList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getStringList(
@@ -220,7 +219,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public List<CustomerOfflinePaymentRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
+        return getCustomerOfflinePaymentRecordList(
                 ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_NOTIFICATION.getCode(),
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
@@ -229,7 +228,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public List<CustomerOfflinePaymentRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
+        return getCustomerOfflinePaymentRecordList(
                 ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION.getCode(),
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
@@ -262,7 +261,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    private List<CustomerOfflinePaymentRecord> getCustomerOnlinePaymentRecordList(
+    private List<CustomerOfflinePaymentRecord> getCustomerOfflinePaymentRecordList(
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
@@ -270,13 +269,13 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                 key,
                 keyColumn,
                 valueColumn);
-        List<CustomerOfflinePaymentRecord> customerOnlinePaymentRecordList=new ArrayList<>();
+        List<CustomerOfflinePaymentRecord> customerOfflinePaymentRecordList=new ArrayList<>();
         CustomerOfflinePaymentRecord customerOnlinePaymentRecord;
         for(String contractHash : pendingContractHash){
-            customerOnlinePaymentRecord=getCustomerOnlinePaymentRecord(contractHash);
-            customerOnlinePaymentRecordList.add(customerOnlinePaymentRecord);
+            customerOnlinePaymentRecord=getCustomerOfflinePaymentRecord(contractHash);
+            customerOfflinePaymentRecordList.add(customerOnlinePaymentRecord);
         }
-        return customerOnlinePaymentRecordList;
+        return customerOfflinePaymentRecordList;
     }
 
     /**
@@ -288,7 +287,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public List<CustomerOfflinePaymentRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
+        return getCustomerOfflinePaymentRecordList(
                 ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED.getCode(),
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
@@ -310,7 +309,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseContractTable();
             List<String> contractHashList=new ArrayList<>();
             String contractHash;
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -356,7 +355,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
@@ -404,10 +403,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase,
-            String brokerCryptoAddress,
-            String walletPublicKey,
-            long cryptoAmount)
+            CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
 
         DatabaseTable databaseTable=getDatabaseContractTable();
@@ -419,16 +415,14 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
         databaseTable.insertRecord(databaseTableRecord);
     }
 
-    public CustomerOfflinePaymentRecord getCustomerOnlinePaymentRecord(String contractHash)
+    public CustomerOfflinePaymentRecord getCustomerOfflinePaymentRecord(String contractHash)
             throws UnexpectedResultReturnedFromDatabaseException {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
-            CryptoAddress brokerCryptoAddress;
-            String cryptoAddressString;
             CustomerOfflinePaymentRecord customerOfflinePaymentRecord=new CustomerOfflinePaymentRecord();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -474,7 +468,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             String contractHash=customerOfflinePaymentRecord.getContractHash();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -602,7 +596,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                 customerBrokerContractPurchase.getPublicKeyBroker());
         record.setStringValue(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_PAYMENT.getCode());
+                ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_NOTIFICATION.getCode());
         return record;
     }
 
@@ -621,7 +615,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -667,7 +661,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
                     DatabaseFilterType.EQUAL);
@@ -689,7 +683,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             CantUpdateRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            databaseTable.setStringFilter(
+            databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
@@ -729,9 +723,15 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
 
         } catch (CantInsertRecordException exception) {
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving new event.",
+                    "Cannot insert a record in Offline Payment database");
         } catch(Exception exception){
-            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+            throw new CantSaveEventException(
+                    FermatException.wrapException(exception),
+                    "Saving new event.",
+                    "Unexpected exception");
         }
     }
     

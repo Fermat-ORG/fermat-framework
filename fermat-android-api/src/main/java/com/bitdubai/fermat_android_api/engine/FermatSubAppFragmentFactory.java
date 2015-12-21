@@ -8,13 +8,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
+import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * Created by mati on 2015.08.24..
  */
-public abstract class FermatSubAppFragmentFactory <S extends SubAppsSession,J extends SubAppSettings,F extends FermatFragmentsEnumType> implements SubAppFragmentFactory<S,J> {
+public abstract class FermatSubAppFragmentFactory <S extends SubAppsSession,F extends FermatFragmentsEnumType> implements SubAppFragmentFactory<S> {
 
     protected FermatFragment fermatFragment;
 
@@ -24,18 +24,16 @@ public abstract class FermatSubAppFragmentFactory <S extends SubAppsSession,J ex
      *
      * @param code                           the reference used to identify the fragment
      * @param subAppsSession
-     * @param subAppSettingsManager
      * @param subAppResourcesProviderManager @return the fragment referenced
      */
     @Override
-    public Fragment getFragment(String code, S subAppsSession, J subAppSettingsManager, SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException {
+    public Fragment getFragment(String code, S subAppsSession, SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException {
 
         F fragments = getFermatFragmentEnumType(code);
 
         fermatFragment = getFermatFragment(fragments);
 
         fermatFragment.setSubAppsSession(subAppsSession);
-        fermatFragment.setAppSettings(subAppSettingsManager);
         fermatFragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
         return fermatFragment;
     }

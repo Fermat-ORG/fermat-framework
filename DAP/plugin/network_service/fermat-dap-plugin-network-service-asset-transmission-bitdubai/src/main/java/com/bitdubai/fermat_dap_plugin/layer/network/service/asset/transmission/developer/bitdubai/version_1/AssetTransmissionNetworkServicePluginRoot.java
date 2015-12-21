@@ -609,8 +609,8 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
     }
 
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String phrase,String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias,phrase, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     @Override
@@ -640,6 +640,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                     constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
                             NetworkServiceType.UNDEFINED,
                             null,                     // alias
+                            null,                     // phrase
                             null,                     // identityPublicKey
                             null,                     // location
                             null,                     // distance
@@ -855,117 +856,6 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see AssetTransmissionNetworkServiceManager#sendDigitalAssetMetadata(ActorAssetIssuer, ActorAssetUser, DigitalAssetMetadata)
-     */
-    @Override
-    public void sendDigitalAssetMetadata(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException {
-
-        try {
-
-            System.out.println(" AssetTransmissionNetworkServicePluginRoot - Starting method sendDigitalAssetMetadata");
-
-            /*
-             * ask for a previous connection
-             */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserReceiver.getActorPublicKey());
-
-            /*
-             * Construct the message content in json format
-             */
-            String msjContent = EncodeMsjContent.encodeMSjContentDigitalAssetMetadataTransmit(digitalAssetMetadataToSend, PlatformComponentType.ACTOR_ASSET_ISSUER, PlatformComponentType.ACTOR_ASSET_USER);
-
-             /*
-             * Construct a new digitalAssetMetadataTransaction
-             */
-            DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction = new DigitalAssetMetadataTransactionImpl();
-            digitalAssetMetadataTransaction.setGenesisTransaction(digitalAssetMetadataToSend.getGenesisTransaction());
-            digitalAssetMetadataTransaction.setSenderId(actorAssetIssuerSender.getActorPublicKey());
-            digitalAssetMetadataTransaction.setSenderType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-            digitalAssetMetadataTransaction.setReceiverId(actorAssetUserReceiver.getActorPublicKey());
-            digitalAssetMetadataTransaction.setReceiverType(PlatformComponentType.ACTOR_ASSET_USER);
-            digitalAssetMetadataTransaction.setDigitalAssetMetadata(digitalAssetMetadataToSend);
-            digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.DELIVERING);
-            digitalAssetMetadataTransaction.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
-            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED);
-
-            /*
-             * Save into data base
-             */
-            getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransaction);
-
-            /*
-             * If not null
-             */
-            if (communicationNetworkServiceLocal != null) {
-
-                //Send the message
-                communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getActorPublicKey(), actorAssetUserReceiver.getActorPublicKey(), msjContent);
-
-            } else {
-
-                /*
-                 * Created the message
-                 */
-                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getActorPublicKey(),//Sender
-                        actorAssetUserReceiver.getActorPublicKey(), //Receiver
-                        msjContent, //Message Content
-                        FermatMessageContentType.TEXT);//Type
-                /*
-                 * Configure the correct status
-                 */
-                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-                /*
-                 * Save to the data base table
-                 */
-                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                outgoingMessageDao.create(fermatMessage);
-
-                /*
-                 * Create the sender basic profile
-                 */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
-
-                /*
-                 * Create the receiver basic profile
-                 */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserReceiver.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
-
-                /*
-                 * Ask the client to connect
-                 */
-                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
-
-            }
-
-        } catch (Exception e) {
-
-            StringBuilder contextBuffer = new StringBuilder();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
-            CantSendDigitalAssetMetadataException pluginStartException = new CantSendDigitalAssetMetadataException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
-        }
-
     }
 
     /**
@@ -1199,96 +1089,6 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             CantSendTransactionNewStatusNotificationException pluginStartException = new CantSendTransactionNewStatusNotificationException(CantSendTransactionNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
-        }
-
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see AssetTransmissionNetworkServiceManager#sendTransactionNewStatusNotification(ActorAssetUser, String, String, DistributionStatus)
-     */
-    @Override
-    public void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender, String actorAssetIssuerReceiverPublicKey, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException {
-
-        try {
-
-            /*
-             * ask for a previous connection
-             */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiverPublicKey);
-
-            /*
-             * Construct the message content in json format
-             */
-            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(transactionId, newDistributionStatus, PlatformComponentType.ACTOR_ASSET_USER, PlatformComponentType.ACTOR_ASSET_ISSUER);
-
-            /*
-             * If not null
-             */
-            if (communicationNetworkServiceLocal != null) {
-
-                //Send the message
-                communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getActorPublicKey(), actorAssetIssuerReceiverPublicKey, msjContent);
-
-            } else {
-
-                /*
-                 * Created the message
-                 */
-                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getActorPublicKey(),//Sender
-                        actorAssetIssuerReceiverPublicKey, //Receiver
-                        msjContent, //Message Content
-                        FermatMessageContentType.TEXT);//Type
-                /*
-                 * Configure the correct status
-                 */
-                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-                /*
-                 * Save to the data base table
-                 */
-                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                outgoingMessageDao.create(fermatMessage);
-
-                /*
-                 * Create the sender basic profile
-                 */
-                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
-
-                /*
-                 * Create the receiver basic profile
-                 */
-                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerReceiverPublicKey, NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
-
-                /*
-                 * Ask the client to connect
-                 */
-                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
-
-            }
-
-        } catch (Exception e) {
-
-            StringBuilder contextBuffer = new StringBuilder();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
-            CantSendTransactionNewStatusNotificationException pluginStartException = new CantSendTransactionNewStatusNotificationException(CantSendTransactionNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }

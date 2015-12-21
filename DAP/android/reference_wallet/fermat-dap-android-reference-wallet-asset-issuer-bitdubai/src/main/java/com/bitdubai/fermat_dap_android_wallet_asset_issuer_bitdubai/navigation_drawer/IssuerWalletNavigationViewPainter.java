@@ -14,19 +14,19 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**
  * Created by frank on 12/9/15.
  */
 public class IssuerWalletNavigationViewPainter implements NavigationViewPainter {
     private Activity activity;
-    private final ActorIdentity actorIdentity;
+    private final IdentityAssetIssuer identityAssetIssuer;
 
-    public IssuerWalletNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
+    public IssuerWalletNavigationViewPainter(Activity activity, IdentityAssetIssuer identityAssetIssuer) {
         this.activity = activity;
-        this.actorIdentity = actorIdentity;
+        this.identityAssetIssuer = identityAssetIssuer;
     }
 
     @Override

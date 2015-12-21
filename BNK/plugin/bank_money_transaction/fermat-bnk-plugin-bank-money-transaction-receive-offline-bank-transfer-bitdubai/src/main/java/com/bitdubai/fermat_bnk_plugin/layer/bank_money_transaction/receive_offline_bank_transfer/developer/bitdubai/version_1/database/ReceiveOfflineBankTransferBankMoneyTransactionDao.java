@@ -195,7 +195,7 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDao {
         DatabaseTable transactionTable = this.database.getTable(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TABLE_NAME);
         List<DatabaseTableRecord> records;
 
-        transactionTable.setStringFilter(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
         records = transactionTable.getRecords();
 

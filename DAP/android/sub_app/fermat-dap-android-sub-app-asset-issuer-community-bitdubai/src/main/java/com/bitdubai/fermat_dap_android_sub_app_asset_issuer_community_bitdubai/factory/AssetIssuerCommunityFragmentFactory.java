@@ -1,18 +1,19 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.factory;
 
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.fragments.HomeFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.settings.AssetIssuerSubAppSettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.apache.commons.lang.NotImplementedException;
 
 /**
  * Created by francisco on 21/10/15.
  */
-public class AssetIssuerCommunityFragmentFactory extends FermatSubAppFragmentFactory<AssetIssuerCommunitySubAppSession, AssetIssuerSubAppSettings, AssetIssuerCommunityFragmentEnumTypes> {
+public class AssetIssuerCommunityFragmentFactory extends FermatFragmentFactory<AssetIssuerCommunitySubAppSession, SubAppResourcesProviderManager, AssetIssuerCommunityFragmentEnumTypes> {
 
 
     @Override

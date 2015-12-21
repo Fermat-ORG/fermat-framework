@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
@@ -19,15 +18,13 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsFragment2;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsReceivedHistory;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsSendHistory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession, WalletSettings,WalletResourcesProviderManager,ReferenceFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
+public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
 
 
     @Override
@@ -64,19 +61,15 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT:
-                    currentFragment = TransactionsSendHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED:
-                    currentFragment = TransactionsReceivedHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_REQUEST_RECEIVED:
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
-                    currentFragment = TransactionsReceivedHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY:
-                    currentFragment = TransactionsSendHistory.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY:
                     currentFragment = RequestReceiveHistoryFragment.newInstance();

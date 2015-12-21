@@ -171,7 +171,7 @@ public class AssetFactoryMiddlewareDao {
                     transaction.addRecordToInsert(table, record);
                 else {
                     //update Records
-                    table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                    table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                     transaction.addRecordToUpdate(table, record);
                 }
             }
@@ -194,7 +194,7 @@ public class AssetFactoryMiddlewareDao {
                     transaction.addRecordToInsert(table, record);
                 else {
                     //update Records
-                    table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                    table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                     transaction.addRecordToUpdate(table, record);
                 }
             }
@@ -214,7 +214,7 @@ public class AssetFactoryMiddlewareDao {
             transaction.addRecordToInsert(table, record);
         else {
             //update Records
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(table, record);
         }
 
@@ -249,7 +249,7 @@ public class AssetFactoryMiddlewareDao {
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
         if (table.getRecords().isEmpty())
             return true;
@@ -260,7 +260,7 @@ public class AssetFactoryMiddlewareDao {
     private List<DatabaseTableRecord> getResourcesData(String assetFactoryPublicKey) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
 
-        table.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ASSET_PUBLIC_KEY_COLUMN, assetFactoryPublicKey, DatabaseFilterType.EQUAL);
+        table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ASSET_PUBLIC_KEY_COLUMN, assetFactoryPublicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
@@ -269,7 +269,7 @@ public class AssetFactoryMiddlewareDao {
     private List<DatabaseTableRecord> getIdentityIssuerData(String assetFactoryPublicKey) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
 
-        table.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, assetFactoryPublicKey, DatabaseFilterType.EQUAL);
+        table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, assetFactoryPublicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
@@ -278,7 +278,7 @@ public class AssetFactoryMiddlewareDao {
     private List<DatabaseTableRecord> getContractsData(String assetFactoryPublicKey) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
-        table.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetFactoryPublicKey, DatabaseFilterType.EQUAL);
+        table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetFactoryPublicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
@@ -288,7 +288,7 @@ public class AssetFactoryMiddlewareDao {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
 
         if (filter != null)
-            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.loadToMemory();
 
@@ -538,13 +538,13 @@ public class AssetFactoryMiddlewareDao {
            DatabaseTable tableResources = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
            DatabaseTable tableIdentityUser = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
             DatabaseTableRecord databaseTablerecord =  getAssetFactoryProjectRecord(assetFactory);
-            table.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
            if (assetFactory.getResources() != null) {
                for (Resource resources : assetFactory.getResources()) {
                    DatabaseTableRecord record = getResourceDataRecord(assetFactory.getPublicKey(), resources);
-                   //tableResources.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN, record.getUUIDValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN).toString(), DatabaseFilterType.EQUAL);
+                   //tableResources.addStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN, record.getUUIDValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN).toString(), DatabaseFilterType.EQUAL);
                    tableResources.deleteRecord(record);
                }
            }
@@ -589,7 +589,7 @@ public class AssetFactoryMiddlewareDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, assetFactoryRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, assetFactoryRecord);
             }
 
@@ -675,7 +675,7 @@ public class AssetFactoryMiddlewareDao {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, assetFactoryRecord);
             else {
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, assetFactoryRecord);
             }
 

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_desto
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -14,7 +15,7 @@ public class BankTransactionParametersWrapper implements BankTransactionParamete
     private final String          walletPublicKey;
     private final String          publicActorKey;
     private final String          account;
-    private final float           amount;
+    private final BigDecimal      amount;
     private final String          memo;
     private final String          publicKeyPlugin;
 
@@ -23,7 +24,7 @@ public class BankTransactionParametersWrapper implements BankTransactionParamete
                                             String walletPublicKey,
                                             String publicActorKey,
                                             String account,
-                                            float amount,
+                                            BigDecimal amount,
                                             String memo,
                                             String publicKeyPlugin
     ){
@@ -57,7 +58,7 @@ public class BankTransactionParametersWrapper implements BankTransactionParamete
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

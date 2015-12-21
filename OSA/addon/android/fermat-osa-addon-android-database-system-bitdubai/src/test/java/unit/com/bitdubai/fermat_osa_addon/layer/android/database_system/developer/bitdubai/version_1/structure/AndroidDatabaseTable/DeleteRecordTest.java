@@ -34,7 +34,7 @@ public class DeleteRecordTest {
 
 
     private Activity mockActivity;
-    private Context mockContext;
+    private String mockContext;
 
     private AndroidDatabase testDatabase;
     private DatabaseTable testDatabaseTable;
@@ -49,7 +49,7 @@ public class DeleteRecordTest {
 
     public  void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
         testOwnerId = UUID.randomUUID();
         testDatabase = new AndroidDatabase(mockContext, testOwnerId, testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);

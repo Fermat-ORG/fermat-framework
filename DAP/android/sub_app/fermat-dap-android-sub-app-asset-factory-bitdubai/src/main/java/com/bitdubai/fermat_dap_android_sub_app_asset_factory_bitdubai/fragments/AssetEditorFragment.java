@@ -114,7 +114,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((AssetFactorySession) appSession).getManager();
+            manager = ((AssetFactorySession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             if (!isEdit) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
@@ -438,7 +438,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
             resource.setId(UUID.randomUUID());
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(toByteArray(((BitmapDrawable) takePicture.getDrawable()).getBitmap()));
+//            resource.setResourceBinayData(toByteArray(((BitmapDrawable) takePicture.getDrawable()).getBitmap()));
+            resource.setResourceBinayData(toByteArray(takePicture));
             resources.add(resource);
             asset.setResources(resources);
         } else
@@ -509,9 +510,16 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
      * @param bitmap Bitmap
      * @return byte array
      */
-    private byte[] toByteArray(Bitmap bitmap) {
+    private byte[] toByteArray(ImageView imageView) {
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bm = imageView.getDrawingCache();
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
+
+
 }

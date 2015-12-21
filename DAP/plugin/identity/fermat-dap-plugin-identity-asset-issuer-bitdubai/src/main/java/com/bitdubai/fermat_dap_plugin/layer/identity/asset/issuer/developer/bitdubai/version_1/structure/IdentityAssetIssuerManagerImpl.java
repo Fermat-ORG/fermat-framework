@@ -8,20 +8,21 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerIdentityDao;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantListAssetIssuerIdentitiesException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,12 +95,12 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
      * @param pluginFileSystem
      */
     public IdentityAssetIssuerManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ActorAssetIssuerManager actorAssetIssuerManager) {
-        this.errorManager            = errorManager;
-        this.logManager              = logManager;
-        this.pluginDatabaseSystem    = pluginDatabaseSystem;
-        this.pluginFileSystem        = pluginFileSystem;
-        this.pluginId                = pluginId;
-        this.deviceUserManager       = deviceUserManager;
+        this.errorManager = errorManager;
+        this.logManager = logManager;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.deviceUserManager = deviceUserManager;
         this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
@@ -150,7 +151,15 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
         }
     }
 
-    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantListAssetIssuersException {
+    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
+        try {
+            getAssetIssuerIdentityDao().updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage);
+        } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantGetAssetIssuerIdentitiesException {
         IdentityAssetIssuer identityAssetIssuer = null;
         try {
             identityAssetIssuer = getAssetIssuerIdentityDao().getIdentityAssetIssuer();
@@ -160,19 +169,19 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
         return identityAssetIssuer;
     }
 
-    public boolean  hasIntraIssuerIdentity() throws CantListAssetIssuersException{
+    public boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException {
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(loggedUser).size() > 0)
+            if (getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(loggedUser).size() > 0)
                 return true;
             else
                 return false;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetIssuersException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        }  catch (CantListAssetIssuerIdentitiesException e) {
+        } catch (CantListAssetIssuerIdentitiesException e) {
             throw new CantListAssetIssuersException("CAN'T GET IF ASSET ISSUER IDENTITIES EXISTS", e, "", "");
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER ISSUER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
@@ -185,8 +194,7 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
                     actorAssetIssuerManager.createActorAssetIssuerFactory(identityAssetIssuer.getPublicKey(), identityAssetIssuer.getAlias(), identityAssetIssuer.getProfileImage());
                 }
             }
-        }
-        catch (CantGetLoggedInDeviceUserException e) {
+        } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
         } catch (CantListAssetIssuerIdentitiesException e) {
             throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant List Asset Issuer Identities", "");

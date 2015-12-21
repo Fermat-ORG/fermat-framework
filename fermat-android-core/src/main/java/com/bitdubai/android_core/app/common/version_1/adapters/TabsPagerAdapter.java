@@ -11,6 +11,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
@@ -21,8 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.List;
@@ -46,26 +45,22 @@ import java.util.List;
         private TabStrip tabStrip;
 
 
-        private AbstractFermatSession walletSession;
+        private FermatSession walletSession;
 
         private ErrorManager errorManager;
 
-        private WalletSettings walletSettings;
-
         private WalletResourcesProviderManager walletResourcesProviderManager;
 
-        private SubAppFragmentFactory subAppFragmentFactory;
-
-        private SubAppSettings subAppSettings;
+        private FermatFragmentFactory subAppFragmentFactory;
 
         private SubAppResourcesProviderManager subAppResourcesProviderManager;
 
-        private SubAppsSession subAppsSession;
+        private FermatSession subAppsSession;
 
         private Resources resources;
 
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,SubAppsSession subAppSession,ErrorManager errorManager,SubAppFragmentFactory subAppFragmentFactory,SubAppSettings subAppSettings,SubAppResourcesProviderManager subAppResourcesProviderManager) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,FermatSession subAppSession,ErrorManager errorManager,FermatFragmentFactory subAppFragmentFactory,SubAppResourcesProviderManager subAppResourcesProviderManager) {
             super(fm);
             this.context=context;
 
@@ -76,7 +71,6 @@ import java.util.List;
             this.activity=activity;
             tabStrip=activity.getTabStrip();
             this.subAppFragmentFactory=subAppFragmentFactory;
-            this.subAppSettings = subAppSettings;
             this.subAppResourcesProviderManager = subAppResourcesProviderManager;
 
 
@@ -91,22 +85,19 @@ import java.util.List;
 
         }
 
-    public TabsPagerAdapter(FragmentManager fragmentManager, Context applicationContext, SubAppFragmentFactory subAppFragmentFactory, String fragment, SubAppsSession subAppsSession, SubAppResourcesProviderManager subAppResourcesProviderManager, Resources resources) {
+    public TabsPagerAdapter(FragmentManager fragmentManager, Context applicationContext, FermatFragmentFactory subAppFragmentFactory, String fragment, FermatSession subAppsSession, SubAppResourcesProviderManager subAppResourcesProviderManager, Resources resources) {
         super(fragmentManager);
         this.context=applicationContext;
 
         this.subAppFragmentFactory =subAppFragmentFactory;
         this.subAppsSession = subAppsSession;
         this.onlyFragment = fragment;
-
-        this.subAppFragmentFactory=subAppFragmentFactory;
-        this.subAppSettings = subAppSettings;
         this.subAppResourcesProviderManager = subAppResourcesProviderManager;
 
 
     }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
             super(fm);
             this.context=context;
 
@@ -127,7 +118,7 @@ import java.util.List;
 
         }
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,AbstractFermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
         super(fm);
         this.context=context;
 
@@ -200,20 +191,12 @@ import java.util.List;
                     }
                 }
 
-
-
             }else{
                 fragmentCodeType = onlyFragment;
             }
-
-
-
-
-
-
             try {
                 if(walletFragmentFactory !=null){
-                    currentFragment= walletFragmentFactory.getFragment(fragmentCodeType, walletSession,walletSettings,walletResourcesProviderManager);
+                    currentFragment= walletFragmentFactory.getFragment(fragmentCodeType, walletSession,walletResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -222,7 +205,7 @@ import java.util.List;
 
             try {
                 if(subAppFragmentFactory !=null){
-                    currentFragment= subAppFragmentFactory.getFragment(fragmentCodeType,subAppsSession,subAppSettings,subAppResourcesProviderManager);
+                    currentFragment= subAppFragmentFactory.getFragment(fragmentCodeType, subAppsSession,subAppResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();

@@ -1,7 +1,0 @@
-= Miscelanea
-
-Aquí hemos reunido notas generales sobre el milestne
-
-. Requerimos enumerar las wallets y la versión mínima de la plataforma desde que puede encontrarse dicha wallet.
-. Hay que hacer que en platform no se inicialicen todos los plugins sino los correspondientes a las cosas instaladas.
-. Definir la ubicación de una nueva niche wallet en la estructura de directorios de fermat.

@@ -18,13 +18,16 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorConnectionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -52,9 +55,70 @@ public class ActorConnectionEventActions {
         this.pluginVersionReference     = pluginVersionReference    ;
     }
 
-    public void handleRequestConnection(final CryptoBrokerConnectionRequest request) throws CantRequestActorConnectionException,
-                                                                                      UnsupportedActorTypeException,
-                                                                                      ConnectionAlreadyRequestedException {
+    public void handleNewsEvent() throws CantHandleNewsEventException {
+
+        try {
+
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
+
+
+            for (final CryptoBrokerConnectionRequest request : list)
+                this.handleRequestConnection(request);
+
+        } catch(CantListPendingConnectionRequestsException |
+                    CantRequestActorConnectionException |
+                    UnsupportedActorTypeException |
+                    ConnectionAlreadyRequestedException e) {
+
+            throw new CantHandleNewsEventException(e, "", "Error handling Crypto Broker Connection Request News Event.");
+        }
+
+    }
+
+    public void handleUpdateEvent() throws CantHandleNewsEventException {
+
+        try {
+
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
+
+
+            for (final CryptoBrokerConnectionRequest request : list) {
+
+                switch (request.getRequestAction()) {
+
+                    case ACCEPT:
+                        this.handleAcceptConnection(request.getRequestId());
+                        break;
+                    case CANCEL:
+                        this.handleCancelConnection(request.getRequestId());
+                        break;
+                    case DENY:
+                        this.handleDenyConnection(request.getRequestId());
+                        break;
+                    case DISCONNECT:
+                        this.handleDisconnect(request.getRequestId());
+                        break;
+
+                }
+            }
+
+        } catch(CantListPendingConnectionRequestsException |
+                ActorConnectionNotFoundException           |
+                UnexpectedConnectionStateException         |
+                CantAcceptActorConnectionRequestException  |
+                CantCancelActorConnectionRequestException  |
+                CantDenyActorConnectionRequestException    |
+                CantDisconnectFromActorException           e) {
+
+            throw new CantHandleNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
+        }
+
+    }
+
+
+    public void handleRequestConnection(final CryptoBrokerConnectionRequest request) throws CantRequestActorConnectionException ,
+                                                                                            UnsupportedActorTypeException       ,
+                                                                                            ConnectionAlreadyRequestedException {
 
         try {
 

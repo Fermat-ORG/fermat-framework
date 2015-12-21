@@ -5,22 +5,10 @@
 <br>
 ## Introduction
 =======
-### Fermat Development Environment Installation and Configuration - Linux - Preferably ubuntu
 
 Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of mantainers called bitDubai. You might want to join this community and specifically one of their teams which are working on different areas of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
 
-Also, you might want to add your own functionality to Fermat, perhaps your own platform, plugins, reference wallet or build your own niche wallet. All of these options are covered within this guide.
-
-Depending on where the changes you propose may belong to the procedure may vary a little bit. 
-
-* **Git**
-* **Java Standard Development Kit 7**
-* **Gradle**
-* **Android SDK Tools 23.01**
-* **Android Development Studio or IntelliJ IDEA**
-
-Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment.
-
+Also, you might want to add your own functionality to Fermat, perhaps your own platform, plugins, reference wallet or build your own niche wallet. To help you get all the necessary tools to set up the development enviroment, please refer to [Installation Guide](https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md)
 <br>
 ## Part I: Casual Contribution
 

@@ -39,17 +39,17 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception,
-                    "Cannot set the asset distribution database handler",
+                    "Cannot set the customer online payment database handler",
                     "The database handler is null");
         }
     }
 
-    private void setDatabaseDao(CustomerOnlinePaymentBusinessTransactionDao closeContractBusinessTransactionDao)
+    private void setDatabaseDao(CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao)
             throws CantSetObjectException {
-        if(closeContractBusinessTransactionDao==null){
-            throw new CantSetObjectException("The CloseContractBusinessTransactionDao is null");
+        if(customerOnlinePaymentBusinessTransactionDao==null){
+            throw new CantSetObjectException("The CustomerOnlinePaymentBusinessTransactionDao is null");
         }
-        this.customerOnlinePaymentBusinessTransactionDao =closeContractBusinessTransactionDao;
+        this.customerOnlinePaymentBusinessTransactionDao =customerOnlinePaymentBusinessTransactionDao;
     }
 
     public void setEventManager(EventManager eventManager) {
@@ -95,7 +95,10 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the AssetDistributionRecorderService", "The AssetDistributionRecorderService is probably null");
+            throw new CantStartServiceException(
+                    exception,
+                    "Starting the CustomerOnlinePaymentRecorderService",
+                    "The CustomerOnlinePaymentRecorderService is probably null");
         }
 
     }
