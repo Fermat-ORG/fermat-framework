@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -80,7 +81,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
     /**
      * Represents the plugin manager.
      */
-    //BrokerSubmitOnlineMerchandiseTransactionManager brokerSubmitOnlineMerchandiseTransactionManager;
+    BrokerSubmitOfflineMerchandiseTransactionManager brokerSubmitOfflineMerchandiseTransactionManager;
 
     /**
      * Represents the plugin BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory
@@ -215,6 +216,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             /**
              * Init the plugin manager
              */
+            //TODO: Temporal implementation
+            this.brokerSubmitOfflineMerchandiseTransactionManager=new BrokerSubmitOfflineMerchandiseTransactionManager();
             /*this.brokerSubmitOnlineMerchandiseTransactionManager=new BrokerSubmitOnlineMerchandiseTransactionManager(
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao,
                     this.customerBrokerContractSaleManager,
@@ -275,7 +278,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return this.brokerSubmitOfflineMerchandiseTransactionManager;
     }
 
     public static LogLevel getLogLevelByClass(String className) {

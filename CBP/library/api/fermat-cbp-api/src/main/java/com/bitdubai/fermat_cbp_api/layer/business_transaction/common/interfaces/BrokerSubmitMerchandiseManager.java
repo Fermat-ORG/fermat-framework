@@ -14,14 +14,6 @@ import java.math.BigDecimal;
  */
 public interface BrokerSubmitMerchandiseManager extends FermatManager {
 
-    /**
-     * This method send a payment according the contract elements.
-     * @param referencePrice
-     * @param cbpWalletPublicKey
-     * @param cryptoWalletPublicKey
-     * @param contractHash
-     */
-    void submitMerchandise(BigDecimal referencePrice, String cbpWalletPublicKey, String cryptoWalletPublicKey, String contractHash)throws CantSubmitMerchandiseException;
 
     /**
      * This method returns the ContractTransactionStatus by contractHash
