@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="16dp"
     android:background="@color/cbw_header_end_background"
     android:fillViewport="false"
     android:orientation="vertical">
@@ -98,7 +99,7 @@
                 android:gravity="start"
                 android:textColor="#69ccfa"
                 android:textSize="18sp"
-                tools:text="Amount Received"/>
+                tools:text="@string/cbw_amount_received"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_amount_received_to_receive_value"
@@ -151,7 +152,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingStart="16dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"

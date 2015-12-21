@@ -2,7 +2,10 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common;
 
 
 import android.app.Fragment;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,13 +49,26 @@ public class CloseContractDetailsFragment extends FermatWalletFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.cbw_close_contract_details, container, false);
+
+        configureToolbar();
 
         initViews(rootView);
 
         return rootView;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     private void initViews(View rootView) {
@@ -71,14 +87,14 @@ public class CloseContractDetailsFragment extends FermatWalletFragment {
         customerName.setText(contractBasicInfo.getCryptoCustomerAlias());
 
         FermatTextView amountSoldOrToSellTitle = (FermatTextView) rootView.findViewById(R.id.cbw_amount_sold_or_to_sell_title);
-        amountSoldOrToSellTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.cbw_amount_to_receive : R.string.cbw_amount_sold);
+        amountSoldOrToSellTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.cbw_amount_to_sell : R.string.cbw_amount_sold);
 
         FermatTextView amountSoldOrToSellValue = (FermatTextView) rootView.findViewById(R.id.cbw_amount_sold_or_to_sell_value);
         String amountToSell = DecimalFormat.getInstance().format(contractBasicInfo.getAmount());
         amountSoldOrToSellValue.setText(String.format("$1%s %2$s", amountToSell, contractBasicInfo.getMerchandise()));
 
         FermatTextView amountReceivedOrToReceiveTitle = (FermatTextView) rootView.findViewById(R.id.cbw_amount_received_to_receive_title);
-        amountReceivedOrToReceiveTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.cbw_amount_to_receive : R.string.cbw_amount_sold);
+        amountReceivedOrToReceiveTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.cbw_amount_to_receive : R.string.cbw_amount_received);
 
         FermatTextView amountReceivedOrToReceiveValue = (FermatTextView) rootView.findViewById(R.id.cbw_amount_received_to_receive_value);
         String amountToReceive = getAmountToReceive(contractBasicInfo);
@@ -89,13 +105,14 @@ public class CloseContractDetailsFragment extends FermatWalletFragment {
 
         LinearLayout cancellationReasonContainer = (LinearLayout) rootView.findViewById(R.id.cbw_cancellation_reason_container);
         if (status.equals(ContractStatus.CANCELLED)) {
-            cancellationReasonContainer.setVisibility(View.GONE);
+            cancellationReasonContainer.setVisibility(View.VISIBLE);
         } else {
             FermatTextView cancellationReasonText = (FermatTextView) rootView.findViewById(R.id.cbw_cancellation_reason_text);
             cancellationReasonText.setText(contractBasicInfo.getCancellationReason());
         }
+
         FermatTextView contractDetailsCloseDate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_close_date);
-        contractDetailsCloseDate.setText("15/02/2015");
+        contractDetailsCloseDate.setText(getResources().getString(R.string.cbw_contract_details_last_update_date, "15/02/2015"));
 
         FermatButton checkNegotiationDetails = (FermatButton) rootView.findViewById(R.id.cbw_contract_details_check_negotiation_details);
         checkNegotiationDetails.setOnClickListener(new View.OnClickListener() {
