@@ -2,9 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdu
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -53,6 +53,11 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     }
 
     @Override
+    public byte[] getImage() {
+        return profileImage;
+    }
+
+    @Override
     public String getPhrase(){
         return this.phrase;
     }
@@ -60,6 +65,11 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     @Override
     public String getPublicKey() {
         return this.publicKey;
+    }
+
+    @Override
+    public Actors getActorType() {
+        return Actors.INTRA_USER;
     }
 
     @Override

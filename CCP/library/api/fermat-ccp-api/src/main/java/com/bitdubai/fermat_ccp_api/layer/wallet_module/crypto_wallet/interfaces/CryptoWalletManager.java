@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 
 /**
