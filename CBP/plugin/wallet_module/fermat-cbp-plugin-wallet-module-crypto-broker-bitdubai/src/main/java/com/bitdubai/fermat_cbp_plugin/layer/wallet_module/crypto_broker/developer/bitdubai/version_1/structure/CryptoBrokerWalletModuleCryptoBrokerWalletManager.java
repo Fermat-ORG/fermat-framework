@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.Crypt
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
@@ -187,6 +188,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
+    public CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException {
+        //TODO
+        return null;
+    }
+
+    @Override
     public boolean associateIdentity(UUID brokerId) {
         return false;
     }
@@ -253,7 +260,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public List<String> getBrokerBankAccounts() {
         // TODO esto viene de los settings de la negociacion que guarda Angel en su plugin Customer Broker Purchase Negotiation
-        if(BROKER_BANK_ACCOUNTS.isEmpty()){
+        if (BROKER_BANK_ACCOUNTS.isEmpty()) {
             BROKER_BANK_ACCOUNTS.add(BROKER_BANK_ACCOUNT_1);
             BROKER_BANK_ACCOUNTS.add(BROKER_BANK_ACCOUNT_2);
             BROKER_BANK_ACCOUNTS.add(BROKER_BANK_ACCOUNT_3);
