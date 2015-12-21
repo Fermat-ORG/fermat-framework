@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDr
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -16,6 +17,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 public class NavigationItemMenuViewHolder extends FermatViewHolder {
     private TextView label;
     private ImageView icon;
+    private LinearLayout rowContainer;
 
 
     public NavigationItemMenuViewHolder(View itemView) {
@@ -23,7 +25,7 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
 
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
-
+        rowContainer = (LinearLayout) itemView.findViewById(R.id.ccw_row_container);
 
     }
 
@@ -33,5 +35,9 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
 
     public ImageView getIcon() {
         return icon;
+    }
+
+    public LinearLayout getRowContainer() {
+        return rowContainer;
     }
 }

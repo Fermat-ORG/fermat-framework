@@ -189,6 +189,7 @@ public enum Fragments implements FermatFragments {
 
     //Cash Money Wallet
     CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY("CSHCMWBS"),
+    CSH_CASH_MONEY_WALLET_SETUP("CSHCMWS"),
 
     // CCP Identity
     CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CCPSACCIMF"),

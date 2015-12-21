@@ -299,24 +299,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    /*public List<CustomerOnlinePaymentRecord> getOnCryptoNetworkCryptoStatusList() throws
-            UnexpectedResultReturnedFromDatabaseException,
-            CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
-                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-    }*/
-
-    /*public List<CustomerOnlinePaymentRecord> getOnBlockchainkCryptoStatusList() throws
-            UnexpectedResultReturnedFromDatabaseException,
-            CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                CryptoStatus.ON_BLOCKCHAIN.getCode(),
-                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-    }*/
-
     /**
      * This method returns a CustomerOnlinePaymentRecordList according the arguments.
      * @param key String with the search key.
@@ -617,7 +599,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                                     ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
             cryptoAddressString=record.getStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
+                            ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             customerOnlinePaymentRecord.setCryptoAddress(brokerCryptoAddress);
@@ -726,7 +708,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 customerBrokerContractSale.getPublicKeyBroker());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION.getCode());
+                ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT.getCode());
 
         return record;
     }
