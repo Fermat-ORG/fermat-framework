@@ -1104,10 +1104,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 cryptoWalletIntraUserIdentityList.add(cryptoWalletIntraUserIdentity);
             }
 
-            //TODO Harcoder
-            cryptoWalletIntraUserIdentityList.add(new CryptoWalletWalletIntraUserIdentity("afd0647a-87de-4c56-9bc9-be736e0c5059", "mati", new byte[0]));
-
-
             return cryptoWalletIntraUserIdentityList;
 
         }

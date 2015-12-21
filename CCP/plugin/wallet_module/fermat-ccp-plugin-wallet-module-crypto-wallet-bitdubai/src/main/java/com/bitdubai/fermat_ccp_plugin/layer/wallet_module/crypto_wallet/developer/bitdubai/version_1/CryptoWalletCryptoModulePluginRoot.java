@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
@@ -184,13 +185,17 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         }
     }
 
-    @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
         return null;
     }
 
     @Override
     public ActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
+        try {
+            return getCryptoWallet().getActiveIdentities().get(0);
+        } catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

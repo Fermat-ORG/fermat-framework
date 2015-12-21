@@ -37,6 +37,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -188,7 +189,10 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             handlerTimer.postDelayed(new Runnable(){
                 public void run() {
                     if(walletContactRecords.isEmpty()){
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         setUpTutorial();
+                    }else{
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
                 }}, 300);
             return rootView;
@@ -256,24 +260,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            final CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
-            IntraUserLoginIdentity intraUserLoginIdentity = new IntraUserLoginIdentity() {
-                @Override
-                public String getAlias() {
-                    return cryptoWalletIntraUserIdentity.getAlias();
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return cryptoWalletIntraUserIdentity.getPublicKey();
-                }
-
-                @Override
-                public byte[] getProfileImage() {
-                    return cryptoWalletIntraUserIdentity.getProfileImage();
-                }
-            };
-            getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), intraUserLoginIdentity));
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -409,7 +395,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
         mSearchView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-        //(LinearLayout) rootView.findViewById(R.id.fragment_container2).setVisibility((cryptoWallet.listWalletContactsScrolling(referenceWalletSession.getAppPublicKey(),)));
 
         mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
