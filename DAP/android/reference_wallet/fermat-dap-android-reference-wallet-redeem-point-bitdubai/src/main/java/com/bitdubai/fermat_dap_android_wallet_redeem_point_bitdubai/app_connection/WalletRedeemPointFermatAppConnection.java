@@ -29,7 +29,7 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections{
 
     RedeemPointIdentity redeemPointIdentity;
 
-    public WalletRedeemPointFermatAppConnection(Activity activity, RedeemPointIdentity redeemPointIdentity) {
+    public WalletRedeemPointFermatAppConnection(Activity activity) {
         super(activity);
         this.redeemPointIdentity = redeemPointIdentity;
     }

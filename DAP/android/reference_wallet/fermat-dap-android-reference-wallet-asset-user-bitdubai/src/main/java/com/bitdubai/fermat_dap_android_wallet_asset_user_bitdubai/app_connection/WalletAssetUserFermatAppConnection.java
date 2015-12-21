@@ -29,7 +29,7 @@ public class WalletAssetUserFermatAppConnection extends AppConnections{
 
     IdentityAssetUser identityAssetUser;
 
-    public WalletAssetUserFermatAppConnection(Activity activity, IdentityAssetUser identityAssetUser) {
+    public WalletAssetUserFermatAppConnection(Activity activity) {
         super(activity);
         this.identityAssetUser = identityAssetUser;
     }
