@@ -307,7 +307,12 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
              */
             address = output.getScriptPubKey().getToAddress(wallet.getNetworkParameters());
         }
-        CryptoAddress cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        CryptoAddress cryptoAddress;
+        if (address != null)
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        else
+            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
+
         return cryptoAddress;
     }
 
@@ -608,7 +613,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         long value = 0;
         try{
             for (TransactionOutput output : tx.getOutputs()){
-                if (!output.isMine(wallet))
+                if (output.getScriptPubKey().isSentToAddress())
                     value = output.getValue().getValue();
             }
 

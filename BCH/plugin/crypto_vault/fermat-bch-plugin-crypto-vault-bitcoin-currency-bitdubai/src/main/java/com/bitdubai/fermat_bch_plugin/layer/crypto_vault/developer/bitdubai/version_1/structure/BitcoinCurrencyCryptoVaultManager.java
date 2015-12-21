@@ -30,11 +30,14 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.KeyChain;
 import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.List;
@@ -343,6 +346,7 @@ public class BitcoinCurrencyCryptoVaultManager {
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
 
+
         /**
          * Add transactions to the wallet that we can use to spend.
          */
@@ -360,18 +364,12 @@ public class BitcoinCurrencyCryptoVaultManager {
         final Coin coinToSend = Coin.valueOf(satoshis);
 
         /**
-         * remove any watched address that may be added
-         */
-        for (Address watchedAddress : wallet.getWatchedAddresses()){
-            wallet.removeWatchedAddress(watchedAddress);
-        }
-
-        /**
          * creates the send request and broadcast it on the network.
          */
         wallet.allowSpendingUnconfirmedTransactions();
         wallet.setAcceptRiskyTransactions(true);
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
+
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
 
@@ -382,8 +380,10 @@ public class BitcoinCurrencyCryptoVaultManager {
             sendRequest.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
         }
 
+
         try {
             wallet.completeTx(sendRequest);
+
         } catch (InsufficientMoneyException e) {
             StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
             output.append(System.lineSeparator());
