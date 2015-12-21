@@ -360,9 +360,17 @@ public class BitcoinCurrencyCryptoVaultManager {
         final Coin coinToSend = Coin.valueOf(satoshis);
 
         /**
+         * remove any watched address that may be added
+         */
+        for (Address watchedAddress : wallet.getWatchedAddresses()){
+            wallet.removeWatchedAddress(watchedAddress);
+        }
+
+        /**
          * creates the send request and broadcast it on the network.
          */
         wallet.allowSpendingUnconfirmedTransactions();
+        wallet.setAcceptRiskyTransactions(true);
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
