@@ -129,7 +129,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
                 public void run() {
+                    Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_SCREEN_ENABLED);
+                    if(o!=null) {
+                        if (!(Boolean) o)
+                            setUpPresentation();
+                    }else{
                         setUpPresentation();
+                    }
                 }}, 500);
         } catch (Exception ex) {
             if (errorManager != null)
@@ -157,6 +163,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         referenceWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
                     }
                 }
+
 
             }
         });
@@ -387,7 +394,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
