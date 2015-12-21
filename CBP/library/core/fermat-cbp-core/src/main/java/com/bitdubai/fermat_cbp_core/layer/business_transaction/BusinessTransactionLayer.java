@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_core.layer.business_transaction;
 
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_ack_offline_payment.BrokerAckOfflinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_ack_online_payment.BrokerAckOnlinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.costomer_offline_payment.CustomerOfflinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_online_payment.CustomerOnlinePaymentPluginSubsystem;
@@ -23,6 +24,7 @@ public class BusinessTransactionLayer extends AbstractLayer {
 
         try {
 
+            registerPlugin(new BrokerAckOfflinePaymentPluginSubsystem());
             registerPlugin(new BrokerAckOnlinePaymentPluginSubsystem());
             registerPlugin(new CustomerOfflinePaymentPluginSubsystem());
             registerPlugin(new CustomerOnlinePaymentPluginSubsystem());

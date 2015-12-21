@@ -109,7 +109,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 //        container_jane_doe.setOnClickListener(this);
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
-//        checkbox_not_show.setOnCheckedChangeListener(this);
+        checkbox_not_show.setOnCheckedChangeListener(this);
     }
 
 
@@ -168,8 +168,12 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Toast.makeText(activity,"Checked",Toast.LENGTH_SHORT).show();
-    }
+        if(isChecked){
+            getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.TRUE);
+        }else {
+            getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.FALSE);
+        }
 
+    }
 
 }

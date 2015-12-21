@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE NEGOTIATION TRANSACTION CUSTOMER BROKER UPDATE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER UPDATE. CAN'T INITIALIZE DATABASE EXCEPTION";
 
     public CantInitializeDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

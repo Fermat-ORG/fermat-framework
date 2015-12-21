@@ -32,9 +32,13 @@ include ':fermat-osa-addon-android-device-location-bitdubai'
 project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
 
 // OSA Projects (Linux)
-
+/*
 include ':fermat-osa-linux-core'
 project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
 
 include ':fermat-osa-addon-linux-file-system-bitdubai'
 project(':fermat-osa-addon-linux-file-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-file-system-bitdubai')
+
+include ':fermat-osa-addon-linux-database-system-bitdubai'
+project(':fermat-osa-addon-linux-database-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-database-system-bitdubai')
+*/

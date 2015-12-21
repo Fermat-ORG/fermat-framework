@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission
 /**
  * Created by Yordin Alayn 10.12.15
  */
-public class IncomingNegotiationTransmissionConfirmEventHandler extends AbstractNegotiationTransactionEventHandler {
+public class IncomingNegotiationTransmissionConfirmEventHandler extends AbstractCustomerBrokerNewEventHandler {
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {

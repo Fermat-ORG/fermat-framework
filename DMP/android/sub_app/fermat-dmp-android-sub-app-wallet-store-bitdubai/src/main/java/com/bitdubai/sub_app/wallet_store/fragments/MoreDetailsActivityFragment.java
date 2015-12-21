@@ -57,7 +57,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
         super.setSubAppsSession(subAppsSession);
 
         WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
-        moduleManager = session.getWalletStoreModuleManager();
+        moduleManager = session.getModuleManager();
     }
 
     @Override
