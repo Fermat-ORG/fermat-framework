@@ -8,7 +8,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.11.21..

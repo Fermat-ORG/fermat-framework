@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantLoadSubAppSettings;
