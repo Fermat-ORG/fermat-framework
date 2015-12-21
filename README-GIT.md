@@ -1,6 +1,5 @@
-////
-<! all links tested - laderuner >
-////
+
+<!-- all links tested - laderuner -->
 
 # Git Management
 
