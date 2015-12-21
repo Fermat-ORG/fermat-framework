@@ -51,7 +51,8 @@ Although there are many ways to configure these tools, we suggest to follow the 
 
 ```shell
 platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
-#platfform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
+#platfform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous 
+line and uncomment this.
 ```
 
 * Then, to execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
