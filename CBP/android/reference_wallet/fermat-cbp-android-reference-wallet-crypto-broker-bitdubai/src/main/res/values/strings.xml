@@ -73,5 +73,7 @@
     <string name="cbw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="cbw_check_negotiation_details">Check Negotiation Details</string>
     <string name="cbw_contract_details_last_update_date">At Date: %1$s</string>
+    <string name="cbw_amount_sold">Amount Sold</string>
+    <string name="cbw_contract_details_payment_method">Payment Method</string>
 
 </resources>

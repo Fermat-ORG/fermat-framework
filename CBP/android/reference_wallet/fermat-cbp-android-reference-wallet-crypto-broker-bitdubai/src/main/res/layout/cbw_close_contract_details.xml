@@ -71,10 +71,10 @@
                 android:gravity="start"
                 android:textColor="#69ccfa"
                 android:textSize="18sp"
-                tools:text="Amount Sold"/>
+                tools:text="@string/cbw_amount_sold"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_contract_details_you_sold"
+                android:id="@+id/cbw_amount_sold_or_to_sell_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
@@ -101,7 +101,7 @@
                 tools:text="Amount Received"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_contract_details_you_receive"
+                android:id="@+id/cbw_amount_received_to_receive_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
@@ -114,7 +114,6 @@
                 tools:text="540.01 BTC"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_payment_method_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
@@ -125,7 +124,7 @@
                 android:gravity="start"
                 android:textColor="#69ccfa"
                 android:textSize="18sp"
-                tools:text="Payment Method"/>
+                android:text="@string/cbw_contract_details_payment_method"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_contract_details_payment_method"
@@ -169,6 +168,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 tools:text="El precio de venta estaba demasiado alto y no pudimos ponernos de acuerdo"/>
+
         </LinearLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

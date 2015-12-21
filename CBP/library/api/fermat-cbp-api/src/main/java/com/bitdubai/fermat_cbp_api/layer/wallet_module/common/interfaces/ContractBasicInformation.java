@@ -14,6 +14,8 @@ public interface ContractBasicInformation {
      */
     float getAmount();
 
+    String getCancellationReason();
+
     /**
      * @return the contract ID
      */

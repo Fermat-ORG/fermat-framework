@@ -24,12 +24,14 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private String paymentCurrency;
     private long date;
     private ContractStatus status;
+    private String cancellationReason;
 
     public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
+        this.cancellationReason = "";
 
         amount = random.nextFloat() * 100;
         exchangeRateAmount = random.nextFloat();
@@ -60,6 +62,11 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     @Override
     public float getAmount() {
         return amount;
+    }
+
+    @Override
+    public String getCancellationReason() {
+        return cancellationReason;
     }
 
     @Override
