@@ -15,27 +15,26 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActiveActorIdentityInformation {
-
+public interface ActiveActorIdentityInformation {
 
     /**
      * @return a string representing the public key.
      */
-    public String getPublicKey();
+    String getPublicKey();
 
     /**
      * @return an element of Actors enum representing the type of the actor identity.
      */
-    public Actors getActorType();
+    Actors getActorType();
 
     /**
      * @return a string with the actor identity alias.
      */
-    public String getAlias();
+    String getAlias();
 
     /**
      * @return a byte array with the actor identity profile image.
      */
-    public byte[] getImage();
+    byte[] getImage();
 
 }

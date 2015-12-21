@@ -153,7 +153,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             this.intraWalletUser = this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, phrase, profileImage);
 
 
-            return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
+            return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
         } catch (CantCreateNewIntraWalletUserException e) {
             throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER", e, "", "Error in Intra user identity manager");
         } catch (Exception e) {
@@ -199,7 +199,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserIdentity> intraWalletUserList = this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
             for (IntraWalletUserIdentity intraWalletUser : intraWalletUserList) {
-                intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage()));
+                intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage()));
             }
 
             return intraUserLoginIdentityList;
@@ -624,7 +624,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             for (IntraWalletUserIdentity intraWalletUser : intraWalletUserList) {
                 //TODO: Naty lo saqué esto porque el intraUserLoggedPublicKey está siempre en null, hay que darle valor.
                 //if(intraWalletUser.getPublicKey().equals(intraUserLoggedPublicKey)) {
-                intraUserLoginIdentity = new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
+                intraUserLoginIdentity = new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
                 break;
                 //}
             }

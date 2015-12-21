@@ -18,17 +18,17 @@ public final class SelectableIdentity implements CryptoBrokerCommunitySelectable
     private final String alias       ;
     private final String publicKey   ;
     private final Actors actorType   ;
-    private final byte[] profileImage;
+    private final byte[] image       ;
 
     public SelectableIdentity(final String alias       ,
                               final String publicKey   ,
                               final Actors actorType   ,
-                              final byte[] profileImage) {
+                              final byte[] image       ) {
 
         this.alias        = alias       ;
         this.publicKey    = publicKey   ;
         this.actorType    = actorType   ;
-        this.profileImage = profileImage;
+        this.image        = image       ;
     }
 
     public SelectableIdentity(final CryptoBrokerIdentity cryptoBrokerIdentity) {
@@ -36,7 +36,7 @@ public final class SelectableIdentity implements CryptoBrokerCommunitySelectable
         this.alias        = cryptoBrokerIdentity.getAlias()       ;
         this.publicKey    = cryptoBrokerIdentity.getPublicKey()   ;
         this.actorType    = Actors.CBP_CRYPTO_BROKER              ;
-        this.profileImage = cryptoBrokerIdentity.getProfileImage();
+        this.image       = cryptoBrokerIdentity.getProfileImage();
     }
 
     @Override
@@ -50,8 +50,8 @@ public final class SelectableIdentity implements CryptoBrokerCommunitySelectable
     }
 
     @Override
-    public final byte[] getProfileImage() {
-        return profileImage;
+    public final byte[] getImage() {
+        return image;
     }
 
     @Override
@@ -65,7 +65,7 @@ public final class SelectableIdentity implements CryptoBrokerCommunitySelectable
                 "alias='" + alias + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 ", actorType=" + actorType +
-                ", profileImage=" + Arrays.toString(profileImage) +
+                ", profileImage=" + Arrays.toString(image) +
                 '}';
     }
 

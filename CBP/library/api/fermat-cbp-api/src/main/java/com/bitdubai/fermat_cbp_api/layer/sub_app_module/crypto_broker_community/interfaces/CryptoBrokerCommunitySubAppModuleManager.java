@@ -23,7 +23,7 @@ import java.util.List;
  * provides all the necessary methods for the Crypto Broker Community sub app.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
- *
+ *par
  * @author lnacosta
  * @version 1.0.0
  */

@@ -105,7 +105,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                     selectedIdentity.getPublicKey()   ,
                     selectedIdentity.getActorType()   ,
                     selectedIdentity.getAlias()       ,
-                    selectedIdentity.getProfileImage()
+                    selectedIdentity.getImage()
             );
 
             final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
