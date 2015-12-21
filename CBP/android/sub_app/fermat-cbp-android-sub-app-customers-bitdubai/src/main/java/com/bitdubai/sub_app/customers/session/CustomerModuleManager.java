@@ -1,6 +1,6 @@
 package com.bitdubai.sub_app.customers.session;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 /**
  * Created by mati on 2015.11.19..

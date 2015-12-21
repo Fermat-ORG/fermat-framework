@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.PreferenceWalletSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 
@@ -53,26 +51,5 @@ public interface WalletSettings extends FermatSettings {
      * @throws CantSetDefaultSkinException if something goes wrong.
      */
     void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException, CantLoadWalletSettings;
-
-    /**
-     * This method let us set the preference settings for a wallet
-     *
-     * @param preferenceWalletSettings
-     * @throws CantSetDefaultSkinException
-     */
-    @Deprecated // todo this is done through the module manager
-    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantSaveWalletSettings;
-
-    /**
-     * This method let us get the preference settings for a wallet
-     *
-     * @return preference settings of a wallet
-     * @throws CantGetDefaultSkinException
-     */
-    @Deprecated // todo this is done through the module manager
-    public String getPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings;
-
-
-
 
 }
