@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 12/8/2015.
  */
-public interface CashMoneyWalletModuleManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
+public interface CashMoneyWalletModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
     CashWalletBalances getWalletBalances(String walletPublicKey) throws CantGetCashMoneyWalletBalancesException;
     FiatCurrency getWalletCurrency(String walletPublicKey) throws CantGetCashMoneyWalletCurrencyException;

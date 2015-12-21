@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantCreateCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetCryptoBrokerListException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetSelectedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSaveProfileImageException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
@@ -26,33 +26,7 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public interface CryptoBrokerCommunityModuleManager extends ModuleManager{
-
-    /**
-     * The method <code>createCryptoBroker</code> is used to create a new crypto broker
-     *
-     * @param cryptoBrokerName the name of the crypto broker to create
-     * @param phrase the phrase of the crypto broker to create
-     * @param profileImage  the profile image of the crypto broker to create
-     *
-     * @return the login identity generated for the said crypto broker.
-     *
-     * @throws CantCreateCryptoBrokerException if something goes wrong.
-     */
-    CryptoBrokerLoginIdentity createCryptoBroker(String cryptoBrokerName,
-                                                 String phrase          ,
-                                                 byte[] profileImage    ) throws CantCreateCryptoBrokerException;
-
-    /**
-     * The method <code>setNewProfileImage</code> let the current logged in crypto broker set its profile
-     * picture.
-     *
-     * @param image the profile picture to set
-     *
-     * @throws CantSaveProfileImageException if something goes wrong.
-     */
-    void setNewProfileImage(byte[] image                ,
-                            String cryptoBrokerPublicKey) throws CantSaveProfileImageException;
+public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager {
 
     /**
      * The method <code>listSelectableIdentities</code> lists the login identities that can be used
@@ -62,27 +36,7 @@ public interface CryptoBrokerCommunityModuleManager extends ModuleManager{
      *
      * @throws CantListIdentitiesToSelectException if something goes wrong.
      */
-    List<CryptoBrokerLoginIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
-
-    /**
-     * The method <code>select</code> allows as to select a crypto broker to work with.
-     *
-     * @param cryptoBrokerPublicKey the public key of the crypto broker to log in
-     *
-     * @throws CantSelectCryptoBrokerException if something goes wrong.
-     */
-    void select(String cryptoBrokerPublicKey) throws CantSelectCryptoBrokerException;
-
-    /**
-     * The method <code>getSuggestionsToContact</code> searches for crypto brokers that the logged in
-     * crypto broker could be interested to add.
-     *
-     * @return a list with information of crypto brokers
-     *
-     * @throws CantGetCryptoBrokerListException if something goes wrong.
-     */
-    List<CryptoBrokerInformation> getSuggestionsToContact(int max   ,
-                                                          int offset) throws CantGetCryptoBrokerListException;
+    List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
 
     /**
      * The method <code>searchCryptoBroker</code> gives us an interface to manage a search for a particular
@@ -93,20 +47,20 @@ public interface CryptoBrokerCommunityModuleManager extends ModuleManager{
     CryptoBrokerSearch searchCryptoBroker();
 
     /**
-     * The method <code>askCryptoBrokerForAcceptance</code> initialize the request of contact between
+     * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
      * two crypto brokers.
      *
-     * @param cryptoBrokerToAddName      The name of the crypto broker to add
-     * @param cryptoBrokerToAddPublicKey The public key of the crypto broker to add
-     * @param profileImage               The profile image that the crypto broker has
+     * @param selectedIdentity       The identity selected to work with.
+     * @param cryptoBrokerToContact  the information of the broker to add.
      *
-     * @throws CantStartRequestException if something goes wrong.
+     * @throws CantRequestConnectionException           if something goes wrong.
+     * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
+     * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void askCryptoBrokerForAcceptance(String cryptoBrokerToAddName     ,
-                                      String cryptoBrokerToAddPublicKey,
-                                      byte[] profileImage              ,
-                                      String identityPublicKey         ,
-                                      String identityAlias             ) throws CantStartRequestException;
+    void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity   ,
+                                         CryptoBrokerInformation                 cryptoBrokerToContact) throws CantRequestConnectionException          ,
+                                                                                                               ActorConnectionAlreadyRequestedException,
+                                                                                                               ActorTypeNotSupportedException          ;
 
     /**
      * The method <code>acceptCryptoBroker</code> takes the information of a connection request, accepts
@@ -159,11 +113,11 @@ public interface CryptoBrokerCommunityModuleManager extends ModuleManager{
      *
      * @return the list of crypto brokers connected to the logged in crypto broker
      *
-     * @throws CantGetCryptoBrokerListException if something goes wrong.
+     * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerInformation> getAllCryptoBrokers(String identityPublicKey,
                                                       int    max              ,
-                                                      int    offset           ) throws CantGetCryptoBrokerListException;
+                                                      int    offset           ) throws CantListCryptoBrokersException;
 
     /**
      * The method <code>getCryptoBrokersWaitingYourAcceptance</code> returns the list of crypto brokers waiting to be accepted
@@ -171,11 +125,11 @@ public interface CryptoBrokerCommunityModuleManager extends ModuleManager{
      *
      * @return the list of crypto brokers waiting to be accepted or rejected by the  logged in crypto broker
      *
-     * @throws CantGetCryptoBrokerListException if something goes wrong.
+     * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerInformation> getCryptoBrokersWaitingYourAcceptance(String identityPublicKey,
                                                                         int    max              ,
-                                                                        int    offset           ) throws CantGetCryptoBrokerListException;
+                                                                        int    offset           ) throws CantListCryptoBrokersException;
 
     /**
      * The method <code>getCryptoBrokersWaitingTheirAcceptance</code> list the crypto brokers that haven't
@@ -184,19 +138,19 @@ public interface CryptoBrokerCommunityModuleManager extends ModuleManager{
      * @return the list of crypto brokers that haven't answered to a sent connection request by the current
      *         logged in crypto broker.
      *
-     * @throws CantGetCryptoBrokerListException if something goes wrong.
+     * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerInformation> getCryptoBrokersWaitingTheirAcceptance(String identityPublicKey,
                                                                          int    max              ,
-                                                                         int    offset           ) throws CantGetCryptoBrokerListException;
+                                                                         int    offset           ) throws CantListCryptoBrokersException;
 
     /**
      *
-     * @return active CryptoBrokerLoginIdentity
+     * @return active CryptoBrokerCommunitySelectableIdentity
      *
      * @throws CantGetSelectedIdentityException if something goes wrong.
      */
-    CryptoBrokerLoginIdentity getActiveCryptoBrokerIdentity() throws CantGetSelectedIdentityException;
+    CryptoBrokerCommunitySelectableIdentity getActiveCryptoBrokerIdentity() throws CantGetSelectedIdentityException;
 
     /**
      * Count crypto broker waiting
@@ -225,9 +179,9 @@ public interface CryptoBrokerCommunityModuleManager extends ModuleManager{
      *
      * @param identityPublicKey
      *
-     * @throws CantGetCryptoBrokerListException if something goes wrong.
+     * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    void  deleteCryptoBrokerIdentity(String identityPublicKey) throws CantGetCryptoBrokerListException;
+    void  deleteCryptoBrokerIdentity(String identityPublicKey) throws CantListCryptoBrokersException;
 
     /**
      *

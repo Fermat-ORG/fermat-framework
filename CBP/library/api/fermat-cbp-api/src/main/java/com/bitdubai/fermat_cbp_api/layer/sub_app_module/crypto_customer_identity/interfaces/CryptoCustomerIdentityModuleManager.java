@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
@@ -18,7 +18,7 @@ import java.util.List;
  * provides the methods for the Crypto Customer Identity sub app.
  */
 
-public interface CryptoCustomerIdentityModuleManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
+public interface CryptoCustomerIdentityModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
 
 

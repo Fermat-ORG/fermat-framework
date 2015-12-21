@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import org.apache.commons.lang.Validate;
 
 /**
- * The class <code>com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation</code>
+ * The class <code>com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation</code>
  * represents an actor identity with all the basic information.
  *
  * An Actor Identity Information contains all the basic information of an actor identity.
@@ -17,17 +17,17 @@ import org.apache.commons.lang.Validate;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActorIdentityInformation {
+public class ActiveActorIdentityInformation {
 
     private final String publicKey;
     private final Actors actorType;
     private final String alias    ;
     private final byte[] image    ;
 
-    public ActorIdentityInformation(final String publicKey,
-                                    final Actors actorType,
-                                    final String alias    ,
-                                    final byte[] image    ) {
+    public ActiveActorIdentityInformation(final String publicKey,
+                                          final Actors actorType,
+                                          final String alias,
+                                          final byte[] image) {
 
         Validate.notNull(publicKey, "The Public Key can't be null.");
         Validate.notNull(actorType, "The Actor Type can't be null.");

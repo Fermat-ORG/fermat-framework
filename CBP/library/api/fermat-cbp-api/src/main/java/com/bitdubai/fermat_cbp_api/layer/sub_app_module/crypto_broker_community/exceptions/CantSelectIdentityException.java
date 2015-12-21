@@ -3,9 +3,9 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.30..
+ * Created by natalia on 14/08/15.
  */
-public class CantStartRequestException extends FermatException {
+public class CantSelectIdentityException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantStartRequestException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantStartRequestException(String message, Exception cause, String context, String possibleReason) {
+    public CantSelectIdentityException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

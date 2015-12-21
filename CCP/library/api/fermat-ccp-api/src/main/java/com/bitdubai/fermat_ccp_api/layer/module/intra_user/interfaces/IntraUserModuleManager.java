@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
@@ -15,7 +15,7 @@ import java.util.List;
  * The interface <code>IntraUserModuleManager</code>
  * provides the methods for the Intra Users sub app.
  */
-public interface IntraUserModuleManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
+public interface IntraUserModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
 
     /**
