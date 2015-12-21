@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.wallet_store.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.sub_app.wallet_store.fragments.DetailsActivityFragment;
 import com.bitdubai.sub_app.wallet_store.fragments.MainActivityFragment;
 import com.bitdubai.sub_app.wallet_store.fragments.MoreDetailsActivityFragment;
-import com.bitdubai.sub_app.wallet_store.preference_settings.WalletStorePreferenceSettings;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 
 import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_DETAIL_ACTIVITY;
