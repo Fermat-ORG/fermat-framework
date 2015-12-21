@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.adapters;
+package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters;
 
 import android.content.Context;
 import android.view.View;
