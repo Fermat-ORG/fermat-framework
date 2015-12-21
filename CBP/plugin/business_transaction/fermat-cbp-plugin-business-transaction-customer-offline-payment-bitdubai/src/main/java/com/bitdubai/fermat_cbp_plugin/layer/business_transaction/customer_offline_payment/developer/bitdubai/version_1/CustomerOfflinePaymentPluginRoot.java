@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -135,7 +136,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
              * The database exists but cannot be open. I can not handle this situation.
              */
             errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -164,7 +165,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                  * The database cannot be created. I can not handle this situation.
                  */
                 errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
+                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
                         UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -186,7 +187,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             }
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
         }
@@ -251,14 +252,13 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer offline payment starting");
-        } catch (CantInitializeDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantStartServiceException e) {
-            e.printStackTrace();
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            //TODO: handle correctly this method exceptions
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    null,
+                    null);
         }
     }
 
