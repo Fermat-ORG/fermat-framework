@@ -33,7 +33,7 @@ public class CustomerBrokerNewPurchaseNegotiationTransaction {
 
         try {
 
-            //UPDATE NEGOTIATION
+            //CREATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.createCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
