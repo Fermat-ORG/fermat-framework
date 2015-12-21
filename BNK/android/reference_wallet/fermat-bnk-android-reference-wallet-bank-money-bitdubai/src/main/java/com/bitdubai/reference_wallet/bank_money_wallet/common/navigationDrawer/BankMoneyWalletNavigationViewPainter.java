@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
 /**
@@ -25,7 +25,7 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
 
 
     @Override
-    public View addNavigationViewHeader(ActiveIdentity intraUserLoginIdentity) {
+    public View addNavigationViewHeader(ActorIdentityInformation intraUserLoginIdentity) {
         /*try {
             return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {

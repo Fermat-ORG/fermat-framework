@@ -120,6 +120,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeMan
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
@@ -453,7 +454,7 @@ public abstract class FermatActivity extends AppCompatActivity
                  */
                 final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
                 if(viewPainter!=null) {
-                    ActiveIdentity loginIdentity = appConnections.getActiveIdentity();
+                    ActorIdentityInformation loginIdentity = appConnections.getActiveIdentity();
                     View view = viewPainter.addNavigationViewHeader(loginIdentity);
                     FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
                     frameLayout.setVisibility(View.VISIBLE);

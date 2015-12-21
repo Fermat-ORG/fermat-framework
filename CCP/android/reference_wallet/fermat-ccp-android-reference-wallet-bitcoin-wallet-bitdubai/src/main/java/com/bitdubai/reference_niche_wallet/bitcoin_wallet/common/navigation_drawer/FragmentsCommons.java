@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
@@ -26,19 +27,19 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,ActiveIdentity intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,ActorIdentityInformation intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (intraUserLoginIdentity != null) {
-                if (intraUserLoginIdentity.getProfileImage() != null) {
-                    if (intraUserLoginIdentity.getProfileImage().length > 0) {
+                if (intraUserLoginIdentity.getImage() != null) {
+                    if (intraUserLoginIdentity.getImage().length > 0) {
                         //BitmapFactory.Options options = new BitmapFactory.Options();
                         //options.inScaled = true;
                         //options.inSampleSize = 2;
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),false);
-                        bitmapWorkerTask.execute(intraUserLoginIdentity.getProfileImage());
+                        bitmapWorkerTask.execute(intraUserLoginIdentity.getImage());
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
                         //options.inBitmap = bitmap;
                         //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);

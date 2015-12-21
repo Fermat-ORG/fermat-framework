@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
@@ -29,7 +29,7 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveIdentity intraUserLoginIdentity) {
+    public View addNavigationViewHeader(ActorIdentityInformation intraUserLoginIdentity) {
         return null;
     }
 

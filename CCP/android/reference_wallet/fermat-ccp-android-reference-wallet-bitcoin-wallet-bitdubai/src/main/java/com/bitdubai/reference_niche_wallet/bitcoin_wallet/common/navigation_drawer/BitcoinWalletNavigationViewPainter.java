@@ -11,10 +11,8 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
 /**
  * Created by Matias Furszyfer on 2015.11.24..
@@ -30,7 +28,7 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveIdentity intraUserLoginIdentity) {
+    public View addNavigationViewHeader(ActorIdentityInformation intraUserLoginIdentity) {
         try {
             return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity,intraUserLoginIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
