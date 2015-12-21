@@ -147,7 +147,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public SettingsManager<BasicSubAppSettings> getSettingsManager() {
-        return new SettingsManager<>(pluginFileSystem, pluginId);
+        return null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.settings.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantBuildSettingsObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -24,7 +25,7 @@ import java.util.UUID;
  * @author lnacosta
  * @version 1.0.0
  */
-public class SettingsManager<Z extends FermatSettings> {
+public abstract class SettingsManager<Z extends FermatSettings> {
 
     private static final String SETTINGS_DIRECTORY_NAME   = "settings";
     private static final String SETTINGS_FILE_NAME_PREFIX = "sFile_"  ;
@@ -58,7 +59,7 @@ public class SettingsManager<Z extends FermatSettings> {
             final PluginTextFile settingsFile = pluginFileSystem.getTextFile(
                     pluginId,
                     SETTINGS_DIRECTORY_NAME,
-                    buildModuleSettingsFileName(publicKey),
+                    buildSettingsFileName(publicKey),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -82,7 +83,7 @@ public class SettingsManager<Z extends FermatSettings> {
                 PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(
                         pluginId,
                         SETTINGS_DIRECTORY_NAME,
-                        buildModuleSettingsFileName(publicKey),
+                        buildSettingsFileName(publicKey),
                         FilePrivacy.PRIVATE,
                         FileLifeSpan.PERMANENT
                 );
@@ -124,7 +125,7 @@ public class SettingsManager<Z extends FermatSettings> {
             final PluginTextFile settingsFile = pluginFileSystem.getTextFile(
                     pluginId,
                     SETTINGS_DIRECTORY_NAME,
-                    buildModuleSettingsFileName(publicKey),
+                    buildSettingsFileName(publicKey),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -144,9 +145,20 @@ public class SettingsManager<Z extends FermatSettings> {
         }
     }
 
-    private String buildModuleSettingsFileName(final String publicKey) {
+    private String buildSettingsFileName(final String publicKey) {
 
         return SETTINGS_FILE_NAME_PREFIX + "_" + publicKey;
     }
+
+    /**
+     * Through the method <code>buildSettingsObject</code> you can build a new settings object.
+     *
+     * @param publicKey  of the wallet or sub-app.
+     *
+     * @return an instance of the settings object.
+     *
+     * @throws CantBuildSettingsObjectException if something goes wrong.
+     */
+    public abstract Z buildSettingsObject(final String publicKey) throws CantBuildSettingsObjectException;
 
 }

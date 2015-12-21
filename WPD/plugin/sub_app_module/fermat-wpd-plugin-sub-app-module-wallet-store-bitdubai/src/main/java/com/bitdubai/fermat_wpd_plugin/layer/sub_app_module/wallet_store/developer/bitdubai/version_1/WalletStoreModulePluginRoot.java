@@ -199,7 +199,7 @@ public class WalletStoreModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public SettingsManager<BasicWalletSettings> getSettingsManager() {
-        return new SettingsManager<>(pluginFileSystem, pluginId);
+        return null;
     }
 
     @Override
