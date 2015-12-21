@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantC
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -60,7 +61,10 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin i
 
         } catch (CantCreateCryptoBrokerIdentityException e) {
 
-            throw new CantCreateCryptoBrokerException(CantCreateCryptoBrokerException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantCreateCryptoBrokerException(e, "", "There was an error trying to create an identity.");
+        } catch (CryptoBrokerIdentityAlreadyExistsException e) {
+
+            throw new CantCreateCryptoBrokerException(e, "", "A similar alias already exists.");
         }
     }
 

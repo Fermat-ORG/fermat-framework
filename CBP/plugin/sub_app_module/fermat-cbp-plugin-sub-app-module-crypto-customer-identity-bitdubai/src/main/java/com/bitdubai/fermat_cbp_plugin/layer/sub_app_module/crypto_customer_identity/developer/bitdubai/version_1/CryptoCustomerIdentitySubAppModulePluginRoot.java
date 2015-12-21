@@ -64,7 +64,7 @@ public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractPlugin
             CryptoCustomerIdentity identity = this.identityManager.createCryptoCustomerIdentity(cryptoCustomerName, profileImage);
             return converIdentityToInformation(identity);
         } catch (CantCreateCryptoCustomerIdentityException e) {
-            throw new CouldNotCreateCryptoCustomerException(CantCreateCryptoBrokerException.DEFAULT_MESSAGE, e, "", "");
+            throw new CouldNotCreateCryptoCustomerException(e, "", "");
         }
     }
 
