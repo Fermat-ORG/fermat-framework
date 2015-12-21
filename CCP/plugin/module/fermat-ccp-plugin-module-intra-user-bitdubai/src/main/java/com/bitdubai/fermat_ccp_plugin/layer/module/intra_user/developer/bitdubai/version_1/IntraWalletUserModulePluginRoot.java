@@ -426,19 +426,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws IntraUserDisconnectingFailedException
      */
     @Override
-    public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
+    public void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
         try
         {
             /**
              *Call Actor Intra User to disconnect request connection
              */
-            this.intraWalletUserManager.disconnectIntraWalletUser(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraWalletUserManager.disconnectIntraWalletUser(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
             /**
              *Call Network Service Intra User to disconnect request connection
              */
 
-            this.intraUserNertwokServiceManager.disconnectIntraUSer(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
         }
         catch(CantDisconnectIntraWalletUserException e)

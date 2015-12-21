@@ -108,7 +108,7 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
             try {
                 //image null
                 if (intraUserInformation != null && identity != null) {
-                    ((IntraUserSubAppSession) getSession()).getModuleManager().disconnectIntraUSer(intraUserInformation.getPublicKey());
+                    ((IntraUserSubAppSession) getSession()).getModuleManager().disconnectIntraUSer(identity.getPublicKey(),intraUserInformation.getPublicKey());
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
