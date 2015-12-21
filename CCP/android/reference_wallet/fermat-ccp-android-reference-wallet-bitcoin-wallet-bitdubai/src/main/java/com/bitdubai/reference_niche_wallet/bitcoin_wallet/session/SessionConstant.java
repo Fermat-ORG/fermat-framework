@@ -9,4 +9,5 @@ public class SessionConstant {
     public static final String FROM_ACTIONBAR_SEND_ICON_CONTACTS = "from_contacts";
     public static final String PRESENTATION_IDENTITY_CREATED = "identity_created";
     public static final String CREATE_EXTRA_USER = "create_extra_user";
+    public static final String PRESENTATION_SCREEN_ENABLED = "presentation_screen_enabled";
 }
