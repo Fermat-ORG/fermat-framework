@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.modules;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 
 /**
  * A module is an intermediate point between the graphic user interface and the fermat system.
