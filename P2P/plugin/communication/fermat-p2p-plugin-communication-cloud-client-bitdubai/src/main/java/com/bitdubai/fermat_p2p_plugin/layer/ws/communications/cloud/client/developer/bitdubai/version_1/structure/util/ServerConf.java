@@ -19,7 +19,7 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the production environment
      */
-    public static final String SERVER_IP_PRODUCCTION = "192.168.0.103";
+    public static final String SERVER_IP_PRODUCCTION = "52.35.64.221";
 
     /**
      * Represent the SERVER_IP in the developer environment
