@@ -10,7 +10,7 @@ import com.bitdubai.sub_app.customers.session.CustomersSubAppSession;
 
 import static com.bitdubai.sub_app.customers.fragmentFactory.CustomersFragmentsEnumType.MAIN_FRAGMET;
 
-public class CustomersFragmentFactory extends FermatSubAppFragmentFactory<CustomersSubAppSession, CustomersPreferenceSettings, CustomersFragmentsEnumType> {
+public class CustomersFragmentFactory extends FermatSubAppFragmentFactory<CustomersSubAppSession, CustomersFragmentsEnumType> {
 
 
     @Override

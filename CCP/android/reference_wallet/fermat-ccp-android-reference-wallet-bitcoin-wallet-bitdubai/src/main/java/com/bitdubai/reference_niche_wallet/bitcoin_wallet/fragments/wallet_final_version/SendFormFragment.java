@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,8 +72,6 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
      */
     private ReferenceWalletSession referenceWalletSession;
     private CryptoWallet cryptoWallet;
-    private IntraUserModuleManager intraUserModuleManager;
-
     /**
      * UI
      */
@@ -95,6 +95,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     private WalletContact walletContact;
     private boolean connectionDialogIsShow;
     private boolean onFocus;
+    private Spinner spinner;
 
 
     public static SendFormFragment newInstance() {
@@ -144,6 +145,15 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        List<String> list = new ArrayList<String>();
+        list.add("btc");
+        list.add("bits");
+        list.add("Satoshis");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
     }
 
     private void setUpActions(){
@@ -363,7 +373,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                             validAddress,
                             notes,
                             referenceWalletSession.getAppPublicKey(),
-                            intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
+                            cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
                             Actors.INTRA_USER,
                             cryptoWalletWalletContact.getActorPublicKey(),
                             cryptoWalletWalletContact.getActorType(),

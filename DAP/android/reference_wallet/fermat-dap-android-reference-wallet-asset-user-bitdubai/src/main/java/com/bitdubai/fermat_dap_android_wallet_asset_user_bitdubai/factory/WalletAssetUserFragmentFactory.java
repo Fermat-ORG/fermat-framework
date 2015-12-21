@@ -1,14 +1,11 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.MainFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.MyAssetsActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.settings.AssetUserSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 /**
@@ -17,7 +14,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
  * @author Francisco Vasquez on 15/09/15.
  * @version 1.0
  */
-public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetUserSession, AssetUserSettings,WalletResourcesProviderManager, WalletAssetUserFragmentsEnumType> {
+public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetUserSession,WalletResourcesProviderManager, WalletAssetUserFragmentsEnumType> {
 
 
     @Override

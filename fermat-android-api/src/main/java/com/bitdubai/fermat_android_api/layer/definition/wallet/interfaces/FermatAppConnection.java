@@ -14,8 +14,6 @@ public interface FermatAppConnection {
 
     FermatFragmentFactory getFragmentFactory();
 
-    FermatSettings getSettings();
-
     NavigationViewPainter getNavigationViewPainter();
 
     HeaderViewPainter getHeaderViewPainter();

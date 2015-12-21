@@ -70,9 +70,6 @@ project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bi
 include ':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai')
 
-include ':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai'
-project(':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai')
-
 // network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
