@@ -1335,8 +1335,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     protected void bottomNavigationEnabled(boolean enabled){
         if(enabled) {
-
-
             bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(),null);
         }
     }

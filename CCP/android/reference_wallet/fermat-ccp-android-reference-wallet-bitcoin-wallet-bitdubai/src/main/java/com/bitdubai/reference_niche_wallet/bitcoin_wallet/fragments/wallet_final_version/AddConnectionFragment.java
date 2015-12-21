@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -47,6 +48,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private ErrorManager errorManager;
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
     private ReferenceWalletSession referenceWalletSession;
+    private ImageView empty_screen;
 
 
     public static AddConnectionFragment newInstance() {
@@ -74,7 +76,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         try {
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
+            empty_screen = (ImageView) layout.findViewById(R.id.empty_screen);
             setUpScreen();
+            onRefresh();
         } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -122,6 +126,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 intraUserInformationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(intraUserInformationList);
+                if(intraUserInformationList.isEmpty()){
+                    empty_screen.setVisibility(View.VISIBLE);
+                }
             }
         }
     }

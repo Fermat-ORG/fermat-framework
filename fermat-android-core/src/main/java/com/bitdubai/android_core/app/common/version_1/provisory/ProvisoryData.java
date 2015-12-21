@@ -85,7 +85,7 @@ public class ProvisoryData {
 
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
-        identityFolder.setIconResource(R.drawable.ic_06);
+        identityFolder.setIconResource(R.drawable.identities_xxhdpi);
         identityFolder.setPosition(2);
         lst.add(identityFolder);
 
