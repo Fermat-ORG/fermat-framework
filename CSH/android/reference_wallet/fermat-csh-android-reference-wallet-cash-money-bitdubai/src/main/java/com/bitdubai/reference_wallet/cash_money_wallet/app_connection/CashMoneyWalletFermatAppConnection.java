@@ -14,10 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.reference_wallet.cash_money_wallet.fragmentFactory.CashMoneyWalletFragmentFactory;
-import com.bitdubai.reference_wallet.cash_money_wallet.preference_settings.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 /**

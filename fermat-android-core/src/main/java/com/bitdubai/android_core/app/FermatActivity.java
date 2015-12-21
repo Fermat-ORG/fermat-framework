@@ -76,8 +76,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -119,22 +117,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
-import com.bitdubai.fermat_api.layer.modules.NewModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -379,10 +368,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             if(appConnections!=null) {
                 ModuleManager moduleManager = getModuleManager(appConnections.getPluginVersionReference());
-                if (moduleManager instanceof NewModuleManager) {
-                    NewModuleManager newModuleManager = (NewModuleManager) moduleManager;
-                    appConnections.setActiveIdentity(newModuleManager.getActiveIdentity());
-                }
+                appConnections.setActiveIdentity(moduleManager.getSelectedActorIdentity());
             }
             TabStrip tabs = activity.getTabStrip();
             Map<String, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
