@@ -12,11 +12,13 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerConnectionDenialFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
@@ -27,7 +29,7 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<FermatSettings, CryptoBrokerCommunitySelectableIdentity> {
 
     /**
      * The method <code>listSelectableIdentities</code> lists the login identities that can be used
@@ -67,46 +69,44 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * The method <code>acceptCryptoBroker</code> takes the information of a connection request, accepts
      * the request and adds the crypto broker to the list managed by this plugin with ContactState CONTACT.
      *
-     * @param cryptoBrokerToAddName      The name of the crypto broker to add
-     * @param cryptoBrokerToAddPublicKey The public key of the crypto broker to add
-     * @param profileImage               The profile image that the crypto broker has
+     * @param requestId      The request id of te connection to accept.
      *
-     * @throws CantAcceptRequestException if something goes wrong.
+     * @throws CantAcceptRequestException           if something goes wrong.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request..
      */
-    void acceptCryptoBroker(String identityPublicKey         ,
-                            String cryptoBrokerToAddName     ,
-                            String cryptoBrokerToAddPublicKey,
-                            byte[] profileImage              ) throws CantAcceptRequestException;
+    void acceptCryptoBroker(UUID requestId) throws CantAcceptRequestException, ConnectionRequestNotFoundException;
 
 
     /**
      * The method <code>denyConnection</code> denies a conection request from other crypto broker
      *
-     * @param cryptoBrokerToRejectPublicKey the public key of the user to deny its connection request
+     * @param requestId      The request id of te connection to deny.
      *
      * @throws CryptoBrokerConnectionDenialFailedException if something goes wrong.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
-    void denyConnection(String cryptoBrokerLoggedPublicKey  ,
-                        String cryptoBrokerToRejectPublicKey) throws CryptoBrokerConnectionDenialFailedException;
+    void denyConnection(UUID requestId) throws CryptoBrokerConnectionDenialFailedException, ConnectionRequestNotFoundException;
 
     /**
      * The method <code>disconnectCryptoBroker</code> disconnect an crypto broker from the list managed by this
      * plugin
      *
-     * @param cryptoBrokerToDisconnectPublicKey the public key of the crypto broker to disconnect
+     * @param requestId      The request id of te connection to disconnect.
      *
      * @throws CryptoBrokerDisconnectingFailedException if something goes wrong.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
-    void disconnectCryptoBroker(String cryptoBrokerToDisconnectPublicKey) throws CryptoBrokerDisconnectingFailedException;
+    void disconnectCryptoBroker(UUID requestId) throws CryptoBrokerDisconnectingFailedException, ConnectionRequestNotFoundException;
 
     /**
      * The method <code>cancelCryptoBroker</code> cancels an crypto broker from the list managed by this
      *
-     * @param cryptoBrokerToCancelPublicKey
+     * @param requestId      The request id of te connection to cancel.
      *
      * @throws CryptoBrokerCancellingFailedException if something goes wrong.
+     * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
-    void cancelCryptoBroker(String cryptoBrokerToCancelPublicKey) throws CryptoBrokerCancellingFailedException;
+    void cancelCryptoBroker(UUID requestId) throws CryptoBrokerCancellingFailedException, ConnectionRequestNotFoundException;
 
     /**
      * The method <code>getAllCryptoBrokers</code> returns the list of all crypto brokers registered by the

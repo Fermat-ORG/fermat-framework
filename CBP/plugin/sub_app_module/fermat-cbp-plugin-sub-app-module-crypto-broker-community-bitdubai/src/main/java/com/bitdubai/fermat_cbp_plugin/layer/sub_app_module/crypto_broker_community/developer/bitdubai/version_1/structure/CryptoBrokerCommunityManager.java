@@ -1,7 +1,13 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -23,6 +29,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerConnectionDenialFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
@@ -35,6 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager</code>
@@ -140,23 +148,97 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public void acceptCryptoBroker(String identityPublicKey, String cryptoBrokerToAddName, String cryptoBrokerToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException {
+    public void acceptCryptoBroker(final UUID requestId) throws CantAcceptRequestException, ConnectionRequestNotFoundException {
 
+        try {
+
+            cryptoBrokerActorConnectionManager.acceptConnection(requestId);
+
+        } catch (final CantAcceptActorConnectionRequestException |
+                       UnexpectedConnectionStateException        e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAcceptRequestException(e, "", "Error trying to accept the actor connection.");
+        } catch (final ActorConnectionNotFoundException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new ConnectionRequestNotFoundException(e, "", "Connection already requested.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAcceptRequestException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
-    public void denyConnection(String cryptoBrokerLoggedPublicKey, String cryptoBrokerToRejectPublicKey) throws CryptoBrokerConnectionDenialFailedException {
+    public void denyConnection(final UUID requestId) throws CryptoBrokerConnectionDenialFailedException,
+                                                            ConnectionRequestNotFoundException         {
 
+        try {
+
+            cryptoBrokerActorConnectionManager.denyConnection(requestId);
+
+        } catch (final CantDenyActorConnectionRequestException |
+                       UnexpectedConnectionStateException      e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoBrokerConnectionDenialFailedException(e, "", "Error trying to deny the actor connection.");
+        } catch (final ActorConnectionNotFoundException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new ConnectionRequestNotFoundException(e, "", "Connection request not found.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoBrokerConnectionDenialFailedException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
-    public void disconnectCryptoBroker(String cryptoBrokerToDisconnectPublicKey) throws CryptoBrokerDisconnectingFailedException {
+    public void disconnectCryptoBroker(final UUID requestId) throws CryptoBrokerDisconnectingFailedException,
+                                                                    ConnectionRequestNotFoundException      {
 
+        try {
+
+            cryptoBrokerActorConnectionManager.disconnect(requestId);
+
+        } catch (final CantDisconnectFromActorException   |
+                       UnexpectedConnectionStateException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoBrokerDisconnectingFailedException(e, "", "Error trying to disconnect the actor connection.");
+        } catch (final ActorConnectionNotFoundException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new ConnectionRequestNotFoundException(e, "", "Connection request not found.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoBrokerDisconnectingFailedException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
-    public void cancelCryptoBroker(String cryptoBrokerToCancelPublicKey) throws CryptoBrokerCancellingFailedException {
+    public void cancelCryptoBroker(final UUID requestId) throws CryptoBrokerCancellingFailedException, ConnectionRequestNotFoundException {
 
+        try {
+
+            cryptoBrokerActorConnectionManager.cancelConnection(requestId);
+
+        } catch (final CantCancelActorConnectionRequestException |
+                       UnexpectedConnectionStateException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoBrokerCancellingFailedException(e, "", "Error trying to disconnect the actor connection.");
+        } catch (final ActorConnectionNotFoundException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new ConnectionRequestNotFoundException(e, "", "Connection request not found.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoBrokerCancellingFailedException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
@@ -205,7 +287,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        // todo implement
         return null;
     }
 }
