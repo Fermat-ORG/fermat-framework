@@ -1,9 +1,8 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
-
 # Installation and Configuration Guide for Fermat Development Environment 
 
 <br>
-## all links tested-laderuner
+
 ## Introduction
 
 Currently Fermat is targeting the Android OS (other OS will come later on).
@@ -23,7 +22,7 @@ RAM = 8 Gb
 It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution). 
 To use Ubuntu, you will need:
 * a) 30 Gb Free space in you hard disk, to allocate a new *partition* to install Ubuntu (this will NOT affect your Windows partition)
-* b) A valid UBUNTU disc image ( you can download it here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) )     
+* b) A valid UBUNTU disc image ( you can download it here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) )
 * c) A free DVD to create the UBUNTU installation disk.
 
 <br>
@@ -41,7 +40,7 @@ You will need the following tools in order to develop in Fermat
 Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team, by means of the automatic installationscript or following the manual installation steps.
 
 
-#### Automatic installation
+### Automatic installation
 
 * You can install all the needed software automatically using the following script: (please use "right-clic" and "save as.." and save it in your _$HOME_ folder ) 
 [FermatDeveloperInstaller.sh] (https://raw.githubusercontent.com/bitDubai/fermat/master/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
@@ -52,16 +51,11 @@ Although there are many ways to configure these tools, we suggest to follow the 
 
 ```shell
 platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
-#platfform="-linux-i586.tar.gz" #To use this platorm, you need to comment the previous line and uncomment this.
-
-gradleVersion=2.9 #Sets the version that you want to use in development, this version must be superior to 2.5.
-
-#If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
-#genymotion="genymotion-2.5.2_x86.bin" #Genymotion for 32 Bits OS
-genymotion="genymotion-2.5.2_x64.bin" #Genymotion for 64 Bits OS
-#If you want to use the default Android Studio emulator, please, leave the previous lines commented.
+#platfform="-linux-i586.tar.gz" #To use this platorm, comment the previous line and uncomment this.
 ```
+
 * Then, to execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
+
 ```shell
 cd $HOME
 ./FermatDeveloperInstaller.sh
@@ -71,7 +65,7 @@ It takes some time to download all the software, please, be patient.
 
 
 <br>
-#### Manual installation
+### Manual installation (if automatic installation did no work properly)
 
 In case the script goes wrong or does not do its intended job, you can go with the manual set up of the environment.
 
