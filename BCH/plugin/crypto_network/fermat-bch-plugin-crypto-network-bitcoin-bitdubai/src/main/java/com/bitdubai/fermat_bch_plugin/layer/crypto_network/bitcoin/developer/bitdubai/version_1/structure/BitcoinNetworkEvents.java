@@ -342,20 +342,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoAddress getOutgoingTransactionAddressFrom (Transaction tx){
-        Address address = null;
-        for (TransactionInput input : tx.getInputs()){
-            if (input.getScriptSig().isSentToAddress())
-                address = input.getScriptSig().getToAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT));
-        }
-
-        CryptoAddress cryptoAddress = null;
-
-        if (address != null)
-            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
-        else
-            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
-
-        return cryptoAddress;
+        return getIncomingTransactionAddressFrom(tx);
     }
 
     /**
@@ -364,30 +351,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoAddress getOutgoingTransactionAddressTo (Wallet wallet, Transaction tx){
-        Address address = null;
-
-        /**
-         * look for the transactions outputs that are for keys not mine.
-         */
-        for (TransactionOutput output : tx.getOutputs()){
-            if (!output.isMine(wallet)){
-                Script script =  output.getScriptPubKey();
-                /**
-                 * get the address from the output
-                 */
-                if (script.isSentToAddress()){
-                    address = script.getToAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT));
-                }
-            }
-        }
-
-        CryptoAddress cryptoAddress = null;
-        if (address != null)
-            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
-        else
-            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
-
-        return cryptoAddress;
+        return getIncomingTransactionAddressTo(wallet,tx);
     }
 
     /**
