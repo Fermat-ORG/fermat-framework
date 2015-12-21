@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -73,6 +74,11 @@ public class Message implements Serializable{
      * Represent the fermatMessageContentType
      */
     private MessageContentType messageContentType;
+
+    /**
+     * Represent the messageType
+     */
+    private MessageType messageType;
 
     /**
      * Constructor
@@ -269,7 +275,29 @@ public class Message implements Serializable{
         this.signature = signature;
     }
 
+    /**
+     * Gets the value of messageType and returns
+     *
+     * @return messageType
+     */
+    public MessageType getMessageType() {
+        return messageType;
+    }
 
+    /**
+     * Sets the messageType
+     *
+     * @param messageType to set
+     */
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+    }
+
+    /**
+     * (non-javadoc)
+     *
+     * @see Object#toString()
+     */
     @Override
     public String toString() {
         return "Message{" +
@@ -282,6 +310,7 @@ public class Message implements Serializable{
                 ", signature='" + signature + '\'' +
                 ", messageStatus=" + messageStatus +
                 ", messageContentType=" + messageContentType +
+                ", messageType=" + messageType +
                 '}';
     }
 }

@@ -34,7 +34,6 @@ public class DesktopDatabaseTableOrder implements DataBaseTableOrder {
      *
      * @param columnName
      */
-    @Override
     public void setColumName (String columnName){
         this.columnName = columnName;
     }
@@ -44,7 +43,6 @@ public class DesktopDatabaseTableOrder implements DataBaseTableOrder {
      *
      * @param direction DatabaseFilterOrder enum, ASC or DESC
      */
-    @Override
     public void setDirection (DatabaseFilterOrder direction){
         this.direction = direction;
     }
@@ -55,8 +53,7 @@ public class DesktopDatabaseTableOrder implements DataBaseTableOrder {
      * @return String column name
      */
     @Override
-    public String getColumName (){
-
+    public String getColumnName() {
         return this.columnName;
     }
 

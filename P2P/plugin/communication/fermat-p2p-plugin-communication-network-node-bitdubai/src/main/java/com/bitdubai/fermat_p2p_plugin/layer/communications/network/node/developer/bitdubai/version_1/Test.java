@@ -6,34 +6,12 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
-import com.google.gson.Gson;
-
-import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
-import org.jboss.resteasy.spi.ResteasyDeployment;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.Timestamp;
 
 import javax.servlet.ServletException;
-
-import io.undertow.Handlers;
-import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.server.handlers.resource.ClassPathResourceManager;
-import io.undertow.server.handlers.resource.ResourceHandler;
-import io.undertow.server.handlers.resource.ResourceManager;
-import io.undertow.servlet.Servlets;
-import io.undertow.servlet.api.DeploymentInfo;
-import io.undertow.servlet.api.DeploymentManager;
-import io.undertow.util.Headers;
 
 
 /**

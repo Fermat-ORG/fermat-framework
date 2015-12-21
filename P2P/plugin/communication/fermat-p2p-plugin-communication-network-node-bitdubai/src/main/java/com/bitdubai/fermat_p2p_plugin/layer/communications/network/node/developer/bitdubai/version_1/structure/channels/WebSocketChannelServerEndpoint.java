@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.MessageProcessor;
 
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint</code>
@@ -23,7 +26,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WebSocketChannelServerEndpoint {
+public abstract class WebSocketChannelServerEndpoint {
 
     /**
      * Represent the list of messages processors
@@ -100,7 +103,53 @@ public class WebSocketChannelServerEndpoint {
      *
      * @return messagesProcessors
      */
-    public Map<MessageType, List<MessageProcessor>> getMessagesProcessors() {
+    protected Map<MessageType, List<MessageProcessor>> getMessagesProcessors() {
         return messagesProcessors;
     }
+
+    /**
+     * Validate if can process the message type
+     *
+     * @param messageType to process
+     * @return true or false
+     */
+    protected boolean canProcessMessage(MessageType messageType){
+        return messagesProcessors.containsKey(messageType);
+    }
+
+    /**
+     * Method that process a new message received
+     *
+     * @param message
+     * @param session
+     */
+    protected void processMessage(Message message, Session session) throws IllegalArgumentException{
+
+        /*
+         * Validate if can process the message
+         */
+        if (canProcessMessage(message.getMessageType())){
+
+            /*
+             * Get list of the processor
+             */
+            for (MessageProcessor messageProcessor: messagesProcessors.get(message.getMessageType())) {
+
+                /*
+                 * Process the message
+                 */
+                messageProcessor.processingMessage(session, message);
+            }
+
+        }else {
+
+            throw new IllegalArgumentException("The message type: "+message.getMessageType()+" is not supported");
+        }
+    }
+
+    /**
+     * Initialize the message processor
+     */
+    abstract void initMessageProcessors();
+
 }

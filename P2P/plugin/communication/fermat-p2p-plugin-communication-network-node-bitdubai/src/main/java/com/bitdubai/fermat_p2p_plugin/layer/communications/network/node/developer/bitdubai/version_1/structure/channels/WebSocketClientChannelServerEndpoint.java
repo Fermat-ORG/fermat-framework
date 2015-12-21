@@ -8,13 +8,13 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageDecoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageEncoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInClient;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageDecoder;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageEncoder;
 
 import org.jboss.logging.Logger;
 
@@ -66,9 +66,12 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
     }
 
     /**
-     * Initialize the message processor
+     * (non-javadoc)
+     *
+     * @see WebSocketChannelServerEndpoint#initMessageProcessors()
      */
-    private void initMessageProcessors(){
+    @Override
+    void initMessageProcessors(){
 
         /*
          * Register all messages processor for this
@@ -114,11 +117,19 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
     public void newMessageReceived(Message message, Session session) {
 
         LOG.info("New message Received");
-        LOG.info("session: " + session.getId() + " message = " + message + "");
+        LOG.info("Session: " + session.getId() + " Message = " + message + "");
 
-        for (Session s : session.getOpenSessions()) {
-            s.getAsyncRemote().sendText(message.getContent());
+        try {
+
+            /*
+             * Process the new message received
+             */
+            processMessage(message, session);
+
+        }catch (IllegalArgumentException i){
+            LOG.warn(i.getMessage());
         }
+
     }
 
     /**
