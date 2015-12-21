@@ -19,7 +19,7 @@ import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragm
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class WalletStoreFragmentFactory extends FermatFragmentFactory<WalletStoreSubAppSession, WalletStorePreferenceSettings, ResourceProviderManager, WalletStoreFragmentsEnumType> {
+public class WalletStoreFragmentFactory extends FermatFragmentFactory<WalletStoreSubAppSession, ResourceProviderManager, WalletStoreFragmentsEnumType> {
 
 
     @Override

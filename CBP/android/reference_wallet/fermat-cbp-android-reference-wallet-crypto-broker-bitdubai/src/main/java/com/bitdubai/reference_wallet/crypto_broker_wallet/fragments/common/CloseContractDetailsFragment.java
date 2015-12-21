@@ -145,7 +145,7 @@ public class CloseContractDetailsFragment extends FermatWalletFragment {
         BigDecimal exchangeRate = BigDecimal.valueOf(contractBasicInfo.getExchangeRateAmount());
 
         double amountToReceive = amountToSell.multiply(exchangeRate).doubleValue();
-        return DecimalFormat.getInstance().format(amountToReceive);
+        return DecimalFormat.getNumberInstance().format(amountToReceive);
     }
 
 
