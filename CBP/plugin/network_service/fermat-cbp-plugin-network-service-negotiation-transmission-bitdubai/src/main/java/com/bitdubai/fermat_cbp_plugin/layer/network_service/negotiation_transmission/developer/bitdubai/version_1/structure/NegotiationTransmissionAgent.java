@@ -19,7 +19,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionResponseMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationMessage;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -336,13 +337,22 @@ public class NegotiationTransmissionAgent {
 
                                 launchNotification();
 
-                                NegotiationTransmissionResponseMessage transmissionResponseMessage = new NegotiationTransmissionResponseMessage(
+                                NegotiationMessage negotiationMessage = new NegotiationMessage(
+                                        negotiationTransmission.getTransmissionId(),
                                         negotiationTransmission.getTransactionId(),
+                                        negotiationTransmission.getNegotiationId(),
+                                        negotiationTransmission.getNegotiationTransactionType(),
+                                        negotiationTransmission.getPublicKeyActorSend(),
+                                        negotiationTransmission.getActorSendType(),
+                                        negotiationTransmission.getPublicKeyActorReceive(),
+                                        negotiationTransmission.getActorReceiveType(),
+                                        negotiationTransmission.getTransmissionType(),
                                         NegotiationTransmissionState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        negotiationTransmission.getNegotiationTransactionType());
+                                        negotiationTransmission.getTimestamp()
+                                );
 
                                 Gson gson = new Gson();
-                                String message = gson.toJson(transmissionResponseMessage);
+                                String message = gson.toJson(negotiationMessage);
 
                                 // El destination soy yo porque me lo estan enviando
                                 // El sender es el otro y es a quien le voy a responder

@@ -109,7 +109,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 //        container_jane_doe.setOnClickListener(this);
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
-//        checkbox_not_show.setOnCheckedChangeListener(this);
+        checkbox_not_show.setOnCheckedChangeListener(this);
     }
 
 
@@ -146,7 +146,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         }
         else if(id == R.id.btn_right){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe",null,convertImage(R.drawable.profile_image_standard));
+                getSession().getModuleManager().getCryptoWallet().createIntraUser("Jane Doe",null,convertImage(R.drawable.profile_image_standard));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
@@ -168,8 +168,12 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Toast.makeText(activity,"Checked",Toast.LENGTH_SHORT).show();
-    }
+        if(isChecked){
+            getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.TRUE);
+        }else {
+            getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.FALSE);
+        }
 
+    }
 
 }

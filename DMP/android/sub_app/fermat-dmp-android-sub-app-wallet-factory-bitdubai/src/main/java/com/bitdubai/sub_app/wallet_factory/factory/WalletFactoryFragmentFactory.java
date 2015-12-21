@@ -16,7 +16,7 @@ import com.bitdubai.sub_app.wallet_factory.ui.fragments.MainFragment;
  * @author Francisco Vasquez
  */
 
-public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<WalletFactorySubAppSession, WalletFactoryPreferenceSettings, WalletFactoryFragmentsEnumType> {
+public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<WalletFactorySubAppSession, WalletFactoryFragmentsEnumType> {
 
 
     public WalletFactoryFragmentFactory() {

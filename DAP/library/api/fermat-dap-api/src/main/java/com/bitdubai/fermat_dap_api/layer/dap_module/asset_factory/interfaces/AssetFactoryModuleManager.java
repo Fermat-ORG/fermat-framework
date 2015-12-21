@@ -1,15 +1,14 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
-//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
-
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.settings.BasicSubAppSettings;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
@@ -19,13 +18,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.List;
 
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetFactoryModuleManager extends ModuleManager {
+public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSettings, ActorIdentityInformation> {
     //Implementa solo los metodos que utiliza la sup app
     IdentityAssetIssuer getLoggedIdentityAssetIssuer();
 
@@ -68,6 +68,11 @@ public interface AssetFactoryModuleManager extends ModuleManager {
      * This method returns the information stored about the all Asset Factory
      */
     List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException;
+
+    /**
+     * This method returns the resource of an asset factory object
+     */
+    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
 
     /**
      * TThis method list all wallet installed in device, start the transaction

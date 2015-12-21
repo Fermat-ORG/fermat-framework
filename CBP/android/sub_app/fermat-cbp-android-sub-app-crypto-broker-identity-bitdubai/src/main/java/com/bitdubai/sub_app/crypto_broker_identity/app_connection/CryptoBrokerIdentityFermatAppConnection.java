@@ -14,9 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_identity.preference_settings.CryptoBrokerIdentityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 
 /**
@@ -51,10 +49,6 @@ public class CryptoBrokerIdentityFermatAppConnection extends AppConnections {
         return new CryptoBrokerIdentitySubAppSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new CryptoBrokerIdentityPreferenceSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

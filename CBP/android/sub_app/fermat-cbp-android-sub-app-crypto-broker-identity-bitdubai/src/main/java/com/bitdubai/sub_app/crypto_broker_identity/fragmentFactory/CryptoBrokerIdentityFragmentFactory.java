@@ -18,7 +18,7 @@ import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.Crypto
 /**
  * Created by Nelson Ramirez on 2015.09
  */
-public class CryptoBrokerIdentityFragmentFactory extends FermatFragmentFactory<CryptoBrokerIdentitySubAppSession, CryptoBrokerIdentityPreferenceSettings, SubAppResourcesProviderManager, CryptoBrokerIdentityFragmentsEnumType> {
+public class CryptoBrokerIdentityFragmentFactory extends FermatFragmentFactory<CryptoBrokerIdentitySubAppSession, SubAppResourcesProviderManager, CryptoBrokerIdentityFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {

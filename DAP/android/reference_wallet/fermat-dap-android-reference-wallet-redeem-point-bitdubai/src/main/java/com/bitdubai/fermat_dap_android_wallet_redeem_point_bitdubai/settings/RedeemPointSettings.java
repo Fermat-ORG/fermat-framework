@@ -44,13 +44,4 @@ public class RedeemPointSettings implements WalletSettings {
         this.skinId = skinId;
     }
 
-    @Override
-    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantSaveWalletSettings {
-        this.preferenceWalletSettings = preferenceWalletSettings;
-    }
-
-    @Override
-    public String getPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings {
-        return preferenceWalletSettings.toString();
-    }
 }

@@ -23,12 +23,9 @@ import com.bitdubai.android_core.app.common.version_1.connections.ConnectionCons
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
@@ -53,15 +50,13 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.List;
@@ -343,7 +338,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 if (getWalletSessionManager().isWalletOpen(lastWallet.getWalletPublicKey())) {
                     walletSession = getWalletSessionManager().getWalletSession(lastWallet.getWalletPublicKey());
                 } else {
-                    WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
                     walletSession = getWalletSessionManager().openWalletSession(lastWallet,getErrorManager(),moduleManager,fermatAppConnection);
                 }
             }
@@ -484,7 +478,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             getWalletRuntimeManager().getLastWallet().getLastActivity().getFragment(fragmentType);
             FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletPublicKey,this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getAssetIssuerIdentity(), getAssetUserWalletModuleManager().getAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getAssetRedeemPointIdentity());
             FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
-            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()), getWalletSettingsManager().getSettings(walletPublicKey), getWalletResourcesProviderManager());
+            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()),getWalletResourcesProviderManager());
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(R.id.fragment_container2, fragment);

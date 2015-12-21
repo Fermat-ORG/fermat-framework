@@ -32,7 +32,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import android.view.View;
@@ -122,16 +122,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             //com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subApp);
 
             FermatFragmentsEnumType fermatFragmentsEnumType = fermatFragmentFactory.getFermatFragmentEnumType(fragmentType);
-            android.app.Fragment fragment =  fermatFragmentFactory.getFragment(fragmentType,subAppsSession,null,null);
+            android.app.Fragment fragment =  fermatFragmentFactory.getFragment(fragmentType,subAppsSession,null);
 
 
-
-//            android.app.Fragment fragment = subAppFragmentFactory.getFragment(
-//                    fragmentType,
-//                    subAppsSession,
-//                    null, //getSubAppSettingsManager().getAndLoadSettingsFile(xxx),
-//                    getSubAppResourcesProviderManager()
-//            );
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(idContainer, fragment);

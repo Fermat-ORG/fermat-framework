@@ -15,11 +15,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.header.CryptoCustomerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.preference_settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 /**
@@ -57,10 +55,6 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
         return new CryptoCustomerWalletSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new CryptoCustomerWalletPreferenceSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

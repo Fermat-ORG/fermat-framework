@@ -72,11 +72,8 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -117,11 +114,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
@@ -139,7 +135,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
@@ -708,7 +703,6 @@ public abstract class FermatActivity extends AppCompatActivity
      * Method used from a Wallet to paint tabs
      */
     protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, FermatSession walletSession,FermatFragmentFactory fermatFragmentFactory) {
-        WalletSettingsManager walletSettingsManager = getWalletSettingsManager();
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
@@ -772,7 +766,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 subAppsSession,
                 getErrorManager(),
                 fermatFragmentFactory,
-                null,//getSubAppSettingSettingsManager(),
                 getSubAppResourcesProviderManager()
         );
 
@@ -1507,36 +1500,6 @@ public abstract class FermatActivity extends AppCompatActivity
             return ((ApplicationSession) getApplication()).getFermatSystem().getErrorManager(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
         } catch (ErrorManagerNotFoundException |
                 CantGetErrorManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Get WalletSettingsManager
-     */
-    public WalletSettingsManager getWalletSettingsManager() {
-/// TODO THINK WHAT TO DO WITH SUB-APP/WALLET/LOQSEA SETTINGS
-        try {
-            return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
-                            Layers.MIDDLEWARE,
-                            Plugins.WALLET_SETTINGS,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
 
             System.out.println(e.getMessage());
             System.out.println(e.toString());

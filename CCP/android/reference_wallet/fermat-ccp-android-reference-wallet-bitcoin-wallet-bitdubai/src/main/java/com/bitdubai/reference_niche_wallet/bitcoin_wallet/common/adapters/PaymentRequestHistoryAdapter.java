@@ -112,7 +112,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 state = "Waiting for response";
                 break;
             case APPROVED:
-                state = "Approved";
+                state = "Accepted";
                 break;
             case PAID:
                 state = "Paid";

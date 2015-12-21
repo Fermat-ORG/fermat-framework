@@ -101,7 +101,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
-    private FermatTextView txt_vault;
+    private FermatTextView txt_balance_amount_type;
 
 
     public static SendTransactionFragment2 newInstance() {
@@ -123,15 +123,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = appSession.getErrorManager();
 
-            CryptoWalletIntraUserIdentity lst = referenceWalletSession.getIntraUserModuleManager();
-
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
                 public void run() {
+                    Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_SCREEN_ENABLED);
+                    if(o!=null) {
+                        if (!(Boolean) o)
+                            setUpPresentation();
+                    }else{
                         setUpPresentation();
+                    }
                 }}, 500);
         } catch (Exception ex) {
             if (errorManager != null)
@@ -159,6 +163,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         referenceWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
                     }
                 }
+
 
             }
         });
@@ -308,7 +313,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             public void onClick(View view) {
                 //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
                 //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-                changeAmountType(txt_balance_amount);
+                changeAmountType();
             }
         });
         txt_amount_type.setOnClickListener(new View.OnClickListener() {
@@ -316,7 +321,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             public void onClick(View view) {
                 //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
                 //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-                changeAmountType(txt_balance_amount);
+                changeAmountType();
             }
         });
 
@@ -329,6 +334,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         }
+
+        txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
 
     }
 
@@ -387,7 +394,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -501,8 +508,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
     }
 
-    private void changeAmountType(TextView txt_balance_amount){
-        referenceWalletSession.setTypeAmount((referenceWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN);
+    private void changeAmountType(){
+        ShowMoneyType showMoneyType = (referenceWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        referenceWalletSession.setTypeAmount(showMoneyType);
+        String moneyTpe = "";
+        switch (showMoneyType){
+            case BITCOIN:
+                moneyTpe = "btc";
+                break;
+            case BITS:
+                moneyTpe = "bits";
+                break;
+        }
+        txt_balance_amount_type.setText(moneyTpe);
         updateBalances();
     }
 

@@ -8,11 +8,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleCryptoCustomerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -53,7 +57,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 
 
     @Override
-    public CryptoCustomerWallet getCryptoCustomerWallet(String walletPublicKey) throws CantGetCryptoCustomerWalletException {
+    public CryptoCustomerWalletManager getCryptoCustomerWallet(String walletPublicKey) throws CantGetCryptoCustomerWalletException {
         try {
             if (walletManager == null)
                 walletManager = new CryptoCustomerWalletModuleCryptoCustomerWalletManager();
@@ -104,5 +108,15 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
             // If I couldn't get the correct logging level, then I will set it to minimal.
             return DEFAULT_LOG_LEVEL;
         }
+    }
+
+    @Override
+    public SettingsManager<FermatSettings> getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        return null;
     }
 }

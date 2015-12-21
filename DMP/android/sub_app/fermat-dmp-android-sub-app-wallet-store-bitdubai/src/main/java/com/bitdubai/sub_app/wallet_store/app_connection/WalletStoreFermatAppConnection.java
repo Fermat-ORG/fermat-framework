@@ -14,9 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentFactory;
-import com.bitdubai.sub_app.wallet_store.preference_settings.WalletStorePreferenceSettings;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 
 /**
@@ -49,11 +47,6 @@ public class WalletStoreFermatAppConnection extends AppConnections {
     @Override
     public AbstractFermatSession getSession() {
         return new WalletStoreSubAppSession();
-    }
-
-    @Override
-    public FermatSettings getSettings() {
-        return new WalletStorePreferenceSettings();
     }
 
     @Override
