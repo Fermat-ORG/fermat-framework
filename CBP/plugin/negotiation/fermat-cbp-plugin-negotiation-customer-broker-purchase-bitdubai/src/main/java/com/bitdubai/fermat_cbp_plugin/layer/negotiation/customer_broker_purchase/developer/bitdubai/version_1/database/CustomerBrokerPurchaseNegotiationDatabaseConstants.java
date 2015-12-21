@@ -54,7 +54,7 @@ public class CustomerBrokerPurchaseNegotiationDatabaseConstants {
     static final String CHANGES_PURCHASE_STATUS_COLUMN_NAME = "status";
     static final String CHANGES_PURCHASE_START_DATE_TIME_COLUMN_NAME = "start_date_time";
 
-    static final String CHANGES_PURCHASE_FIRST_KEY_COLUMN = "clause_id";
+    static final String CHANGES_PURCHASE_FIRST_KEY_COLUMN = "change_id";
 
     /**
      * Locations Customer database table definition.
