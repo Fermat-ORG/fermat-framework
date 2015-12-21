@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantGetCryptoAddressException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantGetCryptoAmountException;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -156,9 +157,11 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
      * @throws CantSubmitMerchandiseException
      */
     @Override
-    public void submitMerchandise(String cbpWalletPublicKey,
-                                  String walletPublicKey,
-                                  String contractHash)
+    public void submitMerchandise(
+            BigDecimal referencePrice,
+            String cbpWalletPublicKey,
+            String walletPublicKey,
+            String contractHash)
             throws CantSubmitMerchandiseException {
         try {
             CustomerBrokerContractSale customerBrokerContractSale=
@@ -175,7 +178,9 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                     customerBrokerContractSale,
                     customerCryptoAddress,
                     walletPublicKey,
-                    cryptoAmount);
+                    cryptoAmount,
+                    cbpWalletPublicKey,
+                    referencePrice);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             throw new CantSubmitMerchandiseException(e,
                     "Submit online merchandise",

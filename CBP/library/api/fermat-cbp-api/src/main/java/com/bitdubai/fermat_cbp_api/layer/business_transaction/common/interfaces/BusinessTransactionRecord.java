@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 
+import java.math.BigDecimal;
+
 /**
  * This class represents the Contract Basic information persisted in Business Transactions plugins database.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
@@ -35,6 +37,8 @@ public class BusinessTransactionRecord {
     private String transactionId;
 
     private String cryptoWalletPublicKey;
+
+    private BigDecimal priceReference;
 
     //Offline fields
     private FiatCurrency currencyType;
@@ -87,6 +91,10 @@ public class BusinessTransactionRecord {
 
     public CurrencyType getPaymentType() {
         return paymentType;
+    }
+
+    public BigDecimal getPriceReference() {
+        return priceReference;
     }
 
     public long getTimestamp() {
@@ -152,6 +160,10 @@ public class BusinessTransactionRecord {
         this.paymentType = paymentType;
     }
 
+    public void setPriceReference(BigDecimal priceReference) {
+        this.priceReference = priceReference;
+    }
+
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
@@ -183,6 +195,7 @@ public class BusinessTransactionRecord {
                 ", transactionHash='" + transactionHash + '\'' +
                 ", transactionId='" + transactionId + '\'' +
                 ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' +
+                ", priceReference=" + priceReference +
                 ", currencyType=" + currencyType +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +
