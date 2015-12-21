@@ -344,7 +344,17 @@ public class BitcoinCurrencyCryptoVaultManager {
          * Create the bitcoinj wallet from the keys of this account
          */
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
-        final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        Wallet wallet = null;
+        try {
+             wallet = Wallet.fromSeed(networkParameters, getBitcoinVaultSeed());
+        } catch (InvalidSeedException e) {
+            e.printStackTrace();
+        }
+
+        wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
+
+        wallet.getActiveKeychain().getKey(KeyChain.KeyPurpose.CHANGE);
 
 
         /**
@@ -366,6 +376,7 @@ public class BitcoinCurrencyCryptoVaultManager {
         /**
          * creates the send request and broadcast it on the network.
          */
+
         wallet.allowSpendingUnconfirmedTransactions();
         wallet.setAcceptRiskyTransactions(true);
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
@@ -383,7 +394,6 @@ public class BitcoinCurrencyCryptoVaultManager {
 
         try {
             wallet.completeTx(sendRequest);
-
         } catch (InsufficientMoneyException e) {
             StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
             output.append(System.lineSeparator());
