@@ -338,15 +338,15 @@ public class AssetIssuingTransactionMonitorAgent implements Agent, DealsWithLogg
                                         withError = true;
                                         continue;
                                     }
-                                    assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                                    /**
+                                     * If all pending transactions on_crypto_network has been processed, then I will update the event status
+                                     */
+                                    if (!withError) {
+                                        assetIssuingTransactionDao.updateEventStatus(eventId);
+                                        assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                                    }
+                                }
 
-                                }
-                                /**
-                                 * If all pending transactions on_crypto_network has been processed, then I will update the event status
-                                 */
-                                if (!withError) {
-                                    assetIssuingTransactionDao.updateEventStatus(eventId);
-                                }
                             }
                         }
                         case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER: {
@@ -386,14 +386,13 @@ public class AssetIssuingTransactionMonitorAgent implements Agent, DealsWithLogg
                                         withError = true;
                                         continue;
                                     }
-                                    assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
-
-                                }
-                                /**
-                                 * If all pending transactions on_block_chain has been processed, then I will update the event status
-                                 */
-                                if (!withError) {
-                                    assetIssuingTransactionDao.updateEventStatus(eventId);
+                                    /**
+                                     * If all pending transactions on_block_chain has been processed, then I will update the event status
+                                     */
+                                    if (!withError) {
+                                        assetIssuingTransactionDao.updateEventStatus(eventId);
+                                        assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
+                                    }
                                 }
                             }
                         }
