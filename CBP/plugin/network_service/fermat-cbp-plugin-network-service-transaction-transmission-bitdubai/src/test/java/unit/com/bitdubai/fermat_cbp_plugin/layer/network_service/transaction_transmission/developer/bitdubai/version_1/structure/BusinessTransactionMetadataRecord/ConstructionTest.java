@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 /**
- * Created by root on 12/12/15.
+ * Created by Gabriel Araujo (gabe_512@hotmail.com) on 12/12/15.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {

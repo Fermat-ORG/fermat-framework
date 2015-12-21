@@ -125,7 +125,12 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         toReceive.start();
         toSend.start();
     }
-
+    /**
+     * Check if it is running
+     */
+     public boolean isRunning(){
+         return this.running;
+     }
     /**
      * Pause the internal threads
      */
@@ -148,7 +153,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         //Stop the Threads
         toReceive.interrupt();
         toSend.interrupt();
-
+        this.running = false;
         //Disconnect from the service
         communicationsVPNConnection.close();
     }
