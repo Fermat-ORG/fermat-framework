@@ -94,9 +94,9 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            moduleManager = ((WalletStoreSubAppSession) appSession).getWalletStoreModuleManager();
+            moduleManager = ((WalletStoreSubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
-            catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }

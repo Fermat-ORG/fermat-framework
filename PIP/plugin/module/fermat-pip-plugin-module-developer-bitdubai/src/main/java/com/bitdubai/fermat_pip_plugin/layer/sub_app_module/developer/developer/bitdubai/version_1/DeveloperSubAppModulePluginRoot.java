@@ -5,12 +5,21 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.abstract_classes.AbstractModule;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantPersistModuleSettingsException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.basic_classes.BasicSubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
@@ -32,7 +41,13 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements DealWithDatabaseManagers, DealsWithLogManagers, ToolManager {
+public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppSettings> implements
+        DealWithDatabaseManagers,
+        DealsWithLogManagers,
+        ToolManager {
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
 
     // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
 
@@ -88,5 +103,10 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements D
             throw new CantGetLogToolException(CantGetLogToolException.DEFAULT_MESSAGE ,e, " Error get DeveloperActorLogTool object","");
 
         }
+    }
+
+    @Override
+    protected PluginFileSystem getPluginFileSystem() {
+        return pluginFileSystem;
     }
 }

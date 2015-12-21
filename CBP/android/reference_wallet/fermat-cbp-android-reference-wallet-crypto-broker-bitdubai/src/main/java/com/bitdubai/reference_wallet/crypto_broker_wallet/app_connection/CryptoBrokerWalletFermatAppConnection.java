@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer.CryptoBrokerWalletFooterPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBrokerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
@@ -51,6 +51,7 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections {
                 Developers.BITDUBAI,
                 new Version()
         );
+
     }
 
     @Override

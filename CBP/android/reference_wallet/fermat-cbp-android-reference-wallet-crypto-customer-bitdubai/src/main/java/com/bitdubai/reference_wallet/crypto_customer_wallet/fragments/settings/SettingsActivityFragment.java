@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,16 +13,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragm
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import static android.widget.Toast.makeText;
 

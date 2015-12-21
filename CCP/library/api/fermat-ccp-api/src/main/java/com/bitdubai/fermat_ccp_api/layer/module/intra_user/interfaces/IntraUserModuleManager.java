@@ -61,6 +61,17 @@ public interface IntraUserModuleManager extends ModuleManager {
      */
      List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
+
+    /**
+     * The method <code>getCacheSuggestionsToContact</code> get cache list of intra users that the logged in
+     * intra user could be interested to add.
+     *
+     * @return a list with information of intra users
+     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
+     */
+    List<IntraUserInformation> getCacheSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
+
     /**
      * The method <code>searchIntraUser</code> gives us an interface to manage a search for a particular
      * intra user

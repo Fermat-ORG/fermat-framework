@@ -37,6 +37,9 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetIdentityRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 
 import java.util.ArrayList;
@@ -167,7 +170,7 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
-                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity());
+                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getAssetRedeemPointIdentity());
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
                     fragments.add(walletFragmentFactory.getFragment(page.getFragment(), getWalletSessionManager().getWalletSession(wallet.getPublicKey()), null, getWalletResourcesProviderManager()));
@@ -194,6 +197,12 @@ public class WizardActivity extends FermatActivity
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
             } catch (CantGetActiveLoginIdentityException e) {
+                e.printStackTrace();
+            } catch (CantGetIdentityAssetIssuerException e) {
+                e.printStackTrace();
+            } catch (CantGetIdentityAssetUserException e) {
+                e.printStackTrace();
+            } catch (CantGetIdentityRedeemPointException e) {
                 e.printStackTrace();
             }
         }

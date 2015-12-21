@@ -50,20 +50,20 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
     private Database database;
 
-    private final ErrorManager         errorManager        ;
+    private final ErrorManager errorManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final PluginFileSystem     pluginFileSystem    ;
-    private final UUID                 pluginId            ;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
 
-    public BitcoinWalletBasicWallet(final ErrorManager         errorManager        ,
+    public BitcoinWalletBasicWallet(final ErrorManager errorManager,
                                     final PluginDatabaseSystem pluginDatabaseSystem,
-                                    final PluginFileSystem     pluginFileSystem    ,
-                                    final UUID                 pluginId            ) {
+                                    final PluginFileSystem pluginFileSystem,
+                                    final UUID pluginId) {
 
-        this.errorManager         = errorManager        ;
+        this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem     = pluginFileSystem    ;
-        this.pluginId             = pluginId            ;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     //metodo create para crear la base de datos
@@ -121,18 +121,18 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType    ,
+    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,
                                                            TransactionType transactionType,
-                                                           int             max            ,
-                                                           int             offset         ) throws CantListTransactionsException {
+                                                           int max,
+                                                           int offset) throws CantListTransactionsException {
 
         try {
             BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
 
             return bitcoinWalletBasicWalletDao.listTransactions(
-                    balanceType    ,
+                    balanceType,
                     transactionType,
-                    max            ,
+                    max,
                     offset
             );
 
@@ -146,10 +146,10 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactionsByActor(final String      actorPublicKey,
-                                                                  final BalanceType balanceType   ,
-                                                                  final int         max           ,
-                                                                  final int         offset        ) throws CantListTransactionsException {
+    public List<BitcoinWalletTransaction> listTransactionsByActor(final String actorPublicKey,
+                                                                  final BalanceType balanceType,
+                                                                  final int max,
+                                                                  final int offset) throws CantListTransactionsException {
 
         try {
 
@@ -174,11 +174,11 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String           actorPublicKey,
-                                                                         final BalanceType      balanceType   ,
-                                                                         final TransactionType  transactionType,
-                                                                         final int              max           ,
-                                                                         final int              offset        ) throws CantListTransactionsException {
+    public List<BitcoinWalletTransaction> listTransactionsByActorAndType(final String actorPublicKey,
+                                                                         final BalanceType balanceType,
+                                                                         final TransactionType transactionType,
+                                                                         final int max,
+                                                                         final int offset) throws CantListTransactionsException {
 
         try {
 
@@ -204,18 +204,18 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(final BalanceType     balanceType    ,
+    public List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(final BalanceType balanceType,
                                                                                      final TransactionType transactionType,
-                                                                                     final int             max            ,
-                                                                                     final int             offset         ) throws CantListTransactionsException {
+                                                                                     final int max,
+                                                                                     final int offset) throws CantListTransactionsException {
 
         try {
             BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
 
             return bitcoinWalletBasicWalletDao.listLastActorTransactionsByTransactionType(
-                    balanceType    ,
+                    balanceType,
                     transactionType,
-                    max            ,
+                    max,
                     offset
             );
         } catch (CantListTransactionsException exception) {
@@ -228,8 +228,8 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public void setTransactionDescription(final UUID   transactionID,
-                                          final String memo         ) throws CantStoreMemoException,
+    public void setTransactionDescription(final UUID transactionID,
+                                          final String memo) throws CantStoreMemoException,
             CantFindTransactionException {
         try {
             BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
@@ -255,15 +255,15 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
             case AVAILABLE:
                 return new BitcoinWalletBasicWalletAvailableBalance(database);
             case BOOK:
-                return new BitcoinWalletBasicWalletBookBalance     (database);
+                return new BitcoinWalletBasicWalletBookBalance(database);
             default:
                 return new BitcoinWalletBasicWalletAvailableBalance(database);
         }
     }
 
     @Override
-    public BitcoinWalletTransactionSummary getActorTransactionSummary(final String      actorPublicKey,
-                                                                      final BalanceType balanceType   ) throws CantGetActorTransactionSummaryException {
+    public BitcoinWalletTransactionSummary getActorTransactionSummary(final String actorPublicKey,
+                                                                      final BalanceType balanceType) throws CantGetActorTransactionSummaryException {
         try {
             BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
 
@@ -326,8 +326,8 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
         }
     }
 
-    private void persistWalletIds(final PluginTextFile    walletIdsFile,
-                                  final Map<String, UUID> walletsIdMap ) throws CantCreateWalletException {
+    private void persistWalletIds(final PluginTextFile walletIdsFile,
+                                  final Map<String, UUID> walletsIdMap) throws CantCreateWalletException {
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -345,6 +345,16 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
             walletIdsFile.persistToMedia();
         } catch (CantPersistFileException cantPersistFileException) {
             throw new CantCreateWalletException("Could not persist in file", cantPersistFileException, "stringBuilder: " + stringBuilder.toString(), "");
+        }
+    }
+
+    @Override
+    public void deleteTransaction(UUID transactionID) throws CantFindTransactionException {
+        try {
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            bitcoinWalletBasicWalletDao.deleteTransaction(transactionID);
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 }
