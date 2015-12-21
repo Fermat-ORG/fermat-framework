@@ -1,8 +1,8 @@
+<!-- all links tested by laderuner -->
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat
 Logo")
 
 <br><br>
-## all links tested-laderuner
 ## Introduction: Platforms & Super Layers
 
 First of all we need to explain how we have separated each large structure of the framework into two concepts: '_Platforms_' and '_Super Layers_'.
