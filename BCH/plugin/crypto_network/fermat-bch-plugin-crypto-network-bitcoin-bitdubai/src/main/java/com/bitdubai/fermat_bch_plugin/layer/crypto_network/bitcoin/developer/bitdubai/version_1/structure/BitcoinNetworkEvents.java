@@ -177,7 +177,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                         errorAddress,
                         0,
                         "",
-                        ProtocolStatus.NO_ACTION_REQUIRED);
+                        ProtocolStatus.TO_BE_NOTIFIED);
             } catch (CantExecuteDatabaseOperationException e1) {
                 e1.printStackTrace();
             }
@@ -635,8 +635,14 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * I need to check the outputs for the value that is being sent
          */
+        long value = 0;
         try{
-            return tx.getValue(wallet).negate().getValue();
+            for (TransactionOutput output : tx.getOutputs()){
+                if (!output.isMine(wallet))
+                    value = output.getValue().getValue();
+            }
+
+            return value;
         } catch (Exception e){
             return 0;
         }
