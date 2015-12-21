@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
 /**
@@ -39,5 +40,10 @@ public class IntraUserNetworkService  implements IntraUserInformation {
     @Override
     public String getPhrase() {
         return this.phrase;
+    }
+
+    @Override
+    public ConnectionState getConnectionState() {
+        return null;
     }
 }
