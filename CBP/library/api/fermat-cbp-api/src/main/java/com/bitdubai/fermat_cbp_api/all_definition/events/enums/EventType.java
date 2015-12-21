@@ -68,13 +68,13 @@ public enum EventType implements FermatEventEnum {
     INCOMING_NEGOTIATION_TRANSMISSION_UPDATE("INTRU") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionUpdateEvent(this);}
     },
-    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION("INTCN") {
+    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM("INTCN") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmNegotiationEvent(this);}
     },
     INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE("INTCR") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmResponseEvent(this);}
     },
-    INCOMING_NEGOTIATION_TRANSACTION("INTRS") {
+    INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION("INTRT") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransactionEvent(this);}
     },
     NEW_NEGOTIATION_TRANSACTION_NEW("NNTRN") {

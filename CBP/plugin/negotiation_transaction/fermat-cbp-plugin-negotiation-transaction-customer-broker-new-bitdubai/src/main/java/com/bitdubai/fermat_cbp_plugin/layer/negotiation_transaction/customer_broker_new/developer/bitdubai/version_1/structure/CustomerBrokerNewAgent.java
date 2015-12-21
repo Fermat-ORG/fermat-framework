@@ -401,7 +401,7 @@ public class CustomerBrokerNewAgent implements
 
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
 
-                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSACTION.getCode())) {
+                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
                         negotiationTransmission = record.getInformation();
@@ -425,42 +425,8 @@ public class CustomerBrokerNewAgent implements
                     }
                 }
 
-                //EVENT CONFIRM RESPONSE: evalua si se confirma.
-                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE.getCode())) {
-                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
-                        negotiationTransmission = record.getInformation();
-                        transactionId = negotiationTransmission.getTransactionId();
-                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
-                        if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_RESPONSE.getCode())) {
-
-                            negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_CONFIRMATION;
-                            //agrregar getNegotiationType() al negotiationTransaction
-//                            negotiationType              = negotiationTransaction.getNegotiationType().getCode();
-
-//                            switch (negotiationType){
-//                                case PURCHASE:
-//                                    customerBrokerContractPurchaseManager.
-//                                            updateStatusCustomerBrokerPurchaseContractStatus(
-//                                                    contractHash,
-//                                                    ContractStatus.PENDING_PAYMENT);
-//                                    break;
-//                                case SALE:
-//                                    customerBrokerContractSaleManager.
-//                                            updateStatusCustomerBrokerSaleContractStatus(
-//                                                    contractHash,
-//                                                    ContractStatus.PENDING_PAYMENT);
-//                            }
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, negotiationTransactionStatus);
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
-                            negotiationTransmissionManager.confirmReception(transactionId);
-
-                        }
-                    }
-                }
-
                 //EVENT CONFIRM NEGOTIATION: evalua si se envia la negociacion
-                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION.getCode())) {
+                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
                         negotiationTransmission = record.getInformation();

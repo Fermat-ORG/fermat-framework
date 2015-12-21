@@ -703,7 +703,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
 
             System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER \n STATE: " + NegotiationTransmissionState.PENDING_ACTION + "-----------------------\n");
-            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSACTION);
+            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION);
             IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) fermatEvent;
             event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
             event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
@@ -728,7 +728,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             databaseDao.confirmReception(transmissionId);
 
             System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE +" -----------------------\n");
-            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
+
+            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM);
             IncomingNegotiationTransmissionConfirmNegotiationEvent event = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
             event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
             event.setDestinationPlatformComponentType(actorReceiveType);

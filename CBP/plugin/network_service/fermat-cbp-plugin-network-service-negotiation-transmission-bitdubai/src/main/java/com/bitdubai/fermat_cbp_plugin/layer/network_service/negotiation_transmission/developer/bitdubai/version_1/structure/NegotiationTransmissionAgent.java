@@ -378,14 +378,14 @@ public class NegotiationTransmissionAgent {
     }
 
     private void launchNotificationConfirm(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSACTION);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION);
         IncomingNegotiationTransactionEvent eventToRaise = (IncomingNegotiationTransactionEvent) fermatEvent;
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
         eventManager.raiseEvent(eventToRaise);
     }
 
     private void launchNotificationNegotiation(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM);
         IncomingNegotiationTransmissionConfirmNegotiationEvent eventToRaise = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
         eventManager.raiseEvent(eventToRaise);
