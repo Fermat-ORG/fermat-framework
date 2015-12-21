@@ -33,38 +33,42 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         setErrorManager(errorManager);
-        LOCAL_STORAGE_PATH="digital-asset-transmission/";
+        LOCAL_STORAGE_PATH = "digital-asset-transmission/";
     }
 
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException{
-        if(errorManager==null){
+    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
+        if (errorManager == null) {
             throw new CantSetObjectException("ErrorManager is null");
         }
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
     public void setDigitalAssetMetadataAssetIssuerWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetIssuerActorsException {
-        AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-        AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
-        ActorAssetIssuer actorAssetIssuer=this.actorAssetIssuerManager.getActorAssetIssuer();
+        AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+        AssetIssuerWalletBalance assetIssuerWalletBalance = assetIssuerWallet.getBookBalance(balanceType);
+        ActorAssetIssuer actorAssetIssuer = this.actorAssetIssuerManager.getActorAssetIssuer();
         String actorFromPublicKey;
-        if(actorAssetIssuer==null){
+        if (actorAssetIssuer == null) {
             System.out.println("ASSET DISTRIBUTION Actor Issuer is null");
-            actorFromPublicKey="UNDEFINED";
-        }else{
-            actorFromPublicKey=actorAssetIssuer.getActorPublicKey();
+            actorFromPublicKey = "UNDEFINED";
+        } else {
+            actorFromPublicKey = actorAssetIssuer.getActorPublicKey();
         }
-        System.out.println("ASSET DISTRIBUTION Actor Issuer public key:"+actorFromPublicKey);
-        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
+        System.out.println("ASSET DISTRIBUTION Actor Issuer public key:" + actorFromPublicKey);
+        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
                 genesisTransaction,
                 actorFromPublicKey,
                 "testActorToPublicKey"
         );
-        System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:"+assetIssuerWalletTransactionRecordWrapper.getDescription());
-        System.out.println("ASSET DISTRIBUTION Balance Type:"+balanceType);
+        System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:" + assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET DISTRIBUTION Balance Type:" + balanceType);
 
         assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
+    }
+
+    public AssetIssuerWallet getIssuerWallet() throws CantLoadWalletException {
+        return this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
     }
 
 }

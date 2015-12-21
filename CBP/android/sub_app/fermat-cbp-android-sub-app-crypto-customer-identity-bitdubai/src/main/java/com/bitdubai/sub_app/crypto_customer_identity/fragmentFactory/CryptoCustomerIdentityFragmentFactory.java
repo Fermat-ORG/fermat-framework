@@ -17,7 +17,7 @@ import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.Cryp
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory<CryptoCustomerIdentitySubAppSession, CryptoCustomerIdentityPreferenceSettings, SubAppResourcesProviderManager, CryptoCustomerIdentityFragmentsEnumType> {
+public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory<CryptoCustomerIdentitySubAppSession, SubAppResourcesProviderManager, CryptoCustomerIdentityFragmentsEnumType> {
 
 
     @Override

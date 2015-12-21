@@ -55,10 +55,6 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections{
         return new RedeemPointSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new RedeemPointSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

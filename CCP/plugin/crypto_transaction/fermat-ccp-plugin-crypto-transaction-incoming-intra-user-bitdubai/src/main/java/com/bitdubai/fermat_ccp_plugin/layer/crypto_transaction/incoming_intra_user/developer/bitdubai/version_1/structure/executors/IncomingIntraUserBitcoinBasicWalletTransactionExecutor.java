@@ -65,6 +65,9 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
                 case REVERSED_ON_BLOCKCHAIN:
                     processReversedOnBlockchainTransaction(transactionContainer);
                     break;
+                case IRREVERSIBLE:
+                    //TODO: ver porqué sigue quedando acá la transaccion
+                    break;
                 default:
                     throw new IncomingIntraUSerUnexpectedTransactionException("El crypto status no es esperado", null, "El cryptoStatus es: " + transaction.getInformation().getCryptoStatus().getCode(), "");
             }

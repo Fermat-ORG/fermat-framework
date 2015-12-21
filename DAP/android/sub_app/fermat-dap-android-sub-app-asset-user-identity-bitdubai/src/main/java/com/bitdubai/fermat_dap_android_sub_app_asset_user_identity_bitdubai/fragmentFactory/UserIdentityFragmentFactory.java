@@ -13,7 +13,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSession, UserIdentitySubAppSettings, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
+public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSession, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
 
 
     @Override

@@ -51,10 +51,6 @@ public class CryptoBrokerIdentityFermatAppConnection extends AppConnections {
         return new CryptoBrokerIdentitySubAppSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new CryptoBrokerIdentityPreferenceSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
