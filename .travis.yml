@@ -41,6 +41,6 @@ install:
   - 'echo "Download Gradle Wrapper"; chmod +x ./gradlew; ls -l gradlew; ./gradlew -v'
 
 script:
-  - ./gradlew rebuild
+  - ./gradlew assemble
   - ./gradlew build
 
