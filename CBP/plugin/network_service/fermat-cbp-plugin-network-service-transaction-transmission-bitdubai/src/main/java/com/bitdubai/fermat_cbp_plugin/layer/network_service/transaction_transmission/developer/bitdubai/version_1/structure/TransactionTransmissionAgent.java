@@ -253,6 +253,7 @@ public class TransactionTransmissionAgent {
         //Stop the Thread
         toSend.interrupt();
         toReceive.interrupt();
+        this.running = Boolean.FALSE;
         //Disconnect from the service
     }
 
