@@ -68,14 +68,26 @@ public enum EventType implements FermatEventEnum {
     INCOMING_NEGOTIATION_TRANSMISSION_UPDATE("INTRU") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionUpdateEvent(this);}
     },
-    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM("INTCN") {
+    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW("INTCN") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmNegotiationEvent(this);}
+    },
+    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE("INTCU") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmNegotiationEvent(this);}
+    },
+    INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE("INTCC") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmNegotiationEvent(this);}
+    },
+    INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW("INTTN") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransactionEvent(this);}
+    },
+    INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE("INTTU") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransactionEvent(this);}
+    },
+    INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE("INTTC") {
+        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransactionEvent(this);}
     },
     INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE("INTCR") {
         public final FermatEvent getNewEvent() { return new IncomingNegotiationTransmissionConfirmResponseEvent(this);}
-    },
-    INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION("INTRT") {
-        public final FermatEvent getNewEvent() { return new IncomingNegotiationTransactionEvent(this);}
     },
     NEW_NEGOTIATION_TRANSACTION_NEW("NNTRN") {
         public final FermatEvent getNewEvent() { return new NewNegotiationTransactionNewEvent(this);}

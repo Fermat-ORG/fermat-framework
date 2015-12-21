@@ -17,13 +17,12 @@ public class IncomingNegotiationTransactionEventHandler extends AbstractCustomer
         if(this.CustomerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
 
             try {
+
                 this.CustomerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
+
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransactionEventHandler", "Check the cause");
             } catch(ClassCastException exception){
-                //Logger LOG = Logger.getGlobal();
-                //LOG.info("EXCEPTION DETECTOR----------------------------------");
-                //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingNegotiationTransactionEventHandler", "Cannot cast this event");
             } catch(Exception exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransactionEventHandler", "Unexpected exception");

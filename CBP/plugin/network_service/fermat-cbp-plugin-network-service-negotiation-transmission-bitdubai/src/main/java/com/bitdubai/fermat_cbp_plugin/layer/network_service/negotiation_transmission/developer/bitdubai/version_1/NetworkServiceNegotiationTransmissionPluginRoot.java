@@ -384,7 +384,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         try {
 
             Map<String, Object> filters = new HashMap<>();
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
+            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PENDING_ACTION);
 
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
             if(!negotiationTransmissionList.isEmpty()){
@@ -685,8 +685,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-            FermatEvent fermatEvent;
-
             NegotiationTransmissionImpl negotiationTransmission = new NegotiationTransmissionImpl(
                 negotiationMessage.getTransmissionId(),
                 negotiationMessage.getTransactionId(),
@@ -702,13 +700,6 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             );
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
 
-            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER \n STATE: " + NegotiationTransmissionState.PENDING_ACTION + "-----------------------\n");
-            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION);
-            IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) fermatEvent;
-            event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-            event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
-            eventManager.raiseEvent(event);
-
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
         } catch (Exception e) {
@@ -721,19 +712,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-            FermatEvent fermatEvent;
-            UUID                    transmissionId      = confirmMessage.getTransmissionId();
-            PlatformComponentType   actorReceiveType    = confirmMessage.getActorReceiveType();
-
+            UUID transmissionId = confirmMessage.getTransmissionId();
             databaseDao.confirmReception(transmissionId);
-
-            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE +" -----------------------\n");
-
-            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM);
-            IncomingNegotiationTransmissionConfirmNegotiationEvent event = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
-            event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-            event.setDestinationPlatformComponentType(actorReceiveType);
-            eventManager.raiseEvent(event);
 
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");

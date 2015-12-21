@@ -161,7 +161,6 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
                 filtersTable.add(newFilter);
             }
             table.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
-//            table.setStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, "23", DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
 

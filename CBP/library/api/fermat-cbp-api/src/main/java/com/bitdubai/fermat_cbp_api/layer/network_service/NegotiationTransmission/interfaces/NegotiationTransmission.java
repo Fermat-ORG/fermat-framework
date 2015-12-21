@@ -32,6 +32,8 @@ public interface NegotiationTransmission {
 
     NegotiationTransmissionState getTransmissionState();
 
+
+
     long getTimestamp();
 
     boolean isPendingToRead();

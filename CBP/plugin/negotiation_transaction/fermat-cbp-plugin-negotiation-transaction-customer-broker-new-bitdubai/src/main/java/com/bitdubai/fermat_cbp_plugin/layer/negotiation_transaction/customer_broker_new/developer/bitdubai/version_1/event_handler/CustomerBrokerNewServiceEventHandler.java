@@ -11,6 +11,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -26,7 +28,9 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
 
     private EventManager                                        eventManager;
 
-    private CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
+    private CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
+
+    private NegotiationTransmissionManager                      negotiationTransmissionManager;
 
     private ServiceStatus               serviceStatus   = ServiceStatus.CREATED;
 
@@ -34,9 +38,11 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
 
     public CustomerBrokerNewServiceEventHandler(
         CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao,
+        NegotiationTransmissionManager                     negotiationTransmissionManager,
         EventManager eventManager
     ){
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
+        this.negotiationTransmissionManager                     = negotiationTransmissionManager;
         this.eventManager                                       = eventManager;
     }
 
@@ -49,28 +55,22 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
             fermatEventHandler = new IncomingNegotiationTransactionEventHandler();
             ((IncomingNegotiationTransactionEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
             fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
             ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE);
-            fermatEventHandler = new IncomingNegotiationTransmissionConfirmResponseEventHandler();
-            ((IncomingNegotiationTransmissionConfirmResponseEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
             this.serviceStatus = ServiceStatus.STARTED;
+
         } catch (CantSetObjectException exception){
             throw new CantStartServiceException(exception,"Starting the AssetDistributionRecorderService", "The AssetDistributionRecorderService is probably null");
         }
@@ -98,6 +98,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
         LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         LOG.info("CHECK THE DATABASE");
+
     }
 
     public void incomingNegotiationTransactionConfirmEventHandler(IncomingNegotiationTransmissionConfirmNegotiationEvent event) throws CantSaveEventException {
@@ -105,15 +106,8 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
-    }
 
-    public void incomingNegotiationTransactionConfirmResponseEventHandler(IncomingNegotiationTransmissionConfirmResponseEvent event) throws CantSaveEventException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("CHECK THE DATABASE");
     }
-
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/

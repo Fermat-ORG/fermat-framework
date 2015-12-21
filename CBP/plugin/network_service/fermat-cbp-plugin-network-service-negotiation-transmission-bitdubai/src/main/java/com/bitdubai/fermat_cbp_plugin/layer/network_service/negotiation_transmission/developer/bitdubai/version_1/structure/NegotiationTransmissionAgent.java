@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionMessage;
@@ -243,6 +245,8 @@ public class NegotiationTransmissionAgent {
 
                             // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
                             Gson gson = new Gson();
+
+                            //TODO ESTO DEBE SER UN NegotiationTransmissionMessage
                             String jsonNegotiationTransaction =gson.toJson(negotiationTransmission);
 
                             // Envio el mensaje a la capa de comunicacion
@@ -302,6 +306,79 @@ public class NegotiationTransmissionAgent {
     private void processReceive() {
 
         try {
+
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PENDING_ACTION);
+
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
+            for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
+                switch (negotiationTransmission.getNegotiationTransactionType()){
+                    case CUSTOMER_BROKER_NEW:
+
+                        if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION){
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+
+                        }else{
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+
+                        }
+                        break;
+
+                    case CUSTOMER_BROKER_UPDATE:
+
+                        if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION){
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+
+                        }else{
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+
+                        }
+                        break;
+
+                    case CUSTOMER_BROKER_CLOSE:
+
+                        if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION){
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+
+                        }else{
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+
+                        }
+                        break;
+                }
+            }
+        } catch (CantReadRecordDataBaseException e) {
+                e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        /*
+        try {
+
             //communicationNetworkServiceConnectionManager.
             Map<String, Object> filters = new HashMap<>();
             filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
@@ -372,11 +449,12 @@ public class NegotiationTransmissionAgent {
                     }
                 }
             }
-        } catch (com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException e) {
+        } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
         }
+        */
     }
-
+/*
     private void launchNotificationConfirm(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION);
         IncomingNegotiationTransactionEvent eventToRaise = (IncomingNegotiationTransactionEvent) fermatEvent;
@@ -390,7 +468,7 @@ public class NegotiationTransmissionAgent {
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
         eventManager.raiseEvent(eventToRaise);
     }
-
+*/
     private void discountWaitTime(){
         if(!waitingPlatformComponentProfile.isEmpty()) {
             for (NegotiationTransmissionPlatformComponentProfilePlusWaitTime negotiationTransmissionPlatformComponentProfilePlusWaitTime : waitingPlatformComponentProfile.values()) {
