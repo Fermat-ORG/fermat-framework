@@ -229,11 +229,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
     @Override
     public void loadToMemory() throws CantLoadTableToMemoryException {
 
-        if (tableAggregateFunction != null && !tableAggregateFunction.isEmpty()) {
-            for (DatabaseAggregateFunction dso : tableAggregateFunction) {
-                System.out.println(dso);
-            }
-        }
         this.records = new ArrayList<>();
 
         String topSentence = "";
@@ -255,7 +250,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
             database = this.database.getReadableDatabase();
             List<String> columns = getColumns(database);
             String queryString = "SELECT *" + makeOutputColumns() + " FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence;
-            System.out.println(queryString);
             cursor = database.rawQuery(queryString, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
