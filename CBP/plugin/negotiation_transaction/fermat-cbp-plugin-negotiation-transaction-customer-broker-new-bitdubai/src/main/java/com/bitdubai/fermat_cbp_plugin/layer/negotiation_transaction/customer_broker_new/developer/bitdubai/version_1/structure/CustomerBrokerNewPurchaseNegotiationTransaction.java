@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
 
 /**
- * Created by Yordin Alayn on 08.12.15.
+ * Created by Yordin Alayn on 16.12.15.
  */
 public class CustomerBrokerNewPurchaseNegotiationTransaction {
 
@@ -28,12 +28,12 @@ public class CustomerBrokerNewPurchaseNegotiationTransaction {
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
     }
 
-    //PROCESS THE NEW PURCHASE NEGOTIATION TRANSACTION
+    //PROCESS THE UPDATE PURCHASE NEGOTIATION TRANSACTION
     public void newPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantNewPurchaseNegotiationTransactionException {
 
         try {
 
-            //CREATE NEGOTIATION
+            //UPDATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.createCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION

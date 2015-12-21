@@ -196,7 +196,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
 
             if (transactionType == TransactionType.DEBIT) {
-                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
+                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
                 try {
                     cashMoneyWalletSession.getModuleManager().createCashWithdrawalTransaction(t);
                     //updateWalletBalances(view.getRootView());
@@ -206,7 +206,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 }
             }
             else if(transactionType == TransactionType.CREDIT) {
-                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
+                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
                 try {
                     cashMoneyWalletSession.getModuleManager().createCashDepositTransaction(t);
                     //updateWalletBalances(view.getRootView());

@@ -29,7 +29,7 @@ public class CustomerBrokerContractPurchaseInformation implements CustomerBroker
             String negotiationID,
             String publicKeyCustomer,
             String publicKeyBroker,
-            long dateTime,
+            Long dateTime,
             ContractStatus status,
             Collection<ContractClause> clause
     ){
@@ -63,7 +63,7 @@ public class CustomerBrokerContractPurchaseInformation implements CustomerBroker
     }
 
     @Override
-    public long getDateTime() {
+    public Long getDateTime() {
         return this.dateTime;
     }
 
@@ -75,6 +75,11 @@ public class CustomerBrokerContractPurchaseInformation implements CustomerBroker
     @Override
     public Collection<ContractClause> getContractClause() {
         return clause;
+    }
+
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        return null;
     }
 
     @Override

@@ -121,7 +121,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
             if (cashMoneyWallet == null || transaction.getPublicKeyWallet() != lastPublicKey) {
                 try {
                     //cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet(transaction.getPublicKeyWallet());
-                    cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet("publicKeyWalletMock");
+                    cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet("cash_wallet");
                 } catch (CantLoadCashMoneyWalletException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                     continue;

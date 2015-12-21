@@ -10,12 +10,53 @@ import java.util.Collection;
  */
 
 public interface Contract {
+
+    /**
+     *
+     * @return ContractId
+     */
     String getContractId();
+
+    /**
+     *
+     * @return NegotiatiotId
+     */
     String getNegotiatiotId();
+
+    /**
+     *
+     * @return PublicKeyCustomer
+     */
     String getPublicKeyCustomer();
+
+    /**
+     *
+     * @return PublicKeyBroker
+     */
     String getPublicKeyBroker();
-    long getDateTime();
+
+    /**
+     *
+     * @return a Long with DateTime
+     */
+    Long getDateTime();
+
+    /**
+     *
+     * @return ContractStatus Status
+     */
     ContractStatus getStatus();
+
+    /**
+     *
+     * @return Collection<ContractClause> ContractClause
+     */
     Collection<ContractClause> getContractClause();
+
+    /**
+     *
+     * @return a Boolean with NearExpirationDatetime
+     */
+    Boolean getNearExpirationDatetime();
 }
 
