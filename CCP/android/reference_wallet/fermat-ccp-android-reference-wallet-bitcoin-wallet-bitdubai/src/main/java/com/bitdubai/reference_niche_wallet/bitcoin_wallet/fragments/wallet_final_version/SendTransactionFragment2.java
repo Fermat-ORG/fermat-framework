@@ -187,39 +187,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             super.onActivityCreated(savedInstanceState);
             animationManager = new AnimationManager(rootView,emptyListViewsContainer);
             getPaintActivtyFeactures().addCollapseAnimation(animationManager);
-            final CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
-
-            ActiveIdentity intraUserLoginIdentity = null;
-            if(cryptoWalletIntraUserIdentity != null) {
-                intraUserLoginIdentity = new ActiveIdentity() {
-                    @Override
-                    public String getAlias() {
-                        return cryptoWalletIntraUserIdentity.getAlias();
-                    }
-
-                    @Override
-                    public String getPublicKey() {
-                        return cryptoWalletIntraUserIdentity.getPublicKey();
-                    }
-
-                    @Override
-                    public byte[] getProfileImage() {
-                        return cryptoWalletIntraUserIdentity.getProfileImage();
-                    }
-
-                    @Override
-                    public void setNewProfileImage(byte[] newProfileImage) {
-
-                    }
-
-                    @Override
-                    public String createMessageSignature(String message) {
-                        return null;
-                    }
-                };
-            }
-
-            getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), intraUserLoginIdentity));
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);

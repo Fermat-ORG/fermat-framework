@@ -260,34 +260,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            final CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
-            ActiveIdentity intraUserLoginIdentity = new ActiveIdentity() {
-                @Override
-                public String getAlias() {
-                    return cryptoWalletIntraUserIdentity.getAlias();
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return cryptoWalletIntraUserIdentity.getPublicKey();
-                }
-
-                @Override
-                public byte[] getProfileImage() {
-                    return cryptoWalletIntraUserIdentity.getProfileImage();
-                }
-
-                @Override
-                public void setNewProfileImage(byte[] newProfileImage) {
-
-                }
-
-                @Override
-                public String createMessageSignature(String message) {
-                    return null;
-                }
-            };
-            getPaintActivtyFeactures().addNavigationView(new BitcoinWalletNavigationViewPainter(getActivity(), intraUserLoginIdentity));
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);

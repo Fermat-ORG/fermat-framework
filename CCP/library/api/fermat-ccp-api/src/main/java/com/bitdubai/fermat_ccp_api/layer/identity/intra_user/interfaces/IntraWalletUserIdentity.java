@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
 /**
  * The interface <code>IntraWalletUser</code>
  * defines the methods related to the extraction of the information of an intra user
  */
-public interface IntraWalletUserIdentity extends ActiveIdentity{
+public interface IntraWalletUserIdentity extends ActorIdentityInformation {
 
     /**
      * The method <code>getAlias</code> returns the alias of the represented intra user

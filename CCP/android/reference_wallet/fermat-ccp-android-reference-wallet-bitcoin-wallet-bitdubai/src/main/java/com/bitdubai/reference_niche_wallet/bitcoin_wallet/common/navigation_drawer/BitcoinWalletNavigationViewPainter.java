@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
@@ -20,10 +21,10 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
  */
 public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
-    private final ActiveIdentity intraUserLoginIdentity;
+    private final ActorIdentityInformation intraUserLoginIdentity;
     private Activity activity;
 
-    public BitcoinWalletNavigationViewPainter(Activity activity, ActiveIdentity intraUserLoginIdentity) {
+    public BitcoinWalletNavigationViewPainter(Activity activity, ActorIdentityInformation intraUserLoginIdentity) {
         this.activity = activity;
         this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
