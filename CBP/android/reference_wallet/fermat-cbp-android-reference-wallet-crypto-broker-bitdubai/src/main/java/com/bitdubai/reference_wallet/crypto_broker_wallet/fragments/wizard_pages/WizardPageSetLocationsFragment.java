@@ -5,9 +5,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragm
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandises extends FermatWalletFragment{
+public class WizardPageSetLocationsFragment extends FermatWalletFragment {
 
-    public static WizardPageSetMerchandises newInstance() {
-        return new WizardPageSetMerchandises();
+    public static FermatWalletFragment newInstance() {
+        return new WizardPageSetLocationsFragment();
     }
 }
