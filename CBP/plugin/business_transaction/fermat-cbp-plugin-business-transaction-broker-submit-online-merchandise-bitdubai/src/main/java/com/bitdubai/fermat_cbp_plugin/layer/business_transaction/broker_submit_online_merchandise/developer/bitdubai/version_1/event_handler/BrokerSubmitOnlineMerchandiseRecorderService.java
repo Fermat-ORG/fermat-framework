@@ -8,8 +8,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingConfirmBusinessTransactionResponse;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 

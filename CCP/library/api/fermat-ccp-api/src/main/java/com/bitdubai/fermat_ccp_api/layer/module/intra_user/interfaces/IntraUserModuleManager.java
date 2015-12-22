@@ -1,13 +1,17 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 
 import java.util.List;
 
@@ -15,7 +19,7 @@ import java.util.List;
  * The interface <code>IntraUserModuleManager</code>
  * provides the methods for the Intra Users sub app.
  */
-public interface IntraUserModuleManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
+public interface IntraUserModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
 
     /**
@@ -187,6 +191,15 @@ public interface IntraUserModuleManager extends ModuleManager<FermatSettings, Ac
      * @throws CantListIntraWalletUsersException
      */
     void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException;
+
+
+    /**
+     * The method <code>getIntraUsersConnectionStatus</code> return connection request status
+     * @param intraUserConnectedPublicKey
+     * @return ConnectionState object
+     * @throws CantGetIntraUserConnectionStatusException
+     */
+    ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUserConnectionStatusException;
 
     boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException;
 }

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaym
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHistoryItemViewHolder;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +27,8 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest, PaymentHistoryItemViewHolder>  {
 
-   // private View.OnClickListener mOnClickListener;
+    private onRefreshList onRefreshList;
+    // private View.OnClickListener mOnClickListener;
     CryptoWallet cryptoWallet;
     ReferenceWalletSession referenceWalletSession;
     Typeface tf;
@@ -34,11 +36,12 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession) {
+    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
         //this.mOnClickListener = onClickListener;
+        this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
@@ -184,9 +187,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                                 , referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
+                        onRefreshList.onRefresh();
                     } catch (Exception e) {
                         showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
                     }
+
                 }
             });
 
@@ -197,6 +202,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
+                    onRefreshList.onRefresh();
                 } catch (Exception e) {
                     showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
                 }

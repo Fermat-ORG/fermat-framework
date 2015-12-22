@@ -62,7 +62,7 @@
             android:columnCount="2">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/ccw_amount_sold_or_to_sell_title"
+                android:id="@+id/ccw_amount_bought_or_wanted_to_buy_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
@@ -73,10 +73,10 @@
                 android:gravity="start"
                 android:textColor="#69ccfa"
                 android:textSize="16sp"
-                tools:text="@string/ccw_amount_sold"/>
+                tools:text="@string/ccw_wanted_to_buy"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/ccw_amount_sold_or_to_sell_value"
+                android:id="@+id/ccw_amount_bought_or_wanted_to_buy_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
@@ -86,10 +86,10 @@
                 android:layout_row="0"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                tools:text="400.03 USD"/>
+                tools:text="1.32 BTC"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/ccw_amount_received_to_receive_title"
+                android:id="@+id/ccw_contract_details_price_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
@@ -100,10 +100,10 @@
                 android:gravity="start"
                 android:textColor="#69ccfa"
                 android:textSize="16sp"
-                tools:text="@string/ccw_price"/>
+                android:text="@string/ccw_price"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/ccw_amount_received_to_receive_value"
+                android:id="@+id/ccw_contract_details_price_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
@@ -113,7 +113,7 @@
                 android:layout_row="1"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                tools:text="325 BTC/USD"/>
+                tools:text="325 USD/BTC"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"

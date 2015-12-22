@@ -60,6 +60,11 @@ public class MethodCallsHistoryDao extends AbstractBaseDao<MethodCallsHistory> {
 
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
+        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME, entity.getUuid());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME , entity.getCreateTimestamp().getTime());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME, entity.getMethodName());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME, entity.getParameters());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getProfileIdentityPublicKey());
 
         return databaseTableRecord;
     }

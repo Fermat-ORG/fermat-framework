@@ -40,7 +40,7 @@ public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUserI
     protected void bindHolder(final IntraUserIdentityInfoViewHolder holder, final IntraWalletUserIdentity data, final int position) {
         holder.getIdentityName().setText(data.getAlias());
 
-        byte[] profileImage = data.getProfileImage();
+        byte[] profileImage = data.getImage();
         Bitmap imageBitmap = profileImage == null ?
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);

@@ -2,9 +2,11 @@ package com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 
 import java.util.List;
@@ -36,8 +38,21 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
      * @throws CantCreateCryptoBrokerIdentityException if something goes wrong.
      */
     CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias,
-                                                    final byte[] image) throws CantCreateCryptoBrokerIdentityException;
+                                                    final byte[] image) throws CantCreateCryptoBrokerIdentityException   ,
+                                                                               CryptoBrokerIdentityAlreadyExistsException;
 
+    /**
+     * Through the method <code>createCryptoBrokerIdentity</code> you can create a new crypto broker identity.
+     *
+     * @param publicKey the public key of the crypto Broker to publish
+     *
+     * @return an instance of the recent created crypto broker identity.
+     *
+     * @throws CantGetCryptoBrokerIdentityException   if something goes wrong.
+     * @throws IdentityNotFoundException              if we cannot find an identity for the given public key.
+     */
+    CryptoBrokerIdentity getCryptoBrokerIdentity(final String publicKey) throws CantGetCryptoBrokerIdentityException,
+                                                                                IdentityNotFoundException           ;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity
