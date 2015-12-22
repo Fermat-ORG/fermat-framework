@@ -160,7 +160,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, String transactionId) throws CantBroadcastTransactionException {
         bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx, transactionId);
     }
 

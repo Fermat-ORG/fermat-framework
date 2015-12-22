@@ -251,7 +251,7 @@ public class AssetCryptoVaultManager  {
         }
 
         try {
-            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, UUID.fromString(genesisTransactionId));
+            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, genesisTransactionId);
         } catch (CantBroadcastTransactionException e) {
             throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Cant broadcast the outgoing transaction", "CryptoNetwork issue.");
         }

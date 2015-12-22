@@ -176,7 +176,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(final Transaction tx, final String transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -193,9 +193,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * Broadcast it.
              */
-            TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
+            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-
                 @Override
                 public void onBroadcastProgress(double progress) {
                     System.out.println("****CryptoNetwork: progress broadcast " + progress);
@@ -226,7 +225,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param tx
      * @param transactionId
      */
-    private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
+    private void storeOutgoingTransaction(Wallet wallet, Transaction tx, String transactionId) {
         events.saveOutgoingTransaction(wallet, tx, transactionId);
     }
 
