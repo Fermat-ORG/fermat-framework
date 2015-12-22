@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -66,6 +67,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      *  UI components
      */
     FermatTextView dialogTitle;
+    LinearLayout dialogTitleLayout;
     EditText amountText;
     AutoCompleteTextView memoText;
     Button applyBtn;
@@ -110,6 +112,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             setContentView(R.layout.create_transaction_dialog);
 
 
+            dialogTitleLayout = (LinearLayout) findViewById(R.id.csh_ctd_title_layout);
             dialogTitle = (FermatTextView) findViewById(R.id.csh_ctd_title);
             //dialogTitleImg = (FermatTextView) findViewById(R.id.csh_ctd_title_img);
             amountText = (EditText) findViewById(R.id.csh_ctd_amount);
@@ -117,7 +120,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             applyBtn = (Button) findViewById(R.id.csh_ctd_apply_transaction_btn);
             cancelBtn = (Button) findViewById(R.id.csh_ctd_cancel_transaction_btn);
 
-
+            dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
             dialogTitle.setText(getTransactionTitleText());
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
