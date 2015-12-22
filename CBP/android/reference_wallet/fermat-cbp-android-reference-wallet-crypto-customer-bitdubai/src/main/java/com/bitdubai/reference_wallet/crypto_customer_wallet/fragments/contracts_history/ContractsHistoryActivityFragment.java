@@ -203,7 +203,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        appSession.setData("contract_data", data);
+        appSession.setData(CryptoCustomerWalletSession.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 

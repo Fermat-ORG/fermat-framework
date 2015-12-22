@@ -76,5 +76,6 @@
     <string name="cbw_amount_sold">Amount Sold</string>
     <string name="cbw_contract_details_payment_method">Payment Method</string>
     <string name="cbw_amount_received">Amount Received</string>
+    <string name="cbw_action_filter">Filter</string>
 
 </resources>
