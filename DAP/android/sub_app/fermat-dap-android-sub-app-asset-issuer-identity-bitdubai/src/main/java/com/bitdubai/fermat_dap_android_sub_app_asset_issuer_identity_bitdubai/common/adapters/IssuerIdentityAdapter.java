@@ -40,7 +40,7 @@ public class IssuerIdentityAdapter extends FermatAdapter<IdentityAssetIssuer, Is
     protected void bindHolder(final IssuerIdentityViewHolder holder, final IdentityAssetIssuer data, final int position) {
         holder.getIdentityName().setText(data.getAlias());
 
-        byte[] profileImage = data.getProfileImage();
+        byte[] profileImage = data.getImage();
         Bitmap imageBitmap = profileImage == null ?
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);

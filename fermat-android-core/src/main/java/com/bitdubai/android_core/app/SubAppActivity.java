@@ -197,7 +197,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 SubApp subApp = subAppRuntimeManager.getLastSubApp();
                 activity= subApp.getLastActivity();
                 fragment  = activity.getLastFragment();
+
+//                fermatAppConnection = new WeakReference<FermatAppConnection>(FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity()));
+
                 fermatAppConnection = new WeakReference<FermatAppConnection>(FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this)) ;
+
 
             }catch (NullPointerException nullPointerException){
                 fragment=null;
@@ -270,6 +274,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
 
             SubApp subApp = subAppRuntimeManager.getLastSubApp();
+
+//            loadFragment(subApp.getType(), idContainer, screen,FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity()).getFragmentFactory());
+
             loadFragment(subApp.getType(), idContainer, screen,FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this).getFragmentFactory());
 
         } catch (Exception e) {
