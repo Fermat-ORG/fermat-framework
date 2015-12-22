@@ -306,7 +306,24 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
         try {
-            return  intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
+
+            List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+
+            List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
+            intraUserInformationList = intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max,offset);
+
+
+            for (IntraUserInformation intraUser : intraUserInformationList) {
+
+                //get connection state status
+                ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+
+                //return intra user information - if not connected - status return null
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                intraUserInformationModuleList.add(intraUserInformation);
+            }
+
+            return intraUserInformationModuleList;
         }
         catch (ErrorSearchingCacheSuggestionsException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
