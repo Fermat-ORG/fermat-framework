@@ -36,6 +36,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.event_handler.BrokerSubmitOfflineMerchandiseRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -228,11 +229,11 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             /**
              * Init event recorder service.
              */
-            /*BrokerSubmitOnlineMerchandiseRecorderService brokerSubmitOnlineMerchandiseRecorderService=
-                    new BrokerSubmitOnlineMerchandiseRecorderService(
+            BrokerSubmitOfflineMerchandiseRecorderService brokerSubmitOfflineMerchandiseRecorderService=
+                    new BrokerSubmitOfflineMerchandiseRecorderService(
                             brokerSubmitOfflineMerchandiseBusinessTransactionDao,
                             eventManager);
-            brokerSubmitOnlineMerchandiseRecorderService.start();
+            brokerSubmitOfflineMerchandiseRecorderService.start();
 
             /**
              * Init monitor Agent
