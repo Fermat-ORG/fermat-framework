@@ -27,7 +27,7 @@ public interface CustomerBrokerCloseManager {
      * @param customerBrokerPurchaseNegotiation the updated negotiation
      * @throws CantCreateCustomerBrokerContractPurchaseException
      */
-    void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerContractPurchaseException;
+    void createCustomerBrokerClosePurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerContractPurchaseException;
 
     /**
      * Create an Customer Broker Close Negotiation Transaction for the broker
@@ -35,7 +35,7 @@ public interface CustomerBrokerCloseManager {
      * @param customerBrokerSaleNegotiation the updated negotiation
      * @throws CantCreateCustomerBrokerContractSaleException
      */
-    void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerContractSaleException;
+    void createCustomerBrokerCloseSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerContractSaleException;
 
     /**
      * Get negotiation transaction Customer Broker Close for the transactionId indicate
@@ -44,7 +44,7 @@ public interface CustomerBrokerCloseManager {
      * @return the Negotiation Transaction data
      * @throws CantGetCustomerBrokerCloseNegotiationTransactionException
      */
-    CustomerBrokerClose getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerCloseNegotiationTransactionException;
+    CustomerBrokerClose getCustomerBrokerCloseNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerCloseNegotiationTransactionException;
 
     /**
      * List negotiation transaction Customer Broker Close
@@ -52,6 +52,6 @@ public interface CustomerBrokerCloseManager {
      * @return the list Negotiation Transaction data
      * @throws CantGetListCustomerBrokerCloseNegotiationTransactionException
      */
-    List<CustomerBrokerClose> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerCloseNegotiationTransactionException;
+    List<CustomerBrokerClose> getAllCustomerBrokerCloseNegotiationTranasction() throws CantGetListCustomerBrokerCloseNegotiationTransactionException;
 
 }

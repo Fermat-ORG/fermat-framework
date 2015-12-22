@@ -42,7 +42,9 @@ import java.util.regex.Pattern;
  * Created by Yordin Alayn on 16.09.15.
  */
 
-public class NegotiationTransactionCustomerBrokerClosePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
+public class NegotiationTransactionCustomerBrokerClosePluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        LogManagerForDevelopers{
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -52,6 +54,8 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     public NegotiationTransactionCustomerBrokerClosePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -74,5 +78,39 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
         return null;
     }
 
+    /*IMPLEMENTATION LogManagerForDevelopers*/
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerClosePluginRoot");
+        return returnedClasses;
+    }
 
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+
+        //I will check the current values and update the LogLevel in those which is different
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+
+            //if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+            if (NegotiationTransactionCustomerBrokerClosePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                NegotiationTransactionCustomerBrokerClosePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                NegotiationTransactionCustomerBrokerClosePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                NegotiationTransactionCustomerBrokerClosePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+    }
+
+    public static LogLevel getLogLevelByClass(String className) {
+        try{
+            //sometimes the classname may be passed dynamically with an $moretext. I need to ignore whats after this.
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return NegotiationTransactionCustomerBrokerClosePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            //If I couldn't get the correct logging level, then I will set it to minimal.
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+    /*END IMPLEMENTATION LogManagerForDevelopers*/
 }
