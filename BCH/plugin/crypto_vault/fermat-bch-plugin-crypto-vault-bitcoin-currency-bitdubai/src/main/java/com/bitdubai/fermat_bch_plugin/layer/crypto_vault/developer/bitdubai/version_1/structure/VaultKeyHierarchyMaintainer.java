@@ -285,7 +285,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
             try {
                 getDao().setGeneratedKeysValue(accountId, value);
             } catch (CantExecuteDatabaseOperationException  e) {
-                throw new KeyMaintainerStatisticException(KeyMaintainerStatisticException.DEFAULT_MESSAGE, e, "there was an error updateing the Generated Key value", "database error.");
+                throw new KeyMaintainerStatisticException(KeyMaintainerStatisticException.DEFAULT_MESSAGE, e, "there was an error updating the Generated Key value", "database error.");
             }
         }
 
