@@ -61,7 +61,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
         int id = v.getId();
 
         if (id == R.id.start_community) {
-            SharedPreferences pref = getContext().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+            SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = pref.edit();
             if (dontShowAgainCheckBox.isChecked()) {
                 edit.putBoolean("isChecked", true);

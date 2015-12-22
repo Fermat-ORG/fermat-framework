@@ -421,18 +421,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws IntraUserDisconnectingFailedException
      */
     @Override
-    public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
-        try {
+    public void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
+        try
+        {
             /**
              *Call Actor Intra User to disconnect request connection
              */
-            this.intraWalletUserManager.disconnectIntraWalletUser(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraWalletUserManager.disconnectIntraWalletUser(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
             /**
              *Call Network Service Intra User to disconnect request connection
              */
 
-            this.intraUserNertwokServiceManager.disconnectIntraUSer(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
         } catch (CantDisconnectIntraWalletUserException e) {
             throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey, e, "", "");
@@ -766,8 +767,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
                 intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                intraUserLoginXml.persistToMedia();
-            } catch (CantPersistFileException cantPersistFileException) {
+                    intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.

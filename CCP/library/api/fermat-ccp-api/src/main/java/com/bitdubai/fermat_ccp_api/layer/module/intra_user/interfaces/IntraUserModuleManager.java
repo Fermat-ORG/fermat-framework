@@ -123,7 +123,7 @@ public interface IntraUserModuleManager extends ModuleManager<FermatSettings, Ac
      * @param intraUserToDisconnectPublicKey the public key of the intra user to disconnect
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException
      */
-     void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
+     void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 
     /**
      * The method <code>cancelIntraUser</code> cancels an intra user from the list managed by this
