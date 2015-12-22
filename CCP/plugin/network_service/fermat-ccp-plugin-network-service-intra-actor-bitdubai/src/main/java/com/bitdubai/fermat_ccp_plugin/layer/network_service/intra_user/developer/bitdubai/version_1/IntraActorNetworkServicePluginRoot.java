@@ -873,7 +873,25 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord
+                            "MENSAJE DENIED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
+                    break;
+
+                case DISCONNECTED:
+
+                    actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+                    getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+                    actorNetworkServiceRecord.setFlagReadead(false);
+                    getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
+                    System.out.println("----------------------------\n" +
+                            "MENSAJE DISCONNECTED LLEGÓ BIEN: CASE DISCONNECTED" + actorNetworkServiceRecord
                             + "\n-------------------------------------------------");
 
 
