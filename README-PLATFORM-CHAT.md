@@ -17,7 +17,7 @@ Logo")
   Contacts: To add, modify, delete and view contacts.
   Messages: To view text messages or play voice messages. 
   SendText: To send message.
-  SendVoice: To send a voice messaging.
+  SendVoice: To send voice message.
 
 ## Middleware
 
