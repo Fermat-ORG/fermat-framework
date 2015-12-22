@@ -510,48 +510,75 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     private List<ContractBasicInformation> getContractHistoryTestData() {
         if (contractsHistory == null) {
-            ContractBasicInformation contract;
+            List<CustomerBrokerNegotiationInformation> openNegotiations = getOpenNegotiationsTestData();
+
+            CryptoBrokerWalletModuleContractBasicInformation contract;
             contractsHistory = new ArrayList<>();
 
             contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.CANCELLED);
+            contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
+            contract.setCancellationReason("No se realizo el pago en el tiempo establecido");
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Bank Transfer", "Col $", ContractStatus.CANCELLED);
+            contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
+            contract.setCancellationReason("No se entrego la mercancia en el tiempo establecido");
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
+            contract.setCancellationReason("Tardo mucho para responder");
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("nelsoanlfo", "BTC", "Bank Transfer", "Arg $", ContractStatus.CANCELLED);
+            contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
+            contract.setCancellationReason("No llegamos a un acuerdo con respecto al precio de venta");
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("neoperol", "USD", "Cash in Hand", "BsF", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("nairovene", "USD", "Cash Delivery", "BsF", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Luis Pineda", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contract.setNegotiationId(openNegotiations.get(2).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Carlos Ruiz", "USD", "Crypto Transfer", "BTC", ContractStatus.CANCELLED);
+            contract.setNegotiationId(openNegotiations.get(3).getNegotiationId());
+            contract.setCancellationReason("No se realizo el pago en el tiempo establecido");
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("josePres", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(4).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("nairo300", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(5).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("dbz_brokers", "USD", "Crypto Transfer", "BTC", ContractStatus.PENDING_PAYMENT);
+            contract.setNegotiationId(openNegotiations.get(0).getNegotiationId());
             contractsHistory.add(contract);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("Mirian Margarita Noguera", "USD", "Crypto Transfer", "BTC", ContractStatus.COMPLETED);
+            contract.setNegotiationId(openNegotiations.get(1).getNegotiationId());
             contractsHistory.add(contract);
         }
 

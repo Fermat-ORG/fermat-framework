@@ -104,4 +104,44 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     public long getLastUpdate() {
         return date;
     }
+
+    public void setCustomerAlias(String customerAlias) {
+        this.customerAlias = customerAlias;
+    }
+
+    public void setNegotiationId(UUID negotiationId) {
+        this.negotiationId = negotiationId;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public void setMerchandise(String merchandise) {
+        this.merchandise = merchandise;
+    }
+
+    public void setTypeOfPayment(String typeOfPayment) {
+        this.typeOfPayment = typeOfPayment;
+    }
+
+    public void setExchangeRateAmount(float exchangeRateAmount) {
+        this.exchangeRateAmount = exchangeRateAmount;
+    }
+
+    public void setPaymentCurrency(String paymentCurrency) {
+        this.paymentCurrency = paymentCurrency;
+    }
+
+    public void setLastUpdate(long date) {
+        this.date = date;
+    }
+
+    public void setStatus(ContractStatus status) {
+        this.status = status;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
+    }
 }

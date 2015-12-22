@@ -185,9 +185,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_start_negotiation) {
             changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST, appSession.getAppPublicKey());
+            return true;
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
