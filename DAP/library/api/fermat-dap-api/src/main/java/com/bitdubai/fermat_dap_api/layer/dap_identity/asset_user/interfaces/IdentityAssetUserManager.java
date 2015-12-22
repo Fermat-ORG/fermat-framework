@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface IdentityAssetUserManager extends ModuleManager {
+public interface IdentityAssetUserManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
