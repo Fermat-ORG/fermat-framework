@@ -195,7 +195,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public IdentityAssetIssuer getAssetIssuerIdentity() throws CantGetIdentityAssetIssuerException {
+    public IdentityAssetIssuer getActiveAssetIssuerIdentity() throws CantGetIdentityAssetIssuerException {
         try {
             return identityAssetIssuerManager.getIdentityAssetIssuer();
         } catch (CantGetAssetIssuerIdentitiesException e) {

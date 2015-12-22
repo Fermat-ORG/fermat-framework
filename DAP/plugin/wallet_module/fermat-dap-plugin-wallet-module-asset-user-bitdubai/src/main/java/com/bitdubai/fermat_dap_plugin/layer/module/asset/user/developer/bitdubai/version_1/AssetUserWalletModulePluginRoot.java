@@ -118,7 +118,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         assetUserWalletManager.createAssetUserWallet(walletPublicKey);
     }
 
-    public IdentityAssetUser getAssetUserIdentity() throws CantGetIdentityAssetUserException {
+    public IdentityAssetUser getActiveAssetUserIdentity() throws CantGetIdentityAssetUserException {
         try {
             return identityAssetUserManager.getIdentityAssetUser();
         } catch (CantGetAssetUserIdentitiesException e) {

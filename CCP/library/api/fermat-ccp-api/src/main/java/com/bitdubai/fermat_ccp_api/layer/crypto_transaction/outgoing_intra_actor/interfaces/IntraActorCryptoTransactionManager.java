@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
 import java.util.UUID;
 
@@ -18,15 +20,15 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
     /**
      * The method <code>payCryptoRequest</code> sends the payment of a request.
      *
-     * @param walletPublicKey           The public key of the wallet sending the transaction
-     * @param requestId                 The request identifier
-     * @param destinationAddress        The crypto address of the user to send the money to
-     * @param cryptoAmount              The amount of crypto currency to be sent
-     * @param description               A note to register in the wallet balance to describe the transaction
-     * @param senderPublicKey           The public key of the actor sending the transaction
-     * @param receptorPublicKey         The public key of the actor that we are sending the transaction to
-     * @param senderActorType           The type of actor sending the transaction
-     * @param receptorActorType         The type of actor receiving the transaction
+     * @param walletPublicKey    The public key of the wallet sending the transaction
+     * @param requestId          The request identifier
+     * @param destinationAddress The crypto address of the user to send the money to
+     * @param cryptoAmount       The amount of crypto currency to be sent
+     * @param description        A note to register in the wallet balance to describe the transaction
+     * @param senderPublicKey    The public key of the actor sending the transaction
+     * @param receptorPublicKey  The public key of the actor that we are sending the transaction to
+     * @param senderActorType    The type of actor sending the transaction
+     * @param receptorActorType  The type of actor receiving the transaction
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException
      */
@@ -45,15 +47,15 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
     /**
      * The method <code>sendCrypto</code> is used to send crypto currency to another intra user
      *
-     * @param walletPublicKey           The public key of the wallet sending the transaction
-     * @param destinationAddress        The crypto address of the user to send the money to
-     * @param cryptoAmount              The amount of crypto currency to be sent
-     * @param description               A note to register in the wallet balance to describe the transaction
-     * @param senderPublicKey           The public key of the actor sending the transaction
-     * @param receptorPublicKey         The public key of the actor that we are sending the transaction to
-     * @param senderActorType           The type of actor sending the transaction
-     * @param receptorActorType         The type of actor receiving the transaction
-     * @param referenceWallet           The type of the wallet sending the transaction
+     * @param walletPublicKey    The public key of the wallet sending the transaction
+     * @param destinationAddress The crypto address of the user to send the money to
+     * @param cryptoAmount       The amount of crypto currency to be sent
+     * @param description        A note to register in the wallet balance to describe the transaction
+     * @param senderPublicKey    The public key of the actor sending the transaction
+     * @param receptorPublicKey  The public key of the actor that we are sending the transaction to
+     * @param senderActorType    The type of actor sending the transaction
+     * @param receptorActorType  The type of actor receiving the transaction
+     * @param referenceWallet    The type of the wallet sending the transaction
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException
      */
@@ -69,36 +71,26 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
             com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
     /**
-     * The method <code>sendCrypto</code> is used to send crypto currency to another intra user
-     *
-     * @param walletPublicKey
-     * @param destinationAddress
-     * @param cryptoAmount
-     * @param op_Return
-     * @param description
-     * @param senderPublicKey
-     * @param receptorPublicKey
-     * @param senderActorType
-     * @param receptorActorType
-     * @param referenceWallet
-     * @return
-     * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions
-     * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException
+     * This method overload is used to send crypto currency to an intra user actor,
+     * in this one you can specify if its for an intra user in the same device.
+     * {@code true} in that flag if so.
      */
-    public UUID sendCrypto(String walletPublicKey,
-                           CryptoAddress destinationAddress,
-                           long cryptoAmount,
-                           String op_Return,
-                           String description,
-                           String senderPublicKey,
-                           String receptorPublicKey,
-                           Actors senderActorType,
-                           Actors receptorActorType,
-                           ReferenceWallet referenceWallet) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
-            com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
+    UUID sendCrypto(String walletPublicKey,
+                    CryptoAddress destinationAddress,
+                    long cryptoAmount,
+                    String op_Return,
+                    String description,
+                    String senderPublicKey,
+                    String receptorPublicKey,
+                    Actors senderActorType,
+                    Actors receptorActorType,
+                    ReferenceWallet referenceWallet,
+                    boolean sendFromSameDevice) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException;
+
 
     /**
      * Gets the Transaction Hash generated by the vault for the Crypto Transaction generated to send bitcoins.
+     *
      * @param transactionId
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions
@@ -124,15 +116,15 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException
      *
     public void sendFiat(String walletPublicKey,
-                          CryptoAddress destinationAddress,
-                          long cryptoAmount,
-                          FiatCurrency fiatCurrency,
-                          long fiatAmount,
-                          String description,
-                          String senderPublicKey,
-                          String receptorPublicKey,
-                          Actors senderActorType,
-                          Actors receptorActorType) throws OutgoingIntraActorCantSendFundsExceptions,
-                                                              OutgoingIntraActorInsufficientFundsException;
-    */
+    CryptoAddress destinationAddress,
+    long cryptoAmount,
+    FiatCurrency fiatCurrency,
+    long fiatAmount,
+    String description,
+    String senderPublicKey,
+    String receptorPublicKey,
+    Actors senderActorType,
+    Actors receptorActorType) throws OutgoingIntraActorCantSendFundsExceptions,
+    OutgoingIntraActorInsufficientFundsException;
+     */
 }

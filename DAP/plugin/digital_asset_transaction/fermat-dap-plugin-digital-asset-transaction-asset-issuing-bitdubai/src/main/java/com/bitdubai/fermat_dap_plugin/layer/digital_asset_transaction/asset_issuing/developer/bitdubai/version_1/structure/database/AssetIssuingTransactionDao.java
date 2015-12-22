@@ -28,6 +28,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.Unexp
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -403,7 +404,7 @@ public class AssetIssuingTransactionDao {
             for (DatabaseTableRecord databaseTableRecord : databaseTableRecords) {
                 //Este procedimiento puede cambiar si logro añadir el filtro que necesito.
                 digitalAssetTransactionStatus = databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME);
-                if (!digitalAssetTransactionStatus.equals(TransactionStatus.ISSUED)) {
+                if (!digitalAssetTransactionStatus.equals(TransactionStatus.ISSUED.getCode())) {
                     digitalAssetTransactionId = databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME);
                     pendingDigitalAssetsTransactionId.add(digitalAssetTransactionId);
                 }
@@ -500,41 +501,6 @@ public class AssetIssuingTransactionDao {
         List<String> pendingAssetsPublicKey = getPendingDigitalAssetPublicKeys();
         return !pendingAssetsPublicKey.isEmpty();
     }
-
-    /*public int getNumberOfPendingAssets(String publicKey) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
-
-        try {
-            this.database.openDatabase();
-            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
-            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-            databaseTable.loadToMemory();
-            DatabaseTableRecord databaseTableRecord;
-            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
-            if (databaseTableRecords.size() > 1) {
-                
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", "Public key:" + publicKey);
-            } else {
-                databaseTableRecord = databaseTableRecords.get(0);
-            }
-            int assetsToGenerate = databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE_COLUMN_NAME);
-            int assetsGenerated = databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME);
-            
-            return assetsToGenerate - assetsGenerated;
-
-        } catch (DatabaseNotFoundException exception) {
-            
-            throw new CantCheckAssetIssuingProgressException(exception, "Opening the Asset Issuing plugin database", "Cannot found the Asset Issuing database");
-        } catch (CantOpenDatabaseException exception) {
-            
-            throw new CantCheckAssetIssuingProgressException(exception, "Opening the Asset Issuing plugin database", "Cannot open the Asset Issuing database");
-        } catch (CantLoadTableToMemoryException exception) {
-            
-            throw new CantCheckAssetIssuingProgressException(exception, "Loading Asset Issuing plugin database to memory", "Cannot load the Asset Issuing database");
-        } catch (Exception exception) {
-            
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Checking pending assets to issue", "Unexpected exception");
-        }
-    }*/
 
     public void persistOutgoingIntraActorUUID(String transactionID, UUID outgoingId) throws CantPersistsTransactionUUIDException {
         try {
@@ -840,7 +806,7 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public String getEventTypeById(String eventId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public EventType getEventTypeById(String eventId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
 
         try {
             this.database = openDatabase();
@@ -856,7 +822,7 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
 
-            return databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN);
+            return EventType.getByCode(databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN));
         } catch (CantExecuteDatabaseOperationException exception) {
 
             throw new CantCheckAssetIssuingProgressException(exception, "Trying to get pending events", "Cannot find or open the database");

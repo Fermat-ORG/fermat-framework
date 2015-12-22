@@ -100,7 +100,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     }
 
     @Override
-    public RedeemPointIdentity getAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException {
+    public RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException {
         try {
             return redeemPointIdentityManager.getIdentityAssetRedeemPoint();
         } catch (CantGetRedeemPointIdentitiesException e) {

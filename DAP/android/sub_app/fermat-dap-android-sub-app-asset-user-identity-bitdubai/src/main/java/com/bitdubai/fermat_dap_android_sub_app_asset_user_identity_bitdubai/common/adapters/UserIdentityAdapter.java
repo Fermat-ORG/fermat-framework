@@ -40,7 +40,7 @@ public class UserIdentityAdapter extends FermatAdapter<IdentityAssetUser, UserId
     protected void bindHolder(final UserIdentityViewHolder holder, final IdentityAssetUser data, final int position) {
         holder.getIdentityName().setText(data.getAlias());
 
-        byte[] profileImage = data.getProfileImage();
+        byte[] profileImage = data.getImage();
         Bitmap imageBitmap = profileImage == null ?
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);

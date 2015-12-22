@@ -192,7 +192,7 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             List<RedeemPointIdentity> redeemPointIdentities = getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (redeemPointIdentities.size() > 0) {
                 for (RedeemPointIdentity identityAssetRedeemPoint : redeemPointIdentities) {
-                    actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getProfileImage());
+                    actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getImage());
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
