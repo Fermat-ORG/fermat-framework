@@ -527,8 +527,10 @@ Here are some examples:
 
 Additionally, if that information is required the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRoot class Plug-in for achieving the aforementioned display.
 
-To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plug-in is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
-
+To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plug-in is available at:
+[Script in Groovy Documentation](https://github.com/bitDubai/fermat/blob/master/scripts/database/database_classes_generator/documentation_en.md)
+ and 
+ [Script Groovy](https://github.com/bitDubai/fermat/blob/master/scripts/database/database_classes_generator/script.groovy)
 <br>
 #### Agents
 
@@ -1072,8 +1074,7 @@ within the class should define the logic for queries, update, delete, inserts, a
 In the documentation of Fermat there is a tutorial, which has defined a script to create the classes mentioned, less DatabaseDao class.
 <br>
 The following link is the template of how these classes should be defined.
-
-https://github.com/bitDubai/fermat/tree/2a20518c484322846d5727499dfff16c8ddc0bd2/fermat-documentation/scripts/database/database_classes_generator
+[Database Classes Generator](https://github.com/bitDubai/fermat/tree/2a20518c484322846d5727499dfff16c8ddc0bd2/fermat-documentation/scripts/database/database_classes_generator)
 
 ###Folder Structure
 <br>

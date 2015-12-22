@@ -19,7 +19,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;

@@ -52,4 +52,9 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerContractPurc
         this.customerBrokerContractPurchaseDao.updateStatusCustomerBrokerPurchaseContract(contractId, status);
     }
 
+    @Override
+    public void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantupdateCustomerBrokerContractPurchaseException {
+
+    }
+
 }

@@ -1,11 +1,11 @@
 :bookseries: animal
 :numbered:
 
-= Fermat: expanding the cryptoworld
+= Fermat: Expanding The Cryptoworld
 
 Gustavo H. Corradi <book@fermat.org>
 
-v.0.0 (draft), december, 2015.
+v.0.0 (draft), December, 2015.
 
 
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20book%20logotype/FermatBookLogotype3D/PNG_fermat_book_logo_3D_Low_800x813.png[FermatBookLogo]

@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
@@ -31,6 +33,36 @@ public class CustomerOnlinePaymentRecord {
 
     private String walletPublicKey;
 
+    //Offline fields
+    private long paymentAmount;
+
+    private CurrencyType paymentType;
+
+    private FiatCurrency currencyType;
+
+    public long getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(long paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public CurrencyType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(CurrencyType paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public FiatCurrency getCurrencyType() {
+        return currencyType;
+    }
+
+    public void setCurrencyType(FiatCurrency currencyType) {
+        this.currencyType = currencyType;
+    }
 
     public String getBrokerPublicKey() {
         return brokerPublicKey;
@@ -134,6 +166,9 @@ public class CustomerOnlinePaymentRecord {
                 ", transactionHash='" + transactionHash + '\'' +
                 ", transactionId='" + transactionId + '\'' +
                 ", walletPublicKey='" + walletPublicKey + '\'' +
+                ", paymentAmount=" + paymentAmount +
+                ", paymentType=" + paymentType +
+                ", currencyType=" + currencyType +
                 '}';
     }
 }

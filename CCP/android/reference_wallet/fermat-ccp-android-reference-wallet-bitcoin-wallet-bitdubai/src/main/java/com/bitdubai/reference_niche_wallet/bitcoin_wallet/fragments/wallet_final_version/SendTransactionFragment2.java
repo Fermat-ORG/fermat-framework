@@ -123,15 +123,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = appSession.getErrorManager();
 
-            CryptoWalletIntraUserIdentity lst = referenceWalletSession.getIntraUserModuleManager();
-
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
                 public void run() {
+                    Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_SCREEN_ENABLED);
+                    if(o!=null) {
+                        if (!(Boolean) o)
+                            setUpPresentation();
+                    }else{
                         setUpPresentation();
+                    }
                 }}, 500);
         } catch (Exception ex) {
             if (errorManager != null)
@@ -159,6 +163,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         referenceWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
                     }
                 }
+
 
             }
         });
@@ -389,7 +394,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

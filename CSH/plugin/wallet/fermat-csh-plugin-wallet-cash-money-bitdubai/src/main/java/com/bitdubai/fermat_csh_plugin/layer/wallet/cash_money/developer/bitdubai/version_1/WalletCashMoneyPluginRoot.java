@@ -73,9 +73,9 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     private void createTestWalletIfNotExists() {
         //System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
 
-        if(!cashMoneyWalletExists("publicKeyWalletMock")) {
+        if(!cashMoneyWalletExists("cash_wallet")) {
             try {
-                createCashMoneyWallet("publicKeyWalletMock", FiatCurrency.US_DOLLAR);
+                createCashMoneyWallet("cash_wallet", FiatCurrency.US_DOLLAR);
             } catch (CantCreateCashMoneyWalletException e) {}
         }
     }
@@ -84,7 +84,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         //System.out.println("CASHWALLET - testDeposits CALLED");
 
         try {
-            CashMoneyWallet wallet = loadCashMoneyWallet("publicKeyWalletMock");
+            CashMoneyWallet wallet = loadCashMoneyWallet("cash_wallet");
             wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(10000), "testCreditFromWallet");
             wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(8000), "testDebitFromWallet");
 
@@ -139,7 +139,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "WalletCashMoneyPluginRoot", null);
         }
 
-        createTestWalletIfNotExists();
+        //createTestWalletIfNotExists();
         //testDeposits();
     }
 
