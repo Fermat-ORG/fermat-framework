@@ -1,4 +1,5 @@
-﻿![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+<!-- all links tested by laderuner -->
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 <br><br>
 
@@ -6,9 +7,9 @@
 
 ## Introduction
 
-Communication is a vital need among systems to expand their functionality and interaction between different devices. Fermat in this case is no exception. Communication is important for the transmission of data and sending relevant information.
+Communication is a vital need among systems to expand their functionality and interaction between different devices. Fermat is in this case no exception. Communication is important for the transmission of data and sending relevant information.
 
-To meet this important need has been defined as part of the Network Services solution.
+Fermat Network Services solution addresses to solve this need.
 
 
 Network Services fall into the category of plug-in components defined types that can be found within the Fermat system. This type of plug-in is dedicated to a well-defined task within the architecture, it acts as an intermediary between the communication layer and the other components of the platform, and thus act as a service for the other components.

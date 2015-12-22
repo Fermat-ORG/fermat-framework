@@ -1095,25 +1095,21 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
         try {
 
-            List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new  ArrayList<CryptoWalletIntraUserIdentity>();
+            List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new ArrayList<CryptoWalletIntraUserIdentity>();
 
             for (IntraWalletUserIdentity intraWalletUser : this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
 
-                CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = new CryptoWalletWalletIntraUserIdentity(intraWalletUser.getPublicKey(),intraWalletUser.getAlias(),intraWalletUser.getProfileImage());
+                CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = new CryptoWalletWalletIntraUserIdentity(intraWalletUser.getPublicKey(), intraWalletUser.getAlias(), intraWalletUser.getImage());
 
                 cryptoWalletIntraUserIdentityList.add(cryptoWalletIntraUserIdentity);
             }
 
             return cryptoWalletIntraUserIdentityList;
 
-        }
-        catch(CantListIntraWalletUsersException e)
-        {
-            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE,e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE,e,"","unknown error");
+        } catch (CantListIntraWalletUsersException e) {
+            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE, e, "", "");
+        } catch (Exception e) {
+            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE, e, "", "unknown error");
         }
 
     }

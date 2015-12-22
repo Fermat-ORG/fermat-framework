@@ -2,7 +2,7 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.basic_classes.BasicWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.exceptions.CantGetRefinedCatalogException;
@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * This interface manage the presentation logic of the wallet store
  */
-public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSettings, ActorIdentityInformation> {
+public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSettings, ActiveActorIdentityInformation> {
 
     /**
      * This method let us get the wallet catalogue

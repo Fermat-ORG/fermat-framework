@@ -372,7 +372,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                  */
                 @Override
                 public byte[] getProfileImage() {
-                    return assetAppropriated.getIdentityAssetIssuer().getProfileImage();
+                    return assetAppropriated.getIdentityAssetIssuer().getImage();
                 }
 
                 /**

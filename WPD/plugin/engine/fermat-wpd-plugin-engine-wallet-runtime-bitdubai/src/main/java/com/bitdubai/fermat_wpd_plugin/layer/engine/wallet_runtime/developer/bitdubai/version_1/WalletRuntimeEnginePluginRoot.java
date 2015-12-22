@@ -2375,6 +2375,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackgroundColor("#ffffff");
         //runtimeActivity.setColor("#d07b62");
 
 

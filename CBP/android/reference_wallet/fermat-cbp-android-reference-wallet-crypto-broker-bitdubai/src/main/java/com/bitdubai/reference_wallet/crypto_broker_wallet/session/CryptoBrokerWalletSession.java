@@ -10,6 +10,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.preference_settings.Cr
 
 public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoBrokerWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
     public static final String NEGOTIATION_DATA = "negotiation_data";
+    public static final String CONTRACT_DATA = "contract_data";
 
     public CryptoBrokerWalletSession() {
     }

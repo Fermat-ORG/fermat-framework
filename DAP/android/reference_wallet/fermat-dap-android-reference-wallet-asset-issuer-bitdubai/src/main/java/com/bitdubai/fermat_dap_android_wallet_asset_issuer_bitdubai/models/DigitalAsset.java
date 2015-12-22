@@ -125,6 +125,7 @@ public class DigitalAsset {
     }
 
     public String getFormattedExpDate() {
+        if (expDate == null) return "No expiration date";
         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
         return df.format(expDate);
     }
