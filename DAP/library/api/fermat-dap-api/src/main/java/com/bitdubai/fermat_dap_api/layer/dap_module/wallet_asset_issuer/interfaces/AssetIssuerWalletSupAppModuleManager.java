@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfa
 
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
+public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
     //TODO DOCUMENT ALL THESE METHODS WHEN THEY'RE IMPLEMENTED.
 

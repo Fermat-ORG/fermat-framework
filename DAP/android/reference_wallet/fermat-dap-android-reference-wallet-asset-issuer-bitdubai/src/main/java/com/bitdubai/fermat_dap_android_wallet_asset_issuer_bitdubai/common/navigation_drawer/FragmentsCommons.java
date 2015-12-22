@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -23,18 +24,18 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,IdentityAssetIssuer identityAssetIssuer) throws CantGetIdentityAssetIssuerException {
+    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,ActiveActorIdentityInformation identityAssetIssuer) throws CantGetIdentityAssetIssuerException {
         View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (identityAssetIssuer != null) {
-                if (identityAssetIssuer.getProfileImage() != null) {
-                    if (identityAssetIssuer.getProfileImage().length > 0) {
+                if (identityAssetIssuer.getImage() != null) {
+                    if (identityAssetIssuer.getImage().length > 0) {
                         //BitmapFactory.Options options = new BitmapFactory.Options();
                         //options.inScaled = true;
                         //options.inSampleSize = 2;
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),false);
-                        bitmapWorkerTask.execute(identityAssetIssuer.getProfileImage());
+                        bitmapWorkerTask.execute(identityAssetIssuer.getImage());
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
                         //options.inBitmap = bitmap;
                         //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);

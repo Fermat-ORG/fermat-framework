@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
@@ -21,15 +22,15 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptio
 public class IssuerWalletNavigationViewPainter implements NavigationViewPainter {
 
     private Activity activity;
-    private final IdentityAssetIssuer identityAssetIssuer;
+    private final ActiveActorIdentityInformation identityAssetIssuer;
 
-    public IssuerWalletNavigationViewPainter(Activity activity, IdentityAssetIssuer identityAssetIssuer) {
+    public IssuerWalletNavigationViewPainter(Activity activity, ActiveActorIdentityInformation identityAssetIssuer) {
         this.activity = activity;
         this.identityAssetIssuer = identityAssetIssuer;
     }
 
     @Override
-    public View addNavigationViewHeader() {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetIssuer) {
         try {
             return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, identityAssetIssuer);
         } catch (CantGetIdentityAssetIssuerException e) {
