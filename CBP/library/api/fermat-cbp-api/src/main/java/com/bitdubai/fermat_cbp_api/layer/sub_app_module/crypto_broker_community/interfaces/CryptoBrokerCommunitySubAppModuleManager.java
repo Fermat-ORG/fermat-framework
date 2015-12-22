@@ -1,17 +1,13 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetSelectedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
@@ -48,7 +44,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @return a searching interface
      */
-    CryptoBrokerSearch searchCryptoBroker();
+    CryptoBrokerCommunitySearch searchCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
 
     /**
      * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
@@ -61,8 +57,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
      * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity   ,
-                                         CryptoBrokerInformation                 cryptoBrokerToContact) throws CantRequestConnectionException          ,
+    void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity     ,
+                                         CryptoBrokerCommunityInformation        cryptoBrokerToContact) throws CantRequestConnectionException          ,
                                                                                                                ActorConnectionAlreadyRequestedException,
                                                                                                                ActorTypeNotSupportedException          ;
 
@@ -117,7 +113,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+    List<CryptoBrokerCommunityInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
                                                                 final int                                     max             ,
                                                                 final int                                     offset          ) throws CantListCryptoBrokersException;
 
@@ -129,7 +125,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> listCryptoBrokersPendingLocalAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+    List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingLocalAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
                                                                       final int max,
                                                                       final int offset) throws CantListCryptoBrokersException;
 
@@ -142,7 +138,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+    List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
                                                                        final int max,
                                                                        final int offset) throws CantListCryptoBrokersException;
 
