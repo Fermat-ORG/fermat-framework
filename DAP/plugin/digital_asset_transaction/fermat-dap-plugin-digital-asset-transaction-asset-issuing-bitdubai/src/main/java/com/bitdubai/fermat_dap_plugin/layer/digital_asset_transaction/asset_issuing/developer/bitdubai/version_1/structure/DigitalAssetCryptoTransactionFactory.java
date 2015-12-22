@@ -20,7 +20,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
@@ -403,11 +402,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting Digital Asset in local storage", "Can't create '" + this.digitalAssetLocalFilePath + this.digitalAssetFileName + "' file");
         } catch (CantPersistFileException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting Digital Asset in local storage", "Can't persist '" + this.digitalAssetLocalFilePath + this.digitalAssetFileName + "' file");
-        } /*catch (CantLoadFileException e) {
-            throw new CantCreateDigitalAssetFileException(e,"TEST","Can't read '"+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
-        } catch (FileNotFoundException e) {
-            throw new CantCreateDigitalAssetFileException(e,"TEST","Can't read '"+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
-        }*/
+        }
     }
 
     /**
@@ -467,7 +462,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
                 try {
                     isPublicKeyInDatabase(this.digitalAsset.getPublicKey());
                 } catch (CantIssueDigitalAssetException ex) {
-                    this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ASSET_ALREADY_ISSUED);
+                    this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ISSUING);
                     throw ex;
                 }
             }
@@ -738,11 +733,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionID, TransactionStatus.GENESIS_SETTLED);
     }
 
-    /*private CryptoTransaction requestGenesisTransaction(CryptoAddress genesisAddress) throws CoultNotCreateCryptoTransaction {
-        CryptoTransaction genesisTransaction = this.cryptoVaultManager.generateDraftCryptoTransaction(genesisAddress, this.digitalAsset.getGenesisAmount());
-        return genesisTransaction;
-    }*/
-
     /**
      * This method sets the genesis transaction in a digital asset metadata
      *
@@ -880,14 +870,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_CRYPTO);
             this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
-            //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getActorPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
-            //TODO: Send btc through outgoing intra user
-            //genesisTransaction.setOp_Return(digitalAssetHash);
-            //this.cryptoVaultManager.sendBitcoins(genesisTransaction);
-            //TODO: this genesisTransaction is hardcoded for now. Waiting for a better way to get the genesisTransaction
-            //I will remove the genesisTransaction from this method, now I cannot get this parameter in a synchrony way
-            //String genesisTransaction="d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
-            //this.assetIssuingTransactionDao.persistGenesisTransaction(transactionId, genesisTransaction);
             UUID outgoingId = this.outgoingIntraActorManager.getTransactionManager().sendCrypto(this.walletPublicKey,
                     genesisAddress,
                     this.digitalAsset.getGenesisAmount(),
@@ -897,10 +879,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
                     this.actorAssetIssuerPublicKey,
                     Actors.INTRA_USER,
                     Actors.DAP_ASSET_ISSUER,
-                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                    true);
             this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
             this.assetIssuingTransactionDao.updateTransactionProtocolStatusByTransactionId(transactionId, ProtocolStatus.TO_BE_NOTIFIED);
-            //return genesisTransaction;
         } catch (CantExecuteQueryException exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the database: " + transactionId);
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
@@ -956,8 +938,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
                 sendBitcoinsFromCryptoVault(genesisAddress, digitalAssetHash, transactionId, digitalAssetMetadata);
             } else {
                 sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
-                //digitalAssetMetadata=setDigitalAssetGenesisTransaction(transactionId, genesisTransaction, digitalAssetMetadata);
-                //We kept the DigitalAssetMetadata in DAMVault
                 saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
             }
             //TODO REMOVE HARDCODE

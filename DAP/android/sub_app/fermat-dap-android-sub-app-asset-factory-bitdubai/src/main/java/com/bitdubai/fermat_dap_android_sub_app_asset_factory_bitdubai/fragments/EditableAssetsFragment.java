@@ -270,7 +270,7 @@ public class EditableAssetsFragment extends FermatFragment implements
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_edit) {
             if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
-                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
             else
                 selectedAsset = null;
         } else if (menuItem.getItemId() == R.id.action_publish) {

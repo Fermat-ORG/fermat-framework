@@ -5,22 +5,22 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -60,7 +60,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             dao.initialize(this.pluginId);
             UUID transactionId = UUID.randomUUID();
 
-            dao.registerNewTransaction(transactionId,requestId, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
+            dao.registerNewTransaction(transactionId, requestId, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false);
 
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
@@ -108,7 +108,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             OutgoingIntraActorDao dao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
             dao.initialize(this.pluginId);
             UUID transactionId = UUID.randomUUID();
-            dao.registerNewTransaction(transactionId,null, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
+            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false);
             return transactionId;
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
@@ -131,7 +131,8 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            String           receptorPublicKey,
                            Actors           senderActorType,
                            Actors           receptorActorType,
-                           ReferenceWallet  referenceWallet) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                           ReferenceWallet referenceWallet,
+                           boolean sendFromSameDevice) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         BitcoinWalletWallet bitcoinWalletWallet = null;
         try {
@@ -149,7 +150,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
         try {
             UUID transactionId = UUID.randomUUID();
             dao.initialize(this.pluginId);
-            dao.registerNewTransaction(transactionId, null,walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
+            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, sendFromSameDevice);
             return transactionId;
         } catch (CantInitializeOutgoingIntraActorDaoException | OutgoingIntraActorCantInsertRecordException e) {
             throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");
