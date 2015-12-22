@@ -510,6 +510,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     private List<ContractBasicInformation> getContractHistoryTestData() {
         if (contractsHistory == null) {
+            List<CustomerBrokerNegotiationInformation> openNegotiations = getOpenNegotiationsTestData();
+
             CryptoBrokerWalletModuleContractBasicInformation contract;
             contractsHistory = new ArrayList<>();
 

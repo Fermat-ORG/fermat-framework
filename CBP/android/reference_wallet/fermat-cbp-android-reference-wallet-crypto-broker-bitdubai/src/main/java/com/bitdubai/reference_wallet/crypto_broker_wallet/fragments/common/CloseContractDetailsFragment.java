@@ -93,14 +93,14 @@ public class CloseContractDetailsFragment extends FermatWalletFragment {
 
         FermatTextView amountSoldOrToSellValue = (FermatTextView) rootView.findViewById(R.id.cbw_amount_sold_or_to_sell_value);
         String amountToSell = DecimalFormat.getInstance().format(contractBasicInfo.getAmount());
-        amountSoldOrToSellValue.setText(String.format("$1%s %2$s", amountToSell, contractBasicInfo.getMerchandise()));
+        amountSoldOrToSellValue.setText(String.format("%1$s %2$s", amountToSell, contractBasicInfo.getMerchandise()));
 
         FermatTextView amountReceivedOrToReceiveTitle = (FermatTextView) rootView.findViewById(R.id.cbw_amount_received_to_receive_title);
         amountReceivedOrToReceiveTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.cbw_amount_to_receive : R.string.cbw_amount_received);
 
         FermatTextView amountReceivedOrToReceiveValue = (FermatTextView) rootView.findViewById(R.id.cbw_amount_received_to_receive_value);
         String amountToReceive = getAmountToReceive(contractBasicInfo);
-        amountReceivedOrToReceiveValue.setText(String.format("$1%s %2$s", amountToReceive, contractBasicInfo.getPaymentCurrency()));
+        amountReceivedOrToReceiveValue.setText(String.format("%1$s %2$s", amountToReceive, contractBasicInfo.getPaymentCurrency()));
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_payment_method);
         paymentMethod.setText(contractBasicInfo.getTypeOfPayment());
