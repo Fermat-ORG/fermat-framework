@@ -34,4 +34,38 @@ Contacts: To add, modify, delete and view contacts.<br>
   
 ## Middleware
 
+
+
+Esto va a tener la siguiente base de datos:
+
+### Base de Datos
+
+#### Chats
+
+** Id ** 
+** Id Objeto **
+** Local Actor Type **
+** Local Actor Pub Key **
+** Remote Actor Type **
+** Remote Actor Pub Key **
+** Chat Name **
+** Status ** : Invissible | Vissible
+** Creation Datetime **
+** Last Message Dateime **
+
+#### Mensajes
+
+** Id **
+** Id Chat **
+** Message Text **
+** Status ** : Created | Sent | Delivered | Read
+** Type ** : Incomming | Outgoing
+** Timestamp **
+
+#### Contactos
+
+
+
+
+
 ## Network Service
