@@ -114,7 +114,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.I
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -703,6 +706,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 "--------------------------------------------------------");
         actorNetworkServiceRecordedAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
+            //has map cache - contador de failure mas de 5 lo mando a dormir a todos los mensajes de esa public key
+              //  el agente levanta los mensajes y los procesa de nuevo por cierto tiempo
+
+                checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+
+
     }
 
     /**
@@ -922,6 +931,33 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         eventManager.raiseEvent(platformEvent);
     }
 
+    private void checkFailedDeliveryTime(String destinationPublicKey)
+    {
+        try{
+            //verifico el tiempo que hace que estoy tratando de enviar el mensaje si pasaron dos horas le cambio el estado a Wait y lo proceso en otro bloque
+            List<ActorNetworkServiceRecord> actorNetworkServiceRecord = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
+         //sumo un contandor y veo si llego a 5
+
+           //long sentDate = actorNetworkServiceRecord.getSentDate();
+
+           // long currentTime = System.currentTimeMillis();
+
+
+
+        }
+        catch(Exception e)
+        {
+
+        }
+
+    }
+
+
+    private String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+        return format.format(date);
+    }
     /**
      * Get the IdentityPublicKey
      *
@@ -1243,7 +1279,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false
+                    false,1
             );
 
         } catch (final CantCreateNotificationException e) {
