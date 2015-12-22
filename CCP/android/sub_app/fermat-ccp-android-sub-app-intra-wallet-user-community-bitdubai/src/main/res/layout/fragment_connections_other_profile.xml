@@ -36,7 +36,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp">
 
-
         <Button
             android:id="@+id/btn_conect"
             android:layout_width="wrap_content"
@@ -64,6 +63,31 @@
             android:paddingRight="18dp"
             android:text="Disconnect"
             android:textColor="#0072bc"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btn_connection_request_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_grey"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="Request Send"
+            android:textColor="#ffffff"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btn_connection_request_reject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_grey"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="Connection Rejected"
+            android:textColor="#ffffff"
+            android:visibility="gone"
             tools:ignore="HardcodedText" />
 
     </RelativeLayout>
@@ -94,6 +118,44 @@
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:text="Janeth Williams"
+            android:textColor="#292929"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#b5b5b7" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="32dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="Phrase"
+            android:textColor="#0072bc"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/userPhrase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="User Phrase"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:textColor="#292929"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
