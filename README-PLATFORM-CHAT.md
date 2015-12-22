@@ -3,9 +3,8 @@ Logo")
 
 <br><br>
 ## Introduction: Platform Chat
-  This component is a platform of text(chat) and voice messaging. 
-  Un plugin que agrega la funcionalidad de chat y que podrá ser integrada a cualquier actividad dentro de Fermat.
-  (*) Also, it can be use as a instant messaging platform without a coin transaction reference, using its own contact list.<br>
+  Un plugin que agrega la funcionalidad de chat o mensajeria instantánea y que podrá ser integrada a cualquier actividad dentro de Fermat.<br>
+  
   
 ## Sup App
   TransactionList: List of transactions in process.<br>
