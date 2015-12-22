@@ -27,12 +27,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Asset Name"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="15dp"
+            android:textSize="@dimen/abc_text_size_title_material"/>
 
         <TextView android:id="@+id/assetsRemainingDeliveryListText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="94 Assets Remaining"/>
+            android:text="94 Assets Remaining"
+            android:textSize="@dimen/abc_text_size_small_material"/>
 
     </LinearLayout>
 
