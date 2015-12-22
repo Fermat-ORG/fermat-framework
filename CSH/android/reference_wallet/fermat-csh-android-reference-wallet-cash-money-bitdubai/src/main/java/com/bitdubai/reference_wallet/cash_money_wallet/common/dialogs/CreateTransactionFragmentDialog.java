@@ -3,6 +3,8 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
@@ -63,7 +65,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     /**
      *  UI components
      */
-    FermatTextView dialogTitleText;
+    FermatTextView dialogTitle;
     EditText amountText;
     AutoCompleteTextView memoText;
     Button applyBtn;
@@ -108,14 +110,15 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             setContentView(R.layout.create_transaction_dialog);
 
 
-            dialogTitleText = (FermatTextView) findViewById(R.id.csh_ctd_title);
+            dialogTitle = (FermatTextView) findViewById(R.id.csh_ctd_title);
+            //dialogTitleImg = (FermatTextView) findViewById(R.id.csh_ctd_title_img);
             amountText = (EditText) findViewById(R.id.csh_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.csh_ctd_memo);
             applyBtn = (Button) findViewById(R.id.csh_ctd_apply_transaction_btn);
             cancelBtn = (Button) findViewById(R.id.csh_ctd_cancel_transaction_btn);
 
 
-            dialogTitleText.setText(getTransactionTitleText());
+            dialogTitle.setText(getTransactionTitleText());
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
             cancelBtn.setOnClickListener(this);
@@ -160,6 +163,14 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             return resources.getString(R.string.withdrawal_transaction_text);
         else
             return resources.getString(R.string.deposit_transaction_text);
+    }
+
+    private int getTransactionTitleColor()
+    {
+        if (transactionType == TransactionType.DEBIT)
+            return resources.getColor(R.color.csh_fab_color_normal_w);
+        else
+            return resources.getColor(R.color.csh_fab_color_normal_d);
     }
 
 
