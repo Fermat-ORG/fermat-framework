@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetIdentityRedeemPointException;
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetRedeemPointWalletSubAppModule extends ModuleManager {
+public interface AssetRedeemPointWalletSubAppModule extends ModuleManager<FermatSettings, ActorIdentityInformation> {
     /**
      * (non-Javadoc)
      * @see List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesBook(String publicKey)
@@ -24,6 +26,6 @@ public interface AssetRedeemPointWalletSubAppModule extends ModuleManager {
 
     void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException;
 
-    RedeemPointIdentity getAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException;
+    RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException;
 
 }
