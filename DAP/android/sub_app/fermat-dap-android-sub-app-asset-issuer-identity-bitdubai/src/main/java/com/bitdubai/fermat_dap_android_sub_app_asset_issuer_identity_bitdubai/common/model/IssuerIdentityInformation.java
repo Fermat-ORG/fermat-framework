@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.common.model;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**
@@ -28,7 +29,12 @@ public class IssuerIdentityInformation implements IdentityAssetIssuer {
     }
 
     @Override
-    public byte[] getProfileImage() {
+    public Actors getActorType() {
+        return Actors.DAP_ASSET_ISSUER;
+    }
+
+    @Override
+    public byte[] getImage() {
         return this.profileImage;
     }
 

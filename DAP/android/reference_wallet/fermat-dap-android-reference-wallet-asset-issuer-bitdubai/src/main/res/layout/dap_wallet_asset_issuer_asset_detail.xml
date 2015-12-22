@@ -225,7 +225,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Redeem"
+                    android:text="Redeemed"
                     android:fontFamily="regular"
                     android:textSize="17sp"
                     android:textColor="#b3ffffff" />

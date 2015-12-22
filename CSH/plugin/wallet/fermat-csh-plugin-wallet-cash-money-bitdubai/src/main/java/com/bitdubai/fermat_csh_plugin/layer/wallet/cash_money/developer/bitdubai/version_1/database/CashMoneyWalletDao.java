@@ -19,28 +19,23 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletTransactionException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CashMoneyWalletDoesNotExistException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetHeldFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantTransactionCashMoneyException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CashMoneyWalletDoesNotExistException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyTotalBalanceException;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCreditException;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddDebitException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetBalancesRecord;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantRegisterCashMoneyWalletTransactionException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CashMoneyWalletInconsistentTableStateException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletTransactionImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -166,7 +161,7 @@ public class CashMoneyWalletDao {
         }
     }
 
-    public void debit(String walletPublicKey, BalanceType balanceType, BigDecimal debitAmount) throws CantRegisterDebitException {
+    public void debit(String walletPublicKey, BalanceType balanceType, BigDecimal debitAmount) throws CantRegisterDebitException, CashMoneyWalletInsufficientFundsException {
         DatabaseTable table;
         DatabaseTableRecord record;
         try {
@@ -177,7 +172,7 @@ public class CashMoneyWalletDao {
                 available = available.subtract(debitAmount);
 
                 if (available.compareTo(new BigDecimal(0)) < 0)
-                    throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit available balance by this amount, insufficient funds.");
+                    throw new CashMoneyWalletInsufficientFundsException(CashMoneyWalletInsufficientFundsException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit available balance by this amount, insufficient funds.");
 
                 record.setStringValue(CashMoneyWalletDatabaseConstants.WALLETS_AVAILABLE_BALANCE_COLUMN_NAME, available.toPlainString());
 
@@ -186,7 +181,7 @@ public class CashMoneyWalletDao {
                 book = book.subtract(debitAmount);
 
                 if (book.compareTo(new BigDecimal(0)) < 0)
-                    throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit book balance by this amount, insufficient funds.");
+                    throw new CashMoneyWalletInsufficientFundsException(CantRegisterDebitException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit book balance by this amount, insufficient funds.");
 
                 record.setStringValue(CashMoneyWalletDatabaseConstants.WALLETS_BOOK_BALANCE_COLUMN_NAME, book.toPlainString());
 
@@ -198,10 +193,10 @@ public class CashMoneyWalletDao {
                 book = book.subtract(debitAmount);
 
                 if (available.compareTo(new BigDecimal(0)) < 0)
-                    throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit available balance by this amount, insufficient funds.");
+                    throw new CashMoneyWalletInsufficientFundsException(CantRegisterDebitException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit available balance by this amount, insufficient funds.");
 
                 if (book.compareTo(new BigDecimal(0)) < 0)
-                    throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit book balance by this amount, insufficient funds.");
+                    throw new CashMoneyWalletInsufficientFundsException(CantRegisterDebitException.DEFAULT_MESSAGE, null, "Debit in Cash wallet", "Cant debit book balance by this amount, insufficient funds.");
 
                 record.setStringValue(CashMoneyWalletDatabaseConstants.WALLETS_AVAILABLE_BALANCE_COLUMN_NAME, available.toPlainString());
                 record.setStringValue(CashMoneyWalletDatabaseConstants.WALLETS_BOOK_BALANCE_COLUMN_NAME, book.toPlainString());
