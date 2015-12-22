@@ -126,8 +126,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingLocalAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                      final int max,
-                                                                      final int offset) throws CantListCryptoBrokersException;
+                                                                               final int max,
+                                                                               final int offset) throws CantListCryptoBrokersException;
 
     /**
      * The method <code>listCryptoBrokersPendingRemoteAction</code> list the crypto brokers that haven't

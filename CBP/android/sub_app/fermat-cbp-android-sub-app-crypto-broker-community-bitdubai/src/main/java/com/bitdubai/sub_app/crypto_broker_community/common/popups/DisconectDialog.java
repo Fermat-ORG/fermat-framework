@@ -10,13 +10,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
@@ -29,7 +27,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
+public class DisconectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -44,14 +42,20 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
     CharSequence username;
     CharSequence title;
 
-    IntraUserInformation intraUserInformation;
+    CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
 
-    IntraUserLoginIdentity identity;
+    CryptoBrokerCommunitySelectableIdentity identity;
 
 
-    public DisconectDialog(Activity a, CryptoBrokerCommunitySubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
-        super(a, intraUserSubAppSession, subAppResources);
-        this.intraUserInformation = intraUserInformation;
+    public DisconectDialog(Activity a,
+                           CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession,
+                           SubAppResourcesProviderManager subAppResources,
+                           CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
+                           CryptoBrokerCommunitySelectableIdentity identity) {
+
+        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+
+        this.cryptoBrokerCommunityInformation = cryptoBrokerCommunityInformation;
         this.identity = identity;
     }
 
@@ -102,10 +106,11 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-            try {
+            //try {
                 //image null
-                if (intraUserInformation != null && identity != null) {
-                    ((CryptoBrokerCommunitySubAppSession) getSession()).getModuleManager().disconnectIntraUSer(intraUserInformation.getPublicKey());
+                if (cryptoBrokerCommunityInformation != null && identity != null) {
+                    Toast.makeText(getContext(), "TODO DISCONNECT ->", Toast.LENGTH_SHORT).show();
+                    //getSession().getModuleManager().disconnectIntraUSer(cryptoBrokerCommunityInformation.getPublicKey());
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
@@ -116,9 +121,9 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (IntraUserDisconnectingFailedException e) {
+            /*} catch (IntraUserDisconnectingFailedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             dismiss();
         }else if( i == R.id.negative_button){

@@ -379,6 +379,6 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     @Override
     public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         // todo implement
-        return null;
+        return new SelectableIdentity("hola", "como estas", Actors.CBP_CRYPTO_BROKER, null);
     }
 }
