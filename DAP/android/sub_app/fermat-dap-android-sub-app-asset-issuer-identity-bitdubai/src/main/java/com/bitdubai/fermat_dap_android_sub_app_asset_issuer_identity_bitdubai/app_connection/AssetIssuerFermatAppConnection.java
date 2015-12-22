@@ -15,9 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.fragmentFactory.IssuerIdentityFragmentFactory;
-import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.preference_settings.IssuerIdentityPreferenceSettings;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.session.IssuerIdentitySubAppSession;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
