@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.header.WalletAssetIssuerHeaderPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.IssuerWalletFragmentFactory;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.navigation_drawer.IssuerWalletNavigationViewPainter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.navigation_drawer.IssuerWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 

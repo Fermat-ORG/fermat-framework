@@ -1,9 +1,8 @@
-package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.navigation_drawer;
+package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.navigation_drawer;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,21 +14,28 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
 
 /**
  * Created by frank on 12/9/15.
  */
 public class IssuerWalletNavigationViewPainter implements NavigationViewPainter {
-    private Activity activity;
-    private final IdentityAssetIssuer identityAssetIssuer;
 
-    public IssuerWalletNavigationViewPainter(Activity activity, IdentityAssetIssuer identityAssetIssuer) {
+    private Activity activity;
+    private final ActiveActorIdentityInformation identityAssetIssuer;
+
+    public IssuerWalletNavigationViewPainter(Activity activity, ActiveActorIdentityInformation identityAssetIssuer) {
         this.activity = activity;
         this.identityAssetIssuer = identityAssetIssuer;
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetIssuer) {
+        try {
+            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, identityAssetIssuer);
+        } catch (CantGetIdentityAssetIssuerException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -56,8 +62,8 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.color.fab_material_white);
-        }catch (OutOfMemoryError error){
+                    activity.getResources(), R.drawable.bg_app_image, options);
+        } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
         return drawable;
@@ -65,7 +71,7 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return 0;
     }
 
     @Override
