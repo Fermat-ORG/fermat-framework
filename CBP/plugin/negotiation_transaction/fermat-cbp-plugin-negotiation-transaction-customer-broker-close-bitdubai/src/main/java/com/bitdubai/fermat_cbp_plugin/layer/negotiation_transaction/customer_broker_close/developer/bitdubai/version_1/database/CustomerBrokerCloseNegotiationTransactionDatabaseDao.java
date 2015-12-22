@@ -21,11 +21,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDevelope
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.CUSTOMER_BROKER_CLOSE.interfaces.CustomerBrokerClose;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by yordin on 22/12/15.
+ * Created by Yordin Alayn on 22.12.15.
  */
 public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
@@ -345,7 +345,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
         }
     }
 
-    private CustomerBrokerClose getCustomerBrokerNewFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+    private CustomerBrokerClose getCustomerBrokerCloseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
 
         UUID                            transactionId       = record.getUUIDValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME);
         UUID                            negotiationId       = record.getUUIDValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME);
