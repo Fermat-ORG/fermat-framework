@@ -42,7 +42,7 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
         this.transmissionId             = transmissionId;
         this.transactionId              = transactionId;
         this.negotiationId              = negotiationId;
-        this.negotiationTransactionType  = negotiationTransactionType;
+        this.negotiationTransactionType = negotiationTransactionType;
         this.publicKeyActorSend         = publicKeyActorSend;
         this.actorSendType              = actorSendType;
         this.publicKeyActorReceive      = publicKeyActorReceive;

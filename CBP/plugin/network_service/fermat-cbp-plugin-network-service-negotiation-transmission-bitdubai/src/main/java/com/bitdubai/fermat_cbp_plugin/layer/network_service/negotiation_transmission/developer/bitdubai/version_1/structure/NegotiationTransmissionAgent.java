@@ -225,6 +225,7 @@ public class NegotiationTransmissionAgent {
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
                         if (wsCommunicationsCloudClientManager != null) {
                             if (platformComponentProfile != null) {
+
                                 //VERIFICAR EL ACTOR_INTRA_USER
                                 PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorSend(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
                                 PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorReceive(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
@@ -240,18 +241,33 @@ public class NegotiationTransmissionAgent {
                     if (communicationNetworkServiceLocal != null) {
                         try {
 
-                            negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
+                            //TODO EVALUAR EL ESTATUS ACA.
+                            negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
                             System.out.print("-----------------------\n SENDING NEGOTIATION TRANSACTION RECORD To:" + receiverPublicKey + "-----------------------\n");
 
                             // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
                             Gson gson = new Gson();
 
-                            //TODO ESTO DEBE SER UN NegotiationTransmissionMessage
-                            String jsonNegotiationTransaction =gson.toJson(negotiationTransmission);
+                            NegotiationMessage negotiationMessage = new NegotiationMessage(
+                                    negotiationTransmission.getTransmissionId(),
+                                    negotiationTransmission.getTransactionId(),
+                                    negotiationTransmission.getNegotiationId(),
+                                    negotiationTransmission.getNegotiationTransactionType(),
+                                    negotiationTransmission.getPublicKeyActorSend(),
+                                    negotiationTransmission.getActorSendType(),
+                                    negotiationTransmission.getPublicKeyActorReceive(),
+                                    negotiationTransmission.getActorReceiveType(),
+                                    negotiationTransmission.getTransmissionType(),
+                                    negotiationTransmission.getTransmissionState(),
+                                    negotiationTransmission.getNegotiationXML(),
+                                    negotiationTransmission.getTimestamp()
+                            );
+                            String jsonNegotiationTransaction =gson.toJson(negotiationMessage);
 
-                            // Envio el mensaje a la capa de comunicacion
                             communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonNegotiationTransaction);
+
                             databaseDao.changeState(negotiationTransmission);
+
                             System.out.print("-----------------------\n NEGOTIATION TRANSACTION STATE: " + negotiationTransmission.getTransmissionState() + "\n-----------------------\n");
 
                         } catch (CantRegisterSendNegotiationTransmissionException e) {
