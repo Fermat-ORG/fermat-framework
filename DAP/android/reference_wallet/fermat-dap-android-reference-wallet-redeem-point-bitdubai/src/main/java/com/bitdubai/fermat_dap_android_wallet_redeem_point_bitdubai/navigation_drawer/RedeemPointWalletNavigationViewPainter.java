@@ -14,22 +14,28 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetIdentityRedeemPointException;
 
 /**
  * Created by frank on 12/9/15.
  */
 public class RedeemPointWalletNavigationViewPainter implements NavigationViewPainter {
-    private Activity activity;
-    private final RedeemPointIdentity redeemPointIdentity;
 
-    public RedeemPointWalletNavigationViewPainter(Activity activity, RedeemPointIdentity redeemPointIdentity) {
+    private Activity activity;
+    private final ActiveActorIdentityInformation redeemPointIdentity;
+
+    public RedeemPointWalletNavigationViewPainter(Activity activity, ActiveActorIdentityInformation redeemPointIdentity) {
         this.activity = activity;
         this.redeemPointIdentity = redeemPointIdentity;
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation redeemPointIdentity) {
+        try {
+            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, redeemPointIdentity);
+        } catch (CantGetIdentityRedeemPointException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
