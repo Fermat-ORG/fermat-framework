@@ -7,9 +7,12 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.MessageProcessor;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NodeContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,9 +32,9 @@ import javax.websocket.Session;
 public abstract class WebSocketChannelServerEndpoint {
 
     /**
-     * Represent the list of messages processors
+     * Represent the list of package processors
      */
-    private Map<MessageType, List<MessageProcessor>> messagesProcessors;
+    private Map<PackageType, List<PackageProcessor>> packageProcessors;
 
     /**
      * Represent the channelIdentity
@@ -39,43 +42,50 @@ public abstract class WebSocketChannelServerEndpoint {
     private ECCKeyPair channelIdentity;
 
     /**
+     * Represent the daoFactory instance
+     */
+    private DaoFactory daoFactory;
+
+    /**
      * Constructor
      */
     public WebSocketChannelServerEndpoint(){
         super();
-        this.messagesProcessors = new HashMap<>();
+        this.packageProcessors = new HashMap<>();
+        this.daoFactory  = (DaoFactory) NodeContext.get(DaoFactory.class.getName());
+        initPackageProcessorsRegistration();
     }
 
     /**
-     * This method register a MessageProcessor object with this
+     * This method register a PackageProcessor object with this
      * channel
      */
-    public void registerMessageProcessor(MessageProcessor messageProcessor) {
+    public void registerMessageProcessor(PackageProcessor packageProcessor) {
 
         /*
          * Set server reference
          */
 
         //Validate if a previous list created
-        if (messagesProcessors.containsKey(messageProcessor.getMessageType())){
+        if (packageProcessors.containsKey(packageProcessor.getPackageType())){
 
             /*
              * Add to the existing list
              */
-            messagesProcessors.get(messageProcessor.getMessageType()).add(messageProcessor);
+            packageProcessors.get(packageProcessor.getPackageType()).add(packageProcessor);
 
         }else{
 
             /*
              * Create a new list
              */
-            List<MessageProcessor> messageProcessorList = new ArrayList<>();
-            messageProcessorList.add(messageProcessor);
+            List<PackageProcessor> packageProcessorList = new ArrayList<>();
+            packageProcessorList.add(packageProcessor);
 
             /*
-             * Add to the messageProcessor
+             * Add to the packageProcessor
              */
-            messagesProcessors.put(messageProcessor.getMessageType(), messageProcessorList);
+            packageProcessors.put(packageProcessor.getPackageType(), packageProcessorList);
         }
 
     }
@@ -99,57 +109,58 @@ public abstract class WebSocketChannelServerEndpoint {
     }
 
     /**
-     * Gets the value of messagesProcessors and returns
+     * Gets the value of packageProcessors and returns
      *
-     * @return messagesProcessors
+     * @return packageProcessors
      */
-    protected Map<MessageType, List<MessageProcessor>> getMessagesProcessors() {
-        return messagesProcessors;
+    protected Map<PackageType, List<PackageProcessor>> getPackageProcessors() {
+        return packageProcessors;
     }
 
     /**
-     * Validate if can process the message type
+     * Validate if can process the package type
      *
-     * @param messageType to process
+     * @param packageType to validate
      * @return true or false
      */
-    protected boolean canProcessMessage(MessageType messageType){
-        return messagesProcessors.containsKey(messageType);
+    protected boolean canProcessMessage(PackageType packageType){
+        return packageProcessors.containsKey(packageType);
     }
 
     /**
      * Method that process a new message received
      *
-     * @param message
+     * @param packageReceived
      * @param session
      */
-    protected void processMessage(Message message, Session session) throws IllegalArgumentException{
+    protected void processMessage(Package packageReceived, Session session) throws PackageTypeNotSupportedException {
 
         /*
          * Validate if can process the message
          */
-        if (canProcessMessage(message.getMessageType())){
+        if (canProcessMessage(packageReceived.getPackageType())){
 
             /*
              * Get list of the processor
              */
-            for (MessageProcessor messageProcessor: messagesProcessors.get(message.getMessageType())) {
+            for (PackageProcessor packageProcessor : packageProcessors.get(packageReceived.getPackageType())) {
 
                 /*
                  * Process the message
                  */
-                messageProcessor.processingMessage(session, message);
+                packageProcessor.processingPackage(session, packageReceived);
             }
 
         }else {
 
-            throw new IllegalArgumentException("The message type: "+message.getMessageType()+" is not supported");
+            throw new PackageTypeNotSupportedException("The package type: "+packageReceived.getPackageType()+" is not supported");
         }
     }
 
     /**
-     * Initialize the message processor
+     * Initialize the all package processors for this
+     * channel
      */
-    abstract void initMessageProcessors();
+    abstract void initPackageProcessorsRegistration();
 
 }

@@ -14,6 +14,10 @@ public class ClientsConnectionHistory extends AbstractBaseEntity implements Seri
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String STATUS_SUCCESS = "SUCCESS";
+
+	public static final String STATUS_FAIL = "FAIL";
+
 	private UUID uuid;
 
 	private String identityPublicKey;

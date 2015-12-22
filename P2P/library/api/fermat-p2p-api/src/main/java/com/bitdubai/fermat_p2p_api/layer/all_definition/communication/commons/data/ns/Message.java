@@ -4,8 +4,9 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message</code> is
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.Message</code> is
  * message representation
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/12/15.
@@ -23,7 +24,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class Message implements Serializable{
+public class Message extends PackageContent implements Serializable{
 
     /**
      * Represent the serialVersionUID
@@ -71,17 +72,20 @@ public class Message implements Serializable{
     private MessageStatus messageStatus;
 
     /**
-     * Represent the fermatMessageContentType
-     */
-    private MessageContentType messageContentType;
-
-    /**
      * Represent the messageType
      */
     private MessageType messageType;
 
     /**
      * Constructor
+     */
+    public Message(){
+        this.id = UUID.randomUUID();
+        this.shippingTimestamp = new Timestamp(System.currentTimeMillis());
+    }
+
+    /**
+     * Constructor whit parameters
      *
      * @param content
      * @param deliveryTimestamp
@@ -89,18 +93,17 @@ public class Message implements Serializable{
      * @param messageStatus
      * @param receiver
      * @param sender
-     * @param shippingTimestamp
      * @param signature
      */
-    public Message(String content, Timestamp deliveryTimestamp, MessageContentType messageContentType, MessageStatus messageStatus, String receiver, String sender, Timestamp shippingTimestamp, String signature) {
+    public Message(String content, Timestamp deliveryTimestamp, MessageContentType messageContentType, MessageStatus messageStatus, String receiver, String sender, String signature) {
         this.content = content;
         this.deliveryTimestamp = deliveryTimestamp;
-        this.messageContentType = messageContentType;
+        this.setMessageContentType(messageContentType);
         this.messageStatus = messageStatus;
         this.id = UUID.randomUUID();
         this.receiver = receiver;
         this.sender = sender;
-        this.shippingTimestamp = shippingTimestamp;
+        this.shippingTimestamp = new Timestamp(System.currentTimeMillis());
         this.signature = signature;
     }
 
@@ -158,23 +161,7 @@ public class Message implements Serializable{
         this.id = id;
     }
 
-    /**
-     * Gets the value of messageContentType and returns
-     *
-     * @return messageContentType
-     */
-    public com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType getMessageContentType() {
-        return messageContentType;
-    }
 
-    /**
-     * Sets the messageContentType
-     *
-     * @param messageContentType to set
-     */
-    public void setMessageContentType(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType messageContentType) {
-        this.messageContentType = messageContentType;
-    }
 
     /**
      * Gets the value of messageStatus and returns
@@ -309,7 +296,7 @@ public class Message implements Serializable{
                 ", deliveryTimestamp=" + deliveryTimestamp +
                 ", signature='" + signature + '\'' +
                 ", messageStatus=" + messageStatus +
-                ", messageContentType=" + messageContentType +
+                ", messageContentType=" + getMessageContentType() +
                 ", messageType=" + messageType +
                 '}';
     }

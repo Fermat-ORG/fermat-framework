@@ -14,7 +14,11 @@ public class CheckedClientsHistory extends AbstractBaseEntity  implements Serial
 
 	private static final long serialVersionUID = 1L;
 
-	private UUID uuid;
+    public static final String CHECK_TYPE_IN  = "IN";
+
+    public static final String CHECK_TYPE_OUT = "OUT";
+
+    private UUID uuid;
 
 	private String identityPublicKey;
 

@@ -7,8 +7,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors;
 
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
@@ -19,14 +19,14 @@ import javax.websocket.Session;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.MessageProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor</code>
  * is the base class for all message processor class <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class MessageProcessor {
+public abstract class PackageProcessor {
 
     /**
      * Represent the webSocketChannelServerEndpoint instance with the processor are register
@@ -34,9 +34,9 @@ public abstract class MessageProcessor {
     private WebSocketChannelServerEndpoint channel;
 
     /**
-     * Represent the messageType
+     * Represent the packageType
      */
-    private MessageType messageType;
+    private PackageType packageType;
 
     /**
      * Represent the daoFactory instance
@@ -56,11 +56,12 @@ public abstract class MessageProcessor {
     /**
      * Constructor with parameter
      *
-     * @param messageType
+     * @param channel
+     * @param packageType
      */
-    public MessageProcessor(WebSocketChannelServerEndpoint channel, MessageType messageType) {
+    public PackageProcessor(WebSocketChannelServerEndpoint channel, PackageType packageType) {
         this.channel     = channel;
-        this.messageType = messageType;
+        this.packageType = packageType;
         this.daoFactory  = (DaoFactory) NodeContext.get(DaoFactory.class.getName());
         this.gson        = new Gson();
         this.jsonParser  = new JsonParser();
@@ -85,12 +86,12 @@ public abstract class MessageProcessor {
     }
 
     /**
-     * Gets the value of messageType and returns
+     * Gets the value of packageType and returns
      *
-     * @return messageType
+     * @return packageType
      */
-    public MessageType getMessageType() {
-        return messageType;
+    public PackageType getPackageType() {
+        return packageType;
     }
 
     /**
@@ -114,8 +115,8 @@ public abstract class MessageProcessor {
     /**
      * Method that call to process the message
      *
-     * @param session that send the message
-     * @param message received to process
+     * @param session that send the package
+     * @param packageReceived to process
      */
-    public abstract void processingMessage(Session session, final Message message);
+    public abstract void processingPackage(final Session session, final Package packageReceived);
 }

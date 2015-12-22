@@ -7,14 +7,16 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageDecoder;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageEncoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInClient;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInNetworkService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
 
 import org.jboss.logging.Logger;
 
@@ -40,8 +42,8 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(
         value = "/client-channel",
         configurator = ClientChannelConfigurator.class,
-        encoders = {MessageEncoder.class},
-        decoders = {MessageDecoder.class}
+        encoders = {PackageEncoder.class},
+        decoders = {PackageDecoder.class}
 )
 public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServerEndpoint{
 
@@ -61,17 +63,15 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
     public WebSocketClientChannelServerEndpoint(){
         super();
         this.clientsSessionMemoryCache = ClientsSessionMemoryCache.getInstance();
-
-        initMessageProcessors();
     }
 
     /**
      * (non-javadoc)
      *
-     * @see WebSocketChannelServerEndpoint#initMessageProcessors()
+     * @see WebSocketChannelServerEndpoint#initPackageProcessorsRegistration()
      */
     @Override
-    void initMessageProcessors(){
+    void initPackageProcessorsRegistration(){
 
         /*
          * Register all messages processor for this
@@ -102,32 +102,45 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
         endpointConfig.getUserProperties().remove(HeadersAttName.NPKI_ATT_HEADER_NAME);
 
         /*
+         * Get the client public key identity
+         */
+        String cpki = (String) endpointConfig.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
+
+        /*
          * Mach the session whit the client public key identity
          */
-        clientsSessionMemoryCache.add((String) endpointConfig.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME), session);
+        clientsSessionMemoryCache.add(cpki, session);
+
+        /*
+         * Create a new ClientsConnectionHistory
+         */
+        ClientsConnectionHistory clientsConnectionHistory = new ClientsConnectionHistory();
+        clientsConnectionHistory.setIdentityPublicKey(cpki);
+        clientsConnectionHistory.setStatus(ClientsConnectionHistory.STATUS_SUCCESS);
+
     }
 
     /**
      * Method called to handle a new message received
      *
-     * @param message received
+     * @param packageReceived new
      * @param session sender
      */
     @OnMessage
-    public void newMessageReceived(Message message, Session session) {
+    public void newPackageReceived(Package packageReceived, Session session) {
 
         LOG.info("New message Received");
-        LOG.info("Session: " + session.getId() + " Message = " + message + "");
+        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
 
         try {
 
             /*
-             * Process the new message received
+             * Process the new package received
              */
-            processMessage(message, session);
+            processMessage(packageReceived, session);
 
-        }catch (IllegalArgumentException i){
-            LOG.warn(i.getMessage());
+        }catch (PackageTypeNotSupportedException p){
+            LOG.warn(p.getMessage());
         }
 
     }

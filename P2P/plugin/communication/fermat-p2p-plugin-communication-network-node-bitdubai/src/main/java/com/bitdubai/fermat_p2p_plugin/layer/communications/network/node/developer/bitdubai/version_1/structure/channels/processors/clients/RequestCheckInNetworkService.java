@@ -6,10 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.Message;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.MessageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 
 import org.jboss.logging.Logger;
 
@@ -23,7 +24,7 @@ import javax.websocket.Session;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RequestCheckInNetworkService extends MessageProcessor {
+public class RequestCheckInNetworkService extends PackageProcessor {
 
     /**
      * Represent the LOG
@@ -37,16 +38,16 @@ public class RequestCheckInNetworkService extends MessageProcessor {
      *
      */
     public RequestCheckInNetworkService(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, MessageType.REQUEST_CHECK_IN_NETWORK_SERVICE);
+        super(webSocketChannelServerEndpoint, PackageType.REQUEST_CHECK_IN_NETWORK_SERVICE);
     }
 
     /**
      * (non-javadoc)
-     * @see MessageProcessor#processingMessage(Session, Message)
+     * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
-    public void processingMessage(Session session, Message message) {
+    public void processingPackage(Session session, Package packageReceived) {
 
-        LOG.info("Processing new message received");
+        LOG.info("Processing new package received");
     }
 }
