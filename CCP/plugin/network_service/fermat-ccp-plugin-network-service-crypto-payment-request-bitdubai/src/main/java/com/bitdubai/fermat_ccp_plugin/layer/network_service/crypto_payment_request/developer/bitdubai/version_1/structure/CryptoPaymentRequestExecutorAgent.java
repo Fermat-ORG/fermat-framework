@@ -126,7 +126,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
             if(cryptoPaymentRequestNetworkServicePluginRoot.isRegister()) {
 
-                // function to process and send the right message to the counterparts.
+                // function to process and send the rigth message to the counterparts.
                 processSend();
             }
 
@@ -361,7 +361,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
             return true;
         }
-            poolConnectionsWaitingForResponse.remove(actorPublicKey);
+        poolConnectionsWaitingForResponse.remove(actorPublicKey);
         return false;
     }
 
@@ -376,8 +376,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             case DAP_ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
 
             default: throw new InvalidParameterException(
-                  " actor type: "+type.name()+"  type-code: "+type.getCode(),
-                  " type of actor not expected."
+                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
+                    " type of actor not expected."
             );
         }
     }
@@ -409,7 +409,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     }
 
     private void toWaitingResponse(final UUID requestId) throws CantChangeRequestProtocolStateException,
-                                                                RequestNotFoundException               {
+            RequestNotFoundException               {
 
         cryptoPaymentRequestNetworkServiceDao.changeProtocolState(
                 requestId,
@@ -418,7 +418,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     }
 
     public void confirmRequest(final UUID requestId) throws CantTakeActionException,
-                                                            RequestNotFoundException   {
+            RequestNotFoundException   {
 
         cryptoPaymentRequestNetworkServiceDao.takeAction(
                 requestId,

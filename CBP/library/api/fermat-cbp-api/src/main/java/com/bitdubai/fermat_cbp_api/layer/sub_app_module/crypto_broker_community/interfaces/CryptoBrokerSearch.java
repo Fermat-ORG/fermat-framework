@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface CryptoBrokerSearch {
 
-    void setNameToSearch(String nameToSearch);
+    void addAlias(String alias);
 
     List<CryptoBrokerInformation> getResult() throws CantGetCryptoBrokerSearchResult;
 

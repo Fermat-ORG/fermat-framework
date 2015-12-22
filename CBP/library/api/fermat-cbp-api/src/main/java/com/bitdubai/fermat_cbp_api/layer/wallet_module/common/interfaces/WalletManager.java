@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 21/11/15.
  */
-public interface WalletManager extends ModuleManager<FermatSettings, ActorIdentityInformation> {
+public interface WalletManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
     /**
      * Add a new clause to the negotiation
