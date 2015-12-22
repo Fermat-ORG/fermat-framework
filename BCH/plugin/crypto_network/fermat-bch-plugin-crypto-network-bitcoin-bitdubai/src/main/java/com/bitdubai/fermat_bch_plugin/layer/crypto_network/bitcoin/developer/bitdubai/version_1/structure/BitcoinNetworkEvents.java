@@ -377,7 +377,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     /**
      * determines if the passed transaction is incoming or outgoing transaction
      * @param txHash
-     * @return true if is an IncomingTransactin, false if is outgoing.
+     * @return true if is an IncomingTransaction, false if is outgoing.
      */
     private boolean isIncomingTransaction(String txHash) throws CantExecuteDatabaseOperationException {
         return getDao().isIncomingTransaction(txHash);

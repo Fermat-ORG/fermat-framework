@@ -354,9 +354,6 @@ public class BitcoinCurrencyCryptoVaultManager {
 
         wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
 
-        wallet.getActiveKeychain().getKey(KeyChain.KeyPurpose.CHANGE);
-
-
         /**
          * Add transactions to the wallet that we can use to spend.
          */
@@ -376,13 +373,14 @@ public class BitcoinCurrencyCryptoVaultManager {
         /**
          * creates the send request and broadcast it on the network.
          */
-
-        wallet.allowSpendingUnconfirmedTransactions();
-        wallet.setAcceptRiskyTransactions(true);
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
 
+        /**
+         * I set SendRequest properties
+         */
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
+        sendRequest.shuffleOutputs = false;
 
         /**
          * I will add the OP_Return output if any
