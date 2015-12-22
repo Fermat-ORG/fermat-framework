@@ -212,11 +212,8 @@ public class NegotiationTransmissionAgent {
     private void processSend() {
 
         try {
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
-
-            //Read all pending NegotiationTransmission from database
-            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
+            
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
                 String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
@@ -323,10 +320,7 @@ public class NegotiationTransmissionAgent {
 
         try {
 
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PENDING_ACTION);
-
-            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
                 switch (negotiationTransmission.getNegotiationTransactionType()){
                     case CUSTOMER_BROKER_NEW:

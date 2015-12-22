@@ -383,10 +383,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         List<Transaction<NegotiationTransmission>> pendingTransaction=new ArrayList<>();
         try {
 
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PENDING_ACTION);
-
-            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             if(!negotiationTransmissionList.isEmpty()){
 
                 for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList){

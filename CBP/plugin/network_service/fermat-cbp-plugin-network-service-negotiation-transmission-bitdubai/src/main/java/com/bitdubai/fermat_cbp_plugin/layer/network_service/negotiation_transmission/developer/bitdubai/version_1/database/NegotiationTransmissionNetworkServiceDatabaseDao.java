@@ -94,7 +94,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
     /*UPDATE REGISTER SEND NEGOTIATION TRANSMISSION*/
     public void updateRegisterSendNegotiatioTransmission(NegotiationTransmission negotiationTransmission) throws CantRegisterSendNegotiationTransmissionException {
-
+/*
         if (negotiationTransmission == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
@@ -114,7 +114,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             throw new CantRegisterSendNegotiationTransmissionException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE + ". CAN'T UPDATE REGISTER IN DATABSE A NEGOTIATION TRANSMISSION", e, contextBuffer.toString(), "The record do not exist");
 
         }
-
+*/
     }
 
     /*CONFIRM RECEPTION*/
@@ -131,6 +131,38 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         }
     }
 
+    public List<NegotiationTransmission> findAllByTransmissionState(NegotiationTransmissionState negotiationTransmissionState) throws CantReadRecordDataBaseException {
+
+        if (negotiationTransmissionState == null) {
+            throw new IllegalArgumentException("The filters are required, can not be null or empty");
+        }
+
+        List<NegotiationTransmission> list = null;
+
+        try {
+            DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            table.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, negotiationTransmissionState.getCode(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            list = new ArrayList<>();
+            list.clear();
+
+            for (DatabaseTableRecord record : records) {
+                NegotiationTransmission outgoingTemplateNetworkServiceMessage = constructNegotiationTransmission(record);
+                list.add(outgoingTemplateNetworkServiceMessage);
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
+        } catch (InvalidParameterException e) {
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
+        }
+
+        return list;
+    }
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
