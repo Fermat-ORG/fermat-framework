@@ -80,5 +80,6 @@
     <string name="cbw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>
     <string name="cbw_welcome">Welcome</string>
     <string name="cbw_next_step">Next Step</string>
+    <string name="select_identity_warning_msg">Need to Select an Identity</string>
 
 </resources>

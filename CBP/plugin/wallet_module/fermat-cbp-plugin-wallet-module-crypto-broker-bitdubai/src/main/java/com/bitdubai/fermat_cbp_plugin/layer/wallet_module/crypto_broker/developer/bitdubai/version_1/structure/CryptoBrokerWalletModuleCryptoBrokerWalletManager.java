@@ -195,7 +195,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public boolean associateIdentity(UUID brokerId) {
+    public boolean associateIdentity(String brokerPublicKey) {
         return false;
     }
 

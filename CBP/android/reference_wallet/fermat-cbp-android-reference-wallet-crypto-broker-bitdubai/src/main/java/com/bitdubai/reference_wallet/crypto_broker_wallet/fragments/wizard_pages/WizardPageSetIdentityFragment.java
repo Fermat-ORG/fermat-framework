@@ -1,15 +1,22 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
@@ -21,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.IdentitiesAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +39,7 @@ import java.util.List;
 public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity> implements FermatListItemListeners<CryptoBrokerIdentity> {
 
     private List<CryptoBrokerIdentity> identities;
+    private CryptoBrokerIdentity selectedIdentity;
 
     private ErrorManager errorManager;
     private CryptoBrokerWalletManager walletManager;
@@ -54,6 +63,24 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     }
 
     @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selectedIdentity != null) {
+                    walletManager.associateIdentity(selectedIdentity.getPublicKey());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                } else {
+                    Toast.makeText(getActivity(), R.string.select_identity_warning_msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    @Override
     public FermatAdapter getAdapter() {
         IdentitiesAdapter adapter = new IdentitiesAdapter(getActivity(), identities);
         adapter.setFermatListEventListener(this);
@@ -62,12 +89,17 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
-        return null;
+        if (layoutManager == null)
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+        return layoutManager;
     }
 
     @Override
     public void onItemClickListener(CryptoBrokerIdentity data, int position) {
-
+        selectedIdentity = data;
+        IdentitiesAdapter identitiesAdapter = (IdentitiesAdapter) this.adapter;
+        identitiesAdapter.selectItem(position);
     }
 
     @Override
@@ -98,12 +130,24 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
     @Override
     public void onPostExecute(Object... result) {
-
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                identities = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(identities);
+            }
+        }
     }
 
     @Override
     public void onErrorOccurred(Exception ex) {
-
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            Log.e(TAG, ex.getMessage(), ex);
+        }
     }
 
     @Override
