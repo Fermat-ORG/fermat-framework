@@ -112,18 +112,12 @@ public class DesktopDatabaseTable implements  DatabaseTable{
         */
         try{
             ResultSetMetaData rsmd = rs.getMetaData();
-            //List<String> lstColumnNames=new ArrayList<String>();
-            for(int i=0;i<rsmd.getColumnCount();i++){
+
+
+            for(int i = 1;i <= rsmd.getColumnCount(); i++){
                 columns.add(rsmd.getColumnName(i));
             }
-            //fin
-            /*String[] columnNames = new String[lstColumnNames.size()];
 
-            columnNames = lstColumnNames.toArray(columnNames);
-
-            for (int i = 0; i < columnNames.length; ++i) {
-                columns.add(columnNames[i].toString());
-            }*/
             rs.close();
         }catch(Exception e){
             e.printStackTrace();
@@ -220,15 +214,15 @@ public class DesktopDatabaseTable implements  DatabaseTable{
              */
 
             for (int i = 0; i < records.size(); ++i) {
-
                 if(records.get(i).getChange())
-
                     recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
             }
 
-
-            this.database.update(tableName, recordUpdateList, makeFilter().replace("WHERE",""), null);
-
+            if(this.tableFilter!=null){
+                this.database.update(tableName, recordUpdateList, makeFilter(), new String[]{tableFilter.get(0).getColumn()});
+            }else {
+                this.database.update(tableName, recordUpdateList, makeFilter(), null);
+            }
 
         }catch (Exception exception)
         {
@@ -264,6 +258,10 @@ public class DesktopDatabaseTable implements  DatabaseTable{
                     strValues.append(",");
 
                 strValues.append ("'" + records.get(i).getValue() + "'");
+
+
+
+
             }
 
             // this.database.insert(tableName, null, initialValues);
@@ -282,49 +280,43 @@ public class DesktopDatabaseTable implements  DatabaseTable{
     public void loadToMemory() throws CantLoadTableToMemoryException {
 
 
-        this.tableRecord  = new DesktopDatabaseRecord();
 
-        List<DatabaseRecord>  recordValues = new ArrayList<DatabaseRecord>();
+
+
         this.records = new ArrayList<DatabaseTableRecord>() ;
 
 
         String topSentence = "";
         try {
 
-
-            if(!this.top.isEmpty())
+            if(this.top.length() > 0)
                 topSentence = " LIMIT " + this.top ;
 
             ResultSet rs = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence , null);
-
             List<String> columns = getColumns();
 
-            if (rs.next()) {
-                do {
-                    /**
-                     * Get columns name to read values of files
-                     *
-                     */
+                while ( rs.next() ) {
 
-                    for (int i = 0; i < columns.size(); ++i) {
+                    DatabaseTableRecord tableRecordConsult  = new DesktopDatabaseRecord();
+                    List<DatabaseRecord> recordValues = new ArrayList<DatabaseRecord>();
+
+                    for (String nameColumn : columns) {
                         DatabaseRecord recordValue = new DesktopRecord();
-                        recordValue.setName(columns.get(i).toString());
-                        //recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
-                        recordValue.setValue(rs.getString(i));
+                        recordValue.setName(nameColumn.toString());
+                        recordValue.setValue(rs.getString(nameColumn.toString()));
                         recordValue.setChange(false);
                         recordValues.add(recordValue);
                     }
 
-                } while (rs.next());
-            }
-
+                    tableRecordConsult.setValues(recordValues);
+                    this.records.add(tableRecordConsult);
+                }
 
         } catch (Exception e) {
             throw new CantLoadTableToMemoryException();
         }
 
-        tableRecord.setValues(recordValues);
-        this.records.add(this.tableRecord);
+
 
     }
 
@@ -381,6 +373,8 @@ public class DesktopDatabaseTable implements  DatabaseTable{
 
     @Override
     public void setFilterGroup(DatabaseTableFilterGroup filterGroup) {
+
+        this.tableFilterGroup = filterGroup;
 
     }
 
@@ -445,26 +439,76 @@ public class DesktopDatabaseTable implements  DatabaseTable{
 
     @Override
     public void addStringFilter(String columnName, String value, DatabaseFilterType type) {
+        if (this.tableFilter == null)
+            this.tableFilter = new ArrayList<>();
+
+        DatabaseTableFilter filter = new DesktopDatabaseTableFilter(
+                columnName,
+                type      ,
+                value
+        );
+
+        this.tableFilter.add(filter);
 
     }
 
     @Override
     public void addFermatEnumFilter(String columnName, FermatEnum value, DatabaseFilterType type) {
 
+        if (this.tableFilter == null)
+            this.tableFilter = new ArrayList<>();
+
+        this.tableFilter.add(
+                new DesktopDatabaseTableFilter(
+                        columnName,
+                        type,
+                        value.getCode()
+                )
+        );
+
     }
 
     @Override
     public void addFilterOrder(String columnName, DatabaseFilterOrder direction) {
 
+        if (this.tableOrder == null)
+            this.tableOrder = new ArrayList<>();
+
+        DataBaseTableOrder order = new DesktopDatabaseTableOrder(columnName, direction);
+
+        this.tableOrder.add(order);
+
     }
 
     @Override
-    public void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type) {
+    public void addUUIDFilter(String columName, UUID value, DatabaseFilterType type) {
+
+        if (this.tableFilter == null)
+            this.tableFilter = new ArrayList<>();
+
+        DatabaseTableFilter filter = new DesktopDatabaseTableFilter();
+
+        filter.setColumn(columName);
+        filter.setValue(value.toString());
+        filter.setType(type);
+
+        this.tableFilter.add(filter);
 
     }
 
     @Override
     public void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
+
+        if (this.tableSelectOperator == null)
+            this.tableSelectOperator = new ArrayList<>();
+
+        DatabaseSelectOperator selectOperator = new DesktopDatabaseSelectOperator(
+                columnName,
+                operator,
+                alias
+        );
+
+        this.tableSelectOperator.add(selectOperator);
 
     }
 

@@ -184,7 +184,14 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
         File storagePath = new File(databasePath);
         if (!storagePath.exists()){
-            storagePath.mkdirs();
+            //storagePath.mkdirs();
+            throw new DatabaseNotFoundException();
+        }else {
+
+            databasePath += "/" + databaseName.replace("-", "") + ".db";
+
+
+            this.Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
         }
 
         databasePath += "/" + this.databaseName.replace("-","") + ".db";
@@ -217,13 +224,15 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
             File storagePath = new File(databasePath);
             if (!storagePath.exists()){
-                storagePath.mkdirs();
+                //storagePath.mkdirs();
+                throw new DatabaseNotFoundException();
+            }else {
+
+                databasePath += "/" + databaseName.replace("-", "") + ".db";
+
+
+                this.Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
             }
-
-            databasePath += "/" + databaseName.replace("-","") + ".db";
-
-
-            this.Database = DesktopDatabaseBridge.openDatabase(databasePath,null,0,null);
 
         }
         catch (Exception exception) {
@@ -382,7 +391,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
             this.query += ")";
 
 
-            executeQuery();
+            executeQuery(this.query);
 
             /**
              * get index column
@@ -390,7 +399,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
             if(table.getIndex() != null && !table.getIndex().isEmpty ()) {
                 this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
 
-                executeQuery();
+                executeQuery(this.query);
             }
 
         }catch (Exception e)
