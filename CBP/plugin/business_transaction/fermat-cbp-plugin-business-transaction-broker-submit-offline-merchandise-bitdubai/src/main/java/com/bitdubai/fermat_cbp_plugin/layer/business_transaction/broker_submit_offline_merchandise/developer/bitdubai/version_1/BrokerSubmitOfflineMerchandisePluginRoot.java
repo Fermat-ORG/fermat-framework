@@ -252,7 +252,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             brokerSubmitOnlineMerchandiseMonitorAgent.start();*/
 
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Broker submit offline merchandise starting");
+            //System.out.println("Broker submit offline merchandise starting");
         } catch (Exception exception) {
             //TODO: handle correctly this method exceptions
             throw new CantStartPluginException(
@@ -302,16 +302,16 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;//brokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return brokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;//brokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return brokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;//brokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return brokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 }
