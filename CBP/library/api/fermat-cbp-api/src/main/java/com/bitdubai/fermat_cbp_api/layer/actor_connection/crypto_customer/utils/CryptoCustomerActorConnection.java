@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils;
 
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 
 import java.util.UUID;
 
@@ -14,21 +13,19 @@ import java.util.UUID;
  */
 public final class CryptoCustomerActorConnection extends ActorConnection<CryptoCustomerLinkedActorIdentity> {
 
-    public CryptoCustomerActorConnection(final UUID connectionId,
-                                         final CryptoCustomerLinkedActorIdentity linkedIdentity,
-                                         final String publicKey,
-                                         final Actors actorType,
-                                         final String alias,
-                                         final byte[] image,
-                                         final ConnectionState connectionState,
-                                         final long creationTime,
-                                         final long updateTime) {
+    public CryptoCustomerActorConnection(final UUID                              connectionId   ,
+                                         final CryptoCustomerLinkedActorIdentity linkedIdentity ,
+                                         final String                            publicKey      ,
+                                         final String                            alias          ,
+                                         final byte[]                            image          ,
+                                         final ConnectionState                   connectionState,
+                                         final long                              creationTime   ,
+                                         final long                              updateTime     ) {
 
         super(
                 connectionId   ,
                 linkedIdentity ,
                 publicKey      ,
-                actorType      ,
                 alias          ,
                 image          ,
                 connectionState,

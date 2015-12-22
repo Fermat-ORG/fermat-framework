@@ -76,8 +76,8 @@ public class ActorConnectionDatabaseFactory {
 
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , DatabaseDataType.STRING      ,  36, Boolean.TRUE );
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     , DatabaseDataType.STRING      , 130, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
