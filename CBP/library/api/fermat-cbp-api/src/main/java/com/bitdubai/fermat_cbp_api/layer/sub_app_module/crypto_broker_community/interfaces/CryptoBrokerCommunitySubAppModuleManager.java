@@ -122,19 +122,19 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
                                                                 final int                                     offset          ) throws CantListCryptoBrokersException;
 
     /**
-     * The method <code>getCryptoBrokersWaitingYourAcceptance</code> returns the list of crypto brokers waiting to be accepted
+     * The method <code>listCryptoBrokersPendingLocalAction</code> returns the list of crypto brokers waiting to be accepted
      * or rejected by the logged in crypto broker
      *
      * @return the list of crypto brokers waiting to be accepted or rejected by the  logged in crypto broker
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> getCryptoBrokersWaitingYourAcceptance(String identityPublicKey,
-                                                                        int    max              ,
-                                                                        int    offset           ) throws CantListCryptoBrokersException;
+    List<CryptoBrokerInformation> listCryptoBrokersPendingLocalAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                                      final int max,
+                                                                      final int offset) throws CantListCryptoBrokersException;
 
     /**
-     * The method <code>getCryptoBrokersWaitingTheirAcceptance</code> list the crypto brokers that haven't
+     * The method <code>listCryptoBrokersPendingRemoteAction</code> list the crypto brokers that haven't
      * answered to a sent connection request by the current logged in crypto broker.
      *
      * @return the list of crypto brokers that haven't answered to a sent connection request by the current
@@ -142,48 +142,15 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> getCryptoBrokersWaitingTheirAcceptance(String identityPublicKey,
-                                                                         int    max              ,
-                                                                         int    offset           ) throws CantListCryptoBrokersException;
-
-    /**
-     *
-     * @return active CryptoBrokerCommunitySelectableIdentity
-     *
-     * @throws CantGetSelectedIdentityException if something goes wrong.
-     */
-    CryptoBrokerCommunitySelectableIdentity getActiveCryptoBrokerIdentity() throws CantGetSelectedIdentityException;
+    List<CryptoBrokerInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                                       final int max,
+                                                                       final int offset) throws CantListCryptoBrokersException;
 
     /**
      * Count crypto broker waiting
      * @return
      */
     int getCryptoBrokersWaitingYourAcceptanceCount();
-
-    /**
-     * The method <code>updateCryptoBrokerIdentity</code> change a identity information data
-     *
-     * @param identityPublicKey
-     * @param identityAlias
-     * @param identityPhrase
-     * @param profileImage
-     *
-     * @throws CantUpdateIdentityException if something goes wrong.
-     */
-    void updateCryptoBrokerIdentity(String identityPublicKey,
-                                    String identityAlias    ,
-                                    String identityPhrase   ,
-                                    byte[] profileImage     ) throws CantUpdateIdentityException;
-
-
-    /**
-     *The method <code>deleteCryptoBrokerIdentity</code> change identity status to inactive
-     *
-     * @param identityPublicKey
-     *
-     * @throws CantListCryptoBrokersException if something goes wrong.
-     */
-    void  deleteCryptoBrokerIdentity(String identityPublicKey) throws CantListCryptoBrokersException;
 
     /**
      *
