@@ -2,8 +2,16 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingCacheSuggestionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -84,23 +92,23 @@ import java.util.Map;
 
 public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         LogManagerForDevelopers,
-        IntraUserModuleManager  {
+        IntraUserModuleManager {
 
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER  )
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER)
     private IntraUserManager intraUserNertwokServiceManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.INTRA_WALLET_USER  )
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR          , plugin = Plugins.INTRA_WALLET_USER  )
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserManager;
 
     private IntraWalletUserIdentity intraWalletUser;
@@ -139,41 +147,37 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CouldNotCreateIntraUserException
      */
     @Override
-    public IntraUserLoginIdentity createIntraUser(String intraUserName,String phrase, byte[] profileImage) throws CouldNotCreateIntraUserException {
+    public IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws CouldNotCreateIntraUserException {
 
-      try{
-           this.intraWalletUser =  this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName,phrase, profileImage);
+        try {
+            this.intraWalletUser = this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, phrase, profileImage);
 
 
-          return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
-      }
-
-      catch (CantCreateNewIntraWalletUserException e){
-            throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER",e,"","Error in Intra user identity manager");
-      }
-      catch(Exception e)
-      {
-          throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER",FermatException.wrapException(e),"","unknown exception");
-      }
+            return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
+        } catch (CantCreateNewIntraWalletUserException e) {
+            throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER", e, "", "Error in Intra user identity manager");
+        } catch (Exception e) {
+            throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER", FermatException.wrapException(e), "", "unknown exception");
+        }
     }
 
     /**
      * That method let the current logged in intra user set its profile
      * picture.
+     *
      * @param image the profile picture to set
      * @throws CantSaveProfileImageException
      */
     @Override
     public void setNewProfileImage(byte[] image, String intraUserPublicKey) throws CantSaveProfileImageException {
-        try{
+        try {
             this.intraWalletUser.setNewProfileImage(image);
         }
 //        catch (CantSetNewProfileImageException e){
 //            throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE",e,"","Error in Intra user identity manager");
 //        }
-        catch(Exception e)
-        {
-            throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE",FermatException.wrapException(e),"","unknown exception");
+        catch (Exception e) {
+            throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE", FermatException.wrapException(e), "", "unknown exception");
         }
 
     }
@@ -192,21 +196,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
             List<IntraUserLoginIdentity> intraUserLoginIdentityList = new ArrayList<IntraUserLoginIdentity>();
 
-            List<IntraWalletUserIdentity> intraWalletUserList =  this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            List<IntraWalletUserIdentity> intraWalletUserList = this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
             for (IntraWalletUserIdentity intraWalletUser : intraWalletUserList) {
-                intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage()));
+                intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage()));
             }
 
             return intraUserLoginIdentityList;
 
         } catch (CantListIntraWalletUsersException e) {
 
-            throw new CantShowLoginIdentitiesException("CAN'T GET Available Login Identities",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantShowLoginIdentitiesException("CAN'T GET Available Login Identities",FermatException.wrapException(e),"","unknown exception");
+            throw new CantShowLoginIdentitiesException("CAN'T GET Available Login Identities", e, "", "");
+        } catch (Exception e) {
+            throw new CantShowLoginIdentitiesException("CAN'T GET Available Login Identities", FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -217,10 +219,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @param intraUserPublicKey the public key of the intra user to log in
      */
     @Override
-    public void login(String intraUserPublicKey)throws CantLoginIntraUserException {
+    public void login(String intraUserPublicKey) throws CantLoginIntraUserException {
 
-        try
-        {
+        try {
             this.intraUserLoggedPublicKey = intraUserPublicKey;
 
             /**
@@ -246,15 +247,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
             intraUserLoginXml.persistToMedia();
 
-        }
-        catch(CantLoadLoginsFileException e)
-        {
-            throw new CantLoginIntraUserException("CAN'T LOGIN INTRA USER",e,"","Error load xml file");
+        } catch (CantLoadLoginsFileException e) {
+            throw new CantLoginIntraUserException("CAN'T LOGIN INTRA USER", e, "", "Error load xml file");
 
-        }
-        catch(Exception e)
-        {
-            throw new CantLoginIntraUserException("CAN'T LOGIN USER",FermatException.wrapException(e),"","unknown exception");
+        } catch (Exception e) {
+            throw new CantLoginIntraUserException("CAN'T LOGIN USER", FermatException.wrapException(e), "", "unknown exception");
         }
 
     }
@@ -267,10 +264,29 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
 
         try {
-            return  intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
+
+            List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+
+            List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
+            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
+
+
+
+            for (IntraUserInformation intraUser : intraUserInformationList) {
+
+                //get connection state status
+                ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+
+                //return intra user information - if not connected - status return null
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                intraUserInformationModuleList.add(intraUserInformation);
+            }
+
+            return intraUserInformationModuleList;
+
         }
         catch (ErrorSearchingSuggestionsException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
@@ -283,13 +299,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
         try {
-            return  intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
-        }
-        catch (ErrorSearchingCacheSuggestionsException e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
-        }
-        catch (Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+            return intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
+        } catch (ErrorSearchingCacheSuggestionsException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT", e, "", "Error on intra user network service");
+        } catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT", e, "", "Unknown Error");
         }
     }
 
@@ -302,7 +316,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      */
     @Override
     public IntraUserSearch searchIntraUser() {
-        return new IntraUserModuleSearch(this.intraUserNertwokServiceManager,this.intraWalletUserIdentityManager);
+        return new IntraUserModuleSearch(this.intraUserNertwokServiceManager,this.intraWalletUserIdentityManager, this.intraWalletUserManager);
     }
 
     /**
@@ -320,10 +334,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
 
-        try
-        {
+        try {
             /**
              *Call Actor Intra User to add request connection
              */
@@ -334,21 +347,14 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
              */
 
             this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER, profileImage);
+        } catch (CantCreateIntraWalletUserException e) {
+            throw new CantStartRequestException("", e, "", "");
+        } catch (RequestAlreadySendException e) {
+            throw new CantStartRequestException("", e, "", "Intra user request already send");
+        } catch (Exception e) {
+            throw new CantStartRequestException("CAN'T ASK INTRA USER CONNECTION", FermatException.wrapException(e), "", "unknown exception");
         }
-        catch(CantCreateIntraWalletUserException e)
-        {
-            throw new CantStartRequestException("",e,"","");
-        }
-        catch(RequestAlreadySendException e)
-        {
-            throw new CantStartRequestException("",e,"","Intra user request already send");
-        }
-
-        catch(Exception e)
-        {
-            throw new CantStartRequestException("CAN'T ASK INTRA USER CONNECTION",FermatException.wrapException(e),"","unknown exception");
-        }
-      }
+    }
 
     /**
      * That method takes the information of a connection request, accepts
@@ -360,9 +366,8 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CantAcceptRequestException
      */
     @Override
-    public void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException {
-        try
-        {
+    public void acceptIntraUser(String identityPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException {
+        try {
             /**
              *Call Actor Intra User to accept request connection
              */
@@ -373,17 +378,12 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
              */
             this.intraUserNertwokServiceManager.acceptIntraUser(identityPublicKey, intraUserToAddPublicKey);
 
-        }
-       catch(CantAcceptIntraWalletUserException e)
-        {
-            throw new CantAcceptRequestException("CAN'T ACCEPT INTRA USER CONNECTION - KEY " + intraUserToAddPublicKey,e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantAcceptRequestException("CAN'T ACCEPT INTRA USER CONNECTION - KEY " + intraUserToAddPublicKey,FermatException.wrapException(e),"","unknown exception");
+        } catch (CantAcceptIntraWalletUserException e) {
+            throw new CantAcceptRequestException("CAN'T ACCEPT INTRA USER CONNECTION - KEY " + intraUserToAddPublicKey, e, "", "");
+        } catch (Exception e) {
+            throw new CantAcceptRequestException("CAN'T ACCEPT INTRA USER CONNECTION - KEY " + intraUserToAddPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
-
 
 
     /**
@@ -393,28 +393,23 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws IntraUserConectionDenegationFailedException
      */
     @Override
-    public void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
-        try
-        {
+    public void denyConnection(String intraUserLoggedPublicKey, String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
+        try {
             /**
              *Call Actor Intra User to denied request connection
              */
 
-           this.intraWalletUserManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
+            this.intraWalletUserManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
 
             /**
              *Call Network Service Intra User to denied request connection
              */
             this.intraUserNertwokServiceManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
 
-        }
-        catch(CantDenyConnectionException e)
-        {
-            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey,e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey,FermatException.wrapException(e),"","unknown exception");
+        } catch (CantDenyConnectionException e) {
+            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey, e, "", "");
+        } catch (Exception e) {
+            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -440,32 +435,28 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
             this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
-        }
-        catch(CantDisconnectIntraWalletUserException e)
-        {
-            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey,e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey,FermatException.wrapException(e),"","unknown exception");
+        } catch (CantDisconnectIntraWalletUserException e) {
+            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey, e, "", "");
+        } catch (Exception e) {
+            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
 
     /**
      * That method cancels an intra user from the list managed by this
+     *
      * @param intraUserToCancelPublicKey
      * @throws IntraUserCancellingFailedException
      */
     @Override
     public void cancelIntraUser(String intraUserToCancelPublicKey) throws IntraUserCancellingFailedException {
-        try
-        {
+        try {
             /**
              *Call Actor Intra User to cancel request connection
              */
 
-              this.intraWalletUserManager.cancelIntraWalletUser(this.intraUserLoggedPublicKey, intraUserToCancelPublicKey);
+            this.intraWalletUserManager.cancelIntraWalletUser(this.intraUserLoggedPublicKey, intraUserToCancelPublicKey);
 
             /**
              *Call Network Service Intra User to cancel request connection
@@ -474,14 +465,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             this.intraUserNertwokServiceManager.cancelIntraUSer(this.intraUserLoggedPublicKey, intraUserToCancelPublicKey);
 
 
-        }
-         catch(CantCancelIntraWalletUserException e)
-        {
-            throw new IntraUserCancellingFailedException("CAN'T CANCEL INTRA USER CONNECTION- KEY:" + intraUserToCancelPublicKey,e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new IntraUserCancellingFailedException("CAN'T CANCEL INTRA USER CONNECTION- KEY:" + intraUserToCancelPublicKey,FermatException.wrapException(e),"","unknown exception");
+        } catch (CantCancelIntraWalletUserException e) {
+            throw new IntraUserCancellingFailedException("CAN'T CANCEL INTRA USER CONNECTION- KEY:" + intraUserToCancelPublicKey, e, "", "");
+        } catch (Exception e) {
+            throw new IntraUserCancellingFailedException("CAN'T CANCEL INTRA USER CONNECTION- KEY:" + intraUserToCancelPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -494,23 +481,21 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws CantGetIntraUsersListException {
-        try{
-            List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+    public List<IntraUserInformation> getAllIntraUsers(String identityPublicKey, int max, int offset) throws CantGetIntraUsersListException {
+        try {
+            List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
 
 
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
             }
             return intraUserList;
-        }
-        catch(CantGetIntraWalletUsersException e) {
-            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",e,"","");
-        }
-        catch(Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",FermatException.wrapException(e),"","unknown exception");
+        } catch (CantGetIntraWalletUsersException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER", FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -523,24 +508,22 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws CantGetIntraUsersListException {
-        List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey, int max, int offset) throws CantGetIntraUsersListException {
+        List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
         try {
 
 
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
             }
 
             return intraUserList;
-        }
-       catch(CantGetIntraWalletUsersException e) {
-            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
-        }
-        catch(Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
+        } catch (CantGetIntraWalletUsersException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE", FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -553,9 +536,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      */
     @Override
     public int getIntraUsersWaitingYourAcceptanceCount() {
-       //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
+        //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
         try {
-            return getIntraUsersWaitingYourAcceptance(getActiveIntraUserIdentity().getPublicKey(),100,0).size();
+            return getIntraUsersWaitingYourAcceptance(getActiveIntraUserIdentity().getPublicKey(), 100, 0).size();
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
@@ -564,16 +547,27 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         return 0;
     }
 
+
+    @Override
+    public ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUserConnectionStatusException {
+
+        try {
+            return this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUserConnectedPublicKey);
+        } catch (CantGetIntraUsersConnectedStateException e) {
+            throw new CantGetIntraUserConnectionStatusException("CAN'T GET INTRA USER CONNECTION STATUS",e,"","Error on IntraUserIdentity Manager");
+
+        }
+
+    }
+
     @Override
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage) throws CantUpdateIdentityException {
         try {
-             this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey,identityAlias,identityPhrase,profileImage);
-        }
-        catch (CantUpdateIdentityException e) {
-            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY",e,"","Error on IntraUserIdentity Manager");
-        }
-        catch (Exception e) {
-            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY",FermatException.wrapException(e),"","Error on IntraUserIdentity Manager");
+            this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, identityPhrase, profileImage);
+        } catch (CantUpdateIdentityException e) {
+            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error on IntraUserIdentity Manager");
+        } catch (Exception e) {
+            throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", FermatException.wrapException(e), "", "Error on IntraUserIdentity Manager");
         }
     }
 
@@ -581,12 +575,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     public void deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException {
         try {
             this.intraWalletUserIdentityManager.deleteIntraUserIdentity(identityPublicKey);
-        }
-        catch (CantDeleteIdentityException e) {
-            throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY",e,"","Error on IntraUserIdentity Manager");
-        }
-        catch (Exception e) {
-            throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY",FermatException.wrapException(e),"","Error on IntraUserIdentity Manager");
+        } catch (CantDeleteIdentityException e) {
+            throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error on IntraUserIdentity Manager");
+        } catch (Exception e) {
+            throw new CantDeleteIdentityException("CAN'T UPDATE INTRA USER IDENTITY", FermatException.wrapException(e), "", "Error on IntraUserIdentity Manager");
         }
     }
 
@@ -605,31 +597,25 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey,int max,int offset) throws CantGetIntraUsersListException {
-        try
-        {
-            List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey, int max, int offset) throws CantGetIntraUsersListException {
+        try {
+            List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
 
-             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
+            List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
             }
             return intraUserList;
-        }
-        catch(CantGetIntraWalletUsersException e)
-        {
-            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",e,"","Error on IntraUserActor Manager");
-        }
-        catch(Exception e)
-        {
-            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
+        } catch (CantGetIntraWalletUsersException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE", e, "", "Error on IntraUserActor Manager");
+        } catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE", FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
     @Override
-    public IntraUserLoginIdentity getActiveIntraUserIdentity() throws CantGetActiveLoginIdentityException
-    {
+    public IntraUserLoginIdentity getActiveIntraUserIdentity() throws CantGetActiveLoginIdentityException {
         try {
 
             IntraUserLoginIdentity intraUserLoginIdentity = null;
@@ -639,20 +625,18 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             for (IntraWalletUserIdentity intraWalletUser : intraWalletUserList) {
                 //TODO: Naty lo saqué esto porque el intraUserLoggedPublicKey está siempre en null, hay que darle valor.
                 //if(intraWalletUser.getPublicKey().equals(intraUserLoggedPublicKey)) {
-                    intraUserLoginIdentity =  new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
-                    break;
+                intraUserLoginIdentity = new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
+                break;
                 //}
-             }
+            }
 
             return intraUserLoginIdentity;
 
         } catch (CantListIntraWalletUsersException e) {
 
-            throw new CantGetActiveLoginIdentityException("CAN'T GET Active Login Identities",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantGetActiveLoginIdentityException("CAN'T GET active Login Identities",FermatException.wrapException(e),"","unknown exception");
+            throw new CantGetActiveLoginIdentityException("CAN'T GET Active Login Identities", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetActiveLoginIdentityException("CAN'T GET active Login Identities", FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -676,7 +660,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
          * Modify by Manuel on 25/07/2015
          * I will wrap all this method within a try, I need to catch any generic java Exception
          */
-        try{
+        try {
 
             /**
              * I will check the current values and update the LogLevel in those which is different
@@ -693,15 +677,12 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 }
             }
 
-        }catch (Exception exception){
-            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ IntraWalletUserModulePluginRoot.newLoggingLevel ,"Check the cause");
+        } catch (Exception exception) {
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + IntraWalletUserModulePluginRoot.newLoggingLevel, "Check the cause");
             this.errorManager.reportUnexpectedPluginException(Plugins.INTRA_WALLET_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
 
     }
-
-
-
 
 
     /**
@@ -709,8 +690,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      */
     @Override
     public void start() throws CantStartPluginException {
-        try
-        {
+        try {
             this.serviceStatus = ServiceStatus.STARTED;
 
             /**
@@ -729,95 +709,93 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
              */
             this.intraUserLoggedPublicKey = intraUserSettings.getLoggedInPublicKey();
 
-        }
-        catch (CantLoadLoginsFileException e)
-        {
-            throw new CantStartPluginException("Error load logins xml file",e);
-        }
-        catch(Exception e)
-        {
-            throw new CantStartPluginException("Unknown Error",e);
+        } catch (CantLoadLoginsFileException e) {
+            throw new CantStartPluginException("Error load logins xml file", e);
+        } catch (Exception e) {
+            throw new CantStartPluginException("Unknown Error", e);
         }
 
     }
 
-        /**
-         * private methods
-         */
+    /**
+     * private methods
+     */
 
-        private void loadSettingsFile() throws CantLoadLoginsFileException {
+    private void loadSettingsFile() throws CantLoadLoginsFileException {
 
-            try
-            {
+        try {
+            /**
+             *  I check if the file containing  the wallets settings  already exists or not.
+             * If not exists I created it.
+             * * *
+             */
+
+            intraUserLoginXml = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            /**
+             * Now I read the content of the file and place it in memory.
+             */
+            intraUserLoginXml.loadFromMedia();
+
+            String xml = intraUserLoginXml.getContent();
+
+            intraUserSettings = (IntraUserSettings) XMLParser.parseXML(xml, intraUserSettings);
+
+
+        } catch (FileNotFoundException fileNotFoundException) {
+            /**
+             * If the file did not exist it is not a problem. It only means this is the first time this plugin is running.
+             *
+             * I will create the file now, with an empty content so that when a new wallet is added we wont have to deal
+             * with this file not existing again.
+             * * * * *
+             */
+
+            try {
+                intraUserLoginXml = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            } catch (CantCreateFileException cantCreateFileException) {
                 /**
-                 *  I check if the file containing  the wallets settings  already exists or not.
-                 * If not exists I created it.
-                 * * *
+                 * If I can not save this file, then this plugin shouldn't be running at all.
+                 */
+                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantCreateFileException, null, null);
+            }
+
+            try {
+                /**
+                 * make default xml structure
                  */
 
-                intraUserLoginXml = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
-                /**
-                 * Now I read the content of the file and place it in memory.
-                 */
-                intraUserLoginXml.loadFromMedia();
-
-                String xml = intraUserLoginXml.getContent();
-
-                intraUserSettings = (IntraUserSettings) XMLParser.parseXML(xml, intraUserSettings);
-
-
-            } catch (FileNotFoundException fileNotFoundException) {
-                /**
-                 * If the file did not exist it is not a problem. It only means this is the first time this plugin is running.
-                 *
-                 * I will create the file now, with an empty content so that when a new wallet is added we wont have to deal
-                 * with this file not existing again.
-                 * * * * *
-                 */
-
-                try{
-                    intraUserLoginXml = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                }
-                catch (CantCreateFileException cantCreateFileException ) {
-                    /**
-                     * If I can not save this file, then this plugin shouldn't be running at all.
-                     */
-                    throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantCreateFileException, null, null);
-                }
-
-                try {
-                    /**
-                     * make default xml structure
-                     */
+                intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
                     intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                    intraUserLoginXml.persistToMedia();
-                }
-                catch (CantPersistFileException cantPersistFileException ) {
-
-                    /**
-                     * If I can not save this file, then this plugin shouldn't be running at all.
-                     */
-                    throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
-                }
-            }
-            catch (CantLoadFileException | CantCreateFileException e) {
-
                 /**
-                 * In this situation we might have a corrupted file we can not read. For now the only thing I can do is
-                 * to prevent the plug-in from running.
-                 *
-                 * In the future there should be implemented a method to deal with this situation.
-                 * * * *
+                 * If I can not save this file, then this plugin shouldn't be running at all.
                  */
-                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, e, null, null);
+                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
             }
-            catch(Exception ex)
-            {
-                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, FermatException.wrapException(ex), null, null);
-            }
-        }
+        } catch (CantLoadFileException | CantCreateFileException e) {
 
+            /**
+             * In this situation we might have a corrupted file we can not read. For now the only thing I can do is
+             * to prevent the plug-in from running.
+             *
+             * In the future there should be implemented a method to deal with this situation.
+             * * * *
+             */
+            throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, e, null, null);
+        } catch (Exception ex) {
+            throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, FermatException.wrapException(ex), null, null);
+        }
+    }
+
+    @Override
+    public SettingsManager<FermatSettings> getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        return null;
+    }
 }

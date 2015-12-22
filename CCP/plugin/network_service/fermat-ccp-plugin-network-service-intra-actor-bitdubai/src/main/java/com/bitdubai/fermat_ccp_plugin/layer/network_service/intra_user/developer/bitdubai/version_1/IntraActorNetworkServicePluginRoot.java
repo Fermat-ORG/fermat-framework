@@ -271,6 +271,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private OutgoingNotificationDao outgoingNotificationDao;
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
+
+
+    private Thread toCache;
     /**
      * Constructor
      */
@@ -783,8 +786,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          * Tell the manager to handler the new connection stablished
          */
 
-        System.out.println("LEONNNN MIRAME QUE CAPO ;) \n publickey" + remoteComponentProfile.getIdentityPublicKey() + "\n -------------------- nombre: " + remoteComponentProfile.getAlias());
-
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
@@ -1198,7 +1199,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //Create a thread to save intra user cache list
-            Thread toCache = new Thread(new Runnable() {
+
+            this.toCache = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try
@@ -1208,9 +1210,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
                     }
-
                 }
-            });
+            },"Thread Cache");
 
             toCache.start();
 

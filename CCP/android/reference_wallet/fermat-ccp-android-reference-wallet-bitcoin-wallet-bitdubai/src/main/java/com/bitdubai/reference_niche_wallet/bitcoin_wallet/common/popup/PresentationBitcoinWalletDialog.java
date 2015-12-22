@@ -146,7 +146,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         }
         else if(id == R.id.btn_right){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("Jane Doe",null,convertImage(R.drawable.profile_image_standard));
+                getSession().getModuleManager().getCryptoWallet().createIntraUser("Jane Doe",null,convertImage(R.drawable.profile_standard_female));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
@@ -168,6 +168,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Toast.makeText(activity,String.valueOf(isChecked),Toast.LENGTH_SHORT).show();
         if(isChecked){
             getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.TRUE);
         }else {
@@ -176,4 +177,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
