@@ -6,6 +6,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ActorIdentityViewHolder;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class IdentitiesAdapter extends FermatAdapter<CryptoBrokerIdentity, Actor
 
     @Override
     protected int getCardViewResource() {
-        return 0;
+        return R.layout.cbw_crypto_broker_identity_list_item;
     }
 
     @Override

@@ -57,6 +57,7 @@ import java.util.UUID;
 public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWalletManager {
     private List<ContractBasicInformation> contractsHistory;
     private List<CustomerBrokerNegotiationInformation> openNegotiations;
+    private ArrayList<CryptoBrokerIdentity> listOfIdentities;
 
     public static final String CASH_IN_HAND = "Cash on Hand";
     public static final String CASH_DELIVERY = "Cash Delivery";
@@ -237,7 +238,20 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException {
-        return null;
+        return getListOfIdentitiesTestData();
+    }
+
+    private List<CryptoBrokerIdentity> getListOfIdentitiesTestData() {
+        if (listOfIdentities == null) {
+            listOfIdentities = new ArrayList<CryptoBrokerIdentity>();
+
+            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("Nelson Ramirez"));
+            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("leonacosta"));
+            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("nelsonalfo"));
+            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("Andres Lopez"));
+        }
+
+        return listOfIdentities;
     }
 
     @Override

@@ -46,7 +46,7 @@
         android:layout_marginTop="16dp">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/crypto_broker_identity_recycler_view"
+            android:id="@+id/cbw_identities_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="8dp"

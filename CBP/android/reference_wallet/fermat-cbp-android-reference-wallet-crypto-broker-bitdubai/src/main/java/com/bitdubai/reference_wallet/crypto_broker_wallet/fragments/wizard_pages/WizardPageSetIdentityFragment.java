@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.IdentitiesAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -82,6 +83,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             data.addAll(walletManager.getListOfIdentities());
 
         } catch (CantGetCryptoBrokerIdentityListException ex) {
+
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
                 errorManager.reportUnexpectedWalletException(
@@ -111,21 +113,21 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
     @Override
     protected int getLayoutResource() {
-        return 0;
+        return R.layout.cbw_wizard_step_set_identity;
     }
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;
+        return R.id.swipe_refresh;
     }
 
     @Override
     protected int getRecyclerLayoutId() {
-        return 0;
+        return R.id.cbw_identities_recycler_view;
     }
 
     @Override
     protected boolean recyclerHasFixedSize() {
-        return false;
+        return true;
     }
 }
