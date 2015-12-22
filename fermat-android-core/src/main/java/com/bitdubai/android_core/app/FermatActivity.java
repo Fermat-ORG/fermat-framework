@@ -680,6 +680,7 @@ public abstract class FermatActivity extends AppCompatActivity
         SpannableString s = new SpannableString(title);
 
 
+
 //        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
 //                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 //
