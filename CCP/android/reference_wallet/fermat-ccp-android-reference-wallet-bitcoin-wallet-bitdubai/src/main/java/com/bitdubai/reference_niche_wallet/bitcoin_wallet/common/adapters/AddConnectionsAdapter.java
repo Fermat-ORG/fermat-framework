@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.View;
 
@@ -64,8 +65,15 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
         holder.getContainer_data().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.setSelected(!data.isSelected());
-                v.setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
+                boolean selected =  !data.isSelected();
+                data.setSelected(selected);
+                TransitionDrawable transition = (TransitionDrawable) v.getBackground();
+                if(selected==false){
+                    transition.startTransition(300);
+                }else{
+                    transition.reverseTransition(300);
+                }
+                //v.setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
             }
         });
         if(data.isSelected()){

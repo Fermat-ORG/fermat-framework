@@ -23,7 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -157,7 +157,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet wallet = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+                CryptoCustomerWalletManager wallet = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
                 GrouperItem<ContractBasicInformation> grouper;
 
                 

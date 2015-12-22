@@ -3,6 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.connection_manager;
 import android.app.Activity;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.app_connection.CommunityAssetIssuerFermatAppConnection;
@@ -34,19 +35,17 @@ import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConn
  */
 public class FermatAppConnectionManager {
 
+
     public static AppConnections getFermatAppConnection(
             String publicKey,
-            Activity activity,
-            IntraUserLoginIdentity intraUserLoginIdentity,
-            IdentityAssetIssuer identityAssetIssuer,
-            IdentityAssetUser identityAssetUser,
-            RedeemPointIdentity redeemPointIdentity) {
+            Activity activity) {
+
         AppConnections fermatAppConnection = null;
 
         switch (publicKey){
             //CCP WALLET
             case "reference_wallet":
-                fermatAppConnection = new BitcoinWalletFermatAppConnection(activity,intraUserLoginIdentity);
+                fermatAppConnection = new BitcoinWalletFermatAppConnection(activity);
                 break;
             //CCP Sub Apps
             case "public_key_ccp_intra_user_identity":
@@ -58,13 +57,13 @@ public class FermatAppConnectionManager {
 
             //DAP WALLETS
             case "asset_issuer" :
-                fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity, identityAssetIssuer);
+                fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity);
                 break;
             case "asset_user"   :
-                fermatAppConnection = new WalletAssetUserFermatAppConnection(activity, identityAssetUser);
+                fermatAppConnection = new WalletAssetUserFermatAppConnection(activity);
                 break;
             case "redeem_point" :
-                fermatAppConnection = new WalletRedeemPointFermatAppConnection(activity, redeemPointIdentity);
+                fermatAppConnection = new WalletRedeemPointFermatAppConnection(activity);
                 break;
             //DAP Sub Apps
             case "public_key_dap_asset_issuer_identity":

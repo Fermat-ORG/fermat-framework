@@ -4295,12 +4295,12 @@
                     <plugin	name="Cash Money"
                         description=""
                         difficulty="4"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
@@ -4627,6 +4627,7 @@
                         <certifications>
                         </certifications>
                     </android>
+                    
                     <android name="Suppliers"
                         description=""
                         difficulty="6"
@@ -4646,7 +4647,7 @@
 
             <layer name="Wallet Module" language="java">
                 <plugins>
-                    <plugin	name="Crypto Broker"
+                    <plugin name="Crypto Broker"
                         description=""
                         difficulty="4"
                         code-level="development"
@@ -4662,7 +4663,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Crypto Customer"
+                    <plugin name="Crypto Customer"
                         description=""
                         difficulty="4"
                         code-level="development"
@@ -4745,6 +4746,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
+                    
                     <plugin name="Suppliers"
                         description=""
                         difficulty="4"
@@ -4903,7 +4905,7 @@
 
             <layer name="Business Transaction" language="java">
                 <plugins>
-                    <plugin	name="Customer Online Payment"
+                    <plugin name="Customer Online Payment"
                         description=""
                         difficulty="8"
                         code-level="qa"
@@ -4912,14 +4914,78 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Customer Offline Payment"
+                    <plugin name="Customer Offline Payment"
+                        description=""
+                        difficulty="8"
+                        code-level="qa"
+                        >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yalayn" scope="implementation" percentage="10"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
+                    <plugin name="Broker Ack Online Payment"
+                        description=""
+                        difficulty="8"
+                        code-level="qa"
+                        >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yalayn" scope="implementation" percentage="10"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
+                    <plugin name="Broker Ack Offline Payment"
+                        description=""
+                        difficulty="8"
+                        code-level="development"
+                        >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yalayn" scope="implementation" percentage="10"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
+                    <plugin name="Broker Submit Online Merchandise"
+                        description=""
+                        difficulty="8"
+                        code-level="qa"
+                        >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yalayn" scope="implementation" percentage="10"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
+                    <plugin name="Broker Submit Offline Merchandise"
                         description=""
                         difficulty="8"
                         code-level="development"
@@ -4935,7 +5001,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Broker Ack Online Payment"
+                    <plugin name="Customer Ack Online Merchandise"
                         description=""
                         difficulty="8"
                         code-level="development"
@@ -4951,7 +5017,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Broker Ack Offline Payment"
+                    <plugin name="Customer Ack Offline Merchandise"
                         description=""
                         difficulty="8"
                         code-level="development"
@@ -4967,71 +5033,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Broker Submit Online Merchandise"
-                        description=""
-                        difficulty="8"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin	name="Broker Submit Offline Merchandise"
-                        description=""
-                        difficulty="8"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin	name="Customer Ack Online Merchandise"
-                        description=""
-                        difficulty="8"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin	name="Customer Ack Offline Merchandise"
-                        description=""
-                        difficulty="8"
-                        code-level="development"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin	name="Open Contract"
+                    <plugin name="Open Contract"
                         description=""
                         difficulty="8"
                         code-level="qa"
@@ -5046,7 +5048,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Close Contract"
+                    <plugin name="Close Contract"
                         description=""
                         difficulty="8"
                         code-level="qa"
@@ -5061,7 +5063,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Wholesaler Crypto Sale"
+                    <plugin name="Wholesaler Crypto Sale"
                         description=""
                         difficulty="0"
                         code-level="concept"
@@ -5075,7 +5077,7 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Wholesaler Fiat Sale"
+                    <plugin name="Wholesaler Fiat Sale"
                         description=""
                         difficulty="0"
                         code-level="concept"
@@ -5094,21 +5096,35 @@
 
             <layer name="Negotiation Transaction" language="java">
                 <plugins>
-                    <plugin	name="Customer Broker New"
+                    <plugin name="Customer Broker New"
                         description=""
                         difficulty="8"
-                        code-level="q"a>
+                        code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="10"></author>
+                            <author name="yalayn" scope="implementation" percentage="100"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Customer Broker Update"
+                    <plugin name="Customer Broker Update"
+                        description=""
+                        difficulty="8"
+                        code-level="qa">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yalayn" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
+                    <plugin name="Customer Broker Close"
                         description=""
                         difficulty="8"
                         code-level="development">
@@ -5116,20 +5132,7 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin	name="Customer Broker Close"
-                        description=""
-                        difficulty="8"
-                        code-level="development">
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="10"></author>
+                            <author name="vlzangel" scope="implementation" percentage="15"></author>
                         </authors>
                         <mantainers>
                         </mantainers>
