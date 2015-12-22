@@ -193,37 +193,6 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
                 NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
-/*
-        try{
-
-            List<String> negotiationList=new ArrayList<>();
-            String negotiation;
-
-            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
-            }
-            table.addStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
-            table.loadToMemory();
-            List<DatabaseTableRecord> records = table.getRecords();
-            if(records.isEmpty()){
-                //There is no records in database, I'll return an empty list.
-                return negotiationList;
-            }
-
-            for(DatabaseTableRecord databaseTableRecord : records){
-                negotiation = databaseTableRecord.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
-                negotiationList.add(negotiation);
-            }
-
-            return negotiationList;
-
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e, "Getting "+NegotiationTransactionStatus.PENDING_SUBMIT.getCode()+" based on "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,"Cannot load the table into memory");
-        } catch (Exception e){
-            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+NegotiationTransactionStatus.PENDING_SUBMIT.getCode()+" based on "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,"Cannot load the table into memory");
-        }
-        */
 
     }
 
