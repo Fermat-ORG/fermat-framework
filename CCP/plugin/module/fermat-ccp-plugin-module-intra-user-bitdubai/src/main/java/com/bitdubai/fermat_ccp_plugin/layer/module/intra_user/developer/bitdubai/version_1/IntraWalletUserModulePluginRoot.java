@@ -767,12 +767,14 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
                 intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                    intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
+                intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                /**
-                 * If I can not save this file, then this plugin shouldn't be running at all.
-                 */
-                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
+//                /**
+//                 * If I can not save this file, then this plugin shouldn't be running at all.
+//                 */
+//                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
+            }catch (Exception e){
+                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, e, null, null);
             }
         } catch (CantLoadFileException | CantCreateFileException e) {
 
