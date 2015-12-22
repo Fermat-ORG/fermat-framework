@@ -4,7 +4,8 @@ Logo")
 <br><br>
 ## Introduction: Platform Chat
   This component is a platform of text(chat) and voice messaging. 
-  The exchanging messages between two or more users (or entities) work as stored supports related to a coin transaction managed by Fermat.
+  The exchanging messages between two or more users (or entities) work as stored supports related to a coin transaction(*) managed by Fermat.
+  (*) It can be use as a instant messaging platform without a coin transaction reference, as well, using its own contact list.
   
 ## Sup App
   ContactsList: List to manage contacts.
