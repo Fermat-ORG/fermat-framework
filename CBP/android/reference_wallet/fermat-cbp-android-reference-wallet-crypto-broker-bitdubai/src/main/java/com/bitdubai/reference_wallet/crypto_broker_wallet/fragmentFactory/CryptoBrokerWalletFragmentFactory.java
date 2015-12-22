@@ -1,11 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseContractDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseNegotiationDetailsFragment;
@@ -25,7 +23,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
  * <p/>
  * Created by Nelson Ramirez on 2015-09-30
  */
-public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<CryptoBrokerWalletSession, WalletSettings,WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
+public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<CryptoBrokerWalletSession,WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
 
     @Override
     public FermatWalletFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {

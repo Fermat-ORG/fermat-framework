@@ -13,7 +13,7 @@ import static com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.Cry
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerCommunityFragmentFactory extends FermatSubAppFragmentFactory<CryptoCustomerCommunitySubAppSession, CryptoCustomerCommunityPreferenceSettings, CryptoCustomerCommunityFragmentsEnumType> {
+public class CryptoCustomerCommunityFragmentFactory extends FermatSubAppFragmentFactory<CryptoCustomerCommunitySubAppSession, CryptoCustomerCommunityFragmentsEnumType> {
 
 
     @Override

@@ -18,7 +18,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * Modify by Jose Manuel De Sousa Dos Santos on 08/12/2015.
  */
 
-public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSession, IntraUserPreferenceSettings,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
+public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSession,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
 
 
     @Override

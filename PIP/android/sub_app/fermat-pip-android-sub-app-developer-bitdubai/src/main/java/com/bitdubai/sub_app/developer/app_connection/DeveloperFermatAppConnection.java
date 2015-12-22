@@ -14,9 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
-import com.bitdubai.sub_app.developer.preference_settings.DeveloperPreferenceSettings;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 /**
@@ -47,11 +45,6 @@ public class DeveloperFermatAppConnection extends AppConnections{
     @Override
     public AbstractFermatSession getSession() {
         return new DeveloperSubAppSession();
-    }
-
-    @Override
-    public FermatSettings getSettings() {
-        return new DeveloperPreferenceSettings();
     }
 
     @Override

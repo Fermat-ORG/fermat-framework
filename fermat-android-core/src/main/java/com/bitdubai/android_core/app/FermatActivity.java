@@ -54,16 +54,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -72,11 +73,9 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -117,33 +116,27 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
-import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -368,9 +361,14 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Method that loads the UI
      */
-    protected void loadBasicUI(Activity activity) {
+    protected void loadBasicUI(Activity activity,AppConnections appConnections) {
         // rendering UI components
         try {
+
+            if(appConnections!=null) {
+                ModuleManager moduleManager = getModuleManager(appConnections.getPluginVersionReference());
+                appConnections.setActiveIdentity(moduleManager.getSelectedActorIdentity());
+            }
             TabStrip tabs = activity.getTabStrip();
             Map<String, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
             TitleBar titleBar = activity.getTitleBar();
@@ -388,7 +386,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
-            paintSideMenu(activity, sideMenu);
+            paintSideMenu(activity, sideMenu,appConnections);
 
             paintFooter(activity.getFooter());
 
@@ -437,7 +435,7 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    private void paintSideMenu(Activity activity, SideMenu sideMenu) {
+    private void paintSideMenu(Activity activity, SideMenu sideMenu,AppConnections appConnections) {
         try {
             if (sideMenu != null) {
                 String backgroundColor = sideMenu.getBackgroudColor();
@@ -452,8 +450,10 @@ public abstract class FermatActivity extends AppCompatActivity
                 /**
                  * Set header
                  */
-                if(navigationViewPainter!=null) {
-                    View view = navigationViewPainter.addNavigationViewHeader();
+                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                if(viewPainter!=null) {
+                    ActiveActorIdentityInformation loginIdentity = appConnections.getActiveIdentity();
+                    View view = viewPainter.addNavigationViewHeader(loginIdentity);
                     FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
                     frameLayout.setVisibility(View.VISIBLE);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -463,7 +463,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     /**
                      * Set adapter
                      */
-                    FermatAdapter mAdapter = navigationViewPainter.addNavigationViewAdapter();
+                    FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
                     List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getNavigationMenu();
                     boolean flag = false;
                     int counter = 0;
@@ -481,7 +481,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     navigation_recycler_view.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
 
-                    RecyclerView.ItemDecoration itemDecoration = navigationViewPainter.addItemDecoration();
+                    RecyclerView.ItemDecoration itemDecoration = viewPainter.addItemDecoration();
                     if(itemDecoration!=null){
                         navigation_recycler_view.addItemDecoration(itemDecoration);
                     }
@@ -492,7 +492,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     if(navigation_view_footer!=null) {
                         if (sideMenu.hasFooter()) {
                             navigation_view_footer.setVisibility(View.VISIBLE);
-                            ViewGroup viewGroup = navigationViewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
+                            ViewGroup viewGroup = viewPainter.addNavigationViewBodyContainer(getLayoutInflater(), navigation_view_footer);
                         }
                     }
 
@@ -502,7 +502,7 @@ public abstract class FermatActivity extends AppCompatActivity
                      */
                     final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
                     if(relativeLayout!=null) {
-                        if(navigationViewPainter.hasBodyBackground()){
+                        if(viewPainter.hasBodyBackground()){
                             AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
 
                                 WeakReference<ViewGroup> view;
@@ -514,7 +514,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
                                 @Override
                                 protected Bitmap doInBackground(Void... params) {
-                                    return navigationViewPainter.addBodyBackground();
+                                    return viewPainter.addBodyBackground();
                                 }
 
                                 @Override
@@ -527,8 +527,8 @@ public abstract class FermatActivity extends AppCompatActivity
                             asyncTask.execute();
                         }
 
-                        if(navigationViewPainter.addBodyBackgroundColor() > 0) {
-                            relativeLayout.setBackgroundColor(navigationViewPainter.addBodyBackgroundColor());
+                        if(viewPainter.addBodyBackgroundColor() > 0) {
+                            relativeLayout.setBackgroundColor(viewPainter.addBodyBackgroundColor());
                         }
                     }
                     //navigationView.invalidate();
@@ -708,7 +708,6 @@ public abstract class FermatActivity extends AppCompatActivity
      * Method used from a Wallet to paint tabs
      */
     protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, FermatSession walletSession,FermatFragmentFactory fermatFragmentFactory) {
-        WalletSettingsManager walletSettingsManager = getWalletSettingsManager();
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
@@ -764,7 +763,7 @@ public abstract class FermatActivity extends AppCompatActivity
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
-        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this, null, null, null, null);
+        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this);
         com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
         adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),
@@ -772,7 +771,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 subAppsSession,
                 getErrorManager(),
                 fermatFragmentFactory,
-                null,//getSubAppSettingSettingsManager(),
                 getSubAppResourcesProviderManager()
         );
 
@@ -1460,6 +1458,17 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+    public ModuleManager getIdentityManager(){
+        return getModuleManager(new PluginVersionReference(
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Layers.IDENTITY,
+                Plugins.INTRA_WALLET_USER,
+                Developers.BITDUBAI,
+                new Version()
+        ));
+
+    }
+
     /**
      * Get WalletManager from the fermat platform
      *
@@ -1507,36 +1516,6 @@ public abstract class FermatActivity extends AppCompatActivity
             return ((ApplicationSession) getApplication()).getFermatSystem().getErrorManager(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
         } catch (ErrorManagerNotFoundException |
                 CantGetErrorManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Get WalletSettingsManager
-     */
-    public WalletSettingsManager getWalletSettingsManager() {
-/// TODO THINK WHAT TO DO WITH SUB-APP/WALLET/LOQSEA SETTINGS
-        try {
-            return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
-                    new PluginVersionReference(
-                            Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
-                            Layers.MIDDLEWARE,
-                            Plugins.WALLET_SETTINGS,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (VersionNotFoundException |
-                CantStartPluginException e) {
 
             System.out.println(e.getMessage());
             System.out.println(e.toString());
@@ -1703,176 +1682,6 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Assest Issuer Wallet Module
-     */
-    public AssetIssuerWalletSupAppModuleManager getAssetIssuerWalletModuleManager() {
-
-        try {
-            return (AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.ASSET_ISSUER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Asset User Wallet Module
-     */
-    public AssetUserWalletSubAppModuleManager getAssetUserWalletModuleManager() {
-
-        try {
-            return (AssetUserWalletSubAppModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.ASSET_USER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Asset Redeem Point
-     */
-    public AssetRedeemPointWalletSubAppModule getAssetRedeemPointWalletModuleManager() {
-        try {
-            return (AssetRedeemPointWalletSubAppModule) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.REDEEM_POINT,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * CBP
-     */
-    public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
-        try {
-            return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.CRYPTO_BROKER_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.CRYPTO_BROKER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    public CryptoCustomerWalletModuleManager getCryptoCustomerWalletModuleManager() {
-        try {
-            return (CryptoCustomerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.CRYPTO_BROKER_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.CRYPTO_CUSTOMER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    public BankMoneyWalletModuleManager getBankMoneyWalletModuleManager() {
-        try {
-            return (BankMoneyWalletModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.BANKING_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
         try {
             return getApplicationSession().getFermatSystem().getModuleManager(pluginVersionReference);
@@ -1890,31 +1699,6 @@ public abstract class FermatActivity extends AppCompatActivity
         return (ApplicationSession)getApplication();
     }
 
-    public CashMoneyWalletModuleManager getCashMoneyWalletModuleManager() {
-        try {
-            return (CashMoneyWalletModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.CASH_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.BITDUBAI_CSH_MONEY_WALLET_MODULE,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
     /**
      * Set up wizards to this activity can be more than one.
      *
@@ -2112,8 +1896,9 @@ public abstract class FermatActivity extends AppCompatActivity
             case ACTIVITY_TYPE_DESKTOP:
                 break;
             case ACTIVITY_TYPE_WALLET:
-                Activity activity = getWalletRuntimeManager().getLastWallet().getLastActivity();
-                paintSideMenu(activity,activity.getSideMenu());
+                WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+                Activity activity = walletNavigationStructure.getLastActivity();
+                paintSideMenu(activity,activity.getSideMenu(),FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(),this));
                 paintFooter(activity.getFooter());
                 break;
             case ACTIVITY_TYPE_SUB_APP:
@@ -2236,7 +2021,7 @@ public abstract class FermatActivity extends AppCompatActivity
         if(activityType.equals(ActivityType.ACTIVITY_TYPE_WALLET)){
             WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
             Activity activity = walletNavigationStructure.getLastActivity();
-            paintSideMenu(activity,activity.getSideMenu());
+            paintSideMenu(activity,activity.getSideMenu(),FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this));
         }else{
             invalidate();
         }
@@ -2273,4 +2058,97 @@ public abstract class FermatActivity extends AppCompatActivity
 
         }
     }
+
+
+    //TODO: de acá para abajo tiene que desaparecer
+
+    /**
+     * Assest Issuer Wallet Module
+     */
+    public AssetIssuerWalletSupAppModuleManager getAssetIssuerWalletModuleManager() {
+
+        try {
+            return (AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.DIGITAL_ASSET_PLATFORM,
+                            Layers.WALLET_MODULE,
+                            Plugins.ASSET_ISSUER,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
+    }
+
+    /**
+     * Asset User Wallet Module
+     */
+    public AssetUserWalletSubAppModuleManager getAssetUserWalletModuleManager() {
+
+        try {
+            return (AssetUserWalletSubAppModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.DIGITAL_ASSET_PLATFORM,
+                            Layers.WALLET_MODULE,
+                            Plugins.ASSET_USER,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
+    }
+
+    /**
+     * Asset Redeem Point
+     */
+    public AssetRedeemPointWalletSubAppModule getAssetRedeemPointWalletModuleManager() {
+        try {
+            return (AssetRedeemPointWalletSubAppModule) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
+                    new PluginVersionReference(
+                            Platforms.DIGITAL_ASSET_PLATFORM,
+                            Layers.WALLET_MODULE,
+                            Plugins.REDEEM_POINT,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+        } catch (ModuleManagerNotFoundException |
+                CantGetModuleManagerException e) {
+
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+
+            return null;
+        } catch (Exception e) {
+
+            System.out.println(e.toString());
+
+            return null;
+        }
+    }
+
 }

@@ -2,9 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdu
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -31,17 +31,17 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     private String alias;
     private String phrase;
     private String publicKey;
-    private byte[] profileImage;
+    private byte[] image;
     private String privateKey;
 
     /**
      * Constructor
      */
-    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.alias = alias;
         this.phrase = phrase;
         this.publicKey = publicKey;
-        this.profileImage = profileImage;
+        this.image = image;
         this.privateKey = privateKey;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
@@ -50,6 +50,11 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     @Override
     public String getAlias() {
         return this.alias;
+    }
+
+    @Override
+    public byte[] getImage() {
+        return image;
     }
 
     @Override
@@ -63,8 +68,8 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     }
 
     @Override
-    public byte[] getProfileImage() {
-        return this.profileImage;
+    public Actors getActorType() {
+        return Actors.INTRA_USER;
     }
 
     @Override
@@ -97,7 +102,7 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
                     FileLifeSpan.PERMANENT
             );
 
-            file.setContent(profileImage);
+            file.setContent(image);
 
 
             file.persistToMedia();
@@ -114,7 +119,7 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
 //        } catch (Exception e) {
 //            throw new CantSetNewProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
 //        }
-        this.profileImage = newProfileImage;
+        this.image = newProfileImage;
     }
 
     /**

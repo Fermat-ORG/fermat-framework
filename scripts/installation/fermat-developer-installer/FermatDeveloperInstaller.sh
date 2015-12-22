@@ -22,7 +22,7 @@
 installationFolder=$HOME #you can modify the installation folder, as default I am going to set the home user folder.
 #Please, select one platform accoding your Operative System
 platform="-linux-x64.tar.gz"
-#plafform="-linux-i586.tar.gz"
+#platform="-linux-i586.tar.gz"
 gradleVersion=2.9
 #If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
 #Genymotion 32Bits
@@ -239,7 +239,7 @@ createEnvironmentVars
 installIDE
 
 #Get and install Genymotion (optional)
-installGenymotion
+#installGenymotion
 
 echo "Congratulations, your development enviroment is ready to configurate."
 echo "Bye!"

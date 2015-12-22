@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 
 import java.math.BigDecimal;

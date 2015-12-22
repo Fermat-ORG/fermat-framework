@@ -18,9 +18,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.common.header.
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.WalletAssetUserFragmentFactory;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.navigation_drawer.UserWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.settings.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -29,7 +27,7 @@ public class WalletAssetUserFermatAppConnection extends AppConnections{
 
     IdentityAssetUser identityAssetUser;
 
-    public WalletAssetUserFermatAppConnection(Activity activity, IdentityAssetUser identityAssetUser) {
+    public WalletAssetUserFermatAppConnection(Activity activity) {
         super(activity);
         this.identityAssetUser = identityAssetUser;
     }
@@ -55,10 +53,6 @@ public class WalletAssetUserFermatAppConnection extends AppConnections{
         return new AssetUserSession();
     }
 
-    @Override
-    public FermatSettings getSettings() {
-        return new AssetUserSettings();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

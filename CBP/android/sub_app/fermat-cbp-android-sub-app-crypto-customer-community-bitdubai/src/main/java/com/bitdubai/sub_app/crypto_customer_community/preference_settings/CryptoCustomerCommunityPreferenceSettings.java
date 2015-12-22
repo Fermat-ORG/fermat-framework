@@ -21,7 +21,7 @@ public class CryptoCustomerCommunityPreferenceSettings implements SubAppSettings
      * @throws CantGetDefaultLanguageException
      */
     @Override
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
+    public UUID getDefaultLanguage() {
         return null;
     }
 
@@ -32,7 +32,7 @@ public class CryptoCustomerCommunityPreferenceSettings implements SubAppSettings
      * @throws CantGetDefaultSkinException
      */
     @Override
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
+    public UUID getDefaultSkin() {
         return null;
     }
 
@@ -43,7 +43,7 @@ public class CryptoCustomerCommunityPreferenceSettings implements SubAppSettings
      * @throws CantSetDefaultLanguageException
      */
     @Override
-    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
+    public void setDefaultLanguage(UUID languageId) {
 
     }
 
@@ -54,7 +54,7 @@ public class CryptoCustomerCommunityPreferenceSettings implements SubAppSettings
      * @throws CantSetDefaultSkinException
      */
     @Override
-    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
+    public void setDefaultSkin(UUID skinId) {
 
     }
 
@@ -66,7 +66,7 @@ public class CryptoCustomerCommunityPreferenceSettings implements SubAppSettings
      * @throws CantSetDefaultSkinException
      */
     @Override
-    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveWalletSettings {
+    public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) {
 
     }
 
@@ -78,7 +78,7 @@ public class CryptoCustomerCommunityPreferenceSettings implements SubAppSettings
      * @throws CantGetDefaultSkinException
      */
     @Override
-    public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings {
+    public String getPreferenceSettings(String walletPublicKey) {
         return null;
     }
 }

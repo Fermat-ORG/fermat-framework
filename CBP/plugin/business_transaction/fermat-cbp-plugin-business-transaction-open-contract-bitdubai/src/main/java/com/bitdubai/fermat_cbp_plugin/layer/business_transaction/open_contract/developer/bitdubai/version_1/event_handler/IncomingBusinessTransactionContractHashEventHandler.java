@@ -3,11 +3,9 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingBusinessTransactionContractHash;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingBusinessTransactionContractHash;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 30/11/15.
