@@ -48,7 +48,7 @@
             android:paddingRight="18dp"
             android:text="Connect"
             android:textColor="#ffffff"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:ignore="HardcodedText" />
 
         <Button

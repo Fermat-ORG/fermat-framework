@@ -161,7 +161,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
                 if(o!=null){
                     if((Boolean)(o)){
-                        invalidate();
+                        //invalidate();
                         referenceWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
                     }
                 }
@@ -169,6 +169,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
                     if(cryptoWalletIntraUserIdentity==null){
                         getActivity().onBackPressed();
+                    }else{
+                        invalidate();
                     }
                 } catch (CantListCryptoWalletIntraUserIdentityException e) {
                     e.printStackTrace();

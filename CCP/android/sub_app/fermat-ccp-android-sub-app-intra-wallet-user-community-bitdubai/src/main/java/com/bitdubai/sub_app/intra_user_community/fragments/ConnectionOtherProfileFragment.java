@@ -2,11 +2,13 @@ package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,8 +23,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
@@ -84,6 +88,7 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         errorManager = appSession.getErrorManager();
         intraUserInformation = (IntraUserInformation) appSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
 
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -108,44 +113,34 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
 
-        connectionSend();
-
-        /*try {
-            if (intraWalletUserActorManager.getIntraUsersConnectionStatus(intraUserInformation.getPublicKey()) != null){
-                switch (intraWalletUserActorManager.getIntraUsersConnectionStatus(intraUserInformation.getPublicKey())) {
-                    case BLOCKED_LOCALLY:
-                    case BLOCKED_REMOTELY:
-                    case CANCELLED_LOCALLY:
-                    case CANCELLED_REMOTELY:
-                        connectionRejected();
-                        break;
-                    case CONNECTED:
-                        disconnectRequest();
-                        break;
-                    case NO_CONNECTED:
-                    case DISCONNECTED_LOCALLY:
-                    case DISCONNECTED_REMOTELY:
-                    case ERROR:
-                    case DENIED_LOCALLY:
-                    case DENIED_REMOTELY:
-                        connectRequest();
-                        break;
-                    case PENDING_LOCALLY_ACCEPTANCE:
-                    case PENDING_REMOTELY_ACCEPTANCE:
-                        connectionSend();
-                        break;
-                }
-            }else {
-                connectRequest();
+        switch (intraUserInformation.getConnectionState()) {
+                case BLOCKED_LOCALLY:
+                case BLOCKED_REMOTELY:
+                case CANCELLED_LOCALLY:
+                case CANCELLED_REMOTELY:
+                    connectionRejected();
+                    break;
+                case CONNECTED:
+                    disconnectRequest();
+                    break;
+                case NO_CONNECTED:
+                case DISCONNECTED_LOCALLY:
+                case DISCONNECTED_REMOTELY:
+                case ERROR:
+                case DENIED_LOCALLY:
+                case DENIED_REMOTELY:
+                    connectRequest();
+                    break;
+                case PENDING_LOCALLY_ACCEPTANCE:
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    connectionSend();
+                    break;
             }
-
-        } catch (CantGetIntraUsersConnectedStateException e) {
-            e.printStackTrace();
-        }*/
 
         try {
             userName.setText(intraUserInformation.getName());
             userPhrase.setText(intraUserInformation.getPhrase());
+            userPhrase.setTextColor(Color.parseColor("#292929"));
             if (intraUserInformation.getProfileImage() != null) {
                 Bitmap bitmap;
                 if (intraUserInformation.getProfileImage().length > 0) {
@@ -179,6 +174,12 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(intraUserInformation.getName());
                 connectDialog.setSecondDescription("a connection request");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
                 connectDialog.show();
             } catch (CantGetActiveLoginIdentityException e) {
                 e.printStackTrace();
@@ -192,6 +193,12 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(intraUserInformation.getName());
+                disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
                 disconectDialog.show();
             } catch (CantGetActiveLoginIdentityException e) {
                 e.printStackTrace();
@@ -202,6 +209,37 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         }
         if (i == R.id.btn_connection_request_reject) {
             Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateButton() {
+        try {
+             connectionState = moduleManager.getIntraUsersConnectionStatus(this.intraUserInformation.getPublicKey());
+        } catch (CantGetIntraUserConnectionStatusException e) {
+            e.printStackTrace();
+        }
+        switch (connectionState) {
+            case BLOCKED_LOCALLY:
+            case BLOCKED_REMOTELY:
+            case CANCELLED_LOCALLY:
+            case CANCELLED_REMOTELY:
+                connectionRejected();
+                break;
+            case CONNECTED:
+                disconnectRequest();
+                break;
+            case NO_CONNECTED:
+            case DISCONNECTED_LOCALLY:
+            case DISCONNECTED_REMOTELY:
+            case ERROR:
+            case DENIED_LOCALLY:
+            case DENIED_REMOTELY:
+                connectRequest();
+                break;
+            case PENDING_LOCALLY_ACCEPTANCE:
+            case PENDING_REMOTELY_ACCEPTANCE:
+                connectionSend();
+                break;
         }
     }
 
