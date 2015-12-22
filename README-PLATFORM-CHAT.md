@@ -41,30 +41,32 @@ Esto va a tener la siguiente base de datos:
 ### Base de Datos
 
 #### Chats<br>
-** Id Chat** <br>
-** Id Objeto **<br>
-** Local Actor Type **<br>
-** Local Actor Pub Key **<br>
-** Remote Actor Type **<br>
-** Remote Actor Pub Key **<br>
-** Chat Name **<br>
-** Status ** : Invissible | Vissible<br>
-** Creation Datetime **<br>
-** Last Message Dateime **<br>
+**Id Chat** <br>
+**Id Objeto**<br>
+**Local Actor Type**<br>
+**Local Actor Pub Key**<br>
+**Remote Actor Type**<br>
+**Remote Actor Pub Key**<br>
+**Chat Name**<br>
+**Status** : Invissible | Vissible<br>
+**Creation Datetime**<br>
+**Last Message Dateime**<br>
 
 #### Mensajes<br>
-** Id Mensaje**<br>
-** Id Contacto **<br>
-** Id Chat **<br>
-** Message Text **<br>
-** Status ** : Created | Sent | Delivered | Read<br>
-** Type ** : Incomming | Outgoing<br>
-** Timestamp **<br>
+**Id Mensaje**<br>
+**Id Chat**<br>
+**MessageText **<br>
+**Status** : Created | Sent | Delivered | Read<br>
+**Type** : Incomming | Outgoing<br>
+**Timestamp**<br>
 
 #### Contactos<br>
-** Id Contacto**<br>
-** Name **<br>
-** Alias **<br>
-** Timestamp **<br>
+
+**Id Contacto**<br>
+**Remote Name**<br>
+**Alias**<br>
+**Remote Actor Type**
+**Remote Actor Pub Key**
+**Creation Datetime**<br>
 
 ## Network Service
