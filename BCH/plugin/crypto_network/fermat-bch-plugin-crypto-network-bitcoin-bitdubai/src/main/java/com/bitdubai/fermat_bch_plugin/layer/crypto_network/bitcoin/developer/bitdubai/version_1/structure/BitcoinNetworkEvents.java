@@ -144,7 +144,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param tx
      * @param transactionId
      */
-    public void saveOutgoingTransaction(Wallet wallet, Transaction tx, String transactionId) {
+    public void saveOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
         /**
          * Register the new outgoing transaction into the database
          */

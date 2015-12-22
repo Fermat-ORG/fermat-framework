@@ -176,7 +176,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final Transaction tx, final String transactionId) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -225,7 +225,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param tx
      * @param transactionId
      */
-    private void storeOutgoingTransaction(Wallet wallet, Transaction tx, String transactionId) {
+    private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
         events.saveOutgoingTransaction(wallet, tx, transactionId);
     }
 

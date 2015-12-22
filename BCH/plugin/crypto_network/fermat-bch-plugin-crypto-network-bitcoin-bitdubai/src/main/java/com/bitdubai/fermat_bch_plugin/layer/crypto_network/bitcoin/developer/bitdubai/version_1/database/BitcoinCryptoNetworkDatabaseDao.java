@@ -210,7 +210,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param protocolStatus
      * @throws CantExecuteDatabaseOperationException
      */
-    private void saveNewTransaction(@Nullable String transactionId,
+    private void saveNewTransaction(@Nullable UUID transactionId,
                                     String hash,
                                      String blockHash,
                                     CryptoStatus cryptoStatus,
@@ -229,13 +229,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
         /**
          * generates the trx_id if this is an incoming transaction or used the passed one.
          */
-        String trxId = null;
+        UUID trxId = null;
         if (transactionId == null)
-                trxId = UUID.randomUUID().toString();
+                trxId = UUID.randomUUID();
         else
             trxId = transactionId;
 
-        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, trxId);
+        record.setUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, trxId);
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, hash);
         /**
          * The block Hash will be null until the transaction is not confirmed, So I will only insert it
@@ -314,7 +314,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param protocolStatus
      * @throws CantExecuteDatabaseOperationException
      */
-    public void saveNewOutgoingTransaction(String transactionId,
+    public void saveNewOutgoingTransaction(UUID transactionId,
                                            String hash,
                                            String blockHash,
                                            CryptoStatus cryptoStatus,
