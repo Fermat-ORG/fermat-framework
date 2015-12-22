@@ -1,9 +1,9 @@
-﻿![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+<!-- all links tested by laderuner -->
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 <br><br>
 
 # NETWORK SERVICES
-
 ## Introducción
 
 Comunicarse es una necesidad vital entre sistemas para ampliar sus funcionalidades e interacción entre dispositivos diferentes. En este caso Fermat no es la excepción. La comunicación es importante para la transmisión de datos y envío de información relevante.

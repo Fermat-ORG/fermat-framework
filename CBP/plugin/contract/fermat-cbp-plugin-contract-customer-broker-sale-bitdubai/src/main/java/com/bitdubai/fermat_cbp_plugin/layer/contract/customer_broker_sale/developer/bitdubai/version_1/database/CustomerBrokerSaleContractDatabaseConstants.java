@@ -50,6 +50,6 @@ public class CustomerBrokerSaleContractDatabaseConstants {
     static final String CLAUSE_STATUS_LOG_DATA_TIME_COLUMN_NAME = "data_time";
     static final String CLAUSE_STATUS_LOG_CHANGE_BY_COLUMN_NAME = "change_by";
 
-    static final String CLAUSE_STATUS_LOG_FIRST_KEY_COLUMN = "clause_id";
+    static final String CLAUSE_STATUS_LOG_FIRST_KEY_COLUMN = "log_id";
 
 }

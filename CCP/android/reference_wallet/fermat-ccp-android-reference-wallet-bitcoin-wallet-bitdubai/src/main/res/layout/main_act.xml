@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#1173aa"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <ImageView
             android:layout_width="35dp"
@@ -136,9 +137,9 @@
                         android:id="@+id/btn_intra_user"
                         app:fab_colorNormal="#fff"
                         app:fab_size="mini"
-                        app:fab_icon="@drawable/ic_contact_float_new_contact"
-                        app:fab_title="Crypto User"
-                        app:fab_colorPressed="#0f0"/>
+                        app:fab_icon="@drawable/intra_user_xxhdpi"
+                        app:fab_title="Fermat User"
+                        app:fab_colorPressed="#c7e0f9"/>
 
                     <com.getbase.floatingactionbutton.FloatingActionButton
                         android:layout_width="wrap_content"
@@ -146,9 +147,9 @@
                         app:fab_colorNormal="#fff"
                         app:fab_size="mini"
                         android:id="@+id/btn_extra_user"
-                        app:fab_title="Extra User"
-                        app:fab_icon="@drawable/ic_contact_float_new_contact_blue"
-                        app:fab_colorPressed="#a53"/>
+                        app:fab_title="External User"
+                        app:fab_icon="@drawable/extra_user_xxhdpi"
+                        app:fab_colorPressed="#c7e0f9"/>
 
                 </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

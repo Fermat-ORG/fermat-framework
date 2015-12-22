@@ -16,22 +16,18 @@
         android:id="@+id/cbw_nav_footer_item_currency"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
         android:layout_weight="1"
         android:text="BitCoins"
         android:textColor="@color/black"
-        android:textSize="16sp"/>
+        android:textSize="14sp"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_nav_footer_item_currency_amount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
         android:layout_weight="1"
         android:gravity="end"
         android:text="220.02"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
+        android:textColor="@color/white"
+        android:textSize="14sp"/>
 </LinearLayout>

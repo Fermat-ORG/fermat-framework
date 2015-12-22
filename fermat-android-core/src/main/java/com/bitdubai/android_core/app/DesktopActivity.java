@@ -302,7 +302,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
              */
             Activity activity = getActivityUsedType();
 
-            loadBasicUI(activity);
+            //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
+            loadBasicUI(activity,null);
 
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();

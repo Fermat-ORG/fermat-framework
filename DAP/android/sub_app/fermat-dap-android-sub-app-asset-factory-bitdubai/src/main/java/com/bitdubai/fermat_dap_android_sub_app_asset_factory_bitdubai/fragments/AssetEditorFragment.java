@@ -435,7 +435,11 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         if (hasResource) {
             List<Resource> resources = new ArrayList<>();
             Resource resource = new Resource();
-            resource.setId(UUID.randomUUID());
+            if (asset.getResources().size() > 0) {
+                resource.setId(asset.getResources().get(0).getId());
+            } else {
+                resource.setId(UUID.randomUUID());
+            }
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
 //            resource.setResourceBinayData(toByteArray(((BitmapDrawable) takePicture.getDrawable()).getBitmap()));
@@ -505,9 +509,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     }
 
     /**
-     * Bitmap to byte[]
+     * ImageView to byte[]
      *
-     * @param bitmap Bitmap
      * @return byte array
      */
     private byte[] toByteArray(ImageView imageView) {

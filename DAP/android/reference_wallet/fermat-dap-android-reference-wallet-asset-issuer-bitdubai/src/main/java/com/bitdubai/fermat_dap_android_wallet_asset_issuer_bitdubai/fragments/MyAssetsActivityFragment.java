@@ -31,8 +31,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.widget.Toast.makeText;
-
 /**
  * A simple {@link Fragment} subclass.
  */
