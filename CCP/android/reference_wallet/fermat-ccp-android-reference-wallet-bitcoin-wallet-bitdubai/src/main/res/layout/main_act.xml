@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/btn_intra_user"
                         app:fab_colorNormal="#fff"
-                        app:fab_size="mini"
+                        app:fab_size="normal"
                         app:fab_icon="@drawable/intra_user_xxhdpi"
                         app:fab_title="Fermat User"
                         app:fab_colorPressed="#c7e0f9"/>
@@ -145,7 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:fab_colorNormal="#fff"
-                        app:fab_size="mini"
+                        app:fab_size="normal"
                         android:id="@+id/btn_extra_user"
                         app:fab_title="External User"
                         app:fab_icon="@drawable/extra_user_xxhdpi"
