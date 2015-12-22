@@ -708,6 +708,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             //has map cache - contador de failure mas de 5 lo mando a dormir a todos los mensajes de esa public key
               //  el agente levanta los mensajes y los procesa de nuevo por cierto tiempo
+        //si hace varios dias que esta tratando de enviarlos los borra
 
                 checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
 
