@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
@@ -203,6 +204,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                 } catch (CantCreateWithdrawalTransactionException e) {
                     Toast.makeText(activity.getApplicationContext(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
+                } catch (CashMoneyWalletInsufficientFundsException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds!", Toast.LENGTH_SHORT).show();
                 }
             }
             else if(transactionType == TransactionType.CREDIT) {

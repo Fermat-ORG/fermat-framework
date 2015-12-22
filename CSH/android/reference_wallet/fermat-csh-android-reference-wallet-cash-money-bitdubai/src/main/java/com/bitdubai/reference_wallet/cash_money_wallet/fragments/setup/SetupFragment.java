@@ -48,8 +48,6 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
     Spinner currencySpinner;
     ArrayAdapter<String> currencySpinnerAdapter;
     Button okBtn;
-    //Button backBtn;
-
 
     public SetupFragment() {}
     public static SetupFragment newInstance() {return new SetupFragment();}
@@ -72,16 +70,13 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
             fiatCurrencies.add(f.getCode());
             fiatCurrenciesFriendly.add(f.getFriendlyName() + " (" + f.getCode() + ")");
         }
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.setup_page, container, false);
-
 
 
         getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));
@@ -91,15 +86,14 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
         okBtn = (Button) layout.findViewById(R.id.csh_setup_ok_btn);
         okBtn.setOnClickListener(this);
 
-
-
+        //Wallet setup currency spinner
         currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
         currencySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinnerAdapter.notifyDataSetChanged();
-
         currencySpinner = (Spinner) layout.findViewById(R.id.csh_setup_currency_spinner);
         currencySpinner.setAdapter(currencySpinnerAdapter);
         currencySpinner.setOnItemSelectedListener(this);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -131,16 +125,13 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
                 }
             }
             else
-            {
                 Toast.makeText(getActivity(), "Please select a valid currency.", Toast.LENGTH_SHORT).show();
-
-            }
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        Toast.makeText(getActivity(), "Item #" + pos + " selected (" + fiatCurrenciesFriendly.get(pos) + ")", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getActivity(), "Item #" + pos + " selected (" + fiatCurrenciesFriendly.get(pos) + ")", Toast.LENGTH_SHORT).show();
         try {
             selectedCurrency = FiatCurrency.getByCode(fiatCurrencies.get(pos));
         } catch(InvalidParameterException e) { }
@@ -149,6 +140,6 @@ public class SetupFragment extends FermatWalletFragment implements View.OnClickL
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        Toast.makeText(getActivity(), "Nothing selected", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Nothing selected", Toast.LENGTH_SHORT).show();
     }
 }
