@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.int
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
@@ -179,15 +180,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                             long timeStampToday =  ((customerBrokerContractPurchase.getDateTime() - date.getTime()) / 60) / 60;
                             if (timeStampToday <= DELAY_HOURS)
                             {
-
-                            }
-                            //Recorrer las clausulas del contrato
-                            for (ContractClause contractClause : customerBrokerContractPurchase.getContractClause())
-                            {
-                                if (contractClause.getStatus().getCode() != ContractClauseStatus.EXECUTED.getCode())
-                                {
-                                    //Debemos enviar notificacion de las distintas clausulas segun se estatus
-                                }
+                                customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
                             }
                         }
                     }
@@ -227,7 +220,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                             long timeStampToday =  ((customerBrokerContractPurchase.getDateTime() - date.getTime()) / 60) / 60;
                             if (timeStampToday <= DELAY_HOURS)
                             {
-
+                                customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
                             }
                         }
                     }
@@ -279,6 +272,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
             } catch (CantCloseContractException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantGetIndexException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            } catch (CantupdateCustomerBrokerContractPurchaseException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
