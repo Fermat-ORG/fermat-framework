@@ -19,6 +19,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 
+import java.util.List;
+
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
@@ -142,7 +144,8 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     }
 
     public CryptoWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
-        return getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+        List<CryptoWalletIntraUserIdentity> lst =getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser();
+        return (lst.isEmpty()) ? null : lst.get(0);
     }
 
     public String getCommunityConnection() {

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
@@ -64,7 +64,7 @@ public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractPlugin
             CryptoCustomerIdentity identity = this.identityManager.createCryptoCustomerIdentity(cryptoCustomerName, profileImage);
             return converIdentityToInformation(identity);
         } catch (CantCreateCryptoCustomerIdentityException e) {
-            throw new CouldNotCreateCryptoCustomerException(CantCreateCryptoBrokerException.DEFAULT_MESSAGE, e, "", "");
+            throw new CouldNotCreateCryptoCustomerException(e, "", "");
         }
     }
 
@@ -101,7 +101,7 @@ public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractPlugin
     }
 
     @Override
-    public ActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
     }
 }

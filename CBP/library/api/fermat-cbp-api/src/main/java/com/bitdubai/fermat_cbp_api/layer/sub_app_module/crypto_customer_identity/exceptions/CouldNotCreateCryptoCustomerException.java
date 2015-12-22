@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by eze on 2015.07.30..
  */
 public class CouldNotCreateCryptoCustomerException extends FermatException {
+
+    private static final String DEFAULT_MESSAGE = "COULD NOT CREATE CRYPTO CUSTOMER EXCEPTION";
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -16,5 +18,9 @@ public class CouldNotCreateCryptoCustomerException extends FermatException {
      */
     public CouldNotCreateCryptoCustomerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    public CouldNotCreateCryptoCustomerException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

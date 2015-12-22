@@ -34,7 +34,6 @@
             android:paddingBottom="10dip"
             android:paddingRight="20dp"
             android:paddingTop="10dip"
-            tools:text="Jennifer"
             android:textColor="#ffffff"
             android:textSize="16sp"
             />
@@ -49,6 +48,7 @@
         android:src="@drawable/ic_arrow_down_grey"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:visibility="gone"
         />
 
 

@@ -37,9 +37,10 @@ public class HierarchyAccount {
         this.hierarchyAccountType = hierarchyAccountType;
 
         /**
-         * I set the account path, the m/path
+         * I set the account path, the m/acountId H/1
+         * All keys derived will be m/0H/1/x for example
          */
-        this.accountPath = ImmutableList.of(new ChildNumber(id, true));
+        this.accountPath = ImmutableList.of(new ChildNumber(id, true), new ChildNumber(1, false));
         this.pathAsString = accountPath.toString();
     }
 
