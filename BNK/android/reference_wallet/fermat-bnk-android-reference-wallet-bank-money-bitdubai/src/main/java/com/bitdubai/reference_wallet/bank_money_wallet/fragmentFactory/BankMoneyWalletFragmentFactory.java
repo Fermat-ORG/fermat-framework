@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -14,7 +13,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSe
 /**
  * Created by Guillermo on 04/12/15.
  */
-public class BankMoneyWalletFragmentFactory extends FermatFragmentFactory<BankMoneyWalletSession, WalletSettings,WalletResourcesProviderManager, BankMoneyWalletFragmentsEnumType> {
+public class BankMoneyWalletFragmentFactory extends FermatFragmentFactory<BankMoneyWalletSession,WalletResourcesProviderManager, BankMoneyWalletFragmentsEnumType> {
     @Override
     public FermatWalletFragment getFermatFragment(BankMoneyWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
         if (fragment == null) {

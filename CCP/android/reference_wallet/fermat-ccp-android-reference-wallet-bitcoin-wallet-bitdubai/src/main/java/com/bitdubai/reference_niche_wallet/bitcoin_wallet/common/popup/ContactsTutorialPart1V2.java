@@ -16,6 +16,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+
 import java.util.List;
 
 /**
@@ -74,6 +76,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
             }
         }
         else if(id == R.id.add_extra_user){
+            getSession().setData(SessionConstant.CREATE_EXTRA_USER,Boolean.TRUE);
             dismiss();
         }
     }

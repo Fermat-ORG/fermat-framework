@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cbw_header_end_background"
+    android:fillViewport="false"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/cbw_close_contract_details_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         android:orientation="vertical">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -29,129 +31,170 @@
 
         <ImageView
             android:id="@+id/cbw_customer_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="34dp"
+            android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
             tools:ignore="contentDescription"
+            android:layout_marginBottom="16dp"
             tools:src="@drawable/person"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_customer_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="22sp"
+            android:textSize="18sp"
+            android:layout_marginBottom="20dp"
             tools:text="Amanda Hood"/>
 
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="26dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="20dp"
             android:columnCount="2">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_amount_sold_or_to_sell_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
+                android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_row="0"
                 android:gravity="start"
-                android:text="@string/cbw_you_sold"
                 android:textColor="#69ccfa"
-                android:textSize="20sp"/>
+                android:textSize="16sp"
+                tools:text="@string/cbw_amount_sold"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_contract_details_you_sold"
+                android:id="@+id/cbw_amount_sold_or_to_sell_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_row="0"
-                android:text="400.03 USD"
                 android:textColor="@color/white"
-                android:textSize="22sp"/>
+                android:textSize="18sp"
+                tools:text="400.03 USD"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_amount_received_to_receive_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
+                android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_row="1"
                 android:gravity="start"
-                android:text="@string/cbw_and_receive_text"
                 android:textColor="#69ccfa"
-                android:textSize="20sp"/>
+                android:textSize="16sp"
+                tools:text="@string/cbw_amount_received"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_contract_details_you_receive"
+                android:id="@+id/cbw_amount_received_to_receive_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_row="1"
-                android:text="40.01 BTC"
                 android:textColor="@color/white"
-                android:textSize="22sp"/>
+                android:textSize="18sp"
+                tools:text="540.01 BTC"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
+                android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_row="2"
                 android:gravity="start"
-                android:text="@string/cbw_trough_text"
                 android:textColor="#69ccfa"
-                android:textSize="20sp"/>
+                android:textSize="16sp"
+                android:text="@string/cbw_contract_details_payment_method"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_contract_details_payment_method"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_row="2"
-                android:text="Crypto Transfer"
                 android:textColor="@color/white"
-                android:textSize="22sp"/>
+                android:textSize="18sp"
+                tools:text="Crypto Transfer"/>
 
         </GridLayout>
+
+        <LinearLayout
+            android:id="@+id/cbw_cancellation_reason_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical"
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cbw_cancellation_reason_title"
+                android:textColor="#ff585a"
+                android:textSize="14sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_cancellation_reason_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                tools:text="El precio de venta estaba demasiado alto y no pudimos ponernos de acuerdo"/>
+
+        </LinearLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_contract_details_close_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:text="At Date: 20/05/015"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="16sp"
+            android:text="@string/cbw_contract_details_last_update_date"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/cbw_contract_details_check_negotiation_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp"
             android:background="@color/cbw_toolbar_start_background"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="Check Negotiation Details"
+            android:text="@string/cbw_check_negotiation_details"
             android:textColor="@color/white"
             android:textSize="16sp"/>
     </LinearLayout>
-</FrameLayout>
+</ScrollView>

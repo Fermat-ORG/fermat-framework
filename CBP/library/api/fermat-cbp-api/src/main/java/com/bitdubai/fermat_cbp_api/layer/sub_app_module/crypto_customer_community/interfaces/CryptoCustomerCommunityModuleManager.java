@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import java.util.List;
 
@@ -13,12 +15,12 @@ import java.util.List;
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
  * provides the methods for the Crypto Customer Community sub app, to Identity Management Customers and the relationship with other Customers.
  */
-public interface CryptoCustomerCommunityModuleManager extends ModuleManager{
+public interface CryptoCustomerCommunityModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
 
 
     /**
-     * The method <code>getSuggestionsToContact</code> searches for crypto Customer that the logged in
+     * The method <code>listCryptoBrokersAvailablesToContact</code> searches for crypto Customer that the logged in
      * crypto customer could be interested to add.
      *
      * @return a list with information of crypto customer
@@ -35,7 +37,7 @@ public interface CryptoCustomerCommunityModuleManager extends ModuleManager{
     public CryptoCustomerSearch searchCryptoCustomer();
 
     /**
-     * The method <code>askCryptoBrokerForAcceptance</code> initialize the request of contact between
+     * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
      * a crypto Customer and a other crypto customer.
      *
      * @param cryptoCustomerToAddName      The name of the crypto customer to add

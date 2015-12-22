@@ -8,7 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -196,5 +199,15 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        return null;
     }
 }

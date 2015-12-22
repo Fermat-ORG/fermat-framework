@@ -16,11 +16,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.header.WalletAssetIssuerHeaderPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.IssuerWalletFragmentFactory;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.navigation_drawer.IssuerWalletNavigationViewPainter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.navigation_drawer.IssuerWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.settings.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -29,7 +27,7 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections {
 
     IdentityAssetIssuer identityAssetIssuer;
 
-    public WalletAssetIssuerFermatAppConnection(Activity activity, IdentityAssetIssuer identityAssetIssuer) {
+    public WalletAssetIssuerFermatAppConnection(Activity activity) {
         super(activity);
         this.identityAssetIssuer = identityAssetIssuer;
     }
@@ -53,11 +51,6 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections {
     @Override
     public AbstractFermatSession getSession() {
         return new AssetIssuerSession();
-    }
-
-    @Override
-    public FermatSettings getSettings() {
-        return new AssetIssuerSettings();
     }
 
     @Override

@@ -28,8 +28,8 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
@@ -177,10 +177,10 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
     }
 
     private void loadIdentity(){
-        if (identitySelected.getProfileImage() != null) {
+        if (identitySelected.getImage() != null) {
             Bitmap bitmap = null;
-            if (identitySelected.getProfileImage().length > 0) {
-                bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
+            if (identitySelected.getImage().length > 0) {
+                bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             }else{
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);

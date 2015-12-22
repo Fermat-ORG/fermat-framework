@@ -114,15 +114,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * creates the blockchain object for the specified network.
              */
-//        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
-//        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
-            BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
-            try {
-                blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, blockStore);
-            } catch (BlockStoreException e) {
-                e.printStackTrace();
-            }
-
+            BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
+            BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
 
             /**
              * creates the peerGroup object
@@ -191,6 +184,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
             wallet.addWalletTransaction(walletTransaction);
 
+
             /**
              * save the added transaction in the wallet
              */
@@ -201,6 +195,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+
                 @Override
                 public void onBroadcastProgress(double progress) {
                     System.out.println("****CryptoNetwork: progress broadcast " + progress);
@@ -210,20 +205,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             broadcast.broadcast().get(2, TimeUnit.MINUTES);
             broadcast.future().get(2, TimeUnit.MINUTES);
 
-            wallet.saveToFile(walletFileName);
-
+            //todo move this inside the progress to execute when reaches 100%
             /**
              * Store this outgoing transaction in the table
              */
+            wallet.saveToFile(walletFileName);
             storeOutgoingTransaction(wallet, tx, transactionId);
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+
         } catch (Exception exception){
+            exception.printStackTrace();
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
         }
 

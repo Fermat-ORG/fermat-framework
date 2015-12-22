@@ -12,7 +12,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -52,6 +55,16 @@ import java.util.List;
  */
 public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
         AssetIssuerWalletSupAppModuleManager {
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        return null;
+    }
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
@@ -182,7 +195,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public IdentityAssetIssuer getAssetIssuerIdentity() throws CantGetIdentityAssetIssuerException {
+    public IdentityAssetIssuer getActiveAssetIssuerIdentity() throws CantGetIdentityAssetIssuerException {
         try {
             return identityAssetIssuerManager.getIdentityAssetIssuer();
         } catch (CantGetAssetIssuerIdentitiesException e) {

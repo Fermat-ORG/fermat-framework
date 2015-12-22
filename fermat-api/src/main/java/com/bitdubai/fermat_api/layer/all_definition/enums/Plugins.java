@@ -242,35 +242,37 @@ public enum Plugins implements FermatPluginsEnum {
     WS_CLOUD_CLIENT             ("WCL"),
 
     //CBP
-    BANK_MONEY_RESTOCK              ("BMRE"),
-    BANK_MONEY_DESTOCK              ("BMDE"),
-    CASH_MONEY_RESTOCK              ("CMDE"),
-    CASH_MONEY_DESTOCK              ("CMRE"),
-    CONTRACT_PURCHASE               ("CONTP"),
-    CONTRACT_SALE                   ("CONTS"),
-    CRYPTO_BROKER_WALLET            ("CBWA"),
-    CRYPTO_BROKER_ACTOR             ("CBAC"),
-    CRYPTO_CUSTOMER_ACTOR           ("CCAC"),
-    CRYPTO_MONEY_DESTOCK            ("CRDE"),
-    CRYPTO_MONEY_RESTOCK            ("CRRE"),
-    CUSTOMER_BROKER_CLOSE           ("CBCL"),
-    CUSTOMER_BROKER_NEW             ("CBNE"),
-    CUSTOMER_BROKER_UPDATE          ("CBUP"),
-    FIAT_INDEX                      ("FI"),
-    NEGOTIATION_PURCHASE            ("NGP"),
-    NEGOTIATION_SALE                ("NGS"),
-    NEGOTIATION_TRANSMISSION        ("NGTR"),
-    OPEN_CONTRACT                   ("OPC"),
-    TRANSACTION_TRANSMISSION        ("TRTX"),
-    CLOSE_CONTRACT                  ("CLC"),
-    CUSTOMER_ONLINE_PAYMENT         ("CONP"),
-    CUSTOMER_OFFLINE_PAYMENT        ("COFP"),
-    BROKER_ACK_OFFLINE_PAYMENT      ("BAFP"),
-    BROKER_ACK_ONLINE_PAYMENT       ("BAOP"),
-    CUSTOMER_ACK_ONLINE_MERCHANDISE ("CAOM"),
+    BANK_MONEY_RESTOCK                  ("BMRE"),
+    BANK_MONEY_DESTOCK                  ("BMDE"),
+    CASH_MONEY_RESTOCK                  ("CMDE"),
+    CASH_MONEY_DESTOCK                  ("CMRE"),
+    CONTRACT_PURCHASE                   ("CONTP"),
+    CONTRACT_SALE                       ("CONTS"),
+    CRYPTO_BROKER_WALLET                ("CBWA"),
+    CRYPTO_BROKER_ACTOR                 ("CBAC"),
+    CRYPTO_CUSTOMER_ACTOR               ("CCAC"),
+    CRYPTO_MONEY_DESTOCK                ("CRDE"),
+    CRYPTO_MONEY_RESTOCK                ("CRRE"),
+    CUSTOMER_BROKER_CLOSE               ("CBCL"),
+    CUSTOMER_BROKER_NEW                 ("CBNE"),
+    CUSTOMER_BROKER_UPDATE              ("CBUP"),
+    FIAT_INDEX                          ("FI"),
+    NEGOTIATION_PURCHASE                ("NGP"),
+    NEGOTIATION_SALE                    ("NGS"),
+    NEGOTIATION_TRANSMISSION            ("NGTR"),
+    OPEN_CONTRACT                       ("OPC"),
+    TRANSACTION_TRANSMISSION            ("TRTX"),
+    CLOSE_CONTRACT                      ("CLC"),
+    CUSTOMER_ONLINE_PAYMENT             ("CONP"),
+    CUSTOMER_OFFLINE_PAYMENT            ("COFP"),
+    BROKER_ACK_OFFLINE_PAYMENT          ("BAFP"),
+    BROKER_ACK_ONLINE_PAYMENT           ("BAOP"),
+    CUSTOMER_ACK_ONLINE_MERCHANDISE     ("CAOM"),
+    BROKER_SUBMIT_ONLINE_MERCHANDISE    ("BSOM"),
+    BROKER_SUBMIT_OFFLINE_MERCHANDISE   ("BSFM"),
 
-    CUSTOMER_BROKER_PURCHASE        ("CBPU"),
-    CUSTOMER_BROKER_SALE            ("CBSA"),
+    CUSTOMER_BROKER_PURCHASE            ("CBPU"),
+    CUSTOMER_BROKER_SALE                ("CBSA"),
 
     // End  new Plugins
 
@@ -386,6 +388,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT       ;
             case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
+            case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
+            case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

@@ -11,9 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.TransactionTransmissionStates;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.events.IncomingNewContractStatusUpdate;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
@@ -253,6 +253,7 @@ public class TransactionTransmissionAgent {
         //Stop the Thread
         toSend.interrupt();
         toReceive.interrupt();
+        this.running = Boolean.FALSE;
         //Disconnect from the service
     }
 

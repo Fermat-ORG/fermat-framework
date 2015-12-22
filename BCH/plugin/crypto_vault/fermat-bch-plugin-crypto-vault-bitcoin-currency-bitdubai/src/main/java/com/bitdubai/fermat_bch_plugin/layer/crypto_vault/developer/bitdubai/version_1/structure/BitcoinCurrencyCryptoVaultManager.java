@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
@@ -33,8 +32,12 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.KeyChain;
 import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.List;
@@ -108,7 +111,6 @@ public class BitcoinCurrencyCryptoVaultManager {
                 vaultSeedGenerator.load();
             } else
                 vaultSeedGenerator.load();
-
             DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
             seed.check();
             return seed;
@@ -342,14 +344,23 @@ public class BitcoinCurrencyCryptoVaultManager {
          * Create the bitcoinj wallet from the keys of this account
          */
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
-        final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        Wallet wallet = null;
+        try {
+             wallet = Wallet.fromSeed(networkParameters, getBitcoinVaultSeed());
+        } catch (InvalidSeedException e) {
+            e.printStackTrace();
+        }
+
+        wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
 
         /**
          * Add transactions to the wallet that we can use to spend.
          */
         for (Transaction transaction : transactions){
             if (!transaction.isEveryOwnedOutputSpent(wallet)){
-                wallet.addWalletTransaction(new WalletTransaction(WalletTransaction.Pool.UNSPENT, transaction));
+                WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, transaction);
+                wallet.addWalletTransaction(walletTransaction);
             }
         }
 
@@ -363,15 +374,28 @@ public class BitcoinCurrencyCryptoVaultManager {
          * creates the send request and broadcast it on the network.
          */
         Wallet.SendRequest sendRequest = Wallet.SendRequest.to(address, coinToSend);
+
+        /**
+         * I set SendRequest properties
+         */
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
+        sendRequest.shuffleOutputs = false;
+
+        /**
+         * I will add the OP_Return output if any
+         */
+        if (op_Return != null){
+            sendRequest.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
+        }
+
 
         try {
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
             StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
             output.append(System.lineSeparator());
-            output.append("Current balance available for this transaction: " + wallet.getBalance().getValue());
+            output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
             throw new InsufficientCryptoFundsException(InsufficientCryptoFundsException.DEFAULT_MESSAGE, e, output.toString(), null);

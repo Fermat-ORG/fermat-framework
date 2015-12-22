@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_core.layer.business_transaction;
 
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_ack_offline_payment.BrokerAckOfflinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_ack_online_payment.BrokerAckOnlinePaymentPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_submit_offline_merchandise.BrokerSubmitOfflinePaymentPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_submit_online_merchandise.BrokerSubmitOnlinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.costomer_offline_payment.CustomerOfflinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_online_payment.CustomerOnlinePaymentPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
@@ -26,6 +28,8 @@ public class BusinessTransactionLayer extends AbstractLayer {
 
             registerPlugin(new BrokerAckOfflinePaymentPluginSubsystem());
             registerPlugin(new BrokerAckOnlinePaymentPluginSubsystem());
+            registerPlugin(new BrokerSubmitOfflinePaymentPluginSubsystem());
+            registerPlugin(new BrokerSubmitOnlinePaymentPluginSubsystem());
             registerPlugin(new CustomerOfflinePaymentPluginSubsystem());
             registerPlugin(new CustomerOnlinePaymentPluginSubsystem());
             registerPlugin(new CloseContractPluginSubsystem());
