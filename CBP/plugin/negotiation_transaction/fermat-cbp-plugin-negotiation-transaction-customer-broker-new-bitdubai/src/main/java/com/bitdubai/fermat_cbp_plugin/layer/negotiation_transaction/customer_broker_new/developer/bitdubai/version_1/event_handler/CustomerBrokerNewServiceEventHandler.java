@@ -30,19 +30,15 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
 
     private CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
 
-    private NegotiationTransmissionManager                      negotiationTransmissionManager;
-
     private ServiceStatus               serviceStatus   = ServiceStatus.CREATED;
 
     private List<FermatEventListener>   listenersAdded  = new ArrayList<>();
 
     public CustomerBrokerNewServiceEventHandler(
         CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao,
-        NegotiationTransmissionManager                     negotiationTransmissionManager,
         EventManager eventManager
     ){
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
-        this.negotiationTransmissionManager                     = negotiationTransmissionManager;
         this.eventManager                                       = eventManager;
     }
 
