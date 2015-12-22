@@ -152,13 +152,20 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             getDao().saveNewOutgoingTransaction(transactionId,
                     tx.getHashAsString(),
                     getBlockHash(tx),
-                    getTransactionCryptoStatus(tx),
+                    CryptoStatus.ON_CRYPTO_NETWORK,
                     tx.getConfidence().getDepthInBlocks(),
                     getOutgoingTransactionAddressTo(wallet,tx),
                     getOutgoingTransactionAddressFrom(tx),
                     getOutgoingTransactionValue(wallet,tx),
                     getTransactionOpReturn(tx),
                     ProtocolStatus.TO_BE_NOTIFIED);
+
+            /**
+             * If the transaction is already under blocks, I will save it.
+             */
+            if (getTransactionCryptoStatus(tx) != CryptoStatus.ON_CRYPTO_NETWORK){
+                saveMissingOutgoingTransaction(wallet, tx, getTransactionCryptoStatus(tx));
+            }
         } catch (Exception e) {
             /**
              * if there is an error in getting information from the transaction object.

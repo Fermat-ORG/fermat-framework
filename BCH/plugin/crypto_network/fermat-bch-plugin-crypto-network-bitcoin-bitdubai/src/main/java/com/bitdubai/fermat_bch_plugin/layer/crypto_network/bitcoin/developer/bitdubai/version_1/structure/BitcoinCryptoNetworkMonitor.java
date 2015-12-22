@@ -190,6 +190,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             wallet.saveToFile(walletFileName);
 
+
+
             /**
              * Broadcast it.
              */
@@ -204,14 +206,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             broadcast.broadcast().get(2, TimeUnit.MINUTES);
             broadcast.future().get(2, TimeUnit.MINUTES);
 
-            //todo move this inside the progress to execute when reaches 100%
             /**
              * Store this outgoing transaction in the table
              */
-            wallet.saveToFile(walletFileName);
             storeOutgoingTransaction(wallet, tx, transactionId);
 
-
+            /**
+             * saves the wallet again.
+             */
+            wallet.saveToFile(walletFileName);
         } catch (Exception exception){
             exception.printStackTrace();
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
