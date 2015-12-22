@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
 
 /**
@@ -45,4 +46,10 @@ public interface IntraUserInformation extends IdentityUserInformation {
      * @return the profile image
      */
     public byte[] getProfileImage();
+
+    /**
+     * The method <code>getConnectionState</code> returns the Connection State Status
+     * @return ConnectionState object
+     */
+    ConnectionState getConnectionState();
 }
