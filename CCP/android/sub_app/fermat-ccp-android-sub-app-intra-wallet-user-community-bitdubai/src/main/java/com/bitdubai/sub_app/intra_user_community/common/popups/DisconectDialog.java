@@ -66,15 +66,15 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
 
         mDescription = (FermatTextView) findViewById(R.id.description);
         mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mTitle = (FermatTextView)findViewById(R.id.title);
+        mTitle = (FermatTextView) findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mDescription.setText(description!= null ? description : "");
-        mUsername.setText(username!= null ? username: "");
-        mTitle.setText(title != null ? title: "");
+        mDescription.setText(description != null ? description : "");
+        mUsername.setText(username != null ? username : "");
+        mTitle.setText(title != null ? title : "");
 
     }
 
@@ -108,7 +108,7 @@ public class DisconectDialog extends FermatDialog<SubAppsSession, SubAppResource
             try {
                 //image null
                 if (intraUserInformation != null && identity != null) {
-                    ((IntraUserSubAppSession) getSession()).getModuleManager().disconnectIntraUSer(intraUserInformation.getPublicKey());
+                    ((IntraUserSubAppSession) getSession()).getModuleManager().disconnectIntraUSer(identity.getPublicKey(),intraUserInformation.getPublicKey());
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
