@@ -30,6 +30,7 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
     private String        op_Return;
     private long          timestamp;
     private String        memo;
+    private boolean sameDevice;
 
     @Override
     public CryptoAddress getAddressFrom() {
@@ -174,5 +175,13 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
 
     public ReferenceWallet getReferenceWallet() {
         return this.referenceWallet;
+    }
+
+    public boolean isSameDevice() {
+        return sameDevice;
+    }
+
+    public void setSameDevice(boolean sameDevice) {
+        this.sameDevice = sameDevice;
     }
 }

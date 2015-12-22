@@ -21,7 +21,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
@@ -215,8 +217,16 @@ public class PublishedAssetsFragment extends FermatFragment implements
         }
     }
 
-    public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException {
-        return manager.getAssetFactoryByState(FINAL);
+    public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException, FileNotFoundException {
+        List<AssetFactory> assets = manager.getAssetFactoryByState(FINAL);
+        List<Resource> resources;
+        for(AssetFactory item : assets) {
+            resources = item.getResources();
+            for(Resource resource : resources) {
+                resource.setResourceBinayData(manager.getAssetFactoryResource(resource).getContent());
+            }
+        }
+        return assets;
     }
 
     @Override

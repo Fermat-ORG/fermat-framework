@@ -191,7 +191,7 @@ public class IdentityAssetIssuerManagerImpl implements DealsWithErrors, DealsWit
             List<IdentityAssetIssuer> identityAssetIssuers = getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (identityAssetIssuers.size() > 0) {
                 for (IdentityAssetIssuer identityAssetIssuer : identityAssetIssuers) {
-                    actorAssetIssuerManager.createActorAssetIssuerFactory(identityAssetIssuer.getPublicKey(), identityAssetIssuer.getAlias(), identityAssetIssuer.getProfileImage());
+                    actorAssetIssuerManager.createActorAssetIssuerFactory(identityAssetIssuer.getPublicKey(), identityAssetIssuer.getAlias(), identityAssetIssuer.getImage());
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
