@@ -299,7 +299,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         } catch (Exception exception) {
                             reportUnexpectedException(FermatException.wrapException(exception));
                         }
-                    } catch (InvalidSendToAddressException | CouldNotSendMoneyException e) {
+                    } catch (InvalidSendToAddressException e) {
                         try {
                             dao.cancelTransaction(transaction);
                             roolback(transaction);
@@ -312,7 +312,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (CryptoTransactionAlreadySentException e) {
                         reportUnexpectedException(e);
                         // TODO: Verify what to do when the transaction has already been sent.
-                    } catch (CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
+                    } catch (CouldNotSendMoneyException | CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
+                        //If we cannot send the money at this moment then we'll keep trying.
                         reportUnexpectedException(e);
                     }
                 }
