@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -16,9 +17,11 @@ import java.lang.ref.WeakReference;
 public abstract class AppConnections implements FermatAppConnection{
 
     WeakReference<Activity> activity;
+    ActiveActorIdentityInformation activeIdentity;
 
     public AppConnections(Activity activity) {
-        this.activity = new WeakReference<Activity>(activity);
+        this.activity = new WeakReference<>(activity);
+        activeIdentity = null;
     }
 
     public abstract PluginVersionReference getPluginVersionReference();
@@ -36,5 +39,13 @@ public abstract class AppConnections implements FermatAppConnection{
 
     public Activity getActivity() {
         return activity.get();
+    }
+
+    public final void setActiveIdentity(ActiveActorIdentityInformation activeIdentity){
+        this.activeIdentity = activeIdentity;
+    }
+
+    public ActiveActorIdentityInformation getActiveIdentity() {
+        return activeIdentity;
     }
 }

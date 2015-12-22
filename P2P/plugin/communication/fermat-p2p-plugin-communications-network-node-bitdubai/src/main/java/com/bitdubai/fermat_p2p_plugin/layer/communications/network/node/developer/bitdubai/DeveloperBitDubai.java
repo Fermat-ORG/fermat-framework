@@ -6,9 +6,12 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
@@ -23,68 +26,44 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
-    /**
-     * Represent the plugin instance
-     */
-    Plugin plugin;
-
-    /**
-     * Constructor
-     */
     public DeveloperBitDubai() {
-
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
-         plugin = (Plugin) new NetworkNodePluginRoot();
-
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 
-    /**
-     * (non-javadoc)
-     * @see PluginDeveloper#getPlugin()
-     */
     @Override
-    public Plugin getPlugin() {
-        return plugin;
+    public void start() throws CantStartPluginDeveloperException {
+        try {
+
+            this.registerVersion(new NetworkNodePluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
-    /**
-     * (non-javadoc)
-     * @see PluginLicensor#getAmountToPay()
-     */
+
     @Override
     public int getAmountToPay() {
         return 100;
     }
 
-    /**
-     * (non-javadoc)
-     * @see PluginLicensor#getCryptoCurrency()
-     */
     @Override
     public CryptoCurrency getCryptoCurrency() {
         return CryptoCurrency.BITCOIN;
     }
 
-    /**
-     * (non-javadoc)
-     * @see PluginLicensor#getAddress()
-     */
     @Override
     public String getAddress() {
-        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
     }
 
-    /**
-     * (non-javadoc)
-     * @see PluginLicensor#getTimePeriod()
-     */
     @Override
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
+
+
 }

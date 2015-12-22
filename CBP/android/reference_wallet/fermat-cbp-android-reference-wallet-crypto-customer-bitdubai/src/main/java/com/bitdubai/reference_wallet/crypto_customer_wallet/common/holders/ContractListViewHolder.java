@@ -100,7 +100,7 @@ public class ContractListViewHolder extends FermatViewHolder {
 
     private String getSellingOrSoldText(ContractStatus status) {
         if (status == ContractStatus.COMPLETED)
-            return res.getString(R.string.sold);
+            return res.getString(R.string.bought);
         return res.getString(R.string.selling);
     }
 

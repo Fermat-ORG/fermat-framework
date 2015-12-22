@@ -2,7 +2,7 @@ package com.bitdubai.fermat_api.layer.modules.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 
 /**
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
  * Created by Matias Furszyfer on 2015.10.18.
  * Updated by Leon Acosta on 12/21/2015.
  */
-public interface ModuleManager<Z extends FermatSettings, Y extends ActorIdentityInformation> extends FermatManager {
+public interface ModuleManager<Z extends FermatSettings, Y extends ActiveActorIdentityInformation> extends FermatManager {
 
     /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified

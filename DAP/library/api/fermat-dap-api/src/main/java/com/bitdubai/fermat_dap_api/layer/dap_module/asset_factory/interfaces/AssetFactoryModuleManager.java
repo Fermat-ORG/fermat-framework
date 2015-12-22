@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSettings, ActorIdentityInformation> {
+public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSettings, ActiveActorIdentityInformation> {
     //Implementa solo los metodos que utiliza la sup app
     IdentityAssetIssuer getLoggedIdentityAssetIssuer();
 
