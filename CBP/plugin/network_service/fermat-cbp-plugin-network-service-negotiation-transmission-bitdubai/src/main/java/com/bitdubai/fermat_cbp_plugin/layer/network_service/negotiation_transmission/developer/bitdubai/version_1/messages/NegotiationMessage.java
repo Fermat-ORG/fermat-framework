@@ -22,6 +22,7 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
     private final PlatformComponentType         actorReceiveType;
     private final NegotiationTransmissionType   transmissionType;
     private final NegotiationTransmissionState  transmissionState;
+    private final String                        negotiationXML;
     private final long                          timestamp;
 
     public NegotiationMessage(
@@ -35,6 +36,7 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
         final PlatformComponentType             actorReceiveType,
         final NegotiationTransmissionType       transmissionType,
         final NegotiationTransmissionState      transmissionState,
+        final String                            negotiationXML,
         final long                              timestamp
     ){
         this.transmissionId             = transmissionId;
@@ -47,6 +49,7 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
         this.actorReceiveType           = actorReceiveType;
         this.transmissionType           = transmissionType;
         this.transmissionState          = transmissionState;
+        this.negotiationXML             = negotiationXML;
         this.timestamp                  = timestamp;
     }
 
@@ -77,10 +80,13 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
     
     public final NegotiationTransmissionType getTransmissionType(){ return transmissionType; }
 
-    
+
     public final NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
 
-    
+
+    public final String getNegotiationXML(){ return negotiationXML; }
+
+
     public final long getTimestamp(){ return timestamp; }
 
     @Override
@@ -96,6 +102,7 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
                 ", actorReceiveType           = " + actorReceiveType +
                 ", transmissionType           = " + transmissionType +
                 ", transmissionState          = " + transmissionState +
+                ", negotiationXML             = " + negotiationXML +
                 ", timestamp                  = " + timestamp +
                 "}";
     }

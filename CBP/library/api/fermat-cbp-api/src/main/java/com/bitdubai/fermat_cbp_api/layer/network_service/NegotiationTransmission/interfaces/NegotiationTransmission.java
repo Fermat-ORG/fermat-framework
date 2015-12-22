@@ -32,7 +32,7 @@ public interface NegotiationTransmission {
 
     NegotiationTransmissionState getTransmissionState();
 
-
+    String getNegotiationXML();
 
     long getTimestamp();
 

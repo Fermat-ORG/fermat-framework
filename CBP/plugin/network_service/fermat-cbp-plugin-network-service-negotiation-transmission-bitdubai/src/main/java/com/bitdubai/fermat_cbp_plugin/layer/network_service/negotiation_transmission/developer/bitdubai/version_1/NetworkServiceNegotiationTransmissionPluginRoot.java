@@ -696,6 +696,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationMessage.getActorReceiveType(),
                 negotiationMessage.getTransmissionType(),
                 negotiationMessage.getTransmissionState(),
+                negotiationMessage.getNegotiationXML(),
                 negotiationMessage.getTimestamp()
             );
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
@@ -826,6 +827,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             UUID transmissionId = UUID.randomUUID();
             UUID transactionId = negotiationTransaction.getTransactionId();
             UUID negotiationId = negotiationTransaction.getTransactionId();
+            String negotiationXML = negotiationTransaction.getNegotiationXML();
 
             if(actorSendType == PlatformComponentType.ACTOR_CRYPTO_CUSTOMER){
                 publicKeyActorSend = negotiationTransaction.getPublicKeyCustomer();
@@ -852,6 +854,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     actorReceiveType,
                     transmissionType,
                     transmissionState,
+                    negotiationXML,
                     timestamp
             );
         } catch (Exception e) {

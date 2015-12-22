@@ -103,7 +103,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
             DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
-            loadRecordAsSendNegotiatioTransmission(record,negotiationTransmission);
+            loadRecordAsSendNegotiatioTransmission(record, negotiationTransmission);
             DatabaseTransaction transaction = getDataBase().newTransaction();
             transaction.addRecordToUpdate(getDatabaseTable(), record);
             getDataBase().executeTransaction(transaction);
@@ -287,6 +287,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         PlatformComponentType           actorReceiveType        =   PlatformComponentType.getByCode(record.getStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_ACTOR_RECEIVE_TYPE_COLUMN_NAME));
         NegotiationTransmissionType     transmissionType        =   NegotiationTransmissionType.getByCode(record.getStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_TYPE_COLUMN_NAME));
         NegotiationTransmissionState    transmissionState       =   NegotiationTransmissionState.getByCode(record.getStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME));
+        String                          negotiationXML          = "";
         long                            timestamp               =   record.getLongValue(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TIMESTAMP_COLUMN_NAME);
 
         negotiationTransmission = new NegotiationTransmissionImpl(
@@ -300,6 +301,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
                 actorReceiveType,
                 transmissionType,
                 transmissionState,
+                negotiationXML,
                 timestamp
         );
 
