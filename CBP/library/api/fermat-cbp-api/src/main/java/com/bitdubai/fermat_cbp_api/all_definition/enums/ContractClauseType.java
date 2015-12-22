@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by Angel 28/11/2015
+ * Updated by Manuel Perez on 22/12/2015
  */
 public enum ContractClauseType implements FermatEnum {
     CRYPTO_TRANSFER("CRT"),

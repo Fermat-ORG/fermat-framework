@@ -85,14 +85,14 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
      * This method returns a crypto amount (long) from a CustomerBrokerPurchaseNegotiation
      * @return
      */
-    private long getCryptoAmount(
+    private long getAmount(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws
             CantGetCryptoAmountException {
         try{
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)){
+                if(clause.getType().equals(ClauseType.BROKER_CURRENCY_QUANTITY)){
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }
@@ -173,7 +173,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             String customerCryptoAddress=getBrokerCryptoAddressString(
                     customerBrokerSaleNegotiation
             );
-            long cryptoAmount=getCryptoAmount(customerBrokerSaleNegotiation);
+            long cryptoAmount= getAmount(customerBrokerSaleNegotiation);
             this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
                     customerCryptoAddress,

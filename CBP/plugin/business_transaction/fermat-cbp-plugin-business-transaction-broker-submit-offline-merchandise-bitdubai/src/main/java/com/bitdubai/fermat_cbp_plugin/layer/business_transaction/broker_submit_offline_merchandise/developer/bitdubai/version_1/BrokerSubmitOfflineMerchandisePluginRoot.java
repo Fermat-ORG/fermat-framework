@@ -218,9 +218,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             /**
              * Init the plugin manager
              */
-            //TODO: Temporal implementation
-            this.brokerSubmitOfflineMerchandiseTransactionManager=new BrokerSubmitOfflineMerchandiseTransactionManager();
-            /*this.brokerSubmitOnlineMerchandiseTransactionManager=new BrokerSubmitOnlineMerchandiseTransactionManager(
+            this.brokerSubmitOfflineMerchandiseTransactionManager=new BrokerSubmitOfflineMerchandiseTransactionManager(
                     brokerSubmitOfflineMerchandiseBusinessTransactionDao,
                     this.customerBrokerContractSaleManager,
                     this.customerBrokerSaleNegotiationManager

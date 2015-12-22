@@ -23,14 +23,13 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants 
     public static final String SUBMIT_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
-    public static final String SUBMIT_OFFLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
-    public static final String SUBMIT_OFFLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_TIMESTAMP_COLUMN_NAME = "timestamp";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_AMOUNT_COLUMN_NAME = "amount";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME = "cbp_wallet_public_key";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME = "reference_price";
+    public static final String SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME = "payment_type";
 
     public static final String SUBMIT_OFFLINE_MERCHANDISE_FIRST_KEY_COLUMN = "transaction_id";
 
