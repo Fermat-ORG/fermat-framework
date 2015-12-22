@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
@@ -191,9 +192,13 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-
         try {
-            return getCryptoWallet().getActiveIdentities().get(0);
+            List<IntraWalletUserIdentity> lst = getCryptoWallet().getActiveIdentities();
+            if(lst.isEmpty()){
+                return null;
+            }else{
+                return lst.get(0);
+            }
         } catch (CantGetCryptoWalletException e) {
             e.printStackTrace();
             return null;

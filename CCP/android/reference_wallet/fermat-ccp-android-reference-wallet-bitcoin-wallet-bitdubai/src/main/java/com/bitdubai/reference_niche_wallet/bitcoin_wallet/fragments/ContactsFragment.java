@@ -353,8 +353,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                         lauchCreateContactDialog(false);
                         referenceWalletSession.removeData(SessionConstant.CREATE_EXTRA_USER);
                     }
-                }else {
-                    getActivity().onBackPressed();
                 }
 
             }

@@ -2375,6 +2375,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackgroundColor("#ffffff");
         //runtimeActivity.setColor("#d07b62");
 
 
@@ -2437,6 +2438,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Requests");
         runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -2553,6 +2555,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Send to contact");
         runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -2592,9 +2595,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Request");
+        runtimeTitleBar.setLabel("Send Request To Contact");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
@@ -2700,6 +2705,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabel("Settings");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
@@ -2747,6 +2753,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabel("Contact detail");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
