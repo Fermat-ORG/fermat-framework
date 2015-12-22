@@ -27,7 +27,7 @@ public class IntraUserIdentityInformationImp implements IntraWalletUserIdentity 
 
     @Override
     public byte[] getImage() {
-        return new byte[0];
+        return profileImage;
     }
 
 
@@ -44,12 +44,6 @@ public class IntraUserIdentityInformationImp implements IntraWalletUserIdentity 
     @Override
     public Actors getActorType() {
         return null;
-    }
-
-
-    @Override
-    public byte[] getProfileImage() {
-        return this.profileImage;
     }
 
     @Override
