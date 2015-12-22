@@ -114,45 +114,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.getbase.floatingactionbutton.FloatingActionsMenu
-                    android:id="@+id/multiple_actions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    app:fab_addButtonColorNormal="#fff"
-                    app:fab_addButtonColorPressed="#0f0"
-                    app:fab_addButtonPlusIconColor="#66ff0000"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp"
-                    app:fab_icon="@drawable/btn_contact_selector"
-                    app:fab_labelStyle="@style/menu_labels_style"
-                    android:layout_marginEnd="16dp"
-                    >
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/btn_intra_user"
-                        app:fab_colorNormal="#fff"
-                        app:fab_size="normal"
-                        app:fab_icon="@drawable/intra_user_xxhdpi"
-                        app:fab_title="Fermat User"
-                        app:fab_colorPressed="#c7e0f9"/>
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:fab_colorNormal="#fff"
-                        app:fab_size="normal"
-                        android:id="@+id/btn_extra_user"
-                        app:fab_title="External User"
-                        app:fab_icon="@drawable/extra_user_xxhdpi"
-                        app:fab_colorPressed="#c7e0f9"/>
-
-                </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
 
 
             </RelativeLayout>

@@ -224,7 +224,7 @@ public class RequestFormFragment extends FermatWalletFragment implements View.On
                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
 
                 );
-
+                Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
 
             }
 

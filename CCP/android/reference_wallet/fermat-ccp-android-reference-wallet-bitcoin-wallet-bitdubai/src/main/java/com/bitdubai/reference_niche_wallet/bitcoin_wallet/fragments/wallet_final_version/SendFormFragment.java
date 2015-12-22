@@ -125,6 +125,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         try {
             rootView = inflater.inflate(R.layout.send_form_base, container, false);
             setUpUI();
+            contactName.setText("");
             setUpActions();
             setUpUIData();
             setUpContactAddapter();
@@ -379,7 +380,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                             cryptoWalletWalletContact.getActorType(),
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
                     );
-                    Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
+
                 } catch (InsufficientFundsException e) {
                     Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                 } catch (CantSendCryptoException e) {
