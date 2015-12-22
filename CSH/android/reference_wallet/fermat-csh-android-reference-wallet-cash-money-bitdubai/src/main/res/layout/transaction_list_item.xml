@@ -52,7 +52,7 @@
         android:textColor="@color/csh_transaction_deposit_color"
         android:textSize="@dimen/csh_regular_text_size"
         android:visibility="gone"
-        android:text="DEPOSIT"/>
+        android:text="@string/deposit_transaction_text_caps"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/textView_deposit_date"
@@ -120,7 +120,7 @@
         android:textColor="@color/csh_transaction_withdrawal_color"
         android:textSize="@dimen/csh_regular_text_size"
         android:visibility="gone"
-        android:text="WITHDRAWAL"/>
+        android:text="@string/withdrawal_transaction_text_caps"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/textView_withdrawal_date"

@@ -201,10 +201,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 Toast.makeText(activity.getApplicationContext(), "Amount cannot be zero", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (memo.equals("")) {
-                Toast.makeText(activity.getApplicationContext(), "Memo cannot be empty", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
 
             if (transactionType == TransactionType.DEBIT) {
@@ -214,9 +210,11 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     //updateWalletBalances(view.getRootView());
 
                 } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+                    return;
                 } catch (CashMoneyWalletInsufficientFundsException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
             else if(transactionType == TransactionType.CREDIT) {
@@ -226,17 +224,17 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     //updateWalletBalances(view.getRootView());
 
                 } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Error on deposit!", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
-            dismiss();
-
 
         } catch (Exception e) {
             cashMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "There was an error processing transaction!" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
         }
+        dismiss();
     }
 
 }

@@ -132,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/csh_fab_color_normal_w"
-            fab:fab_title="Withdraw"
+            fab:fab_title="@string/withdrawal_transaction_text"
             fab:fab_colorPressed="@color/csh_fab_color_pressed_w"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/csh_withdrawal"/>
@@ -142,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/csh_fab_color_normal_d"
-            fab:fab_title="Deposit"
+            fab:fab_title="@string/deposit_transaction_text"
             fab:fab_colorPressed="@color/csh_fab_color_pressed_d"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/csh_deposit"/>
