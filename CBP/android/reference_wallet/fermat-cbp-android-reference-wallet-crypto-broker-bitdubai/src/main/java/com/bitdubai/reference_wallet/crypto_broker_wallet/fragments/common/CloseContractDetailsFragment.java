@@ -40,11 +40,11 @@ import java.text.NumberFormat;
  * A simple {@link Fragment} subclass.
  */
 public class CloseContractDetailsFragment extends FermatWalletFragment {
-
+    private static final String TAG = "CloseContractDetails";
 
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
-    private static final String TAG = "CloseContractDetails";
+
 
     public static CloseContractDetailsFragment newInstance() {
         return new CloseContractDetailsFragment();
