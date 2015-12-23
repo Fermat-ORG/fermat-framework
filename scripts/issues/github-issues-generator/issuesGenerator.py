@@ -40,7 +40,8 @@
 #   1.2.0:	- Fixes the default repository user.
 #		- Add issues for Agents, Network Service, Network Service Messages and events.
 #		- Add the labels list (only for team leaders use).
-#   		- Add the variable networkService. 
+#   		- Add the variable networkService.
+#   1.2.4:	- Fix a bug in Agent and events issues generation.
  
 from pygithub3 import Github
 
@@ -174,9 +175,9 @@ for eventHandler in eventHandlers:
 
 #Events
 for event in events:
-	title= platform+" - "+layer+" - "+pluginName+" - Implementation - Event - "+event
-	body="This issue will be closed after fully implementation of "+event+"."+"\n"+teamLeaderMessage
-    	print title+"\n"+body
+	titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Event - "+event
+	bodyGenerated="This issue will be closed after fully implementation of "+event+"."+"\n"+teamLeaderMessage
+    	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
@@ -185,9 +186,9 @@ for event in events:
 
 #Agents issues
 for agent in agents:
-	title= platform+" - "+layer+" - "+pluginName+" - Implementation - Agent - "+agent
-	body="This issue will be closed after fully implementation of "+agent+"."+"\n"+teamLeaderMessage
-    	print title+"\n"+body
+	titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Agent - "+agent
+	bodyGenerated="This issue will be closed after fully implementation of "+agent+"."+"\n"+teamLeaderMessage
+    	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
@@ -196,9 +197,9 @@ for agent in agents:
 
 #Network Service
 if isNetworkService:
-	title= platform+" - "+layer+" - "+pluginName+" - Implementation - Network Service Template"
-	body="This issue will be closed after fully implementation of the template."+"\n"+teamLeaderMessage
-    	print title+"\n"+body
+	titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Network Service Template"
+	bodyGenerated="This issue will be closed after fully implementation of the template."+"\n"+teamLeaderMessage
+    	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
@@ -208,9 +209,9 @@ if isNetworkService:
 
 #Network Service Messages issues
 for nsMessage in nsMessages:
-	title= platform+" - "+layer+" - "+pluginName+" - Implementation - Network Service Message - "+nsMessage
-	body="This issue will be closed after fully implementation of "+nsMessage+"."+"\n"+teamLeaderMessage
-    	print title+"\n"+body
+	titleGenerated= platform+" - "+layer+" - "+pluginName+" - Implementation - Network Service Message - "+nsMessage
+	bodyGenerated="This issue will be closed after fully implementation of "+nsMessage+"."+"\n"+teamLeaderMessage
+    	print titleGenerated+"\n"+bodyGenerated
     	print "------------------------------------------\n"
 	if isTeamLeader:
 		issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
