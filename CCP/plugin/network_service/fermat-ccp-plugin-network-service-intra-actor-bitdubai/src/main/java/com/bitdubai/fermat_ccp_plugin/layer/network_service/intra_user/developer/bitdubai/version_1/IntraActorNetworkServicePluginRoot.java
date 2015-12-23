@@ -1235,12 +1235,28 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                //get extra data
 
-               Gson gson = new Gson();
-               JsonParser jParser = new JsonParser();
-               JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+               String actorPhrase = "";
+               String profileImage = "";
+               if(!platformComponentProfile.getExtraData().equals(""))
+               {
+                   try {
+                       Gson gson = new Gson();
+                       JsonParser jParser = new JsonParser();
+                       JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
 
-                byte[] imageByte = Base64.decode(jsonObject.get("PHRASE").getAsString(), Base64.DEFAULT);
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),jsonObject.get("AVATAR_IMG").getAsString()));
+                       actorPhrase = jsonObject.get("PHRASE").getAsString();
+                       profileImage  = jsonObject.get("AVATAR_IMG").getAsString();
+                   }
+                   catch(Exception e){
+
+                       profileImage = platformComponentProfile.getExtraData();
+                   }
+
+
+               }
+
+                byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),actorPhrase));
             }
 
             //Create a thread to save intra user cache list
@@ -1471,12 +1487,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 //profile images and  phrase pass on extra data
 
-                String PHRASE ="";
-                String AVATAR_IMG = "";
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(PHRASE, actor.getPhrase());
-                jsonObject.addProperty(AVATAR_IMG , Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                jsonObject.addProperty("PHRASE", actor.getPhrase());
+                jsonObject.addProperty("AVATAR_IMG" , Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
                 PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
