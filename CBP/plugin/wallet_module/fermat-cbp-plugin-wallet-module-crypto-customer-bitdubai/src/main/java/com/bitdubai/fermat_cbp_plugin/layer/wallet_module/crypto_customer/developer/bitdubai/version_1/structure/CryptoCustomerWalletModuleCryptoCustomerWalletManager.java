@@ -167,7 +167,13 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      */
     @Override
     public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) {
-        return null;
+        //TODO: Implementar
+        Collection<NegotiationLocations> negotiationLocations = null;
+        if (negotiationType.getCode() == NegotiationType.PURCHASE.getCode())
+        {
+
+        }
+        return negotiationLocations;
     }
 
     @Override
