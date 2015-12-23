@@ -18,12 +18,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
@@ -43,27 +42,27 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
-    public static final String INTRA_USER_SELECTED = "intra_user";
+    public static final String ACTOR_SELECTED = "actor_selected";
+
     private static final int MAX = 20;
+
     protected final String TAG = "ConnectionNotificationsFragment";
+
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
-    private LinearLayout empty;
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
+    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
     private LinearLayout emptyView;
-    private IntraUserModuleManager moduleManager;
+    private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private IntraUserInformation intraUserInformation;
-    private List<IntraUserInformation> lstIntraUserInformations;
-    private IntraUserLoginIdentity identity;
-    private ProgressDialog dialog;
+    private CryptoBrokerCommunityInformation cryptoBrokerInformation;
+    private List<CryptoBrokerCommunityInformation> cryptoBrokerInformationList;
 
     /**
      * Create a new instance of this fragment
@@ -79,11 +78,11 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        intraUserSubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-        intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
-        moduleManager = intraUserSubAppSession.getModuleManager();
+        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
+        cryptoBrokerInformation = (CryptoBrokerCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        lstIntraUserInformations = new ArrayList<>();
+        cryptoBrokerInformationList = new ArrayList<>();
     }
 
 
@@ -101,7 +100,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
             layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new AppNotificationAdapter(getActivity(),lstIntraUserInformations);
+            adapter = new AppNotificationAdapter(getActivity(), cryptoBrokerInformationList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
 
@@ -124,18 +123,15 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return rootView;
     }
 
-    private synchronized ArrayList<IntraUserInformation> getMoreData() {
-        ArrayList<IntraUserInformation> dataSet = new ArrayList<>();
+    private synchronized ArrayList<CryptoBrokerCommunityInformation> getMoreData() {
+
+        ArrayList<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
 
-            dataSet.addAll(moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-            //offset = dataSet.size();
-//
-//            lstIntraUserInformations.addAll(moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-//            adapter.notifyDataSetChanged();
+            dataSet.addAll(moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset));
 
-        } catch (CantGetIntraUsersListException e) {
+        } catch (CantListCryptoBrokersException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,14 +140,15 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return dataSet;
     }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-//        /**
-//         * add navigation header
-//         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
-//
-//        /**
-//         * Navigation view items
-//         */
+
+        try {
+            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
+        } catch (Exception ex) {
+
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+
         AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
         setNavigationDrawer(appNavigationAdapter);
     }
@@ -182,9 +179,9 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
-                            adapter.changeDataSet(lstIntraUserInformations);
-                            if (lstIntraUserInformations.isEmpty()) {
+                            cryptoBrokerInformationList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
+                            adapter.changeDataSet(cryptoBrokerInformationList);
+                            if (cryptoBrokerInformationList.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
@@ -215,18 +212,20 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
 
 
     @Override
-    public void onItemClickListener(IntraUserInformation data, int position) {
+    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
         try {
-            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
+            //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoBrokerCommunitySubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.show();
-        } catch (CantAcceptRequestException | CantGetActiveLoginIdentityException e) {
+        } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
+            Toast.makeText(getActivity(), "TODO ACCEPT but.. ERROR! ->", Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
-    public void onLongItemClickListener(IntraUserInformation data, int position) {
+    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
     }
 

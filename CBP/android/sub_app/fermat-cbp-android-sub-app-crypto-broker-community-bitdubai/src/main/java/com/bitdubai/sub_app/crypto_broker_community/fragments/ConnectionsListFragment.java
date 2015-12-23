@@ -19,10 +19,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppFriendsListAdapter;
@@ -40,9 +41,9 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsListFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+public class ConnectionsListFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
-    public static final String INTRA_USER_SELECTED = "intra_user";
+    public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
     private int offset = 0;
@@ -53,11 +54,11 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     private boolean isRefreshing = false;
     private View rootView;
     private AppFriendsListAdapter adapter;
-    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
+    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
     private LinearLayout emptyView;
-    private IntraUserModuleManager moduleManager;
+    private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationArrayList;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
@@ -66,10 +67,10 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        intraUserSubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-        moduleManager = intraUserSubAppSession.getModuleManager();
+        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
+        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        lstIntraUserInformations = new ArrayList<>();
+        cryptoBrokerCommunityInformationArrayList = new ArrayList<>();
     }
 
     @Override
@@ -82,7 +83,7 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new AppFriendsListAdapter(getActivity(), lstIntraUserInformations);
+            adapter = new AppFriendsListAdapter(getActivity(), cryptoBrokerCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
@@ -96,8 +97,8 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
         return rootView;
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
         AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
         setNavigationDrawer(appNavigationAdapter);
     }
@@ -128,9 +129,9 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
-                            adapter.changeDataSet(lstIntraUserInformations);
-                            if (lstIntraUserInformations.isEmpty()) {
+                            cryptoBrokerCommunityInformationArrayList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
+                            adapter.changeDataSet(cryptoBrokerCommunityInformationArrayList);
+                            if (cryptoBrokerCommunityInformationArrayList.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
@@ -159,11 +160,11 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
         }
     }
 
-    private synchronized List<IntraUserInformation> getMoreData() {
-        List<IntraUserInformation> dataSet = new ArrayList<>();
+    private synchronized List<CryptoBrokerCommunityInformation> getMoreData() {
+        List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
         try {
-            dataSet.addAll(moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-        } catch (CantGetIntraUsersListException | CantGetActiveLoginIdentityException e) {
+            dataSet.addAll(moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset));
+        } catch (CantListCryptoBrokersException | CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
         }
 
@@ -185,13 +186,13 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     }
 
     @Override
-    public void onItemClickListener(IntraUserInformation data, int position) {
-        appSession.setData(INTRA_USER_SELECTED, data);
+    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+        appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(IntraUserInformation data, int position) {
+    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
     }
 }
