@@ -86,8 +86,17 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
+        openNegotiationList = new ArrayList<>();
+        marketExchangeRateSummaryList = new ArrayList<>();
+        Object configureData = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
+        if (configureData == null) {
+            startWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), appSession);
+        }else{
+            openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
+        }
+
+
     }
 
 
@@ -95,10 +104,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        Object configureData = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
-        if (configureData == null) {
-            startWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), appSession);
-        }
+
 
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
@@ -177,9 +183,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
-            // setting up event listeners
-            adapter.setChildItemFermatEventListeners(this);
+                adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
+                // setting up event listeners
+                adapter.setChildItemFermatEventListeners(this);
         }
         return adapter;
     }

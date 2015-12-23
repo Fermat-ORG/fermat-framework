@@ -163,7 +163,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         referenceWalletSession =(ReferenceWalletSession) appSession;
-        setRetainInstance(true);
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
