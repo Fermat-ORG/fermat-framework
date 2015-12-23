@@ -120,6 +120,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
@@ -678,6 +679,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected void setActionBarProperties(String title, Activity activity) {
         SpannableString s = new SpannableString(title);
+
 
 
 //        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
@@ -1333,8 +1335,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     protected void bottomNavigationEnabled(boolean enabled){
         if(enabled) {
-
-
             bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(),null);
         }
     }
@@ -1898,7 +1898,13 @@ public abstract class FermatActivity extends AppCompatActivity
             case ACTIVITY_TYPE_WALLET:
                 WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
                 Activity activity = walletNavigationStructure.getLastActivity();
-                paintSideMenu(activity,activity.getSideMenu(),FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(),this));
+                AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this);
+                try {
+                    appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
+                } catch (CantGetSelectedActorIdentityException e) {
+                    e.printStackTrace();
+                }
+                paintSideMenu(activity,activity.getSideMenu(),appsConnections);
                 paintFooter(activity.getFooter());
                 break;
             case ACTIVITY_TYPE_SUB_APP:
@@ -1927,6 +1933,7 @@ public abstract class FermatActivity extends AppCompatActivity
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case MONEY_REQUEST:
+
                         break;
                     case CLOUD_CONNECTED_NOTIFICATION:
                         launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
@@ -2060,95 +2067,6 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-    //TODO: de acá para abajo tiene que desaparecer
 
-    /**
-     * Assest Issuer Wallet Module
-     */
-    public AssetIssuerWalletSupAppModuleManager getAssetIssuerWalletModuleManager() {
-
-        try {
-            return (AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.ASSET_ISSUER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Asset User Wallet Module
-     */
-    public AssetUserWalletSubAppModuleManager getAssetUserWalletModuleManager() {
-
-        try {
-            return (AssetUserWalletSubAppModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.ASSET_USER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
-    /**
-     * Asset Redeem Point
-     */
-    public AssetRedeemPointWalletSubAppModule getAssetRedeemPointWalletModuleManager() {
-        try {
-            return (AssetRedeemPointWalletSubAppModule) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.DIGITAL_ASSET_PLATFORM,
-                            Layers.WALLET_MODULE,
-                            Plugins.REDEEM_POINT,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
 
 }

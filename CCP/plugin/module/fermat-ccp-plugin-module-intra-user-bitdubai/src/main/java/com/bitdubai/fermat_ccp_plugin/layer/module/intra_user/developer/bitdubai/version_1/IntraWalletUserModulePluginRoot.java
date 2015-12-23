@@ -299,11 +299,31 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
         try {
-            return intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
-        } catch (ErrorSearchingCacheSuggestionsException e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT", e, "", "Error on intra user network service");
-        } catch (Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT", e, "", "Unknown Error");
+
+            List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+
+            List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
+            intraUserInformationList = intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max,offset);
+
+
+            for (IntraUserInformation intraUser : intraUserInformationList) {
+
+                //get connection state status
+                ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+
+                //return intra user information - if not connected - status return null
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                intraUserInformationModuleList.add(intraUserInformation);
+            }
+
+            return intraUserInformationModuleList;
+        }
+        catch (ErrorSearchingCacheSuggestionsException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+
         }
     }
 
@@ -421,18 +441,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws IntraUserDisconnectingFailedException
      */
     @Override
-    public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
-        try {
+    public void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
+        try
+        {
             /**
              *Call Actor Intra User to disconnect request connection
              */
-            this.intraWalletUserManager.disconnectIntraWalletUser(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraWalletUserManager.disconnectIntraWalletUser(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
             /**
              *Call Network Service Intra User to disconnect request connection
              */
 
-            this.intraUserNertwokServiceManager.disconnectIntraUSer(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
         } catch (CantDisconnectIntraWalletUserException e) {
             throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey, e, "", "");
@@ -766,13 +787,14 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
                 intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                intraUserLoginXml.persistToMedia();
-            } catch (CantPersistFileException cantPersistFileException) {
+                intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                /**
-                 * If I can not save this file, then this plugin shouldn't be running at all.
-                 */
-                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
+//                /**
+//                 * If I can not save this file, then this plugin shouldn't be running at all.
+//                 */
+//                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
+            }catch (Exception e){
+                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, e, null, null);
             }
         } catch (CantLoadFileException | CantCreateFileException e) {
 

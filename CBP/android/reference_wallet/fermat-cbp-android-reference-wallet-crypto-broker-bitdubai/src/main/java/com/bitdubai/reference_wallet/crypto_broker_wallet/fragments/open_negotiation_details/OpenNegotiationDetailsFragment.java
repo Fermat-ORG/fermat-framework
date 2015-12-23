@@ -107,8 +107,6 @@ public class OpenNegotiationDetailsFragment extends FermatWalletFragment impleme
         lastUpdateDate = (FermatTextView) rootView.findViewById(R.id.cbw_last_update_date);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_open_negotiation_details_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-
-        bindData();
     }
 
     private void configureToolbar() {
