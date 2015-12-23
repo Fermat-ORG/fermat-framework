@@ -37,6 +37,7 @@ dependencies {
     //Business Transaction
     compile project(':fermat-cbp-plugin-business-transaction-broker-ack-offline-payment-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-broker-ack-online-payment-bitdubai')
+    compile project(':fermat-cbp-plugin-business-transaction-broker-submit-offline-merchandise-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-broker-submit-online-merchandise-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-close-contract-bitdubai')
     compile project(':fermat-cbp-plugin-business-transaction-customer-offline-payment-bitdubai')

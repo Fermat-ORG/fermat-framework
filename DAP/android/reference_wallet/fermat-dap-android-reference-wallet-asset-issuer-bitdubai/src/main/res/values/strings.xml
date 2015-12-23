@@ -3,4 +3,5 @@
     <string name="action_publish">Distribute</string>
     <string name="dap_identity_alias_default_text">Asset Issuer</string>
     <string name="no_assets">No Assets</string>
+    <string name="no_users">No Users</string>
 </resources>

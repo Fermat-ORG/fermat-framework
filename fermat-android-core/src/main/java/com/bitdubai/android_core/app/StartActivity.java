@@ -265,7 +265,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 System.out.println(e.getFormattedTrace());
             }
 
-            try {
+            /*try {
                 fermatSystem.startAllRegisteredPlatforms();
 
             } catch (FermatException e) {
@@ -273,7 +273,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 System.out.println(e.getPossibleReason());
                 System.out.println(e.getFormattedContext());
                 System.out.println(e.getFormattedTrace());
-            }
+            }*/
 
             return true;
         }

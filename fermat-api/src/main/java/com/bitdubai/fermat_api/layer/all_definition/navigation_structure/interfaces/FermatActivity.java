@@ -54,4 +54,6 @@ public interface FermatActivity extends Serializable{
 
     public FermatWizard getWizard(String wizardCode);
 
+    String getBackgroundColor();
+
 }
