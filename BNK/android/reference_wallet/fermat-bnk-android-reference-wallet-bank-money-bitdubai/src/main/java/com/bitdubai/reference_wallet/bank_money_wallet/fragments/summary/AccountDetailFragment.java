@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
+package com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
