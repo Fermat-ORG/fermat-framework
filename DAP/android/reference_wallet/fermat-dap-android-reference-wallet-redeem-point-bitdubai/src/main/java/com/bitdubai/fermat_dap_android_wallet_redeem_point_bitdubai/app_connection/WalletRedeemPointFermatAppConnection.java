@@ -2,12 +2,12 @@ package com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connect
 
 import android.app.Activity;
 
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -23,7 +23,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Re
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletRedeemPointFermatAppConnection extends AppConnections{
+public class WalletRedeemPointFermatAppConnection extends AppConnections {
 
     RedeemPointIdentity redeemPointIdentity;
 
@@ -39,13 +39,13 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections{
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.REDEEM_POINT,
                 Developers.BITDUBAI,
                 new Version()
-            );
+        );
     }
 
     @Override
@@ -56,7 +56,7 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new RedeemPointWalletNavigationViewPainter(getActivity(),redeemPointIdentity);
+        return new RedeemPointWalletNavigationViewPainter(getActivity(), getActiveIdentity());
     }
 
     @Override

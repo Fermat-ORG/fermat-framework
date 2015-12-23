@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -373,20 +375,29 @@ public class AssetCryptoVaultManager  {
      * @return
      */
     public int getAvailableKeyCount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
-        //todo implement: I will use this to validate when new assets are created in the factory the amount of available keys.
-        // if the amount of keys is less than the amount of assets to create, then I will invoke deriveKeys
+        try {
+            int currentGeneratedCount = getDao().getCurrentGeneratedKeys(account.getId());
+            int currentUsedCount = getDao().getCurrentUsedKeys(account.getId());
+            return currentGeneratedCount - currentUsedCount;
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
+
         return 0;
     }
 
 
     /**
      * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
-     * @param pluginId the pluginId invoking this call. Might not have permissions to create new keys.
+     * @param plugin the pluginId invoking this call. Might not have permissions to create new keys.
      * @param account the account to derive keys from.
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */
-    public void deriveKeys(UUID pluginId, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+    public void deriveKeys(Plugins plugin, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+        if (plugin == Plugins.ASSET_ISSUING){
+            
+        }
         //todo implement when creating assets, If I create more assets than available keys, then first I need to generate new keys.
     }
 

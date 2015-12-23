@@ -6,14 +6,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
@@ -24,26 +21,32 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
+public class AcceptDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
      * UI components
      */
 
-    IntraUserInformation intraUserInformation;
+    CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
 
-    IntraUserLoginIdentity identity;
+    CryptoBrokerCommunitySelectableIdentity identity;
     private FermatTextView title;
     private FermatTextView description;
     private FermatTextView userName;
     private FermatButton positiveBtn;
     private FermatButton negativeBtn;
 
-    public AcceptDialog(Activity a, CryptoBrokerCommunitySubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
-        super(a, intraUserSubAppSession, subAppResources);
-        this.intraUserInformation = intraUserInformation;
-        this.identity = identity;
+    public AcceptDialog(Activity                                a                                 ,
+                        CryptoBrokerCommunitySubAppSession      cryptoBrokerCommunitySubAppSession,
+                        SubAppResourcesProviderManager          subAppResources                   ,
+                        CryptoBrokerCommunityInformation        cryptoBrokerInformation           ,
+                        CryptoBrokerCommunitySelectableIdentity identity                          ) {
+
+        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+
+        this.cryptoBrokerCommunityInformation = cryptoBrokerInformation;
+        this.identity             = identity               ;
     }
 
 
@@ -62,7 +65,7 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
 
         title.setText("Connect");
         description.setText("Do you want to accept");
-        userName.setText(intraUserInformation.getName());
+        userName.setText(cryptoBrokerCommunityInformation.getAlias());
 
     }
 
@@ -81,29 +84,31 @@ public class AcceptDialog extends FermatDialog<SubAppsSession, SubAppResourcesPr
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-            try {
-                if (intraUserInformation != null && identity != null) {
-                    ((CryptoBrokerCommunitySubAppSession) getSession()).getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
-                    Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+           // try {
+                if (cryptoBrokerCommunityInformation != null && identity != null) {
+                    Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
+                    //getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), information.getName(), information.getPublicKey(), information.getProfileImage());
+                    Toast.makeText(getContext(), cryptoBrokerCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (CantAcceptRequestException e) {
+            /*} catch (CantAcceptRequestException e) {
                 e.printStackTrace();
-            }
+            }*/
             dismiss();
         } else if (i == R.id.negative_button) {
-            try {
-                if (intraUserInformation != null && identity != null)
-                    ((CryptoBrokerCommunitySubAppSession) getSession()).getModuleManager().denyConnection(identity.getPublicKey(), intraUserInformation.getPublicKey());
-                else {
+            //try {
+                if (cryptoBrokerCommunityInformation != null && identity != null) {
+                    Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
+                    // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
+                } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (IntraUserConectionDenegationFailedException e) {
+            /*} catch (IntraUserConectionDenegationFailedException e) {
                 e.printStackTrace();
-            }
+            }*/
             dismiss();
         }
     }
