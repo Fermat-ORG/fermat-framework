@@ -290,16 +290,18 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              /*
              * Construct a fermat packet whit the PlatformComponentProfile
              */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                     gson.toJson(jsonObject),                                                 //Message Content
                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
+            System.out.println("WsCommunicationsCloudClientConnection - fermatPacket ="+fermatPacket.toJson());
+
             /*
              * Send the encode packet to the server
              */
-            wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacket));
 
 
         }catch (Exception e){

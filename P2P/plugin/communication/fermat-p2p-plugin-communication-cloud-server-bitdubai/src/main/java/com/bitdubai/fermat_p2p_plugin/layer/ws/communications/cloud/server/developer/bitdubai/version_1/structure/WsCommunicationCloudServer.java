@@ -367,6 +367,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
            Integer clientConnectionHashCode  = clientConnection.hashCode();
            LOG.info("clientConnectionHashCode = " + clientConnectionHashCode);
            String clientIdentity = clientIdentityByClientConnectionCache.get(clientConnectionHashCode);
+           pendingPongMessageByConnection.remove(clientConnectionHashCode);
 
            LOG.info("clientIdentity           = " + clientIdentity);
 
