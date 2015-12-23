@@ -139,10 +139,6 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
         return alias;
     }
 
-    @Override
-    public String getPhrase() {
-        return phrase;
-    }
 
     /**
      * Set the Alias
