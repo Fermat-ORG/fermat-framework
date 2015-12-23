@@ -10,14 +10,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
@@ -31,7 +32,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
+public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -49,15 +50,21 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
     CharSequence username;
     CharSequence title;
 
-    IntraUserInformation intraUserInformation;
+    CryptoBrokerCommunityInformation information;
 
-    IntraUserLoginIdentity identity;
+    CryptoBrokerCommunitySelectableIdentity identity;
 
 
-    public ConnectDialog(Activity a, CryptoBrokerCommunitySubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
-        super(a, intraUserSubAppSession, subAppResources);
-        this.intraUserInformation = intraUserInformation;
-        this.identity = identity;
+    public ConnectDialog(Activity                                a                                 ,
+                         CryptoBrokerCommunitySubAppSession      cryptoBrokerCommunitySubAppSession,
+                         SubAppResourcesProviderManager          subAppResources                   ,
+                         CryptoBrokerCommunityInformation information,
+                         CryptoBrokerCommunitySelectableIdentity identity                          ) {
+
+        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+
+        this.information = information;
+        this.identity                         = identity                        ;
     }
 
 
@@ -115,8 +122,12 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
         if (i == R.id.positive_button) {
             try {
                 //image null
-                if (intraUserInformation != null && identity != null) {
-                    ((CryptoBrokerCommunitySubAppSession) getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                if (information != null && identity != null) {
+                    getSession().getModuleManager().requestConnectionToCryptoBroker(
+                            identity,
+                            information
+                    );
+
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
                     Toast.makeText(getContext(), "Connection request send", Toast.LENGTH_SHORT).show();
@@ -127,7 +138,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (CantStartRequestException e) {
+            } catch (CantRequestConnectionException | ActorConnectionAlreadyRequestedException | ActorTypeNotSupportedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }

@@ -203,8 +203,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             });
 
-            broadcast.broadcast().get(2, TimeUnit.MINUTES);
-            broadcast.future().get(2, TimeUnit.MINUTES);
+            broadcast.broadcast().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
+            broadcast.future().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
 
             /**
              * Store this outgoing transaction in the table

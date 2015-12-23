@@ -39,16 +39,6 @@ import java.util.List;
 public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin implements
         AssetRedeemPointWalletSubAppModule {
 
-    @Override
-    public SettingsManager getSettingsManager() {
-        return null;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
-    }
-
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.REDEEM_POINT)
     AssetRedeemPointWalletManager assetRedeemPointWalletManager;
 
@@ -56,7 +46,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     private ErrorManager errorManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.REDEEM_POINT  )
-    private RedeemPointIdentityManager redeemPointIdentityManager;
+    RedeemPointIdentityManager redeemPointIdentityManager;
 
     // TODO MAKE USE OF THE ERROR MANAGER
 
@@ -74,7 +64,10 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     @Override
     public void start() throws CantStartPluginException {
         try {
-            assetRedeemPointWalletModuleManager = new AssetRedeemPointWalletModuleManager(assetRedeemPointWalletManager);
+            assetRedeemPointWalletModuleManager = new AssetRedeemPointWalletModuleManager(
+                    assetRedeemPointWalletManager,
+                    redeemPointIdentityManager);
+
             System.out.println("******* Asset Redeem Point Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
@@ -107,5 +100,20 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetIdentityRedeemPointException(e);
         }
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+//        try {
+        return assetRedeemPointWalletModuleManager.getActiveIdentities().get(0);
+//        } catch (CantGetIssuerWalletModuleException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
     }
 }
