@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -36,7 +37,6 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmissio
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmissionManager;
-import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerClosePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
@@ -63,34 +63,34 @@ public class CustomerBrokerCloseAgent  implements
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity{
 
-    private Database database;
+    private Database                                    database;
 
     private Thread                                      agentThread;
 
-    private LogManager logManager;
+    private LogManager                                  logManager;
 
-    private EventManager eventManager;
+    private EventManager                                eventManager;
 
-    private ErrorManager errorManager;
+    private ErrorManager                                errorManager;
 
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem                        pluginDatabaseSystem;
 
-    private UUID pluginId;
+    private UUID                                        pluginId;
 
     /*Represent the Network Service*/
-    private NegotiationTransmissionManager negotiationTransmissionManager;
+    private NegotiationTransmissionManager              negotiationTransmissionManager;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
+    private CustomerBrokerPurchaseNegotiation           customerBrokerPurchaseNegotiation;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    private CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager;
 
     /*Represent the Monitor Agent*/
     private MonitorAgentTransaction                     monitorAgentTransaction;
@@ -159,23 +159,23 @@ public class CustomerBrokerCloseAgent  implements
     /*INNER CLASSES*/
     private class MonitorAgentTransaction implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
 
-        private CustomerBrokerCloseSaleNegotiationTransaction customerBrokerCloseSaleNegotiationTransaction;
+        private CustomerBrokerCloseSaleNegotiationTransaction       customerBrokerCloseSaleNegotiationTransaction;
 
-        private CustomerBrokerClosePurchaseNegotiationTransaction customerBrokerClosePurchaseNegotiationTransaction;
+        private CustomerBrokerClosePurchaseNegotiationTransaction   customerBrokerClosePurchaseNegotiationTransaction;
 
-        private volatile boolean agentRunning;
+        private volatile boolean                                    agentRunning;
 
-        ErrorManager errorManager;
+        ErrorManager                                                errorManager;
 
-        PluginDatabaseSystem pluginDatabaseSystem;
+        PluginDatabaseSystem                                        pluginDatabaseSystem;
 
-        CustomerBrokerCloseNegotiationTransactionDatabaseDao customerBrokerCloseNegotiationTransactionDatabaseDao;
+        CustomerBrokerCloseNegotiationTransactionDatabaseDao        customerBrokerCloseNegotiationTransactionDatabaseDao;
+
+        boolean                                                     threadWorking;
 
         public final int SLEEP_TIME = 5000;
 
-        int iterationNumber = 0;
-
-        boolean threadWorking;
+        int iterationNumber         = 0;
 
         /*IMPLEMENTATION DealsWithPluginIdentity*/
         @Override
@@ -279,14 +279,12 @@ public class CustomerBrokerCloseAgent  implements
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 //CHANGE STATUS PURCHASE NEGOTIATION
-//                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
                                 break;
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 //CHANGE STATUS SALE NEGOTIATION
-//                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
                                 break;
                         }
 
@@ -309,7 +307,7 @@ public class CustomerBrokerCloseAgent  implements
 
                         switch (negotiationType) {
                             case PURCHASE:
-//                                //SEND CONFIRM NEGOTIATION TO BROKER
+                                //SEND CONFIRM NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 break;
                             case SALE:
@@ -351,7 +349,7 @@ public class CustomerBrokerCloseAgent  implements
                 UUID                                transmissionId;
                 NegotiationTransmission             negotiationTransmission;
                 NegotiationTransaction              negotiationTransaction;
-                NegotiationTransactionStatus        negotiationTransactionStatus;
+                NegotiationType                     negotiationType;
                 String                              negotiationXML;
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
@@ -365,34 +363,76 @@ public class CustomerBrokerCloseAgent  implements
 
                         negotiationTransmission = record.getInformation();
                         negotiationXML  = negotiationTransmission.getNegotiationXML();
-                        transmissionId  = negotiationTransmission.getTransmissionId();
                         transactionId   = negotiationTransmission.getTransactionId();
+                        negotiationType = negotiationTransmission.getNegotiationType();
 
-//                        negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
                         if (negotiationXML != null) {
 
-                            //CLOSE PURCHASE NEGOTIATION
-                            purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                            customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
-                                    customerBrokerPurchaseNegotiationManager,
-                                    customerBrokerCloseNegotiationTransactionDatabaseDao
-                            );
-                            customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
+                            switch (negotiationType) {
+                                case PURCHASE:
+                                    //CLOSE PURCHASE NEGOTIATION
+                                    purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                    customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
+                                            customerBrokerPurchaseNegotiationManager,
+                                            customerBrokerCloseNegotiationTransactionDatabaseDao
+                                    );
+                                    customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
+                                    break;
+                                case SALE:
+                                    //CLOSE SALE NEGOTIATION
+                                    saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                    customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
+                                            customerBrokerSaleNegotiationManager,
+                                            customerBrokerCloseNegotiationTransactionDatabaseDao
+                                    );
+                                    customerBrokerCloseSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
+                                    break;
+                            }
 
-                            //CLOSE SALE NEGOTIATION
-                            saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                            customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
-                                    customerBrokerSaleNegotiationManager,
-                                    customerBrokerCloseNegotiationTransactionDatabaseDao
-                            );
-                            customerBrokerCloseSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId,saleNegotiation);
-
+                            //NOTIFIED EVENT
+                            customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            //CONFIRM TRANSMISSION
+//                            negotiationTransmissionManager.confirmReception(transmissionId);
 
                         }
 
                     }
                 }
 
+                //EVENT CONFIRM NEGOTIATION
+                if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE.getCode())) {
+                    List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+                    for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
+
+                        negotiationTransmission = record.getInformation();
+                        transmissionId  = negotiationTransmission.getTransmissionId();
+                        transactionId           = negotiationTransmission.getTransactionId();
+                        negotiationType         = negotiationTransmission.getNegotiationType();
+                        negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
+
+                        if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
+
+                            switch (negotiationType) {
+                                case PURCHASE:
+                                    //CONFIRM PURCHASE NEGOTIATION
+
+                                    break;
+                                case SALE:
+                                    //CONFIRM SALE NEGOTIATION
+//                                    customerBrokerSaleNegotiationManager.
+                                    break;
+                            }
+
+                            //CONFIRM TRANSACTION
+                            customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                            //NOTIFIED EVENT
+                            customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            //CONFIRM TRANSMISSION
+                            negotiationTransmissionManager.confirmReception(transmissionId);
+
+                        }
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -122,7 +122,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
     public void confirmReception(UUID transmissionId) throws CantRegisterSendNegotiationTransmissionException {
         try {
 
-            NegotiationTransmissionState state = NegotiationTransmissionState.CONFIRM_RECEPTION;
+            NegotiationTransmissionState state = NegotiationTransmissionState.DONE;
             this.changeState(transmissionId, state);
 
         } catch (CantRegisterSendNegotiationTransmissionException e) {

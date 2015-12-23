@@ -226,9 +226,8 @@ public class NegotiationTransmissionAgent {
                         if (wsCommunicationsCloudClientManager != null) {
                             if (platformComponentProfile != null) {
 
-                                //VERIFICAR EL ACTOR_INTRA_USER
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorSend(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorReceive(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorSend(), NetworkServiceType.UNDEFINED, negotiationTransmission.getActorSendType());
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorReceive(), NetworkServiceType.UNDEFINED, negotiationTransmission.getActorReceiveType());
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
                                 // pass the negotiationTransmission to a pool waiting for the response of the other peer or server failure
                                 poolConnectionsWaitingForResponse.put(receiverPublicKey, negotiationTransmission);
@@ -241,8 +240,6 @@ public class NegotiationTransmissionAgent {
                     if (communicationNetworkServiceLocal != null) {
                         try {
 
-                            //TODO EVALUAR EL ESTATUS ACA.
-                            negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
                             System.out.print("-----------------------\n SENDING NEGOTIATION TRANSACTION RECORD To:" + receiverPublicKey + "-----------------------\n");
 
                             // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
@@ -259,12 +256,19 @@ public class NegotiationTransmissionAgent {
                                     negotiationTransmission.getActorReceiveType(),
                                     negotiationTransmission.getTransmissionType(),
                                     negotiationTransmission.getTransmissionState(),
+                                    negotiationTransmission.getNegotiationType(),
                                     negotiationTransmission.getNegotiationXML(),
                                     negotiationTransmission.getTimestamp()
                             );
                             String jsonNegotiationTransaction =gson.toJson(negotiationMessage);
 
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonNegotiationTransaction);
+                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransaction);
+
+                            if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION ){
+                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
+                            }else{
+                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
+                            }
 
                             databaseDao.changeState(negotiationTransmission);
 
@@ -389,99 +393,8 @@ public class NegotiationTransmissionAgent {
         } catch (Exception e){
             e.printStackTrace();
         }
-        /*
-        try {
-
-            //communicationNetworkServiceConnectionManager.
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
-
-            //Read all pending CryptoTransmissionMetadata from database
-            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
-            for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList){
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(negotiationTransmission.getPublicKeyActorSend());
-                if(communicationNetworkServiceLocal!=null){
-                    System.out.print("-----------------------\n RECEIVING NEGOTIATION TRANSACTION \n STATE:" +negotiationTransmission.getTransmissionState() +"\n-----------------------\n");
-                    // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
-                    // if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
-                    try {
-                        switch (negotiationTransmission.getTransmissionState()) {
-                            case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-
-                                System.out.println("Negotiation Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
-                                break;
-
-                            case CONFIRM_NEGOTIATION:
-
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Negotiation Transmission CONFIRM_NEGOTIATION");
-                                //this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getReceiverId());
-                                launchNotificationConfirm();
-                                this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
-                                break;
-
-                            // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
-                            case SENT:
-
-                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SEEN_BY_OWN_NETWORK_SERVICE);
-                                negotiationTransmission.setTransmissionType(negotiationTransmission.getTransmissionType());
-                                databaseDao.updateRegisterSendNegotiatioTransmission(negotiationTransmission);
-
-                                System.out.print("-----------------------\n RECEIVING NEGOTIATION TRANSACTION STATE: " + negotiationTransmission.getPublicKeyActorSend() + "\n-----------------------\n");
-
-                                launchNotificationNegotiation();
-
-                                //VERIFICAR SI SE ENVIA ESTO
-                                NegotiationMessage negotiationMessage = new NegotiationMessage(
-                                        negotiationTransmission.getTransmissionId(),
-                                        negotiationTransmission.getTransactionId(),
-                                        negotiationTransmission.getNegotiationId(),
-                                        negotiationTransmission.getNegotiationTransactionType(),
-                                        negotiationTransmission.getPublicKeyActorSend(),
-                                        negotiationTransmission.getActorSendType(),
-                                        negotiationTransmission.getPublicKeyActorReceive(),
-                                        negotiationTransmission.getActorReceiveType(),
-                                        negotiationTransmission.getTransmissionType(),
-                                        NegotiationTransmissionState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        negotiationTransmission.getTimestamp()
-                                );
-
-                                Gson gson = new Gson();
-                                String message = gson.toJson(negotiationMessage);
-
-                                // El destination soy yo porque me lo estan enviando, El sender es el otro y es a quien le voy a responder
-                                communicationNetworkServiceLocal.sendMessage(negotiationTransmission.getPublicKeyActorReceive(), negotiationTransmission.getPublicKeyActorSend(), message);
-                                System.out.print("-----------------------\n SENDING ANSWER STATE: \" + negotiationTransmission.getTransmissionState()\n-----------------------\n");
-                                break;
-
-                            default:
-                                //TODO: handle with an exception
-                                break;
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-        }
-        */
-    }
-/*
-    private void launchNotificationConfirm(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION);
-        IncomingNegotiationTransactionEvent eventToRaise = (IncomingNegotiationTransactionEvent) fermatEvent;
-        eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-        eventManager.raiseEvent(eventToRaise);
     }
 
-    private void launchNotificationNegotiation(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM);
-        IncomingNegotiationTransmissionConfirmNegotiationEvent eventToRaise = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
-        eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-        eventManager.raiseEvent(eventToRaise);
-    }
-*/
     private void discountWaitTime(){
         if(!waitingPlatformComponentProfile.isEmpty()) {
             for (NegotiationTransmissionPlatformComponentProfilePlusWaitTime negotiationTransmissionPlatformComponentProfilePlusWaitTime : waitingPlatformComponentProfile.values()) {

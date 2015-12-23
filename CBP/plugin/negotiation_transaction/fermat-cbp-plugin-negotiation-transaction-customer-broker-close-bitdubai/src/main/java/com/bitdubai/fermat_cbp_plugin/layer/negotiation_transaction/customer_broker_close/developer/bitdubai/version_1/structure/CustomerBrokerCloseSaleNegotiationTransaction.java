@@ -38,6 +38,8 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
+            //TODO ACA SE DEBE AGREGAR LA DIRECCION BTC A LAS CLAUSULAS SI EL PAGO ES BTC. CONVERSAR CON ANGEL COMO HACER ESTE PASO
+
             //CREATE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.createCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
@@ -61,6 +63,8 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
 
     public void receiveSaleNegotiationTranasction(UUID transactionId, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation)  throws CantCloseSaleNegotiationTransactionException{
         try {
+
+            //TODO ACA SE DEBE AGREGAR LA DIRECCION BTC A LAS CLAUSULAS SI EL PAGO ES BTC. CONVERSAR CON ANGEL COMO HACER ESTE PASO
 
             //CREATE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.createCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
