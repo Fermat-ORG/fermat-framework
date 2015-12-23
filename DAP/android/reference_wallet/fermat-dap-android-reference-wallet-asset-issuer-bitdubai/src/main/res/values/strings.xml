@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Asset Issuer Wallet</string>
     <string name="action_publish">Distribute</string>
-
+    <string name="dap_identity_alias_default_text">Asset Issuer</string>
     <string name="no_assets">No Assets</string>
 </resources>
