@@ -338,7 +338,7 @@ public class IntraWalletUserActorDao {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
 
             // 2) Find all Intra Users.
-            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserConnectedPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserConnectedPublicKey, DatabaseFilterType.EQUAL);
 
 
             table.loadToMemory();
