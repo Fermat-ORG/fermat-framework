@@ -509,7 +509,7 @@ public class BitcoinWalletBasicWalletDao {
             /**
              *  I will load the information of table into a memory structure, filter for transaction id
              */
-            bitcoinwalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+            bitcoinwalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
 
             bitcoinwalletTable.loadToMemory();
 

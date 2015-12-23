@@ -392,7 +392,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
                         bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
                         //if the transaction is a payment request, rollback it state too
-                        lauchNotification();
+                        notificateRollbackToGUI(transaction);
                         if (transaction.getRequestId() != null)
                             revertPaymentRequest(transaction.getRequestId());
                         break;
@@ -432,11 +432,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
             }
         }
 
-        private void lauchNotification(){
-            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
-            ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
-            eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
-        }
 
         private void notificateRollbackToGUI(OutgoingIntraActorTransactionWrapper transactionWrapper){
             FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
