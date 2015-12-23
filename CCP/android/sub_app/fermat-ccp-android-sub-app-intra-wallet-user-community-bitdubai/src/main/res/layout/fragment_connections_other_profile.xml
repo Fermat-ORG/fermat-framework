@@ -73,7 +73,7 @@
             android:background="@drawable/bg_shape_grey"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Request Send"
+            android:text="Request Sent"
             android:textColor="#ffffff"
             android:visibility="gone"
             tools:ignore="HardcodedText" />
