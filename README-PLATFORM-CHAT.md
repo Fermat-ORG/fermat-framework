@@ -31,9 +31,9 @@ Los objetos que manejará la Sub-App para disparar acciones o mostrar infomracio
   6. ContactsList: Lista para administrar contactos propios.<br>
   7. AddContactButton: Botón para agregar contacto.<br>
   8. EditContactButton: Botón para editar contacto.<br>
-  9.DeleteContactButton: Botón para eliminar contacto.<br>
-  10.ContactInfoForm: Form con la info del contacto (detalle).<br>
-  11.CheckMessageSymbol: Marca de mensaje leido.<br>
+  9. DeleteContactButton: Botón para eliminar contacto.<br>
+  10. ContactInfoForm: Form con la info del contacto (detalle).<br>
+  11. CheckMessageSymbol: Marca de mensaje leido.<br>
   
 ## Module
 Mostrar Conexiones (Sub-App 1): Ejecuta un metodo para listar las conexiones.<br>
@@ -83,7 +83,10 @@ Tiene la siguiente base de datos:
 **Creation Datetime**
 
 ## Network Service
-El network service estará compuesto por 2 elementos: <br>
+Esta funcionalidad cuenta con un NS que se encarga del envío y recepción de mensajes, y gestionar los estatus de los mismos. A su vez, se consumirán otros servicios relacionados a la consulta de las conexiones dentro de fermat entre los actores. 
+
+
+----
 **Network Service Remoto**
 Encargado de gestionar la data relacionada a las conexiones y los 
 estatus de los mensajes enviados a través de la plataforma en el servidor.<br>
@@ -91,5 +94,5 @@ estatus de los mensajes enviados a través de la plataforma en el servidor.<br>
 Encargado de gestionar desde el dispositivo (o cliente) las notificaciones y envio de los mensajes.<br>
 
 El protocolo para los mensajes de texto propuesto a utilizar es XMPP. Se trata de un estandar abierto y ampliamente utilizado por aplicaciones similares.
-
+----
 
