@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -494,7 +495,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             BrokerSubmitMerchandiseConfirmed brokerSubmitMerchandiseConfirmed = (BrokerSubmitMerchandiseConfirmed) fermatEvent;
             brokerSubmitMerchandiseConfirmed.setSource(EventSource.BROKER_SUBMIT_ONLINE_MERCHANDISE);
             brokerSubmitMerchandiseConfirmed.setContractHash(contractHash);
-            brokerSubmitMerchandiseConfirmed.setMerchandiseType(PaymentType.CRYPTO_MONEY);
+            brokerSubmitMerchandiseConfirmed.setMerchandiseType(CurrencyType.CRYPTO_MONEY);
             eventManager.raiseEvent(brokerSubmitMerchandiseConfirmed);
         }
 
