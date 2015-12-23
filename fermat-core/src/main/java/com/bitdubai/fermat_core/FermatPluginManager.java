@@ -2,27 +2,30 @@ package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantPausePluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantResumePluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStopPluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CyclicalRelationshipFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.UnexpectedServiceStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantPausePluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantResumePluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStopPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CyclicalRelationshipFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.UnexpectedServiceStatusException;
 
 import java.util.List;
 
@@ -139,6 +142,8 @@ public final class FermatPluginManager {
 
             startPlugin(abstractPlugin);
 
+            checkDatabaseManagerForDevelopers(abstractPlugin);
+
             if (abstractPlugin.getManager() != null)
                 return abstractPlugin.getManager();
             else
@@ -164,6 +169,30 @@ public final class FermatPluginManager {
         }
     }
 
+    private DealsWithDatabaseManagers developerModule;
+
+    @Deprecated // TODO make this correct. Annotation: @DatabaseManagerForDevelopers think about it.
+    private void checkDatabaseManagerForDevelopers(final AbstractPlugin abstractPlugin) {
+
+        try {
+            if (developerModule == null)
+                developerModule = (DealsWithDatabaseManagers) startPluginAndReferences(
+                        new PluginVersionReference(
+                                Platforms .PLUG_INS_PLATFORM,
+                                Layers    .SUB_APP_MODULE   ,
+                                Plugins   .DEVELOPER        ,
+                                Developers.BITDUBAI         ,
+                                new Version()
+                        )
+                );
+
+            developerModule.addDatabaseManager(abstractPlugin.getPluginVersionReference(), (DatabaseManagerForDevelopers) abstractPlugin);
+
+        } catch (Exception e) {
+            System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
+            System.out.println(e.toString());
+        }
+    }
 
     public final void startPluginAndReferences(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
 
