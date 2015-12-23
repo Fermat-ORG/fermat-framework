@@ -40,8 +40,9 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             UUID transactionId = UUID.randomUUID();
 
             //TODO ACA SE DEBE AGREGAR LA DIRECCION BTC A LAS CLAUSULAS SI LA MERCANCIA ES BTC. CONVERSAR CON ANGEL COMO HACER ESTE PASO
+            saveCryptoAdreess(customerBrokerPurchaseNegotiation);
 
-            //CREATE NEGOTIATION
+            //CLOSE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
@@ -68,8 +69,9 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
         try {
 
             //TODO ACA SE DEBE AGREGAR LA DIRECCION BTC A LAS CLAUSULAS SI LA MERCANCIA ES BTC. CONVERSAR CON ANGEL COMO HACER ESTE PASO
+            saveCryptoAdreess(customerBrokerPurchaseNegotiation);
 
-            //CREATE NEGOTIATION
+            //CLOSE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
@@ -88,5 +90,14 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             throw new CantClosePurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
 
+    }
+
+    private void saveCryptoAdreess(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation){
+
+    }
+
+
+    private boolean isCryptoCurrency(){
+        return true;
     }
 }

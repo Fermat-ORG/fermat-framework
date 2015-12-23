@@ -226,8 +226,14 @@ public class NegotiationTransmissionAgent {
                         if (wsCommunicationsCloudClientManager != null) {
                             if (platformComponentProfile != null) {
 
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorSend(), NetworkServiceType.UNDEFINED, negotiationTransmission.getActorSendType());
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorReceive(), NetworkServiceType.UNDEFINED, negotiationTransmission.getActorReceiveType());
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
+                                        negotiationTransmission.getPublicKeyActorSend(),
+                                        NetworkServiceType.UNDEFINED,
+                                        negotiationTransmission.getActorSendType());
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
+                                        negotiationTransmission.getPublicKeyActorReceive(),
+                                        NetworkServiceType.UNDEFINED,
+                                        negotiationTransmission.getActorReceiveType());
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
                                 // pass the negotiationTransmission to a pool waiting for the response of the other peer or server failure
                                 poolConnectionsWaitingForResponse.put(receiverPublicKey, negotiationTransmission);
