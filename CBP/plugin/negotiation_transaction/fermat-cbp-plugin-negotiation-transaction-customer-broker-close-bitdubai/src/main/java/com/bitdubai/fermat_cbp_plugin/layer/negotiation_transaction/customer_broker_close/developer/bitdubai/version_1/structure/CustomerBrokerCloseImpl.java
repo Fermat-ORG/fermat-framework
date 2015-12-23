@@ -1,20 +1,20 @@
-package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 
 import java.util.UUID;
 
 /**
- * Created by Yordin Alayn on 16.12.15.
+ * Created by Yordin Alayn on 22.12.15.
  */
-public class CustomerBrokerUpdateImpl implements CustomerBrokerUpdate{
+public class CustomerBrokerCloseImpl implements CustomerBrokerClose {
 
-    private static final int HASH_PRIME_NUMBER_PRODUCT  = 1019;
-    private static final int HASH_PRIME_NUMBER_ADD      = 1811;
+    private static final int HASH_PRIME_NUMBER_PRODUCT  = 2017;
+    private static final int HASH_PRIME_NUMBER_ADD      = 3203;
 
-    private UUID                            transactionId;
+    private UUID transactionId;
     private UUID                            negotiationId;
     private String                          publicKeyBroker;
     private String                          publicKeyCustomer;
@@ -23,7 +23,7 @@ public class CustomerBrokerUpdateImpl implements CustomerBrokerUpdate{
     private String                          negotiationXML;
     private long timestamp;
 
-    public CustomerBrokerUpdateImpl(
+    public CustomerBrokerCloseImpl(
             UUID                            transactionId,
             UUID                            negotiationId,
             String                          publicKeyBroker,
@@ -53,16 +53,16 @@ public class CustomerBrokerUpdateImpl implements CustomerBrokerUpdate{
 
     public NegotiationTransactionStatus getStatusTransaction(){ return this.negotiationTransactionStatus; }
 
-    public NegotiationType getNegotiationType(){ return this.negotiationType; }
+    public NegotiationType getNegotiationType(){ return this.negotiationType;}
 
     public String getNegotiationXML(){ return this.negotiationXML; }
 
     public long getTimestamp(){ return this.timestamp; }
 
     public boolean equals(Object o){
-        if(!(o instanceof CustomerBrokerUpdateImpl))
+        if(!(o instanceof CustomerBrokerCloseImpl))
             return false;
-        CustomerBrokerUpdateImpl compare = (CustomerBrokerUpdateImpl) o;
+        CustomerBrokerCloseImpl compare = (CustomerBrokerCloseImpl) o;
         return publicKeyBroker.equals(compare.getPublicKeyBroker()) && publicKeyCustomer.equals(compare.getPublicKeyCustomer());
     }
 
