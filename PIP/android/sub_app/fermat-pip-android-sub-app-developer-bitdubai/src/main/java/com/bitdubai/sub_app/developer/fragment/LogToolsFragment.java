@@ -175,12 +175,6 @@ public class LogToolsFragment extends FermatFragment {
 
     }
 
-
-    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
-        this.developerSubAppSession = developerSubAppSession;
-    }
-
-
     public class AppListAdapter extends ArrayAdapter<Loggers> {
 
 
@@ -225,7 +219,6 @@ public class LogToolsFragment extends FermatFragment {
                 holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        String loggerText = holder.companyTextView.getText().toString();
                         CustomDialogClass cdd = new CustomDialogClass(getActivity(), item, item.pluginVersionReference);
                         cdd.show();
                         return true;
@@ -291,7 +284,7 @@ public class LogToolsFragment extends FermatFragment {
                 "Not logging",
                 "Minimal logging",
                 "Moderate logging",
-                "Agressive logging"
+                "Aggressive logging"
         };
 
         List<String> lstEnum;
