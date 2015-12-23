@@ -8,6 +8,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -106,6 +108,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         referenceWalletSession = (ReferenceWalletSession) appSession;
+        setHasOptionsMenu(true);
 
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
@@ -198,7 +201,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                InputMethodManager keyboard = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 keyboard.showSoftInput(contactName, 0);
             }
         }, 50);
@@ -380,6 +383,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                             cryptoWalletWalletContact.getActorType(),
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
                     );
+                    Toast.makeText(getActivity(),"Sending...",Toast.LENGTH_SHORT).show();
 
                 } catch (InsufficientFundsException e) {
                     Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
@@ -432,5 +436,11 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,0);
         super.onDestroy();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
     }
 }

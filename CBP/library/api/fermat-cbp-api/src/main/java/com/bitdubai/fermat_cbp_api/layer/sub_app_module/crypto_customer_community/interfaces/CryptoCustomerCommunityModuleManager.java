@@ -102,7 +102,7 @@ public interface CryptoCustomerCommunityModuleManager extends ModuleManager<Ferm
     public List<CryptoCustomerInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 
     /**
-     * The method <code>getCryptoBrokersWaitingTheirAcceptance</code> list the crypto Customer that haven't
+     * The method <code>listCryptoBrokersPendingRemoteAction</code> list the crypto Customer that haven't
      * answered to a sent connection request by the current logged in Customer.
      *
      * @return the list of crypto Customer that haven't answered to a sent connection request by the current

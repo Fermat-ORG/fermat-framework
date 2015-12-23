@@ -62,7 +62,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      */
     public final void addActorType(final Actors actorType){
 
-        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME;
+        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME;
         databaseTable.addFermatEnumFilter(field, actorType, DatabaseFilterType.EQUAL);
     }
 

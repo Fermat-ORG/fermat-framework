@@ -163,7 +163,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         referenceWalletSession =(ReferenceWalletSession) appSession;
-        setRetainInstance(true);
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
@@ -302,7 +301,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-
+        
         menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.ic_contact_question)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);

@@ -76,6 +76,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     protected final String TAG = "Recycler Base";
     private int offset = 0;
 
+
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
 
@@ -96,10 +97,10 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private boolean isRefreshing = false;
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
-
     private String searchName;
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private List<IntraUserInformation> dataSet = new ArrayList<>();
 
     /**
      * Create a new instance of this fragment
@@ -117,6 +118,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             // setHasOptionsMenu(true);
             // setting up  module
+
             intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -160,20 +162,37 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            swipeRefresh.setRefreshing(true);
             onRefresh();
+            /**
+             * Code to show cache data
+             */
+            /*adapter.changeDataSet(dataSet);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            }, 1500);*/
             SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-            if (!pref.getBoolean("isChecked", false)) {
-                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null);
-                presentationIntraUserCommunityDialog.show();
+            if (!pref.getBoolean("isChecked", true)) {
+                if (moduleManager.getActiveIntraUserIdentity() != null) {
+                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                        presentationIntraUserCommunityDialog.show();
+                    }
+                } else {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    presentationIntraUserCommunityDialog.show();
+                }
             }
-
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-
-
         return rootView;
     }
 
@@ -209,10 +228,8 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            if (swipeRefresh != null)
+                swipeRefresh.setRefreshing(true);
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -229,7 +246,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
-                        progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
@@ -245,7 +261,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -412,7 +427,6 @@ Updates the count of notifications in the ActionBar.
         }
         return dataSet;
     }
-
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
