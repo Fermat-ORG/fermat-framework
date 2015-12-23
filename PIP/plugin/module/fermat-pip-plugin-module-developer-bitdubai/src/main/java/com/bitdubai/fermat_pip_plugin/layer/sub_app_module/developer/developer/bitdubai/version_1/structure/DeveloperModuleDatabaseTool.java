@@ -11,6 +11,7 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseToo
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Matias Furszyfer.
@@ -20,14 +21,14 @@ import java.util.Map;
  */
 public final class DeveloperModuleDatabaseTool implements DatabaseTool {
 
-    private final Map<PluginVersionReference, DatabaseManagerForDevelopers> databaseLstPlugins;
-    private final Map<AddonVersionReference , DatabaseManagerForDevelopers> databaseLstAddons ;
+    private final ConcurrentHashMap<PluginVersionReference, DatabaseManagerForDevelopers> databaseLstPlugins;
+    private final ConcurrentHashMap<AddonVersionReference , DatabaseManagerForDevelopers> databaseLstAddons ;
 
     private final DeveloperModuleDatabaseObjectFactory                      objectFactory     ;
 
 
-    public DeveloperModuleDatabaseTool(final Map<PluginVersionReference, DatabaseManagerForDevelopers> databaseLstPlugins,
-                                       final Map<AddonVersionReference , DatabaseManagerForDevelopers> databaseLstAddons ) {
+    public DeveloperModuleDatabaseTool(final ConcurrentHashMap<PluginVersionReference, DatabaseManagerForDevelopers> databaseLstPlugins,
+                                       final ConcurrentHashMap<AddonVersionReference , DatabaseManagerForDevelopers> databaseLstAddons ) {
 
         this.databaseLstAddons  = databaseLstAddons ;
         this.databaseLstPlugins = databaseLstPlugins;

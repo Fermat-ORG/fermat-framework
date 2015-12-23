@@ -20,6 +20,7 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseTool;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleLogTool;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,16 +48,17 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
     private Map<AddonVersionReference,Addon> logManagersOnAddons;
 
     public DeveloperSubAppModulePluginRoot() {
+
         super(new PluginVersionReference(new Version()));
+
+        databaseManagersOnPlugins = new ConcurrentHashMap<>();
+        databaseManagersOnAddons  = new ConcurrentHashMap<>();
     }
 
 
     @Override
     public void addDatabaseManager(final PluginVersionReference       pluginVersionReference      ,
                                    final DatabaseManagerForDevelopers databaseManagerForDevelopers) {
-
-        if (databaseManagersOnPlugins == null)
-            databaseManagersOnPlugins = new ConcurrentHashMap<>();
 
         databaseManagersOnPlugins.putIfAbsent(
                 pluginVersionReference      ,
@@ -67,9 +69,6 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
     @Override
     public void addDatabaseManager(final AddonVersionReference        addonVersionReference       ,
                                    final DatabaseManagerForDevelopers databaseManagerForDevelopers) {
-
-        if (databaseManagersOnAddons == null)
-            databaseManagersOnAddons = new ConcurrentHashMap<>();
 
         databaseManagersOnAddons.putIfAbsent(
                 addonVersionReference       ,
