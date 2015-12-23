@@ -74,6 +74,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
+    //  JAJA, I LOVE YOU MEN
 
     public NotificationSubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -141,6 +142,12 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         fermatEventListenerIncomingRequestConnectionNotification.setEventHandler(incomingRequestConnectionNotificationHandler);
         eventManager.addListener(fermatEventListenerIncomingRequestConnectionNotification);
         listenersAdded.add(fermatEventListenerIncomingRequestConnectionNotification);
+
+        FermatEventListener outgoingIntraUserRollbackTransactionNotificationEventListener = eventManager.getNewListener(EventType.OUTGOING_ROLLBACK_NOTIFICATION);
+        FermatEventHandler outgoingRollbackNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.IncomingRequestConnectionNotificationHandler(this);
+        outgoingIntraUserRollbackTransactionNotificationEventListener.setEventHandler(outgoingRollbackNotificationHandler);
+        eventManager.addListener(outgoingIntraUserRollbackTransactionNotificationEventListener);
+        listenersAdded.add(outgoingIntraUserRollbackTransactionNotificationEventListener);
 
 
     }
@@ -215,12 +222,18 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             if(actor != null)
             {
                 notification.setImage(actor.getPhoto());
+                if(cryptoCurrency!=null)
                 notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+                else{
+                    notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
+                }
 
             }
             else
             {
+                if(cryptoCurrency!=null)
                 notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+                else notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
 
             }
 
@@ -340,6 +353,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         switch (eventSource) {
             case INCOMING_EXTRA_USER:
                 return "Received money";
+            case OUTGOING_INTRA_USER:
+                return "Transaction canceled";
             default:
                 return "Method: getTextTitleBySource - NO TIENE valor ASIGNADO para RETURN";
         }

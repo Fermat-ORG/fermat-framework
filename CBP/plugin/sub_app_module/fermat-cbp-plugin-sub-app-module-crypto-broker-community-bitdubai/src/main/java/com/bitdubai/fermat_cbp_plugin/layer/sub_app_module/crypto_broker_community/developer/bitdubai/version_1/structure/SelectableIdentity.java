@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_commun
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 
@@ -15,28 +16,36 @@ import java.util.Arrays;
  */
 public final class SelectableIdentity implements CryptoBrokerCommunitySelectableIdentity {
 
-    private final String alias       ;
-    private final String publicKey   ;
-    private final Actors actorType   ;
-    private final byte[] image       ;
+    private final String alias    ;
+    private final String publicKey;
+    private final Actors actorType;
+    private final byte[] image    ;
 
-    public SelectableIdentity(final String alias       ,
-                              final String publicKey   ,
-                              final Actors actorType   ,
-                              final byte[] image       ) {
+    public SelectableIdentity(final String alias    ,
+                              final String publicKey,
+                              final Actors actorType,
+                              final byte[] image    ) {
 
-        this.alias        = alias       ;
-        this.publicKey    = publicKey   ;
-        this.actorType    = actorType   ;
-        this.image        = image       ;
+        this.alias     = alias    ;
+        this.publicKey = publicKey;
+        this.actorType = actorType;
+        this.image     = image    ;
     }
 
     public SelectableIdentity(final CryptoBrokerIdentity cryptoBrokerIdentity) {
 
-        this.alias        = cryptoBrokerIdentity.getAlias()       ;
-        this.publicKey    = cryptoBrokerIdentity.getPublicKey()   ;
-        this.actorType    = Actors.CBP_CRYPTO_BROKER              ;
-        this.image       = cryptoBrokerIdentity.getProfileImage();
+        this.alias     = cryptoBrokerIdentity.getAlias()       ;
+        this.publicKey = cryptoBrokerIdentity.getPublicKey()   ;
+        this.actorType = Actors.CBP_CRYPTO_BROKER              ;
+        this.image     = cryptoBrokerIdentity.getProfileImage();
+    }
+
+    public SelectableIdentity(final CryptoCustomerIdentity cryptoCustomerIdentity) {
+
+        this.alias     = cryptoCustomerIdentity.getAlias()       ;
+        this.publicKey = cryptoCustomerIdentity.getPublicKey()   ;
+        this.actorType = Actors.CBP_CRYPTO_CUSTOMER              ;
+        this.image     = cryptoCustomerIdentity.getProfileImage();
     }
 
     @Override

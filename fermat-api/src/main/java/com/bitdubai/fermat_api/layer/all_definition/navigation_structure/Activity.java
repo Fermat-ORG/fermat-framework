@@ -68,6 +68,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Header header;
     private boolean fullScreen;
+    private String backgroundColor;
 
     public Activity() {
     }
@@ -265,6 +266,14 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setFullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
     }
 }
 

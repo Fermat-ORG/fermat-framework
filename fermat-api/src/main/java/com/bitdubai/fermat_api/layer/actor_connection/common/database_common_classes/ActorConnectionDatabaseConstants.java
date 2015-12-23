@@ -23,6 +23,7 @@ public final class ActorConnectionDatabaseConstants {
 
     public static final String ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME              = "connection_id"             ;
     public static final String ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_public_key";
+    public static final String ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME = "linked_identity_actor_type";
     public static final String ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                 = "public_key"                ;
     public static final String ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                 = "actor_type"                ;
     public static final String ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                      = "alias"                     ;
