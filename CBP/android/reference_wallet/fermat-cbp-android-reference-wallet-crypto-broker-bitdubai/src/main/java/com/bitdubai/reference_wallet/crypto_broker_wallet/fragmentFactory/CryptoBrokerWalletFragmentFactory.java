@@ -16,6 +16,11 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenCon
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetBankAccountsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetLocationsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetMerchandisesFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetProvidersFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 /**
@@ -54,6 +59,16 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return EarningsActivityFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS:
                 return SettingsActivityFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY:
+                return WizardPageSetIdentityFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES:
+                return WizardPageSetMerchandisesFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS:
+                return WizardPageSetProvidersFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS:
+                return WizardPageSetLocationsFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT:
+                return WizardPageSetBankAccountsFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }

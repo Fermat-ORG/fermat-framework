@@ -21,9 +21,9 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     /**
      * associate an Identity to this wallet
      *
-     * @param brokerId the Crypto Broker ID who is going to be associated with this wallet
+     * @param brokerPublicKey the Public Key of the Crypto Broker who is going to be associated with this wallet
      */
-    boolean associateIdentity(UUID brokerId);
+    boolean associateIdentity(String brokerPublicKey);
 
     /**
      * @return a summary of the current market rate for the different currencies the broker have as stock
