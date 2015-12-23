@@ -27,7 +27,7 @@ public class SpecialistSelector {
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
 
         CryptoAddress cryptoAddress = new CryptoAddress();
-        //todo si la direccion del to es vacia, poner la del from
+
         cryptoAddress.setAddress(cryptoTransaction.getAddressTo().getAddress());
         cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
 
