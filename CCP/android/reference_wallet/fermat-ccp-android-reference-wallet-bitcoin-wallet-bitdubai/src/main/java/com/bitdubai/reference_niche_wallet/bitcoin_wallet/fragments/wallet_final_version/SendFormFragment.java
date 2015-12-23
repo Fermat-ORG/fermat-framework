@@ -380,6 +380,7 @@ public class SendFormFragment extends FermatWalletFragment implements View.OnCli
                             cryptoWalletWalletContact.getActorType(),
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
                     );
+                    Toast.makeText(getActivity(),"Sending...",Toast.LENGTH_SHORT).show();
 
                 } catch (InsufficientFundsException e) {
                     Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
