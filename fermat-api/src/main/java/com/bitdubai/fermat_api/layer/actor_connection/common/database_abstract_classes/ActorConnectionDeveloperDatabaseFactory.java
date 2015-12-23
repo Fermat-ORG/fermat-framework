@@ -127,8 +127,8 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
 
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME);
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                );
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             );

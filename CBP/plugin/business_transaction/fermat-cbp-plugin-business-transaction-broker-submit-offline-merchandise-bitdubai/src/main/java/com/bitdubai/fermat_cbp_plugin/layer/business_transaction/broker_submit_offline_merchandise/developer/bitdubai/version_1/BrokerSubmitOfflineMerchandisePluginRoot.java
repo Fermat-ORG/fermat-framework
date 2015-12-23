@@ -32,11 +32,14 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.event_handler.BrokerSubmitOfflineMerchandiseRecorderService;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -70,6 +73,12 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
     private TransactionTransmissionManager transactionTransmissionManager;
+
+    //TODO: Need reference to contract plugin
+    private BankMoneyDestockManager bankMoneyDestockManager;
+
+    //TODO: Need reference to contract plugin
+    private CashMoneyDestockManager cashMoneyDestockManager;
 
     //TODO: Need reference to contract plugin
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
@@ -236,7 +245,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             /**
              * Init monitor Agent
              */
-            /*BrokerSubmitOnlineMerchandiseMonitorAgent brokerSubmitOnlineMerchandiseMonitorAgent=new BrokerSubmitOnlineMerchandiseMonitorAgent(
+            BrokerSubmitOfflineMerchandiseMonitorAgent brokerSubmitOfflineMerchandiseMonitorAgent=new BrokerSubmitOfflineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -245,9 +254,10 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
-                    outgoingIntraActorManager,
-                    cryptoMoneyDeStockManager);
-            brokerSubmitOnlineMerchandiseMonitorAgent.start();*/
+                    cashMoneyDestockManager,
+                    bankMoneyDestockManager
+                    );
+            brokerSubmitOfflineMerchandiseMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker submit offline merchandise starting");

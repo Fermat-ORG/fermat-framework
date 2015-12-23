@@ -7,6 +7,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class AssetIssuerWalletModuleManager {
     AssetIssuerWalletManager assetIssuerWalletManager;
     ActorAssetUserManager    actorAssetUserManager;
+    IdentityAssetIssuerManager identityAssetIssuerManager;
     AssetDistributionManager assetDistributionManager;
     UUID                     pluginId;
     PluginFileSystem         pluginFileSystem;
@@ -35,12 +38,13 @@ public class AssetIssuerWalletModuleManager {
      * constructor
      * @param assetIssuerWalletManager
      */
-    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager,ActorAssetUserManager actorAssetUserManager, AssetDistributionManager assetDistributionManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
-        this.assetIssuerWalletManager = assetIssuerWalletManager;
-        this.actorAssetUserManager    = actorAssetUserManager;
-        this.assetDistributionManager = assetDistributionManager;
-        this.pluginId                 = pluginId;
-        this.pluginFileSystem         = pluginFileSystem;
+    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager,ActorAssetUserManager actorAssetUserManager, AssetDistributionManager assetDistributionManager, IdentityAssetIssuerManager identityAssetIssuerManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
+        this.assetIssuerWalletManager   = assetIssuerWalletManager;
+        this.actorAssetUserManager      = actorAssetUserManager;
+        this.assetDistributionManager   = assetDistributionManager;
+        this.identityAssetIssuerManager = identityAssetIssuerManager;
+        this.pluginId                   = pluginId;
+        this.pluginFileSystem           = pluginFileSystem;
     }
 
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey) throws CantLoadWalletException{
@@ -104,5 +108,15 @@ public class AssetIssuerWalletModuleManager {
             i++;
         }
         return hashMap;
+    }
+
+    public List<IdentityAssetIssuer> getActiveIdentities() {
+
+        try{
+            return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

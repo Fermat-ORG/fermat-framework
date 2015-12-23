@@ -126,7 +126,6 @@ public class ActorConnectionEventActions {
             final CryptoBrokerLinkedActorIdentity linkedIdentity = new CryptoBrokerLinkedActorIdentity(
                     request.getDestinationPublicKey(),
                     Actors.CBP_CRYPTO_BROKER
-
             );
             final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
@@ -134,7 +133,6 @@ public class ActorConnectionEventActions {
                     request.getRequestId()       ,
                     linkedIdentity               ,
                     request.getSenderPublicKey() ,
-                    request.getSenderActorType() ,
                     request.getSenderAlias()     ,
                     request.getSenderImage()     ,
                     connectionState              ,

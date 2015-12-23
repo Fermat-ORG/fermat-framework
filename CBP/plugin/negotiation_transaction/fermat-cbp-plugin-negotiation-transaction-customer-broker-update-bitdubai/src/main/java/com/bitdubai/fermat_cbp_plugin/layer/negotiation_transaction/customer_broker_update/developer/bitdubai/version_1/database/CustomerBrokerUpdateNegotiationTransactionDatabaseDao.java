@@ -322,10 +322,11 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
         String                          publicKeyBroker     = record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_BROKER_COLUMN_NAME);
         String                          publicKeyCustomer   = record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
         NegotiationTransactionStatus    status              = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME));
+        NegotiationType                 negotiationType     = NegotiationType.getByCode(record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_TYPE_COLUMN_NAME));
         String                          negotiationXML      = record.getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_XML_COLUMN_NAME);
         long                            timestamp           = record.getLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME);
 
-        return new CustomerBrokerUpdateImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status, negotiationXML,timestamp);
+        return new CustomerBrokerUpdateImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status,negotiationType,negotiationXML,timestamp);
     }
 
     private List<String> getStringList(String key,String keyColumn,String valueColumn) throws CantGetNegotiationTransactionListException {
