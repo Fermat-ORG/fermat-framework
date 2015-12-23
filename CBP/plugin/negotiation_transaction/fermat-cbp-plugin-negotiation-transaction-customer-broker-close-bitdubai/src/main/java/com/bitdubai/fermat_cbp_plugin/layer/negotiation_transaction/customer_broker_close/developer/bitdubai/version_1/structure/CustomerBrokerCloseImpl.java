@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 
 import java.util.UUID;
@@ -17,7 +18,8 @@ public class CustomerBrokerCloseImpl implements CustomerBrokerClose {
     private UUID                            negotiationId;
     private String                          publicKeyBroker;
     private String                          publicKeyCustomer;
-    private NegotiationTransactionStatus negotiationTransactionStatus;
+    private NegotiationTransactionStatus    negotiationTransactionStatus;
+    private NegotiationType                 negotiationType;
     private String                          negotiationXML;
     private long timestamp;
 
@@ -27,6 +29,7 @@ public class CustomerBrokerCloseImpl implements CustomerBrokerClose {
             String                          publicKeyBroker,
             String                          publicKeyCustomer,
             NegotiationTransactionStatus    negotiationTransactionStatus,
+            NegotiationType                 negotiationType,
             String                          negotiationXML,
             long                            timestamp
     ){
@@ -35,6 +38,7 @@ public class CustomerBrokerCloseImpl implements CustomerBrokerClose {
         this.publicKeyBroker                = publicKeyBroker;
         this.publicKeyCustomer              = publicKeyCustomer;
         this.negotiationTransactionStatus   = negotiationTransactionStatus;
+        this.negotiationType                = negotiationType;
         this.negotiationXML                 = negotiationXML;
         this.timestamp                      = timestamp;
     }
@@ -48,6 +52,8 @@ public class CustomerBrokerCloseImpl implements CustomerBrokerClose {
     public String getPublicKeyCustomer(){ return this.publicKeyCustomer; }
 
     public NegotiationTransactionStatus getStatusTransaction(){ return this.negotiationTransactionStatus; }
+
+    public NegotiationType getNegotiationType(){ return this.negotiationType;}
 
     public String getNegotiationXML(){ return this.negotiationXML; }
 

@@ -44,6 +44,12 @@ public interface NegotiationTransaction {
     NegotiationTransactionStatus getStatusTransaction();
 
     /**
+     * The method <code>getNegotiationType</code> returns the Negotiation type of the negotiation transaction
+     * @return an NegotiationType the Negotiation type of the negotiation transaction
+     */
+    NegotiationType getNegotiationType();
+
+    /**
      * The method <code>getNegotiationXML</code> returns the xml of the negotiation relationship with negotiation transaction
      * @return an String the xml of negotiation
      */
