@@ -401,9 +401,7 @@ Updates the count of notifications in the ActionBar.
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-
         try {
-
             dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
             offset = dataSet.size();
 
@@ -412,7 +410,6 @@ Updates the count of notifications in the ActionBar.
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return dataSet;
     }
 

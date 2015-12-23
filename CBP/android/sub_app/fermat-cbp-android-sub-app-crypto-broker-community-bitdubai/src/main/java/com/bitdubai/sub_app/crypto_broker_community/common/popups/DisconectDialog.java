@@ -111,6 +111,7 @@ public class DisconectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSes
                 if (cryptoBrokerCommunityInformation != null && identity != null) {
                     Toast.makeText(getContext(), "TODO DISCONNECT ->", Toast.LENGTH_SHORT).show();
                     //getSession().getModuleManager().disconnectIntraUSer(cryptoBrokerCommunityInformation.getPublicKey());
+
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);

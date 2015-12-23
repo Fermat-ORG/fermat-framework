@@ -610,8 +610,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      */
     public List<TransactionProtocolData> getPendingTransactionProtocolData() throws CantExecuteDatabaseOperationException {
-        List<TransactionProtocolData> transactionProtocolDataList = getPendingTransactionProtocolData(TransactionTypes.INCOMING);
-        transactionProtocolDataList.addAll(getPendingTransactionProtocolData(TransactionTypes.OUTGOING));
+        List<TransactionProtocolData> transactionProtocolDataList = getTransactionProtocolData(TransactionTypes.INCOMING, ProtocolStatus.TO_BE_NOTIFIED);
+        transactionProtocolDataList.addAll(getTransactionProtocolData(TransactionTypes.OUTGOING, ProtocolStatus.TO_BE_NOTIFIED));
         return transactionProtocolDataList;
     }
 
@@ -620,14 +620,20 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param transactionType
      * @return
      */
-    private List<TransactionProtocolData> getPendingTransactionProtocolData(TransactionTypes transactionType) throws CantExecuteDatabaseOperationException {
+    private List<TransactionProtocolData> getTransactionProtocolData(TransactionTypes transactionType, @Nullable ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable;
         String transactionIdColumnName;
 
         List<TransactionProtocolData> transactionProtocolDataList = new ArrayList<>();
 
         databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+
+        /**
+         * I will set the ProtocolStatus filter, If I received something.
+         */
+        if (protocolStatus != null)
+            databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
         transactionIdColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME;
 
@@ -939,5 +945,15 @@ public class BitcoinCryptoNetworkDatabaseDao {
                 throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to delete statst record.", "database issue");
             }
         }
+    }
+
+    /**
+     * gets all stored TransactionProtocol data, both incoming and outgoing and with no ProtocolStatus filter.
+     * @return
+     */
+    public List<TransactionProtocolData> getAllTransactionProtocolData() throws CantExecuteDatabaseOperationException{
+        List<TransactionProtocolData> transactionProtocolDataList = getTransactionProtocolData(TransactionTypes.INCOMING, null);
+        transactionProtocolDataList.addAll(getTransactionProtocolData(TransactionTypes.OUTGOING, null));
+        return transactionProtocolDataList;
     }
 }
