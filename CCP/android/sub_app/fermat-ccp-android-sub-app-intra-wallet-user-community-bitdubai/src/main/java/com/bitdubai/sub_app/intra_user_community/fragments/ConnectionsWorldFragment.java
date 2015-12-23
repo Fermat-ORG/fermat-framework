@@ -76,6 +76,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     protected final String TAG = "Recycler Base";
     private int offset = 0;
 
+
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
 
