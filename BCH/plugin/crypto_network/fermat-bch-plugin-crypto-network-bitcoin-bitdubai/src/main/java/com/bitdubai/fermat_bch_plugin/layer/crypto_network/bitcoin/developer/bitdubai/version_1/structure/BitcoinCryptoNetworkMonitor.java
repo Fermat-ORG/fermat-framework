@@ -176,7 +176,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -190,12 +190,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             wallet.saveToFile(walletFileName);
 
+
+
             /**
              * Broadcast it.
              */
-            TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
+            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-
                 @Override
                 public void onBroadcastProgress(double progress) {
                     System.out.println("****CryptoNetwork: progress broadcast " + progress);
@@ -205,14 +206,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             broadcast.broadcast().get(2, TimeUnit.MINUTES);
             broadcast.future().get(2, TimeUnit.MINUTES);
 
-            //todo move this inside the progress to execute when reaches 100%
             /**
              * Store this outgoing transaction in the table
              */
-            wallet.saveToFile(walletFileName);
             storeOutgoingTransaction(wallet, tx, transactionId);
 
-
+            /**
+             * saves the wallet again.
+             */
+            wallet.saveToFile(walletFileName);
         } catch (Exception exception){
             exception.printStackTrace();
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);

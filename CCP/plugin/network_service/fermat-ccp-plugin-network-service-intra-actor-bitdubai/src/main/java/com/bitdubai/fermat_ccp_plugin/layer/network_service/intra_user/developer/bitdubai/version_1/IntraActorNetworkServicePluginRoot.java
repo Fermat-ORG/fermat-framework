@@ -1481,7 +1481,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
-                        communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfile);
+                        System.out.println("----------\n Pasamos por el registro robert\n --------------------");
                     }
                 }
 

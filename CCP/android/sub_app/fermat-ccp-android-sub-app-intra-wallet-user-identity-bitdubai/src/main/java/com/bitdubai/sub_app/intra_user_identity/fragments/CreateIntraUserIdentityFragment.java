@@ -3,7 +3,9 @@ package com.bitdubai.sub_app.intra_user_identity.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -31,6 +33,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
@@ -94,7 +97,11 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         View rootLayout = inflater.inflate(R.layout.fragment_create_intra_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
-
+        SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+        if (!pref.getBoolean("isChecked", false)) {
+            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null);
+            presentationIntraUserCommunityDialog.show();
+        }
         return rootLayout;
     }
 
