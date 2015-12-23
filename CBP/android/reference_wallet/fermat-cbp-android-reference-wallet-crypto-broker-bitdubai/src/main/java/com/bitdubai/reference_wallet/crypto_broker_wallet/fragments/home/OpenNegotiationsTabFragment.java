@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -93,6 +94,11 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
+        Object configureData = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
+        if (configureData == null) {
+            startWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), appSession);
+        }
 
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
