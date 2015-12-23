@@ -265,8 +265,10 @@ public enum Plugins implements FermatPluginsEnum {
     CLOSE_CONTRACT                  ("CLC"),
     CUSTOMER_ONLINE_PAYMENT         ("CONP"),
     CUSTOMER_OFFLINE_PAYMENT        ("COFP"),
+    BROKER_ACK_OFFLINE_PAYMENT      ("BAFP"),
     BROKER_ACK_ONLINE_PAYMENT       ("BAOP"),
     CUSTOMER_ACK_ONLINE_MERCHANDISE ("CAOM"),
+    BROKER_SUBMIT_ONLINE_MERCHANDISE("BSOM"),
 
     CUSTOMER_BROKER_PURCHASE        ("CBPU"),
     CUSTOMER_BROKER_SALE            ("CBSA"),
@@ -382,8 +384,10 @@ public enum Plugins implements FermatPluginsEnum {
             case "CLC":     return CLOSE_CONTRACT                   ;
             case "CONP":    return CUSTOMER_ONLINE_PAYMENT          ;
             case "COFP":    return CUSTOMER_OFFLINE_PAYMENT         ;
+            case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT       ;
             case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
+            case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

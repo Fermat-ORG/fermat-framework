@@ -14,12 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
-import com.bitdubai.fermat_api.layer.modules.abstract_classes.AbstractModule;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantPersistModuleSettingsException;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.basic_classes.BasicSubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
@@ -41,7 +40,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppSettings> implements
+public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
         DealWithDatabaseManagers,
         DealsWithLogManagers,
         ToolManager {
@@ -106,7 +105,12 @@ public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppS
     }
 
     @Override
-    protected PluginFileSystem getPluginFileSystem() {
-        return pluginFileSystem;
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        return null;
     }
 }

@@ -11,7 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
@@ -35,6 +38,16 @@ import java.util.List;
  */
 public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin implements
         AssetRedeemPointWalletSubAppModule {
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        return null;
+    }
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.REDEEM_POINT)
     AssetRedeemPointWalletManager assetRedeemPointWalletManager;
@@ -87,7 +100,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     }
 
     @Override
-    public RedeemPointIdentity getAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException {
+    public RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException {
         try {
             return redeemPointIdentityManager.getIdentityAssetRedeemPoint();
         } catch (CantGetRedeemPointIdentitiesException e) {

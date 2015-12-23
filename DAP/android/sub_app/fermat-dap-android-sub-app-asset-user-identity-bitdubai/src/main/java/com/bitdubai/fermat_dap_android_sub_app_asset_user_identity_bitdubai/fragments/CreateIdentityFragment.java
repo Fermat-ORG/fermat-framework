@@ -172,10 +172,10 @@ public class CreateIdentityFragment extends FermatFragment {
     }
 
     private void loadIdentity(){
-        if (identitySelected.getProfileImage() != null) {
+        if (identitySelected.getImage() != null) {
             Bitmap bitmap = null;
-            if (identitySelected.getProfileImage().length > 0) {
-                bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
+            if (identitySelected.getImage().length > 0) {
+                bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             }else{
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);

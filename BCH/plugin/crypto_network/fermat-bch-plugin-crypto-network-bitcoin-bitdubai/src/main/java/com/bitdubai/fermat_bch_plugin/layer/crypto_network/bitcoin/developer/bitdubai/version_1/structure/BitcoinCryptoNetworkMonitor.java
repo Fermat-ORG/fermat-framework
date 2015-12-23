@@ -176,7 +176,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -184,15 +184,18 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
             wallet.addWalletTransaction(walletTransaction);
 
+
             /**
              * save the added transaction in the wallet
              */
             wallet.saveToFile(walletFileName);
 
+
+
             /**
              * Broadcast it.
              */
-            TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
+            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
                 @Override
                 public void onBroadcastProgress(double progress) {
@@ -203,20 +206,17 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             broadcast.broadcast().get(2, TimeUnit.MINUTES);
             broadcast.future().get(2, TimeUnit.MINUTES);
 
-            wallet.saveToFile(walletFileName);
-
             /**
              * Store this outgoing transaction in the table
              */
             storeOutgoingTransaction(wallet, tx, transactionId);
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+            /**
+             * saves the wallet again.
+             */
+            wallet.saveToFile(walletFileName);
         } catch (Exception exception){
+            exception.printStackTrace();
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
         }
 

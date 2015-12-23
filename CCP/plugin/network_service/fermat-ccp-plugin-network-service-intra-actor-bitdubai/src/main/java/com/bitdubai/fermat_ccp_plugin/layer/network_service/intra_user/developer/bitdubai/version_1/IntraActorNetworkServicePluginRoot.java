@@ -271,6 +271,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private OutgoingNotificationDao outgoingNotificationDao;
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
+
+
+    private Thread toCache;
     /**
      * Constructor
      */
@@ -783,8 +786,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          * Tell the manager to handler the new connection stablished
          */
 
-        System.out.println("LEONNNN MIRAME QUE CAPO ;) \n publickey" + remoteComponentProfile.getIdentityPublicKey() + "\n -------------------- nombre: " + remoteComponentProfile.getAlias());
-
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
@@ -862,7 +863,25 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord
+                            "MENSAJE DENIED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
+                    break;
+
+                case DISCONNECTED:
+
+                    actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+                    getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+                    actorNetworkServiceRecord.setFlagReadead(false);
+                    getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
+                    System.out.println("----------------------------\n" +
+                            "MENSAJE DISCONNECTED LLEGÓ BIEN: CASE DISCONNECTED" + actorNetworkServiceRecord
                             + "\n-------------------------------------------------");
 
 
@@ -1180,7 +1199,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //Create a thread to save intra user cache list
-            Thread toCache = new Thread(new Runnable() {
+
+            this.toCache = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try
@@ -1190,9 +1210,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
                     }
-
                 }
-            });
+            },"Thread Cache");
 
             toCache.start();
 
@@ -1425,7 +1444,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
-                        communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfile);
+                        System.out.println("----------\n Pasamos por el registro robert\n --------------------");
                     }
                 }
 

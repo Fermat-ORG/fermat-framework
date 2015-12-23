@@ -11,8 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
  */
 public final class CryptoBrokerLinkedActorIdentity extends LinkedActorIdentity {
 
-    public CryptoBrokerLinkedActorIdentity(final String publicKey) {
-        super(publicKey, Actors.CBP_CRYPTO_BROKER);
+    public CryptoBrokerLinkedActorIdentity(final String publicKey, final Actors actorType) {
+        super(publicKey, actorType);
     }
 
 }

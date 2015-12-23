@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:background="@drawable/cbw_navigation_drawer_background">
+
+
+    <LinearLayout
+        android:id="@+id/cbw_row_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:background="@color/cbw_navigation_view_menu_item_overlay">
+
+        <ImageView
+            android:id="@+id/imageView_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/btn_drawer_home_normal"
+            android:visibility="gone"
+            tools:ignore="contentDescription"
+            />
+
+        <TextView
+            android:id="@+id/textView_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingBottom="14dip"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="14dip"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            tools:text="Home">
+        </TextView>
+    </LinearLayout>
+
+</LinearLayout>

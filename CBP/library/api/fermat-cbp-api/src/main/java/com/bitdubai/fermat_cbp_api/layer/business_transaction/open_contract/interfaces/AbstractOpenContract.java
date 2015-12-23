@@ -37,7 +37,8 @@ public abstract class AbstractOpenContract {
             FiatIndex fiatIndex,
             String brokerPublicKey,
             String customerPublicKey,
-            String negotiationId)
+            String negotiationId,
+            boolean nearExpirationDatetime)
             throws InvalidParameterException, CantGetIndexException {
 
         ContractSaleRecord contractRecord=new ContractSaleRecord();
@@ -112,6 +113,8 @@ public abstract class AbstractOpenContract {
         //TODO: find the correct value, this was removed from negotiation clauses
         dayTime=0;
         contractRecord.setDayTime(dayTime);
+        //New fields
+        contractRecord.setNearExpirationDatetime(nearExpirationDatetime);
         return contractRecord;
     }
 
@@ -120,7 +123,8 @@ public abstract class AbstractOpenContract {
             FiatIndex fiatIndex,
             String brokerPublicKey,
             String customerPublicKey,
-            String negotiationId)
+            String negotiationId,
+            boolean nearExpirationDatetime)
             throws InvalidParameterException, CantGetIndexException {
 
         ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
@@ -193,6 +197,8 @@ public abstract class AbstractOpenContract {
         //Sets the contractId (hash)
         contractRecord.generateContractHash();
         contractRecord.setContractClauses(contractClauses);
+        //New Field
+        contractRecord.setNearExpirationDatetime(nearExpirationDatetime);
         return contractRecord;
     }
 
@@ -228,7 +234,8 @@ public abstract class AbstractOpenContract {
                 fiatIndex,
                 brokerPublicKey,
                 customerPublicKey,
-                negotiationId);
+                negotiationId,
+                customerBrokerPurchaseNegotiation.getNearExpirationDatetime());
         return contractRecord;
 
     }
@@ -253,7 +260,8 @@ public abstract class AbstractOpenContract {
                 fiatIndex,
                 brokerPublicKey,
                 customerPublicKey,
-                negotiationId);
+                negotiationId,
+                customerBrokerSaleNegotiation.getNearExpirationDatetime());
 
         return contractRecord;
 
