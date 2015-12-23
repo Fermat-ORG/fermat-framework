@@ -26,6 +26,15 @@ public class DesktopDatabaseTableFilter implements DatabaseTableFilter {
     private DatabaseFilterType type;
     private String value;
 
+
+    public DesktopDatabaseTableFilter(){}
+
+    public DesktopDatabaseTableFilter(String column, DatabaseFilterType type, String value){
+        this.column=column;
+        this.type=type;
+        this.value=value;
+    }
+
     /**
      * DatabaseTableFilter interface implementation.
      */

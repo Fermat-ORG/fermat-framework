@@ -29,11 +29,19 @@ public class DesktopDatabaseTableOrder implements DataBaseTableOrder {
      * DataBaseTableOrder interface implementation.
      */
 
+    public DesktopDatabaseTableOrder(){}
+
+    public DesktopDatabaseTableOrder(String columnName, DatabaseFilterOrder direction) {
+        this.columnName = columnName;
+        this.direction = direction;
+    }
+
     /**
      * <p>This method sets the column to order the query
      *
      * @param columnName
      */
+
     public void setColumName (String columnName){
         this.columnName = columnName;
     }
@@ -43,6 +51,7 @@ public class DesktopDatabaseTableOrder implements DataBaseTableOrder {
      *
      * @param direction DatabaseFilterOrder enum, ASC or DESC
      */
+
     public void setDirection (DatabaseFilterOrder direction){
         this.direction = direction;
     }
@@ -52,6 +61,7 @@ public class DesktopDatabaseTableOrder implements DataBaseTableOrder {
      *
      * @return String column name
      */
+
     @Override
     public String getColumnName() {
         return this.columnName;
