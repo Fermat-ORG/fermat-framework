@@ -96,26 +96,6 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if (item.getItemId() == R.id.action_no_filter) {
-            filterContractStatus = null;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_filter_succeed) {
-            filterContractStatus = ContractStatus.COMPLETED;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_filter_cancel) {
-            filterContractStatus = ContractStatus.CANCELLED;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }*/
 
         return super.onOptionsItemSelected(item);
     }
