@@ -21,12 +21,21 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.event_handler.CustomerAckOnlineMerchandiseRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -74,14 +83,9 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /**
-     * Represents the plugin manager.
-     */
-    //CustomerOnlinePaymentTransactionManager customerOnlinePaymentTransactionManager;
-
-    /**
      * Represents the plugin CustomerOnlinePaymentBusinessTransactionDatabaseFactory
      */
-    //CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+    CustomerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
 
     /**
      * Represents the database
@@ -97,7 +101,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
         super(new PluginVersionReference(new Version()));
     }
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     @Override
     public List<String> getClassesFullPath() {
@@ -124,19 +128,113 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeDatabaseException
+     */
+    private void initializeDb() throws CantInitializeDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.database = this.pluginDatabaseSystem.openDatabase(
+                    pluginId,
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantOpenDatabaseException);
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory =
+                    new CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.database = customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(
+                        pluginId,
+                        CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        cantOpenDatabaseException);
+                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         try {
 
             /**
+             * Initialize database
+             */
+            initializeDb();
+
+            /**
+             * Initialize Developer Database Factory
+             */
+            customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory = new
+                    CustomerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+                    pluginId);
+            customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
+
+            /**
+             * Initialize Dao
+             */
+            CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao=
+                    new CustomerAckOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
+                            pluginId,
+                            database);
+
+            /**
+             * Init event recorder service.
+             */
+            CustomerAckOnlineMerchandiseRecorderService customerAckOnlineMerchandiseRecorderService=
+                    new CustomerAckOnlineMerchandiseRecorderService(
+                            customerAckOnlineMerchandiseBusinessTransactionDao,
+                            eventManager);
+            customerAckOnlineMerchandiseRecorderService.start();
+
+            /**
              * Initialize plugin manager
              */
-        //TODO: temporal instance, only for compilation
-            this.customerAckOnlineMerchandiseTransactionManager = new CustomerAckOnlineMerchandiseTransactionManager();
+            this.customerAckOnlineMerchandiseTransactionManager = new CustomerAckOnlineMerchandiseTransactionManager(
+                    customerAckOnlineMerchandiseBusinessTransactionDao);
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Customer Ack Online Merchandise Starting");
         } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    null,
+                    null);
         }
     }
 
