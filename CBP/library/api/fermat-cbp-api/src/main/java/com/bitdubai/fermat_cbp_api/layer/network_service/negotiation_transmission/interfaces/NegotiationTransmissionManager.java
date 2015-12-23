@@ -29,7 +29,7 @@ public interface NegotiationTransmissionManager extends FermatManager, Transacti
      *
      * @param negotiationTransaction the negotiation transaction
      * @param transactionType the negotiation transaction type
-     * @throws CantSendNegotiationToCryptoCustomerException
+     * @throws CantSendNegotiationToCryptoBrokerException
      */
     void sendNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoBrokerException;
 

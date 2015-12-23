@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     private final   PlatformComponentType           actorReceiveType;
     private         NegotiationTransmissionType     transmissionType;
     private         NegotiationTransmissionState    transmissionState;
+    private final   NegotiationType                 negotiationType;
     private final   String                          negotiationXML;
     private final   long                            timestamp;
     private         boolean                         pendingFlag;
@@ -38,6 +40,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
             final PlatformComponentType         actorReceiveType,
             final NegotiationTransmissionType   transmissionType,
             final NegotiationTransmissionState  transmissionState,
+            final NegotiationType               negotiationType,
             final String                        negotiationXML,
             final long timestamp
     ){
@@ -51,6 +54,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
         this.actorReceiveType           = actorReceiveType;
         this.transmissionType           = transmissionType;
         this.transmissionState          = transmissionState;
+        this.negotiationType            = negotiationType;
         this.negotiationXML             = negotiationXML;
         this.timestamp = timestamp;
         this.pendingFlag = false;
@@ -85,6 +89,9 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
 
     @Override
     public NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
+
+    @Override
+    public NegotiationType getNegotiationType(){ return negotiationType; }
 
     @Override
     public String getNegotiationXML(){ return negotiationXML;}

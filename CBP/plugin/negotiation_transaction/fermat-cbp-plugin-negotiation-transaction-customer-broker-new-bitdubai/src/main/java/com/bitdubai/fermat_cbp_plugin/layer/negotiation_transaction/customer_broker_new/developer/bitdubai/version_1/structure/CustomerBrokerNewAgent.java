@@ -310,9 +310,6 @@ public class CustomerBrokerNewAgent implements
                                 //CHANGE STATUS PURCHASE NEGOTIATION
                                 customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
                                 break;
-                            default:
-
-                                break;
                         }
                         
                         //Update the Negotiation Transaction
@@ -338,9 +335,6 @@ public class CustomerBrokerNewAgent implements
 //                                purchaseNegotiation=(CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML,purchaseNegotiation);
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 //VIEW THAN METHOD OF NEGOTIATION CHANGE STATUS CONFITMATION
-                                break;
-                            default:
-
                                 break;
                         }
 
@@ -392,6 +386,7 @@ public class CustomerBrokerNewAgent implements
 
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
 
+                //EVENT NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
@@ -448,7 +443,7 @@ public class CustomerBrokerNewAgent implements
                     }
                 }
 
-                //EVENT CONFIRM NEGOTIATION: evalua si se envia la negociacion
+                //EVENT CONFIRM NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
@@ -476,6 +471,8 @@ public class CustomerBrokerNewAgent implements
             } catch (CantConfirmTransactionException e) {
                 e.printStackTrace();
             } catch (CantUpdateRecordException e){
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 
 import java.util.UUID;
 
@@ -72,6 +73,11 @@ public interface NegotiationTransmission {
      */
     NegotiationTransmissionState getTransmissionState();
 
+    /**
+     * The method <code>getNegotiationXML</code> returns the xml of the negotiation relationship with negotiation transmission
+     * @return an NegotiationType the negotiation type of negotiation
+     */
+    NegotiationType getNegotiationType();
     /**
      * The method <code>getNegotiationXML</code> returns the xml of the negotiation relationship with negotiation transmission
      * @return an String the xml of negotiation

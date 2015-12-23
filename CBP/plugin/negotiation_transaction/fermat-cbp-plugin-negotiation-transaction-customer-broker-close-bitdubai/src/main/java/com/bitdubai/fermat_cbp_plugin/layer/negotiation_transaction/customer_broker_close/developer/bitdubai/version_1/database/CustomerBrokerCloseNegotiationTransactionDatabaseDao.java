@@ -93,9 +93,9 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             table.insertRecord(record);
 
         } catch (CantInsertRecordException e){
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, insert database problems.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "customer broker close Negotiation Transaction", "Cant create new customer broker close Negotiation Transaction, insert database problems.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException (e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, unknown failure.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException (e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction", "Cant create new customer broker close Negotiation Transaction, unknown failure.");
         }
 
     }
@@ -104,7 +104,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     public void updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(UUID transactionId, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException{
         try {
             if (!transactionExists(transactionId))
-                throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException("Cant Update Status Customer Broker New Negotiation Transaction, not exists.", "Customer Broker New Negotiation Transaction, Update State", "Cant Update State Customer Broker New Negotiation Transaction, not exists");
+                throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException("Cant Update Status customer broker close Negotiation Transaction, not exists.", "customer broker close Negotiation Transaction, Update State", "Cant Update State customer broker close Negotiation Transaction, not exists");
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
             table.addUUIDFilter(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
@@ -113,9 +113,9 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             table.updateRecord(record);
 
         } catch (CantUpdateRecordException e) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "Customer Broker New Negotiation Transaction, Update State", "Cant Update State Customer Broker New Negotiation Transaction, update database problems.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, "customer broker close Negotiation Transaction, Update State", "Cant Update State customer broker close Negotiation Transaction, update database problems.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction, Update State", "Cant Update State Customer Broker New Negotiation Transaction, unknown failure.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction, Update State", "Cant Update State customer broker close Negotiation Transaction, unknown failure.");
         }
     }
 
@@ -128,7 +128,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker close exists", "customer broker close Negotiation Transaction", "");
             }
             table.addUUIDFilter(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
@@ -141,9 +141,9 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             }
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction not return register", "unknown failure.");
         }
 
         return getTransaction;
@@ -157,7 +157,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker close exists", "customer broker close Negotiation Transaction", "");
             }
             table.loadToMemory();
             record = table.getRecords();
@@ -169,9 +169,9 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             }
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction not return register", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction not return register", "unknown failure.");
         }
 
         return getTransactions;
@@ -183,7 +183,8 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
         return getStringList(
                 NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),
                 CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_NEGOTIATION_COLUMN_NAME,
-                CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME);
+                CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME);
+//        CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME);
 
     }
 
@@ -193,7 +194,8 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
         return getStringList(
                 NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode(),
                 CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_NEGOTIATION_COLUMN_NAME,
-                CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME);
+                CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME);
+//                CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME);
 
     }
 
@@ -333,15 +335,15 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
         try {
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new tablet exists", "Customer Broker New Negotiation Transaction", "");
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker close tablet exists", "customer broker close Negotiation Transaction", "");
             }
             table.addUUIDFilter(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction Id Not Exists", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(em.getMessage(), em, "customer broker close Negotiation Transaction Id Not Exists", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction Id Not Exists", "unknown failure.");
+            throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "customer broker close Negotiation Transaction Id Not Exists", "unknown failure.");
         }
     }
 
@@ -384,7 +386,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
+                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION customer broker close", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
             }
             List<String> negotiationList=new ArrayList<>();
             String negotiation;
