@@ -405,6 +405,8 @@ public class BitcoinCurrencyCryptoVaultManager {
             bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, FermatTrId);
         } catch (CantBroadcastTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
+        } catch (Exception e){
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
         }
 
         return sendRequest.tx.getHashAsString();
