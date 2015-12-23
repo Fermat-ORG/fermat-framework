@@ -434,7 +434,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
 
         private void notificateRollbackToGUI(OutgoingIntraActorTransactionWrapper transactionWrapper){
-            FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
+            FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.OUTGOING_ROLLBACK_NOTIFICATION);
             OutgoingIntraRollbackNotificationEvent outgoingIntraRollbackNotificationEvent = (OutgoingIntraRollbackNotificationEvent) platformEvent;
             outgoingIntraRollbackNotificationEvent.setSource(EventSource.OUTGOING_INTRA_USER);
             outgoingIntraRollbackNotificationEvent.setActorId(transactionWrapper.getActorToPublicKey());
