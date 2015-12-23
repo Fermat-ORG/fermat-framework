@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -109,16 +110,16 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     void cancelCryptoBroker(UUID requestId) throws CryptoBrokerCancellingFailedException, ConnectionRequestNotFoundException;
 
     /**
-     * The method <code>getAllCryptoBrokers</code> returns the list of all crypto brokers registered by the
+     * The method <code>listAllConnectedCryptoBrokers</code> returns the list of all crypto brokers registered by the
      * logged in crypto broker
      *
      * @return the list of crypto brokers connected to the logged in crypto broker
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> getAllCryptoBrokers(String identityPublicKey,
-                                                      int    max              ,
-                                                      int    offset           ) throws CantListCryptoBrokersException;
+    List<CryptoBrokerInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                                final int                                     max             ,
+                                                                final int                                     offset          ) throws CantListCryptoBrokersException;
 
     /**
      * The method <code>getCryptoBrokersWaitingYourAcceptance</code> returns the list of crypto brokers waiting to be accepted

@@ -223,9 +223,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
     @Override
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage) throws CantUpdateIdentityException {
-            try
-            {
+            try {
                 intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
+                registerIdentities();
             }
             catch(CantUpdateIntraUserIdentityException e)
             {

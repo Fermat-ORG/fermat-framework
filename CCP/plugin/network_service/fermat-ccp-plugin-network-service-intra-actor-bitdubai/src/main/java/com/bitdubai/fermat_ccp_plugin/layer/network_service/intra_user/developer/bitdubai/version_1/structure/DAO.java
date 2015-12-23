@@ -32,8 +32,13 @@ public interface DAO {
                                            NotificationDescriptor descriptor      ,
                                            long                        timestamp   ,
                                            ActorProtocolState protocolState    ,
-                                           boolean                     flagReaded      ) throws CantCreateNotificationException;
+                                           boolean                     flagReaded,
+                                            int sentCount) throws CantCreateNotificationException;
+
     public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException;
+
+    public List<ActorNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetNotificationException, NotificationNotFoundException;
+
 
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
                                                       final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException;
