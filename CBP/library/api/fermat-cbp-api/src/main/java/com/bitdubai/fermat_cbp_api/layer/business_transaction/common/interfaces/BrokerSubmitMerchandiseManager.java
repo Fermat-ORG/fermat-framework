@@ -5,6 +5,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 
+import java.math.BigDecimal;
+
 /**
  * This interface must be used to create manager interface in BrokerSubmitOnlineMerchandise and
  * BrokerSubmitOnlineMerchandise plugins.
@@ -12,12 +14,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
  */
 public interface BrokerSubmitMerchandiseManager extends FermatManager {
 
-    /**
-     * This method send a payment according the contract elements.
-     * @param contractHash
-     * @throws CantSubmitMerchandiseException
-     */
-    void submitMerchandise(String walletPublicKey, String contractHash)throws CantSubmitMerchandiseException;
 
     /**
      * This method returns the ContractTransactionStatus by contractHash

@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -244,7 +243,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                     {
                                         sw = 2;
                                     }
-                                    if (contractClause.getType().getCode() == ContractClauseType.CAHS_DELIVERY.getCode() && contractClause.getType().getCode() == ContractClauseType.CASH_ON_HAND.getCode())
+                                    if (contractClause.getType().getCode() == ContractClauseType.CASH_DELIVERY.getCode() && contractClause.getType().getCode() == ContractClauseType.CASH_ON_HAND.getCode())
                                     {
                                         sw = 3;
                                     }

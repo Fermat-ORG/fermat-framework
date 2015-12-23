@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
@@ -98,7 +99,9 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         } catch (CantRegisterCreditException e) {
             System.out.println("CASHWALLET - testCashWallet() - CantRegisterCreditException");
         } catch (CantRegisterDebitException e) {
-            System.out.println("CASHWALLET - testCashWallet() - CantRegisterCreditException");
+            System.out.println("CASHWALLET - testCashWallet() - CantRegisterDebitException");
+        }catch (CashMoneyWalletInsufficientFundsException e) {
+            System.out.println("CASHWALLET - testCashWallet() - CashMoneyWalletInsufficientFundsException");
         }
     }
 
