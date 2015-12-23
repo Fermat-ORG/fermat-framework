@@ -243,6 +243,25 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         break;
                     case DISCONNECTED:
+                        System.out.print("-----------------------\n" +
+                                "REQUEST PARA DESCONEXION!!!!!-----------------------\n" +
+                                "-----------------------\n NOTIFICAION: " + cpr);
+
+                        lauchNotification();
+
+                        try {
+
+                            actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
+
+                        } catch (CantUpdateRecordDataBaseException e) {
+                            e.printStackTrace();
+                        } catch (CantUpdateRecordException e) {
+                            e.printStackTrace();
+                        } catch (RequestNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
                     case RECEIVED:
                         sendMessageToActor(cpr);
 
