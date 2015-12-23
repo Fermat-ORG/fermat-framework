@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithDatabaseManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -143,6 +145,7 @@ public final class FermatPluginManager {
             startPlugin(abstractPlugin);
 
             checkDatabaseManagerForDevelopers(abstractPlugin);
+            checkLogManagerForDevelopers(abstractPlugin);
 
             if (abstractPlugin.getManager() != null)
                 return abstractPlugin.getManager();
@@ -169,14 +172,14 @@ public final class FermatPluginManager {
         }
     }
 
-    private DealsWithDatabaseManagers developerModule;
+    private DealsWithDatabaseManagers dealsWithDatabaseManagers;
 
     @Deprecated // TODO make this correct. Annotation: @DatabaseManagerForDevelopers think about it.
     private void checkDatabaseManagerForDevelopers(final AbstractPlugin abstractPlugin) {
 
         try {
-            if (developerModule == null)
-                developerModule = (DealsWithDatabaseManagers) startPluginAndReferences(
+            if (dealsWithDatabaseManagers == null)
+                dealsWithDatabaseManagers = (DealsWithDatabaseManagers) startPluginAndReferences(
                         new PluginVersionReference(
                                 Platforms .PLUG_INS_PLATFORM,
                                 Layers    .SUB_APP_MODULE   ,
@@ -186,7 +189,32 @@ public final class FermatPluginManager {
                         )
                 );
 
-            developerModule.addDatabaseManager(abstractPlugin.getPluginVersionReference(), (DatabaseManagerForDevelopers) abstractPlugin);
+            dealsWithDatabaseManagers.addDatabaseManager(abstractPlugin.getPluginVersionReference(), (DatabaseManagerForDevelopers) abstractPlugin);
+
+        } catch (Exception e) {
+            System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
+            System.out.println(e.toString());
+        }
+    }
+
+    private DealsWithLogManagers dealsWithLogManagers;
+
+    @Deprecated // TODO make this correct. Annotation: @LogManagerForDevelopers think about it.
+    private void checkLogManagerForDevelopers(final AbstractPlugin abstractPlugin) {
+
+        try {
+            if (dealsWithLogManagers == null)
+                dealsWithLogManagers = (DealsWithLogManagers) startPluginAndReferences(
+                        new PluginVersionReference(
+                                Platforms .PLUG_INS_PLATFORM,
+                                Layers    .SUB_APP_MODULE   ,
+                                Plugins   .DEVELOPER        ,
+                                Developers.BITDUBAI         ,
+                                new Version()
+                        )
+                );
+
+            dealsWithLogManagers.addLogManager(abstractPlugin.getPluginVersionReference(), (LogManagerForDevelopers) abstractPlugin);
 
         } catch (Exception e) {
             System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");

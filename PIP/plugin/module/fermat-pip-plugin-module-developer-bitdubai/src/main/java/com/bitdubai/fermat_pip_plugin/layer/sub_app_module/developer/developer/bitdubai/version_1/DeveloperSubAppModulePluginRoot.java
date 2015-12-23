@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -20,8 +19,6 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseTool;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleLogTool;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -44,8 +41,8 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
     private ConcurrentHashMap<PluginVersionReference, DatabaseManagerForDevelopers> databaseManagersOnPlugins;
     private ConcurrentHashMap<AddonVersionReference , DatabaseManagerForDevelopers> databaseManagersOnAddons ;
 
-    private Map<PluginVersionReference,Plugin> logManagersOnPlugins;
-    private Map<AddonVersionReference,Addon> logManagersOnAddons;
+    private ConcurrentHashMap<PluginVersionReference, LogManagerForDevelopers> logManagersOnPlugins;
+    private ConcurrentHashMap<AddonVersionReference , LogManagerForDevelopers> logManagersOnAddons ;
 
     public DeveloperSubAppModulePluginRoot() {
 
@@ -53,6 +50,9 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
 
         databaseManagersOnPlugins = new ConcurrentHashMap<>();
         databaseManagersOnAddons  = new ConcurrentHashMap<>();
+
+        logManagersOnPlugins = new ConcurrentHashMap<>();
+        logManagersOnAddons  = new ConcurrentHashMap<>();
     }
 
 
@@ -76,13 +76,24 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
         );
     }
 
-    /**
-     * Service Interface implementation.
-     */
     @Override
-    public void setLogManagers(Map<PluginVersionReference, Plugin> logManagersOnPlugins, Map<AddonVersionReference, Addon> logManagersOnAddons) {
-        this.logManagersOnPlugins = logManagersOnPlugins;
-        this.logManagersOnAddons = logManagersOnAddons;
+    public void addLogManager(final PluginVersionReference  pluginVersionReference ,
+                              final LogManagerForDevelopers logManagerForDevelopers) {
+
+        logManagersOnPlugins.putIfAbsent(
+                pluginVersionReference ,
+                logManagerForDevelopers
+        );
+    }
+
+    @Override
+    public void addLogManager(final AddonVersionReference   addonVersionReference  ,
+                              final LogManagerForDevelopers logManagerForDevelopers) {
+
+        logManagersOnAddons.putIfAbsent(
+                addonVersionReference  ,
+                logManagerForDevelopers
+        );
     }
 
     @Override
@@ -96,12 +107,11 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public LogTool getLogTool() throws CantGetLogToolException {
-        try {
-            return new DeveloperModuleLogTool(logManagersOnPlugins,logManagersOnAddons);
-        } catch(Exception e) {
-            throw new CantGetLogToolException(CantGetLogToolException.DEFAULT_MESSAGE ,e, " Error get DeveloperActorLogTool object","");
 
-        }
+        return new DeveloperModuleLogTool(
+                this.logManagersOnPlugins,
+                this.logManagersOnAddons
+        );
     }
 
     @Override
