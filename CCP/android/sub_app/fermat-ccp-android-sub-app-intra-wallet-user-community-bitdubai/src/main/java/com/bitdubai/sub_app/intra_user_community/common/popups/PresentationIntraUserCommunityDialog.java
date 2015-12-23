@@ -94,15 +94,32 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = pref.edit();
         if (id == R.id.btn_left) {
-            dismiss();
+            ;
+            if (dontShowAgainCheckBox.isChecked()) {
+                edit.putBoolean("isChecked", true);
+                edit.apply();
+                dismiss();
+            } else {
+                edit.putBoolean("isChecked", false);
+                edit.apply();
+                dismiss();
+            }
             Toast.makeText(getActivity(), "Create identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.btn_right) {
-            dismiss();
+            if (dontShowAgainCheckBox.isChecked()) {
+                edit.putBoolean("isChecked", true);
+                edit.apply();
+                dismiss();
+            } else {
+                edit.putBoolean("isChecked", false);
+                edit.apply();
+                dismiss();
+            }
             Toast.makeText(getActivity(), "Create identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.start_community) {
-            SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
-            SharedPreferences.Editor edit = pref.edit();
             if (dontShowAgainCheckBox.isChecked()) {
                 edit.putBoolean("isChecked", true);
                 edit.apply();
