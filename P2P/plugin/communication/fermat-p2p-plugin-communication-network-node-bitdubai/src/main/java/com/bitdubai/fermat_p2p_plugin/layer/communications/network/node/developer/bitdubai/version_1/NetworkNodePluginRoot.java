@@ -80,7 +80,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     /**
      * PluginDatabaseSystem references definition.
      */
-   @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -128,7 +128,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         /*
          * Validate required resources
          */
-         validateInjectedResources();
+        validateInjectedResources();
 
         try {
 
@@ -194,7 +194,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
          */
         if (pluginDatabaseSystem  == null ||
                 errorManager      == null ||
-                    eventManager  == null) {
+                eventManager  == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -225,17 +225,17 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         try {
 
-         System.out.println("Loading identity");
+            System.out.println("Loading identity");
 
          /*
           * Load the file with the identity
           */
-          PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-          String content = pluginTextFile.getContent();
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String content = pluginTextFile.getContent();
 
-          System.out.println("content = "+content);
+            System.out.println("content = "+content);
 
-          identity = new ECCKeyPair(content);
+            identity = new ECCKeyPair(content);
 
         } catch (FileNotFoundException e) {
 
