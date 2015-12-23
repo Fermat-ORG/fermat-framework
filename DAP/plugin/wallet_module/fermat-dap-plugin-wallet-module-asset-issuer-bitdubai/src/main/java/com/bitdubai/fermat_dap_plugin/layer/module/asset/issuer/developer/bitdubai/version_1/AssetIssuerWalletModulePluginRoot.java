@@ -32,6 +32,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIssuerWalletModuleException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
@@ -56,16 +57,6 @@ import java.util.List;
 public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
         AssetIssuerWalletSupAppModuleManager {
 
-    @Override
-    public SettingsManager getSettingsManager() {
-        return null;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
-    }
-
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
 
@@ -85,7 +76,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     AssetFactoryManager assetFactoryManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_ISSUER  )
-    private IdentityAssetIssuerManager identityAssetIssuerManager;
+    IdentityAssetIssuerManager identityAssetIssuerManager;
 
     private AssetIssuerWallet wallet;
 
@@ -117,6 +108,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                     assetIssuerWalletManager,
                     actorAssetUserManager,
                     assetDistributionManager,
+                    identityAssetIssuerManager,
                     pluginId,
                     pluginFileSystem
             );
@@ -275,5 +267,20 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryResource(resource);
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+//        try {
+            return assetIssuerWalletModuleManager.getActiveIdentities().get(0);
+//        } catch (CantGetIssuerWalletModuleException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
     }
 }

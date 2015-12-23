@@ -106,8 +106,8 @@ public class DatabaseToolsFragment extends FermatFragment {
 
         try {
 
-            List<PluginVersionReference> plugins = databaseTools.getAvailablePluginList();
-            List<AddonVersionReference> addons = databaseTools.getAvailableAddonList();
+            List<PluginVersionReference> plugins = databaseTools.listAvailablePlugins();
+            List<AddonVersionReference> addons = databaseTools.listAvailableAddons();
 
             mlist = new ArrayList<>();
 
