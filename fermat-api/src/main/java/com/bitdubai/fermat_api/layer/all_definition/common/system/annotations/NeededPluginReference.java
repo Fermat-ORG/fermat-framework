@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 28/10/2015.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.TYPE})
 public @interface NeededPluginReference {
 
     Platforms        platform();
