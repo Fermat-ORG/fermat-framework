@@ -84,7 +84,6 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                     newConnectionId              ,
                     linkedIdentity               ,
                     actorReceiving.getPublicKey(),
-                    actorReceiving.getActorType(),
                     actorReceiving.getAlias()    ,
                     actorReceiving.getImage()    ,
                     connectionState              ,

@@ -8,7 +8,13 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.preference_settings.CryptoCustomerWalletPreferenceSettings;
 
-public class CryptoCustomerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoCustomerWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
+public class CryptoCustomerWalletSession
+        extends AbstractFermatSession<InstalledWallet, CryptoCustomerWalletModuleManager, WalletResourcesProviderManager>
+        implements WalletSession {
+
+    public static final String CONTRACT_DATA = "CONTRACT_DATA";
+    public static final String NEGOTIATION_DATA = "NEGOTIATION_DATA";
+
 
     public CryptoCustomerWalletSession() {
     }

@@ -107,16 +107,12 @@ public final class FermatPluginManager {
                     return (FermatManager) abstractPlugin;
             }
 
-            final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
-
-            for (final AddonVersionReference avr : neededAddons) {
+            for (final AddonVersionReference avr : abstractPlugin.getNeededAddons()) {
                 FermatManager reference = addonManager.startAddonAndReferences(avr);
                 abstractPlugin.assignAddonReference(avr, reference);
             }
 
-            final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
-
-            for (final PluginVersionReference pvr : neededPlugins) {
+            for (final PluginVersionReference pvr : abstractPlugin.getNeededPlugins()) {
 
                 AbstractPlugin reference = systemContext.getPluginVersion(pvr);
 
@@ -128,6 +124,15 @@ public final class FermatPluginManager {
                     abstractPlugin.assignPluginReference(pvr, reference.getManager());
                 else
                     abstractPlugin.assignPluginReference(reference);
+            }
+
+            for (final PluginVersionReference pvr : abstractPlugin.getNeededIndirectPlugins()) {
+
+                AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+
+                compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
+
+                startPluginAndReferences(pvr);
             }
 
             abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
@@ -170,16 +175,12 @@ public final class FermatPluginManager {
 
             if (!abstractPlugin.isStarted()) {
 
-                final List<AddonVersionReference> neededAddons = abstractPlugin.getNeededAddons();
-
-                for (final AddonVersionReference avr : neededAddons) {
+                for (final AddonVersionReference avr : abstractPlugin.getNeededAddons()) {
                     FermatManager reference = addonManager.startAddonAndReferences(avr);
                     abstractPlugin.assignAddonReference(avr, reference);
                 }
 
-                final List<PluginVersionReference> neededPlugins = abstractPlugin.getNeededPlugins();
-
-                for (final PluginVersionReference pvr : neededPlugins) {
+                for (final PluginVersionReference pvr : abstractPlugin.getNeededPlugins()) {
 
                     AbstractPlugin reference = systemContext.getPluginVersion(pvr);
 
@@ -191,6 +192,15 @@ public final class FermatPluginManager {
                         abstractPlugin.assignPluginReference(pvr, reference.getManager());
                     else
                         abstractPlugin.assignPluginReference(reference);
+                }
+
+                for (final PluginVersionReference pvr : abstractPlugin.getNeededIndirectPlugins()) {
+
+                    AbstractPlugin reference = systemContext.getPluginVersion(pvr);
+
+                    compareReferences(pluginVersionReference, pvr, reference.getNeededPlugins());
+
+                    startPluginAndReferences(pvr);
                 }
 
                 abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));

@@ -11,8 +11,8 @@ import java.math.BigDecimal;
  */
 public interface CryptoBrokerWalletBalanceRecord {
     //TODO: Documentar y excepciones
-//    String getWalletPublicKey();
-//    void   setWalletPublicKey(String walletPublicKey);
+//    String getCryptoWalletPublicKey();
+//    void   setCryptoWalletPublicKey(String walletPublicKey);
 //
     String getBrokerPublicKey();
     void   setBrokerPublicKey(String brokerPublicKey);
