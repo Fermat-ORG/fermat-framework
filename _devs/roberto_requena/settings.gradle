@@ -1,0 +1,5 @@
+include ':fermat-api'
+project(':fermat-api').projectDir = new File('../../../fermat-api')
+
+include ':fermat-osa-addon-android-database-system-bitdubai'
+project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('../../../OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
