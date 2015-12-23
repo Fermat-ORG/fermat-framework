@@ -866,8 +866,19 @@ public enum EventType implements FermatEventEnum {
             return new IncomingIntraUserTransactionDebitNotificationEvent(this);
         }
 
-    };
+    },
+    OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION("OIURT") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new OutgoingIntraUserRollbackTransactionNotificationEventListener(this, fermatEventMonitor);
+        }
 
+        @Override
+        public FermatEvent getNewEvent() {
+            return new OutgoingIntraUserTransactionRollbackNotificationEvent(this);
+        }
+
+    };
 
 
     /**
