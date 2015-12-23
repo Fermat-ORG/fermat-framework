@@ -189,7 +189,8 @@ public final class FermatPluginManager {
                         )
                 );
 
-            dealsWithDatabaseManagers.addDatabaseManager(abstractPlugin.getPluginVersionReference(), (DatabaseManagerForDevelopers) abstractPlugin);
+            if(abstractPlugin instanceof DatabaseManagerForDevelopers)
+                dealsWithDatabaseManagers.addDatabaseManager(abstractPlugin.getPluginVersionReference(), (DatabaseManagerForDevelopers) abstractPlugin);
 
         } catch (Exception e) {
             System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
@@ -214,7 +215,8 @@ public final class FermatPluginManager {
                         )
                 );
 
-            dealsWithLogManagers.addLogManager(abstractPlugin.getPluginVersionReference(), (LogManagerForDevelopers) abstractPlugin);
+            if(abstractPlugin instanceof LogManagerForDevelopers)
+                dealsWithLogManagers.addLogManager(abstractPlugin.getPluginVersionReference(), (LogManagerForDevelopers) abstractPlugin);
 
         } catch (Exception e) {
             System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
