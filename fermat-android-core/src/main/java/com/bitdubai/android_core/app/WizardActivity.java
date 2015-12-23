@@ -350,6 +350,16 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
+    public void backScreen() {
+        doBack();
+    }
+
+    @Override
+    public void nextScreen() {
+        doNext();
+    }
+
+    @Override
     public void changeActivityBack(String appBackPublicKey, String activityCode) {
 
     }

@@ -57,7 +57,8 @@ public class IncomingNotificationDao implements DAO {
                                                         final NotificationDescriptor descriptor          ,
                                                         final long                            timestamp           ,
                                                         final ActorProtocolState              protocolState       ,
-                                                        final boolean                         flagReaded          ) throws CantCreateNotificationException {
+                                                        final boolean                         flagReaded ,
+                                                        int sentCount) throws CantCreateNotificationException {
 
         try {
 
@@ -77,7 +78,8 @@ public class IncomingNotificationDao implements DAO {
                     destinationPublicKey,
                     timestamp           ,
                     protocolState       ,
-                    flagReaded
+                    flagReaded,
+                    0
 
             );
 
@@ -219,6 +221,13 @@ public class IncomingNotificationDao implements DAO {
 
             throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
         }
+
+    }
+
+    public List<ActorNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
+
+
+        return null;
 
     }
 
@@ -475,7 +484,8 @@ public class IncomingNotificationDao implements DAO {
                 destinationPublicKey           ,
                 timestamp   ,
                 actorProtocolState             ,
-                readed
+                readed,
+                0
 
         );
     }

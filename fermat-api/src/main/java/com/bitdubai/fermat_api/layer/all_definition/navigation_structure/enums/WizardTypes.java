@@ -12,7 +12,9 @@ public enum WizardTypes {
 
     CWP_WALLET_FACTORY_CREATE_NEW_PROJECT("CWFCNP"),
     CWP_WALLET_PUBLISHER_PUBLISH_PROJECT("CWPPP"),
-    CCP_WALLET_BITCOIN_START_WIZARD("CCPWBSW");
+    CCP_WALLET_BITCOIN_START_WIZARD("CCPWBSW"),
+    CBP_WALLET_CRYPTO_BROKER_START_WIZARD("CBPWCBSW"),
+    CBP_WALLET_CRYPTO_CUSTOMER_START_WIZARD("CBPWCCSW");
 
 
     private String code;
@@ -38,6 +40,10 @@ public enum WizardTypes {
                 return WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT;
             case "CCPWBSW":
                 return CCP_WALLET_BITCOIN_START_WIZARD;
+            case "CBPWCBSW":
+                return CBP_WALLET_CRYPTO_BROKER_START_WIZARD;
+            case "CBPWCCSW":
+                return CBP_WALLET_CRYPTO_CUSTOMER_START_WIZARD;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

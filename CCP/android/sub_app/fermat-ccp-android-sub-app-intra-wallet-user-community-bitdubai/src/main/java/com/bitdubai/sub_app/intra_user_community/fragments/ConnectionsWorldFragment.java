@@ -163,6 +163,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            swipeRefresh.setRefreshing(true);
             onRefresh();
             /**
              * Code to show cache data

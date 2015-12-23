@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 /**
@@ -85,5 +86,20 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     public void setAppResourcesProviderManager(R appResourcesProviderManager) {
         this.appResourcesProviderManager = appResourcesProviderManager;
     }
+
+    protected void wizardNext(){
+        Activity activity = getActivity();
+        if(activity instanceof FermatWizardActivity){
+            ((FermatWizardActivity) activity).nextScreen();
+        }
+    }
+
+    protected void wizardBack(){
+        Activity activity = getActivity();
+        if(activity instanceof FermatWizardActivity){
+            ((FermatWizardActivity) activity).nextScreen();
+        }
+    }
+
 
 }
