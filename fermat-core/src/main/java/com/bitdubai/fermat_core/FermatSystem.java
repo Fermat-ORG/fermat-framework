@@ -3,6 +3,7 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_cht_core.CHTPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
@@ -92,6 +93,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
+            fermatSystemContext.registerPlatform(new CHTPlatform());
             fermatSystemContext.registerPlatform(new CSHPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new DAPPlatform());
