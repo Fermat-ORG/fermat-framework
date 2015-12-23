@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
@@ -95,8 +96,10 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
         int id = v.getId();
         if (id == R.id.btn_left) {
             dismiss();
+            Toast.makeText(getActivity(), "Create identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.btn_right) {
             dismiss();
+            Toast.makeText(getActivity(), "Create identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.start_community) {
             SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = pref.edit();
