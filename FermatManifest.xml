@@ -2153,7 +2153,7 @@
                 </plugins>
             </layer>
 
-            <layer name="Basic Wallet" language="java">
+            <layer name="Wallet" language="java">
                 <plugins>
                     <plugin
                         name="Bitcoin Wallet"
