@@ -14,11 +14,11 @@ public class IncomingNegotiationTransactionEventHandler extends AbstractCustomer
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.CustomerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
+        if(this.customerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
 
             try {
 
-                this.CustomerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
+                this.customerBrokerNewServiceEventHandler.incomingNegotiationTransactionEventHandler((IncomingNegotiationTransactionEvent) fermatEvent);
 
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransactionEventHandler", "Check the cause");

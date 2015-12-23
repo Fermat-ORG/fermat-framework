@@ -39,6 +39,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.event_handler.CustomerBrokerCloseServiceEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
@@ -116,6 +117,9 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     /*Represent the Negotiation Sale*/
     private CustomerBrokerSaleNegotiation                                       customerBrokerSaleNegotiation;
 
+    /*Represent Service Event Handler*/
+    private CustomerBrokerCloseServiceEventHandler                              customerBrokerCloseServiceEventHandler;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     public NegotiationTransactionCustomerBrokerClosePluginRoot() {
@@ -141,7 +145,8 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
              customerBrokerCloseManagerImpl = new CustomerBrokerCloseManagerImpl(customerBrokerCloseNegotiationTransactionDatabaseDao);
 
              //Init event recorder service.
-
+             customerBrokerCloseServiceEventHandler = new CustomerBrokerCloseServiceEventHandler(customerBrokerCloseNegotiationTransactionDatabaseDao,eventManager);
+             customerBrokerCloseServiceEventHandler.start();
 
              //Init monitor Agent
              customerBrokerCloseAgent = new CustomerBrokerCloseAgent(
