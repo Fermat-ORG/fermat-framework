@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
@@ -156,6 +158,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException {
         // TODO
+        return null;
+    }
+
+    /**
+     * @param negotiationType
+     * @return Collection<NegotiationLocations>
+     */
+    @Override
+    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) {
         return null;
     }
 

@@ -13,13 +13,21 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletAssociatedSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotConfirmNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
@@ -35,6 +43,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -191,6 +201,15 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException {
         //TODO
+        return null;
+    }
+
+    /**
+     * @param negotiationType
+     * @return Collection<NegotiationLocations>
+     */
+    @Override
+    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) {
         return null;
     }
 
@@ -520,6 +539,34 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         }
 
         return wrapper;
+    }
+
+    /**
+     * This method list all wallet installed in device, start the transaction
+     */
+    @Override
+    public List<InstalledWallet> getInstallWallets() throws CantListWalletsException {
+        return null;
+    }
+
+    @Override
+    public CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting() throws CantNewEmptyCryptoBrokerWalletSettingException {
+        return null;
+    }
+
+    @Override
+    public CryptoBrokerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() throws CantNewEmptyCryptoBrokerWalletAssociatedSettingException {
+        return null;
+    }
+
+    @Override
+    public void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread) throws CantSaveCryptoBrokerWalletSettingException {
+
+    }
+
+    @Override
+    public void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantGetCryptoBrokerWalletSettingException {
+
     }
 
     private List<ContractBasicInformation> getContractHistoryTestData() {

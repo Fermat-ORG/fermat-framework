@@ -2,12 +2,19 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletAssociatedSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +24,7 @@ import java.util.UUID;
  * Created by nelson on 22/09/15.
  */
 public interface CryptoBrokerWalletManager extends WalletManager {
-
+    //TODO: Documentar
     /**
      * associate an Identity to this wallet
      *
@@ -64,4 +71,17 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     boolean isNothingLeftToConfirm(List<NegotiationStep> dataSet);
 
     CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet);
+
+     /**
+     * This method list all wallet installed in device, start the transaction
+     */
+    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException;
+
+    CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting() throws CantNewEmptyCryptoBrokerWalletSettingException;
+
+    CryptoBrokerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() throws CantNewEmptyCryptoBrokerWalletAssociatedSettingException;
+
+    void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread) throws CantSaveCryptoBrokerWalletSettingException;
+
+    void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantGetCryptoBrokerWalletSettingException;
 }
