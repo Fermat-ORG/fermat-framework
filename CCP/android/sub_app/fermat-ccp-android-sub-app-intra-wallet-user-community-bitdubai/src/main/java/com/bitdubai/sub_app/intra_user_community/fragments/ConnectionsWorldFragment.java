@@ -96,7 +96,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private boolean isRefreshing = false;
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
-
     private String searchName;
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
@@ -117,6 +116,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             // setHasOptionsMenu(true);
             // setting up  module
+
             intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -163,19 +163,23 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
             onRefresh();
             SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
             if (!pref.getBoolean("isChecked", false)) {
-                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null);
-                presentationIntraUserCommunityDialog.show();
+                if (moduleManager.getActiveIntraUserIdentity() != null) {
+                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                        presentationIntraUserCommunityDialog.show();
+                    }
+                } else {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    presentationIntraUserCommunityDialog.show();
+                }
             }
-
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-
-
         return rootView;
-    }
+        }
 
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
