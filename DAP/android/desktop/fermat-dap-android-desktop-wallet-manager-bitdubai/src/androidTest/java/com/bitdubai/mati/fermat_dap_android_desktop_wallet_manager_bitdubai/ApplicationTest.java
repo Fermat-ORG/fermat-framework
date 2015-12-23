@@ -1,4 +1,4 @@
-package com.example.mati.fermat_dap_android_desktop_sub_app_manager_bitdubai;
+package com.bitdubai.mati.fermat_dap_android_desktop_wallet_manager_bitdubai;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
