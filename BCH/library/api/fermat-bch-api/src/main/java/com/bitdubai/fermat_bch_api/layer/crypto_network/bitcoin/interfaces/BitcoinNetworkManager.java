@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
@@ -123,5 +124,12 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantGetTransactionCryptoStatusException
      */
     CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException;
+
+    /**
+     * Will check and fix any inconsistency that may be in out transaction table.
+     * For example, If i don't have all adressTo or From, or coin values of zero.
+     * @throws CantFixTransactionInconsistenciesException
+     */
+    void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException;
 
 }

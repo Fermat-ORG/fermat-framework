@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcce
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
@@ -13,13 +14,17 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_cl
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
@@ -55,22 +60,28 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     private final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ;
     private final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ;
     private final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager;
+    private final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ;
     private final ErrorManager                       errorManager                          ;
     private final PluginVersionReference             pluginVersionReference                ;
 
     public CryptoBrokerCommunityManager(final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ,
                                         final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ,
                                         final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager,
+                                        final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ,
                                         final ErrorManager                       errorManager                          ,
                                         final PluginVersionReference             pluginVersionReference                ) {
 
         this.cryptoBrokerIdentityManager            = cryptoBrokerIdentityManager           ;
         this.cryptoBrokerActorConnectionManager     = cryptoBrokerActorConnectionManager    ;
         this.cryptoBrokerActorNetworkServiceManager = cryptoBrokerActorNetworkServiceManager;
+        this.cryptoCustomerIdentityManager          = cryptoCustomerIdentityManager         ;
         this.errorManager                           = errorManager                          ;
         this.pluginVersionReference                 = pluginVersionReference                ;
     }
 
+    /**
+     * We are listing here all crypto brokers and all crypto customer identities found in the device.
+     */
     @Override
     public List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException {
 
@@ -82,6 +93,11 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
             for (final CryptoBrokerIdentity cbi : cryptoBrokerIdentities)
                 selectableIdentities.add(new SelectableIdentity(cbi));
+
+            final List<CryptoCustomerIdentity> cryptoCustomerIdentities = cryptoCustomerIdentityManager.getAllCryptoCustomerFromCurrentDeviceUser();
+
+            for (final CryptoCustomerIdentity cci : cryptoCustomerIdentities)
+                selectableIdentities.add(new SelectableIdentity(cci));
 
             return selectableIdentities;
 
@@ -120,7 +136,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                     cryptoBrokerToContact.getPublicKey()   ,
                     Actors.CBP_CRYPTO_BROKER               ,
                     cryptoBrokerToContact.getAlias()       ,
-                    cryptoBrokerToContact.getProfileImage()
+                    cryptoBrokerToContact.getImage()
             );
 
             cryptoBrokerActorConnectionManager.requestConnection(
@@ -242,8 +258,37 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public List<CryptoBrokerInformation> getAllCryptoBrokers(String identityPublicKey, int max, int offset) throws CantListCryptoBrokersException {
-        return null;
+    public List<CryptoBrokerInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                                       final int                                     max             ,
+                                                                       final int                                     offset          ) throws CantListCryptoBrokersException {
+
+        try {
+
+            final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+
+            final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
+
+            final List<CryptoBrokerActorConnection> actorConnections = search.getResult(max, offset);
+
+            final List<CryptoBrokerInformation> cryptoBrokerInformationList = new ArrayList<>();
+
+            for (CryptoBrokerActorConnection cbac : actorConnections)
+                cryptoBrokerInformationList.add(new ActorInformation(cbac));
+
+            return cryptoBrokerInformationList;
+
+        } catch (final CantListActorConnectionsException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override

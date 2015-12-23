@@ -29,7 +29,7 @@ public interface CryptoBrokerInformation {
      *
      * @return the profile image
      */
-    byte[] getProfileImage();
+    byte[] getImage();
 
     /**
      * The method <code>listCryptoBrokerWallets</code> returns the list of the public crypto broker wallets
