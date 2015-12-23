@@ -123,6 +123,22 @@ public class CustomerBrokerCloseAgent  implements
     @Override
     public void start() throws CantStartAgentException {
 
+//        Logger LOG = Logger.getGlobal();
+//        LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
+        monitorAgentTransaction = new MonitorAgentTransaction();
+
+        ((DealsWithPluginDatabaseSystem) this.monitorAgentTransaction).setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        ((DealsWithErrors) this.monitorAgentTransaction).setErrorManager(this.errorManager);
+
+        try {
+            ((MonitorAgentTransaction) this.monitorAgentTransaction).Initialize();
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_CLOSE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        }
+
+        this.agentThread = new Thread(monitorAgentTransaction);
+        this.agentThread.start();
+        System.out.print("-----------------------\n CUSTOMER BROKER CLOSE AGENT: SUCCESSFUL START \n-----------------------\n");
     }
 
     @Override
