@@ -177,7 +177,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
                 }
             }, 1500);*/
             SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-            if (!pref.getBoolean("isChecked", true)) {
+            if (!pref.getBoolean("isChecked", false)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
                         PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
