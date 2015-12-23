@@ -324,9 +324,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         getPendingToSubmitCryptoList();
                 for(String pendingContractHash : pendingToSubmitCrypto){
                     businessTransactionRecord =brokerSubmitOnlineMerchandiseBusinessTransactionDao.
-                            getBussinesTransactionRecord(pendingContractHash);
+                            getBusinessTransactionRecord(pendingContractHash);
                     outgoingCryptoTransactionId=intraActorCryptoTransactionManager.sendCrypto(
-                            businessTransactionRecord.getCryptoWalletPublicKey(),
+                            businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
@@ -490,7 +490,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
         }
 
         private void raisePaymentConfirmationEvent(String contractHash){
-            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.CUSTOMER_ONLINE_PAYMENT_CONFIRMED);
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
             BrokerSubmitMerchandiseConfirmed brokerSubmitMerchandiseConfirmed = (BrokerSubmitMerchandiseConfirmed) fermatEvent;
             brokerSubmitMerchandiseConfirmed.setSource(EventSource.BROKER_SUBMIT_ONLINE_MERCHANDISE);
             brokerSubmitMerchandiseConfirmed.setContractHash(contractHash);
@@ -588,7 +588,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         if(brokerSubmitOnlineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
                             businessTransactionRecord =
                                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.
-                                            getBussinesTransactionRecord(contractHash);
+                                            getBusinessTransactionRecord(contractHash);
                             contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
                             if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode())){
                                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
