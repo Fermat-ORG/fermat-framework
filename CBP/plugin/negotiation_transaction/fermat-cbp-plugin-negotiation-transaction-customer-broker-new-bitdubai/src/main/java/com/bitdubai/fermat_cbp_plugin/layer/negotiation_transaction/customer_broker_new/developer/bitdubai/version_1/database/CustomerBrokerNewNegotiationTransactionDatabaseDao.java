@@ -22,7 +22,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDevelope
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
+import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
@@ -59,12 +61,10 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException {
         try {
-//            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
             try {
                 CustomerBrokerNewNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerNewNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
-//                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
                 database = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
@@ -78,14 +78,11 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         }
     }
 
-    //CREATE NEW NEGOTIATION TRANSACTION
-    public void createRegisterCustomerBrokerNewNegotiationTranasction(Negotiation negotiation, NegotiationType negotiationType) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
+    //CREATE SEND NEW NEGOTIATION TRANSACTION
+    public void createCustomerBrokerNewNegotiationTransaction(UUID transactionId, Negotiation negotiation, NegotiationType negotiationType, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
 
-        UUID transactionId = UUID.randomUUID();
         Date time = new Date();
         long timestamp = time.getTime();
-        NegotiationTransactionStatus statusTransaction = NegotiationTransactionStatus.PENDING_SUBMIT;
-        NegotiationTransmissionState stateTransmission = NegotiationTransmissionState.PROCESSING_SEND;
         String negotiationXML = XMLParser.parseObject(negotiation);
 
         try {
@@ -98,8 +95,6 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME, negotiation.getBrokerPublicKey());
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, negotiation.getCustomerPublicKey());
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME, statusTransaction.getCode());
-            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME, negotiation.getStatus().getCode());
-            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATE_TRANSMISSION_COLUMN_NAME, stateTransmission.getCode());
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME, negotiationType.getCode());
             record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME, negotiationXML);
             record.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME, timestamp);
@@ -198,37 +193,6 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
                 NegotiationTransactionStatus.PENDING_SUBMIT.getCode(),
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
-/*
-        try{
-
-            List<String> negotiationList=new ArrayList<>();
-            String negotiation;
-
-            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
-            if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException ("CANT GET NEGOTIATION TRANSACTION LISt. TABLE NO FOUNT.", "NEGOTIATION TRANSACTION CUSTOMER BROKER NEW", "CANT GET NEGOTIATION TRANSACTION LIST, TABLE NO FOUNT.");
-            }
-            table.addStringFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
-            table.loadToMemory();
-            List<DatabaseTableRecord> records = table.getRecords();
-            if(records.isEmpty()){
-                //There is no records in database, I'll return an empty list.
-                return negotiationList;
-            }
-
-            for(DatabaseTableRecord databaseTableRecord : records){
-                negotiation = databaseTableRecord.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
-                negotiationList.add(negotiation);
-            }
-
-            return negotiationList;
-
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetNegotiationTransactionListException(CantGetNegotiationTransactionListException.DEFAULT_MESSAGE,e, "Getting "+NegotiationTransactionStatus.PENDING_SUBMIT.getCode()+" based on "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,"Cannot load the table into memory");
-        } catch (Exception e){
-            throw new CantGetNegotiationTransactionListException(e.getMessage(), FermatException.wrapException(e),"Getting "+NegotiationTransactionStatus.PENDING_SUBMIT.getCode()+" based on "+CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,"Cannot load the table into memory");
-        }
-        */
 
     }
 
@@ -236,7 +200,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     public List<String> getPendingToConfirmtNegotiation() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
 
         return getStringList(
-                NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode(),
+                NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode(),
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME,
                 CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_ID_COLUMN_NAME);
 
@@ -397,10 +361,11 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         String                          publicKeyBroker     = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_BROKER_COLUMN_NAME);
         String                          publicKeyCustomer   = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
         NegotiationTransactionStatus    status              = NegotiationTransactionStatus.getByCode(record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_STATUS_TRANSACTION_COLUMN_NAME));
+        NegotiationType                 negotiationType     = NegotiationType.getByCode(record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME));
         String                          negotiationXML      = record.getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME);
         long                            timestamp           = record.getLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME);
 
-        return new CustomerBrokerNewImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status, negotiationXML,timestamp);
+        return new CustomerBrokerNewImpl(transactionId,negotiationId,publicKeyBroker,publicKeyCustomer,status,negotiationType,negotiationXML,timestamp);
     }
 
     private String getValue(String key,String keyColumn,String valueColumn) throws UnexpectedResultReturnedFromDatabaseException {

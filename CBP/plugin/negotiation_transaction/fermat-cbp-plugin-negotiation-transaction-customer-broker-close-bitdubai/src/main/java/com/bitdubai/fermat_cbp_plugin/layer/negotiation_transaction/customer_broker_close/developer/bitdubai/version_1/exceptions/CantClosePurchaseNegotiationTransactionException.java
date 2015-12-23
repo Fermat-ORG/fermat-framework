@@ -1,13 +1,12 @@
-package com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions;
+package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Yordin Alayn on 25.11.2015.
+ * Created by Yordin Alayn on 22.12.15.
  */
-public class CantSendNegotiationToCryptoBrokerException extends FermatException {
-
-    public static final String DEFAULT_MESSAGE = "CAN'T SEND NEGOTIATION FROM CRYPTO CUSTOMER TO CRYPTO BROKER";
+public class CantClosePurchaseNegotiationTransactionException extends FermatException {
+    public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER CLOSE. CAN'T PROCESS NEW PURCHASE NEGOTIATION TRANSACTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,8 +16,7 @@ public class CantSendNegotiationToCryptoBrokerException extends FermatException 
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantSendNegotiationToCryptoBrokerException(String message, Exception cause, String context, String possibleReason) {
+    public CantClosePurchaseNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
 }

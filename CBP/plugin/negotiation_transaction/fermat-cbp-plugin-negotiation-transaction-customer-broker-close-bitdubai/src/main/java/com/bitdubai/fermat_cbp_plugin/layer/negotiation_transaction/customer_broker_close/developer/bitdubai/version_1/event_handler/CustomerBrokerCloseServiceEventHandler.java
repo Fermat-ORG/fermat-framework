@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.event_handler;
+package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -10,8 +10,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -19,25 +18,24 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Created by Yordin Alayn on 10.12.15.
- * Based On OpenContractRecorderService Create by Manuel Perez.
+ * Created by Yordin Alayn on 22.12.15.
  */
-public class CustomerBrokerNewServiceEventHandler implements CBPService {
+public class CustomerBrokerCloseServiceEventHandler implements CBPService {
 
-    private EventManager                                        eventManager;
+    private EventManager eventManager;
 
-    private CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
+    private CustomerBrokerCloseNegotiationTransactionDatabaseDao customerBrokerCloseNegotiationTransactionDatabaseDao;
 
-    private ServiceStatus               serviceStatus   = ServiceStatus.CREATED;
+    private ServiceStatus serviceStatus   = ServiceStatus.CREATED;
 
-    private List<FermatEventListener>   listenersAdded  = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded  = new ArrayList<>();
 
-    public CustomerBrokerNewServiceEventHandler(
-        CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao,
-        EventManager eventManager
+    public CustomerBrokerCloseServiceEventHandler(
+            CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
+            EventManager                                            eventManager
     ){
-        this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
-        this.eventManager                                       = eventManager;
+        this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
+        this.eventManager                                           = eventManager;
     }
 
     /*SERVICE*/
@@ -49,14 +47,14 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
             fermatEventHandler = new IncomingNegotiationTransactionEventHandler();
             ((IncomingNegotiationTransactionEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE);
             fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
             ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
@@ -90,7 +88,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
         Logger LOG = Logger.getGlobal();
         LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerBrokerCloseNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         LOG.info("CHECK THE DATABASE");
 
     }
@@ -98,7 +96,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
     public void incomingNegotiationTransactionConfirmEventHandler(IncomingNegotiationTransmissionConfirmNegotiationEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerBrokerCloseNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
 
     }
