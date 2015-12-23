@@ -336,7 +336,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
              notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("Sent Transaction reversed");
-            notification.setTextBody("Sending for " + amount  + " could not complete.");
+            notification.setTextBody("Sending for " + WalletUtils.formatBalanceString(amount)  + " BTC could not complete.");
             notification.setNotificationType(NotificationType.OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION.getCode());
             poolNotification.add(notification);
 
