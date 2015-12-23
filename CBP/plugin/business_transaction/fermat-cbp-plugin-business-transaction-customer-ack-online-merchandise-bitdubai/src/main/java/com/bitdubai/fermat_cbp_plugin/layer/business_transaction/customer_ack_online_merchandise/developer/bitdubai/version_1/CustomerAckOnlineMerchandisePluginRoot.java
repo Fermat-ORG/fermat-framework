@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -86,6 +87,12 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
      * Represents the database
      */
     Database database;
+
+    /**
+     * Represents the plugin manager
+     */
+    CustomerAckOnlineMerchandiseTransactionManager customerAckOnlineMerchandiseTransactionManager;
+
     public CustomerAckOnlineMerchandisePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -111,7 +118,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                 }
             }
         } catch (Exception exception) {
-             this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
@@ -120,6 +127,12 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
     @Override
     public void start() throws CantStartPluginException {
         try {
+
+            /**
+             * Initialize plugin manager
+             */
+        //TODO: temporal instance, only for compilation
+            this.customerAckOnlineMerchandiseTransactionManager = new CustomerAckOnlineMerchandiseTransactionManager();
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Customer Ack Online Merchandise Starting");
         } catch (Exception exception) {
@@ -144,7 +157,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return this.customerAckOnlineMerchandiseTransactionManager;
     }
 
     @Override
