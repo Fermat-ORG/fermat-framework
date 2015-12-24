@@ -23,8 +23,8 @@ import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankAccountNumberImpl;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankMoneyTransactionRecordImpl;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankMoneyWalletImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
 import java.util.List;
@@ -39,10 +39,10 @@ import java.util.UUID;
 public class WalletBankMoneyPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, BankMoneyWalletManager {
 
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
@@ -92,9 +92,9 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch(CantInitializeBankMoneyWalletDatabaseException cantInitializeException) {
+        } catch (CantInitializeBankMoneyWalletDatabaseException cantInitializeException) {
             FermatException e = new CantInitializeBankMoneyWalletDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
@@ -102,37 +102,34 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
     @Override
     public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException {
         try {
-            bankMoneyWallet = new BankMoneyWalletImpl(this.pluginId,this.pluginDatabaseSystem,this.errorManager,walletPublicKey);
+            bankMoneyWallet = new BankMoneyWalletImpl(this.pluginId, this.pluginDatabaseSystem, this.errorManager, walletPublicKey);
         } catch (Exception exception) {
             FermatException e = new CantInitializeBankMoneyWalletDatabaseException("Database cannot be initialized", exception, "CashMoneyTransactionHoldPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return bankMoneyWallet;
     }
 
-    public void test(){
+    public void test() {
         try {
             BankMoneyWallet bankMoneyWallet = loadBankMoneyWallet("testbankwallet");
-            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("guillermo account","1234567887654321",FiatCurrency.EURO,BankAccountType.SAVING));
-            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("Test2 account","9876543210123456",FiatCurrency.US_DOLLAR,BankAccountType.SAVING));
-            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("Test3","3210123456987654",FiatCurrency.VENEZUELAN_BOLIVAR,BankAccountType.SAVING));
-            try{
-                bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(),300,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.DEPOSIT.getCode(),"test_reference",null,null,"1234567887654321",0,0,(new Date().getTime()),null,null));
-                bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(),300,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.DEPOSIT.getCode(),"test_reference",null,null,"1234567887654321",0,0,new Date().getTime(),null,null));
-                bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(),300,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.DEPOSIT.getCode(),"test_reference",null,null,"1234567887654321",0,0,new Date().getTime(),null,null));
-                bankMoneyWallet.getAvailableBalance().debit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(),250,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.WITHDRAW.getCode(),"test_reference",null,null,"1234567887654321",0,0,new Date().getTime(),null,null));
-                bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(),300,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.DEPOSIT.getCode(),"test_reference",null,null,"1234567887654321",0,0,new Date().getTime(),null,null));
-                bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(),300,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.DEPOSIT.getCode(),"test_reference",null,null,"1234567887654321",0,0,new Date().getTime(),null,null));
-                bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(),300,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.DEPOSIT.getCode(),"test_reference",null,null,"1234567887654321",0,0,new Date().getTime(),null,null));
-                bankMoneyWallet.getBookBalance().debit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(),250,FiatCurrency.US_DOLLAR.getCode(), BankOperationType.WITHDRAW.getCode(),"test_reference",null,null,"1234567887654321",0,0,new Date().getTime(),null,null));
-            }catch (Exception e){
-                System.out.println("error en transacciones = "+e.getMessage());
+            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("guillermo account", "1234567887654321", FiatCurrency.EURO, BankAccountType.SAVING));
+            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("Test2 account", "9876543210123456", FiatCurrency.US_DOLLAR, BankAccountType.SAVING));
+            bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("Test3", "3210123456987654", FiatCurrency.VENEZUELAN_BOLIVAR, BankAccountType.SAVING));
+            try {
+                bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
+                bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
+                bankMoneyWallet.getAvailableBalance().debit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
+                bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
+                bankMoneyWallet.getBookBalance().debit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
+            } catch (Exception e) {
+                System.out.println("error en transacciones = " + e.getMessage());
             }
 
-        }catch (CantLoadBankMoneyWalletException e){
-            System.out.println("bank_wallet "+ e.getMessage());
-        }catch (CantAddNewAccountException e){
-            System.out.println("bank_wallet "+ e.getMessage());
+        } catch (CantLoadBankMoneyWalletException e) {
+            System.out.println("bank_wallet " + e.getMessage());
+        } catch (CantAddNewAccountException e) {
+            System.out.println("bank_wallet " + e.getMessage());
         }
 
     }
