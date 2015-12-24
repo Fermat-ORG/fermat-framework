@@ -15,16 +15,12 @@ Currently we are a small team dedicated to the development of a communications l
 
 ### Team Members:
 
-![alt text](https://avatars1.githubusercontent.com/u/12099493?v=3&s=460 "Image Profile")
-
 * **Roberto Requena [Team Leader]**<br/>
 ---
     Email:   rart3001@gmail.com
     Skype:   Rart3001
     Github:  https://github.com/Rart3001
-    
-![alt text](https://avatars3.githubusercontent.com/u/13169230?v=3&s=460 "Image Profile")
-    
+
 * **Hendry Rodriguez**<br/>
 ---
       Email:   elnegroevaristo@gmail.com
