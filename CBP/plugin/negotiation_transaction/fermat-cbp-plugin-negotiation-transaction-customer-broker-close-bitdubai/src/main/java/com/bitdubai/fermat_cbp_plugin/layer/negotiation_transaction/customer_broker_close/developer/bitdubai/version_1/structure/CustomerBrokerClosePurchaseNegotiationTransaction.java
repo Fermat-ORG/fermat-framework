@@ -1,16 +1,23 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantNegotiationAddCryptoAdreessException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -39,11 +46,16 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            //TODO ACA SE DEBE AGREGAR LA DIRECCION BTC A LAS CLAUSULAS SI LA MERCANCIA ES BTC. CONVERSAR CON ANGEL COMO HACER ESTE PASO
-            saveCryptoAdreess(customerBrokerPurchaseNegotiation);
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation;
+
+            //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
+            purchaseNegotiation = getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
+
+            //SAVE CRYPTO ADREESS OF THE CUSTOMER
+            this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(purchaseNegotiation);
 
             //CLOSE NEGOTIATION
-            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
+            this.customerBrokerPurchaseNegotiationManager.closeNegotiation(purchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
@@ -68,8 +80,8 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
         try {
 
-            //TODO ACA SE DEBE AGREGAR LA DIRECCION BTC A LAS CLAUSULAS SI LA MERCANCIA ES BTC. CONVERSAR CON ANGEL COMO HACER ESTE PASO
-            saveCryptoAdreess(customerBrokerPurchaseNegotiation);
+
+//            saveCryptoAdreess(customerBrokerPurchaseNegotiation);
 
             //CLOSE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.closeNegotiation(customerBrokerPurchaseNegotiation);
@@ -92,12 +104,91 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
-    private void saveCryptoAdreess(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation){
+    private CustomerBrokerPurchaseNegotiation getNegotiationAddCryptoAdreess(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantNegotiationAddCryptoAdreessException{
+
+        CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiation;
+
+        try {
+
+            if (isMerchandiseCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses())) {
+
+                Collection<Clause> negotiationClauses;
+
+                negotiationClauses = addCryptoAdreess(customerBrokerPurchaseNegotiation.getClauses());
+
+                purchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl(
+                        customerBrokerPurchaseNegotiation.getNegotiationId(),
+                        customerBrokerPurchaseNegotiation.getCustomerPublicKey(),
+                        customerBrokerPurchaseNegotiation.getBrokerPublicKey(),
+                        customerBrokerPurchaseNegotiation.getStartDate(),
+                        customerBrokerPurchaseNegotiation.getNegotiationExpirationDate(),
+                        customerBrokerPurchaseNegotiation.getStatus(),
+                        negotiationClauses
+                );
+
+            }
+
+        } catch (CantGetListClauseException e){
+            throw new CantNegotiationAddCryptoAdreessException(e.getMessage(),e, CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+        } catch (Exception e){
+            throw new CantNegotiationAddCryptoAdreessException(e.getMessage(), FermatException.wrapException(e), CantClosePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR ADD CRYPTO ADREESS AN PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+        }
+
+        return purchaseNegotiation;
 
     }
 
+    private Collection<Clause> addCryptoAdreess(Collection<Clause> negotiationClauses){
 
-    private boolean isCryptoCurrency(){
-        return true;
+        Collection<Clause> negotiationClausesNew = new ArrayList<>();
+
+        for(Clause clause : negotiationClauses){
+            if(clause.getType() == ClauseType.CUSTOMER_CRYPTO_ADDRESS){
+                negotiationClausesNew.add(
+                    addClause(clause,cryptoAdreessActor())
+                );
+            }else{
+                negotiationClausesNew.add(
+                    addClause(clause,clause.getValue())
+                );
+            }
+        }
+
+        return negotiationClausesNew;
+
+    }
+
+    private Clause addClause(Clause clause, String value){
+
+        Clause clauseNew = new CustomerBrokerNegotiationClauseImpl(
+            clause.getClauseId(),
+            clause.getType(),
+            value,
+            clause.getStatus(),
+            clause.getProposedBy(),
+            clause.getIndexOrder()
+        );
+
+        return clauseNew;
+
+    }
+
+    private String cryptoAdreessActor(){
+
+        return null;
+
+    }
+    private boolean isMerchandiseCryptoCurrency(Collection<Clause> negotiationClauses){
+
+        for(Clause clause : negotiationClauses){
+            if(clause.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD)){
+                if (clause.getValue().equals(CurrencyType.CRYPTO_MONEY)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
     }
 }
