@@ -107,7 +107,7 @@ Technically Fermat is an open-source P2P system built on a plug-in architecture 
 
 * **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people, for example Brands creating their own wallets for their customers. All the heavy lifting is done by the Fermat underlaying technology.
 
-* **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers.
+* **Fermat guarantees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers.
 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [white paper](FERMAT-WHITE-PAPER.md) that we're anxious to add. So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet or financial APP.
