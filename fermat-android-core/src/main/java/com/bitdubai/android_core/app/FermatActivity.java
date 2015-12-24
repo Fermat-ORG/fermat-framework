@@ -302,7 +302,8 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         try {
-            this.resetThisActivity();
+            //this.resetThisActivity();
+
             super.onStop();
         } catch (Exception e) {
             e.printStackTrace();

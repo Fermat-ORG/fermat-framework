@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -149,17 +150,21 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         else if(id == R.id.btn_right){
             try {
                 final CryptoWallet cryptoWallet = getSession().getModuleManager().getCryptoWallet();
-                cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
+                //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
+
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        cryptoWallet.registerIdentities();
+                        try {
+                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
+                        } catch (CantCreateNewIntraWalletUserException e) {
+                            e.printStackTrace();
+                        }
+                        //cryptoWallet.registerIdentities();
                     }
                 });
                 thread.start();
-            } catch (CantCreateNewIntraWalletUserException e) {
-                e.printStackTrace();
             } catch (CantGetCryptoWalletException e) {
                 e.printStackTrace();
             }
@@ -172,7 +177,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
