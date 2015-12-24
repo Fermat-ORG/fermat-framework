@@ -140,7 +140,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      */
     public void sendPingMessage(WebSocket conn){
 
-        LOG.debug("Sending ping message to remote node (" + conn.getRemoteSocketAddress() + ")");
+        LOG.info("Sending ping message to remote node (" + conn.getRemoteSocketAddress() + ")");
         FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
         frame.setFin(true);
         conn.sendFrame(frame);
@@ -157,7 +157,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
         if (f.getOpcode() == Framedata.Opcode.PONG){
-            LOG.debug(" Pong message receiveRemote from node (" + conn.getRemoteSocketAddress() + ") connection is alive");
+            LOG.info(" Pong message receiveRemote from node (" + conn.getRemoteSocketAddress() + ") connection is alive");
             pendingPongMessageByConnection.remove(conn.hashCode());
         }
     }
