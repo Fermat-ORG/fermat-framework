@@ -126,6 +126,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
+import jdk.nashorn.internal.parser.JSONParser;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot</code> is
@@ -681,7 +683,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
 
-                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
 
                     System.out.print("-----------------------\n" +
                             "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
@@ -1237,7 +1239,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             //Create a thread to save intra user cache list
 
-            this.toCache = new Thread(new Runnable() {
+            Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try
@@ -1250,7 +1252,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 }
             },"Thread Cache");
 
-            toCache.start();
+            thread.start();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1469,7 +1471,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                                                                                                                             (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
                                                                                                                                             NetworkServiceType.UNDEFINED,
                                                                                                                                             PlatformComponentType.ACTOR_INTRA_USER,
-                                                                                                                                            imageString);
+                        imageString);
 
 
                /* for (int i = 0; i < 35; i++) {

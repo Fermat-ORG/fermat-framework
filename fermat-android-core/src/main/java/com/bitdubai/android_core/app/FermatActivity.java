@@ -816,6 +816,11 @@ public abstract class FermatActivity extends AppCompatActivity
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
+            if(activityType == ActivityType.ACTIVITY_TYPE_WALLET){
+                if(coordinatorLayout!=null)
+                coordinatorLayout.setBackgroundColor(Color.WHITE);
+            }
+
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             if (mToolbar != null)
