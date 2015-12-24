@@ -197,7 +197,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         );
 
                         System.out.print("-----------------------\n" +
-                                "ENVIANDO MENSAJE A OTRO INTRA USER!!!!! -----------------------\n" +
+                                "TRATANDO DE ENVIAR EL  MENSAJE A OTRO INTRA USER NUEVAMENTE!!!!! -----------------------\n" +
                                 "-----------------------\n DESDE: " + cpr.getActorSenderAlias());
 
 

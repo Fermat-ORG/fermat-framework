@@ -973,19 +973,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     else
                     {
                         record.setSentCount(record.getSentCount() + 1);
+                        outgoingNotificationDao.update(record);
                     }
                 }
                 else
                 {
-                    //I verify the number of days I'm around trying to send if it exceeds seven I delete record
+                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
 
                     long sentDate = record.getSentDate();
                     long currentTime = System.currentTimeMillis();
 
                     long dif = currentTime - sentDate;
 
-                    if(dif > 604800000)
+                    if(dif > 259200000)
                         outgoingNotificationDao.delete(record.getId());
+
+                    //TODO tendria que disparar evento para que le cambie el estado da la solicitud a Error usuario no existe o algo asi
                 }
 
             }
