@@ -1,5 +1,7 @@
-include ':fermat-api'
-project(':fermat-api').projectDir = new File('../../../fermat-api')
+apply from: 'P2P/settings.gradle'
 
-include ':fermat-osa-addon-android-database-system-bitdubai'
-project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('../../../OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
+include ':fermat-api'
+include ':fermat-core'
+include ':fermat-core-api'
+
+include ':fermat_linux_core'
