@@ -130,7 +130,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
-import jdk.nashorn.internal.parser.JSONParser;
 
 
 /**
@@ -1240,6 +1239,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                String actorPhrase = "";
                String profileImage = "";
+               PhotoType photoType = null;
                if(!platformComponentProfile.getExtraData().equals(""))
                {
                    try {
@@ -1248,6 +1248,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                        actorPhrase = jsonObject.get("PHRASE").getAsString();
                        profileImage  = jsonObject.get("AVATAR_IMG").getAsString();
+                       photoType = PhotoType.getByCode(jsonObject.get("PhotoType").getAsString());
                    }
                    catch(Exception e){
                        profileImage = platformComponentProfile.getExtraData();
@@ -1257,7 +1258,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                }
 
                 byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),actorPhrase));
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),actorPhrase,photoType));
             }
 
             //Create a thread to save intra user cache list
@@ -1492,17 +1493,16 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
                 jsonObject.addProperty("AVATAR_IMG" , Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                jsonObject.addProperty("PhotoType",actor.getPhotoType().getCode());
                 String extraData = gson.toJson(jsonObject);
 
                 PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                                                                                                                                            (actor.getName().toLowerCase()),
-                                                                                                                                            "",//phrase
-                                                                                                                                            (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
-                                                                                                                                            NetworkServiceType.UNDEFINED,
-                                                                                                                                            PlatformComponentType.ACTOR_INTRA_USER,
-                                                                                                                                            // null);//imageString);
-
-                                                                                                                                              extraData);
+                        (actor.getName().toLowerCase()),
+                        (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_INTRA_USER,
+                        // null);//imageString);
+                        extraData);
 
 
                /* for (int i = 0; i < 35; i++) {
@@ -1514,10 +1514,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
-                        System.out.println("---------- TESTENADO --------------------");
+                        System.out.println("---------- TESTEANDO --------------------");
                         System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
                         System.out.println("----------\n "+networkServiceType+"\n --------------------");
-                        System.out.println("---------- TESTENADO --------------------");
+                        System.out.println("---------- TESTEANDO --------------------");
                         communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
                         System.out.println("----------\n Pasamos por el registro robert\n --------------------");
                     }
@@ -1548,10 +1548,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
 
-                System.out.println("---------- TESTENADO --------------------");
+                System.out.println("---------- TESTEANDO --------------------");
                 System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
                 System.out.println("----------\n "+networkServiceType+"\n --------------------");
-                System.out.println("---------- TESTENADO --------------------");
+                System.out.println("---------- TESTEANDO --------------------");
                 communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
                 System.out.println("----------\n Pasamos por el registro robert\n --------------------");
 //                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
@@ -1563,10 +1563,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors, byte[] profileImage) {
-        return new Identity(publicKey, alias,phrase, actors, profileImage);
-    public Actor contructIdentity(String publicKey, String alias, Actors actors, byte[] profileImage, PhotoType photoType) {
-        return new Identity(publicKey, alias, actors, profileImage, photoType);
+    public Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors, byte[] profileImage, PhotoType photoType) {
+        return new Identity(publicKey, alias, phrase,actors, profileImage, photoType);
     }
 
     public void connectToBetweenActors(String senderPK, PlatformComponentType senderType, String receiverPK, PlatformComponentType receiverType) {

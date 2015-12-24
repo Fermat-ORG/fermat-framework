@@ -19,8 +19,7 @@ public class Identity implements Actor {
     private PhotoType photoType;
 
 
-    public Identity(String publicKey, String name, String phrase, Actors type, byte[] image) {
-    public Identity(String publicKey, String name, Actors type, byte[] image, PhotoType photoType) {
+    public Identity(String publicKey, String name, String phrase, Actors type, byte[] image, PhotoType photoType) {
         this.publicKey = publicKey;
         this.name = name;
         this.type = type;

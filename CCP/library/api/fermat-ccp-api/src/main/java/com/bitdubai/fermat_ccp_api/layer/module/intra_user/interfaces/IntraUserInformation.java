@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
 
 /**
@@ -52,4 +53,10 @@ public interface IntraUserInformation extends IdentityUserInformation {
      * @return ConnectionState object
      */
     ConnectionState getConnectionState();
+
+    /**
+     * The method <code>getPhotoType</code> returns the Photo Type of the Intra User
+     * @return PhotoType object
+     */
+    PhotoType getPhotoType();
 }

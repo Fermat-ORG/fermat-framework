@@ -11,9 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
@@ -463,8 +461,8 @@ public interface CryptoWallet extends Serializable {
                                    final BlockchainNetworkType networkType      ,
                                    final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException;
 
-    void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 
     public void registerIdentities();
+
     void createIntraUser(String name, String phrase, byte[] image, PhotoType photoType) throws CantCreateNewIntraWalletUserException;
 }

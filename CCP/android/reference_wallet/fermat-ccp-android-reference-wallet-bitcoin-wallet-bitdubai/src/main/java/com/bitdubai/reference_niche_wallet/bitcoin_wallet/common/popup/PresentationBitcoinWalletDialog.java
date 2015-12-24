@@ -140,7 +140,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
         if(id == R.id.btn_left){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.profile_image_standard), PhotoType.DEFAULT_MALE);
+                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",null, PhotoType.DEFAULT_MALE);
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
@@ -152,22 +152,24 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         else if(id == R.id.btn_right){
             try {
                 final CryptoWallet cryptoWallet = getSession().getModuleManager().getCryptoWallet();
-                //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
+                cryptoWallet.createIntraUser("Jane Doe", "Available", null,PhotoType.DEFAULT_COLOR_FEMALE);
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
-                        } catch (CantCreateNewIntraWalletUserException e) {
-                            e.printStackTrace();
-                        }
-                        //cryptoWallet.registerIdentities();
-                    }
-                });
-                thread.start();
+//                Thread thread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
+//                        } catch (CantCreateNewIntraWalletUserException e) {
+//                            e.printStackTrace();
+//                        }
+//                        //cryptoWallet.registerIdentities();
+//                    }
+//                });
+//                thread.start();
             } catch (CantGetCryptoWalletException e) {
+                e.printStackTrace();
+            } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
             }
             dismiss();

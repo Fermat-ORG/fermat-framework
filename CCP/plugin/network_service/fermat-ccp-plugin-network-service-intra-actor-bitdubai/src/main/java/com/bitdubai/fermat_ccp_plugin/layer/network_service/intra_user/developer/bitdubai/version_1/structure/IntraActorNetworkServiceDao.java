@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDatabaseFactory;
@@ -167,13 +169,13 @@ public class IntraActorNetworkServiceDao {
         String intraUserProfileImage       = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME);
         String intraUserPublicKey          = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME);
         String intraUserPhrase             = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME);
-
+        PhotoType photoType                = PhotoType.getByCode(record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHOTO_TYPE_COLUMN_NAME));
         byte[] profileImage = null;
 
         if (intraUserProfileImage.length() > 0)
             profileImage = intraUserProfileImage.getBytes();
 
-        return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase);
+        return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase,photoType);
     }
 
 }

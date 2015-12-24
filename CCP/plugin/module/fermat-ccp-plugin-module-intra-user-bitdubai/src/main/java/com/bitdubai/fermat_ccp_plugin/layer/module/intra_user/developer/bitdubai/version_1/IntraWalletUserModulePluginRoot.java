@@ -33,7 +33,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
@@ -271,7 +270,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
             List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
+            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset);
 
 
 
@@ -281,7 +280,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
                 //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState, intraUser.getPhotoType());
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
@@ -312,7 +311,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
                 //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState, intraUser.getPhotoType());
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
@@ -509,7 +508,12 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                if (intraUserActor.getProfileImage()!=null){
+                    intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),PhotoType.CUSTOM));
+                }else{
+                    intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),PhotoType.DEFAULT_MALE));
+                }
+
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {
@@ -536,7 +540,12 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                if (intraUserActor.getProfileImage()!=null){
+                    intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),PhotoType.CUSTOM));
+                }else{
+                    intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),PhotoType.DEFAULT_MALE));
+                }
+
             }
 
             return intraUserList;
@@ -624,7 +633,12 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                if (intraUserActor.getProfileImage()!=null){
+                    intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),PhotoType.CUSTOM));
+                }else{
+                    intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),PhotoType.DEFAULT_MALE));
+                }
+
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {

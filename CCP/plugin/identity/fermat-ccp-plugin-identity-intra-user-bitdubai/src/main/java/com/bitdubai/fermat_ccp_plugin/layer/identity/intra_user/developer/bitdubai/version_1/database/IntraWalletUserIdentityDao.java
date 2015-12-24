@@ -169,7 +169,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
 
-    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage) throws CantUpdateIntraUserIdentityException {
+    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage,PhotoType photoType) throws CantUpdateIntraUserIdentityException {
 
         try {
 
@@ -197,6 +197,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 //set new values
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias);
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
+                record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHOTO_TIPE,photoType.getCode());
 
                 table.updateRecord(record);
             }
