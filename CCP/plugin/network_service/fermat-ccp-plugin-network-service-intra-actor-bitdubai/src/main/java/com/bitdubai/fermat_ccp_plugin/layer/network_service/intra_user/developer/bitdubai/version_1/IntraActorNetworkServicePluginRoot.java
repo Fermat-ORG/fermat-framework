@@ -1511,7 +1511,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
-                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfile);
+                        System.out.println("---------- TESTENADO --------------------");
+                        System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
+                        System.out.println("----------\n "+networkServiceType+"\n --------------------");
+                        System.out.println("---------- TESTENADO --------------------");
+                        communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
                         System.out.println("----------\n Pasamos por el registro robert\n --------------------");
                     }
                 }
@@ -1520,6 +1524,38 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    @Override
+    public void registrateActor(Actor actor) {
+        try {
+            if (register) {
+                CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("PHRASE", actor.getPhrase());
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                        (actor.getName().toLowerCase()),
+                        (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_INTRA_USER,
+                        extraData);
+
+                System.out.println("---------- TESTENADO --------------------");
+                System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
+                System.out.println("----------\n "+networkServiceType+"\n --------------------");
+                System.out.println("---------- TESTENADO --------------------");
+                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+                System.out.println("----------\n Pasamos por el registro robert\n --------------------");
+//                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+//                System.out.println("----------\n Pasamos por el registro robert\n --------------------");
+            }
+        }catch(Exception e){
+              e.printStackTrace();
         }
     }
 
