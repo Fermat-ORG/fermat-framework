@@ -223,9 +223,6 @@ public abstract class FermatActivity extends AppCompatActivity
      * This code will be in a manager in the new core
      */
     private List<ElementsWithAnimation> elementsWithAnimation = new ArrayList<>();
-    private NavigationViewPainter navigationViewPainter;
-    private FooterViewPainter footerViewPainter;
-    private HeaderViewPainter headerViewPainter;
     private BottomNavigation bottomNavigation;
 
 
@@ -390,9 +387,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintSideMenu(activity, sideMenu,appConnections);
 
-            paintFooter(activity.getFooter());
+            paintFooter(activity.getFooter(),appConnections.getFooterViewPainter());
 
-            pantHeader(activity.getHeader());
+            pantHeader(activity.getHeader(),appConnections.getHeaderViewPainter());
 
             setScreen(activity);
         } catch (Exception e) {
@@ -414,8 +411,8 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    private void pantHeader(FermatHeader header) {
-        if(header!=null){
+    private void pantHeader(FermatHeader header, HeaderViewPainter headerViewPainter) {
+        if(header!=null && headerViewPainter!=null){
             if(header.hasExpandable()){
                 headerViewPainter.addExpandableHeader(getToolbarHeader());
             }
@@ -423,8 +420,8 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    private void paintFooter(FermatFooter footer) {
-        if (footer != null) {
+    private void paintFooter(FermatFooter footer,FooterViewPainter footerViewPainter) {
+        if (footer != null && footerViewPainter!=null) {
             FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
             RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
             if (footer_container != null && footerViewPainter != null && slide_container != null) {
@@ -727,26 +724,14 @@ public abstract class FermatActivity extends AppCompatActivity
         pagertabs.setVisibility(View.VISIBLE);
 
 
-        if (tabStrip.isHasIcon()) {
-            adapterWithIcons = new TabsPagerAdapterWithIcons(getFragmentManager(),
-                    getApplicationContext(),
-                    fermatFragmentFactory,
-                    tabStrip,
-                    walletSession,
-                    getWalletResourcesProviderManager(),
-                    getResources());
-            pagertabs.setAdapter(adapterWithIcons);
-        } else {
-
-            adapter = new TabsPagerAdapter(getFragmentManager(),
-                    getApplicationContext(),
-                    fermatFragmentFactory,
-                    tabStrip,
-                    walletSession,
-                    getWalletResourcesProviderManager(),
-                    getResources());
-            pagertabs.setAdapter(adapter);
-        }
+        adapter = new TabsPagerAdapter(getFragmentManager(),
+                getApplicationContext(),
+                fermatFragmentFactory,
+                tabStrip,
+                walletSession,
+                getWalletResourcesProviderManager(),
+                getResources());
+        pagertabs.setAdapter(adapter);
 
         if(tabStrip.isHasIcon()){
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -768,7 +753,6 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, FermatSession subAppsSession) throws InvalidParameterException {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        System.out.println("tabLayout: " + tabLayout);
         tabLayout.setVisibility(View.VISIBLE);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -1179,9 +1163,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
-            navigationViewPainter = null;
             elementsWithAnimation = new ArrayList<>();
-            footerViewPainter = null;
             if(bottomNavigation!=null) {
                 bottomNavigation.reset();
                 bottomNavigation = null;
@@ -1472,17 +1454,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    public ModuleManager getIdentityManager(){
-        return getModuleManager(new PluginVersionReference(
-                Platforms.CRYPTO_CURRENCY_PLATFORM,
-                Layers.IDENTITY,
-                Plugins.INTRA_WALLET_USER,
-                Developers.BITDUBAI,
-                new Version()
-        ));
-
-    }
-
     /**
      * Get WalletManager from the fermat platform
      *
@@ -1602,38 +1573,6 @@ public abstract class FermatActivity extends AppCompatActivity
             return null;
         }
     }
-
-
-    /**
-     * Get IntraUserModuleManager
-     */
-    public IntraUserModuleManager getIntraUserModuleManager() {
-
-        try {
-            return (IntraUserModuleManager) ((ApplicationSession) getApplication()).getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.CRYPTO_CURRENCY_PLATFORM,
-                            Layers.SUB_APP_MODULE,
-                            Plugins.INTRA_WALLET_USER,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (ModuleManagerNotFoundException |
-                CantGetModuleManagerException e) {
-
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-
-            return null;
-        }
-    }
-
 
     /**
      * Get NotificationManager
@@ -1864,37 +1803,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void changeNavigationDrawerAdapter(FermatAdapter adapter) {
-        adapter.changeDataSet(getNavigationMenu());
-        adapter.setFermatListEventListener(this);
-        navigation_recycler_view.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void addNavigationViewHeader(View view) {
-        try {
-            //navigationView.addHeaderView(view);
-            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
-            frameLayout.setVisibility(View.VISIBLE);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            view.setLayoutParams(layoutParams);
-            frameLayout.addView(view);
-            navigationView.invalidate();
-            //navigationView.postInvalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void addFooterView(FooterViewPainter footerViewPainter){
-        this.footerViewPainter = footerViewPainter;
-        invalidate();
-    }
-
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback ){
         bottomNavigation.setDesktopHolderClickCallback(desktopHolderClickCallback);
     }
@@ -1919,7 +1827,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 paintSideMenu(activity,activity.getSideMenu(),appsConnections);
-                paintFooter(activity.getFooter());
+                paintFooter(activity.getFooter(),appsConnections.getFooterViewPainter());
                 break;
             case ACTIVITY_TYPE_SUB_APP:
                 break;
@@ -2034,19 +1942,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation){
         this.elementsWithAnimation.add(elementsWithAnimation);
-    }
-
-    @Override
-    public void addNavigationView(NavigationViewPainter navigationViewPainter) {
-        this.navigationViewPainter = navigationViewPainter;
-        if(activityType.equals(ActivityType.ACTIVITY_TYPE_WALLET)){
-            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
-            Activity activity = walletNavigationStructure.getLastActivity();
-            paintSideMenu(activity,activity.getSideMenu(),FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this));
-        }else{
-            invalidate();
-        }
-
     }
 
     /**

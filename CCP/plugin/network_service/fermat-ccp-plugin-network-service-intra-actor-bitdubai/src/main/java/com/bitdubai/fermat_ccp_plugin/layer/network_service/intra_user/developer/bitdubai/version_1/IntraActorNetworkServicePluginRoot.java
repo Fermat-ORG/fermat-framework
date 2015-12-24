@@ -1471,7 +1471,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                                                                                                                             (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
                                                                                                                                             NetworkServiceType.UNDEFINED,
                                                                                                                                             PlatformComponentType.ACTOR_INTRA_USER,
-                        imageString);
+                        null);//imageString);
 
 
                /* for (int i = 0; i < 35; i++) {
