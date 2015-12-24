@@ -20,7 +20,6 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -36,10 +35,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetIdentityRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 
 import java.util.ArrayList;
