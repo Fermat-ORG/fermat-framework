@@ -30,6 +30,8 @@ public interface NotificationManagerMiddleware extends FermatManager {
 
     void addIncomingRequestConnectionNotification(EventSource source, String actorId, String actorName, Actors actorType, byte[] profileImage);
 
+    void addOutgoingRollbackNotification(EventSource source, String actorId,long amount );
+
     void addCallback(FermatNotificationListener notificationListener);
 
     void deleteCallback(FermatNotificationListener fermatNotificationListener);
