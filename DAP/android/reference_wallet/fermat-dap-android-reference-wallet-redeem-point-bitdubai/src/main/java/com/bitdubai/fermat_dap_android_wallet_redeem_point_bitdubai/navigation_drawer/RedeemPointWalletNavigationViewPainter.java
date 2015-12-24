@@ -83,4 +83,9 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
     public boolean hasBodyBackground() {
         return true;
     }
+
+    @Override
+    public boolean hasClickListener() {
+        return false;
+    }
 }

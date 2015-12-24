@@ -895,30 +895,30 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp.setPublicKey(intraUserIdentityPublicKey);
 
             // Activity: List of identities
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(null);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Intra user Identity");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity = new Activity();
+//            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+//            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(null);
+//            runtimeActivity.setColor("#03A9F4");
+//            runtimeSubApp.addActivity(runtimeActivity);
+//
+//
+//            runtimeTitleBar = new TitleBar();
+//            runtimeTitleBar.setLabel("Intra user Identity");
+//            runtimeTitleBar.setIsTitleTextStatic(true);
+//            runtimeTitleBar.setColor("#1189a4");
+//            runtimeTitleBar.setTitleColor("#ffffff");
+//            runtimeTitleBar.setLabelSize(18);
+//            runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//            statusBar = new StatusBar();
+//            statusBar.setColor("#1189a4");
+//            runtimeActivity.setStatusBar(statusBar);
+//
+//            runtimeFragment = new Fragment();
+//            runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
 
             // Activity: Create New Identity
             runtimeActivity = new Activity();

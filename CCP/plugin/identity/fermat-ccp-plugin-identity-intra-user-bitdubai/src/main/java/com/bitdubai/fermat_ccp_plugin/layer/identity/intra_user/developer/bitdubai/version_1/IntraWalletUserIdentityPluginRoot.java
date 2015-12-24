@@ -165,7 +165,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
             intraWalletUserIdentityDao.createNewUser(alias,phrase, publicKey, privateKey, loggedUser, profileImage);
 
-            com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
 
             registerIdentities();
 

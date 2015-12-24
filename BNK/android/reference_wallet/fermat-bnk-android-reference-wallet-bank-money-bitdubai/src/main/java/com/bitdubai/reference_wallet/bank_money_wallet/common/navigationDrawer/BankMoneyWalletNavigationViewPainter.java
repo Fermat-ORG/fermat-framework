@@ -69,4 +69,9 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
     public boolean hasBodyBackground() {
         return false;
     }
+
+    @Override
+    public boolean hasClickListener() {
+        return false;
+    }
 }

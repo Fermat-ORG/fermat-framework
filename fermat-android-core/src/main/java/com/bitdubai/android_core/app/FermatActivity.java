@@ -95,6 +95,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -454,13 +455,21 @@ public abstract class FermatActivity extends AppCompatActivity
                 final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
                 if(viewPainter!=null) {
                     ActiveActorIdentityInformation loginIdentity = appConnections.getActiveIdentity();
-                    View view = viewPainter.addNavigationViewHeader(loginIdentity);
+                    final View view = viewPainter.addNavigationViewHeader(loginIdentity);
                     FrameLayout frameLayout = (FrameLayout) findViewById(R.id.navigation_view_header);
                     frameLayout.setVisibility(View.VISIBLE);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     layoutParams.gravity = Gravity.CENTER_VERTICAL;
                     view.setLayoutParams(layoutParams);
                     frameLayout.addView(view);
+                    frameLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Object[] object = new Object[2];
+                            if(viewPainter.hasClickListener())
+                            connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY,"public_key_ccp_intra_user_identity",object);
+                        }
+                    });
                     /**
                      * Set adapter
                      */
@@ -806,6 +815,11 @@ public abstract class FermatActivity extends AppCompatActivity
             }
 
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
+
+            if(activityType == ActivityType.ACTIVITY_TYPE_WALLET){
+                if(coordinatorLayout!=null)
+                coordinatorLayout.setBackgroundColor(Color.WHITE);
+            }
 
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -2067,6 +2081,9 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
+    //TODO: to remove
+
+    public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
 
 
 }

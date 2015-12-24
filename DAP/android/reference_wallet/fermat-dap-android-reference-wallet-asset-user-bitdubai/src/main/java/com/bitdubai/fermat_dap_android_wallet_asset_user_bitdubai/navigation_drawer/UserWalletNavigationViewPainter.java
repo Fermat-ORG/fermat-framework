@@ -82,4 +82,9 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
     public boolean hasBodyBackground() {
         return true;
     }
+
+    @Override
+    public boolean hasClickListener() {
+        return false;
+    }
 }
