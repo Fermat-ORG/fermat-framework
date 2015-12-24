@@ -13,7 +13,6 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
 
 /**
@@ -51,7 +50,7 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_wallet_asset_issuer_navigation_view_bottom, base, true);
+        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_issuer_wallet_bottom, base, true);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.bg_app_image, options);
+                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
@@ -82,5 +81,10 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     @Override
     public boolean hasBodyBackground() {
         return true;
+    }
+
+    @Override
+    public boolean hasClickListener() {
+        return false;
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by natalia on 16/09/15.
  */
 
-public interface CryptoBrokerInformation {
+public interface CryptoBrokerCommunityInformation {
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented crypto broker

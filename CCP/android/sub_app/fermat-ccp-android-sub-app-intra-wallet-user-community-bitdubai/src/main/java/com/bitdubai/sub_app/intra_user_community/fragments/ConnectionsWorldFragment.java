@@ -138,6 +138,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         }
     }
 
+
     /**
      * Fragment Class implementation.
      */
@@ -163,6 +164,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            swipeRefresh.setRefreshing(true);
             onRefresh();
             /**
              * Code to show cache data
@@ -176,7 +178,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
                 }
             }, 1500);*/
             SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-            if (!pref.getBoolean("isChecked", true)) {
+            if (!pref.getBoolean("isChecked", false)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
                         PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
@@ -211,16 +213,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
-        /**
-         * Navigation view items
-         */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override

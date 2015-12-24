@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraWalletUserIdentityPluginRoot;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -157,6 +158,19 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     @Override
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public String toString() {
+        return "IntraWalletUserIdentity{" +
+                "alias='" + alias + '\'' +
+                ", phrase='" + phrase + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", image=" + Arrays.toString(image) +
+                ", privateKey='" + privateKey + '\'' +
+                ", pluginFileSystem=" + pluginFileSystem +
+                ", pluginId=" + pluginId +
+                '}';
     }
 }
 

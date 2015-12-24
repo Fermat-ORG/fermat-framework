@@ -100,15 +100,6 @@ public abstract class FermatFragment extends AbstractFermatFragment {
         return ((PaintActivityFeatures)getActivity());
     }
 
-    protected void setNavigationDrawer(FermatAdapter adapter){
-        getPaintActivtyFeactures().changeNavigationDrawerAdapter(adapter);
-    }
-
-
-    protected void addNavigationHeader(View view){
-        getPaintActivtyFeactures().addNavigationViewHeader(view);
-    }
-
     protected void changeApp(Engine emgine,Object[] objects){
         //getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
     }

@@ -85,4 +85,9 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     public boolean hasBodyBackground() {
         return true;
     }
+
+    @Override
+    public boolean hasClickListener() {
+        return true;
+    }
 }

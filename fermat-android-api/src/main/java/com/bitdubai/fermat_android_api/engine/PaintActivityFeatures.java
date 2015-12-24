@@ -15,10 +15,6 @@ public interface PaintActivityFeatures {
 
     public void paintComboBoxInActionBar(ArrayAdapter adapter, ActionBar.OnNavigationListener listener);
 
-    public void changeNavigationDrawerAdapter(FermatAdapter adapter);
-
-    public void addNavigationViewHeader(View view);
-
     public android.support.v7.widget.Toolbar getToolbar();
 
     public RelativeLayout getToolbarHeader();
@@ -26,10 +22,6 @@ public interface PaintActivityFeatures {
     public void invalidate();
 
     public void addCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
-
-    public void addNavigationView(NavigationViewPainter navigationViewPainter);
-
-    public void addFooterView(FooterViewPainter footerViewPainter);
 
     // Esto no deberia estar acá
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback);

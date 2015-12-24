@@ -36,7 +36,6 @@ public interface CommunicationsClientConnection {
      *
      * @param identityPublicKey
      * @param alias
-     * @param phrase
      * @param name
      * @param networkServiceType
      * @param platformComponentType
@@ -44,7 +43,7 @@ public interface CommunicationsClientConnection {
      *
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias,String phrase, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias,String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
 
     /**
      * Construct a PlatformComponentProfile instance, for use in the process
@@ -77,7 +76,7 @@ public interface CommunicationsClientConnection {
      * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String phrase,String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
     /**
      * Method that register a platform component with for Communication like online

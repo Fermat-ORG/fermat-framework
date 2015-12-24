@@ -168,7 +168,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
             com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage,photoType, pluginFileSystem, pluginId);
 
-            registerIdentities();
+            //registerIdentities();
+            registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
 
             return intraWalletUserIdentity;
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -279,7 +280,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             List<IntraWalletUserIdentity> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             List<Actor> lstActors = new ArrayList<Actor>();
             for(IntraWalletUserIdentity user : lstIntraWalletUSer){
-                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), Actors.INTRA_USER,user.getImage(),user.getPhotoType()));
+                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(),Actors.INTRA_USER,user.getImage()));
             }
             intraActorManager.registrateActors(lstActors);
         } catch (CantListIntraWalletUserIdentitiesException e) {
@@ -287,6 +288,12 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         } catch (CantGetLoggedInDeviceUserException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    public void registerIdentity(IntraWalletUserIdentity intraWalletUserIdentity){
+        System.out.println(intraWalletUserIdentity);
+        intraActorManager.registrateActor(intraActorManager.contructIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage()));
+
     }
 
     @Override

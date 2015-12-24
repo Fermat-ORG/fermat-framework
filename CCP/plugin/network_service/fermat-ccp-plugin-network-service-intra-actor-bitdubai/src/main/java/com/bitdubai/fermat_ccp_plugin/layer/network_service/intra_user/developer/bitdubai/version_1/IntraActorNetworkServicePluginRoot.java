@@ -114,6 +114,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.Ev
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -126,6 +129,8 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+
+import jdk.nashorn.internal.parser.JSONParser;
 
 
 /**
@@ -682,7 +687,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
 
-                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
 
                     System.out.print("-----------------------\n" +
                             "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
@@ -1047,11 +1052,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     /**
      * (non-javadoc)
      *
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String,String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType,  String,String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias,String phrase, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, phrase, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias,String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias,  identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     /**
@@ -1216,7 +1221,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
                     NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
                     null,                     // alias
-                    null,                     // phrase
                     null,                     // identityPublicKey
                     null,                     // location
                     null,                     // distance
@@ -1232,13 +1236,33 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
            for (PlatformComponentProfile platformComponentProfile : list) {
 
-                byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),platformComponentProfile.getPhrase()));
+               //get extra data
+
+               String actorPhrase = "";
+               String profileImage = "";
+               if(!platformComponentProfile.getExtraData().equals(""))
+               {
+                   try {
+                       JsonParser jParser = new JsonParser();
+                       JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                       actorPhrase = jsonObject.get("PHRASE").getAsString();
+                       profileImage  = jsonObject.get("AVATAR_IMG").getAsString();
+                   }
+                   catch(Exception e){
+                       profileImage = platformComponentProfile.getExtraData();
+                   }
+
+
+               }
+
+                byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),actorPhrase));
             }
 
             //Create a thread to save intra user cache list
 
-            this.toCache = new Thread(new Runnable() {
+            Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try
@@ -1251,7 +1275,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 }
             },"Thread Cache");
 
-            toCache.start();
+            thread.start();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1461,8 +1485,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 /*
                  * Construct  profile and register
                  */
-                String imageString = Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT);
-                //System.out.println("imageString = "+imageString);
+
+                //profile images and  phrase pass on extra data
+
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("PHRASE", actor.getPhrase());
+                jsonObject.addProperty("AVATAR_IMG" , Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
 
                 PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
                                                                                                                                             (actor.getName().toLowerCase()),
@@ -1470,7 +1500,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                                                                                                                             (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
                                                                                                                                             NetworkServiceType.UNDEFINED,
                                                                                                                                             PlatformComponentType.ACTOR_INTRA_USER,
-                                                                                                                                            imageString);
+                                                                                                                                            // null);//imageString);
+
+                                                                                                                                              extraData);
 
 
                /* for (int i = 0; i < 35; i++) {
@@ -1482,7 +1514,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
-                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfile);
+                        System.out.println("---------- TESTENADO --------------------");
+                        System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
+                        System.out.println("----------\n "+networkServiceType+"\n --------------------");
+                        System.out.println("---------- TESTENADO --------------------");
+                        communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
                         System.out.println("----------\n Pasamos por el registro robert\n --------------------");
                     }
                 }
@@ -1495,6 +1531,40 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     @Override
+    public void registrateActor(Actor actor) {
+        try {
+            if (register) {
+                CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("PHRASE", actor.getPhrase());
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                        (actor.getName().toLowerCase()),
+                        (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_INTRA_USER,
+                        extraData);
+
+                System.out.println("---------- TESTENADO --------------------");
+                System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
+                System.out.println("----------\n "+networkServiceType+"\n --------------------");
+                System.out.println("---------- TESTENADO --------------------");
+                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+                System.out.println("----------\n Pasamos por el registro robert\n --------------------");
+//                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+//                System.out.println("----------\n Pasamos por el registro robert\n --------------------");
+            }
+        }catch(Exception e){
+              e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors, byte[] profileImage) {
+        return new Identity(publicKey, alias,phrase, actors, profileImage);
     public Actor contructIdentity(String publicKey, String alias, Actors actors, byte[] profileImage, PhotoType photoType) {
         return new Identity(publicKey, alias, actors, profileImage, photoType);
     }

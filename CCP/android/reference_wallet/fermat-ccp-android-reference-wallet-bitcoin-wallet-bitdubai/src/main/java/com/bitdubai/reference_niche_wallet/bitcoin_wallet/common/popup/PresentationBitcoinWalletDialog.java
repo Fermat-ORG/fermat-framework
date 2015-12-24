@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -21,6 +23,7 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
@@ -148,10 +151,22 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         }
         else if(id == R.id.btn_right){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("Jane Doe","Available",convertImage(R.drawable.profile_standard_female), PhotoType.DEFAULT_FEMALE);
+                final CryptoWallet cryptoWallet = getSession().getModuleManager().getCryptoWallet();
+                //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
+
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-            } catch (CantCreateNewIntraWalletUserException e) {
-                e.printStackTrace();
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
+                        } catch (CantCreateNewIntraWalletUserException e) {
+                            e.printStackTrace();
+                        }
+                        //cryptoWallet.registerIdentities();
+                    }
+                });
+                thread.start();
             } catch (CantGetCryptoWalletException e) {
                 e.printStackTrace();
             }
@@ -165,7 +180,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 

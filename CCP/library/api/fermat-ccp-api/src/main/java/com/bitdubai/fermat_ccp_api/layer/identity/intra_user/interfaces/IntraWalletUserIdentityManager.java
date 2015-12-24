@@ -68,4 +68,5 @@ public interface IntraWalletUserIdentityManager extends ModuleManager<FermatSett
      */
     void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException;
 
+    void registerIdentities();
 }
