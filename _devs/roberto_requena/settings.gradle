@@ -1,7 +1,13 @@
 apply from: 'P2P/settings.gradle'
 
 include ':fermat-api'
+project(':fermat-api').projectDir = new File('../../../fermat-api')
+
 include ':fermat-core'
+project(':fermat-core').projectDir = new File('../../../fermat-core')
+
 include ':fermat-core-api'
+project(':fermat-core-api').projectDir = new File('../../../fermat-core-api')
 
 include ':fermat_linux_core'
+project(':fermat_linux_core').projectDir = new File('../../../fermat_linux_core')

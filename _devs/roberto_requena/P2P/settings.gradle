@@ -6,10 +6,10 @@
  */
 
 include ':fermat-p2p-api'
-project(':fermat-p2p-api').projectDir = new File('P2P/library/api/fermat-p2p-api')
+project(':fermat-p2p-api').projectDir = new File('../../../../P2P/library/api/fermat-p2p-api')
 
 include ':fermat-p2p-core'
-project(':fermat-p2p-core').projectDir = new File('P2P/library/core/fermat-p2p-core')
+project(':fermat-p2p-core').projectDir = new File('../../../../P2P/library/core/fermat-p2p-core')
 
 //include ':fermat-p2p-plugin-communications-network-client-bitdubai'
 //project(':fermat-p2p-plugin-communications-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communications-network-client-bitdubai')
