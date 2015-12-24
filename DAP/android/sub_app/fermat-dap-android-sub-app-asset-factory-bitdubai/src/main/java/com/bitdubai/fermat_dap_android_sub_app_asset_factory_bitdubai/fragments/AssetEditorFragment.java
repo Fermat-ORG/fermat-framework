@@ -435,7 +435,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         if (hasResource) {
             List<Resource> resources = new ArrayList<>();
             Resource resource = new Resource();
-            if (asset.getResources().size() > 0) {
+            if (asset.getResources() != null && asset.getResources().size() > 0) {
                 resource.setId(asset.getResources().get(0).getId());
             } else {
                 resource.setId(UUID.randomUUID());

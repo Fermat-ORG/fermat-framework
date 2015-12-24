@@ -20,11 +20,11 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
@@ -44,18 +44,17 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  */
 public class ConnectionOtherProfileFragment extends FermatFragment implements MessageReceiver {
 
-    public static final String INTRA_USER_SELECTED = "intra_user";
+    public static final String ACTOR_SELECTED = "actor_selected";
     private Resources res;
     private View rootView;
-    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
+    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
-    private IntraUserModuleManager moduleManager;
+    private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private IntraUserInformation intraUserInformation;
+    private CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
     private Button connect;
-    private CryptoWalletIntraUserActor identity;
     private Button disconnect;
 
     /**
@@ -72,11 +71,11 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        intraUserSubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-        intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
-        moduleManager = intraUserSubAppSession.getModuleManager();
+        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
+        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        intraUserInformation = (IntraUserInformation) appSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
+        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
 
     }
 
@@ -93,24 +92,24 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         try{
-        if(moduleManager.isActorConnected(intraUserInformation.getPublicKey())) {
-            disconnect.setVisibility(View.VISIBLE);
-            connect.setVisibility(View.GONE);
-        }else {
-            connect.setVisibility(View.VISIBLE);
-            disconnect.setVisibility(View.GONE);
-        }
-        }catch (CantCreateNewDeveloperException e) {
+            if(moduleManager.isActorConnected(cryptoBrokerCommunityInformation.getPublicKey())) {
+                disconnect.setVisibility(View.VISIBLE);
+                connect.setVisibility(View.GONE);
+            }else {
+                connect.setVisibility(View.VISIBLE);
+                disconnect.setVisibility(View.GONE);
+            }
+        }catch (CantValidateConnectionStateException e) {
             e.printStackTrace();
         }
 
         try {
-            userName.setText(intraUserInformation.getName());
+            userName.setText(cryptoBrokerCommunityInformation.getAlias());
             userEmail.setText("Unknow");
-            if(intraUserInformation.getProfileImage() != null) {
+            if(cryptoBrokerCommunityInformation.getImage() != null) {
                 Bitmap bitmap;
-                if (intraUserInformation.getProfileImage().length > 0) {
-                    bitmap = BitmapFactory.decodeByteArray(intraUserInformation.getProfileImage(), 0, intraUserInformation.getProfileImage().length);
+                if (cryptoBrokerCommunityInformation.getImage().length > 0) {
+                    bitmap = BitmapFactory.decodeByteArray(cryptoBrokerCommunityInformation.getImage(), 0, cryptoBrokerCommunityInformation.getImage().length);
                 } else {
                     bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
                 }
@@ -131,13 +130,13 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
             public void onClick(View view) {
                 ConnectDialog connectDialog;
                 try {
-                    connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                    connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
                     connectDialog.setTitle("Connection Request");
                     connectDialog.setDescription("Do you want to send ");
-                    connectDialog.setUsername(intraUserInformation.getName());
+                    connectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
                     connectDialog.setSecondDescription("a connection request");
                     connectDialog.show();
-                } catch (CantGetActiveLoginIdentityException e) {
+                } catch (CantGetSelectedActorIdentityException e) {
                     e.printStackTrace();
                 }
             }
@@ -148,12 +147,12 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
 
                 final DisconectDialog disconectDialog;
                 try {
-                    disconectDialog = new DisconectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                    disconectDialog = new DisconectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
                     disconectDialog.setTitle("Disconnect");
                     disconectDialog.setDescription("Want to disconnect from");
-                    disconectDialog.setUsername(intraUserInformation.getName());
+                    disconectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
                     disconectDialog.show();
-                } catch (CantGetActiveLoginIdentityException e) {
+                } catch (CantGetSelectedActorIdentityException e) {
                     e.printStackTrace();
                 }
             }
@@ -169,11 +168,11 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
         /**
          * add navigation header
          */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
+        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
 
         /**
          * Navigation view items

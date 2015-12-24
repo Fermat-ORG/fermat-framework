@@ -42,10 +42,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
-import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantConfirmNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoCustomerException;
@@ -383,10 +381,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         List<Transaction<NegotiationTransmission>> pendingTransaction=new ArrayList<>();
         try {
 
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
-
-            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             if(!negotiationTransmissionList.isEmpty()){
 
                 for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList){
@@ -685,9 +680,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-            FermatEvent fermatEvent;
-
-            NegotiationTransmissionImpl negotiationTransmission = new NegotiationTransmissionImpl(
+            NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
                 negotiationMessage.getTransmissionId(),
                 negotiationMessage.getTransactionId(),
                 negotiationMessage.getNegotiationId(),
@@ -698,16 +691,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationMessage.getActorReceiveType(),
                 negotiationMessage.getTransmissionType(),
                 negotiationMessage.getTransmissionState(),
+                negotiationMessage.getNegotiationType(),
+                negotiationMessage.getNegotiationXML(),
                 negotiationMessage.getTimestamp()
             );
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
-
-            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER \n STATE: " + NegotiationTransmissionState.PENDING_ACTION + "-----------------------\n");
-            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSACTION);
-            IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) fermatEvent;
-            event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-            event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
-            eventManager.raiseEvent(event);
 
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
@@ -721,18 +709,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         try {
 
-            FermatEvent fermatEvent;
-            UUID                    transmissionId      = confirmMessage.getTransmissionId();
-            PlatformComponentType   actorReceiveType    = confirmMessage.getActorReceiveType();
-
+            UUID transmissionId = confirmMessage.getTransmissionId();
             databaseDao.confirmReception(transmissionId);
-
-            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION IS GETTING AN ANSWER STATE: " + NegotiationTransmissionState.CONFIRM_RESPONSE +" -----------------------\n");
-            fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
-            IncomingNegotiationTransmissionConfirmNegotiationEvent event = (IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent;
-            event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-            event.setDestinationPlatformComponentType(actorReceiveType);
-            eventManager.raiseEvent(event);
 
         } catch (CantRegisterSendNegotiationTransmissionException e) {
             throw new CantHandleNewMessagesException(CantHandleNewMessagesException.DEFAULT_MESSAGE, e, "ERROR RECEIVE NEGOTIATION", "");
@@ -837,23 +815,25 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         NegotiationTransmission negotiationTransmission = null;
         try{
-            String publicKeyActorSend = null;
-            String publicKeyActorReceive = null;
-            PlatformComponentType actorReceiveType = null;
-            Date time = new Date();
+            String                  publicKeyActorSend      = null;
+            String                  publicKeyActorReceive   = null;
+            PlatformComponentType   actorReceiveType        = null;
+            Date                    time                    = new Date();
 
-            UUID transmissionId = UUID.randomUUID();
-            UUID transactionId = negotiationTransaction.getTransactionId();
-            UUID negotiationId = negotiationTransaction.getTransactionId();
+            UUID            transmissionId  = UUID.randomUUID();
+            UUID            transactionId   = negotiationTransaction.getTransactionId();
+            UUID            negotiationId   = negotiationTransaction.getTransactionId();
+            NegotiationType negotiationType = negotiationTransaction.getNegotiationType();
+            String          negotiationXML  = negotiationTransaction.getNegotiationXML();
 
             if(actorSendType == PlatformComponentType.ACTOR_CRYPTO_CUSTOMER){
-                publicKeyActorSend = negotiationTransaction.getPublicKeyCustomer();
-                publicKeyActorReceive = negotiationTransaction.getPublicKeyBroker();
-                actorReceiveType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+                publicKeyActorSend      = negotiationTransaction.getPublicKeyCustomer();
+                publicKeyActorReceive   = negotiationTransaction.getPublicKeyBroker();
+                actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_BROKER;
             }else{
-                publicKeyActorSend = negotiationTransaction.getPublicKeyBroker();
-                publicKeyActorReceive = negotiationTransaction.getPublicKeyCustomer();
-                actorReceiveType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+                publicKeyActorSend      = negotiationTransaction.getPublicKeyBroker();
+                publicKeyActorReceive   = negotiationTransaction.getPublicKeyCustomer();
+                actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
             }
 
             long timestamp = time.getTime();
@@ -871,6 +851,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     actorReceiveType,
                     transmissionType,
                     transmissionState,
+                    negotiationType,
+                    negotiationXML,
                     timestamp
             );
         } catch (Exception e) {

@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitduba
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.TransactionAlreadyStartedException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
@@ -21,11 +23,13 @@ public class AssetUserWalletModule {
     AssetUserWalletManager assetUserWalletManager;
     AssetAppropriationManager assetAppropriationManager;
     UserRedemptionManager userRedemptionManager;
+    IdentityAssetUserManager identityAssetUserManager;
 
-    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager) {
-        this.assetUserWalletManager = assetUserWalletManager;
-        this.assetAppropriationManager = assetAppropriationManager;
-        this.userRedemptionManager = userRedemptionManager;
+    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager) {
+        this.assetUserWalletManager     = assetUserWalletManager;
+        this.assetAppropriationManager  = assetAppropriationManager;
+        this.userRedemptionManager      = userRedemptionManager;
+        this.identityAssetUserManager   = identityAssetUserManager;
     }
 
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException {
@@ -56,5 +60,15 @@ public class AssetUserWalletModule {
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException e) {
             throw new CantExecuteAppropriationTransactionException(e, context, null);
         }
+    }
+
+    public List<IdentityAssetUser> getActiveIdentities() {
+
+        try{
+            return identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

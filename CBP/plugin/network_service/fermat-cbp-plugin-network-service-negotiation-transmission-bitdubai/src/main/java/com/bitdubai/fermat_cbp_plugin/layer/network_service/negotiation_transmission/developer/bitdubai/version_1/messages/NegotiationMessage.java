@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 
 import java.util.UUID;
 
@@ -22,6 +23,8 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
     private final PlatformComponentType         actorReceiveType;
     private final NegotiationTransmissionType   transmissionType;
     private final NegotiationTransmissionState  transmissionState;
+    private final NegotiationType               negotiationType;
+    private final String                        negotiationXML;
     private final long                          timestamp;
 
     public NegotiationMessage(
@@ -35,18 +38,22 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
         final PlatformComponentType             actorReceiveType,
         final NegotiationTransmissionType       transmissionType,
         final NegotiationTransmissionState      transmissionState,
+        final NegotiationType                   negotiationType,
+        final String                            negotiationXML,
         final long                              timestamp
     ){
         this.transmissionId             = transmissionId;
         this.transactionId              = transactionId;
         this.negotiationId              = negotiationId;
-        this.negotiationTransactionType  = negotiationTransactionType;
+        this.negotiationTransactionType = negotiationTransactionType;
         this.publicKeyActorSend         = publicKeyActorSend;
         this.actorSendType              = actorSendType;
         this.publicKeyActorReceive      = publicKeyActorReceive;
         this.actorReceiveType           = actorReceiveType;
         this.transmissionType           = transmissionType;
         this.transmissionState          = transmissionState;
+        this.negotiationType            = negotiationType;
+        this.negotiationXML             = negotiationXML;
         this.timestamp                  = timestamp;
     }
 
@@ -77,10 +84,14 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
     
     public final NegotiationTransmissionType getTransmissionType(){ return transmissionType; }
 
-    
+
     public final NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
 
-    
+    public final NegotiationType getNegotiationType(){ return negotiationType; }
+
+    public final String getNegotiationXML(){ return negotiationXML; }
+
+
     public final long getTimestamp(){ return timestamp; }
 
     @Override
@@ -96,6 +107,8 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
                 ", actorReceiveType           = " + actorReceiveType +
                 ", transmissionType           = " + transmissionType +
                 ", transmissionState          = " + transmissionState +
+                ", negotiationXML             = " + negotiationXML +
+                ", negotiationType            = " + negotiationType +
                 ", timestamp                  = " + timestamp +
                 "}";
     }
