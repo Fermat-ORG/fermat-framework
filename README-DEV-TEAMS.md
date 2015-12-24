@@ -33,3 +33,27 @@ Currently we are a small team dedicated to the development of a communications l
 
 We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
+<br>
+## Kabuto Team:
+-----------------------------------
+
+Passionate about technologies, programming for us is part of our life and virtues, using as always ethical management best practices for writing our code.
+
+We are currently providing support in the CHT and CBP Platform as well as we have been responsible for the development at the Back End for handling different wallet.
+
+### Team Members:
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+    
+* **Jose Cardozo**<br/>
+---
+      Email:   josejcb89@gmail.com
+      Skype:   josejcb89
+      Github:  https://github.com/josejcb
+
+We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+
