@@ -199,13 +199,13 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
          * add navigation header
          */
 
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
+//        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
 
         /**
          * Navigation view items
          */
         AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
+//        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override
