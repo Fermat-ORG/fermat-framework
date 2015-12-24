@@ -57,11 +57,7 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
         /**
          * I will get the Genesis Transaction from the Crypto Network
          */
-        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
-        if (cryptoTransaction == null) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
-        }
-        this.cryptoTransaction = cryptoTransaction;
+        this.cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
 
         String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         System.out.println("ASSET DISTRIBUTION OR RECEPTION DAM - Hash:" + digitalAssetMetadataHash);
@@ -77,6 +73,14 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
          * I will compare the OP_Return value of the GenesisTransaction against the Hash of the digital Asset Metadata recieved from the issuer
          */
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
+    }
+
+    public CryptoTransaction foundCryptoTransaction(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getGenesisBlock());
+        if (cryptoTransaction == null) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
+        }
+        return cryptoTransaction;
     }
 
     private CryptoTransaction getCryptoTransactionFromCryptoNetwork(String genesisTransaction) throws DAPException {
