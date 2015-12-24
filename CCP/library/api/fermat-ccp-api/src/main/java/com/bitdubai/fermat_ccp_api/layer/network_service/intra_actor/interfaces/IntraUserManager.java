@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
@@ -123,5 +124,5 @@ public interface IntraUserManager extends FermatManager {
      */
     public void registrateActors(List<Actor> actor);
 
-    Actor contructIdentity(String publicKey, String alias,Actors actors ,byte[] profileImage);
+    Actor contructIdentity(String publicKey, String alias,Actors actors ,byte[] profileImage, PhotoType photoType);
 }

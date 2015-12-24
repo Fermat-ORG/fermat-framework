@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
@@ -275,10 +276,16 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    if (!isUpdate)
-                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, brokerImageByteArray);
-                    else
+                    if (!isUpdate) {
+                        if (brokerImageByteArray!= null){
+                            moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, brokerImageByteArray, PhotoType.CUSTOM);
+                        }else{
+                            moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, null,PhotoType.DEFAULT_MALE);
+                        }
+
+                    } else {
                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
+                    }
                 } catch (CantCreateNewIntraWalletUserException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 } catch (CantUpdateIdentityException e) {

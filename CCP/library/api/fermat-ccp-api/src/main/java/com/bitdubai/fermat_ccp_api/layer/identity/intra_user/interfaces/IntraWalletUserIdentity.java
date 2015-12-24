@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
@@ -31,4 +32,11 @@ public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation 
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSignIntraWalletUserMessageException
      */
     String createMessageSignature(String message);
+
+    /**
+     * The method <code>getPhotoType</code> returns the PhotoType of the intra user
+     * @return string phrase object
+     */
+     PhotoType getPhotoType();
 }
+

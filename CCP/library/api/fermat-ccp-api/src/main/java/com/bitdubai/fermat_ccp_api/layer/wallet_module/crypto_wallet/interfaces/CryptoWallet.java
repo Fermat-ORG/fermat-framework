@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -462,5 +463,5 @@ public interface CryptoWallet extends Serializable {
                                    final BlockchainNetworkType networkType      ,
                                    final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException;
 
-    void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
+    void createIntraUser(String name, String phrase, byte[] image, PhotoType photoType) throws CantCreateNewIntraWalletUserException;
 }
