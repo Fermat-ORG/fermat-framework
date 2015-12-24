@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
@@ -146,8 +148,16 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         }
         else if(id == R.id.btn_right){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("Jane Doe","Available",convertImage(R.drawable.profile_standard_female));
+                final CryptoWallet cryptoWallet = getSession().getModuleManager().getCryptoWallet();
+                cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        cryptoWallet.registerIdentities();
+                    }
+                });
+                thread.start();
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
             } catch (CantGetCryptoWalletException e) {

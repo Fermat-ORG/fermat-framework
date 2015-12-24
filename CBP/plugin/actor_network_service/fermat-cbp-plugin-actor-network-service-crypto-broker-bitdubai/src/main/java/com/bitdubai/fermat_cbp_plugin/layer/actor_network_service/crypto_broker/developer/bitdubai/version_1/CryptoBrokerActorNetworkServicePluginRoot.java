@@ -467,13 +467,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String,String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType,String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentType platformComponentType         ,
                                                                          final NetworkServiceType    networkServiceType            ,
                                                                          final String                alias                         ,
-                                                                         final String                phrase                         ,
                                                                          final String                identityPublicKey             ,
                                                                          final Location              location                      ,
                                                                          final Double                distance                      ,
@@ -488,7 +487,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 platformComponentType         ,
                 networkServiceType            ,
                 alias                         ,
-                phrase                          ,
                 identityPublicKey             ,
                 location                      ,
                 distance                      ,
