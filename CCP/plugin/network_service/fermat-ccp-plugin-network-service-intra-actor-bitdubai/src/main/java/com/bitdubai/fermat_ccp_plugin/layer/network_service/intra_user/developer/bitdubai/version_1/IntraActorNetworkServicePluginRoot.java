@@ -1255,7 +1255,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                }
 
-                byte[] imageByte = Base64.decode(profileImage, Base64.URL_SAFE);
+                byte[] imageByte = Base64.decode(profileImage, Base64.DEFAULT);
                 lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(), imageByte, platformComponentProfile.getAlias(),actorPhrase));
             }
 
@@ -1490,7 +1490,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG" , Base64.encodeToString(actor.getPhoto(), Base64.URL_SAFE));
+                jsonObject.addProperty("AVATAR_IMG" , Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
                 PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
@@ -1536,7 +1536,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.URL_SAFE));
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
                 PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),

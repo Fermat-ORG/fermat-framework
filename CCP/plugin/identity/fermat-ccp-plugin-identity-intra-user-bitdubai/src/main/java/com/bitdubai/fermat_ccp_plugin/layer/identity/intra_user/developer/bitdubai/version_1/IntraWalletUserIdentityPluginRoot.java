@@ -168,8 +168,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
 
             //registerIdentities();
-
-            registerIdentity(intraWalletUserIdentity);
+            registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
 
             return intraWalletUserIdentity;
         } catch (CantGetLoggedInDeviceUserException e) {
