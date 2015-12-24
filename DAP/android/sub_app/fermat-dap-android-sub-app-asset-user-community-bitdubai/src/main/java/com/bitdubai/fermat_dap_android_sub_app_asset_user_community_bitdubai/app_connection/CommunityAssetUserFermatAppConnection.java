@@ -47,7 +47,6 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections{
         return new AssetUserCommunitySubAppSession();
     }
 
-
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
         return null;
