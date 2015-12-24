@@ -466,8 +466,8 @@ public abstract class FermatActivity extends AppCompatActivity
                         @Override
                         public void onClick(View v) {
                             Object[] object = new Object[2];
-                            if(viewPainter.hasClickListener())
-                            connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY,"public_key_ccp_intra_user_identity",object);
+                            if (viewPainter.hasClickListener())
+                                connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY, "public_key_ccp_intra_user_identity", object);
                         }
                     });
                     /**
@@ -1952,6 +1952,8 @@ public abstract class FermatActivity extends AppCompatActivity
                     case CLOUD_CONNECTED_NOTIFICATION:
                         launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
+                    case OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION:
+                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                     default:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
