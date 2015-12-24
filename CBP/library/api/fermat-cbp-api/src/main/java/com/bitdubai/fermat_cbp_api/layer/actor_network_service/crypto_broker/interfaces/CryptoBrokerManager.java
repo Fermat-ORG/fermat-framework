@@ -53,7 +53,7 @@ public interface CryptoBrokerManager extends FermatManager {
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Broker Search.
      * This Crypto Broker search provides all the necessary functionality to make a Crypto Broker Search.
      *
-     * @return a CryptoBrokerSearch instance.
+     * @return a CryptoBrokerCommunitySearch instance.
      */
     CryptoBrokerSearch getSearch();
 

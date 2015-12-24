@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
@@ -583,5 +584,65 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + transactionId.toString(), "database issue");
         }
+    }
+
+    /**
+     * Will check and fix any inconsistency that may be in out transaction table.
+     * For example, If i don't have all adressTo or From, or coin values of zero.
+     * @throws CantFixTransactionInconsistenciesException
+     */
+    public void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
+        List<TransactionProtocolData> transactions = null;
+
+        try {
+            transactions = getDao().getAllTransactionProtocolData();
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantFixTransactionInconsistenciesException(CantFixTransactionInconsistenciesException.DEFAULT_MESSAGE, e, "Database error.", "Database error.");
+        }
+
+        /**
+         * Will iterate each transaction and fix any inconsistency
+         */
+        for (TransactionProtocolData transactionProtocolData : transactions){
+            if (transactionProtocolData.getCryptoTransaction().getAddressFrom().getAddress().contentEquals("Empty"))
+                fixAddressFromInconsistency(transactionProtocolData);
+
+            if (transactionProtocolData.getCryptoTransaction().getAddressTo().getAddress().contentEquals("Empty"))
+                fixAddressToInconsistency(transactionProtocolData);
+
+            if (transactionProtocolData.getCryptoTransaction().getCryptoAmount() == 0)
+                fixCryptoAmountInconsistency(transactionProtocolData);
+        }
+
+    }
+
+    /**
+     * Fixes any inconsistency we may have in
+     * the Crypto Amount
+     * @param transactionProtocolData
+     */
+    private void fixCryptoAmountInconsistency(TransactionProtocolData transactionProtocolData) {
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        //todo get the correct address and update the database
+    }
+
+    /**
+     * Fixes any inconsistency we may have in
+     * the AddressTo
+     * @param transactionProtocolData
+     */
+    private void fixAddressToInconsistency(TransactionProtocolData transactionProtocolData) {
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        //todo get the correct address and update the database
+    }
+
+    /**
+     * Fixes any inconsistency we may have in the AddressFrom
+     * @param transactionProtocolData
+     */
+    private void fixAddressFromInconsistency(TransactionProtocolData transactionProtocolData) {
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        //todo get the correct address and update the database
+
     }
 }

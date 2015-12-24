@@ -7,7 +7,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_online_merchandise.BrokerSubmitOnlineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_online_merchandise.interfaces.BrokerSubmitOnlineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantGetCryptoAddressException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantGetCryptoAmountException;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -84,14 +85,14 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
      * This method returns a crypto amount (long) from a CustomerBrokerPurchaseNegotiation
      * @return
      */
-    private long getCryptoAmount(
+    private long getAmount(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws
             CantGetCryptoAmountException {
         try{
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)){
+                if(clause.getType().equals(ClauseType.BROKER_CURRENCY_QUANTITY)){
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }
@@ -150,12 +151,17 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
 
     /**
      * This method creates the Broker Submit Online Merchandise Business Transaction
+     * @param cbpWalletPublicKey
      * @param walletPublicKey
      * @param contractHash
      * @throws CantSubmitMerchandiseException
      */
     @Override
-    public void submitMerchandise(String walletPublicKey, String contractHash)
+    public void submitMerchandise(
+            BigDecimal referencePrice,
+            String cbpWalletPublicKey,
+            String walletPublicKey,
+            String contractHash)
             throws CantSubmitMerchandiseException {
         try {
             CustomerBrokerContractSale customerBrokerContractSale=
@@ -167,12 +173,14 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             String customerCryptoAddress=getBrokerCryptoAddressString(
                     customerBrokerSaleNegotiation
             );
-            long cryptoAmount=getCryptoAmount(customerBrokerSaleNegotiation);
+            long cryptoAmount= getAmount(customerBrokerSaleNegotiation);
             this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
                     customerCryptoAddress,
                     walletPublicKey,
-                    cryptoAmount);
+                    cryptoAmount,
+                    cbpWalletPublicKey,
+                    referencePrice);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             throw new CantSubmitMerchandiseException(e,
                     "Submit online merchandise",

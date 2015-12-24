@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**
@@ -16,8 +17,16 @@ public class MockIdentityAssetIssuerForTest implements IdentityAssetIssuer {
         return "ASDS-10087982";
     }
 
+    /**
+     * @return an element of Actors enum representing the type of the actor identity.
+     */
     @Override
-    public byte[] getProfileImage() {
+    public Actors getActorType() {
+        return Actors.DAP_ASSET_ISSUER;
+    }
+
+    @Override
+    public byte[] getImage() {
         return new byte[0];
     }
 

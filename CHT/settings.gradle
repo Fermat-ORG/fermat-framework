@@ -1,0 +1,16 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-cht-api'
+project(':fermat-cht-api').projectDir = new File('CHT/library/api/fermat-cht-api')
+
+include ':fermat-cht-core'
+project(':fermat-cht-core').projectDir = new File('CHT/library/core/fermat-cht-core')
+
+//ANDROID
+
+//PLUGINS

@@ -45,6 +45,9 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
             vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.wallets_bitcoin_fragment_contacts_list_item, null);
         }
+        if(position>=1){
+            v.findViewById(R.id.separator_line).setVisibility(View.VISIBLE);
+        }
 
         WalletContact contact = getItem(position);
 

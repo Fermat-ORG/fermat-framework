@@ -1,4 +1,4 @@
-package com.example;
+package com.bitdubai;
 
 public class MyClass {
 }

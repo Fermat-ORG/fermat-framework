@@ -3,6 +3,8 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
@@ -10,9 +12,11 @@ import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
@@ -62,7 +66,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     /**
      *  UI components
      */
-    FermatTextView dialogTitleText;
+    FermatTextView dialogTitle;
+    LinearLayout dialogTitleLayout;
     EditText amountText;
     AutoCompleteTextView memoText;
     Button applyBtn;
@@ -107,14 +112,16 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             setContentView(R.layout.create_transaction_dialog);
 
 
-            dialogTitleText = (FermatTextView) findViewById(R.id.csh_ctd_title);
+            dialogTitleLayout = (LinearLayout) findViewById(R.id.csh_ctd_title_layout);
+            dialogTitle = (FermatTextView) findViewById(R.id.csh_ctd_title);
+            //dialogTitleImg = (FermatTextView) findViewById(R.id.csh_ctd_title_img);
             amountText = (EditText) findViewById(R.id.csh_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.csh_ctd_memo);
             applyBtn = (Button) findViewById(R.id.csh_ctd_apply_transaction_btn);
             cancelBtn = (Button) findViewById(R.id.csh_ctd_cancel_transaction_btn);
 
-
-            dialogTitleText.setText(getTransactionTitleText());
+            dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
+            dialogTitle.setText(getTransactionTitleText());
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
             cancelBtn.setOnClickListener(this);
@@ -161,6 +168,14 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             return resources.getString(R.string.deposit_transaction_text);
     }
 
+    private int getTransactionTitleColor()
+    {
+        if (transactionType == TransactionType.DEBIT)
+            return resources.getColor(R.color.csh_fab_color_normal_w);
+        else
+            return resources.getColor(R.color.csh_fab_color_normal_d);
+    }
+
 
 
     @Override
@@ -189,10 +204,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 Toast.makeText(activity.getApplicationContext(), "Amount cannot be zero", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (memo.equals("")) {
-                Toast.makeText(activity.getApplicationContext(), "Memo cannot be empty", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
 
             if (transactionType == TransactionType.DEBIT) {
@@ -202,7 +213,11 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     //updateWalletBalances(view.getRootView());
 
                 } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+                    return;
+                } catch (CashMoneyWalletInsufficientFundsException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
             else if(transactionType == TransactionType.CREDIT) {
@@ -212,17 +227,17 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     //updateWalletBalances(view.getRootView());
 
                 } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Error on deposit!", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
-            dismiss();
-
 
         } catch (Exception e) {
             cashMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "There was an error processing transaction!" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
         }
+        dismiss();
     }
 
 }

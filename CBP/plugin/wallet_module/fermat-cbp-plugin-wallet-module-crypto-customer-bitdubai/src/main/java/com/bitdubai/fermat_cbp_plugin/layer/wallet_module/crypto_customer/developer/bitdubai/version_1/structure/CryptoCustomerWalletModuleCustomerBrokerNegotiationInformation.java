@@ -122,6 +122,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
 
     @Override
     public UUID getNegotiationId() {
+        //TODO
         return null;
     }
 
@@ -132,6 +133,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
 
     @Override
     public String getCancelReason() {
+        //TODO
         return null;
     }
 }

@@ -114,7 +114,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.I
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -271,6 +274,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private OutgoingNotificationDao outgoingNotificationDao;
 
     private IntraActorNetworkServiceDao intraActorNetworkServiceDao;
+
+
+    private Thread toCache;
     /**
      * Constructor
      */
@@ -700,6 +706,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 "--------------------------------------------------------");
         actorNetworkServiceRecordedAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
+            //has map cache - contador de failure mas de 5 lo mando a dormir a todos los mensajes de esa public key
+              //  el agente levanta los mensajes y los procesa de nuevo por cierto tiempo
+        //si hace varios dias que esta tratando de enviarlos los borra
+
+                checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+
+
     }
 
     /**
@@ -783,8 +796,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          * Tell the manager to handler the new connection stablished
          */
 
-        System.out.println("LEONNNN MIRAME QUE CAPO ;) \n publickey" + remoteComponentProfile.getIdentityPublicKey() + "\n -------------------- nombre: " + remoteComponentProfile.getAlias());
-
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
@@ -862,7 +873,25 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorNetworkServiceRecord.setFlagReadead(false);
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
-                            "MENSAJE ACCEPTED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord
+                            "MENSAJE DENIED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
+                    break;
+
+                case DISCONNECTED:
+
+                    actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+                    getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+                    actorNetworkServiceRecord.setFlagReadead(false);
+                    getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
+                    System.out.println("----------------------------\n" +
+                            "MENSAJE DISCONNECTED LLEGÓ BIEN: CASE DISCONNECTED" + actorNetworkServiceRecord
                             + "\n-------------------------------------------------");
 
 
@@ -921,6 +950,33 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         eventManager.raiseEvent(platformEvent);
     }
 
+    private void checkFailedDeliveryTime(String destinationPublicKey)
+    {
+        try{
+            //verifico el tiempo que hace que estoy tratando de enviar el mensaje si pasaron dos horas le cambio el estado a Wait y lo proceso en otro bloque
+            List<ActorNetworkServiceRecord> actorNetworkServiceRecord = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
+         //sumo un contandor y veo si llego a 5
+
+           //long sentDate = actorNetworkServiceRecord.getSentDate();
+
+           // long currentTime = System.currentTimeMillis();
+
+
+
+        }
+        catch(Exception e)
+        {
+
+        }
+
+    }
+
+
+    private String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+        return format.format(date);
+    }
     /**
      * Get the IdentityPublicKey
      *
@@ -1180,7 +1236,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //Create a thread to save intra user cache list
-            Thread toCache = new Thread(new Runnable() {
+
+            this.toCache = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try
@@ -1190,9 +1247,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
                     }
-
                 }
-            });
+            },"Thread Cache");
 
             toCache.start();
 
@@ -1242,7 +1298,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     notificationDescriptor,
                     currentTime,
                     protocolState,
-                    false
+                    false,1
             );
 
         } catch (final CantCreateNotificationException e) {
@@ -1425,7 +1481,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (register) {
-                        communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfile);
+                        System.out.println("----------\n Pasamos por el registro robert\n --------------------");
                     }
                 }
 

@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
@@ -11,7 +13,7 @@ import java.util.List;
  * The interface <code>IntraWalletUserIdentityManager</code>
  * provides the methods to create and obtain intra users associated to a Device User.
  */
-public interface IntraWalletUserIdentityManager extends ModuleManager {
+public interface IntraWalletUserIdentityManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in

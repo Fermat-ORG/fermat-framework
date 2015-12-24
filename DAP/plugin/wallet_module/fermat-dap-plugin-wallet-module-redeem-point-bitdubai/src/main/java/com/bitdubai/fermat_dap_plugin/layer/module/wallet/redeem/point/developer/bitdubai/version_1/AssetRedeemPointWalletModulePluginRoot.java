@@ -11,7 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
@@ -43,7 +46,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     private ErrorManager errorManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.REDEEM_POINT  )
-    private RedeemPointIdentityManager redeemPointIdentityManager;
+    RedeemPointIdentityManager redeemPointIdentityManager;
 
     // TODO MAKE USE OF THE ERROR MANAGER
 
@@ -61,7 +64,10 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     @Override
     public void start() throws CantStartPluginException {
         try {
-            assetRedeemPointWalletModuleManager = new AssetRedeemPointWalletModuleManager(assetRedeemPointWalletManager);
+            assetRedeemPointWalletModuleManager = new AssetRedeemPointWalletModuleManager(
+                    assetRedeemPointWalletManager,
+                    redeemPointIdentityManager);
+
             System.out.println("******* Asset Redeem Point Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
@@ -87,12 +93,27 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     }
 
     @Override
-    public RedeemPointIdentity getAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException {
+    public RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException {
         try {
             return redeemPointIdentityManager.getIdentityAssetRedeemPoint();
         } catch (CantGetRedeemPointIdentitiesException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetIdentityRedeemPointException(e);
         }
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+//        try {
+        return assetRedeemPointWalletModuleManager.getActiveIdentities().get(0);
+//        } catch (CantGetIssuerWalletModuleException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
     }
 }

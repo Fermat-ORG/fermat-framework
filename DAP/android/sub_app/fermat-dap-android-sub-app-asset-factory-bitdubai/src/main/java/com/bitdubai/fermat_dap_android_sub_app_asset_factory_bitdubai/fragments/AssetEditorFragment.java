@@ -435,10 +435,15 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         if (hasResource) {
             List<Resource> resources = new ArrayList<>();
             Resource resource = new Resource();
-            resource.setId(UUID.randomUUID());
+            if (asset.getResources() != null && asset.getResources().size() > 0) {
+                resource.setId(asset.getResources().get(0).getId());
+            } else {
+                resource.setId(UUID.randomUUID());
+            }
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(toByteArray(((BitmapDrawable) takePicture.getDrawable()).getBitmap()));
+//            resource.setResourceBinayData(toByteArray(((BitmapDrawable) takePicture.getDrawable()).getBitmap()));
+            resource.setResourceBinayData(toByteArray(takePicture));
             resources.add(resource);
             asset.setResources(resources);
         } else
@@ -504,14 +509,20 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     }
 
     /**
-     * Bitmap to byte[]
+     * ImageView to byte[]
      *
-     * @param bitmap Bitmap
      * @return byte array
      */
-    private byte[] toByteArray(Bitmap bitmap) {
+    private byte[] toByteArray(ImageView imageView) {
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bm = imageView.getDrawingCache();
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
+
+
 }

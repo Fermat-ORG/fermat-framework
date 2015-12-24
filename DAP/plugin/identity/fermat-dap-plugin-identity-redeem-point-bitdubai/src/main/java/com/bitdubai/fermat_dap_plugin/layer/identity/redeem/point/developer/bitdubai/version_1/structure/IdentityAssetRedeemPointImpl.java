@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bit
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -79,8 +80,16 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
         return this.publicKey;
     }
 
+    /**
+     * @return an element of Actors enum representing the type of the actor identity.
+     */
     @Override
-    public byte[] getProfileImage() {
+    public Actors getActorType() {
+        return Actors.DAP_ASSET_REDEEM_POINT;
+    }
+
+    @Override
+    public byte[] getImage() {
         return this.profileImage;
     }
 

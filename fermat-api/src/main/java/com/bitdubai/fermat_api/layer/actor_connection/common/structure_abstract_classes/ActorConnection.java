@@ -24,7 +24,6 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
     private final UUID            connectionId   ;
     private final T               linkedIdentity ;
     private final String          publicKey      ;
-    private final Actors          actorType      ;
     private final String          alias          ;
     private final byte[]          image          ;
     private       ConnectionState connectionState;
@@ -34,7 +33,6 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
     protected ActorConnection(final UUID            connectionId   ,
                               final T               linkedIdentity ,
                               final String          publicKey      ,
-                              final Actors          actorType      ,
                               final String          alias          ,
                               final byte[]          image          ,
                               final ConnectionState connectionState,
@@ -44,7 +42,6 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
         Validate.notNull(connectionId   , "The Connection ID can't be null."   );
         Validate.notNull(linkedIdentity , "The Linked Identity can't be null." );
         Validate.notNull(publicKey      , "The Public Key can't be null."      );
-        Validate.notNull(actorType      , "The Actor Type can't be null."      );
         Validate.notNull(alias          , "The Alias can't be null."           );
         Validate.notNull(image          , "The Image can't be null."           );
         Validate.notNull(connectionState, "The Connection State can't be null.");
@@ -53,7 +50,6 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
         this.connectionId    = connectionId   ;
         this.linkedIdentity  = linkedIdentity ;
         this.publicKey       = publicKey      ;
-        this.actorType       = actorType      ;
         this.alias           = alias          ;
         this.image           = image          ;
         this.connectionState = connectionState;
@@ -82,13 +78,6 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
      */
     public final String getPublicKey() {
         return publicKey;
-    }
-
-    /**
-     * @return an element of Actors enum representing the type of the actor.
-     */
-    public final Actors getActorType() {
-        return actorType;
     }
 
     /**

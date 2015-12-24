@@ -15,7 +15,7 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView
+        <ImageView
             android:id="@+id/imageView_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"

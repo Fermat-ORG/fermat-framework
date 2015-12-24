@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdu
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -84,7 +85,12 @@ public class  IdentityAssetUsermpl implements DealsWithPluginFileSystem, DealsWi
     }
 
     @Override
-    public byte[] getProfileImage() {
+    public Actors getActorType() {
+        return Actors.DAP_ASSET_USER;
+    }
+
+    @Override
+    public byte[] getImage() {
         return this.profileImage;
     }
 

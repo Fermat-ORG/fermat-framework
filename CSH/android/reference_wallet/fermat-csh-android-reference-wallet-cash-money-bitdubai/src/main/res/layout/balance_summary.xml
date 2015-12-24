@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/book_balance_text"
-                android:textSize="@dimen/csh_largest_text_size"
+                android:textSize="@dimen/csh_regular_text_size"
                 android:gravity="left"
                 android:paddingLeft="@dimen/csh_balance_left_margin"
                 android:paddingTop="@dimen/csh_activity_vertical_margin"
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textSize="@dimen/csh_large_text_size"
+                android:textSize="@dimen/csh_regular_text_size"
                 android:gravity="left"
                 android:paddingLeft="@dimen/csh_balance_left_margin"
                 android:paddingBottom="@dimen/csh_activity_vertical_margin"
@@ -124,27 +124,28 @@
         fab:fab_labelStyle="@style/menu_labels_style"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/csh_fab_bottom_right_margin"
-        android:gravity="bottom|right">
+        android:gravity="bottom|right"
+        >
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_withdraw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/csh_fab_color_normal"
-            fab:fab_title="Withdraw"
-            fab:fab_colorPressed="@color/csh_fab_color_pressed"
+            fab:fab_colorNormal="@color/csh_fab_color_normal_w"
+            fab:fab_title="@string/withdrawal_transaction_text"
+            fab:fab_colorPressed="@color/csh_fab_color_pressed_w"
             fab:fab_size="mini"
-            fab:fab_icon="@drawable/ic_arrow_up_grey"/>
+            fab:fab_icon="@drawable/csh_withdrawal"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_deposit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/csh_fab_color_normal"
-            fab:fab_title="Deposit"
-            fab:fab_colorPressed="@color/csh_fab_color_pressed"
+            fab:fab_colorNormal="@color/csh_fab_color_normal_d"
+            fab:fab_title="@string/deposit_transaction_text"
+            fab:fab_colorPressed="@color/csh_fab_color_pressed_d"
             fab:fab_size="mini"
-            fab:fab_icon="@drawable/ic_arrow_down_grey"/>
+            fab:fab_icon="@drawable/csh_deposit"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

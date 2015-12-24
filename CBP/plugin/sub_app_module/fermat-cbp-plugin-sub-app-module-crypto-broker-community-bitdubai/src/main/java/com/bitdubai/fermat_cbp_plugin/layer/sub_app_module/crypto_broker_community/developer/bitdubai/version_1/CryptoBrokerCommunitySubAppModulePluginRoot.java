@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
@@ -39,8 +41,14 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CRYPTO_BROKER     )
     private CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CRYPTO_CUSTOMER   )
+    private CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
+
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_BROKER     )
     private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
+
+    CryptoBrokerCommunityManager fermatManager;
+
 
     public CryptoBrokerCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -51,7 +59,18 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
      */
     @Override
     public void start() throws CantStartPluginException {
+
         try {
+
+            fermatManager = new CryptoBrokerCommunityManager(
+                 cryptoBrokerIdentityManager,
+                    cryptoBrokerActorConnectionManager,
+                    cryptoBrokerNetworkServiceManager,
+                    cryptoCustomerIdentityManager,
+                    errorManager,
+                    this.getPluginVersionReference()
+            );
+
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -60,7 +79,7 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return fermatManager;
     }
 
 }

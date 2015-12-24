@@ -41,7 +41,7 @@
     <string name="suggested_exchange_rate">Suggested:</string>
     <string name="market_text">Market: </string>
     <string name="status_changed">CHANGED</string>
-    <string name="amount_to_sell">Amount to Sell</string>
+    <string name="cbw_amount_to_sell">Amount to Sell</string>
     <string name="selling_text">Selling: </string>
     <string name="amount">Amount</string>
     <string name="you_will_receive_amount">You will receive: </string>
@@ -69,5 +69,17 @@
     <string name="cbw_trough_text">Trough</string>
     <string name="cbw_and_receive_text">And Receive</string>
     <string name="cbw_you_sold">You Sold</string>
+    <string name="cbw_amount_to_receive">Amount To Receive</string>
+    <string name="cbw_cancellation_reason_title">Cancellation Reason:</string>
+    <string name="cbw_check_negotiation_details">Check Negotiation Details</string>
+    <string name="cbw_contract_details_last_update_date">At Date: %1$s</string>
+    <string name="cbw_amount_sold">Amount Sold</string>
+    <string name="cbw_contract_details_payment_method">Payment Method</string>
+    <string name="cbw_amount_received">Amount Received</string>
+    <string name="cbw_action_filter">Filter</string>
+    <string name="cbw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>
+    <string name="cbw_welcome">Welcome</string>
+    <string name="cbw_next_step">Next Step</string>
+    <string name="select_identity_warning_msg">Need to Select an Identity</string>
 
 </resources>

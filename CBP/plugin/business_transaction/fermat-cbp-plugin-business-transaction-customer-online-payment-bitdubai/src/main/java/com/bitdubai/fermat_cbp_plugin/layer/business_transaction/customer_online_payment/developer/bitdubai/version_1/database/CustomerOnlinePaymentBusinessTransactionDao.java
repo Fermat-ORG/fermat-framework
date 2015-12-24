@@ -21,10 +21,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -210,7 +210,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    public List<CustomerOnlinePaymentRecord> getPendingToSubmitCryptoStatusList() throws
+    public List<BusinessTransactionRecord> getPendingToSubmitCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
@@ -219,7 +219,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    public List<CustomerOnlinePaymentRecord> getPendingToSubmitNotificationList() throws
+    public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
@@ -228,7 +228,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    public List<CustomerOnlinePaymentRecord> getPendingToSubmitConfirmList() throws
+    public List<BusinessTransactionRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
@@ -237,7 +237,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    public List<CustomerOnlinePaymentRecord> getOnCryptoNetworkCryptoStatusList() throws
+    public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
@@ -246,7 +246,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
 
-    public List<CustomerOnlinePaymentRecord> getOnBlockchainkCryptoStatusList() throws
+    public List<BusinessTransactionRecord> getOnBlockchainkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
@@ -260,11 +260,11 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param key String with the search key.
      * @param keyColumn String with the key column name.
      * @param valueColumn String with the value searched column name.
-     * @return List<CustomerOnlinePaymentRecord>
+     * @return List<BusinessTransactionRecord>
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    private List<CustomerOnlinePaymentRecord> getCustomerOnlinePaymentRecordList(
+    private List<BusinessTransactionRecord> getCustomerOnlinePaymentRecordList(
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
@@ -272,26 +272,26 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 key,
                 keyColumn,
                 valueColumn);
-        List<CustomerOnlinePaymentRecord> customerOnlinePaymentRecordList=new ArrayList<>();
-        CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+        List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
+        BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            customerOnlinePaymentRecord=getCustomerOnlinePaymentRecord(contractHash);
-            customerOnlinePaymentRecordList.add(customerOnlinePaymentRecord);
+            businessTransactionRecord =getCustomerOnlinePaymentRecord(contractHash);
+            businessTransactionRecordList.add(businessTransactionRecord);
         }
-        return customerOnlinePaymentRecordList;
+        return businessTransactionRecordList;
     }
 
     /**
-     * This method returns a CustomerOnlinePaymentRecord
+     * This method returns a BusinessTransactionRecord
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
-    public List<CustomerOnlinePaymentRecord> getPendingCryptoTransactionList() throws
+    public List<BusinessTransactionRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getCustomerOnlinePaymentRecordList(
-                ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode(),
+                ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode(),
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
         );
@@ -424,14 +424,14 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         databaseTable.insertRecord(databaseTableRecord);
     }
 
-    public CustomerOnlinePaymentRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+    public BusinessTransactionRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
             CryptoAddress brokerCryptoAddress;
             String cryptoAddressString;
-            CustomerOnlinePaymentRecord customerOnlinePaymentRecord=new CustomerOnlinePaymentRecord();
+            BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
             databaseTable.addStringFilter(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -440,41 +440,41 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
             DatabaseTableRecord record = records.get(0);
-            customerOnlinePaymentRecord.setBrokerPublicKey(
+            businessTransactionRecord.setBrokerPublicKey(
                     record.getStringValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME));
-            customerOnlinePaymentRecord.setContractHash(record.getStringValue(
+            businessTransactionRecord.setContractHash(record.getStringValue(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                             ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
             contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                             ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
-            customerOnlinePaymentRecord.setContractTransactionStatus(contractTransactionStatus);
-            customerOnlinePaymentRecord.setCustomerPublicKey(
+            businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
+            businessTransactionRecord.setCustomerPublicKey(
                     record.getStringValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
-            customerOnlinePaymentRecord.setTransactionHash(contractHash);
-            customerOnlinePaymentRecord.setTransactionId(
+            businessTransactionRecord.setTransactionHash(contractHash);
+            businessTransactionRecord.setTransactionId(
                     record.getStringValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
             cryptoAddressString=record.getStringValue(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
+                            ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
-            customerOnlinePaymentRecord.setCryptoAddress(brokerCryptoAddress);
-            customerOnlinePaymentRecord.setWalletPublicKey(
+            businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+            businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
-                    ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
-            customerOnlinePaymentRecord.setCryptoAmount(
+                                    ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
+            businessTransactionRecord.setCryptoAmount(
                     record.getLongValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                     ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
-            return customerOnlinePaymentRecord;
+            return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
@@ -487,11 +487,11 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
     }
 
-    public void updateOnlinePaymentRecord(CustomerOnlinePaymentRecord customerOnlinePaymentRecord)
+    public void updateBusinessTransactionRecord(BusinessTransactionRecord businessTransactionRecord)
             throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
-            String contractHash=customerOnlinePaymentRecord.getContractHash();
+            String contractHash= businessTransactionRecord.getContractHash();
             databaseTable.addStringFilter(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -500,12 +500,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
             DatabaseTableRecord record=records.get(0);
-            record=buildDatabaseTableRecord(record, customerOnlinePaymentRecord);
+            record=buildDatabaseTableRecord(record, businessTransactionRecord);
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating databaseTableRecord from a CustomerOnlinePaymentRecord",
+                    "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
         }
     }
@@ -559,48 +559,48 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     }
 
     /**
-     * This method returns a complete database table record from a CustomerOnlinePaymentRecord
+     * This method returns a complete database table record from a BusinessTransactionRecord
      * @param record
-     * @param customerOnlinePaymentRecord
+     * @param businessTransactionRecord
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerOnlinePaymentRecord customerOnlinePaymentRecord){
+            BusinessTransactionRecord businessTransactionRecord){
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
-                customerOnlinePaymentRecord.getBrokerPublicKey());
+                businessTransactionRecord.getBrokerPublicKey());
         //For the business transaction this value represents the contract hash.
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
-                customerOnlinePaymentRecord.getContractHash());
+                businessTransactionRecord.getContractHash());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                customerOnlinePaymentRecord.getContractTransactionStatus().getCode());
+                businessTransactionRecord.getContractTransactionStatus().getCode());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
-                customerOnlinePaymentRecord.getCryptoAddress().getAddress());
+                businessTransactionRecord.getCryptoAddress().getAddress());
         record.setLongValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
-                customerOnlinePaymentRecord.getCryptoAmount());
+                businessTransactionRecord.getCryptoAmount());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
-                customerOnlinePaymentRecord.getCryptoStatus().getCode());
+                businessTransactionRecord.getCryptoStatus().getCode());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
-                customerOnlinePaymentRecord.getCustomerPublicKey());
+                businessTransactionRecord.getCustomerPublicKey());
         record.setLongValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME,
-                customerOnlinePaymentRecord.getTimestamp());
+                businessTransactionRecord.getTimestamp());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME,
-                customerOnlinePaymentRecord.getTransactionHash());
+                businessTransactionRecord.getTransactionHash());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
-                customerOnlinePaymentRecord.getTransactionId());
+                businessTransactionRecord.getTransactionId());
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                customerOnlinePaymentRecord.getWalletPublicKey());
+                businessTransactionRecord.getExternalWalletPublicKey());
 
         return record;
     }

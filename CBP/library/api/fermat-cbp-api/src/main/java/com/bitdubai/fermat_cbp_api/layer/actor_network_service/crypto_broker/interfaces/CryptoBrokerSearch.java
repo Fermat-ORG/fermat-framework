@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerCommunitySearch</code>
  * expose all the methods to search a Crypto Broker.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.

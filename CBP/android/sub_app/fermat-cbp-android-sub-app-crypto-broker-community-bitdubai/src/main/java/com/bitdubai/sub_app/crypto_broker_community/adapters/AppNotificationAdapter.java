@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.holders.AppNotificationsHolder;
 
@@ -19,9 +19,9 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, AppNotificationsHolder> {
+public class AppNotificationAdapter extends FermatAdapter<CryptoBrokerCommunityInformation, AppNotificationsHolder> {
 
-    public AppNotificationAdapter(Context context, List<IntraUserInformation> lst) {
+    public AppNotificationAdapter(Context context, List<CryptoBrokerCommunityInformation> lst) {
         super(context, lst);
     }
 
@@ -36,11 +36,11 @@ public class AppNotificationAdapter extends FermatAdapter<IntraUserInformation, 
     }
 
     @Override
-    protected void bindHolder(AppNotificationsHolder holder, IntraUserInformation data, int position) {
-        holder.userName.setText(data.getName());
+    protected void bindHolder(AppNotificationsHolder holder, CryptoBrokerCommunityInformation data, int position) {
+        holder.userName.setText(data.getAlias());
         Bitmap bitmap;
-        if (data.getProfileImage().length > 0) {
-            bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
+        if (data.getImage().length > 0) {
+            bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
         } else {
             bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
         }
