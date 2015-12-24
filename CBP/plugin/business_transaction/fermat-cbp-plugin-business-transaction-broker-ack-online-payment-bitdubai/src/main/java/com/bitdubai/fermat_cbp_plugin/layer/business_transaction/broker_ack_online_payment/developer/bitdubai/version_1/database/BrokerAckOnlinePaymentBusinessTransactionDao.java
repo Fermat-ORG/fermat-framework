@@ -603,7 +603,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
-            businessTransactionRecord.setCryptoWalletPublicKey(
+            businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
@@ -785,7 +785,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 businessTransactionRecord.getTransactionId());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                businessTransactionRecord.getCryptoWalletPublicKey());
+                businessTransactionRecord.getExternalWalletPublicKey());
 
         return record;
     }

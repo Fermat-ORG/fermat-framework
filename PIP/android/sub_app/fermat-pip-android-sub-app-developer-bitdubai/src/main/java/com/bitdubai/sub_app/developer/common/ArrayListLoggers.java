@@ -13,16 +13,9 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
     public static final int LEVEL_2 = 2;
     public static final int LEVEL_3 = 3;
 
-
-
     public ArrayListLoggers(){
 
     }
-
-    public ArrayListLoggers(int capacity) {
-        super(capacity);
-    }
-
     public boolean containsLevel0(Loggers log){
         boolean result=false;
         int i=0;
