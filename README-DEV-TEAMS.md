@@ -73,10 +73,10 @@ This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we re
 -----------------------------------
 We are a team of diverse nature developers, interested on the bases and structure of the Fermat Framework, and even nonconforming, we work along the entire platform, trying to keep the things ordered and collaborating with other teams.
 
-In the Fermat Core we are responsible for the enhancements and maintance.
-In the OSA Platform we do our best.
-In the Crypto Broker Platform we are responsible for the communication between its respectives actors.
-In the Crypto Currency Platform we developed a serie of plug-ins and we have knowdlege of the whole platform.
+* In the Fermat Core we are responsible for the enhancements and maintance.
+* In the OSA Platform we do our best.
+* In the Crypto Broker Platform we are responsible for the communication between its respectives actors.
+* In the Crypto Currency Platform we developed a serie of plug-ins and we have knowdlege of the whole platform.
 
 In each platform mentioned, we are involved in the development of Network Services, GUI Components and Platform components.
 
