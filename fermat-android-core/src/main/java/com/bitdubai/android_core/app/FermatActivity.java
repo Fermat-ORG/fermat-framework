@@ -172,14 +172,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
     private static final String TAG = "fermat-core";
-    public static final String DEVELOP_MODE = "develop_mode";
     private MainMenu mainMenu;
 
     /**
      * Screen adapters
      */
     protected TabsPagerAdapter adapter;
-    private TabsPagerAdapterWithIcons adapterWithIcons;
     private ScreenPagerAdapter screenPagerAdapter;
 
     /**
@@ -191,8 +189,6 @@ public abstract class FermatActivity extends AppCompatActivity
      * Activity type
      */
     private ActivityType activityType;
-    protected ArrayList activePlatforms;
-    protected boolean developMode;
 
     /**
      * Constans
@@ -246,21 +242,6 @@ public abstract class FermatActivity extends AppCompatActivity
             // The FragmentManager will restore the old Fragments so we don't
             // need to create any new ones here.
         }
-
-
-        try {
-
-            activePlatforms = new ArrayList();
-
-            /*
-            *  Our Future code goes here ...
-            */
-
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
-        }
     }
 
     /**
@@ -284,7 +265,6 @@ public abstract class FermatActivity extends AppCompatActivity
 //                    @Override
 //                    public boolean onMenuItemClick (MenuItem item){
 //
-//                        //makeText(, "Mati",LENGTH_SHORT).show();
 //                        return true;
 //                    }
 //                });
@@ -292,8 +272,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 //getMenuInflater().inflate(R.menu.wallet_store_activity_wallet_menu, menu);
 
             }
-
-
             return true;
 
 
@@ -324,6 +302,7 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         try {
+            this.resetThisActivity();
             super.onStop();
         } catch (Exception e) {
             e.printStackTrace();
@@ -369,7 +348,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 appConnections.setActiveIdentity(moduleManager.getSelectedActorIdentity());
             }
             TabStrip tabs = activity.getTabStrip();
-            Map<String, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
             TitleBar titleBar = activity.getTitleBar();
             MainMenu mainMenu = activity.getMainMenu();
 
@@ -387,9 +365,11 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintSideMenu(activity, sideMenu,appConnections);
 
-            paintFooter(activity.getFooter(),appConnections.getFooterViewPainter());
+            if(appConnections!=null) {
+                paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());
 
-            pantHeader(activity.getHeader(),appConnections.getHeaderViewPainter());
+                pantHeader(activity.getHeader(), appConnections.getHeaderViewPainter());
+            }
 
             setScreen(activity);
         } catch (Exception e) {
@@ -609,17 +589,8 @@ public abstract class FermatActivity extends AppCompatActivity
                         collapsingToolbarLayout.setCollapsedTitleTypeface(typeface);
                         collapsingToolbarLayout.setTitle(title);
                     }
-                        //if (titleBar.getLabelSize() != -1) {
-                        //collapsingToolbarLayout.setCollapsedTitleTex(titleBar.getLabelSize());
-
-                        //}
-
-//
-//
-//                    } else {
                         mToolbar.setTitle(title);
-//
-//                    }
+
                 }
 
                 if (titleBar.getColor() != null) {
@@ -942,7 +913,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-
     /**
      * Dispatch onResume() to fragments.  Note that for better inter-operation
      * with older versions of the platform, at the point of this call the
@@ -978,13 +948,11 @@ public abstract class FermatActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
-
     /**
      * @param tabs
      * @param activity
      */
     protected void paintTabs(TabStrip tabs, Activity activity) {
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
         if (tabs == null)
@@ -1009,11 +977,6 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.setSelectedTabIndicatorHeight(tabs.getIndicatorHeight());
             }
         }
-
-        // put tabs font
-        //if (pagerSlidingTabStrip != null) {
-        //pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf"), 1);
-        //}
     }
 
     /**
@@ -1021,21 +984,15 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     protected void paintStatusBar(StatusBar statusBar) {
-
-
         if (statusBar != null) {
             if (statusBar.getColor() != null) {
                 if (Build.VERSION.SDK_INT > 20) {
                     try {
-
                         Window window = this.getWindow();
-
                         // clear FLAG_TRANSLUCENT_STATUS flag:
                         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
                         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
                         // finally change the color
                         Color color_status = new Color();
                         window.setStatusBarColor(Color.parseColor(statusBar.getColor()));
@@ -1046,24 +1003,16 @@ public abstract class FermatActivity extends AppCompatActivity
                 }
             } else {
                 try {
-
                     Window window = this.getWindow();
-
                     // clear FLAG_TRANSLUCENT_STATUS flag:
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
                     // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-
                     // finally change the color
                     if (Build.VERSION.SDK_INT > 20)
                         window.setStatusBarColor(Color.TRANSPARENT);
-
                     gc();
                     //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
-
-
                     //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
@@ -1095,7 +1044,6 @@ public abstract class FermatActivity extends AppCompatActivity
             }
         }
     }
-
 
     /**
      * Set the activity type
@@ -1198,18 +1146,6 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void initialisePaging() {
 
         try {
-
-            if (activePlatforms == null) {
-                activePlatforms = new ArrayList();
-                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
-            }
-
-            //if (getIntent().getBooleanExtra("flag",false)) {
-            if(true){
-                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
-                activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
-            }
-
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
@@ -1219,26 +1155,19 @@ public abstract class FermatActivity extends AppCompatActivity
                 switch (desktopObject.getType()) {
                     case "DCCP":
                         //por ahora va esto
-                        if (activePlatforms.contains(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
                             WalletManager manager = getWalletManager();
                             //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
                             DesktopFragment desktopFragment = DesktopFragment.newInstance(manager);
                             fragments.add(desktopFragment);
-                        }
+
                         break;
                     case "WPD":
-                        if (activePlatforms.contains(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION)) {
                             DesktopSubAppFragment subAppDesktopFragment = DesktopSubAppFragment.newInstance();
                             fragments.add(subAppDesktopFragment);
-                        }
                         break;
 
                 }
             }
-
-            /**
-             * this pagerAdapter is the screenPagerAdapter with no tabs
-             */
             screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
             final ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
@@ -1299,16 +1228,13 @@ public abstract class FermatActivity extends AppCompatActivity
                     if (Build.VERSION.SDK_INT > 19)
                         wallpaperDrawable = wallpaperManager.getBuiltInDrawable();
 
-                    Display display = getWindowManager().getDefaultDisplay();
-                    Point size = new Point();
-                    display.getSize(size);
-                    Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
+//                    Display display = getWindowManager().getDefaultDisplay();
+//                    Point size = new Point();
+//                    display.getSize(size);
+//                    Bitmap bmp = Bitmap.createScaledBitmap(((BitmapDrawable) wallpaperDrawable).getBitmap(), size.x + 300, size.y, true);
                     getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
                             WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
 
-                    //getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(),bmp));
-
-                    //getWindow().setBackgroundDrawable(scaleDrawable);
                     ApplicationSession.applicationState = ApplicationSession.STATE_STARTED_DESKTOP;
                 }
             }
@@ -1334,7 +1260,6 @@ public abstract class FermatActivity extends AppCompatActivity
             bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(),null);
         }
     }
-
 
     /**
      * Get wallet session manager
@@ -1578,7 +1503,6 @@ public abstract class FermatActivity extends AppCompatActivity
      * Get NotificationManager
      */
     public NotificationManagerMiddleware getNotificationManager() {
-/// TODO POINT TO THE REAL SUB-APP-MODULE PLEASE
         try {
             return (NotificationManagerMiddleware) ((ApplicationSession) getApplication()).getFermatSystem().startAndGetPluginVersion(
                     new PluginVersionReference(
@@ -1959,9 +1883,6 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected abstract void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position);
 
-
-
-
     public void setScreen(Activity activity) {
         try {
             if (activity.isFullScreen()) {
@@ -1975,10 +1896,8 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-
     //TODO: to remove
 
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
-
 
 }

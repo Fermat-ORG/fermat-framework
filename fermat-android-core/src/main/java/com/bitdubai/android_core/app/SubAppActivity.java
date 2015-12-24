@@ -62,10 +62,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activePlatforms = getIntent().getParcelableArrayListExtra(StartActivity.ACTIVE_PLATFORMS);
-
-        developMode = getIntent().getBooleanExtra(DEVELOP_MODE,false);
-
         setActivityType(ActivityType.ACTIVITY_TYPE_SUB_APP);
 
         try {
@@ -84,7 +80,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         unbindDrawables(findViewById(R.id.drawer_layout));
         System.gc();
     }
@@ -102,8 +97,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             }
         }
     }
-
-
 
     /**
      * This method replaces the current fragment by the next in navigation
@@ -550,7 +543,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         try {
             String activityCode = data.getLinkToActivity().getCode();
             if(activityCode.equals("develop_mode")){
-                developMode = true;
                 onBackPressed();
             }else
                 changeActivity(activityCode,data.getAppLinkPublicKey());
