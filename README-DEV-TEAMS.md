@@ -66,3 +66,36 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Github:  https://github.com/lostwood
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+
+
+<br/>
+## Code Butchers Team:
+-----------------------------------
+We are a team of diverse nature developers, interested on the bases and structure of the Fermat Framework, and even nonconforming, we work along the entire platform, trying to keep the things ordered and collaborating with other teams.
+
+In the Fermat Core we are responsible for the enhancements and maintance.
+In the OSA Platform we do our best.
+In the Crypto Broker Platform we are responsible for the communication between its respectives actors.
+In the Crypto Currency Platform we developed a serie of plug-ins and we have knowdlege of the whole platform.
+
+In each platform mentioned, we are involved in the development of Network Services, GUI Components and Platform components.
+
+### Team Members:
+
+![alt text](https://avatars0.githubusercontent.com/u/7293791?v=3&s=460 "Lion")
+
+* **León Acosta [Team Leader]**<br/>
+---
+    Email:   laion.cj91@gmail.com
+    Skype:   leon.acosta
+    Github:  https://github.com/lnacosta
+    
+![alt text](https://avatars2.githubusercontent.com/u/15386992?v=3&s=400 "Pato")
+    
+* **Patricio Gesualdi**<br/>
+---
+      Email:   pmgesualdi@hotmail.com
+      Skype:   pmgesualdi
+      Github:  https://github.com/pmgesualdi
+
+We love music and we do music, we love movies (fanatics), we are also ameteur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
