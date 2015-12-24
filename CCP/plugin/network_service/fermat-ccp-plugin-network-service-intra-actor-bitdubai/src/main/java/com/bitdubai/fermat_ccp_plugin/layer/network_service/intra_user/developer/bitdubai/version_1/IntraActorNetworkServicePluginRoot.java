@@ -129,7 +129,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
-import jdk.nashorn.internal.parser.JSONParser;
 
 
 /**
