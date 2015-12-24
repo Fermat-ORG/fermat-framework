@@ -49,6 +49,8 @@ public class IncomingMoneyNotificationHandler implements FermatEventHandler {
                 //find actor connected with logget identity
                 notificationManager.addIncomingIntraUserNotification(incomingMoneyNotificationEvent.getSource(), incomingMoneyNotificationEvent.getIntraUserIdentityPublicKey(),incomingMoneyNotificationEvent.getWalletPublicKey(), incomingMoneyNotificationEvent.getAmount(), incomingMoneyNotificationEvent.getCryptoCurrency(), incomingMoneyNotificationEvent.getActorId(), incomingMoneyNotificationEvent.getActorType());
                 break;
+
+
         }
 
 

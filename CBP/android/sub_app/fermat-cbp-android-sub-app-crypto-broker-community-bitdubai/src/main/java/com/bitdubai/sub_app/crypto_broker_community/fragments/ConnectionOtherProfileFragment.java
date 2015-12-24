@@ -168,18 +168,6 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
-    }
 
     @Override
     public void onMessageReceive(Context context, Intent data) {

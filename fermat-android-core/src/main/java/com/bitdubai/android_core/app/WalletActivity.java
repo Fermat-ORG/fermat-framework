@@ -234,7 +234,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
         } else {
             Intent intent = new Intent(this, DesktopActivity.class);
-            if(developMode==true) intent.putExtra("flag",true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -548,13 +547,13 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 try {
 
                     //Ultima pantalla de la wallet que quiere conectarse con la app
-                    installedSubApp.getActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY).changeBackActivity(
-                            walletNavigationStructure.getPublicKey(),
-                            lastWalletActivityWhoAskForConnetion.getActivityType());
+//                    installedSubApp.getActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY).changeBackActivity(
+//                            walletNavigationStructure.getPublicKey(),
+//                            lastWalletActivityWhoAskForConnetion.getActivityType());
 
                     connectWithSubApp(engine,objectses,installedSubApp);
 
-                } catch (InvalidParameterException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -636,7 +635,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             String activityCode = data.getLinkToActivity().getCode();
             String appLickPublicKey = data.getAppLinkPublicKey();
             if(activityCode.equals("develop_mode")){
-                developMode = true;
                 onBackPressed();
             }else
                 changeActivity(activityCode,appLickPublicKey);
