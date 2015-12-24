@@ -275,7 +275,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     /*public List<BusinessTransactionRecord> getPendingToSubmitCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
+        return getBusinessTransactionRecordList(
                 CryptoStatus.PENDING_SUBMIT.getCode(),
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
@@ -284,7 +284,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
+        return getBusinessTransactionRecordList(
                 ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION.getCode(),
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
@@ -293,7 +293,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
+        return getBusinessTransactionRecordList(
                 ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_CONFIRMATION.getCode(),
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
@@ -308,7 +308,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    private List<BusinessTransactionRecord> getCustomerOnlinePaymentRecordList(
+    private List<BusinessTransactionRecord> getBusinessTransactionRecordList(
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
@@ -319,7 +319,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getCustomerOnlinePaymentRecordByContractHash(contractHash);
+            businessTransactionRecord = getBusinessTransactionRecordByContractHash(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
@@ -334,7 +334,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     /*public List<BusinessTransactionRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
+        return getBusinessTransactionRecordList(
                 ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode(),
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
@@ -548,12 +548,12 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     }
 
     /**
-     * This methos returns a BusinessTransactionRecord by the parameters given.
+     * This method returns a BusinessTransactionRecord by the parameters given.
      * @param keyValue
      * @param keyColumn
      * @return
      */
-    private BusinessTransactionRecord getCustomerOnlinePaymentRecord(
+    private BusinessTransactionRecord getBusinessTransactionRecord(
             String keyValue,
             String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
         try{
@@ -623,26 +623,26 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         }
     }
 
-    public BusinessTransactionRecord getCustomerOnlinePaymentRecordByContractHash(
+    public BusinessTransactionRecord getBusinessTransactionRecordByContractHash(
             String contractHash)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        return getCustomerOnlinePaymentRecord(
+        return getBusinessTransactionRecord(
                 contractHash,
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                         ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME);
 
     }
 
-    public BusinessTransactionRecord getCustomerOnlinePaymentRecordByCustomerPublicKey(
+    public BusinessTransactionRecord getBusinessTransactionRecordByCustomerPublicKey(
             String customerPublicKey) throws UnexpectedResultReturnedFromDatabaseException {
-        return getCustomerOnlinePaymentRecord(
+        return getBusinessTransactionRecord(
                 customerPublicKey,
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                         ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
     }
 
-    public void updateOnlinePaymentRecord(BusinessTransactionRecord businessTransactionRecord)
+    public void updateBusinessTransactionRecord(BusinessTransactionRecord businessTransactionRecord)
             throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
