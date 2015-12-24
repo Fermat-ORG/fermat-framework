@@ -1242,7 +1242,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                if(!platformComponentProfile.getExtraData().equals(""))
                {
                    try {
-                       Gson gson = new Gson();
                        JsonParser jParser = new JsonParser();
                        JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
 
@@ -1250,7 +1249,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                        profileImage  = jsonObject.get("AVATAR_IMG").getAsString();
                    }
                    catch(Exception e){
-
                        profileImage = platformComponentProfile.getExtraData();
                    }
 

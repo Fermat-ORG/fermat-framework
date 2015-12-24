@@ -98,9 +98,9 @@ public class ConnectionsListFragment extends FermatFragment implements SwipeRefr
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
+//        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
         AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
+//        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override

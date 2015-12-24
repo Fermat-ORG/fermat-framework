@@ -140,17 +140,6 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return dataSet;
     }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-
-        try {
-            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
-        } catch (Exception ex) {
-
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }
-
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override

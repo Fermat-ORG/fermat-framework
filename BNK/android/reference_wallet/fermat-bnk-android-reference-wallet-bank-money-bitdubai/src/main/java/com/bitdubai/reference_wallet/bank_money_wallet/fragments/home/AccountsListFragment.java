@@ -81,7 +81,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.onActivityCreated(savedInstanceState);
         try {
             BankMoneyWalletNavigationViewPainter navigationViewPainter = new BankMoneyWalletNavigationViewPainter(getActivity());
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
