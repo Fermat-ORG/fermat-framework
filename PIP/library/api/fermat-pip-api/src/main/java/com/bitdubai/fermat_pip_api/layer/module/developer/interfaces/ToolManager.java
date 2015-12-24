@@ -9,8 +9,8 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogTo
  */
 public interface ToolManager extends ModuleManager {
 
-public DatabaseTool getDatabaseTool() throws CantGetDataBaseToolException;
+    DatabaseTool getDatabaseTool() throws CantGetDataBaseToolException;
 
-public LogTool getLogTool() throws CantGetLogToolException;
+    LogTool getLogTool() throws CantGetLogToolException;
 
 }

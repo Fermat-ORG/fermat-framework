@@ -36,7 +36,7 @@ public class BusinessTransactionRecord {
 
     private String transactionId;
 
-    private String cryptoWalletPublicKey;
+    private String externalWalletPublicKey;
 
     private BigDecimal priceReference;
 
@@ -109,8 +109,8 @@ public class BusinessTransactionRecord {
         return transactionId;
     }
 
-    public String getCryptoWalletPublicKey() {
-        return cryptoWalletPublicKey;
+    public String getExternalWalletPublicKey() {
+        return externalWalletPublicKey;
     }
 
     //Setters
@@ -176,8 +176,8 @@ public class BusinessTransactionRecord {
         this.transactionId = transactionId;
     }
 
-    public void setCryptoWalletPublicKey(String cryptoWalletPublicKey) {
-        this.cryptoWalletPublicKey = cryptoWalletPublicKey;
+    public void setExternalWalletPublicKey(String externalWalletPublicKey) {
+        this.externalWalletPublicKey = externalWalletPublicKey;
     }
 
     @Override
@@ -194,7 +194,7 @@ public class BusinessTransactionRecord {
                 ", timestamp=" + timestamp +
                 ", transactionHash='" + transactionHash + '\'' +
                 ", transactionId='" + transactionId + '\'' +
-                ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' +
+                ", externalWalletPublicKey='" + externalWalletPublicKey + '\'' +
                 ", priceReference=" + priceReference +
                 ", currencyType=" + currencyType +
                 ", paymentAmount=" + paymentAmount +

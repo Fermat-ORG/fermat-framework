@@ -248,14 +248,14 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
 
     /**
      * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
-     * @param pluginId the pluginId invoking this call. Might not have permissions to create new keys.
+     * @param plugin the pluginId invoking this call. Might not have permissions to create new keys.
      * @param account the account to derive keys from.
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */
     @Override
-    public void deriveKeys(UUID pluginId, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
-        assetCryptoVaultManager.deriveKeys(pluginId, account, keysToDerive);
+    public void deriveKeys(Plugins plugin, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+        assetCryptoVaultManager.deriveKeys(plugin, account, keysToDerive);
     }
 
     /**

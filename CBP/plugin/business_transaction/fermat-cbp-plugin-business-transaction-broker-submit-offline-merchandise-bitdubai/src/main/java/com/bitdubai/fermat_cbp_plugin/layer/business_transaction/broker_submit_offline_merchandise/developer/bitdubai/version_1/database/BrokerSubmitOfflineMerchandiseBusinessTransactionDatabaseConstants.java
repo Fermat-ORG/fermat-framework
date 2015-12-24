@@ -30,6 +30,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants 
     public static final String SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME = "cbp_wallet_public_key";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME = "reference_price";
     public static final String SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME = "payment_type";
+    public static final String SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
 
     public static final String SUBMIT_OFFLINE_MERCHANDISE_FIRST_KEY_COLUMN = "transaction_id";
 

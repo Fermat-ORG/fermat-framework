@@ -34,7 +34,7 @@ public class IssuerWalletNavigationViewAdapter extends FermatAdapter<MenuItem, I
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.dap_wallet_asset_issuer_navigation_row;
+        return R.layout.dap_navigation_drawer_issuer_wallet_navigation_row;
     }
 
     @Override
@@ -49,31 +49,47 @@ public class IssuerWalletNavigationViewAdapter extends FermatAdapter<MenuItem, I
 
                 switch (position) {
                     case 0:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_home_active).into(holder.getIcon());
                         break;
                     case 1:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_active);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_history_active).into(holder.getIcon());
                         break;
                     case 2:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_stadistics_active);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_stadistics_active).into(holder.getIcon());
                         break;
                     case 3:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_users_active);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_users_active).into(holder.getIcon());
                         break;
                 }
             } else {
                 switch (position) {
                     case 0:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_normal);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_home_normal).into(holder.getIcon());
                         break;
                     case 1:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_history_normal);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_history_normal).into(holder.getIcon());
                         break;
                     case 2:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_stadistics_normal);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_stadistics_normal).into(holder.getIcon());
                         break;
                     case 3:
-                        Picasso.with(context).load(R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+//                        holder.getIcon().setImageResource(R.drawable.ic_nav_users_normal);
+
+                        Picasso.with(context).load(R.drawable.ic_nav_users_normal).into(holder.getIcon());
                         break;
                 }
             }

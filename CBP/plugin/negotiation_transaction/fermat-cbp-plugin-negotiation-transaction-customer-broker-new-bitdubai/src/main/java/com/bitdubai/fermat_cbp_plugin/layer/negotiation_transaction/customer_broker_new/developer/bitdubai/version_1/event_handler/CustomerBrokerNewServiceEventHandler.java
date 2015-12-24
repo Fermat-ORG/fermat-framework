@@ -26,7 +26,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
 
     private EventManager                                        eventManager;
 
-    private CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
+    private CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
 
     private ServiceStatus               serviceStatus   = ServiceStatus.CREATED;
 
@@ -49,30 +49,24 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSACTION);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
             fermatEventHandler = new IncomingNegotiationTransactionEventHandler();
             ((IncomingNegotiationTransactionEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEGOTIATION);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
             fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
             ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_RESPONSE);
-            fermatEventHandler = new IncomingNegotiationTransmissionConfirmResponseEventHandler();
-            ((IncomingNegotiationTransmissionConfirmResponseEventHandler) fermatEventHandler).setCustomerBrokerNewService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
             this.serviceStatus = ServiceStatus.STARTED;
+
         } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the AssetDistributionRecorderService", "The AssetDistributionRecorderService is probably null");
+            throw new CantStartServiceException(exception,"Starting the CustomerBrokerNewServiceEventHandler", "The CustomerBrokerNewServiceEventHandler is probably null");
         }
     }
 
@@ -98,6 +92,7 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
         LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         LOG.info("CHECK THE DATABASE");
+
     }
 
     public void incomingNegotiationTransactionConfirmEventHandler(IncomingNegotiationTransmissionConfirmNegotiationEvent event) throws CantSaveEventException {
@@ -105,15 +100,8 @@ public class CustomerBrokerNewServiceEventHandler implements CBPService {
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
-    }
 
-    public void incomingNegotiationTransactionConfirmResponseEventHandler(IncomingNegotiationTransmissionConfirmResponseEvent event) throws CantSaveEventException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerBrokerNewNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("CHECK THE DATABASE");
     }
-
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/

@@ -397,7 +397,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                     );
                 }
                 incomingWalletPublicKey=incomingMoneyEventWrapper.walletPublicKey;
-                contractWalletPublicKey= businessTransactionRecord.getCryptoWalletPublicKey();
+                contractWalletPublicKey= businessTransactionRecord.getExternalWalletPublicKey();
                 if(!incomingWalletPublicKey.equals(contractWalletPublicKey)){
                     throw new IncomingOnlinePaymentException("The wallet public key that receive the money is "+incomingWalletPublicKey+"\n" +
                             "The wallet public key in contract "+contractHash+"\n" +
