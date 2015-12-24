@@ -1,16 +1,13 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetSelectedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
@@ -47,7 +44,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @return a searching interface
      */
-    CryptoBrokerSearch searchCryptoBroker();
+    CryptoBrokerCommunitySearch searchCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
 
     /**
      * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
@@ -60,8 +57,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
      * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity   ,
-                                         CryptoBrokerInformation                 cryptoBrokerToContact) throws CantRequestConnectionException          ,
+    void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity     ,
+                                         CryptoBrokerCommunityInformation        cryptoBrokerToContact) throws CantRequestConnectionException          ,
                                                                                                                ActorConnectionAlreadyRequestedException,
                                                                                                                ActorTypeNotSupportedException          ;
 
@@ -109,31 +106,31 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     void cancelCryptoBroker(UUID requestId) throws CryptoBrokerCancellingFailedException, ConnectionRequestNotFoundException;
 
     /**
-     * The method <code>getAllCryptoBrokers</code> returns the list of all crypto brokers registered by the
+     * The method <code>listAllConnectedCryptoBrokers</code> returns the list of all crypto brokers registered by the
      * logged in crypto broker
      *
      * @return the list of crypto brokers connected to the logged in crypto broker
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> getAllCryptoBrokers(String identityPublicKey,
-                                                      int    max              ,
-                                                      int    offset           ) throws CantListCryptoBrokersException;
+    List<CryptoBrokerCommunityInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                                final int                                     max             ,
+                                                                final int                                     offset          ) throws CantListCryptoBrokersException;
 
     /**
-     * The method <code>getCryptoBrokersWaitingYourAcceptance</code> returns the list of crypto brokers waiting to be accepted
+     * The method <code>listCryptoBrokersPendingLocalAction</code> returns the list of crypto brokers waiting to be accepted
      * or rejected by the logged in crypto broker
      *
      * @return the list of crypto brokers waiting to be accepted or rejected by the  logged in crypto broker
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> getCryptoBrokersWaitingYourAcceptance(String identityPublicKey,
-                                                                        int    max              ,
-                                                                        int    offset           ) throws CantListCryptoBrokersException;
+    List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingLocalAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                                               final int max,
+                                                                               final int offset) throws CantListCryptoBrokersException;
 
     /**
-     * The method <code>getCryptoBrokersWaitingTheirAcceptance</code> list the crypto brokers that haven't
+     * The method <code>listCryptoBrokersPendingRemoteAction</code> list the crypto brokers that haven't
      * answered to a sent connection request by the current logged in crypto broker.
      *
      * @return the list of crypto brokers that haven't answered to a sent connection request by the current
@@ -141,48 +138,15 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerInformation> getCryptoBrokersWaitingTheirAcceptance(String identityPublicKey,
-                                                                         int    max              ,
-                                                                         int    offset           ) throws CantListCryptoBrokersException;
-
-    /**
-     *
-     * @return active CryptoBrokerCommunitySelectableIdentity
-     *
-     * @throws CantGetSelectedIdentityException if something goes wrong.
-     */
-    CryptoBrokerCommunitySelectableIdentity getActiveCryptoBrokerIdentity() throws CantGetSelectedIdentityException;
+    List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
+                                                                       final int max,
+                                                                       final int offset) throws CantListCryptoBrokersException;
 
     /**
      * Count crypto broker waiting
      * @return
      */
     int getCryptoBrokersWaitingYourAcceptanceCount();
-
-    /**
-     * The method <code>updateCryptoBrokerIdentity</code> change a identity information data
-     *
-     * @param identityPublicKey
-     * @param identityAlias
-     * @param identityPhrase
-     * @param profileImage
-     *
-     * @throws CantUpdateIdentityException if something goes wrong.
-     */
-    void updateCryptoBrokerIdentity(String identityPublicKey,
-                                    String identityAlias    ,
-                                    String identityPhrase   ,
-                                    byte[] profileImage     ) throws CantUpdateIdentityException;
-
-
-    /**
-     *The method <code>deleteCryptoBrokerIdentity</code> change identity status to inactive
-     *
-     * @param identityPublicKey
-     *
-     * @throws CantListCryptoBrokersException if something goes wrong.
-     */
-    void  deleteCryptoBrokerIdentity(String identityPublicKey) throws CantListCryptoBrokersException;
 
     /**
      *

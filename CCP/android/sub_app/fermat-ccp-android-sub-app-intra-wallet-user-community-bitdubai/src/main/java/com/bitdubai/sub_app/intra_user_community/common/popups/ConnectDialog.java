@@ -3,9 +3,7 @@ package com.bitdubai.sub_app.intra_user_community.common.popups;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -117,12 +115,10 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
                 //image null
                 if (intraUserInformation != null && identity != null) {
                     ((IntraUserSubAppSession) getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    prefs.edit().putBoolean("Connected", true).apply();
-                    Toast.makeText(getContext(), "Connection request send", Toast.LENGTH_SHORT).show();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
+                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }

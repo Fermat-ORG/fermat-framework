@@ -1,5 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
@@ -67,12 +69,21 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
             public void onClick(View v) {
                 boolean selected =  !data.isSelected();
                 data.setSelected(selected);
-                TransitionDrawable transition = (TransitionDrawable) v.getBackground();
-                if(selected==false){
-                    transition.startTransition(300);
-                }else{
-                    transition.reverseTransition(300);
+                if(selected==true) {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.WHITE, Color.parseColor("#dcf6f7")).setDuration(1500);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    animator.start();
+                }else {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.parseColor("#dcf6f7"), Color.WHITE).setDuration(1500);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    animator.start();
                 }
+//                TransitionDrawable transition = (TransitionDrawable) v.getBackground();
+//                if(selected==false){
+//                    transition.startTransition(300);
+//                }else{
+//                    transition.reverseTransition(300);
+//                }
                 //v.setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
             }
         });

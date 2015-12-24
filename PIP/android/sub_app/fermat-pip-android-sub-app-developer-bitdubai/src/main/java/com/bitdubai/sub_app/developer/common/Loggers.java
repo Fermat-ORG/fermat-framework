@@ -10,16 +10,6 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 public class Loggers {
 
     public static final int TYPE_PLUGIN=1;
-    public static final int TYPE_ADDON=2;
-
-    public static final int LOGGER_LEVEL_NOT_LOGGING=0;
-    public static final int LOGGER_LEVEL_MINIMAL_LOGGING=1;
-    public static final int LOGGER_LEVEL_MODERATE_LOGGING=2;
-    public static final int LOGGER_LEVEL_AGGRESSIVE_LOGGING=3;
-
-
-
-    private static final long serialVersionUID = -8775437026050196758L;
 
     public String picture;
 
@@ -32,4 +22,5 @@ public class Loggers {
     public String developer;
 
     public int type;
+
 }

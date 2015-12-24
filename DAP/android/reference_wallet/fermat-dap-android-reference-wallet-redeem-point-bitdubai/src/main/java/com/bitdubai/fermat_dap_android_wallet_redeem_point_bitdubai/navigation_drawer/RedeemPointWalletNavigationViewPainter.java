@@ -51,7 +51,7 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_wallet_asset_redeem_point_navigation_view_bottom, base, true);
+        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_redeem_point_wallet_bottom, base, true);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.color.fab_material_white);
+                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
         }catch (OutOfMemoryError error){
             error.printStackTrace();
         }
@@ -71,7 +71,7 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return 0;
     }
 
     @Override

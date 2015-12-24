@@ -23,6 +23,14 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/empty_screen"
+        android:background="@drawable/no_request"
+        android:visibility="gone"></ImageView>
+
+
 
 </FrameLayout>
 

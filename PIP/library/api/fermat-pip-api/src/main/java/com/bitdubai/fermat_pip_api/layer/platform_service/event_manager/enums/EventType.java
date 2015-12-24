@@ -770,6 +770,15 @@ public enum EventType implements FermatEventEnum {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent(this);
         }
     },
+    OUTGOING_ROLLBACK_NOTIFICATION("ORN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraTransactionRollbackEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraRollbackNotificationEvent(this);
+        }
+    },
 
     RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
