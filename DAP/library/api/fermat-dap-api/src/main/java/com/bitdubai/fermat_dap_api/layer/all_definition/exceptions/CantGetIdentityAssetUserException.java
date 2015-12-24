@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.exceptions;
+package com.bitdubai.fermat_dap_api.layer.all_definition.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

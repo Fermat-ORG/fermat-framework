@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions;
+package com.bitdubai.fermat_dap_api.layer.all_definition.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by natalia on 02/09/15.
  */
-public class CantGetIdentityAssetIssuerException extends FermatException {
+public class CantGetIdentityRedeemPointException extends FermatException {
 
-    public CantGetIdentityAssetIssuerException(Exception cause) {
+    public CantGetIdentityRedeemPointException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, null, null);
     }
     /**
@@ -18,7 +18,7 @@ public class CantGetIdentityAssetIssuerException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetIdentityAssetIssuerException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetIdentityRedeemPointException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
