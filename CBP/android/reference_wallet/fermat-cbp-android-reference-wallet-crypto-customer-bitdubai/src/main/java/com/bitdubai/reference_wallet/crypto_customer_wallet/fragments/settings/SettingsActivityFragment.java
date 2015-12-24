@@ -71,7 +71,6 @@ public class SettingsActivityFragment extends FermatWalletFragment {
 
         try {
             CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);

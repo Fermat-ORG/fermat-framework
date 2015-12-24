@@ -1277,6 +1277,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         intraWalletUserIdentityManager.createNewIntraWalletUser(name,phrase,image);
     }
 
+    @Override
+    public void registerIdentities(){
+        intraWalletUserIdentityManager.registerIdentities();
+    }
+
 
     private  String convertTime(long time){
         Date date = new Date(time);
