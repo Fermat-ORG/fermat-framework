@@ -16,6 +16,8 @@ public class ActorViewHolder extends FermatViewHolder {
     public CheckBox connect;
     public SquareImageView thumbnail;
     public FermatTextView name;
+    public FermatTextView status;
+    public FermatTextView crypto;
 
     /**
      * Constructor
@@ -24,8 +26,12 @@ public class ActorViewHolder extends FermatViewHolder {
      */
     public ActorViewHolder(View itemView) {
         super(itemView);
-        thumbnail = (SquareImageView) itemView.findViewById(R.id.thumbnail);
-        name = (FermatTextView) itemView.findViewById(R.id.name);
+        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
+        name = (FermatTextView) itemView.findViewById(R.id.community_name);
         connect = (CheckBox) itemView.findViewById(R.id.connect);
+
+        status = (FermatTextView) itemView.findViewById(R.id.status);
+        crypto = (FermatTextView) itemView.findViewById(R.id.crypto);
+
     }
 }
