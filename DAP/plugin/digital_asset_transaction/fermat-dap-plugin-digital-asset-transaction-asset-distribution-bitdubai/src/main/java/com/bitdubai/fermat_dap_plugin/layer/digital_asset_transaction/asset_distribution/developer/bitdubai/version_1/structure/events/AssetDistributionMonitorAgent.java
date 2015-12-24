@@ -16,10 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -44,7 +41,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exception
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
@@ -56,7 +52,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DeliverRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DigitalAssetDistributionVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DigitalAssetDistributor;
@@ -74,7 +69,6 @@ import java.util.UUID;
  */
 public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
-    private String userPublicKey;
     private Thread agentThread;
     private LogManager logManager;
     private ErrorManager errorManager;
@@ -86,19 +80,16 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
     private BitcoinNetworkManager bitcoinNetworkManager;
     private DigitalAssetDistributor distributor;
     private final ActorAssetUserManager actorAssetUserManager;
-    //ActorAssetUserManager actorAssetUserManager;
 
     public AssetDistributionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                          ErrorManager errorManager,
                                          UUID pluginId,
-                                         String userPublicKey,
                                          PluginFileSystem pluginFileSystem,
                                          ActorAssetUserManager actorAssetUserManager,
                                          AssetVaultManager assetVaultManager) throws CantSetObjectException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.userPublicKey = userPublicKey;
         this.distributor = new DigitalAssetDistributor(
                 errorManager,
                 pluginId,
@@ -146,7 +137,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             monitorAgent.setErrorManager(this.errorManager);
             monitorAgent.setAssetDistributionDao(new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault, actorAssetUserManager));
-            monitorAgent.Initialize();
             this.agentThread = new Thread(monitorAgent);
             this.agentThread.start();
         } catch (Exception exception) {
@@ -234,24 +224,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
 
         }
 
-        public void Initialize() throws CantInitializeAssetMonitorAgentException {
-            try {
-
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
-            } catch (DatabaseNotFoundException databaseNotFoundException) {
-                AssetDistributionDatabaseFactory assetIssuingTransactionDatabaseFactory = new AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
-                try {
-                    database = assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, userPublicKey);
-                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                    throw new CantInitializeAssetMonitorAgentException(cantCreateDatabaseException, "Initialize Monitor Agent - trying to create the plugin database", "Please, check the cause");
-                }
-            } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantInitializeAssetMonitorAgentException(exception, "Initialize Monitor Agent - trying to open the plugin database", "Please, check the cause");
-            }
-        }
-
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetDistributionProgressException {
             try {
 
@@ -317,7 +289,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                 System.out.println("ASSET DISTRIBUTION CN genesis transaction: " + genesisTransaction);
                                 CryptoTransaction cryptoGenesisTransaction = getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
                                 if (cryptoGenesisTransaction == null) {
-                                    //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
                                     System.out.println("ASSET DISTRIBUTION the genesis transaction from Crypto Network is null");
                                     continue;
                                 }
@@ -352,9 +323,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                 String transactionInternalId = this.assetDistributionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                 System.out.println("ASSET DISTRIBUTION transactionInternalId " + transactionInternalId);
                                 DigitalAssetMetadata digitalAssetMetadataFromLocalStorage = digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(transactionInternalId);
-                                //digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletDebit(digitalAssetMetadataFromLocalStorage, cryptoGenesisTransaction, BalanceType.BOOK);
-                                //String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
-                                //digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
                                 String actorAssetUserPublicKey = assetDistributionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
                                 digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, actorAssetUserPublicKey);
                                 assetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
@@ -492,14 +460,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             assetVaultManager.sendAssetBitcoins(genesisTransaction, cryptoAddressTo, amount);
         }
 
-        /*private List<String> getPendingAssetVaultEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
-            return assetDistributionDao.getPendingCryptoRouterEvents();
-        }
-
-        private List<String> getPendingNetworkLayerEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
-            return assetDistributionDao.getPendingNetworkLayerEvents();
-        }*/
-
         /**
          * This method returns a full CryptoTransaction from Bitcoin Crypto Network.
          *
@@ -509,18 +469,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
          * @throws CantGetCryptoTransactionException
          */
         private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
-            //List<CryptoTransaction> transactionList=new ArrayList<>();
-            /**
-             * Mock for testing
-             */
-            //CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
-            //mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-            //mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-            //return mockCryptoTransaction;
-            //transactionList.add(mockCryptoTransaction);
-            /**
-             * End of mocking
-             */
             //TODO: change this line when is implemented in crypto network
             List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
             if (transactionListFromCryptoNetwork == null) {
@@ -541,14 +489,11 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             for (CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork) {
                 System.out.println("ASSET DISTRIBUTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
                 if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
-                    //transactionList.add(cryptoTransaction);
                     System.out.println("ASSET DISTRIBUTION I found it!");
                     return cryptoTransaction;
                 }
             }
-            //TODO: think a better return
             return null;
-            //return transactionList;
         }
 
     }

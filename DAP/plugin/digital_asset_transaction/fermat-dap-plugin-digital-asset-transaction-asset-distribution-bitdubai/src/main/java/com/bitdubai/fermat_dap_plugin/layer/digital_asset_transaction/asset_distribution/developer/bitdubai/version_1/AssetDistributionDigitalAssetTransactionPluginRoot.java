@@ -18,8 +18,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -31,7 +29,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -42,12 +39,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exce
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.mocks.MockActorAssetUserForTesting;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.mocks.MockDigitalAssetMetadataForTesting;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
@@ -57,16 +51,13 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DigitalAssetDistributionVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -77,7 +68,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
-    public static long DELIVERING_TIMEOUT = 2 /*MINUTES!!*/ * 60 * 1000;
+    public static long DELIVERING_TIMEOUT = 3 /*MINUTES!!*/ * 60 * 1000;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
     ActorAssetIssuerManager actorAssetIssuerManager;
@@ -90,9 +81,6 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
     BitcoinNetworkManager bitcoinNetworkManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
-    DeviceUserManager deviceUserManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
     AssetVaultManager assetVaultManager;
@@ -126,9 +114,6 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
     AssetDistributionMonitorAgent assetDistributionMonitorAgent;
     Database assetDistributionDatabase;
 
-    //TODO: Delete this log object
-    Logger LOG = Logger.getGlobal();
-
     private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
         AssetDistributionDatabaseFactory databaseFactory = new AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
         assetDistributionDatabase = databaseFactory.createDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
@@ -152,12 +137,10 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
 
     @Override
     public void start() throws CantStartPluginException {
-        //printSomething("Plugin started");
         try {
             try {
                 this.assetDistributionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
             } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
-                //printSomething("CREATING A PLUGIN DATABASE.");
                 try {
                     createAssetDistributionTransactionDatabase();
                 } catch (CantCreateDatabaseException innerException) {
@@ -193,26 +176,20 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                 throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
 
-            //distributeAssets(null, null);
-            //testDeveloperDatabase();
         } catch (CantSetObjectException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
-        } /*catch (CantDistributeDigitalAssetsException e) {
-            e.printStackTrace();
-        }*/ catch (Exception exception) {
+        } catch (Exception exception) {
             System.out.println("Asset Distribution test exception " + exception);
             exception.printStackTrace();
         }
         this.serviceStatus = ServiceStatus.STARTED;
-        //testRaiseEvent();
-
     }
 
     //TODO: DELETE THIS USELESS METHOD
     private void printSomething(String information) {
-        LOG.info("ASSET_DISTRIBUTION: " + information);
+        System.out.println("ASSET_DISTRIBUTION: " + information);
     }
 
     /**
@@ -224,11 +201,9 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (this.assetDistributionMonitorAgent == null) {
-            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.assetDistributionMonitorAgent = new AssetDistributionMonitorAgent(this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
-                    userPublicKey,
                     pluginFileSystem,
                     actorAssetUserManager,
                     assetVaultManager);
@@ -236,11 +211,8 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
             this.assetDistributionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetDistributionMonitorAgent.setDigitalAssetDistributionVault(this.digitalAssetDistributionVault);
             this.assetDistributionMonitorAgent.setAssetTransmissionManager(this.assetTransmissionNetworkServiceManager);
-            //this.assetDistributionMonitorAgent.setActorAssetUserManager(this.actorAssetUserManager);
             this.assetDistributionMonitorAgent.start();
-        }/*else{
-            this.assetDistributionMonitorAgent.start();
-        }*/
+        }
     }
 
     @Override
@@ -330,47 +302,4 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
             }
         }
     }
-
-    private HashMap<DigitalAssetMetadata, ActorAssetUser> getDistributionHashMapForTesting() {
-        HashMap<DigitalAssetMetadata, ActorAssetUser> testingHashMap = new HashMap<>();
-        try {
-
-            testingHashMap.put((DigitalAssetMetadata) getDigitalAssetMetadataForTest(), (ActorAssetUser) getActorAssetUserForTest());
-        } catch (CantDefineContractPropertyException e) {
-            e.printStackTrace();
-        }
-        return testingHashMap;
-    }
-
-    private void testRaiseEvent() {
-        printSomething("Start event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
-        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-        eventToRaise.setSource(EventSource.CRYPTO_ROUTER);
-        eventManager.raiseEvent(eventToRaise);
-        printSomething("End event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
-    }
-
-    private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException {
-        System.out.println("START TEST DEVELOPER DATABASE ASSET DISTRIBUTION");
-        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting = new MockDigitalAssetMetadataForTesting();
-        System.out.println("ASSET DISTRIBUTION MOCKED DAM:" + mockDigitalAssetMetadataForTesting);
-        AssetDistributionDao assetDistributionDao = new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault, actorAssetUserManager);
-        assetDistributionDao.persistDigitalAsset(
-                mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
-                "testLocalStorage",
-                mockDigitalAssetMetadataForTesting.getDigitalAssetHash(),
-                "testReceiverPublicKey",
-                mockDigitalAssetMetadataForTesting.getDigitalAsset().getGenesisAddress().getAddress());
-    }
-
-    private DigitalAssetMetadata getDigitalAssetMetadataForTest() throws CantDefineContractPropertyException {
-        DigitalAssetMetadata mockedDigitalAssetMetadata = new MockDigitalAssetMetadataForTesting();
-        return mockedDigitalAssetMetadata;
-    }
-
-    private ActorAssetUser getActorAssetUserForTest() {
-        ActorAssetUser mockedActorAssetUser = new MockActorAssetUserForTesting();
-        return mockedActorAssetUser;
-    }
-
 }
