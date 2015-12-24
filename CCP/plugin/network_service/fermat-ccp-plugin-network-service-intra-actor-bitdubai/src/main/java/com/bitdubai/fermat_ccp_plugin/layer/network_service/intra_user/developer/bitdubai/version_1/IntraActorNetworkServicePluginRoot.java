@@ -982,14 +982,20 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     long sentDate = record.getSentDate();
                     long currentTime = System.currentTimeMillis();
-
                     long dif = currentTime - sentDate;
 
-                    if(dif > 259200000)
-                        outgoingNotificationDao.delete(record.getId());
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
-                    //TODO tendria que disparar evento para que le cambie el estado da la solicitud a Error usuario no existe o algo asi
-                }
+                    if((int) dias > 3)
+                    {
+                        //notify the user does not exist to intra user actor plugin
+                        record.changeDescriptor(NotificationDescriptor.INTRA_USER_NOT_FOUND);
+                        incomingNotificationsDao.createNotification(record);
+
+                        outgoingNotificationDao.delete(record.getId());
+                    }
+
+            }
 
             }
 
