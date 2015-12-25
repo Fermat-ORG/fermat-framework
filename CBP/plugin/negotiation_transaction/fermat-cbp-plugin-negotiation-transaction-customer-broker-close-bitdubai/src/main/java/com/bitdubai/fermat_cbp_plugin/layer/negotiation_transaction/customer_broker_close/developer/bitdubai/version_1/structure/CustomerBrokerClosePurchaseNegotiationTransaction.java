@@ -15,6 +15,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantNegotiationAddCryptoAdreessException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,10 +29,12 @@ import java.util.UUID;
 public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager        customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Transaction database DAO */
     private CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao;
+
+    private CryptoPaymentManager                                    cryptoPaymentManager;
 
     public CustomerBrokerClosePurchaseNegotiationTransaction(
             CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
@@ -110,7 +115,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
         try {
 
-            if (isMerchandiseCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses())) {
+            if (isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses())) {
 
                 Collection<Clause> negotiationClauses;
 
@@ -173,12 +178,26 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
-    private String cryptoAdreessActor(){
+    private String cryptoAdreessActor() {
 
-        return null;
+        String cryptoAdreess = null;
+
+        try {
+
+            CryptoPaymentRegistry cryptoPaymentRegistry = cryptoPaymentManager.getCryptoPaymentRegistry();
+
+//            cryptoPaymentRegistry.generateCryptoPaymentRequest();
+//
+//            cryptoPaymentRegistry.getRequestById();
+
+        } catch (CantGetCryptoPaymentRegistryException e){
+
+        }
+
+        return cryptoAdreess;
 
     }
-    private boolean isMerchandiseCryptoCurrency(Collection<Clause> negotiationClauses){
+    private boolean isCryptoCurrency(Collection<Clause> negotiationClauses){
 
         for(Clause clause : negotiationClauses){
             if(clause.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD)){
@@ -191,4 +210,6 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
         return false;
 
     }
+
+
 }
