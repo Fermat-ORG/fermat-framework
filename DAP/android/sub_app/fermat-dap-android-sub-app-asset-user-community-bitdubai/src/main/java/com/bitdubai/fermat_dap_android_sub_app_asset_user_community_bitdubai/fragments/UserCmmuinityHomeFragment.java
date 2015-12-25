@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,11 +24,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.ActorAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.navigation_drawer.FragmentsCommons;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.navigation_drawer.UserCommunityNavigationAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -43,7 +40,7 @@ import java.util.List;
 /**
  * Home Fragment
  */
-public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserCmmuinityHomeFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;
@@ -55,7 +52,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    private ActorAdapter adapter;
+    private UserCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
     private int offset = 0;
@@ -65,8 +62,8 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
      */
     private boolean isRefreshing = false;
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public static UserCmmuinityHomeFragment newInstance() {
+        return new UserCmmuinityHomeFragment();
     }
 
     @Override
@@ -84,35 +81,27 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        try {
-            rootView = inflater.inflate(R.layout.home_fragment, container, false);
-            setUpScreen(inflater);
-            configureToolbar();
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new ActorAdapter(getActivity());
-            adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
-                @Override
-                public void onDataSetChanged(List<Actor> dataSet) {
-                    actors = dataSet;
-                }
-            });
-            recyclerView.setAdapter(adapter);
-            swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefreshLayout.setOnRefreshListener(this);
-            swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
+        rootView = inflater.inflate(R.layout.home_fragment, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new UserCommunityAdapter(getActivity());
+        adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
+            @Override
+            public void onDataSetChanged(List<Actor> dataSet) {
+                actors = dataSet;
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-//            dataSet.addAll(manager.getCacheSuggestionsToContact(MAX, offset));
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-
-        } catch (CantGetIdentityAssetUserException e) {
-            e.printStackTrace();
-        }
+        rootView.setBackgroundColor(Color.parseColor("#000b12"));
+        emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+        swipeRefreshLayout.setRefreshing(true);
+        onRefresh();
 
         return rootView;
     }
@@ -120,7 +109,6 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-//        menu.clear();
         inflater.inflate(R.menu.dap_community_user_home_menu, menu);
     }
 
@@ -136,16 +124,16 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
             });
     }
 
-    private void configureToolbar() {
-        Toolbar toolbar = getPaintActivtyFeactures().getToolbar();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            toolbar.setBackground(getResources().getDrawable(R.drawable.dap_action_bar_gradient_colors, null));
-        else
-            toolbar.setBackground(getResources().getDrawable(R.drawable.dap_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-    }
+//    private void configureToolbar() {
+//        Toolbar toolbar = getPaintActivtyFeactures().getToolbar();
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+//            toolbar.setBackground(getResources().getDrawable(R.drawable.dap_action_bar_gradient_colors, null));
+//        else
+//            toolbar.setBackground(getResources().getDrawable(R.drawable.dap_action_bar_gradient_colors));
+//
+//        toolbar.setTitleTextColor(Color.WHITE);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -210,16 +198,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetIdentityAssetUserException {
-        /**
-         * add navigation header
-         */
-//        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), manager.getActiveAssetUserIdentity()));
 
-        /**
-         * Navigation view items
-         */
-//        UserCommunityNavigationAdapter userCommunityNavigationAdapter = new UserCommunityNavigationAdapter(getActivity(), null);
-//        setNavigationDrawer(userCommunityNavigationAdapter);
     }
 
     @Override

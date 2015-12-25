@@ -9,26 +9,26 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.squareup.picasso.Picasso;
 
 /**
  * @author Created by mati on 2015.11.12..
  * @author Modified byJose Manuel De Sousa 08/12/2015
  */
-public class FragmentsCommons {
+public class UserCommunityFragmentsCommons {
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, IdentityAssetUser identityAssetUser) throws CantGetIdentityAssetUserException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation identityAssetUser) throws CantGetIdentityAssetUserException {
+        View view = inflater.inflate(R.layout.dap_navigation_drawer_community_user_header, null, true);
         /**
          * Navigation view header
          */
+        ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         RelativeLayout relativeLayout = new RelativeLayout(activity);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
-        View view = inflater.inflate(R.layout.dap_navigation_drawer_community_user_header, relativeLayout, true);
-        ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         if (identityAssetUser != null) {
             if (identityAssetUser.getImage() != null) {
                 if (identityAssetUser.getImage().length > 0) {

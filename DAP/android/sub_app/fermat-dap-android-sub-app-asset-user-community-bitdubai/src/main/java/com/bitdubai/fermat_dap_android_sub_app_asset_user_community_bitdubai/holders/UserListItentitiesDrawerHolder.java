@@ -10,7 +10,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 /**
  * @author Jose Manuel De Sousa
  */
-public class AppListItentitiesDrawerHolder extends FermatViewHolder {
+public class UserListItentitiesDrawerHolder extends FermatViewHolder {
 
     public FermatTextView userIdentityName;
     public ImageView userIdentityImage;
@@ -20,7 +20,7 @@ public class AppListItentitiesDrawerHolder extends FermatViewHolder {
      *
      * @param itemView cast ui elements
      */
-    protected AppListItentitiesDrawerHolder(View itemView) {
+    protected UserListItentitiesDrawerHolder(View itemView) {
         super(itemView);
 
         userIdentityImage = (ImageView) itemView.findViewById(R.id.imageView_avatar);

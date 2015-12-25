@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.holders.AppListItentitiesDrawerHolder;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.holders.UserListItentitiesDrawerHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import java.util.List;
@@ -13,14 +13,14 @@ import java.util.List;
 /**
  * @author Jose Manuel De Sousa
  */
-public class AppListIdentityAdapter extends FermatAdapter<MenuItem, AppListItentitiesDrawerHolder> {
+public class UserListIdentityAdapter extends FermatAdapter<MenuItem, UserListItentitiesDrawerHolder> {
 
-    protected AppListIdentityAdapter(Context context, List<MenuItem> dataSet) {
+    protected UserListIdentityAdapter(Context context, List<MenuItem> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected AppListItentitiesDrawerHolder createHolder(View itemView, int type) {
+    protected UserListItentitiesDrawerHolder createHolder(View itemView, int type) {
         return null;
     }
 
@@ -30,7 +30,7 @@ public class AppListIdentityAdapter extends FermatAdapter<MenuItem, AppListItent
     }
 
     @Override
-    protected void bindHolder(AppListItentitiesDrawerHolder holder, MenuItem data, int position) {
+    protected void bindHolder(UserListItentitiesDrawerHolder holder, MenuItem data, int position) {
 
     }
 }
