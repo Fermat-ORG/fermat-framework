@@ -11,21 +11,26 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 /**
  * Created by Nerio on 21/10/15.
  */
-public class ActorViewHolder extends FermatViewHolder {
+public class RedeemPointViewHolder extends FermatViewHolder {
 
     public CheckBox connect;
     public SquareImageView thumbnail;
     public FermatTextView name;
+    public FermatTextView status;
+    public FermatTextView crypto;
 
     /**
      * Constructor
      *
      * @param itemView
      */
-    public ActorViewHolder(View itemView) {
+    public RedeemPointViewHolder(View itemView) {
         super(itemView);
-        thumbnail = (SquareImageView) itemView.findViewById(R.id.thumbnail);
-        name = (FermatTextView) itemView.findViewById(R.id.name);
+        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
+        name = (FermatTextView) itemView.findViewById(R.id.community_name);
         connect = (CheckBox) itemView.findViewById(R.id.connect);
+
+        status = (FermatTextView) itemView.findViewById(R.id.status);
+        crypto = (FermatTextView) itemView.findViewById(R.id.crypto);
     }
 }
