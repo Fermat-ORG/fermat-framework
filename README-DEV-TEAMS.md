@@ -15,7 +15,6 @@ Currently we are a small team dedicated to the development of a communications l
 
 ### Team Members:
 
-![alt text](https://avatars1.githubusercontent.com/u/12099493?v=3&s=460 "Image Profile")
 
 * **Roberto Requena [Team Leader]**<br/>
 ---
@@ -23,7 +22,6 @@ Currently we are a small team dedicated to the development of a communications l
     Skype:   Rart3001
     Github:  https://github.com/Rart3001
     
-![alt text](https://avatars3.githubusercontent.com/u/13169230?v=3&s=460 "Image Profile")
     
 * **Hendry Rodriguez**<br/>
 ---
@@ -42,7 +40,6 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 
 ### Team Members:
 
-![alt text](https://avatars3.githubusercontent.com/u/10060413?v=3&s=460 "Image Profile")
 
 * **Manuel Perez [Team Leader]**<br/>
 ---
@@ -50,14 +47,12 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Skype:   darkestpriest
     Github:  https://github.com/darkestpriest
     
-![alt text](https://avatars3.githubusercontent.com/u/12172173?v=3&s=460 "Image Profile")
     
 * **Gabriel Araujo**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
       Github:  https://github.com/GaboHub
-![alt text](https://avatars3.githubusercontent.com/u/16200298?v=3&s=460 "Image Profile")
 
 * **Miguel Payarez**<br/>
 ---
@@ -82,7 +77,6 @@ In each platform mentioned, we are involved in the development of Network Servic
 
 ### Team Members:
 
-![alt text](https://avatars0.githubusercontent.com/u/7293791?v=3&s=460 "Lion")
 
 * **León Acosta [Team Leader]**<br/>
 ---
@@ -90,7 +84,6 @@ In each platform mentioned, we are involved in the development of Network Servic
     Skype:   leon.acosta
     Github:  https://github.com/lnacosta
     
-![alt text](https://avatars2.githubusercontent.com/u/15386992?v=3&s=400 "Pato")
     
 * **Patricio Gesualdi**<br/>
 ---
