@@ -714,11 +714,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 "--------------------------------------------------------");
         actorNetworkServiceRecordedAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
-            //has map cache - contador de failure mas de 5 lo mando a dormir a todos los mensajes de esa public key
-              //  el agente levanta los mensajes y los procesa de nuevo por cierto tiempo
-        //si hace varios dias que esta tratando de enviarlos los borra
-
-                checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+        //I check my time trying to send the message
+         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
 
 
     }
@@ -961,20 +958,56 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private void checkFailedDeliveryTime(String destinationPublicKey)
     {
         try{
-            //verifico el tiempo que hace que estoy tratando de enviar el mensaje si pasaron dos horas le cambio el estado a Wait y lo proceso en otro bloque
-            List<ActorNetworkServiceRecord> actorNetworkServiceRecord = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
-         //sumo un contandor y veo si llego a 5
 
-           //long sentDate = actorNetworkServiceRecord.getSentDate();
+             List<ActorNetworkServiceRecord> actorNetworkServiceRecordList = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
 
-           // long currentTime = System.currentTimeMillis();
+            //if I try to send more than 5 times I put it on hold
+            for (ActorNetworkServiceRecord record : actorNetworkServiceRecordList) {
 
+                if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
+                {
+                    if(record.getSentCount() > 5 )
+                    {
+                        record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
+                        //update state and process again later
+
+                        outgoingNotificationDao.update(record);
+                    }
+                    else
+                    {
+                        record.setSentCount(record.getSentCount() + 1);
+                        outgoingNotificationDao.update(record);
+                    }
+                }
+                else
+                {
+                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
+
+                    long sentDate = record.getSentDate();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
+
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                    if((int) dias > 3)
+                    {
+                        //notify the user does not exist to intra user actor plugin
+                        record.changeDescriptor(NotificationDescriptor.INTRA_USER_NOT_FOUND);
+                        incomingNotificationsDao.createNotification(record);
+
+                        outgoingNotificationDao.delete(record.getId());
+                    }
+
+            }
+
+            }
 
 
         }
         catch(Exception e)
         {
-
+            System.out.print("EXCEPCION VERIFICANDO WAIT MESSAGE");
+            e.printStackTrace();
         }
 
     }
@@ -1501,9 +1534,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                                                                                                                             (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
                                                                                                                                             NetworkServiceType.UNDEFINED,
                                                                                                                                             PlatformComponentType.ACTOR_INTRA_USER,
-                                                                                                                                            // null);//imageString);
-
-                                                                                                                                              extraData);
+                                                                                                                                            extraData);
 
 
                /* for (int i = 0; i < 35; i++) {
