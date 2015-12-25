@@ -138,6 +138,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         }
     }
 
+
     /**
      * Fragment Class implementation.
      */

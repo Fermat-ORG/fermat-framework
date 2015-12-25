@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -21,7 +22,7 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
         /**
          * Navigation view header
          */
@@ -31,9 +32,9 @@ public class FragmentsCommons {
         View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         if (intraUserLoginIdentity != null) {
-            if (intraUserLoginIdentity.getProfileImage() != null) {
-                if (intraUserLoginIdentity.getProfileImage().length > 0) {
-                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length)));
+            if (intraUserLoginIdentity.getImage() != null) {
+                if (intraUserLoginIdentity.getImage().length > 0) {
+                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(intraUserLoginIdentity.getImage(), 0, intraUserLoginIdentity.getImage().length)));
                 } else
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             } else

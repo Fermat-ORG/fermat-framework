@@ -50,6 +50,9 @@ public class DesktopPluginDatabaseSystem implements PluginDatabaseSystem {
             database.openDatabase(databaseName);
 
             return database;
+        } catch (final DatabaseNotFoundException exception){
+
+            throw exception;
         }
         catch (Exception e)
         {
