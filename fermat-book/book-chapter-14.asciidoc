@@ -2,7 +2,7 @@ image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Coins/BNP.jpg
 == Chapter 14: Fermat Bank Notes Platform
 
 This platform introduces the connection to the physical representation of fiat money, the _bank notes_. + 
-At first hand, it serves as a digital registration in a wallet component of an end user's available stock of money in bank notes that he needs to keep track of for future  reference. This leads to build a traceability of these funds when participating in future transactions.  
+At first hand, it serves as a digital registration in a wallet component of an end user's available stock of money in bank notes that he needs to keep track of for future reference. This leads to build a traceability of these funds when participating in future transactions.  
 
 
 ===  Bank Notes Wallet
