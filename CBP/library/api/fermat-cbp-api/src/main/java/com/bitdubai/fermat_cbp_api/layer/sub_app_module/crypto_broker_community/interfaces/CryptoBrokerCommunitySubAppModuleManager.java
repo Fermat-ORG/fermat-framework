@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerConnectionDenialFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ import java.util.UUID;
  * @author lnacosta
  * @version 1.0.0
  */
-public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<FermatSettings, CryptoBrokerCommunitySelectableIdentity> {
+public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
     /**
      * The method <code>listSelectableIdentities</code> lists the login identities that can be used

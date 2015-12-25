@@ -106,7 +106,7 @@ public class AcceptDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            /*} catch (IntraUserConectionDenegationFailedException e) {
+            /*} catch (IntraUserConnectionDenialFailedException e) {
                 e.printStackTrace();
             }*/
             dismiss();

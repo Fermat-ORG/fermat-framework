@@ -132,7 +132,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 
-import jdk.nashorn.internal.parser.JSONParser;
 
 
 /**
