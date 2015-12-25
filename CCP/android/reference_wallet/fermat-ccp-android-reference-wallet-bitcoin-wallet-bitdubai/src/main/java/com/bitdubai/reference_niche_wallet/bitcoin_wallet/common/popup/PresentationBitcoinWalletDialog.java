@@ -27,6 +27,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Created by mati on 2015.11.27..
@@ -153,18 +154,15 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
                 //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+
+
                         try {
+                            //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.profile_standard_female);
                             cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
                         } catch (CantCreateNewIntraWalletUserException e) {
                             e.printStackTrace();
                         }
-                        //cryptoWallet.registerIdentities();
-                    }
-                });
-                thread.start();
+
             } catch (CantGetCryptoWalletException e) {
                 e.printStackTrace();
             }
@@ -180,6 +178,26 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+    private byte[] copyToBuffer(Bitmap bitmap) {
+        ByteBuffer buffer = ByteBuffer.allocate((bitmap.getByteCount()));
+        bitmap.copyPixelsToBuffer(buffer);
+        boolean check = buffer.hasArray();
+        buffer.rewind();
+        if (check)
+        {
+            byte [] NewData = buffer.array();
+            return NewData;
+        }
+        else return null;
+    }
+
+    private byte[] test3(Bitmap bitmap){
+        final int lnth=bitmap.getByteCount();
+        ByteBuffer dst= ByteBuffer.allocate(lnth);
+        bitmap.copyPixelsToBuffer( dst);
+        return dst.array();
     }
 
     @Override

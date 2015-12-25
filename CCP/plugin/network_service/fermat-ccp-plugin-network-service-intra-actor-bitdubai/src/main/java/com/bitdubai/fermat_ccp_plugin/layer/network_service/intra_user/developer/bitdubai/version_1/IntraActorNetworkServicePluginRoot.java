@@ -117,6 +117,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,6 +130,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import java.util.zip.Deflater;
 
 import jdk.nashorn.internal.parser.JSONParser;
 
@@ -1532,25 +1535,57 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public void registrateActor(Actor actor) {
         try {
             if (register) {
-                CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+                // Compressor with highest level of compression
+                Deflater compressor = new Deflater();
+                compressor.setLevel(Deflater.BEST_COMPRESSION);
+                // Give the compressor the data to compress
+                compressor.setInput(actor.getPhoto());
+                compressor.finish();
+                // Create an expandable byte array to hold the compressed data.
+                // It is not necessary that the compressed data will be smaller than
+                // the uncompressed data.
+                ByteArrayOutputStream bos = new ByteArrayOutputStream(actor.getPhoto().length);
+                // Compress the data
+                byte[] buf = new byte[1024];
+                while (!compressor.finished()) {
+                    int count = compressor.deflate(buf);
+                    bos.write(buf, 0, count);
+                }
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                }
+
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
-                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        extraData);
 
-                System.out.println("---------- TESTENADO --------------------");
-                System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
-                System.out.println("----------\n "+networkServiceType+"\n --------------------");
-                System.out.println("---------- TESTENADO --------------------");
-                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+                    final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                            (actor.getName().toLowerCase()),
+                            (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                            NetworkServiceType.UNDEFINED,
+                            PlatformComponentType.ACTOR_INTRA_USER,
+                            extraData);
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            System.out.println("---------------- PROBANDO-----------------------");
+                            communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+                            System.out.println("---------------- PROBANDO-----------------------");
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                thread.start();
                 System.out.println("----------\n Pasamos por el registro robert\n --------------------");
 //                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
 //                System.out.println("----------\n Pasamos por el registro robert\n --------------------");
@@ -1559,6 +1594,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
               e.printStackTrace();
         }
     }
+
 
     @Override
     public Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors, byte[] profileImage) {

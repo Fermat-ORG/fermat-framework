@@ -168,7 +168,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
 
             //registerIdentities();
-            registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
+            //registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
+            registerIdentity(intraWalletUserIdentity);
 
             return intraWalletUserIdentity;
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -312,7 +313,6 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     public void registerIdentity(IntraWalletUserIdentity intraWalletUserIdentity){
-        System.out.println(intraWalletUserIdentity);
         intraActorManager.registrateActor(intraActorManager.contructIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage()));
 
     }
