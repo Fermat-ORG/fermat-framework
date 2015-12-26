@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -189,9 +190,9 @@ public class CustomerBrokerCloseAgent  implements
 
         boolean                                                     threadWorking;
 
-        public final int SLEEP_TIME = 5000;
+        public final int                                            SLEEP_TIME = 5000;
 
-        int iterationNumber         = 0;
+        int                                                         iterationNumber = 0;
 
         /*IMPLEMENTATION DealsWithPluginIdentity*/
         @Override
@@ -228,7 +229,7 @@ public class CustomerBrokerCloseAgent  implements
                     doTheMainTask();
 
                 } catch (CantSendCustomerBrokerCloseNegotiationTransactionException | CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_CLOSE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }
@@ -247,16 +248,23 @@ public class CustomerBrokerCloseAgent  implements
                     CustomerBrokerCloseNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerCloseNegotiationTransactionDatabaseFactory(this.pluginDatabaseSystem);
                     database = databaseFactory.createDatabase(pluginId,CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
+                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_CLOSE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
                     throw new CantInitializeCBPAgent(cantCreateDatabaseException,"Customer Broker Close Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
                 }
 
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_CLOSE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
                 throw new CantInitializeCBPAgent(exception,"Customer Broker Close Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
             }
 
         }
+
+        public void stopAgent() { agentRunning = false; }
+
+        public void startAgent() { agentRunning = true; }
+
+        public boolean isAgentRunning() { return agentRunning; }
+        /*END INNER CLASS PUBLIC METHOD*/
 
         /*INNER CLASS PRIVATE METHOD*/
         private void doTheMainTask() throws
@@ -291,14 +299,14 @@ public class CustomerBrokerCloseAgent  implements
 
                         switch (negotiationType){
                             case PURCHASE:
-                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML,purchaseNegotiation);
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
                                 customerBrokerPurchaseNegotiationManager.sendToBroker(purchaseNegotiation);
                                 break;
                             case SALE:
-                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML,saleNegotiation);
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_CUSTOMER: send negotiation to customer, waiting confirm
@@ -345,15 +353,16 @@ public class CustomerBrokerCloseAgent  implements
                     checkPendingEvent(eventId);
                 }
 
-
             } catch (CantSendNegotiationToCryptoBrokerException e) {
                 throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Purchase Negotiation","Error in Negotiation Transmission Network Service");
             } catch (CantSendNegotiationToCryptoCustomerException e) {
                 throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
             } catch (CantSendConfirmToCryptoBrokerException e) {
                 throw new CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException(CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
-//            } catch (CantSendConfirmToCryptoCustomerException e){
-//                throw new CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException(CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Sale Negotiation", "Error in Negotiation Transmission Network Service");
+            } catch (CantSendConfirmToCryptoCustomerException e){
+                throw new CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException(CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Sale Negotiation", "Error in Negotiation Transmission Network Service");
+            } catch (CantGetNegotiationTransactionListException e) {
+                throw new CantSendCustomerBrokerCloseNegotiationTransactionException(CantSendCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, e,"Sending Negotiation","Cannot get the Negotiation list from database");
             } catch (Exception e) {
                 throw new CantSendCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
             }
@@ -380,7 +389,6 @@ public class CustomerBrokerCloseAgent  implements
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        transmissionId          = negotiationTransmission.getTransmissionId();
                         negotiationXML          = negotiationTransmission.getNegotiationXML();
                         transactionId           = negotiationTransmission.getTransactionId();
                         negotiationType         = negotiationTransmission.getNegotiationType();
@@ -424,7 +432,6 @@ public class CustomerBrokerCloseAgent  implements
                         negotiationTransmission = record.getInformation();
                         transmissionId          = negotiationTransmission.getTransmissionId();
                         transactionId           = negotiationTransmission.getTransactionId();
-                        negotiationType         = negotiationTransmission.getNegotiationType();
                         negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
 
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {

@@ -274,7 +274,31 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
         }
     }
 
-    /*PUBLIC METHOD*/
+    //GET EVENT TYPE OF TRANSACTION
+    public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            table.addStringFilter(
+                    CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records
+                    .get(0)
+                    .getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TYPE_COLUMN_NAME);
+            return value;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        }
+
+    }
+
+    //SAVE NEW EVENT
     public void saveNewEventTansaction(String eventType, String eventSource) throws CantSaveEventException {
         try {
 
@@ -295,6 +319,22 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
         } catch(Exception exception){
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+        }
+    }
+
+    //UPDATE STATUS THE EVENT
+    public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            table.addUUIDFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME, eventStatus.getCode());
+            table.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Updating parameter "+CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME,"");
         }
     }
 
