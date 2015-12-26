@@ -51,3 +51,5 @@ Please, configure your script to generate all the issues following the next step
   	* Add issues for Agents, Network Service, Network Service Messages and events.
     * Add the labels list (only for team leaders use).
     * Add the variable networkService.
+* 1.2.4:	
+  	* Fix a bug in Agent and events issues generation.

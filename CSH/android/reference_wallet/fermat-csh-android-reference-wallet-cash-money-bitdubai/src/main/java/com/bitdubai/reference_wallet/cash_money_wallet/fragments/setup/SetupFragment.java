@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 12/18/2015.
  */
-public class SetupFragment extends FermatWalletFragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
+public class SetupFragment extends AbstractFermatFragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
 
     // Fermat Managers
     private CashMoneyWalletModuleManager moduleManager;

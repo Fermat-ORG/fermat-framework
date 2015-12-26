@@ -117,6 +117,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,8 +130,8 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import java.util.zip.Deflater;
 
-import jdk.nashorn.internal.parser.JSONParser;
 
 
 /**
@@ -711,11 +713,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 "--------------------------------------------------------");
         actorNetworkServiceRecordedAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
-            //has map cache - contador de failure mas de 5 lo mando a dormir a todos los mensajes de esa public key
-              //  el agente levanta los mensajes y los procesa de nuevo por cierto tiempo
-        //si hace varios dias que esta tratando de enviarlos los borra
-
-                checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+        //I check my time trying to send the message
+         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
 
 
     }
@@ -958,20 +957,56 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private void checkFailedDeliveryTime(String destinationPublicKey)
     {
         try{
-            //verifico el tiempo que hace que estoy tratando de enviar el mensaje si pasaron dos horas le cambio el estado a Wait y lo proceso en otro bloque
-            List<ActorNetworkServiceRecord> actorNetworkServiceRecord = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
-         //sumo un contandor y veo si llego a 5
 
-           //long sentDate = actorNetworkServiceRecord.getSentDate();
+             List<ActorNetworkServiceRecord> actorNetworkServiceRecordList = outgoingNotificationDao.getNotificationByDestinationPublicKey(destinationPublicKey);
 
-           // long currentTime = System.currentTimeMillis();
+            //if I try to send more than 5 times I put it on hold
+            for (ActorNetworkServiceRecord record : actorNetworkServiceRecordList) {
 
+                if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
+                {
+                    if(record.getSentCount() > 5 )
+                    {
+                        record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
+                        //update state and process again later
+
+                        outgoingNotificationDao.update(record);
+                    }
+                    else
+                    {
+                        record.setSentCount(record.getSentCount() + 1);
+                        outgoingNotificationDao.update(record);
+                    }
+                }
+                else
+                {
+                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
+
+                    long sentDate = record.getSentDate();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
+
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                    if((int) dias > 3)
+                    {
+                        //notify the user does not exist to intra user actor plugin
+                        record.changeDescriptor(NotificationDescriptor.INTRA_USER_NOT_FOUND);
+                        incomingNotificationsDao.createNotification(record);
+
+                        outgoingNotificationDao.delete(record.getId());
+                    }
+
+            }
+
+            }
 
 
         }
         catch(Exception e)
         {
-
+            System.out.print("EXCEPCION VERIFICANDO WAIT MESSAGE");
+            e.printStackTrace();
         }
 
     }
@@ -1498,9 +1533,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                                                                                                                             (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
                                                                                                                                             NetworkServiceType.UNDEFINED,
                                                                                                                                             PlatformComponentType.ACTOR_INTRA_USER,
-                                                                                                                                            // null);//imageString);
-
-                                                                                                                                              extraData);
+                                                                                                                                            extraData);
 
 
                /* for (int i = 0; i < 35; i++) {
@@ -1532,25 +1565,57 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public void registrateActor(Actor actor) {
         try {
             if (register) {
-                CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+                // Compressor with highest level of compression
+                Deflater compressor = new Deflater();
+                compressor.setLevel(Deflater.BEST_COMPRESSION);
+                // Give the compressor the data to compress
+                compressor.setInput(actor.getPhoto());
+                compressor.finish();
+                // Create an expandable byte array to hold the compressed data.
+                // It is not necessary that the compressed data will be smaller than
+                // the uncompressed data.
+                ByteArrayOutputStream bos = new ByteArrayOutputStream(actor.getPhoto().length);
+                // Compress the data
+                byte[] buf = new byte[1024];
+                while (!compressor.finished()) {
+                    int count = compressor.deflate(buf);
+                    bos.write(buf, 0, count);
+                }
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                }
+
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
-                PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        extraData);
 
-                System.out.println("---------- TESTENADO --------------------");
-                System.out.println("----------\n"+platformComponentProfile+"\n --------------------");
-                System.out.println("----------\n "+networkServiceType+"\n --------------------");
-                System.out.println("---------- TESTENADO --------------------");
-                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+                    final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                            (actor.getName().toLowerCase()),
+                            (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                            NetworkServiceType.UNDEFINED,
+                            PlatformComponentType.ACTOR_INTRA_USER,
+                            extraData);
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            System.out.println("---------------- PROBANDO-----------------------");
+                            communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
+                            System.out.println("---------------- PROBANDO-----------------------");
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                thread.start();
                 System.out.println("----------\n Pasamos por el registro robert\n --------------------");
 //                communicationsClientConnection.registerComponentForCommunication(networkServiceType, platformComponentProfile);
 //                System.out.println("----------\n Pasamos por el registro robert\n --------------------");
@@ -1559,6 +1624,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
               e.printStackTrace();
         }
     }
+
 
     @Override
     public Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors, byte[] profileImage) {

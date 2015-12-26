@@ -156,7 +156,6 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
                 "alias='" + alias + '\'' +
                 ", phrase='" + phrase + '\'' +
                 ", publicKey='" + publicKey + '\'' +
-                ", image=" + Arrays.toString(image) +
                 ", privateKey='" + privateKey + '\'' +
                 ", pluginFileSystem=" + pluginFileSystem +
                 ", pluginId=" + pluginId +
