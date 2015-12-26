@@ -63,10 +63,10 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             CustomerBrokerContractSale customerBrokerContractSale;
             if(!contractExists){
                 /**
-                 * If the contract is not in database, we going to check if exists in contract Layer,
+                 * If the contract is not in database, we are going to check if exists in contract Layer,
                  * in theory this won't happen, when a contract is open is created in contract layer
                  * and is raised an event that build a record in this plugin database. In this case we
-                 * will suppose that the agent in this plugin is not created the contract, but exists in
+                 * will suppose that the agent in this plugin has not created the contract, but exists in
                  * contract layer.
                  */
                 customerBrokerContractSale=
@@ -83,7 +83,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             } else{
                 /**
                  * The contract exists in database, we are going to check the contract status.
-                 * We going to get the record from this contract and
+                 * We are going to get the record from this contract and
                  * update the status to indicate the agent to send a ack notification to a Crypto Customer.
                  */
                 ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(
