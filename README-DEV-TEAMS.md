@@ -50,7 +50,7 @@ Team leaders are classified by the deepness of the hierarchy that goes below the
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
 | 1 | Entry Level | New developer on the project. |
-| 2 | Veteran | VetVeteran developer. Working full time 3+ months. |
+| 2 | Veteran | Veteran developer. Working full time 3+ months. |
 | 3 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 4 | Full Team Leader | Team Leader with 5 full-time members on the team. |
 | 5 | Parent Team Leader | Team Leader of a team with one sub-teams |
