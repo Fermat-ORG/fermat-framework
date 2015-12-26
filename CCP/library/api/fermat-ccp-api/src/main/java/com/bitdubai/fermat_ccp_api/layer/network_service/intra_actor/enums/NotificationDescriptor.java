@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum NotificationDescriptor {
     //Modified by Manuel Perez on 05/08/2015
     ASKFORACCEPTANCE("ASK"),
+    INTRA_USER_NOT_FOUND("IUNF"),
     ACCEPTED("ACP"),
     CANCEL("CAN"),
     DISCONNECTED("DIS"),
@@ -44,6 +45,8 @@ public enum NotificationDescriptor {
                 return NotificationDescriptor.RECEIVED;
             case "DEN":
                 return NotificationDescriptor.DENIED;
+            case "IUNF":
+                return NotificationDescriptor.INTRA_USER_NOT_FOUND;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NotificationDescriptor enum");
 
