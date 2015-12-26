@@ -277,7 +277,7 @@ public class CustomerBrokerCloseAgent  implements
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
-                //SEND NEGOTIATION PENDING
+                //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList = customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
                     for(String negotiationToSubmit: negotiationPendingToSubmitList){
@@ -294,13 +294,15 @@ public class CustomerBrokerCloseAgent  implements
                                 purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
-                                //CHANGE STATUS PURCHASE NEGOTIATION
+                                //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
+                                customerBrokerPurchaseNegotiationManager.sendToBroker(purchaseNegotiation);
                                 break;
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_CLOSE);
-                                //CHANGE STATUS SALE NEGOTIATION
+                                //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_CUSTOMER: send negotiation to customer, waiting confirm
+                                customerBrokerSaleNegotiationManager.sendToBroker(saleNegotiation);
                                 break;
                         }
 
@@ -310,16 +312,16 @@ public class CustomerBrokerCloseAgent  implements
                     }
                 }
 
-                //SEND CONFIRM PENDING
+                //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
                 negotiationPendingToSubmitList = customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
                     for(String negotiationToSubmit: negotiationPendingToSubmitList) {
 
                         System.out.println("Customer Broker Close - Negotiation to submit:\n" + negotiationToSubmit);
 
-                        transactionId = customerBrokerCloseNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
-                        negotiationTransaction = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
-                        negotiationType = negotiationTransaction.getNegotiationType();
+                        transactionId           = customerBrokerCloseNegotiationTransactionDatabaseDao.getTransactionId(negotiationToSubmit);
+                        negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
+                        negotiationType         = negotiationTransaction.getNegotiationType();
 
                         switch (negotiationType) {
                             case PURCHASE:
@@ -372,15 +374,16 @@ public class CustomerBrokerCloseAgent  implements
 
                 String eventTypeCode = customerBrokerCloseNegotiationTransactionDatabaseDao.getEventType(eventId);
 
-                //EVENT NEGOTIATION
+                //EVENT - RECEIVE NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        negotiationXML  = negotiationTransmission.getNegotiationXML();
-                        transactionId   = negotiationTransmission.getTransactionId();
-                        negotiationType = negotiationTransmission.getNegotiationType();
+                        transmissionId          = negotiationTransmission.getTransmissionId();
+                        negotiationXML          = negotiationTransmission.getNegotiationXML();
+                        transactionId           = negotiationTransmission.getTransactionId();
+                        negotiationType         = negotiationTransmission.getNegotiationType();
 
                         if (negotiationXML != null) {
 
@@ -407,37 +410,24 @@ public class CustomerBrokerCloseAgent  implements
 
                             //NOTIFIED EVENT
                             customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
-                            //CONFIRM TRANSMISSION
-//                            negotiationTransmissionManager.confirmReception(transmissionId);
 
                         }
 
                     }
                 }
 
-                //EVENT CONFIRM NEGOTIATION
+                //EVENT - RECEIVE CONFIRM NEGOTIATION
                 if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE.getCode())) {
                     List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
-                        transmissionId  = negotiationTransmission.getTransmissionId();
+                        transmissionId          = negotiationTransmission.getTransmissionId();
                         transactionId           = negotiationTransmission.getTransactionId();
                         negotiationType         = negotiationTransmission.getNegotiationType();
                         negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
 
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
-
-                            switch (negotiationType) {
-                                case PURCHASE:
-                                    //CONFIRM PURCHASE NEGOTIATION
-
-                                    break;
-                                case SALE:
-                                    //CONFIRM SALE NEGOTIATION
-//                                    customerBrokerSaleNegotiationManager.
-                                    break;
-                            }
 
                             //CONFIRM TRANSACTION
                             customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);

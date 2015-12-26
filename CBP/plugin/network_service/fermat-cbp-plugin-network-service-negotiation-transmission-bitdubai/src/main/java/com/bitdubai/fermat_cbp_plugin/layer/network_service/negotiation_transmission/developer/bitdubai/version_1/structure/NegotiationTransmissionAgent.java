@@ -248,7 +248,6 @@ public class NegotiationTransmissionAgent {
 
                             System.out.print("-----------------------\n SENDING NEGOTIATION TRANSACTION RECORD To:" + receiverPublicKey + "-----------------------\n");
 
-                            // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
                             Gson gson = new Gson();
 
                             NegotiationMessage negotiationMessage = new NegotiationMessage(
@@ -362,7 +361,7 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION UPDATE");
 
                         }else{
 
@@ -381,7 +380,7 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CLOSE");
 
                         }else{
 
@@ -412,5 +411,5 @@ public class NegotiationTransmissionAgent {
             }
         }
     }
-    /*PRIVATE*/
+    /*END PRIVATE*/
 }
