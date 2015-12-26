@@ -48,7 +48,7 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 Team leaders are classified by the deepness of the hierarchy that goes below then. The following table shows the categories related to compensation:
 
 | Category | Description |
-|:-----:|-----:| 
+|:-----:|:-----| 
 | Entry Level | New developer on the project. |
 | Veteran | Veteran developer. Working full time 3+ months. |
 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
