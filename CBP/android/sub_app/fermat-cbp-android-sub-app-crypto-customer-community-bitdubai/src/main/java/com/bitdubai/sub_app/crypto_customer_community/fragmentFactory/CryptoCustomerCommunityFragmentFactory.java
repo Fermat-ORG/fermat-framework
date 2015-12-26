@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.MainFragment;
@@ -17,7 +17,7 @@ public class CryptoCustomerCommunityFragmentFactory extends FermatSubAppFragment
 
 
     @Override
-    public FermatFragment getFermatFragment(CryptoCustomerCommunityFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(CryptoCustomerCommunityFragmentsEnumType fragments) throws FragmentNotFoundException {
         if (fragments == MAIN_FRAGMET) {
             return MainFragment.newInstance();
         }

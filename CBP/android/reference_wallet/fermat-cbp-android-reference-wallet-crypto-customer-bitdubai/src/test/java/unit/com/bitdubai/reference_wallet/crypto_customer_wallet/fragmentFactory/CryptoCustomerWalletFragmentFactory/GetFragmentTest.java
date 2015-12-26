@@ -37,7 +37,7 @@ public class GetFragmentTest {
     public void fragmentFound() throws Exception {
         //Fragment actualFragment = fragmentFactory.getFragment(ENUM_TYPE_CODE, session, providerManager);
 
-        //assertThat(actualFragment).isInstanceOf(FermatFragment.class);
+        //assertThat(actualFragment).isInstanceOf(fermatFragment.class);
     }
 
     @Test

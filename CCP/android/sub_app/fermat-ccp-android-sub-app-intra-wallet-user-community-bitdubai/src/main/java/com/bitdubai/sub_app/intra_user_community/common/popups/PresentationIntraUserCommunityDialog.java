@@ -12,17 +12,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 /**
  * @author Jose manuel de Sousa
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+
     public static final int TYPE_PRESENTATION = 1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES = 2;
     private final Activity activity;
@@ -36,17 +37,21 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
 
-
     /**
      * Constructor using Session and Resources
      *
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationIntraUserCommunityDialog(Activity activity, SubAppsSession fermatSession, SubAppResourcesProviderManager resources, int type) {
+    public PresentationIntraUserCommunityDialog(final Activity                       activity     ,
+                                                final IntraUserSubAppSession         fermatSession,
+                                                final SubAppResourcesProviderManager resources    ,
+                                                final int                            type         ) {
+
         super(activity, fermatSession, resources);
+
         this.activity = activity;
-        this.type = type;
+        this.type     = type    ;
     }
 
     @Override
@@ -70,8 +75,6 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
                 startCommunity.setOnClickListener(this);
                 break;
         }
-
-
     }
 
     @Override
@@ -90,7 +93,6 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
         return Window.FEATURE_NO_TITLE;
     }
 
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -107,7 +109,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
                 edit.apply();
                 dismiss();
             }
-            Toast.makeText(getActivity(), "Create identity first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Create an identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.btn_right) {
             if (dontShowAgainCheckBox.isChecked()) {
                 edit.putBoolean("isChecked", true);
@@ -118,7 +120,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<SubAppsSe
                 edit.apply();
                 dismiss();
             }
-            Toast.makeText(getActivity(), "Create identity first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Create an identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.start_community) {
             if (dontShowAgainCheckBox.isChecked()) {
                 edit.putBoolean("isChecked", true);
