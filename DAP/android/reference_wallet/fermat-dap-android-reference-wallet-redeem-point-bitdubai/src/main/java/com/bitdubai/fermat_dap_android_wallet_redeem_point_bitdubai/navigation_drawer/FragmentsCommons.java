@@ -14,8 +14,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.util.BitmapWorkerTask;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetIdentityRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -24,8 +23,10 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Activity activity,ActiveActorIdentityInformation identityAssetUser) throws CantGetIdentityRedeemPointException {
-        View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation identityAssetUser) throws CantGetIdentityRedeemPointException {
+
+        View view = inflater.inflate(R.layout.dap_navigation_drawer_redeem_point_wallet_header, null, true);
+
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (identityAssetUser != null) {
@@ -34,12 +35,12 @@ public class FragmentsCommons {
                         //BitmapFactory.Options options = new BitmapFactory.Options();
                         //options.inScaled = true;
                         //options.inSampleSize = 2;
-                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),false);
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView, activity.getResources(), false);
                         bitmapWorkerTask.execute(identityAssetUser.getImage());
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
                         //options.inBitmap = bitmap;
                         //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
-               //         Bitmap converted = bitmap.copy(Bitmap.Config.RGB_565, true);
+                        //         Bitmap converted = bitmap.copy(Bitmap.Config.RGB_565, true);
                         //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
                         //imageView.setImageBitmap(bitmap);
                     } else
@@ -47,11 +48,15 @@ public class FragmentsCommons {
                 }
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(identityAssetUser.getAlias());
+            } else {
+                Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
+                fermatTextView.setText(R.string.dap_identity_alias_default_text);
             }
 
             return view;
-        }catch (OutOfMemoryError outOfMemoryError){
-            Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
+        } catch (OutOfMemoryError outOfMemoryError) {
+            Toast.makeText(activity, "Error: out of memory ", Toast.LENGTH_SHORT).show();
         }
         return view;
     }

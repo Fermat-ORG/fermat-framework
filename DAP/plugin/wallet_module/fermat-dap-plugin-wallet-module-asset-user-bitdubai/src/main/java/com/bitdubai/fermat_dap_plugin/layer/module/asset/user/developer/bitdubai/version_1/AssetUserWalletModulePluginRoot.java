@@ -20,7 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.TransactionAlreadyStartedException;
@@ -49,16 +49,6 @@ import java.util.List;
 public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         AssetUserWalletSubAppModuleManager {
 
-    @Override
-    public SettingsManager getSettingsManager() {
-        return null;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
-    }
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
@@ -78,7 +68,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     private WalletManagerManager walletMiddlewareManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.ASSET_USER  )
-    private IdentityAssetUserManager identityAssetUserManager;
+    IdentityAssetUserManager identityAssetUserManager;
 
 
     //TODO MAKE USE OF THE ERROR MANAGER
@@ -92,7 +82,12 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         try {
-            assetUserWalletModule = new AssetUserWalletModule(assetUserWalletManager, assetAppropriationManager, userRedemptionManager);
+            assetUserWalletModule = new AssetUserWalletModule(
+                    assetUserWalletManager,
+                    assetAppropriationManager,
+                    userRedemptionManager,
+                    identityAssetUserManager);
+
             System.out.println("******* Asset User Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
@@ -158,5 +153,20 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         } catch (CantListWalletsException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+//        try {
+        return assetUserWalletModule.getActiveIdentities().get(0);
+//        } catch (CantGetIssuerWalletModuleException e) {
+//            e.printStackTrace();
+//            return null;
+//        }    }
     }
 }

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
@@ -55,12 +56,12 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
 
     /**
      * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
-     * @param pluginId the pluginId invoking this call. Might not have permissions to create new keys.
+     * @param plugin the plugin invoking this call. Might not have permissions to create new keys.
      * @param account the account to derive keys from.
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */
-    void deriveKeys(UUID pluginId, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException;
+    void deriveKeys(Plugins plugin, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException;
 
     /**
      * * Creates a new hierarchy Account in the vault.

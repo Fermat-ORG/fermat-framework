@@ -29,11 +29,11 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
@@ -58,16 +58,16 @@ import static android.widget.Toast.makeText;
 public class ConnectionsWorldFragment extends FermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
 
-    public static final String INTRA_USER_SELECTED = "intra_user";
+    public static final String ACTOR_SELECTED = "actor_selected";
 
     private static final int MAX = 20;
     /**
      * MANAGERS
      */
-    private static IntraUserModuleManager moduleManager;
+    private static CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private static ErrorManager errorManager;
 
     protected final String TAG = "Recycler Base";
@@ -79,10 +79,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private AppListAdapter adapter;
     private boolean isStartList = false;
 
-
-    private ProgressDialog mDialog;
-
-
     // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
@@ -92,11 +88,10 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     // flags
     private boolean isRefreshing = false;
     private View rootView;
-    private CryptoBrokerCommunitySubAppSession intraUserSubAppSession;
+    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
 
-    private String searchName;
     private LinearLayout emptyView;
-    private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
 
     /**
      * Create a new instance of this fragment
@@ -114,17 +109,14 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             // setHasOptionsMenu(true);
             // setting up  module
-            intraUserSubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-            moduleManager = intraUserSubAppSession.getModuleManager();
+            cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
+            moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
+            mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(),MAX, offset).size();
 
-            //get search name if
-            //searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
 
             // TODO: display unread notifications.
-            // Run a task to fetch the notifications count
             new FetchCountTask().execute();
 
         } catch (Exception ex) {
@@ -147,7 +139,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+            adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
             recyclerView.setAdapter(adapter);
             adapter.setFermatListEventListener(this);
 
@@ -184,17 +176,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         }
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
     }
 
     @Override
@@ -223,9 +205,9 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
                             result.length > 0) {
                         progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
-                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
-                            adapter.changeDataSet(lstIntraUserInformations);
-                            if (lstIntraUserInformations.isEmpty()) {
+                            cryptoBrokerCommunityInformationList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
+                            adapter.changeDataSet(cryptoBrokerCommunityInformationList);
+                            if (cryptoBrokerCommunityInformationList.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
@@ -255,48 +237,6 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
         super.onCreateOptionsMenu(menu, inflater);
 
-       /* inflater.inflate(R.menu.crypto_broker_user_menu, menu);
-
-        //MenuItem menuItem = new SearchView(getActivity());
-        *//*try {
-            MenuItem searchItem = menu.findItem(R.id.action_search);
-            searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-            //MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-            //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            mSearchView = (SearchView) searchItem.getActionView();
-            mSearchView.setOnQueryTextListener(this);
-            mSearchView.setSubmitButtonEnabled(true);
-            mSearchView.setOnCloseListener(this);
-
-        }catch (Exception e){
-
-        }*//*
-//        MenuItem menuItem = menu.add(0, IntraUserCommunityConstants.IC_ACTION_SEARCH, 0, "send");
-//        menuItem.setIcon(R.drawable.ic_action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        menuItem.setActionProvider(new SearchView(getActivity()))
-
-
-        //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
-        // Get the notifications MenuItem and
-        // its LayerDrawable (layer-list)
-        MenuItem item = menu.findItem(R.id.action_notifications);
-        LayerDrawable icon = (LayerDrawable) item.getIcon();
-
-        // Update LayerDrawable's BadgeDrawable
-        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
-
-
-//        List<String> lst = new ArrayList<String>();
-//        lst.add("Matias");
-//        lst.add("Work");
-//        ArrayAdapter<String> itemsAdapter =
-//                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lst);
-//        MenuItem item = menu.findItem(R.id.spinner);
-//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-//
-//        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
-//        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-*/
     }
 
     @Override
@@ -347,25 +287,20 @@ Updates the count of notifications in the ActionBar.
     }
 
     @Override
-    public boolean onQueryTextSubmit(String name) {
-        //swipeRefreshLayout.setRefreshing(true);
-        IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
-        intraUserSearch.setNameToSearch(name);
+    public boolean onQueryTextSubmit(String alias) {
+
+        try {
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchCryptoBroker(moduleManager.getSelectedActorIdentity());
+            cryptoBrokerCommunitySearch.addAlias(alias);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
 
         // This method does not exist
         mSearchView.onActionViewCollapsed();
         //TODO: cuando esté el network service, esto va a descomentarse
-//        try {
-//            adapter.changeDataSet(intraUserSearch.getResult());
-//
-//        } catch (CantGetIntraUserSearchResult cantGetIntraUserSearchResult) {
-//            cantGetIntraUserSearchResult.printStackTrace();
-//        }
-
-
-        //adapter.setAddButtonVisible(true);
-        //adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
-        //swipeRefreshLayout.setRefreshing(false);
 
         return true;
     }
@@ -391,16 +326,15 @@ Updates the count of notifications in the ActionBar.
     }
 
 
-    private synchronized List<IntraUserInformation> getMoreData() {
-        List<IntraUserInformation> dataSet = new ArrayList<>();
+    private synchronized List<CryptoBrokerCommunityInformation> getMoreData() {
+        List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchCryptoBroker(moduleManager.getSelectedActorIdentity());
 
-            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
+            dataSet.addAll(cryptoBrokerCommunitySearch.getResult());
             offset = dataSet.size();
 
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -410,24 +344,15 @@ Updates the count of notifications in the ActionBar.
 
 
     @Override
-    public void onItemClickListener(IntraUserInformation data, int position) {
+    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
-        appSession.setData(INTRA_USER_SELECTED, data);
+        appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
-
-        /*ConnectDialog connectDialog = null;
-        try {
-            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
-            connectDialog.show();
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }*/
 
     }
 
     @Override
-    public void onLongItemClickListener(IntraUserInformation data, int position) {
+    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
     }
 

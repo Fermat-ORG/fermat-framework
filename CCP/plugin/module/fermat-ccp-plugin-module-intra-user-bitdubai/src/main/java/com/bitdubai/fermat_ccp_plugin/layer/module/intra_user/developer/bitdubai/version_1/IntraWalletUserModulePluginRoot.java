@@ -7,11 +7,11 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingCacheSuggestionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -33,7 +33,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
@@ -59,7 +58,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLo
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserCancellingFailedException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
@@ -299,11 +297,31 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
         try {
-            return intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
-        } catch (ErrorSearchingCacheSuggestionsException e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT", e, "", "Error on intra user network service");
-        } catch (Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT", e, "", "Unknown Error");
+
+            List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+
+            List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
+            intraUserInformationList = intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max,offset);
+
+
+            for (IntraUserInformation intraUser : intraUserInformationList) {
+
+                //get connection state status
+                ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+
+                //return intra user information - if not connected - status return null
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                intraUserInformationModuleList.add(intraUserInformation);
+            }
+
+            return intraUserInformationModuleList;
+        }
+        catch (ErrorSearchingCacheSuggestionsException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+
         }
     }
 
@@ -390,10 +408,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * That method denies a conection request from other intra user
      *
      * @param intraUserToRejectPublicKey the public key of the user to deny its connection request
-     * @throws IntraUserConectionDenegationFailedException
+     * @throws IntraUserConnectionDenialFailedException
      */
     @Override
-    public void denyConnection(String intraUserLoggedPublicKey, String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
+    public void denyConnection(String intraUserLoggedPublicKey, String intraUserToRejectPublicKey) throws IntraUserConnectionDenialFailedException {
         try {
             /**
              *Call Actor Intra User to denied request connection
@@ -407,9 +425,9 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             this.intraUserNertwokServiceManager.denyConnection(intraUserLoggedPublicKey, intraUserToRejectPublicKey);
 
         } catch (CantDenyConnectionException e) {
-            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey, e, "", "");
+            throw new IntraUserConnectionDenialFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey, e, "", "");
         } catch (Exception e) {
-            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey, FermatException.wrapException(e), "", "unknown exception");
+            throw new IntraUserConnectionDenialFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey, FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -421,18 +439,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      * @throws IntraUserDisconnectingFailedException
      */
     @Override
-    public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
-        try {
+    public void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
+        try
+        {
             /**
              *Call Actor Intra User to disconnect request connection
              */
-            this.intraWalletUserManager.disconnectIntraWalletUser(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraWalletUserManager.disconnectIntraWalletUser(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
             /**
              *Call Network Service Intra User to disconnect request connection
              */
 
-            this.intraUserNertwokServiceManager.disconnectIntraUSer(this.intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
+            this.intraUserNertwokServiceManager.disconnectIntraUSer(intraUserLoggedPublicKey, intraUserToDisconnectPublicKey);
 
         } catch (CantDisconnectIntraWalletUserException e) {
             throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey, e, "", "");
@@ -766,13 +785,14 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
                 intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                intraUserLoginXml.persistToMedia();
-            } catch (CantPersistFileException cantPersistFileException) {
+                intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
 
-                /**
-                 * If I can not save this file, then this plugin shouldn't be running at all.
-                 */
-                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
+//                /**
+//                 * If I can not save this file, then this plugin shouldn't be running at all.
+//                 */
+//                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, cantPersistFileException, null, null);
+            }catch (Exception e){
+                throw new CantLoadLoginsFileException(CantLoadLoginsFileException.DEFAULT_MESSAGE, e, null, null);
             }
         } catch (CantLoadFileException | CantCreateFileException e) {
 

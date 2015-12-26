@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -99,15 +100,6 @@ public abstract class FermatFragment extends AbstractFermatFragment {
         return ((PaintActivityFeatures)getActivity());
     }
 
-    protected void setNavigationDrawer(FermatAdapter adapter){
-        getPaintActivtyFeactures().changeNavigationDrawerAdapter(adapter);
-    }
-
-
-    protected void addNavigationHeader(View view){
-        getPaintActivtyFeactures().addNavigationViewHeader(view);
-    }
-
     protected void changeApp(Engine emgine,Object[] objects){
         //getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
     }
@@ -132,5 +124,14 @@ public abstract class FermatFragment extends AbstractFermatFragment {
         System.gc();
     }
 
+    /**
+     * Send local broadcast
+     *
+     * @param broadcast Intent broadcast with channel and extras
+     */
+    public void sendLocalBroadcast(Intent broadcast) {
+        LocalBroadcastManager.getInstance(getActivity())
+                .sendBroadcast(broadcast);
+    }
 }
 

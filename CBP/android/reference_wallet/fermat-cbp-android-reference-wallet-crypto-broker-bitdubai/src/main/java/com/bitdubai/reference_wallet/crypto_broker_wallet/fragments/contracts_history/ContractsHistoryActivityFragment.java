@@ -105,7 +105,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         try {
             CryptoBrokerNavigationViewPainter navigationViewPainter = new CryptoBrokerNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -120,21 +120,21 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_no_filter) {
+        if (item.getItemId() == R.id.cbw_action_no_filter) {
             filterContractStatus = null;
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();
             return true;
         }
 
-        if (item.getItemId() == R.id.action_filter_succeed) {
+        if (item.getItemId() == R.id.cbw_action_filter_succeed) {
             filterContractStatus = ContractStatus.COMPLETED;
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();
             return true;
         }
 
-        if (item.getItemId() == R.id.action_filter_cancel) {
+        if (item.getItemId() == R.id.cbw_action_filter_cancel) {
             filterContractStatus = ContractStatus.CANCELLED;
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();

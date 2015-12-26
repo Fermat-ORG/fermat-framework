@@ -121,7 +121,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         try {
             CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -185,9 +184,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_start_negotiation) {
             changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST, appSession.getAppPublicKey());
+            return true;
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -289,7 +289,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        appSession.setData("negotiation_data", data);
+        appSession.setData(CryptoCustomerWalletSession.NEGOTIATION_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
     }
 

@@ -74,6 +74,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
     // TODO MAKE USE OF THE ERROR MANAGER
+    //  JAJA, I LOVE YOU MEN
 
     public NotificationSubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -141,6 +142,12 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         fermatEventListenerIncomingRequestConnectionNotification.setEventHandler(incomingRequestConnectionNotificationHandler);
         eventManager.addListener(fermatEventListenerIncomingRequestConnectionNotification);
         listenersAdded.add(fermatEventListenerIncomingRequestConnectionNotification);
+
+        FermatEventListener outgoingIntraUserRollbackTransactionNotificationEventListener = eventManager.getNewListener(EventType.OUTGOING_ROLLBACK_NOTIFICATION);
+        FermatEventHandler outgoingRollbackNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.OutgoingIntraRollbackNotificationHandler(this);
+        outgoingIntraUserRollbackTransactionNotificationEventListener.setEventHandler(outgoingRollbackNotificationHandler);
+        eventManager.addListener(outgoingIntraUserRollbackTransactionNotificationEventListener);
+        listenersAdded.add(outgoingIntraUserRollbackTransactionNotificationEventListener);
 
 
     }
@@ -215,12 +222,18 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             if(actor != null)
             {
                 notification.setImage(actor.getPhoto());
+                if(cryptoCurrency!=null)
                 notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+                else{
+                    notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
+                }
 
             }
             else
             {
+                if(cryptoCurrency!=null)
                 notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+                else notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
 
             }
 
@@ -317,6 +330,26 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
+   public void addOutgoingRollbackNotification(EventSource source, String actorId,long amount ){
+        try {
+            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+
+             notification.setAlertTitle(getSourceString(source));
+            notification.setTextTitle("Sent Transaction reversed");
+            notification.setTextBody("Sending for " + WalletUtils.formatBalanceString(amount)  + " BTC could not complete.");
+            notification.setNotificationType(NotificationType.OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION.getCode());
+            poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // notify observers
+        notifyNotificationArrived();
+    }
+
+    @Override
     public void addCallback(FermatNotificationListener notificationListener) {
         this.notificationListener = notificationListener;
     }
@@ -340,6 +373,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         switch (eventSource) {
             case INCOMING_EXTRA_USER:
                 return "Received money";
+            case OUTGOING_INTRA_USER:
+                return "Transaction canceled";
             default:
                 return "Method: getTextTitleBySource - NO TIENE valor ASIGNADO para RETURN";
         }
