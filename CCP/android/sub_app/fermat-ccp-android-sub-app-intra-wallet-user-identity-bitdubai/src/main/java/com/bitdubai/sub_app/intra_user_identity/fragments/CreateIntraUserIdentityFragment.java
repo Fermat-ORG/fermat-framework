@@ -276,7 +276,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, brokerImageByteArray);
+                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_image) : brokerImageByteArray);
                     else
                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
@@ -290,6 +290,14 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         }
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
+    }
+
+    private byte[] convertImage(int resImage){
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     private void dispatchTakePictureIntent() {
