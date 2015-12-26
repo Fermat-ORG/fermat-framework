@@ -299,7 +299,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
