@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -401,6 +402,7 @@ public class CustomerBrokerUpdateAgent implements
 
                             switch (negotiationType) {
                                 case PURCHASE:
+
                                     //UPDATE PURCHASE NEGOTIATION
                                     purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
                                     customerBrokerUpdatePurchaseNegotiationTransaction = new CustomerBrokerUpdatePurchaseNegotiationTransaction(
@@ -408,7 +410,14 @@ public class CustomerBrokerUpdateAgent implements
                                             customerBrokerUpdateNegotiationTransactionDatabaseDao
 
                                     );
-//                                    customerBrokerUpdatePurchaseNegotiationTransaction.
+
+                                    if(purchaseNegotiation.getStatus().equals(NegotiationStatus.CANCELLED)){
+                                        //CANCEL NEGOTIATION
+                                        customerBrokerUpdatePurchaseNegotiationTransaction.receiveCancelPurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
+                                    }else {
+                                        //UPDATE NEGOTIATION
+                                        customerBrokerUpdatePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
+                                    }
                                     break;
 
                                 case SALE:
@@ -420,6 +429,13 @@ public class CustomerBrokerUpdateAgent implements
 
                                     );
 
+                                    if(saleNegotiation.getStatus().equals(NegotiationStatus.CANCELLED)){
+                                        //CANCEL NEGOTIATION
+                                        customerBrokerUpdateSaleNegotiationTransaction.receiveCancelSaleNegotiationTranasction(transactionId, saleNegotiation);
+                                    }else{
+                                        //UPDATE NEGOTIATION
+                                        customerBrokerUpdateSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
+                                    }
                                     break;
                             }
 

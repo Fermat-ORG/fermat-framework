@@ -88,7 +88,7 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
     }
 
     //SEND PROCESS THE CANCEL PURCHASE NEGOTIATION TRANSACTION
-    public void receiveCancelPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation)  throws CantCancelPurchaseNegotiationTransactionException {
+    public void SendCancelPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation)  throws CantCancelPurchaseNegotiationTransactionException {
 
         try {
 
@@ -114,8 +114,8 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
         }
     }
 
-    //RECEIVE PROCESS THE CANCEL PURCHASE NEGOTIATION TRANSACTION
-    public void sendCancelPurchaseNegotiationTranasction(UUID transactionId, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation)  throws CantCancelPurchaseNegotiationTransactionException {
+    //PROCESS THE CANCEL PURCHASE NEGOTIATION TRANSACTION
+    public void receiveCancelPurchaseNegotiationTranasction(UUID transactionId, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation)  throws CantCancelPurchaseNegotiationTransactionException {
 
         try {
 
