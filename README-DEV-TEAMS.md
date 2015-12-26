@@ -2,18 +2,30 @@
 
 # Dev Teams
 
-Here you will fin a list of teams working at Fermat. Feel free to contact their team leaders in order to join them.
+## Introduction
 
+Everything done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only team. We also have teams of graphic designers, 3d artists, video producers, copy writers, etc.
+
+In these file you will have a list of Fermat's developers teams. Feel free to contact their team leaders in order to join them.
+
+## Organization
+
+The ideal size of a team is 5 people. Between all, they should cover all the fields needed for these kind of projects.
+
+In Fermat teams are organized in a hierarchical way. This 
 
 <br>
-## Disruptor Team:
+## Team List
+
+<br>
+### Disruptor Team:
 -----------------------------------
 
 We want to assemble a team that wants to combines its technical capacity with its creative talent, where you feel passion for development and for the work done and not just do it for pay, who is willing to work together and share nights without sleep.
 
 Currently we are a small team dedicated to the development of a communications layer based on a peer-to-peer network with all its complications, and the development of some network services.
 
-### Team Members:
+#### Team Members:
 
 
 * **Roberto Requena [Team Leader]**<br/>
@@ -32,13 +44,13 @@ Currently we are a small team dedicated to the development of a communications l
 We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
-## Mordor Team:
+### Mordor Team:
 -----------------------------------
 We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams with theirs.
 
 In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services.
 
-### Team Members:
+#### Team Members:
 
 
 * **Manuel Perez [Team Leader]**<br/>
@@ -64,7 +76,7 @@ This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we re
 
 
 <br/>
-## Code Butchers Team:
+### Code Butchers Team:
 -----------------------------------
 We are a team of diverse nature developers, interested on the bases and structure of the Fermat Framework, and even nonconforming, we work along the entire platform, trying to keep the things ordered and collaborating with other teams.
 
@@ -75,7 +87,7 @@ We are a team of diverse nature developers, interested on the bases and structur
 
 In each platform mentioned, we are involved in the development of Network Services, GUI Components and Platform components.
 
-### Team Members:
+#### Team Members:
 
 
 * **León Acosta [Team Leader]**<br/>
@@ -92,3 +104,5 @@ In each platform mentioned, we are involved in the development of Network Servic
       Github:  https://github.com/pmgesualdi
 
 We love music and we do music, we love movies (fanatics), we are also ameteur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+
+
