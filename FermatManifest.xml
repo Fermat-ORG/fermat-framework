@@ -1,4 +1,7 @@
-<fermat>
+<?xml version="1.0"?>
+<fermat xmlns="http://www.w3schools.com"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="FermatManifest.xsd" >
     <platforms>
         <platform code="COR" name="Core And Api" logo="COR_logo.png">
 
