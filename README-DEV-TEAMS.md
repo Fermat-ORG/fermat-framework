@@ -62,7 +62,7 @@ Team leaders are classified by the deepness of the hierarchy that goes below the
 | 6 | Multi Parent Team Leader | Team Leader with several sub-teams |
 | 7 | Grand Team Leader | Team Leader with several sub-teams and one grand children |
 | 8 | Multi Parent Team Leader | Team Leader with several sub-teams and several grand children |
-| 9 | Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo 8|
+| 9 | Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo |
 
 
 Please note that whenever with talk about a full-time developer is equivalent to two part-time developers.
