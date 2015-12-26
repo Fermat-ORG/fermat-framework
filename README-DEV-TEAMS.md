@@ -58,11 +58,13 @@ Team leaders are classified by the deepness of the hierarchy that goes below the
 | 2 | Veteran | Veteran developer. Working full time 3+ months. |
 | 3 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 4 | Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 5 | Parent Team Leader | Team Leader of a team with one sub-teams |
-| 6 | Multi Parent Team Leader | Team Leader with several sub-teams |
-| 7 | Grand Team Leader | Team Leader with several sub-teams and one grand children |
-| 8 | Multi Parent Team Leader | Team Leader with several sub-teams and several grand children |
-| 9 | Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo |
+| 5 | New Parent Team Leader | Team Leader of a team with one sub-team |
+| 6 | Parent Team Leader | Team Leader of a team with many sub-teams |
+| 7 | Full Parent Team Leader | Team Leader with 5 sub-teams |
+| 8 | New Grand Team Leader | Team Leader with 5 sub-teams and one grand child |
+| 9 | Grand Team Leader | Team Leader with 5 sub-teams and several grand children |
+| 10 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children |
+| 11 | Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo |
 
 
 Please note that whenever with talk about a full-time developer is equivalent to two part-time developers.
