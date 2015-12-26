@@ -65,6 +65,8 @@ Team leaders are classified by the deepness of the hierarchy that goes below the
 | 9 | Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo 8|
 
 
+Please note that whenever with talk about a full-time developer is equivalent to two part-time developers.
+
 <br>
 ## Team Members
 
