@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.event_handler;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -11,33 +11,33 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDao;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/12/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/12/15.
  */
-public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
+public class CustomerAckOfflineMerchandiseRecorderService implements CBPService {
     /**
      * DealsWithEvents Interface member variables.
      */
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
-    CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao;
+    CustomerAckOfflineMerchandiseBusinessTransactionDao customerAckOfflineMerchandiseBusinessTransactionDao;
     /**
      * TransactionService Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    public CustomerAckOnlineMerchandiseRecorderService(
-            CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao,
+    public CustomerAckOfflineMerchandiseRecorderService(
+            CustomerAckOfflineMerchandiseBusinessTransactionDao customerAckOfflineMerchandiseBusinessTransactionDao,
             EventManager eventManager) throws CantStartServiceException {
         try {
-            setDatabaseDao(customerAckOnlineMerchandiseBusinessTransactionDao);
+            setDatabaseDao(customerAckOfflineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception,
@@ -46,12 +46,12 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
         }
     }
 
-    private void setDatabaseDao(CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao)
+    private void setDatabaseDao(CustomerAckOfflineMerchandiseBusinessTransactionDao customerAckOfflineMerchandiseBusinessTransactionDao)
             throws CantSetObjectException {
-        if(customerAckOnlineMerchandiseBusinessTransactionDao==null){
-            throw new CantSetObjectException("The CustomerAckOnlineMerchandiseBusinessTransactionDao is null");
+        if(customerAckOfflineMerchandiseBusinessTransactionDao==null){
+            throw new CantSetObjectException("The CustomerAckOfflineMerchandiseBusinessTransactionDao is null");
         }
-        this.customerAckOnlineMerchandiseBusinessTransactionDao =customerAckOnlineMerchandiseBusinessTransactionDao;
+        this.customerAckOfflineMerchandiseBusinessTransactionDao =customerAckOfflineMerchandiseBusinessTransactionDao;
     }
 
     public void setEventManager(EventManager eventManager) {
@@ -61,28 +61,21 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerAckOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
     }
 
     public void incomingConfirmBusinessTransactionResponseEventHandler(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerAckOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
-    }
-
-    public void incomingMoneyNotification(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerAckOnlineMerchandiseBusinessTransactionDao.saveIncomingMoneyEvent(event);
+        this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
     }
 
     public void BrokerSubmitMerchandiseConfirmedEventHandler(BrokerSubmitMerchandiseConfirmed event)throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerAckOnlineMerchandiseBusinessTransactionDao.saveNewEvent(
+        this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(
                 event.getEventType().getCode(),
                 event.getSource().getCode(),
                 event.getContractHash());
@@ -100,29 +93,21 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
 
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
             fermatEventHandler = new IncomingNewContractStatusUpdateEventHandler();
-            ((IncomingNewContractStatusUpdateEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
+            ((IncomingNewContractStatusUpdateEventHandler) fermatEventHandler).setCustomerAckOfflineMerchandiseRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
             fermatEventHandler = new IncomingConfirmBusinessTransactionResponseEventHandler();
-            ((IncomingConfirmBusinessTransactionResponseEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
+            ((IncomingConfirmBusinessTransactionResponseEventHandler) fermatEventHandler).setCustomerAckOfflineMerchandiseRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
             fermatEventListener = eventManager.getNewListener(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
             fermatEventHandler = new BrokerSubmitMerchandiseConfirmedEventHandler();
-            ((BrokerSubmitMerchandiseConfirmedEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            fermatEventListener = eventManager.getNewListener(
-                    com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
-            fermatEventHandler = new IncomingMoneyNotificationEventHandler();
-            ((IncomingMoneyNotificationEventHandler) fermatEventHandler).setCustomerAckOnlineMerchandiseRecorderService(this);
+            ((BrokerSubmitMerchandiseConfirmedEventHandler) fermatEventHandler).setCustomerAckOfflineMerchandiseRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
@@ -131,8 +116,8 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
         } catch (CantSetObjectException exception){
             throw new CantStartServiceException(
                     exception,
-                    "Starting the CustomerAckOnlineMerchandiseRecorderService",
-                    "The CustomerAckOnlineMerchandiseRecorderService is probably null");
+                    "Starting the CustomerAckOfflineMerchandiseRecorderService",
+                    "The CustomerAckOfflineMerchandiseRecorderService is probably null");
         }
 
     }
