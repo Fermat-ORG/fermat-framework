@@ -14,7 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutorService;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class MainFragment extends FermatFragment
+public class MainFragment extends AbstractFermatFragment
         implements FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener {
 
     /**

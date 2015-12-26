@@ -20,7 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Home Fragment
  */
-public class UserCmmuinityHomeFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;

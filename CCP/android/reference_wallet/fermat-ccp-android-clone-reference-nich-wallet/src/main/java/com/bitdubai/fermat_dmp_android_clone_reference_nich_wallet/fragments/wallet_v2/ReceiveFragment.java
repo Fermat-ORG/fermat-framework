@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -43,7 +43,7 @@ import java.util.UUID;
 import static com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR.generateBitmap;
 
 
-public  class ReceiveFragment extends FermatWalletFragment {
+public  class ReceiveFragment extends AbstractFermatFragment {
 
     private static final String ARG_POSITION = "position";
 

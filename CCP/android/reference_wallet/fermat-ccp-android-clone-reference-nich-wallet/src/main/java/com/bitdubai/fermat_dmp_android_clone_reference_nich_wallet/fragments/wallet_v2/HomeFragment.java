@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
@@ -29,7 +29,7 @@ import java.util.List;
 import static com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.utils.WalletUtils.formatBalanceString;
 
 
-public class HomeFragment extends FermatWalletFragment {
+public class HomeFragment extends AbstractFermatFragment {
     View rootView;
     ExpandableListView lv;
     String[] contacts;

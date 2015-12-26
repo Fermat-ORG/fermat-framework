@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWizardPageFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -31,7 +31,7 @@ public class WizardPageSetMerchandisesFragment extends FermatWizardPageFragment 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.hello,container);
+        View v = inflater.inflate(R.layout.hello,null);
         return v;
     }
 
