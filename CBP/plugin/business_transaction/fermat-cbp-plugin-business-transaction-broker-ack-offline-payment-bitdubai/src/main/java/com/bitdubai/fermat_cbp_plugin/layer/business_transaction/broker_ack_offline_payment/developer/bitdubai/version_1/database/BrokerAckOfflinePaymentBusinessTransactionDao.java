@@ -18,9 +18,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
@@ -279,13 +281,22 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
 
-        DatabaseTable databaseTable=getDatabaseContractTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractSale
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractSale
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        } catch (ObjectNotSetException exception) {
+            throw new CantInsertRecordException(
+                    ObjectNotSetException.DEFAULT_MESSAGE,
+                    exception,
+                    "Persisting a contract in database",
+                    "An argument in null");
+        }
+
     }
 
     /**
@@ -296,7 +307,11 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractSale customerBrokerContractSale){
+            CustomerBrokerContractSale customerBrokerContractSale) throws ObjectNotSetException {
+
+        ObjectChecker.checkArgument(
+                customerBrokerContractSale,
+                "The customerBrokerContractSale in buildDatabaseTableRecord method is null");
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
@@ -416,9 +431,19 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        updateRecordStatus(contractHash,
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
-                contractTransactionStatus.getCode());
+        try{
+            ObjectChecker.checkArgument(contractHash);
+            updateRecordStatus(contractHash,
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    contractTransactionStatus.getCode());
+        } catch (ObjectNotSetException exception) {
+            throw new CantUpdateRecordException(
+                    exception.DEFAULT_MESSAGE,
+                    exception,
+                    "Updating the contract transaction status",
+                    "The contract hash/Id is null");
+        }
+
     }
 
     /**
