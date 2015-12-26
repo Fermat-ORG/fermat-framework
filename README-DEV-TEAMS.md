@@ -12,10 +12,28 @@ In these file you will have a list of Fermat's developers teams. Feel free to co
 
 The ideal size of a team is 5 people. Between all, they should cover all the fields needed for these kind of projects.
 
-In Fermat teams are organized in a hierarchical way. This 
+In Fermat teams are organized in a hierarchical way. This helps in reviewing changes in source code, since it is expected that a child team changes are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent. At the top of the hierarchy the core developers are the only merging the final batch of changes into the bitDubai codebase.
+
+## Team List
+
+* Thunder
+* Code Butchers
+* Coin Diggers
+* Disruptors
+* Fermat ORG Client
+* Fermat ORG Server
+* Nelson's Team
+* Mordor
+* Franlkin's Team
+
+## Current Hierarchy
+
+
+
+
 
 <br>
-## Team List
+## Team Members
 
 <br>
 ### Disruptor Team:
