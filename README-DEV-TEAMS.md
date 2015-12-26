@@ -43,8 +43,10 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 
 ### Fermat ORG Site
 
-|- Fermat ORG Client
-|- Fermat ORG Server
+| Level 1 | Level 2 | Level 3 | Level 4 |
+|:----:|:----:|:----:|:----:|
+| Fermat ORG Client | | | |
+| Fermat ORG Server | | | |
 
 ## Compensation
 
