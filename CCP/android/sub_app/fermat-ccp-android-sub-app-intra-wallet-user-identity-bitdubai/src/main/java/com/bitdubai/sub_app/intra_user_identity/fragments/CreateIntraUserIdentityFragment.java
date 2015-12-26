@@ -39,6 +39,7 @@ import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -169,7 +170,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             if (identitySelected != null) {
                 loadIdentity();
             } else {
-                identitySelected = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+                List<IntraWalletUserIdentity> lst = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                if(lst.isEmpty()){
+                    identitySelected = lst.get(0);
+                }
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
@@ -276,7 +280,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_image) : brokerImageByteArray);
+                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_male) : brokerImageByteArray);
                     else
                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
