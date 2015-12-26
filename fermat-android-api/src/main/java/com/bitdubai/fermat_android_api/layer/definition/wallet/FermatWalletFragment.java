@@ -52,19 +52,7 @@ public class FermatWalletFragment extends AbstractFermatFragment {
     protected PaintActivityFeatures getPaintActivtyFeactures() {
         return ((PaintActivityFeatures) getActivity());
     }
-
-    protected void setNavigationDrawer(FermatAdapter adapter) {
-        getPaintActivtyFeactures().changeNavigationDrawerAdapter(adapter);
-    }
-
-    protected void addNavigationHeader(View view) {
-        getPaintActivtyFeactures().addNavigationViewHeader(view);
-    }
-
-    protected void addNavigationView(NavigationViewPainter navigationViewPainter){
-        getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-    }
-
+    
     protected Toolbar getToolbar() {
         return getPaintActivtyFeactures().getToolbar();
     }
