@@ -85,17 +85,6 @@ public abstract class FermatFragment extends AbstractFermatFragment {
         ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, null);
     }
 
-    /**
-     * Change activity
-     */
-    protected final void changeFragment(String fragment,int idContainer) {
-        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, idContainer, null);
-    }
-
-    protected final RelativeLayout getToolbarHeader() {
-        return getPaintActivtyFeactures().getToolbarHeader();
-    }
-
     protected PaintActivityFeatures getPaintActivtyFeactures(){
         return ((PaintActivityFeatures)getActivity());
     }

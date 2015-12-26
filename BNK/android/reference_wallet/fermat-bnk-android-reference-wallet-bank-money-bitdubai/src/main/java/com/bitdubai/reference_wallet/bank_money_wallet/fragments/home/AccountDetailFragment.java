@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
 /**
  * Created by memo on 08/12/15.
  */
-public class AccountDetailFragment extends FermatWalletFragment {
+public class AccountDetailFragment extends AbstractFermatFragment {
 
     public AccountDetailFragment() {
     }

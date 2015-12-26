@@ -3,7 +3,7 @@
 //import android.app.Fragment;
 //
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-//import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+//import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;

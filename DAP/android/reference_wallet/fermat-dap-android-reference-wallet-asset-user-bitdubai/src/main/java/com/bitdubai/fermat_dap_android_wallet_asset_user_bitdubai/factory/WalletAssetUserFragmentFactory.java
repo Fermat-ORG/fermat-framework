@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.MyAssetsActivityFragment;
@@ -18,12 +18,12 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
 
 
     @Override
-    public FermatWalletFragment getFermatFragment(WalletAssetUserFragmentsEnumType fragment) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(WalletAssetUserFragmentsEnumType fragment) throws FragmentNotFoundException {
         if (fragment == null) {
             throw createFragmentNotFoundException(null);
         }
 
-        FermatWalletFragment currentFragment = null;
+        AbstractFermatFragment currentFragment = null;
         try {
 
             switch (fragment) {

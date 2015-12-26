@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StartNegotiationActivityFragment extends FermatWalletFragment {
+public class StartNegotiationActivityFragment extends AbstractFermatFragment {
 
 
     public StartNegotiationActivityFragment() {
