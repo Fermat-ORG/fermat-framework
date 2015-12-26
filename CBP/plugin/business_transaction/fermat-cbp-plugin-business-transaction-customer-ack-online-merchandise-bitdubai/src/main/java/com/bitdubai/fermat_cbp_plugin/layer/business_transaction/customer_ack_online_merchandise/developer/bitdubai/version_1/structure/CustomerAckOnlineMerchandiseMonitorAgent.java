@@ -217,10 +217,10 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Open Contract monitor agent doesn't exists");
-                CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory brokerAckOnlinePaymentBusinessTransactionDatabaseFactory=
+                CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory=
                         new CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
-                    database = brokerAckOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId,
+                    database = customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(pluginId,
                             CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     errorManager.reportUnexpectedPluginException(
@@ -265,7 +265,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
                 /**
                  * Check contract status to send. - Customer Side
-                 * The status to verify is PENDING_OFFLINE_MERCHANDISE_NOTIFICATION, it represents that the merchandise is
+                 * The status to verify is PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION, it represents that the merchandise is
                  * acknowledge by the customer.
                  */
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList=
@@ -277,11 +277,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK
+                            ContractTransactionStatus.ONLINE_MERCHANDISE_ACK
                     );
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
-                            ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK
+                            ContractTransactionStatus.ONLINE_MERCHANDISE_ACK
                     );
                 }
 

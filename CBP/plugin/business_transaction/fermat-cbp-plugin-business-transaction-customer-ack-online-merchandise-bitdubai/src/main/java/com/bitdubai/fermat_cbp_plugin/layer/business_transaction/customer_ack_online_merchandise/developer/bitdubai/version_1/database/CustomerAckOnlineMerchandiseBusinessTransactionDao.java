@@ -384,7 +384,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getBusinessTransactionRecordList(
-                ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_NOTIFICATION.getCode(),
+                ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION.getCode(),
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
     }
@@ -465,7 +465,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         return getBusinessTransactionRecord(
                 contractHash,
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        ACK_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME);
+                        ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
 
     }
 

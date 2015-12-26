@@ -57,7 +57,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/12/15.
  */
-public class CustomerAckOfflineMeechandiseMonitorAgent implements
+public class CustomerAckOfflineMerchandiseMonitorAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
@@ -77,7 +77,7 @@ public class CustomerAckOfflineMeechandiseMonitorAgent implements
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
-    public CustomerAckOfflineMeechandiseMonitorAgent(
+    public CustomerAckOfflineMerchandiseMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
             LogManager logManager,
             ErrorManager errorManager,
