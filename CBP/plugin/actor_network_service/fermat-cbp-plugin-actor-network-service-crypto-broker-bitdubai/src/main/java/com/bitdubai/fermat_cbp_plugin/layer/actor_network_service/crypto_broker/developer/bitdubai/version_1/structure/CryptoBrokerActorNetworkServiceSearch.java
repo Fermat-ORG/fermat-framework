@@ -46,7 +46,6 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     PlatformComponentType.ACTOR_CRYPTO_BROKER, // PlatformComponentType you want to find
                     NetworkServiceType   .UNDEFINED,           // NetworkServiceType you want to find
                     null,                                      // alias
-                    null,                                      // phrase
                     null,                                      // identityPublicKey
                     null,                                      // location
                     null,                                      // distance

@@ -27,4 +27,6 @@ public interface NavigationViewPainter {
     RecyclerView.ItemDecoration addItemDecoration();
 
     boolean hasBodyBackground();
+
+    boolean hasClickListener();
 }

@@ -1347,6 +1347,8 @@
                         <certifications>
                         </certifications>
                     </plugin>
+                </plugins>
+            </layer>
         </platform>
 
 

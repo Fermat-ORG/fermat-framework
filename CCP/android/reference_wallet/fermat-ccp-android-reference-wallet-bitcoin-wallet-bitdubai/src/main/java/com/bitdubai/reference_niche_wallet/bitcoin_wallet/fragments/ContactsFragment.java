@@ -39,12 +39,8 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -53,7 +49,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
@@ -64,7 +59,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_con
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
@@ -72,7 +66,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SubActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -225,8 +219,36 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 //                view.setOnClickListener(this);
 //        rootView.findViewById(R.id.btn_extra_user).setOnClickListener(this);
 
+//
+//        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
+//                .setContentView(frameLayout)
+//                .setBackgroundDrawable(R.drawable.btn_contact_selector)
+//                .build();
+//
+//
+//        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+//// repeat many times:
+//        ImageView itemIcon = new ImageView(getActivity());
+//        itemIcon.setBackgroundResource(R.drawable.extra_user_button);
+//        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setText("External User").build();
+//        button1.setId(ID_BTN_EXTRA_USER);
+////        button1.setLayoutParams();
+//
+//
+//        ImageView itemIcon2 = new ImageView(getActivity());
+//        itemIcon2.setBackgroundResource(R.drawable.intra_user_button);
+//        itemIcon2.setImageResource(R.drawable.intra_user);
+//        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setText("Fermat User").build();
+//        button2.setId(ID_BTN_INTRA_USER);
+//
+//
+//        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+//                .addSubActionView(button1)
+//                .addSubActionView(button2)
+//                .attachTo(actionButton)
+//                .build();
 
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
+        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
@@ -237,16 +259,16 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
 // repeat many times:
         ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setBackgroundResource(R.drawable.extra_user_button);
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setLayoutParams(new FrameLayout.LayoutParams(160,160)).build();
+        itemIcon.setImageResource(R.drawable.extra_user_button);
+
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button)).setText("External User").build();
         button1.setId(ID_BTN_EXTRA_USER);
 //        button1.setLayoutParams();
 
 
         ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setBackgroundResource(R.drawable.intra_user_button);
-        itemIcon2.setImageResource(R.drawable.intra_user);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+        itemIcon2.setImageResource(R.drawable.intra_user_button);
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setText("Fermat User").build();
         button2.setId(ID_BTN_INTRA_USER);
 
 

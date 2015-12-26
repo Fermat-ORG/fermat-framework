@@ -23,28 +23,16 @@ public class OutgoingIntraRollbackNotificationHandler implements FermatEventHand
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        OutgoingIntraRollbackNotificationEvent incomingMoneyNotificationEvent =(OutgoingIntraRollbackNotificationEvent) fermatEvent;
-
-        //NotificationEvent notificationEvent = new NotificationEvent();
-        //notificationEvent.setAlertTitle(newNotificationEvent.getNotificationTitle());
-        //notificationEvent.setTextTitle(newNotificationEvent.getNotificationTextTitle());
-        //notificationEvent.setTextBody(newNotificationEvent.getNotificationTextBody());
+        OutgoingIntraRollbackNotificationEvent outgoingIntraRollbackNotificationEvent =(OutgoingIntraRollbackNotificationEvent) fermatEvent;
 
 
-        //TODO: falta ver si le seteo la activity (enum de las activities) o/y si le setio la public Key de la wallet
-
-
-        System.out.println("PROBANDO EVENTO Rollback, PARA NOTIFICACIONES");
-
-        if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
+     if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
 
             System.out.println("PROBANDO EVENTO Rollback, PARA NOTIFICACIONES 2");
             //TODO: acá hay que implementar el add al pool de notificaciones
-                    notificationManager.addIncomingIntraUserNotification(incomingMoneyNotificationEvent.getSource(), incomingMoneyNotificationEvent.getIntraUserIdentityPublicKey(),incomingMoneyNotificationEvent.getWalletPublicKey(), incomingMoneyNotificationEvent.getAmount(), null, incomingMoneyNotificationEvent.getActorId(), incomingMoneyNotificationEvent.getActorType());
+                    notificationManager.addOutgoingRollbackNotification(outgoingIntraRollbackNotificationEvent.getSource(), outgoingIntraRollbackNotificationEvent.getActorId(),outgoingIntraRollbackNotificationEvent.getAmount());
             }
 
-
-            //this.notificationManager.recordNavigationStructure(xmlText,link,filename,skinId);
 
         }
 }

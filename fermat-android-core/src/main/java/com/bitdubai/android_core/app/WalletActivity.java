@@ -548,13 +548,13 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 try {
 
                     //Ultima pantalla de la wallet que quiere conectarse con la app
-                    installedSubApp.getActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY).changeBackActivity(
-                            walletNavigationStructure.getPublicKey(),
-                            lastWalletActivityWhoAskForConnetion.getActivityType());
+//                    installedSubApp.getActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY).changeBackActivity(
+//                            walletNavigationStructure.getPublicKey(),
+//                            lastWalletActivityWhoAskForConnetion.getActivityType());
 
                     connectWithSubApp(engine,objectses,installedSubApp);
 
-                } catch (InvalidParameterException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
