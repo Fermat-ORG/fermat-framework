@@ -71,13 +71,11 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
     }
 
     //CREATE NEW NEGOTIATION TRANSACTION
-    public void createRegisterCustomerBrokerUpdateNegotiationTranasction(Negotiation negotiation, NegotiationType negotiationType) throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
+    public void createCustomerBrokerUpdateNegotiationTransaction(UUID transactionId, Negotiation negotiation, NegotiationType negotiationType, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
 
-        UUID transactionId = UUID.randomUUID();
+
         Date time = new Date();
         long timestamp = time.getTime();
-        NegotiationTransactionStatus statusTransaction = NegotiationTransactionStatus.PENDING_SUBMIT;
-        NegotiationTransmissionState stateTransmission = NegotiationTransmissionState.PROCESSING_SEND;
         String negotiationXML = XMLParser.parseObject(negotiation);
 
         try {
@@ -90,8 +88,6 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_BROKER_COLUMN_NAME, negotiation.getBrokerPublicKey());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, negotiation.getCustomerPublicKey());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, statusTransaction.getCode());
-            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_NEGOTIATION_COLUMN_NAME, negotiation.getStatus().getCode());
-            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATE_TRANSMISSION_COLUMN_NAME, stateTransmission.getCode());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationType.getCode());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_XML_COLUMN_NAME, negotiationXML);
             record.setLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME, timestamp);
