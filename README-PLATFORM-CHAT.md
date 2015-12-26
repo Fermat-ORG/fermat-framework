@@ -23,29 +23,30 @@ Se trata de una plataforma que agrega la funcionalidad de chat o mensajeria inst
 
 Los objetos que manejará la Sub-App para disparar acciones o mostrar infomracion son los sigueintes:<br>
 
-  1. ConnectionsList: Lista de conexiones.<br>
-  2. SelectConnectionButton: Botón para seleccionar conexión.<br>
-  3. MessagesList: Lista de acceso a mensajes.<br>
-  4. OpenChatButton: Botón para abrir chat.<br>
-  5. ChatForm: Entrada para escritura y envío de mensaje de texto.<br>
-  6. ContactsList: Lista para administrar contactos propios.<br>
-  7. AddContactButton: Botón para agregar contacto.<br>
-  8. EditContactButton: Botón para editar contacto.<br>
-  9. DeleteContactButton: Botón para eliminar contacto.<br>
-  10. ContactInfoForm: Form con la info del contacto (detalle).<br>
-  11. CheckMessageSymbol: Marca de mensaje leido.<br>
+1. ConnectionsList: Lista de conexiones.<br>
+2. SelectConnectionButton: Botón para seleccionar conexión.<br>
+3. MessagesList: Lista de acceso a mensajes.<br>
+4. OpenChatButton: Botón para abrir chat.<br>
+5. ChatForm: Entrada para escritura y envío de mensaje de texto.<br>
+6. CheckMessageSymbol: Marca de mensaje leido.<br>
+7. ContactsList: Lista para administrar contactos propios.<br>
+8. AddContactButton: Botón para agregar contacto.<br>
+9. EditContactButton: Botón para editar contacto.<br>
+10. DeleteContactButton: Botón para eliminar contacto.<br>
+11. ContactInfoForm: Form con la info del contacto (detalle).<br>
   
 ## Module
+
 Mostrar Conexiones (Sub-App 1): Ejecuta un metodo para listar las conexiones.<br>
 Seleccionar Conexión (Sub-App 2): Ejecuta un metodo solicitar la info de una conexion enviando como argumento su ID.<br>
-Mostrar Lista de Contactos (Sub-App 6): Ejecuta un metodo para listar los contactos.<br>
-Agregar Contacto (Sub-App 7): Ejecuta un metodo para listar las conexiones.<br>
-Ver Detalle de Contacto (Sub-App 10): Ejecuta un metodo con el ID del contacto a detallar como argumento. <br>
-Editar Contacto (Sub-App 8): Ejecuta un metodo con el ID del contacto a editar como argumento. <br>
-Borrar Contacto (Sub-App 9): Ejecuta un metodo con el ID del contacto a eliminar como argumento. <br>
+Mostrar Lista de Contactos (Sub-App 7): Ejecuta un metodo para listar los contactos.<br>
+Agregar Contacto (Sub-App 8): Ejecuta un metodo para listar las conexiones.<br>
+Ver Detalle de Contacto (Sub-App 11): Ejecuta un metodo con el ID del contacto a detallar como argumento. <br>
+Editar Contacto (Sub-App 9): Ejecuta un metodo con el ID del contacto a editar como argumento. <br>
+Borrar Contacto (Sub-App 10): Ejecuta un metodo con el ID del contacto a eliminar como argumento. <br>
 Mostrar Lista de Chats (Sub-App 3): Ejecuta un metodo para listar los chats enviando como argumento el UUID del objeto.<br>
 Enviar Mensaje (Sub-App 5): Ejecuta un metodo para enviar el mensaje, sus argumentos serian aquellos que sirvan para alimentar la BD.<br>
-Notificar Mensaje Visto (Sub-App 11): Ejecuta un metodo para validar el mensaje como leido enviando como argumento el UUID del objeto y el ID del chat. <br>
+Notificar Mensaje Visto (Sub-App 6): Ejecuta un metodo para validar el mensaje como leido enviando como argumento el UUID del objeto y el ID del chat. <br>
 Abrir Chat (Sub-App 4): Ejecuta un metodo para la creacion o apertura de chat enviando el UUID del objeto como argumento.<br>
 
 ## Middleware
@@ -53,46 +54,42 @@ Abrir Chat (Sub-App 4): Ejecuta un metodo para la creacion o apertura de chat en
 Tiene la siguiente base de datos:
 ### Base de Datos
 
-#### Chats
-**Id Chat** 
-**Id Objeto**
-**Local Actor Type**
-**Local Actor Pub Key**
-**Remote Actor Type**
-**Remote Actor Pub Key**
-**Chat Name**
-**Status** : Invissible | Vissible
-**Creation Datetime**
-**Last Message Dateime**
+#### Chats<br>
+**Id Chat [integer]** <br>
+**Id Objeto [integer]**<br>
+**Local Actor Type [string]**<br>
+**Local Actor Pub Key [string]**<br>
+**Remote Actor Type [string]**<br>
+**Remote Actor Pub Key [string]**<br>
+**Chat Name [string]**<br>
+**Status [integer]** : Invissible | Vissible<br>
+**Creation Date [datetime]**<br>
+**Last Message Date [timestamp]**<br>
 
-#### Mensajes
-**Id Mensaje**
-**Id Chat**
-**MessageText**
-**Status** : Created | Sent | Delivered | Read
-**Type** : Incomming | Outgoing
-**Timestamp**
+#### Mensajes<br>
+**Id Mensaje [integer]**<br>
+**Id Chat [integer]**<br>
+**MessageText [string]**<br>
+**Status [integer]** : Created | Sent | Delivered | Read<br>
+**Type [integer]** : Incomming | Outgoing<br>
+**Message Date [timestamp]**<br>
 
-#### Contactos
-
-**Id Contacto**
-**Remote Name**
-**Alias**
-**Remote Actor Type**
-**Remote Actor Pub Key**
-**Creation Datetime**
+#### Contactos<br>
+**Id Contacto [integer]**<br>
+**Remote Name [string]**<br>
+**Alias [string]**<br>
+**Remote Actor Type [string]**<br>
+**Remote Actor Pub Key [string]**<br>
+**Creation Date [datetime]**<br>
 
 ## Network Service
 Esta funcionalidad cuenta con un NS que se encarga del envío y recepción de mensajes, y gestionar los estatus de los mismos. A su vez, se consumirán otros servicios relacionados a la consulta de las conexiones dentro de fermat entre los actores. 
+### Protocolos
 
+#### Creación del Chat
 
-----
-**Network Service Remoto**
-Encargado de gestionar la data relacionada a las conexiones y los 
-estatus de los mensajes enviados a través de la plataforma en el servidor.<br>
-**Network Service Local**
-Encargado de gestionar desde el dispositivo (o cliente) las notificaciones y envio de los mensajes.<br>
+#### Envío de Mensaje
 
-El protocolo para los mensajes de texto propuesto a utilizar es XMPP. Se trata de un estandar abierto y ampliamente utilizado por aplicaciones similares.
-----
+#### Notificación de Mensaje Visto
+
 
