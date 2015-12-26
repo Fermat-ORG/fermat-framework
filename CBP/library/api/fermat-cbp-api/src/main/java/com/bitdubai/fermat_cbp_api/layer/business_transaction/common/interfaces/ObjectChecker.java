@@ -44,10 +44,10 @@ public class ObjectChecker {
     public static void checkArguments(
             List checkingArguments) throws
             ObjectNotSetException {
-
         int argumentCounter=0;
         for(Object argument : checkingArguments){
-            checkArgument(argument, "The argument "+argumentCounter+" is null");
+            checkArgument(argument, "The argument " + argumentCounter + " is null");
+            argumentCounter++;
         }
 
     }
@@ -64,7 +64,8 @@ public class ObjectChecker {
 
         int argumentCounter=0;
         for(Object argument : checkingArguments){
-            checkArgument(argument, "The argument "+argumentCounter+" is null");
+            checkArgument(argument, "The argument " + argumentCounter+" is null");
+            argumentCounter++;
         }
 
     }
