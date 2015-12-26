@@ -28,8 +28,36 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 
 ## Current Hierarchy
 
+### Fermat Framework & Network
 
+|- Thunder
+|  |-Franklin's Team
+|  |-Mordor
+|- Code Butchers
+|  |-Nelson's Team
+|- Coin Diggers
+|  |-Disruptors
 
+### Fermat ORG Site
+
+|- Fermat ORG Client
+|- Fermat ORG Server
+
+## Compensation
+
+Team leaders are classified by the deepness of the hierarchy that goes below then. The following table shows the categories related to compensation:
+
+| Category | Description |
+|:-----:|-----:| 
+| Entry Level | New developer on the project. |
+| Veteran | Veteran developer. Working full time 3+ months. |
+| New Team Leader | Team Leader with less than 5 full-time members on the team. |
+| Full Team Leader | Team Leader with 5 full-time members on the team. |
+| Parent Team Leader | Team Leader of a team with one sub-teams |
+| Multi Parent Team Leader | Team Leader with several sub-teams |
+| Grand Parent Team Leader | Team Leader with several sub-teams and one grand children |
+| Multi Parent Team Leader | Team Leader with several sub-teams and several grand children |
+| Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo |
 
 
 <br>
