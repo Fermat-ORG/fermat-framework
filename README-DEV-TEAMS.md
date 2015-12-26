@@ -30,13 +30,16 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 
 ### Fermat Framework & Network
 
-|- Thunder
-|  |-Franklin's Team
-|  |-Mordor
-|- Code Butchers
-|  |-Nelson's Team
-|- Coin Diggers
-|  |-Disruptors
+| Level 1 | Level 2 | Level 3 | Level 4 |
+|:----:|:----:|:----:|:----:|
+| Thunder | | | |
+| | Franklin's Team | | |
+| | Mordor | | |
+| Code Butchers | | | |
+| | Nelson's Team | | |
+| Coin Diggers | | | |
+| | Disruptors | | |
+
 
 ### Fermat ORG Site
 
