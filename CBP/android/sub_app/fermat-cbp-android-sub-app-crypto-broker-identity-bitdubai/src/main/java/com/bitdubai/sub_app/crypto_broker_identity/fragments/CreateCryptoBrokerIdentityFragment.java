@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -38,7 +38,7 @@ import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdent
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
+public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
     private static final String TAG = "CreateBrokerIdentity";
 

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -22,40 +21,42 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
-
 /**
  * Created by Matias Furszyfer on 2015.08.12..
  * Changed by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
-
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesProviderManager> implements
-        View.OnClickListener {
+public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
      */
-    FermatButton positiveBtn;
-    FermatButton negativeBtn;
-    FermatTextView mDescription;
-    FermatTextView mUsername;
-    FermatTextView mSecondDescription;
-    FermatTextView mTitle;
-    CharSequence description;
+    private FermatButton positiveBtn;
+    private FermatButton negativeBtn;
+    private FermatTextView mDescription;
+    private FermatTextView mUsername;
+    private FermatTextView mSecondDescription;
+    private FermatTextView mTitle;
+    private CharSequence description;
 
-    CharSequence secondDescription;
-    CharSequence username;
-    CharSequence title;
+    private CharSequence secondDescription;
+    private CharSequence username;
+    private CharSequence title;
 
-    IntraUserInformation intraUserInformation;
+    private final IntraUserInformation   intraUserInformation;
+    private final IntraUserLoginIdentity identity            ;
 
-    IntraUserLoginIdentity identity;
 
+    public ConnectDialog(final Activity                       a                     ,
+                         final IntraUserSubAppSession         intraUserSubAppSession,
+                         final SubAppResourcesProviderManager subAppResources       ,
+                         final IntraUserInformation           intraUserInformation  ,
+                         final IntraUserLoginIdentity         identity              ) {
 
-    public ConnectDialog(Activity a, IntraUserSubAppSession intraUserSubAppSession, SubAppResourcesProviderManager subAppResources, IntraUserInformation intraUserInformation, IntraUserLoginIdentity identity) {
         super(a, intraUserSubAppSession, subAppResources);
+
         this.intraUserInformation = intraUserInformation;
-        this.identity = identity;
+        this.identity             = identity            ;
     }
 
 
@@ -114,18 +115,18 @@ public class ConnectDialog extends FermatDialog<SubAppsSession, SubAppResourcesP
             try {
                 //image null
                 if (intraUserInformation != null && identity != null) {
-                    ((IntraUserSubAppSession) getSession()).getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                    getSession().getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                    super.toastDefaultError();
                 }
                 dismiss();
             } catch (CantStartRequestException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                super.toastDefaultError();
             }
 
             dismiss();

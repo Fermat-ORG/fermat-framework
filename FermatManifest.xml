@@ -1,4 +1,7 @@
-<fermat>
+<?xml version="1.0"?>
+<fermat xmlns="http://www.w3schools.com"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="FermatManifest.xsd" >
     <platforms>
         <platform code="COR" name="Core And Api" logo="COR_logo.png">
 
@@ -2153,7 +2156,7 @@
                 </plugins>
             </layer>
 
-            <layer name="Basic Wallet" language="java">
+            <layer name="Wallet" language="java">
                 <plugins>
                     <plugin
                         name="Bitcoin Wallet"
@@ -8886,7 +8889,7 @@
             previous="">
             <steps>
                 <step id="0" title="Customer set the info to start a New Negotiation"
-                    description="The Crypto Customer indicates he wants to start a new negotiation with a selected Crypto Broker passing the necesary info" (merchandise, amount to buy, hoy to recive the merchandise, etc)
+                    description="The Crypto Customer indicates he wants to start a new negotiation with a selected Crypto Broker passing the necesary info (merchandise, amount to buy, hoy to recive the merchandise, etc)"
                     type="start"
                     platform="CBP"
                     name="Crypto Customer"

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
@@ -33,7 +33,7 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class MainFragment extends FermatWalletFragment
+public class MainFragment extends AbstractFermatFragment
         implements PopupMenu.OnMenuItemClickListener {
 
     private AssetRedeemPointWalletSubAppModule manager;

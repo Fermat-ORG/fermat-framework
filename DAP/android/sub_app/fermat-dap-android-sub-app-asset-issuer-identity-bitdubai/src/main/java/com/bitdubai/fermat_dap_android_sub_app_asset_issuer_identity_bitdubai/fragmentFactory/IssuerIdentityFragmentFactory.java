@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.fragments.CreateIdentityFragment;
@@ -17,7 +17,7 @@ public class IssuerIdentityFragmentFactory extends FermatFragmentFactory<IssuerI
 
 
     @Override
-    public FermatFragment getFermatFragment(IssuerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(IssuerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
 
         if (fragments.equals(IssuerIdentityFragmentsEnumType.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT))
             return IdentityListFragment.newInstance();
