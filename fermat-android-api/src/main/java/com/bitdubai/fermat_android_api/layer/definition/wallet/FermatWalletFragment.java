@@ -14,7 +14,7 @@
 ///**
 // * Created by Matias Furszyfer on 2015.26.21..
 // */
-//public class AbstractFermatFragment extends AbstractFermatFragment {
+//public class fermatFragment extends fermatFragment {
 //
 //
 //    /**

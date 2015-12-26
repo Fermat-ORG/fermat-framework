@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
@@ -43,7 +43,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIntraUserIdentityFragment extends FermatFragment {
+public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private static final String TAG = "CreateBrokerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;

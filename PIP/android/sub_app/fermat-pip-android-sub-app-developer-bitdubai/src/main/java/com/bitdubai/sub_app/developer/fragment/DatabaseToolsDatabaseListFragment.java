@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -45,7 +45,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseListFragment extends FermatFragment {
+public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();

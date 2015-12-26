@@ -19,7 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -45,7 +45,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * Creado por Jose Manuel De Sousa on 29/11/15.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionOtherProfileFragment extends FermatFragment implements MessageReceiver, View.OnClickListener {
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements MessageReceiver, View.OnClickListener {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private Resources res;

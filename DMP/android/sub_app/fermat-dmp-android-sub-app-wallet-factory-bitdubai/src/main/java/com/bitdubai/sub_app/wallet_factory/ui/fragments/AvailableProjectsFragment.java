@@ -16,7 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragment extends FermatFragment
+public class AvailableProjectsFragment extends AbstractFermatFragment
         implements SwipeRefreshLayout.OnRefreshListener, OnMenuItemClickListener {
 
     private final String TAG = "FactoryProjects";
@@ -63,7 +63,7 @@ public class AvailableProjectsFragment extends FermatFragment
 
     private ArrayList<InstalledWallet> dataSet;
 
-    public static FermatFragment newInstance() {
+    public static AbstractFermatFragment newInstance() {
         return new AvailableProjectsFragment();
     }
 

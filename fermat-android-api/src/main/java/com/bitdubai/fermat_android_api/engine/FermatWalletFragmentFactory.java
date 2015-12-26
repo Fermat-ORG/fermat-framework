@@ -2,8 +2,8 @@
 //
 //import android.app.Fragment;
 //
-//import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-//import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+//import com.bitdubai.fermat_android_api.layer.definition.wallet.fermatFragment;
+//import com.bitdubai.fermat_android_api.layer.definition.wallet.fermatFragment;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -17,7 +17,7 @@
 // */
 //public abstract class FermatWalletFragmentFactory <S extends WalletSession,F extends FermatFragmentsEnumType> implements WalletFragmentFactory<S> {
 //
-//    protected AbstractFermatFragment fermatFragment;
+//    protected fermatFragment fermatFragment;
 //
 //    /**
 //     * This method takes a reference (string) to a fragment and returns the corresponding fragment.
@@ -35,7 +35,7 @@
 //        return fermatFragment;
 //    }
 //
-//    public abstract AbstractFermatFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
+//    public abstract fermatFragment getFermatFragment(F fragments) throws FragmentNotFoundException;
 //
 //    public abstract F getFermatFragmentEnumType(String key);
 //
