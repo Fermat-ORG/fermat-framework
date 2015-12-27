@@ -103,7 +103,7 @@ public final class FermatPluginManager {
     @Deprecated // TODO temporal
     private void initDeveloperTools() throws Exception {
         if (dealsWithLogManagers == null) {
-            dealsWithDatabaseManagers = (DealsWithDatabaseManagers) startPluginAndReferences(
+            dealsWithDatabaseManagers = (DealsWithDatabaseManagers) systemContext.getPluginVersion(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.SUB_APP_MODULE,
