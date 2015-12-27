@@ -202,7 +202,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
                     NeededIndirectPluginReferences neededIndirectPluginReferences = (NeededIndirectPluginReferences) a;
 
-                    for (NeededPluginReference npr : neededIndirectPluginReferences.value()) {
+                    for (NeededPluginReference npr : neededIndirectPluginReferences.indirectReferences()) {
                         this.indirectNeededPluginReferences.add(
                                 new PluginVersionReference(
                                         npr.platform(),
