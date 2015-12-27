@@ -5,11 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by Angel 28/11/2015
+ * Updated by Manuel Perez on 22/12/2015
  */
 public enum ContractClauseType implements FermatEnum {
     CRYPTO_TRANSFER("CRT"),
     BANK_TRANSFER("BAT"),
-    CAHS_DELIVERY("CAD"),
+    CASH_DELIVERY("CAD"),
     CASH_ON_HAND("COH");
 
     private final String code;
@@ -25,10 +26,10 @@ public enum ContractClauseType implements FermatEnum {
 
     public static ContractClauseType getByCode(final String code) throws InvalidParameterException{
         switch (code){
-            case "CUSCUR": return CRYPTO_TRANSFER;
-            case "EXCRAT": return BANK_TRANSFER;
-            case "BROCUR": return CAHS_DELIVERY;
-            case "CUSCURQUA": return CASH_ON_HAND;
+            case "CRT": return CRYPTO_TRANSFER;
+            case "BAT": return BANK_TRANSFER;
+            case "CAD": return CASH_DELIVERY;
+            case "COH": return CASH_ON_HAND;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseType enum");
         }
     }

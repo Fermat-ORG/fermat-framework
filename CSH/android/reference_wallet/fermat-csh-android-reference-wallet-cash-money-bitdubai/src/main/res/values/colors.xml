@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="csh_summary_top_background_color">#0d47a1</color>
+    <color name="csh_summary_top_background_color">#1565c0</color>
     <color name="csh_transactions_background_color">#c5cae9</color>
 
     <color name="csh_summary_top_balance_text_color">#ffffff</color>
     <color name="csh_summary_top_balance_amount_text_color">#c5cae9</color>
+
+    <color name="csh_setup_background_color">#1565c0</color>
 
 
     <color name="background_tab_pressed">#6633B5E5</color>
@@ -21,6 +23,10 @@
     <color name="csh_fab_plus_icon_color">#808080</color>
     <color name="csh_fab_color_normal">#fafafa</color>
     <color name="csh_fab_color_pressed">#f1f1f1</color>
+    <color name="csh_fab_color_normal_w">#FD0018</color>
+    <color name="csh_fab_color_normal_d">#00B8FE</color>
+    <color name="csh_fab_color_pressed_w">#bf0012</color>
+    <color name="csh_fab_color_pressed_d">#0088bc</color>
     <color name="csh_fab_black_semi_transparent">#B2000000</color>
     <color name="white">#ffffff</color>
 

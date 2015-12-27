@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.module.developer.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 
@@ -9,8 +9,8 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogTo
  */
 public interface ToolManager extends ModuleManager {
 
-public DatabaseTool getDatabaseTool() throws CantGetDataBaseToolException;
+    DatabaseTool getDatabaseTool() throws CantGetDataBaseToolException;
 
-public LogTool getLogTool() throws CantGetLogToolException;
+    LogTool getLogTool() throws CantGetLogToolException;
 
 }

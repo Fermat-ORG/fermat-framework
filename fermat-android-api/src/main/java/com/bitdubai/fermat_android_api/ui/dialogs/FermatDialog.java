@@ -121,4 +121,8 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
     protected Activity getActivity(){
         return activity;
     }
+
+    protected void toastDefaultError() {
+        Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+    }
 }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/csh_setup_background_color"
+    >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/setup_container"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@color/csh_setup_background_color"
+        android:visibility="invisible"
+        >
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:text="WELCOME"
+            android:layout_gravity="center_vertical"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="@dimen/csh_large_text_size"
+            />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:text="Please choose a currency for this cash wallet"
+            android:layout_gravity="center_vertical"
+            android:textColor="#fff"
+            android:textSize="@dimen/csh_regular_text_size"
+            />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="This step can not be undone"
+            android:layout_gravity="center_vertical"
+            android:textColor="#fff"
+            android:textSize="@dimen/csh_regular_text_size"
+            />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="60dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            >
+
+
+            <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="SPINNER QUE NO SE VE NO SE POR QUE!!"
+                android:layout_gravity="center_vertical"
+                android:textColor="#ff792b"
+                android:textSize="@dimen/csh_regular_text_size"
+                />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dip"
+                android:layout_marginLeft="15dip"
+                android:id="@+id/csh_setup_currency_spinnera"
+                android:layout_gravity="center_horizontal"
+                android:entries="@array/spinnerItems"
+
+                android:textColor="#2c648f"
+                android:background="#FFF"/>-->
+
+            <Spinner
+                android:id="@+id/csh_setup_currency_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true"
+
+            />
+
+       <!--<View
+           android:layout_width="match_parent"
+           android:layout_height="2dip"
+           android:background="#EEE"
+           android:layout_marginTop="15dp"
+           android:layout_marginBottom="15dp"
+           />-->
+
+
+            <!--<Button
+                android:id="@+id/csh_setup_back_btn"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="140dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginLeft="15dip"
+                android:background="#efefef"
+                android:text="Go back"
+                android:textColor="#666666"
+                android:textSize="14sp" />-->
+
+
+            <Button
+                android:id="@+id/csh_setup_ok_btn"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="170dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginLeft="15dip"
+                android:background="#FFF"
+                android:text="OK"
+                android:textColor="#2c648f"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

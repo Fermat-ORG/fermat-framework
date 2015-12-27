@@ -41,12 +41,15 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateN
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDisconnectIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantSetPhotoException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraWalletUserActorDao;
@@ -66,6 +69,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -407,6 +411,29 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         return intraWalletUserActorDao.isConnectionExist(publicKey);
     }
 
+    @Override
+    public ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUsersConnectedStateException {
+
+        try {
+
+            IntraWalletUserActor intraWalletUserActor;
+
+            intraWalletUserActor = intraWalletUserActorDao.getIntraUserConnectedInfo(intraUserConnectedPublicKey);
+
+                    if(intraWalletUserActor != null)
+                        return intraWalletUserActor.getContactState();
+                    else
+                        return ConnectionState.NO_CONNECTED;
+
+
+        } catch (CantGetIntraWalletUsersListException e) {
+            throw new CantGetIntraUsersConnectedStateException("CAN'T GET INTRA USER CONNECTED STATUS", e, "Error get database info", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUsersConnectedStateException("CAN'T GET INTRA USER CONNECTED STATUS", FermatException.wrapException(e), "", "");
+        }
+    }
+
+
 
     private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
         try {
@@ -641,6 +668,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                         break;
                     case DENIED:
                         this.denyConnection(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        break;
+                    case INTRA_USER_NOT_FOUND:
+                        this.intraWalletUserActorDao.updateConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, ConnectionState.INTRA_USER_NOT_FOUND);
+
                         break;
                     default:
                         break;

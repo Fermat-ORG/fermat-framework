@@ -14,6 +14,8 @@ public interface ContractBasicInformation {
      */
     float getAmount();
 
+    String getCancellationReason();
+
     /**
      * @return the contract ID
      */
@@ -43,6 +45,11 @@ public interface ContractBasicInformation {
      * @return the merchandise to buy
      */
     String getMerchandise();
+
+    /**
+     * @return the negotiation ID
+     */
+    UUID getNegotiationId();
 
     /**
      * @return the payment currency

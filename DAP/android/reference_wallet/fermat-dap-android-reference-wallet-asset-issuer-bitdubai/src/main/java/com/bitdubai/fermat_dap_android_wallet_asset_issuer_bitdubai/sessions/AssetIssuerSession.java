@@ -36,6 +36,11 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     private ErrorManager errorManager;
 
     /**
+     *  Wallet Settings
+     */
+    private WalletSettings walletSettings;
+
+    /**
      * Constructor
      *
      * @param
@@ -56,9 +61,9 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     }
 
 
-    public InstalledWallet getWalletSessionType() {
-        return null;
-    }
+//    public InstalledWallet getWalletSessionType() {
+//        return null;
+//    }
 
     @Override
     public void setData(String key, Object object) {
@@ -67,7 +72,7 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
 
     @Override
     public String getIdentityConnection() {
-        return null;
+        return "public_key_dap_asset_issuer_identity";
     }
 
     @Override
@@ -80,13 +85,13 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
         return errorManager;
     }
 
-    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return null;
-    }
+//    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
+//        return null;
+//    }
 
     @Override
     public WalletSettings getWalletSettings() {
-        return null;
+        return this.walletSettings;
     }
 
 

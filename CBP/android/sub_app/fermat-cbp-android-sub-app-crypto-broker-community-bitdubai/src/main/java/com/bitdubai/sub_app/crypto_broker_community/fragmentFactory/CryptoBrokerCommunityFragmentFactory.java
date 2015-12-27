@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_community.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionNotificationsFragment;
@@ -19,11 +19,11 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<CryptoBrokerCommunitySubAppSession,SubAppResourcesProviderManager, CryptoBrokerCommunityFragmentsEnumType> {
+public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager, CryptoBrokerCommunityFragmentsEnumType> {
 
 
    /* @Override
-    public FermatFragment getFermatFragment(final CryptoBrokerCommunityFragmentsEnumType fragment) throws FragmentNotFoundException {
+    public fermatFragment getFermatFragment(final CryptoBrokerCommunityFragmentsEnumType fragment) throws FragmentNotFoundException {
 
         switch (fragment) {
 
@@ -48,7 +48,7 @@ public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerCommunityFragmentsEnumType fragments) throws FragmentNotFoundException {
-        FermatFragment currentFragment = null;
+        AbstractFermatFragment currentFragment = null;
 
         switch (fragments) {
             case CWP_WALLET_STORE_ALL_FRAGMENT:

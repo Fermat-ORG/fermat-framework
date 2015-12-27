@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -17,7 +19,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @author Francisco Vasquez
  * @version 1.0
  */
-public abstract class FermatWizardPageFragment extends Fragment
+public abstract class FermatWizardPageFragment extends AbstractFermatFragment
         implements WizardPageListener {
 
     private final String TAG = "FermatWizardPage";

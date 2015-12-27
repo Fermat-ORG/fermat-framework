@@ -22,7 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -42,7 +42,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIdentityFragment extends FermatFragment {
+public class CreateIdentityFragment extends AbstractFermatFragment {
     private static final String TAG = "CreateBrokerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
@@ -174,10 +174,10 @@ public class CreateIdentityFragment extends FermatFragment {
     }
 
     private void loadIdentity(){
-        if (identitySelected.getProfileImage() != null) {
+        if (identitySelected.getImage() != null) {
             Bitmap bitmap = null;
-            if (identitySelected.getProfileImage().length > 0) {
-                bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
+            if (identitySelected.getImage().length > 0) {
+                bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             }else{
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);

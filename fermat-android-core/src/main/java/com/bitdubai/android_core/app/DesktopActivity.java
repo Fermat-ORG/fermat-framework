@@ -51,10 +51,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activePlatforms = getIntent().getParcelableArrayListExtra(StartActivity.ACTIVE_PLATFORMS);
-
-        developMode = getIntent().getBooleanExtra(DEVELOP_MODE,false);
-
         setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
 
         try {
@@ -302,7 +298,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
              */
             Activity activity = getActivityUsedType();
 
-            loadBasicUI(activity);
+            //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
+            loadBasicUI(activity,null);
 
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
@@ -372,12 +369,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         try {
             String activityCode = data.getLinkToActivity().getCode();
             if(activityCode.equals("develop_mode")){
-                developMode = true;
                 onBackPressed();
             }else
                 changeActivity(activityCode,data.getAppLinkPublicKey());
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
     @Override

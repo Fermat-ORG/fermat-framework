@@ -20,7 +20,7 @@ import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -51,7 +51,7 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class EditableAssetsFragment extends FermatFragment implements
+public class EditableAssetsFragment extends AbstractFermatFragment implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     /**
@@ -270,7 +270,7 @@ public class EditableAssetsFragment extends FermatFragment implements
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_edit) {
             if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
-                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
             else
                 selectedAsset = null;
         } else if (menuItem.getItemId() == R.id.action_publish) {

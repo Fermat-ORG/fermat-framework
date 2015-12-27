@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -85,14 +86,25 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
+        openNegotiationList = new ArrayList<>();
+        marketExchangeRateSummaryList = new ArrayList<>();
+        Object configureData = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
+        if (configureData == null) {
+            startWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), appSession);
+        }else{
+            openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
+        }
+
+
     }
 
 
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
+
 
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
@@ -115,7 +127,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         try {
             CryptoBrokerNavigationViewPainter navigationViewPainter = new CryptoBrokerNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -171,9 +183,9 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
-            // setting up event listeners
-            adapter.setChildItemFermatEventListeners(this);
+                adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
+                // setting up event listeners
+                adapter.setChildItemFermatEventListeners(this);
         }
         return adapter;
     }

@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
 /**
@@ -26,7 +26,7 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
 
 
     @Override
-    public View addNavigationViewHeader() {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         /*try {
             return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
@@ -67,6 +67,11 @@ public class BankMoneyWalletNavigationViewPainter implements com.bitdubai.fermat
 
     @Override
     public boolean hasBodyBackground() {
+        return false;
+    }
+
+    @Override
+    public boolean hasClickListener() {
         return false;
     }
 }

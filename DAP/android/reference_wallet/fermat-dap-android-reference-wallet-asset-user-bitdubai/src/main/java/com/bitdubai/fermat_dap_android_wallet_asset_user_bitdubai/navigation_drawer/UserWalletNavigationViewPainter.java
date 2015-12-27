@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.navigation_dr
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,24 +11,30 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 
 /**
  * Created by frank on 12/9/15.
  */
 public class UserWalletNavigationViewPainter implements NavigationViewPainter {
-    private Activity activity;
-    private final IdentityAssetUser identityAssetUser;
 
-    public UserWalletNavigationViewPainter(Activity activity, IdentityAssetUser identityAssetUser) {
+    private Activity activity;
+    private final ActiveActorIdentityInformation identityAssetUser;
+
+    public UserWalletNavigationViewPainter(Activity activity, ActiveActorIdentityInformation identityAssetUser) {
         this.activity = activity;
         this.identityAssetUser = identityAssetUser;
     }
 
     @Override
-    public View addNavigationViewHeader() {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetUser) {
+        try {
+            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, identityAssetUser);
+        } catch (CantGetIdentityAssetUserException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -45,7 +50,7 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_wallet_asset_user_navigation_view_bottom, base, true);
+        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_user_wallet_bottom, base, true);
     }
 
     @Override
@@ -56,8 +61,8 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.color.fab_material_white);
-        }catch (OutOfMemoryError error){
+                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
+        } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
         return drawable;
@@ -65,7 +70,7 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return 0;
     }
 
     @Override
@@ -76,5 +81,10 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
     @Override
     public boolean hasBodyBackground() {
         return true;
+    }
+
+    @Override
+    public boolean hasClickListener() {
+        return false;
     }
 }

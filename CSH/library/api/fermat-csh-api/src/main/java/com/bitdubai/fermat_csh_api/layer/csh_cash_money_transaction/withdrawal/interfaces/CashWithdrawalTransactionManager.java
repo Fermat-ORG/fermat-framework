@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
 
 /**
@@ -8,6 +9,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.e
  */
 public interface CashWithdrawalTransactionManager extends FermatManager {
 
-    CashWithdrawalTransaction createCashWithdrawalTransaction(CashWithdrawalTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException;
+    CashWithdrawalTransaction createCashWithdrawalTransaction(CashWithdrawalTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException, CashMoneyWalletInsufficientFundsException;
 
 }

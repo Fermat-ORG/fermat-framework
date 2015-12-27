@@ -3,6 +3,8 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
@@ -62,7 +65,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     /**
      *  UI components
      */
-    FermatTextView dialogTitleText;
+    FermatTextView dialogTitle;
     EditText amountText;
     AutoCompleteTextView memoText;
     Button applyBtn;
@@ -107,14 +110,15 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             setContentView(R.layout.create_transaction_dialog);
 
 
-            dialogTitleText = (FermatTextView) findViewById(R.id.csh_ctd_title);
+            dialogTitle = (FermatTextView) findViewById(R.id.csh_ctd_title);
+            //dialogTitleImg = (FermatTextView) findViewById(R.id.csh_ctd_title_img);
             amountText = (EditText) findViewById(R.id.csh_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.csh_ctd_memo);
             applyBtn = (Button) findViewById(R.id.csh_ctd_apply_transaction_btn);
             cancelBtn = (Button) findViewById(R.id.csh_ctd_cancel_transaction_btn);
 
 
-            dialogTitleText.setText(getTransactionTitleText());
+            dialogTitle.setText(getTransactionTitleText());
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
             cancelBtn.setOnClickListener(this);
@@ -161,6 +165,14 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             return resources.getString(R.string.deposit_transaction_text);
     }
 
+    private int getTransactionTitleColor()
+    {
+        if (transactionType == TransactionType.DEBIT)
+            return resources.getColor(R.color.csh_fab_color_normal_w);
+        else
+            return resources.getColor(R.color.csh_fab_color_normal_d);
+    }
+
 
 
     @Override
@@ -196,17 +208,19 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
 
             if (transactionType == TransactionType.DEBIT) {
-                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
+                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
                 try {
                     cashMoneyWalletSession.getModuleManager().createCashWithdrawalTransaction(t);
                     //updateWalletBalances(view.getRootView());
 
                 } catch (CantCreateWithdrawalTransactionException e) {
                     Toast.makeText(activity.getApplicationContext(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
+                } catch (CashMoneyWalletInsufficientFundsException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds!", Toast.LENGTH_SHORT).show();
                 }
             }
             else if(transactionType == TransactionType.CREDIT) {
-                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "publicKeyWalletMock", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
+                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
                 try {
                     cashMoneyWalletSession.getModuleManager().createCashDepositTransaction(t);
                     //updateWalletBalances(view.getRootView());

@@ -32,11 +32,13 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
     float referencePrice;
     ContractStatus status;
     String contractHash;
+    Boolean nearExpirationDatetime;
+
     /**
      * Represents the contract id/hash
      * @return
      */
-    //@Override
+    
     public String getContractId() {
         return contractHash;
     }
@@ -55,18 +57,15 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
         this.contractHash=CryptoHasher.performSha256(this.toString());
         return this.contractHash;
     }
-
-    //@Override
+    
     public float getMerchandiseAmount() {
         return this.merchandiseAmount;
     }
 
-    //@Override
     public CurrencyType getMerchandiseCurrency() {
         return this.merchandiseCurrency;
     }
 
-    //@Override
     public long getMerchandiseDeliveryExpirationDate() {
         return this.merchandiseDeliveryExpirationDate;
     }
@@ -75,47 +74,39 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
         return this.negotiationId;
     }
 
-    //@Override
     public float getPaymentAmount() {
         return this.paymentAmount;
     }
 
-    //@Override
     public CurrencyType getPaymentCurrency() {
         return this.paymentCurrency;
     }
 
-    //@Override
     public long getPaymentExpirationDate() {
         return this.paymentExpirationDate;
     }
 
-    //@Override
     public String getPublicKeyBroker() {
         return this.publicKeyBroker;
     }
 
     @Override
-    public long getDateTime() {
+    public Long getDateTime() {
         return this.dayTime;
     }
 
-    //@Override
     public String getPublicKeyCustomer() {
         return this.publicKeyCustomer;
     }
 
-    //@Override
     public ReferenceCurrency getReferenceCurrency() {
         return this.referenceCurrency;
     }
 
-    //@Override
     public float getReferencePrice() {
         return this.referencePrice;
     }
 
-    //@Override
     public ContractStatus getStatus() {
         return status;
     }
@@ -123,6 +114,15 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
     @Override
     public Collection<ContractClause> getContractClause() {
         return this.contractClauses;
+    }
+
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        return nearExpirationDatetime;
+    }
+
+    public void setNearExpirationDatetime(Boolean nearExpirationDatetime) {
+        this.nearExpirationDatetime = nearExpirationDatetime;
     }
 
     public void setContractClauses(Collection<ContractClause> contractClauses){
@@ -192,26 +192,25 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
      * I generate an XML with the class structure.
      * @return
      */
-    //@Override
+    @Override
     public String toString() {
-        String contractString="Contract details: {\n" +
-                "Contract Clauses: "+contractClauses+"\n" +
-                "Day time: "+dayTime+"\n" +
-                "Merchandise Currency: "+merchandiseCurrency+"\n" +
-                "Merchandise Amount: "+merchandiseAmount+"\n" +
-                "Merchandise Delivery Expiration Date: "+merchandiseDeliveryExpirationDate+"\n" +
-                "Negotiation Id: "+negotiationId+"\n" +
-                "Payment Amount: "+paymentAmount+"\n" +
-                "Payment Currency: "+paymentCurrency+"\n" +
-                "Payment Expiration Date: "+paymentExpirationDate+"\n" +
-                "Broker Public Key: "+publicKeyBroker+"\n" +
-                "Customer Public Key: "+publicKeyCustomer+"\n" +
-                "Reference Currency: "+referenceCurrency+"\n" +
-                "Reference Price: "+referencePrice+"\n" +
-                "Status: "+status+"\n" +
-                "Contract Hash: "+contractHash+"\n" +
-                "}";
-        return contractString;
+        return "ContractPurchaseRecord{" +
+                "contractClauses=" + contractClauses +
+                ", dayTime=" + dayTime +
+                ", merchandiseCurrency=" + merchandiseCurrency +
+                ", merchandiseAmount=" + merchandiseAmount +
+                ", merchandiseDeliveryExpirationDate=" + merchandiseDeliveryExpirationDate +
+                ", negotiationId='" + negotiationId + '\'' +
+                ", paymentAmount=" + paymentAmount +
+                ", paymentCurrency=" + paymentCurrency +
+                ", paymentExpirationDate=" + paymentExpirationDate +
+                ", publicKeyBroker='" + publicKeyBroker + '\'' +
+                ", publicKeyCustomer='" + publicKeyCustomer + '\'' +
+                ", referenceCurrency=" + referenceCurrency +
+                ", referencePrice=" + referencePrice +
+                ", status=" + status +
+                ", contractHash='" + contractHash + '\'' +
+                ", nearExpirationDatetime=" + nearExpirationDatetime +
+                '}';
     }
-
 }

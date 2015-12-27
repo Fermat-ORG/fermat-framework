@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
@@ -73,9 +74,9 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     private void createTestWalletIfNotExists() {
         //System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
 
-        if(!cashMoneyWalletExists("publicKeyWalletMock")) {
+        if(!cashMoneyWalletExists("cash_wallet")) {
             try {
-                createCashMoneyWallet("publicKeyWalletMock", FiatCurrency.US_DOLLAR);
+                createCashMoneyWallet("cash_wallet", FiatCurrency.US_DOLLAR);
             } catch (CantCreateCashMoneyWalletException e) {}
         }
     }
@@ -84,7 +85,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         //System.out.println("CASHWALLET - testDeposits CALLED");
 
         try {
-            CashMoneyWallet wallet = loadCashMoneyWallet("publicKeyWalletMock");
+            CashMoneyWallet wallet = loadCashMoneyWallet("cash_wallet");
             wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(10000), "testCreditFromWallet");
             wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(8000), "testDebitFromWallet");
 
@@ -98,7 +99,9 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         } catch (CantRegisterCreditException e) {
             System.out.println("CASHWALLET - testCashWallet() - CantRegisterCreditException");
         } catch (CantRegisterDebitException e) {
-            System.out.println("CASHWALLET - testCashWallet() - CantRegisterCreditException");
+            System.out.println("CASHWALLET - testCashWallet() - CantRegisterDebitException");
+        }catch (CashMoneyWalletInsufficientFundsException e) {
+            System.out.println("CASHWALLET - testCashWallet() - CashMoneyWalletInsufficientFundsException");
         }
     }
 
@@ -139,7 +142,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "WalletCashMoneyPluginRoot", null);
         }
 
-        createTestWalletIfNotExists();
+        //createTestWalletIfNotExists();
         //testDeposits();
     }
 

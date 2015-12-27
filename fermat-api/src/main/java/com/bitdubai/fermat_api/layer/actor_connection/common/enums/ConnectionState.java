@@ -18,11 +18,13 @@ public enum ConnectionState implements FermatEnum {
     CANCELLED_LOCALLY           ("CAL"),
     CANCELLED_REMOTELY          ("CAR"),
     CONNECTED                   ("CTD"),
+    NO_CONNECTED                ("NCTD"),
     DENIED_LOCALLY              ("DNL"),
     DENIED_REMOTELY             ("DNR"),
     DISCONNECTED_LOCALLY        ("DSL"),
     DISCONNECTED_REMOTELY       ("DSR"),
     ERROR                       ("ERR"),
+    INTRA_USER_NOT_FOUND         ("IUNF"),
     PENDING_LOCALLY_ACCEPTANCE  ("PLA"),
     PENDING_REMOTELY_ACCEPTANCE ("PRA");
 
@@ -48,6 +50,7 @@ public enum ConnectionState implements FermatEnum {
             case "ERR": return ERROR                      ;
             case "PLA": return PENDING_LOCALLY_ACCEPTANCE ;
             case "PRA": return PENDING_REMOTELY_ACCEPTANCE;
+            case "IUNF": return INTRA_USER_NOT_FOUND;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,

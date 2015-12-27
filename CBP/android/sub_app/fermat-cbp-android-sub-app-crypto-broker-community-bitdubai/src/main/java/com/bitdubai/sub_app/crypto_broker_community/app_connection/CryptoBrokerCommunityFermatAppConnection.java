@@ -14,9 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.FermatSettings;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_community.preference_settings.CryptoBrokerCommunityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
@@ -39,9 +37,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
-                Plugins.INTRA_WALLET_USER,
+                Plugins.CRYPTO_BROKER_COMMUNITY,
                 Developers.BITDUBAI,
                 new Version()
         );

@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
@@ -246,5 +247,15 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException {
         return bitcoinCryptoNetworkManager.getCryptoStatus(transactionId);
+    }
+
+    /**
+     * Will check and fix any inconsistency that may be in out transaction table.
+     * For example, If i don't have all adressTo or From, or coin values of zero.
+     * @throws CantFixTransactionInconsistenciesException
+     */
+    @Override
+    public void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
+        bitcoinCryptoNetworkManager.fixTransactionInconsistencies();
     }
 }

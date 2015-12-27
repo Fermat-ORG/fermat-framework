@@ -3,17 +3,16 @@ package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.develop
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterHoldException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CashMoneyWalletNotLoadedException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
 
@@ -121,7 +120,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
             if (cashMoneyWallet == null || transaction.getPublicKeyWallet() != lastPublicKey) {
                 try {
                     //cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet(transaction.getPublicKeyWallet());
-                    cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet("publicKeyWalletMock");
+                    cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet("cash_wallet");
                 } catch (CantLoadCashMoneyWalletException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                     continue;
@@ -132,7 +131,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
             try {
                 cashMoneyWallet.hold(transaction.getTransactionId(), transaction.getPublicKeyActor(), transaction.getPublicKeyPlugin(), transaction.getAmount(), transaction.getMemo());
                 holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
-            } catch (CantRegisterHoldException e) {         //Reject si no hay fondos
+            } catch (CantRegisterHoldException | CashMoneyWalletInsufficientFundsException e) {         //Reject si no hay fondos o no se puede hacer el hold por alguna razon
                 try {
                     holdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
                 } catch (CantUpdateHoldTransactionException ex) {

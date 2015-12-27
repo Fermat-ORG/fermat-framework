@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by root on 14/12/15.
+ * Created by Gabriel Araujo (gabe_512@hotmail.com) on 14/12/15.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetTransactionIdTest {

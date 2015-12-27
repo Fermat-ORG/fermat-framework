@@ -47,6 +47,11 @@ public class IntraUserActorRecord implements Actor {
     }
 
     @Override
+    public String getPhrase() {
+        return "";
+    }
+
+    @Override
     public Actors getType() {
         return Actors.INTRA_USER;
     }
