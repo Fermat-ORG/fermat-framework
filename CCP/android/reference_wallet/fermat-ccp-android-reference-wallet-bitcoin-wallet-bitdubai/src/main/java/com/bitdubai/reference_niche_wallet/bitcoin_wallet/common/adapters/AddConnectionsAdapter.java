@@ -52,14 +52,14 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
                     roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), profileImage);
                     holder.getThumbnail().setImageDrawable(roundedBitmap);
                 } else {
-                    Picasso.with(context).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.getThumbnail());
+                    Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
                 }
             } else {
-                Picasso.with(context).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.getThumbnail());
-                //roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.profile_image_standard);
+                Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
+                //roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male);
             }
         }catch (Exception e){
-            Picasso.with(context).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.getThumbnail());
+            Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
         }
 
 
