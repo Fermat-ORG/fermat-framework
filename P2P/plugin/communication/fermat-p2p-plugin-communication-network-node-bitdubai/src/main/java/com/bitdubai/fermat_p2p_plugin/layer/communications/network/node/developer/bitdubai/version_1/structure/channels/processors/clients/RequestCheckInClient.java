@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestProfileCheckInMsg;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj;
@@ -82,41 +83,14 @@ public class RequestCheckInClient extends PackageProcessor {
                 clientProfile = (ClientProfile) messageContent.getProfileToRegister();
 
                 /*
-                 * Create the CheckedInClient
+                 * CheckedInClient into data base
                  */
-                CheckedInClient checkedInClient = new CheckedInClient();
-                checkedInClient.setIdentityPublicKey(clientProfile.getIdentityPublicKey());
-                checkedInClient.setDeviceType(clientProfile.getDeviceType());
-
-                //Validate if location are available
-                if (clientProfile.getLocation() != null){
-                    checkedInClient.setLatitude(clientProfile.getLocation().getLatitude());
-                    checkedInClient.setLongitude(clientProfile.getLocation().getLongitude());
-                }
+                insertCheckedInClient(clientProfile);
 
                 /*
-                 * Save into the data base
+                 * CheckedClientsHistory into data base
                  */
-                getDaoFactory().getCheckedInClientDao().create(checkedInClient);
-
-                /*
-                 * Create the CheckedClientsHistory
-                 */
-                CheckedClientsHistory checkedClientsHistory = new CheckedClientsHistory();
-                checkedClientsHistory.setIdentityPublicKey(clientProfile.getIdentityPublicKey());
-                checkedClientsHistory.setDeviceType(clientProfile.getDeviceType());
-                checkedClientsHistory.setCheckType(CheckedClientsHistory.CHECK_TYPE_IN);
-
-                //Validate if location are available
-                if (clientProfile.getLocation() != null){
-                    checkedClientsHistory.setLastLatitude(clientProfile.getLocation().getLatitude());
-                    checkedClientsHistory.setLastLongitude(clientProfile.getLocation().getLongitude());
-                }
-
-                /*
-                 * Save into the data base
-                 */
-                getDaoFactory().getCheckedClientsHistoryDao().create(checkedClientsHistory);
+                insertCheckedClientsHistory(clientProfile);
 
                 /*
                  * If all ok, respond whit success message
@@ -157,4 +131,61 @@ public class RequestCheckInClient extends PackageProcessor {
         }
 
     }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param clientProfile
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertCheckedInClient(ClientProfile clientProfile) throws CantInsertRecordDataBaseException {
+
+        /*
+         * Create the CheckedInClient
+         */
+        CheckedInClient checkedInClient = new CheckedInClient();
+        checkedInClient.setIdentityPublicKey(clientProfile.getIdentityPublicKey());
+        checkedInClient.setDeviceType(clientProfile.getDeviceType());
+
+        //Validate if location are available
+        if (clientProfile.getLocation() != null){
+            checkedInClient.setLatitude(clientProfile.getLocation().getLatitude());
+            checkedInClient.setLongitude(clientProfile.getLocation().getLongitude());
+        }
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getCheckedInClientDao().create(checkedInClient);
+    }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param clientProfile
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertCheckedClientsHistory(ClientProfile clientProfile) throws CantInsertRecordDataBaseException {
+
+        /*
+         * Create the CheckedClientsHistory
+         */
+        CheckedClientsHistory checkedClientsHistory = new CheckedClientsHistory();
+        checkedClientsHistory.setIdentityPublicKey(clientProfile.getIdentityPublicKey());
+        checkedClientsHistory.setDeviceType(clientProfile.getDeviceType());
+        checkedClientsHistory.setCheckType(CheckedClientsHistory.CHECK_TYPE_IN);
+
+        //Validate if location are available
+        if (clientProfile.getLocation() != null){
+            checkedClientsHistory.setLastLatitude(clientProfile.getLocation().getLatitude());
+            checkedClientsHistory.setLastLongitude(clientProfile.getLocation().getLongitude());
+        }
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getCheckedClientsHistoryDao().create(checkedClientsHistory);
+
+    }
+
 }

@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestProfileCheckInMsg;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj;
@@ -82,50 +83,14 @@ public class RequestCheckInActor extends PackageProcessor {
                 actorProfile = (ActorProfile) messageContent.getProfileToRegister();
 
                 /*
-                 * Create the CheckedInActor
+                 * CheckedInActor into data base
                  */
-                CheckedInActor checkedInActor = new CheckedInActor();
-                checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
-                checkedInActor.setActorType(actorProfile.getActorType());
-                checkedInActor.setAlias(actorProfile.getAlias());
-                checkedInActor.setName(actorProfile.getName());
-                checkedInActor.setPhoto(actorProfile.getPhoto());
-                checkedInActor.setExtraData(actorProfile.getExtraData());
-                checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
-
-                //Validate if location are available
-                if (actorProfile.getLocation() != null){
-                    checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
-                    checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
-                }
+                insertCheckedInActor(actorProfile);
 
                 /*
-                 * Save into the data base
+                 * CheckedActorsHistory into data base
                  */
-                getDaoFactory().getCheckedInActorDao().create(checkedInActor);
-
-                /*
-                 * Create the CheckedActorsHistory
-                 */
-                CheckedActorsHistory checkedActorsHistory = new CheckedActorsHistory();
-                checkedActorsHistory.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
-                checkedActorsHistory.setActorType(actorProfile.getActorType());
-                checkedActorsHistory.setAlias(actorProfile.getAlias());
-                checkedActorsHistory.setName(actorProfile.getName());
-                checkedActorsHistory.setPhoto(actorProfile.getPhoto());
-                checkedActorsHistory.setExtraData(actorProfile.getExtraData());
-                checkedActorsHistory.setCheckType(CheckedActorsHistory.CHECK_TYPE_IN);
-
-                //Validate if location are available
-                if (actorProfile.getLocation() != null){
-                    checkedActorsHistory.setLastLatitude(actorProfile.getLocation().getLatitude());
-                    checkedActorsHistory.setLastLongitude(actorProfile.getLocation().getLongitude());
-                }
-
-                /*
-                 * Save into the data base
-                 */
-                getDaoFactory().getCheckedActorsHistoryDao().create(checkedActorsHistory);
+                insertCheckedActorsHistory(actorProfile);
 
                 /*
                  * If all ok, respond whit success message
@@ -164,6 +129,72 @@ public class RequestCheckInActor extends PackageProcessor {
             }
 
         }
+
+    }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param actorProfile
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertCheckedInActor(ActorProfile actorProfile) throws CantInsertRecordDataBaseException {
+
+        /*
+         * Create the CheckedInActor
+         */
+        CheckedInActor checkedInActor = new CheckedInActor();
+        checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
+        checkedInActor.setActorType(actorProfile.getActorType());
+        checkedInActor.setAlias(actorProfile.getAlias());
+        checkedInActor.setName(actorProfile.getName());
+        checkedInActor.setPhoto(actorProfile.getPhoto());
+        checkedInActor.setExtraData(actorProfile.getExtraData());
+        checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
+
+        //Validate if location are available
+        if (actorProfile.getLocation() != null){
+            checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
+            checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
+        }
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getCheckedInActorDao().create(checkedInActor);
+
+    }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param actorProfile
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertCheckedActorsHistory(ActorProfile actorProfile) throws CantInsertRecordDataBaseException {
+
+        /*
+         * Create the CheckedActorsHistory
+         */
+        CheckedActorsHistory checkedActorsHistory = new CheckedActorsHistory();
+        checkedActorsHistory.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
+        checkedActorsHistory.setActorType(actorProfile.getActorType());
+        checkedActorsHistory.setAlias(actorProfile.getAlias());
+        checkedActorsHistory.setName(actorProfile.getName());
+        checkedActorsHistory.setPhoto(actorProfile.getPhoto());
+        checkedActorsHistory.setExtraData(actorProfile.getExtraData());
+        checkedActorsHistory.setCheckType(CheckedActorsHistory.CHECK_TYPE_IN);
+
+        //Validate if location are available
+        if (actorProfile.getLocation() != null){
+            checkedActorsHistory.setLastLatitude(actorProfile.getLocation().getLatitude());
+            checkedActorsHistory.setLastLongitude(actorProfile.getLocation().getLongitude());
+        }
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getCheckedActorsHistoryDao().create(checkedActorsHistory);
 
     }
 
