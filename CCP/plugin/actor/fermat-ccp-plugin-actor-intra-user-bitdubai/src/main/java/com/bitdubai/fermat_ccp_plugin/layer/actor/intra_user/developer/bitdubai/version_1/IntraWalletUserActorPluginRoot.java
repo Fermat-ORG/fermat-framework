@@ -669,6 +669,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                     case DENIED:
                         this.denyConnection(intraUserToConnectPublicKey, intraUserSendingPublicKey);
                         break;
+                    case INTRA_USER_NOT_FOUND:
+                        this.intraWalletUserActorDao.updateConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, ConnectionState.INTRA_USER_NOT_FOUND);
+
+                        break;
                     default:
                         break;
 

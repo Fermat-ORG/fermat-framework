@@ -144,7 +144,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         listenersAdded.add(fermatEventListenerIncomingRequestConnectionNotification);
 
         FermatEventListener outgoingIntraUserRollbackTransactionNotificationEventListener = eventManager.getNewListener(EventType.OUTGOING_ROLLBACK_NOTIFICATION);
-        FermatEventHandler outgoingRollbackNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.IncomingRequestConnectionNotificationHandler(this);
+        FermatEventHandler outgoingRollbackNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.OutgoingIntraRollbackNotificationHandler(this);
         outgoingIntraUserRollbackTransactionNotificationEventListener.setEventHandler(outgoingRollbackNotificationHandler);
         eventManager.addListener(outgoingIntraUserRollbackTransactionNotificationEventListener);
         listenersAdded.add(outgoingIntraUserRollbackTransactionNotificationEventListener);
@@ -323,6 +323,27 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
+        }
+
+        // notify observers
+        notifyNotificationArrived();
+    }
+
+    @Override
+   public void addOutgoingRollbackNotification(EventSource source, String actorId,long amount ){
+        try {
+            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+
+             notification.setAlertTitle(getSourceString(source));
+            notification.setTextTitle("Sent Transaction reversed");
+            notification.setTextBody("Sending " + WalletUtils.formatBalanceString(amount)  + " BTC could not be completed.");
+            notification.setNotificationType(NotificationType.OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION.getCode());
+
+            poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // notify observers

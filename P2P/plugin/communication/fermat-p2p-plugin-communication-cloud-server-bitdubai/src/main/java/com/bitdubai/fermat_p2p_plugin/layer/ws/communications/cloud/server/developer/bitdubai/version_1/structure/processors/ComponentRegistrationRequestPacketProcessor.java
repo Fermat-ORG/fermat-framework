@@ -91,9 +91,11 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
             platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.PROFILE_TO_REGISTER).getAsString());
 
-            LOG.info("platformComponentProfileToRegister = " + platformComponentProfileToRegister.getAlias() + "("+platformComponentProfileToRegister.getIdentityPublicKey()+")");
-            LOG.info("platformComponentType              = " + platformComponentProfileToRegister.getPlatformComponentType());
-            LOG.info("networkServiceType                 = " + platformComponentProfileToRegister.getNetworkServiceType());
+            LOG.info("Identity = " + platformComponentProfileToRegister.getIdentityPublicKey());
+            LOG.info("Alias    = " + platformComponentProfileToRegister.getAlias());
+            LOG.info("Name     = " + platformComponentProfileToRegister.getName());
+            LOG.info("Type     = " + platformComponentProfileToRegister.getPlatformComponentType());
+            LOG.info("NSType   = " + platformComponentProfileToRegister.getNetworkServiceType());
 
             /*
              * Switch between platform component type

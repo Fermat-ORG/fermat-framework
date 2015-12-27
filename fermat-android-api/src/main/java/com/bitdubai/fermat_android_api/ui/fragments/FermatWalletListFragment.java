@@ -9,8 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -21,10 +20,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.CheckForNull;
+
 /**
  * RecyclerView Fragment
  */
-public abstract class FermatWalletListFragment<M> extends FermatWalletFragment
+public abstract class FermatWalletListFragment<M> extends AbstractFermatFragment
         implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**
@@ -108,7 +109,8 @@ public abstract class FermatWalletListFragment<M> extends FermatWalletFragment
             recyclerView.setHasFixedSize(recyclerHasFixedSize());
             layoutManager = getLayoutManager();
             if (layoutManager != null)
-                recyclerView.setLayoutManager(layoutManager);
+                if(!layoutManager.isAttachedToWindow())
+                    recyclerView.setLayoutManager(layoutManager);
             adapter = getAdapter();
             if (adapter != null) {
                 recyclerView.setAdapter(adapter);

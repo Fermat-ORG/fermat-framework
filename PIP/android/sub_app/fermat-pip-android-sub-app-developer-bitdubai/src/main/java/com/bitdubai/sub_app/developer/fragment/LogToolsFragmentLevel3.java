@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -52,7 +52,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel3 extends FermatFragment {
+public class LogToolsFragmentLevel3 extends AbstractFermatFragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 

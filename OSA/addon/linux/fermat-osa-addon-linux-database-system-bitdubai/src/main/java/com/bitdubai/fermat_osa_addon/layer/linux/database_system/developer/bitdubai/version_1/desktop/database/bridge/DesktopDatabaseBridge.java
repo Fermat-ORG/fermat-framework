@@ -56,12 +56,12 @@ public class DesktopDatabaseBridge {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
             c.setAutoCommit(false);
-            //Testing purpose
-            //System.out.println("database open");
+
         }catch(Exception e){
             e.printStackTrace();
-            close();
-            //Luis acá iria una Excepción del tipo SQLiteException
+            if (c != null)
+                close();
+
         }
     }
 
@@ -82,7 +82,7 @@ public class DesktopDatabaseBridge {
 
         } catch (SQLException ex) {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-            //Luis acá iria una Excepcion de que no abrío la base de datos
+
         }
 
     }
@@ -96,18 +96,22 @@ public class DesktopDatabaseBridge {
      */
 
     public ResultSet rawQuery(String sql,String[] selectionArgs) {
-        connect();
+        if (c == null)
+            connect();
+
         ResultSet rs=null;
         try {
             stmt = c.createStatement();
             rs = stmt.executeQuery(sql);
             c.commit();
+
         }catch(SQLException ex){
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-            //Luis acá iria la Excepcion de SQLite que deberia crear
-        }finally{
-            close();
+
         }
+
+
+
         return rs;
     }
 
@@ -120,19 +124,20 @@ public class DesktopDatabaseBridge {
      @exception SQLException	//if the SQL string is invalid
      */
     public void execSQL(String sql) {
-        connect();
+
+        if (c == null)
+            connect();
+
         ResultSet rs=null;
         try {
             stmt = c.createStatement();
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
-            c.close();
+
         }catch(SQLException ex){
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-            //Luis acá iria la Excepcion de SQLite que deberia crear
-        }finally{
-            close();
+
         }
 
 
@@ -168,9 +173,10 @@ public class DesktopDatabaseBridge {
                 c.commit();
             } catch (SQLException ex) {
                 Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-                //Luis acá iria un Excepcion si la base no fue creada
+
             }
-            close();
+            if (c != null)
+               close();
         }
 
     }
@@ -227,21 +233,54 @@ public class DesktopDatabaseBridge {
     public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) {
 
         // create our java preparedstatement using a sql update query
-        String setVariables ="";
+        String setVariables = "";
+        int limited = recordUpdateList.entrySet().size();
+        int i = 1;
+        String com;
+        String pk= (whereArg!=null) ?  whereArg[0] : null;
         for(Map.Entry<String, Object> entry : recordUpdateList.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            setVariables+=entry.getKey()+"="+entry.getValue()+" ";
+
+            if(i !=limited){
+                com=", ";
+            }else{
+                com="";
+            }
+
+            if(pk== null || !pk.equalsIgnoreCase(entry.getKey())) {
+                setVariables += entry.getKey() + "= '" + entry.getValue() + "'" + com;
+            }
+
+            i++;
         }
 
-        PreparedStatement ps;
-        try {
+       // PreparedStatement ps;
+       /* try {
+            System.out.println("UPDATE "+tableName+" SET "+setVariables+whereClause);
             ps = c.prepareStatement("UPDATE "+tableName+" SET "+setVariables+whereClause);
-            // call executeUpdate to execute our sql update statement
+
             ps.executeUpdate();
             ps.close();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+
+        if (c == null){
+            connect();
+        }
+
+        ResultSet rs=null;
+        try {
+            stmt = c.createStatement();
+            stmt.executeUpdate("UPDATE " + tableName + " SET " + setVariables + whereClause);
+            stmt.close();
+            c.commit();
+
+        }catch(SQLException ex){
+            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
+
+            if (c != null)
+                close();
         }
 
     }

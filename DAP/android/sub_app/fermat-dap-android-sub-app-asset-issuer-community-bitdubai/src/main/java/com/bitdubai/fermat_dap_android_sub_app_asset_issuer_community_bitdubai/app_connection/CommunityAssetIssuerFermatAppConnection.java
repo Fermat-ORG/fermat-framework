@@ -15,12 +15,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.factory.AssetIssuerCommunityFragmentFactory;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.navigation_drawer.IssuerCommunityNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityAssetIssuerFermatAppConnection extends AppConnections{
+public class CommunityAssetIssuerFermatAppConnection extends AppConnections {
 
     public CommunityAssetIssuerFermatAppConnection(Activity activity) {
         super(activity);
@@ -33,7 +34,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections{
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ASSET_ISSUER_COMMUNITY,
@@ -50,7 +51,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+        return new IssuerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
     }
 
     @Override

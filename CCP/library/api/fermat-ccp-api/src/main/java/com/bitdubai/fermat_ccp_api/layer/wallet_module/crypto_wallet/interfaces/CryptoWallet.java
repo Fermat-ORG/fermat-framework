@@ -463,4 +463,6 @@ public interface CryptoWallet extends Serializable {
                                    final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException;
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
+
+    public void registerIdentities();
 }

@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -21,14 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class DeveloperModuleDatabaseTool implements DatabaseTool {
 
-    private final ConcurrentHashMap<PluginVersionReference, DatabaseManagerForDevelopers> databaseLstPlugins;
-    private final ConcurrentHashMap<AddonVersionReference , DatabaseManagerForDevelopers> databaseLstAddons ;
+    private final ConcurrentHashMap<PluginVersionReference, Plugin> databaseLstPlugins;
+    private final ConcurrentHashMap<AddonVersionReference , Addon> databaseLstAddons ;
 
     private final DeveloperModuleDatabaseObjectFactory                      objectFactory     ;
 
 
-    public DeveloperModuleDatabaseTool(final ConcurrentHashMap<PluginVersionReference, DatabaseManagerForDevelopers> databaseLstPlugins,
-                                       final ConcurrentHashMap<AddonVersionReference , DatabaseManagerForDevelopers> databaseLstAddons ) {
+    public DeveloperModuleDatabaseTool(final ConcurrentHashMap<PluginVersionReference, Plugin> databaseLstPlugins,
+                                       final ConcurrentHashMap<AddonVersionReference , Addon> databaseLstAddons ) {
 
         this.databaseLstAddons  = databaseLstAddons ;
         this.databaseLstPlugins = databaseLstPlugins;
@@ -41,7 +43,7 @@ public final class DeveloperModuleDatabaseTool implements DatabaseTool {
 
         List<PluginVersionReference> lstPlugins = new ArrayList<>();
 
-        for (Map.Entry<PluginVersionReference, DatabaseManagerForDevelopers> entry : databaseLstPlugins.entrySet())
+        for (Map.Entry<PluginVersionReference, Plugin> entry : databaseLstPlugins.entrySet())
             lstPlugins.add(entry.getKey());
 
         return lstPlugins;
@@ -52,7 +54,7 @@ public final class DeveloperModuleDatabaseTool implements DatabaseTool {
 
         List<AddonVersionReference> lstAddons = new ArrayList<>();
 
-        for (Map.Entry<AddonVersionReference, DatabaseManagerForDevelopers> entry : databaseLstAddons.entrySet())
+        for (Map.Entry<AddonVersionReference, Addon> entry : databaseLstAddons.entrySet())
             lstAddons.add(entry.getKey());
 
         return lstAddons;
@@ -61,27 +63,27 @@ public final class DeveloperModuleDatabaseTool implements DatabaseTool {
     @Override
     public List<DeveloperDatabase> getDatabaseListFromPlugin(PluginVersionReference plugin) {
 
-        return databaseLstPlugins.get(plugin).getDatabaseList(this.objectFactory);
+        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugin)).getDatabaseList(this.objectFactory);
     }
 
     @Override
     public List<DeveloperDatabase> getDatabaseListFromAddon(AddonVersionReference addon) {
 
-        return databaseLstAddons.get(addon).getDatabaseList(this.objectFactory);
+        return ((DatabaseManagerForDevelopers)databaseLstAddons.get(addon)).getDatabaseList(this.objectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getPluginTableListFromDatabase(final PluginVersionReference plugin           ,
                                                                        final DeveloperDatabase      developerDatabase) {
 
-        return databaseLstPlugins.get(plugin).getDatabaseTableList(this.objectFactory, developerDatabase);
+        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugin)).getDatabaseTableList(this.objectFactory, developerDatabase);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getAddonTableListFromDatabase(final AddonVersionReference addon            ,
                                                                       final DeveloperDatabase     developerDatabase) {
 
-        return databaseLstAddons.get(addon).getDatabaseTableList(this.objectFactory, developerDatabase);
+        return ((DatabaseManagerForDevelopers)databaseLstAddons.get(addon)).getDatabaseTableList(this.objectFactory, developerDatabase);
     }
 
     @Override
@@ -89,7 +91,7 @@ public final class DeveloperModuleDatabaseTool implements DatabaseTool {
                                                                     final DeveloperDatabase      developerDatabase     ,
                                                                     final DeveloperDatabaseTable developerDatabaseTable) {
 
-        return databaseLstPlugins.get(plugin).getDatabaseTableContent(this.objectFactory, developerDatabase, developerDatabaseTable);
+        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugin)).getDatabaseTableContent(this.objectFactory, developerDatabase, developerDatabaseTable);
     }
 
     @Override
@@ -97,7 +99,7 @@ public final class DeveloperModuleDatabaseTool implements DatabaseTool {
                                                                    final DeveloperDatabase      developerDatabase     ,
                                                                    final DeveloperDatabaseTable developerDatabaseTable) {
 
-        return databaseLstAddons.get(addon).getDatabaseTableContent(this.objectFactory, developerDatabase, developerDatabaseTable);
+        return ((DatabaseManagerForDevelopers)databaseLstAddons.get(addon)).getDatabaseTableContent(this.objectFactory, developerDatabase, developerDatabaseTable);
     }
 
 }

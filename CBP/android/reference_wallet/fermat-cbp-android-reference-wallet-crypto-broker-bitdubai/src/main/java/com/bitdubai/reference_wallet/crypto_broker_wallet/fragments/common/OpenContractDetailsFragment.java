@@ -9,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenContractDetailsFragment extends FermatWalletFragment {
+public class OpenContractDetailsFragment extends AbstractFermatFragment {
 
 
     public static OpenContractDetailsFragment newInstance() {

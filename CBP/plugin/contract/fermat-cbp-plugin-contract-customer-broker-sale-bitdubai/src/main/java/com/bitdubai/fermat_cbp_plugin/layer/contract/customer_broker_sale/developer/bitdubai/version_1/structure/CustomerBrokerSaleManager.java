@@ -55,7 +55,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
 
     @Override
     public void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantupdateCustomerBrokerContractSaleException {
-
+        this.customerBrokerContractSaleDao.updateNegotiationNearExpirationDatetime(contractId, status);
     }
 
 }
