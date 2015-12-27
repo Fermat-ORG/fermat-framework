@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.developer;
 
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
@@ -12,9 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 public interface DealsWithDatabaseManagers {
 
     void addDatabaseManager(PluginVersionReference       pluginVersionReference      ,
-                            DatabaseManagerForDevelopers databaseManagerForDevelopers);
+                            Plugin databaseManagerForDevelopers);
 
     void addDatabaseManager(AddonVersionReference        addonVersionReference       ,
-                            DatabaseManagerForDevelopers databaseManagerForDevelopers);
+                            Addon databaseManagerForDevelopers);
 
 }
