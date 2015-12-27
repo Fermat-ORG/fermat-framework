@@ -1379,7 +1379,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //Wizard
         Wizard runtimeWizard = new Wizard();
-        runtimeActivity.addWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), runtimeWizard);
 
         // step 1 - Set Identity
         WizardPage runtimeWizardPage = new WizardPage();
@@ -1406,6 +1405,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getKey());
         runtimeWizard.addPage(runtimeWizardPage);
 
+        runtimeActivity.addWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), runtimeWizard);
 
         // Activity: Open Negotiation details
         runtimeActivity = new Activity();
