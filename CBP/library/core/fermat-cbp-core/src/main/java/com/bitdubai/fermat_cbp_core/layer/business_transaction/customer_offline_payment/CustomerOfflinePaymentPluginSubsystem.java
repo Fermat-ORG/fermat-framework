@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_core.layer.business_transaction.costomer_offline_payment;
+package com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_offline_payment;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
