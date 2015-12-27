@@ -11,14 +11,15 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestProfileCheckInMsj</code>
- * <p/>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestProfileCheckInMsg</code>
+ * represent the message to request to register a profile with the node<p/>
+ *
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RequestProfileCheckInMsj extends PackageContent {
+public class RequestProfileCheckInMsg extends PackageContent {
 
     /**
      * Represent the profileToRegister to check in
@@ -30,7 +31,7 @@ public class RequestProfileCheckInMsj extends PackageContent {
      *
      * @param profileToRegister
      */
-    public RequestProfileCheckInMsj(Profile profileToRegister) {
+    public RequestProfileCheckInMsg(Profile profileToRegister) {
         this.profileToRegister = profileToRegister;
     }
 

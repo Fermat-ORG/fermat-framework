@@ -6,9 +6,9 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestProfileCheckInMsj;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestProfileCheckInMsg;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -64,7 +64,12 @@ public class RequestCheckInClient extends PackageProcessor {
 
         try {
 
-            RequestProfileCheckInMsj messageContent = (RequestProfileCheckInMsj) packageReceived.getContent();
+            RequestProfileCheckInMsg messageContent = (RequestProfileCheckInMsg) packageReceived.getContent();
+
+            /*
+             * Create the method call history
+             */
+            methodCallsHistory(getGson().toJson(messageContent.getProfileToRegister()), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct
@@ -117,7 +122,7 @@ public class RequestCheckInClient extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(clientProfile.getIdentityPublicKey(), RespondProfileCheckInMsj.STATUS.SUCCESS);
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, NetworkServiceType.UNDEFINED, PackageType.RESPOND_CHECK_IN_CLIENT, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_CHECK_IN_CLIENT, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -126,25 +131,27 @@ public class RequestCheckInClient extends PackageProcessor {
 
             }
 
-        }catch (Exception e){
+        }catch (Exception exception){
 
             try {
+
+                LOG.error(exception.getMessage());
 
                 /*
                  * Respond whit fail message
                  */
                 RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(clientProfile.getIdentityPublicKey(), RespondProfileCheckInMsj.STATUS.FAIL);
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, NetworkServiceType.UNDEFINED, PackageType.RESPOND_CHECK_IN_CLIENT, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_CHECK_IN_CLIENT, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
                  */
                 session.getBasicRemote().sendObject(packageRespond);
 
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (EncodeException e1) {
-                e1.printStackTrace();
+            } catch (IOException iOException) {
+                LOG.error(iOException.getMessage());
+            } catch (EncodeException encodeException) {
+                LOG.error(encodeException.getMessage());
             }
 
         }
