@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.bank_money_wallet.common.adapters;
 
 import android.content.Context;
 import android.view.View;
+
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
