@@ -62,24 +62,16 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        setFullscreenMode();
-
         View layout = inflater.inflate(R.layout.cbw_wizard_step_set_merchandises, container, false);
 
         View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS, appSession.getAppPublicKey());
             }
         });
 
         return layout;
-    }
-
-    private void setFullscreenMode() {
-        View decorView = getActivity().getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        getToolbar().setVisibility(View.GONE);
     }
 }

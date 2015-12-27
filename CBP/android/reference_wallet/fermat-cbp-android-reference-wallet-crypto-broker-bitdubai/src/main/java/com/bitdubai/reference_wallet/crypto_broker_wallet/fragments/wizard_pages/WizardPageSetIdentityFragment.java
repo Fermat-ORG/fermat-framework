@@ -65,8 +65,6 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        setFullscreenMode();
-
         View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,18 +72,13 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                 if (selectedIdentity != null) {
                     walletManager.associateIdentity(selectedIdentity.getPublicKey());
                     appSession.setData(CryptoBrokerWalletSession.CONFIGURED_DATA, true);
+
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
                 } else {
                     Toast.makeText(getActivity(), R.string.select_identity_warning_msg, Toast.LENGTH_LONG).show();
                 }
             }
         });
-    }
-
-    private void setFullscreenMode() {
-        View decorView = getActivity().getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        getToolbar().setVisibility(View.GONE);
     }
 
     @Override

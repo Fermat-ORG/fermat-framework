@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Choose Earning Merchandises"
+            android:text="Exchange Rate Providers"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -31,7 +31,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="You must select a Wallet or Wallets that will work as Merchandise"
+            android:text="You must select the Currency Exchange Rate Providers for your Merchandises"
             android:textColor="@color/white"
             android:textSize="14sp"
             />

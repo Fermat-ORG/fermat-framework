@@ -56,7 +56,6 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        setFullscreenMode();
 
         View layout = inflater.inflate(R.layout.cbw_wizard_step_set_bank_accounts, container, false);
 
@@ -64,7 +63,6 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearFullscreenMode();
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
             }
         });
@@ -72,15 +70,4 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
         return layout;
     }
 
-    private void setFullscreenMode() {
-        View decorView = getActivity().getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        getToolbar().setVisibility(View.GONE);
-    }
-
-    private void clearFullscreenMode() {
-        View decorView = getActivity().getWindow().getDecorView();
-        decorView.setSystemUiVisibility(0);
-        getToolbar().setVisibility(View.VISIBLE);
-    }
 }

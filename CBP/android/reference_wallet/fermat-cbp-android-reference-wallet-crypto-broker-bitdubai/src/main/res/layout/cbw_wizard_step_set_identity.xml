@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/cbw_navigation_drawer_background"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
