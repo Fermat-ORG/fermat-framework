@@ -12,7 +12,7 @@
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:text="@string/cbw_welcome"
         android:textAllCaps="true"
@@ -80,7 +80,7 @@
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/arrow_right_selected"
+            android:src="@drawable/cbw_wizard_arrow_blue"
             tools:ignore="contentDescription"/>
     </RelativeLayout>
 

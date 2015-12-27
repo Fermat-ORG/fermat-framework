@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Choose Stock Merchandises"
+            android:text="Choose Earning Merchandises"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -32,7 +32,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="You must select a Wallet that work as Merchandise and the spread applied to them"
+            android:text="You must select a Wallet or Wallets that will work as Merchandise"
             android:textColor="@color/white"
             android:textSize="14sp"
             />
@@ -49,7 +49,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select a Stock Merchandise"
+            android:text="Select a Earning Merchandise"
             android:textColor="@color/cbw_wizard_color"/>
 
         <View
@@ -98,62 +98,11 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/cbw_selected_stock_wallets_recycler_view"
+            android:id="@+id/cbw_selected_earning_wallets_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginTop="8dp"
             tools:listitem="@layout/cbw_wizard_recycler_view_item"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cbw_selected_stock_wallets_container"
-        android:orientation="vertical"
-        android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingStart="16dp">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select the Spread"
-            android:textColor="@color/cbw_wizard_color"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/cbw_wizard_color"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_spread_value_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                tools:text="15%"/>
-
-            <SeekBar
-                android:id="@+id/cbw_spread_value_seek_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
-
-
-        </LinearLayout>
 
     </LinearLayout>
 

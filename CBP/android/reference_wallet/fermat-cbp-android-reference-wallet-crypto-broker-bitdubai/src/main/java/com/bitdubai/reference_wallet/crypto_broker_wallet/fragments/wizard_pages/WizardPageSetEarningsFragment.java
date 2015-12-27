@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatWizardPageFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -17,23 +16,21 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
-import java.util.Map;
-
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
+public class WizardPageSetEarningsFragment extends AbstractFermatFragment {
 
     // Constants
-    private static final String TAG = "WizardPageSetBank";
+    private static final String TAG = "WizardPageSetEarnings";
 
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
 
 
-    public static WizardPageSetBankAccountsFragment newInstance() {
-        return new WizardPageSetBankAccountsFragment();
+    public static WizardPageSetEarningsFragment newInstance() {
+        return new WizardPageSetEarningsFragment();
     }
 
     @Override
@@ -44,12 +41,14 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+
     }
 
     @Override
@@ -58,14 +57,13 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
 
         setFullscreenMode();
 
-        View layout = inflater.inflate(R.layout.cbw_wizard_step_set_bank_accounts, container, false);
+        View layout = inflater.inflate(R.layout.cbw_wizard_step_set_earnings, container, false);
 
         View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearFullscreenMode();
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
             }
         });
 
@@ -76,11 +74,5 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
         View decorView = getActivity().getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         getToolbar().setVisibility(View.GONE);
-    }
-
-    private void clearFullscreenMode() {
-        View decorView = getActivity().getWindow().getDecorView();
-        decorView.setSystemUiVisibility(0);
-        getToolbar().setVisibility(View.VISIBLE);
     }
 }
