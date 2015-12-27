@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.app_connection;
 
 import android.app.Activity;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
