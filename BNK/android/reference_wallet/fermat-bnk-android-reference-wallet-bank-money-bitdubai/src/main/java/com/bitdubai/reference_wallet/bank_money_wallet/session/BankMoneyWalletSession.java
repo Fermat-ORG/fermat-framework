@@ -17,46 +17,9 @@ import java.util.Map;
  * Created by memo on 04/12/15.
  */
 public class BankMoneyWalletSession extends AbstractFermatSession<InstalledWallet,BankMoneyWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
-    InstalledWallet wallet;
 
-    /**
-     * Active objects in wallet session
-     */
-    Map<String, Object> data;
 
-    /**
-     * Wallet Resources
-     */
-    private WalletResourcesProviderManager resourcesProviderManager;
-
-    /**
-     * Error manager
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * Wallet Store Module
-     */
-    private BankMoneyWalletModuleManager moduleManager;
-
-    public BankMoneyWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletResourcesProviderManager resourcesProviderManager, BankMoneyWalletModuleManager moduleManager) {
-        super(wallet.getWalletPublicKey(), wallet, errorManager, moduleManager, resourcesProviderManager);
-        this.wallet = wallet;
-        data = new HashMap<>();
-        this.resourcesProviderManager = resourcesProviderManager;
-        this.errorManager = errorManager;
-        this.moduleManager = moduleManager;
-    }
-
-    /**
-     * Store any data you need to hold between the fragments of the sub app
-     *
-     * @param key    key to reference the object
-     * @param object the object yo want to store
-     */
-    @Override
-    public void setData(String key, Object object) {
-        data.put(key, object);
+    public BankMoneyWalletSession() {
     }
 
     @Override
@@ -64,59 +27,8 @@ public class BankMoneyWalletSession extends AbstractFermatSession<InstalledWalle
         return null;
     }
 
-    /**
-     * Return the data referenced by the key
-     *
-     * @param key the key to access de data
-     * @return the data you want
-     */
-    @Override
-    public Object getData(String key) {
-        return data.get(key);
-    }
-
-
-    /**
-     * Return the Error Manager
-     *
-     * @return reference to the Error Manager
-     */
-    @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-
     @Override
     public WalletSettings getWalletSettings() {
         return new BankMoneyWalletPreferenceSettings();
-    }
-
-    /**
-     * Return the Wallet Store Module
-     *
-     * @return reference to the Wallet Store Module
-     */
-    public BankMoneyWalletModuleManager getModuleManager() {
-        return moduleManager;
-    }
-
-    public WalletResourcesProviderManager getResourcesProviderManager() {
-        return resourcesProviderManager;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BankMoneyWalletSession that = (BankMoneyWalletSession) o;
-
-        return wallet == that.wallet;
-    }
-
-    @Override
-    public int hashCode() {
-        return wallet.hashCode();
     }
 }
