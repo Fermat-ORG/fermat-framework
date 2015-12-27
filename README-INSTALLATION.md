@@ -106,8 +106,8 @@ We can also install Gradle using the `apt` service, although the version might b
 This is a *zip* file that you must extract using the `unzip` commmand, then we move it to the **/opt** folder
 
 ```bash
-unzip -e gradle-2.8-all.zip
-sudo mv gradle-2.8/ /opt/gradle
+unzip -e gradle-2.10-all.zip
+sudo mv gradle-2.10/ /opt/gradle
 ```
 
 <br>
