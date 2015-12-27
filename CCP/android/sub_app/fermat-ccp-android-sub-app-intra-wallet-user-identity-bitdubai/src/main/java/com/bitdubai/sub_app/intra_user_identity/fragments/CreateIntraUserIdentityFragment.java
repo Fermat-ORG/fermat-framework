@@ -39,6 +39,7 @@ import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -169,7 +170,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             if (identitySelected != null) {
                 loadIdentity();
             } else {
-                identitySelected = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+                List<IntraWalletUserIdentity> lst = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                if(lst.isEmpty()){
+                    identitySelected = lst.get(0);
+                }
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
@@ -188,7 +192,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
@@ -276,7 +280,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_image) : brokerImageByteArray);
+                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
                     else
                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
@@ -295,7 +299,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
