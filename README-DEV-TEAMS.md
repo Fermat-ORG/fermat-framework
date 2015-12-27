@@ -33,7 +33,7 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
 | Thunder | | | |
-| | Franklin's Team | | |
+| | Kabuto | | |
 | | Mordor | | |
 | Code Butchers | | | |
 | | Nelson's Team | | |
@@ -161,6 +161,28 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
+<br/>
+### Kabuto Team:
+-----------------------------------
+Passionate about technologies, programming for us is part of our life and virtues, using as always ethical management best practices for writing our code.
+
+In the Crypto Broker Platform we are responsible for a large part of user level business transactions, wallet and module, while in the Chat Platform we are developing the back end.
+
+#### Team Members:
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+
+* **Jose Cardozo**<br/>
+---
+      Email:   josejcb89@gmail.com
+      Skype:   josejcb89
+      Github:  https://github.com/josejcb
+
+We are also ameteur philosophers, passionate about esoteric topics as video games.
 
 <br/>
 ### Code Butchers Team:
