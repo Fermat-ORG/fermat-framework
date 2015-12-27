@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -27,7 +27,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsActivityFragment extends FermatWalletFragment {
+public class SettingsActivityFragment extends AbstractFermatFragment {
 
     private static final String TAG = "SettingsActivityFragment";
 
@@ -71,7 +71,6 @@ public class SettingsActivityFragment extends FermatWalletFragment {
 
         try {
             CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);

@@ -104,11 +104,13 @@ public class AssetDistributionDatabaseFactory implements DealsWithPluginDatabase
 
             DatabaseTableFactory assetDeliveringTable = databaseFactory.newTableFactory(ownerId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME);
 
-            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 225500, Boolean.TRUE);
-            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 225500, Boolean.TRUE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
 
             assetDeliveringTable.addIndex(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_FIRST_KEY_COLUMN);
 

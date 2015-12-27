@@ -2,8 +2,8 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -29,7 +29,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
 
     @Override
     public AbstractFermatFragment getFermatFragment(ReferenceFragmentsEnumType fragments) throws FragmentNotFoundException {
-        FermatWalletFragment currentFragment = null;
+        AbstractFermatFragment currentFragment = null;
         try {
 
             switch (fragments) {

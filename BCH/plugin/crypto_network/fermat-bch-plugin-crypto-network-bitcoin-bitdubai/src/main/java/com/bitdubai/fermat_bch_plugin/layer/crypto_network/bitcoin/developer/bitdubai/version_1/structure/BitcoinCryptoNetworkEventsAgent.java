@@ -223,28 +223,24 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
             switch (cryptoStatus){
                 case ON_CRYPTO_NETWORK:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case ON_BLOCKCHAIN:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case REVERSED_ON_CRYPTO_NETWORK:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case REVERSED_ON_BLOCKCHAIN:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case IRREVERSIBLE:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
             }
             /**
              * I raise the event
              */
+            event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
             eventManager.raiseEvent(event);
         }
 

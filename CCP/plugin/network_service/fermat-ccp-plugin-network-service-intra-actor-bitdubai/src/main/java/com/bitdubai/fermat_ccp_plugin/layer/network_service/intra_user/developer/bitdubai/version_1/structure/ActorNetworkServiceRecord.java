@@ -123,6 +123,14 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.actorSenderAlias = actorSenderAlias;
     }
 
+    public void setSentCount(int sentCount) {
+        this.sentCount = sentCount;
+    }
+
+    public void setActorProtocolState(ActorProtocolState actorProtocolState) {
+        this.actorProtocolState = actorProtocolState;
+    }
+
     public String toJson() {
 
         Gson gson = new Gson();
@@ -144,6 +152,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
                 ", sentDate=" + sentDate +
                 ", actorProtocolState=" + actorProtocolState +
                 ", flagReadead=" + flagReadead +
+                ", sentCount=" + sentCount +
                 '}';
     }
 }

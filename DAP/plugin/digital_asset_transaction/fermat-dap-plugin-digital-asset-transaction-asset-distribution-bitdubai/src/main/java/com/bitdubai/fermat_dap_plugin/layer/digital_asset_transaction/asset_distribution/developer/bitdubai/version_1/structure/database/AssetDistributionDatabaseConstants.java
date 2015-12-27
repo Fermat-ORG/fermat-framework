@@ -21,7 +21,7 @@ public class AssetDistributionDatabaseConstants {
     public static final String ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME ="actor_user_bitcoin_address";
     public static final String ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME="distribution_id";
 
-    public static final String ASSET_DISTRIBUTION_FIRST_KEY_COLUMN = "genesis_transaction";
+    public static final String ASSET_DISTRIBUTION_FIRST_KEY_COLUMN = ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME;
 
     /**
      * Events recorded database table definition.
@@ -41,12 +41,14 @@ public class AssetDistributionDatabaseConstants {
      */
     public static final String ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME="delivering";
 
-    public static final String ASSET_DISTRIBUTION_DELIVERING_MESSAGE_ID_COLUMN_NAME="message_id";
-    public static final String ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME="delivering_genesis_transaction";
-    public static final String ASSET_DISTRIBUTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME="message_type";
-    public static final String ASSET_DISTRIBUTION_DELIVERING_TIMESTAMP_COLUMN_NAME="delivering_timestamp";
-    public static final String ASSET_DISTRIBUTION_DELIVERING_EVENT_ID_COLUMN_NAME="delivering_event_id";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME = "asset_publickey";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME = "user_publickey";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME = "start_time";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME = "timeout";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME = "delivering_state";
 
-    public static final String ASSET_DISTRIBUTION_DELIVERING_TABLE_FIRST_KEY_COLUMN="message_id";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_TABLE_FIRST_KEY_COLUMN = ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME;
 
 }

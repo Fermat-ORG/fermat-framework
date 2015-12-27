@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -15,7 +15,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MarketRateStatisticsFragment extends FermatWalletFragment {
+public class MarketRateStatisticsFragment extends AbstractFermatFragment {
     private String buy, sell, currencyPair;
 
     public static MarketRateStatisticsFragment newInstance() {

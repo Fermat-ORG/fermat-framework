@@ -10,8 +10,8 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateN
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 
 import java.util.List;
 
@@ -112,9 +112,9 @@ public interface IntraUserModuleManager extends ModuleManager<FermatSettings, Ac
      * The method <code>denyConnection</code> denies a conection request from other intra user
      *
      * @param intraUserToRejectPublicKey the public key of the user to deny its connection request
-     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException
+     * @throws IntraUserConnectionDenialFailedException
      */
-     void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
+     void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws IntraUserConnectionDenialFailedException;
 
     /**
      * The method <code>disconnectIntraUSer</code> disconnect an intra user from the list managed by this

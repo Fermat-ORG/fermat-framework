@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.customers.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.sub_app.customers.fragments.MainFragment;
@@ -14,7 +14,7 @@ public class CustomersFragmentFactory extends FermatSubAppFragmentFactory<Custom
 
 
     @Override
-    public FermatFragment getFermatFragment(CustomersFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(CustomersFragmentsEnumType fragments) throws FragmentNotFoundException {
         if (fragments == MAIN_FRAGMET) {
             return MainFragment.newInstance();
         }
