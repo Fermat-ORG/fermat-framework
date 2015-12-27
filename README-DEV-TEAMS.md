@@ -72,37 +72,34 @@ Please note that whenever with talk about a full-time developer is equivalent to
 <br>
 ## Team Members
 
-
-
 <br>
-### Thunders:
------------------------------------
+### <img src="https://cloud.githubusercontent.com/assets/13594347/10977876/17cab794-83c6-11e5-9f42-35d74b8a1583.png" width="300" height="300"/>
 
 More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and deailing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
 
-#### Team Members:
+#### Thunder Team Members:
 
 
-* **Rodrigo Acosta [Team Leader]**<br/>
+* *Rodrigo Acosta [Team Leader] <br/>
 ---
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
     
     
-* **Nerio Enrique Indriago Ortega **<br/>
+* *Nerio Enrique Indriago Ortega <br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* **Victor Mars **<br/>
+* *Victor Mars <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
-* **Frank Contreras **<br/>
+* *Frank Contreras <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
