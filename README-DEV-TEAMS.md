@@ -80,26 +80,26 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 #### Thunder Team Members:
 
 
-* *Rodrigo Acosta [Team Leader] <br/>
+* Rodrigo Acosta [Team Leader] <br/>
 ---
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
     
     
-* *Nerio Enrique Indriago Ortega <br/>
+* Nerio Enrique Indriago Ortega <br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* *Victor Mars <br/>
+* Victor Mars <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
-* *Frank Contreras <br/>
+* Frank Contreras <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
