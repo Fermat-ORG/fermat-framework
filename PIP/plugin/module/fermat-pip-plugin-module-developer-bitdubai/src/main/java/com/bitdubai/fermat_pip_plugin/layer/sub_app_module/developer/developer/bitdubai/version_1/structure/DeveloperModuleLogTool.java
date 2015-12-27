@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
@@ -23,11 +25,11 @@ import java.util.regex.Pattern;
  */
 public class DeveloperModuleLogTool implements LogTool {
 
-    private final Map<PluginVersionReference, LogManagerForDevelopers> LoggingLstPlugins;
-    private final Map<AddonVersionReference , LogManagerForDevelopers > LoggingLstAddons ;
+    private final Map<PluginVersionReference, Plugin> LoggingLstPlugins;
+    private final Map<AddonVersionReference , Addon> LoggingLstAddons ;
 
-    public DeveloperModuleLogTool(Map<PluginVersionReference, LogManagerForDevelopers> loggingLstPlugins,
-                                  Map<AddonVersionReference , LogManagerForDevelopers> loggingLstAddons ) {
+    public DeveloperModuleLogTool(Map<PluginVersionReference, Plugin> loggingLstPlugins,
+                                  Map<AddonVersionReference , Addon> loggingLstAddons ) {
 
         this.LoggingLstPlugins = loggingLstPlugins;
         this.LoggingLstAddons  = loggingLstAddons ;
@@ -38,7 +40,7 @@ public class DeveloperModuleLogTool implements LogTool {
 
         List<PluginVersionReference> lstPlugins = new ArrayList<>();
 
-        for(Map.Entry<PluginVersionReference, LogManagerForDevelopers> entry : LoggingLstPlugins.entrySet())
+        for(Map.Entry<PluginVersionReference, Plugin> entry : LoggingLstPlugins.entrySet())
             lstPlugins.add(entry.getKey());
 
         return lstPlugins;
@@ -49,7 +51,7 @@ public class DeveloperModuleLogTool implements LogTool {
 
         List<AddonVersionReference> lstAddons = new ArrayList<>();
 
-        for(Map.Entry<AddonVersionReference, LogManagerForDevelopers> entry : LoggingLstAddons.entrySet())
+        for(Map.Entry<AddonVersionReference, Addon> entry : LoggingLstAddons.entrySet())
             lstAddons.add(entry.getKey());
 
         return lstAddons;
@@ -152,7 +154,7 @@ public class DeveloperModuleLogTool implements LogTool {
             /**
              * I get the class full patch from the plug in.
              */
-            List<String> classes = this.LoggingLstAddons.get(addon).getClassesFullPath();
+            List<String> classes = ((LogManagerForDevelopers) this.LoggingLstAddons.get(addon)).getClassesFullPath();
 
             /**
              * I need to know the minimun number of packages on the plug in.
@@ -227,7 +229,7 @@ public class DeveloperModuleLogTool implements LogTool {
      */
     @Override
     public void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass) {
-        this.LoggingLstPlugins.get(plugin).setLoggingLevelPerClass(newLogLevelInClass);
+        ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
     }
 
 }

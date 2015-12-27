@@ -4,8 +4,9 @@ import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_ack_offlin
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_ack_online_payment.BrokerAckOnlinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_submit_offline_merchandise.BrokerSubmitOfflinePaymentPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.broker_submit_online_merchandise.BrokerSubmitOnlinePaymentPluginSubsystem;
-import com.bitdubai.fermat_cbp_core.layer.business_transaction.costomer_offline_payment.CustomerOfflinePaymentPluginSubsystem;
-import com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_ack_onile_merchandise.CustomerAckOnlineMerchandiseSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_ack_offline_merchandise.CustomerAckOfflineMerchandisePluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_offline_payment.CustomerOfflinePaymentPluginSubsystem;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_ack_online_merchandise.CustomerAckOnlineMerchandisePluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_online_payment.CustomerOnlinePaymentPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
@@ -31,7 +32,8 @@ public class BusinessTransactionLayer extends AbstractLayer {
             registerPlugin(new BrokerAckOnlinePaymentPluginSubsystem());
             registerPlugin(new BrokerSubmitOfflinePaymentPluginSubsystem());
             registerPlugin(new BrokerSubmitOnlinePaymentPluginSubsystem());
-            registerPlugin(new CustomerAckOnlineMerchandiseSubsystem());
+            registerPlugin(new CustomerAckOfflineMerchandisePluginSubsystem());
+            registerPlugin(new CustomerAckOnlineMerchandisePluginSubsystem());
             registerPlugin(new CustomerOfflinePaymentPluginSubsystem());
             registerPlugin(new CustomerOnlinePaymentPluginSubsystem());
             registerPlugin(new CloseContractPluginSubsystem());

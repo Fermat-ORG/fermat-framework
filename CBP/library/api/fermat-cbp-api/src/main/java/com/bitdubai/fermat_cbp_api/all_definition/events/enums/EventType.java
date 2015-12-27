@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.eve
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.CustomerAckMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.events.NewNegotiationTransactionNewEvent;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.events.NewNegotiationTransactionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
@@ -44,6 +45,9 @@ public enum EventType implements FermatEventEnum {
     },
     BROKER_SUBMIT_MERCHANDISE_CONFIRMED("BSMC"){
         public final FermatEvent getNewEvent() { return new BrokerSubmitMerchandiseConfirmed(this); }
+    },
+    CUSTOMER_ACK_MERCHANDISE_CONFIRMED("CAMC"){
+        public final FermatEvent getNewEvent() { return new CustomerAckMerchandiseConfirmed(this); }
     },
     CRYPTO_BROKER_CONNECTION_REQUEST_NEWS("CBCRNWS") {
         public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionRequestNewsEvent(this); }

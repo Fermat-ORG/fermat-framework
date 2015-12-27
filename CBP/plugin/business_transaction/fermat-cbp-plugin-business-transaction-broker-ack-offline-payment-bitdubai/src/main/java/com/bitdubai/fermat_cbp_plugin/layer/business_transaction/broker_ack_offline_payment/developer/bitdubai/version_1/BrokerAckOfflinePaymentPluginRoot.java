@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offl
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -239,13 +241,21 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker Ack Offline Payment Starting");
-        } catch (Exception exception) {
-            //TODO: handle correctly this method exceptions
+        } catch (CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
-                    CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
-                    null,
-                    null);
+                    "Starting Broker Offline Payment Plugin",
+                    "Cannot initialize the plugin database factory");
+        } catch (CantInitializeDatabaseException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Offline Payment Plugin",
+                    "Cannot initialize the database plugin");
+        } catch (CantStartAgentException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Offline Payment Plugin",
+                    "Cannot initialize the plugin monitor agent");
         }
     }
 
