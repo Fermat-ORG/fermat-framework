@@ -30,7 +30,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.*;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
@@ -359,7 +359,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 IncomingOnlinePaymentException,
                 CantUpdateRecordException {
             String senderPublicKey;
-            IncomingMoneyEventWrapper incomingMoneyEventWrapper;
+            com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper incomingMoneyEventWrapper;
             BusinessTransactionRecord businessTransactionRecord;
             long contractCryptoAmount;
             long incomingCryptoAmount;
@@ -371,16 +371,16 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             try{
                 incomingMoneyEventWrapper=brokerAckOnlinePaymentBusinessTransactionDao.getIncomingMoneyEventWrapper(
                         eventId);
-                senderPublicKey=incomingMoneyEventWrapper.senderPublicKey;
+                senderPublicKey=incomingMoneyEventWrapper.getSenderPublicKey();
                 businessTransactionRecord =
                         brokerAckOnlinePaymentBusinessTransactionDao.
-                                getCustomerOnlinePaymentRecordByCustomerPublicKey(senderPublicKey);
+                                getBusinessTransactionRecordByCustomerPublicKey(senderPublicKey);
                 if(businessTransactionRecord ==null){
                     //Case: the contract event is not processed or the incoming money is not link to a contract.
                     return;
                 }
                 contractHash= businessTransactionRecord.getContractHash();
-                incomingCryptoAmount=incomingMoneyEventWrapper.cryptoAmount;
+                incomingCryptoAmount=incomingMoneyEventWrapper.getCryptoAmount();
                 contractCryptoAmount= businessTransactionRecord.getCryptoAmount();
                 if(incomingCryptoAmount!=contractCryptoAmount){
                     throw new IncomingOnlinePaymentException("The incoming crypto amount received is "+incomingCryptoAmount+"\n" +
@@ -388,7 +388,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             "is "+contractCryptoAmount
                     );
                 }
-                receiverActorPublicKey=incomingMoneyEventWrapper.receiverPublicKey;
+                receiverActorPublicKey=incomingMoneyEventWrapper.getReceiverPublicKey();
                 expectedActorPublicKey= businessTransactionRecord.getBrokerPublicKey();
                 if(!receiverActorPublicKey.equals(expectedActorPublicKey)){
                     throw new IncomingOnlinePaymentException("The actor public key that receive the money is "+receiverActorPublicKey+"\n" +
@@ -396,7 +396,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             "is "+expectedActorPublicKey
                     );
                 }
-                incomingWalletPublicKey=incomingMoneyEventWrapper.walletPublicKey;
+                incomingWalletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
                 contractWalletPublicKey= businessTransactionRecord.getExternalWalletPublicKey();
                 if(!incomingWalletPublicKey.equals(contractWalletPublicKey)){
                     throw new IncomingOnlinePaymentException("The wallet public key that receive the money is "+incomingWalletPublicKey+"\n" +
@@ -406,7 +406,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 }
                 businessTransactionRecord.setContractTransactionStatus(
                         ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);
-                brokerAckOnlinePaymentBusinessTransactionDao.updateOnlinePaymentRecord(
+                brokerAckOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
                         businessTransactionRecord);
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
@@ -464,7 +464,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         if(brokerAckOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
                             businessTransactionRecord =
                                     brokerAckOnlinePaymentBusinessTransactionDao.
-                                            getCustomerOnlinePaymentRecordByContractHash(contractHash);
+                                            getBusinessTransactionRecordByContractHash(contractHash);
                             contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
                             if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_ACK.getCode())){
                                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);

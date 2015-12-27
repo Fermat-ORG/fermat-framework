@@ -1,18 +1,18 @@
-package com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_ack_onile_merchandise;
+package com.bitdubai.fermat_cbp_core.layer.business_transaction.customer_ack_offline_merchandise;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/12/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/12/15.
  */
-public class CustomerAckOnlineMerchandiseSubsystem extends AbstractPluginSubsystem {
+public class CustomerAckOfflineMerchandisePluginSubsystem extends AbstractPluginSubsystem {
 
-    public CustomerAckOnlineMerchandiseSubsystem() {
-        super(new PluginReference(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE));
+    public CustomerAckOfflineMerchandisePluginSubsystem() {
+        super(new PluginReference(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE));
     }
 
     @Override
