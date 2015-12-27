@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj</code>
@@ -16,15 +15,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RespondProfileCheckInMsj extends PackageContent {
-
-    /**
-     * Represent the status of the check in process
-     */
-    public enum STATUS{
-        SUCCESS,
-        FAIL
-    }
+public class RespondProfileCheckInMsj extends RespondMsg {
 
     /**
      * Represent the identityPublicKey of the profile
@@ -32,19 +23,15 @@ public class RespondProfileCheckInMsj extends PackageContent {
     private String identityPublicKey;
 
     /**
-     * Represent the status
-     */
-    private STATUS status;
-
-    /**
      * Constructor with parameters
      *
-     * @param identityPublicKey
      * @param status
+     * @param details
+     * @param identityPublicKey
      */
-    public RespondProfileCheckInMsj(String identityPublicKey, STATUS status) {
+    public RespondProfileCheckInMsj(STATUS status, String details, String identityPublicKey) {
+        super(status, details);
         this.identityPublicKey = identityPublicKey;
-        this.status = status;
     }
 
     /**
@@ -56,13 +43,6 @@ public class RespondProfileCheckInMsj extends PackageContent {
         return identityPublicKey;
     }
 
-    /**
-     * Gets the value of status and returns
-     *
-     * @return status
-     */
-    public STATUS getStatus() {
-        return status;
-    }
+
 
 }

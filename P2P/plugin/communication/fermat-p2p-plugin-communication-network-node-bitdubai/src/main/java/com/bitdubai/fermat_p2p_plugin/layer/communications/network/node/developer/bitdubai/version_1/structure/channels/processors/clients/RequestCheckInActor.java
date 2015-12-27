@@ -95,7 +95,7 @@ public class RequestCheckInActor extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(actorProfile.getIdentityPublicKey(), RespondProfileCheckInMsj.STATUS.SUCCESS);
+                RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(RespondProfileCheckInMsj.STATUS.SUCCESS, RespondProfileCheckInMsj.STATUS.SUCCESS.toString(), actorProfile.getIdentityPublicKey());
                 Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_CHECK_IN_CLIENT, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -114,7 +114,7 @@ public class RequestCheckInActor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(actorProfile.getIdentityPublicKey(), RespondProfileCheckInMsj.STATUS.FAIL);
+                RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(RespondProfileCheckInMsj.STATUS.FAIL, exception.getLocalizedMessage(), actorProfile.getIdentityPublicKey());
                 Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_CHECK_IN_CLIENT, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*

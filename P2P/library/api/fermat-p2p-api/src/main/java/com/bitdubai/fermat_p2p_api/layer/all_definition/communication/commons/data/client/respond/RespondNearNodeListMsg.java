@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RespondNearNodeListMsg extends PackageContent {
+public class RespondNearNodeListMsg extends RespondMsg {
 
     /**
      * Represent the list of nodes
@@ -28,18 +27,14 @@ public class RespondNearNodeListMsg extends PackageContent {
     private List<NodeProfile> nodes;
 
     /**
-     * Constructor
-     */
-    public RespondNearNodeListMsg(){
-        super();
-    }
-
-    /**
-     * Constructor with parameter
+     * Constructor with parameters
+     *
+     * @param status
+     * @param details
      * @param nodes
      */
-    public RespondNearNodeListMsg(List<NodeProfile> nodes) {
-        super();
+    public RespondNearNodeListMsg(STATUS status, String details, List<NodeProfile> nodes) {
+        super(status, details);
         this.nodes = nodes;
     }
 

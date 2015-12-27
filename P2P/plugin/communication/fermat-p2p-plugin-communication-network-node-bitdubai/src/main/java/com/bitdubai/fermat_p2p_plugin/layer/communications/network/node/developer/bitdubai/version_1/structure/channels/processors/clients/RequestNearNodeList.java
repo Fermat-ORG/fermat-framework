@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestNearNodeListMsg;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondMsg;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondNearNodeListMsg;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
@@ -119,7 +120,7 @@ public class RequestNearNodeList extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                RespondNearNodeListMsg respondNearNodeListMsg = new RespondNearNodeListMsg(nodesProfileList);
+                RespondNearNodeListMsg respondNearNodeListMsg = new RespondNearNodeListMsg(RespondNearNodeListMsg.STATUS.SUCCESS, RespondNearNodeListMsg.STATUS.SUCCESS.toString(),nodesProfileList);
                 Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_NEAR_NODE_LIST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -138,7 +139,7 @@ public class RequestNearNodeList extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                RespondNearNodeListMsg respondNearNodeListMsg = new RespondNearNodeListMsg(null);
+                RespondNearNodeListMsg respondNearNodeListMsg = new RespondNearNodeListMsg(RespondNearNodeListMsg.STATUS.FAIL, exception.getLocalizedMessage(), null);
                 Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_NEAR_NODE_LIST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
