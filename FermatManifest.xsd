@@ -49,10 +49,10 @@
                                           </xs:sequence>
                                         </xs:complexType>
                                       </xs:element>
-                                      <xs:element name="mantainers">
+                                      <xs:element name="maintainers">
                                         <xs:complexType mixed="true">
                                           <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
+                                            <xs:element name="maintainer" minOccurs="0">
                                               <xs:complexType>
                                                 <xs:simpleContent>
                                                   <xs:extension base="xs:string">
@@ -115,10 +115,10 @@
                                           </xs:sequence>
                                         </xs:complexType>
                                       </xs:element>
-                                      <xs:element name="mantainers">
+                                      <xs:element name="maintainers">
                                         <xs:complexType mixed="true">
                                           <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
+                                            <xs:element name="maintainer" minOccurs="0">
                                               <xs:complexType>
                                                 <xs:simpleContent>
                                                   <xs:extension base="xs:string">
@@ -171,10 +171,10 @@
                                           </xs:sequence>
                                         </xs:complexType>
                                       </xs:element>
-                                      <xs:element name="mantainers">
+                                      <xs:element name="maintainers">
                                         <xs:complexType mixed="true">
                                           <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
+                                            <xs:element name="maintainer" minOccurs="0">
                                               <xs:complexType>
                                                 <xs:simpleContent>
                                                   <xs:extension base="xs:string">
@@ -235,10 +235,10 @@
                                           </xs:sequence>
                                         </xs:complexType>
                                       </xs:element>
-                                      <xs:element name="mantainers">
+                                      <xs:element name="maintainers">
                                         <xs:complexType mixed="true">
                                           <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
+                                            <xs:element name="maintainer" minOccurs="0">
                                               <xs:complexType>
                                                 <xs:simpleContent>
                                                   <xs:extension base="xs:string">
@@ -309,10 +309,10 @@
                                           </xs:sequence>
                                         </xs:complexType>
                                       </xs:element>
-                                      <xs:element name="mantainers">
+                                      <xs:element name="maintainers">
                                         <xs:complexType mixed="true">
                                           <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
+                                            <xs:element name="maintainer" minOccurs="0">
                                               <xs:complexType>
                                                 <xs:simpleContent>
                                                   <xs:extension base="xs:string">
@@ -375,10 +375,10 @@
                                           </xs:sequence>
                                         </xs:complexType>
                                       </xs:element>
-                                      <xs:element name="mantainers">
+                                      <xs:element name="maintainers">
                                         <xs:complexType mixed="true">
                                           <xs:sequence>
-                                            <xs:element name="mantainer" minOccurs="0">
+                                            <xs:element name="maintainer" minOccurs="0">
                                               <xs:complexType>
                                                 <xs:simpleContent>
                                                   <xs:extension base="xs:string">
