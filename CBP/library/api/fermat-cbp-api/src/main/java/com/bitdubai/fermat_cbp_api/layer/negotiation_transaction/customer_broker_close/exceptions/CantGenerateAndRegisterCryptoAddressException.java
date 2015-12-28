@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broke
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Yordin on 27/12/15.
+ * Created by Yordin Alayn on 27.12.15.
  */
 public class CantGenerateAndRegisterCryptoAddressException extends FermatException {
 

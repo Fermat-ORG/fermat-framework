@@ -4,16 +4,25 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVaultEnum;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantIdentifyVaultException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantIdentifyWalletManagerException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGenerateAndRegisterCryptoAddressException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGenerateCryptoAddressException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetDefaultWalletException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetDefaultWalletNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetNewCryptoAddressExceptions;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantHandleCryptoAddressesNewException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCryptoAddressesNewException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantRegisterCryptoAddressBookException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.WalletManagerSelector;
@@ -41,9 +50,17 @@ public abstract class AbstractCryptoAddress {
     protected final CryptoAddress getAddress(
         final VaultType vaultType     ,
         final CryptoCurrency cryptoCurrency)
-    throws CantGenerateCryptoAddressException, CantGetNewCryptoAddressExceptions{
+    throws CantGenerateCryptoAddressException{
 
-        return null;
+        try {
+
+            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(BlockchainNetworkType.DEFAULT);
+
+        } catch (CantIdentifyVaultException e) {
+            throw new CantGenerateCryptoAddressException(e, "", "Problem identifying vault.");
+        } catch (GetNewCryptoAddressException e) {
+            throw new CantGenerateCryptoAddressException(e, "", "Problem identifying vault.");
+        }
     }
 
     /*GET THE DEFAULT WALLET FOR CRPYTO ADDRESS*/
@@ -52,30 +69,91 @@ public abstract class AbstractCryptoAddress {
         final CryptoCurrency        cryptoCurrency,
         final BlockchainNetworkType networkType   ,
         final Platforms platform)
-    throws CantGetDefaultWalletException, CantGetDefaultWalletNotFoundException{
+    throws CantGetDefaultWalletException{
 
-        return null;
+        try {
+
+            return walletManagerSelector.getWalletManager(platform).getDefaultWallet(cryptoCurrency,actorType,networkType);
+
+        } catch (CantIdentifyWalletManagerException e) {
+            throw new CantGetDefaultWalletException(e, "", "Problem identifying wallet manager.");
+        } catch (DefaultWalletNotFoundException e) {
+            throw new CantGetDefaultWalletException(e, "", "Default wallet not found.");
+        } catch (CantGetInstalledWalletException e) {
+
+            throw new CantGetDefaultWalletException(e, "", "There was a problem trying to get the default wallet.");
+        }
     }
 
     /*REGISTER THE CRYPTO ADDRESS*/
     protected final void registerCryptoAddress(
         final CryptoAddress        cryptoAddress  ,
-        /*final CryptoAddressRequest request        ,*/
+        final CryptoAddressRequest request        ,
         final InstalledWallet      installedWallet,
         final VaultType            vaultType
     ) throws CantRegisterCryptoAddressBookException{
 
+        try {
+            //TODO CHECK CryptoAddressRequest.
+            FermatVaultEnum fermatVaultEnum = cryptoVaultSelector.getVaultEnum(vaultType, request.getCryptoCurrency());
+
+            ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(installedWallet.getWalletCategory(), installedWallet.getWalletPlatformIdentifier());
+
+            cryptoAddressBookManager.registerCryptoAddress(
+                    cryptoAddress,
+                    request.getIdentityPublicKeyRequesting(),
+                    request.getIdentityTypeRequesting(),
+                    request.getIdentityPublicKeyResponding(),
+                    request.getIdentityTypeResponding(),
+                    installedWallet.getPlatform(),
+                    vaultType,
+                    fermatVaultEnum.getCode(),
+                    installedWallet.getWalletPublicKey(),
+                    referenceWallet
+            );
+        } catch (InvalidParameterException | CallToGetByCodeOnNONEException e){
+            throw new CantRegisterCryptoAddressBookException(e, "walletCategory: "+installedWallet.getWalletCategory()+" - walletPlatformIdentifier: "+installedWallet.getWalletPlatformIdentifier(), "Error trying to get the reference wallet type.");
+        } catch (CantRegisterCryptoAddressBookRecordException e) {
+            throw new CantRegisterCryptoAddressBookException(e, "", "Error trying to register the crypto address.");
+        }
     }
 
     /*GENERATE AND REGISTER THE CRYPTO ADDRESS*/
     protected final CryptoAddress generateAndRegisterCryptoAddress(
         final Platforms            platform ,
-        final VaultType            vaultType
-        /*final CryptoAddressRequest request*/
-    ) throws CantGenerateAndRegisterCryptoAddressException, CantGetDefaultWalletNotFoundException{
-        return null;
+        final VaultType            vaultType,
+        final CryptoAddressRequest request
+    ) throws CantGenerateAndRegisterCryptoAddressException{
+
+        try {
+
+            InstalledWallet wallet = this.getDefaultWallet(
+                    request.getIdentityTypeResponding(),
+                    request.getCryptoCurrency()        ,
+                    request.getBlockchainNetworkType() ,
+                    platform
+            );
+
+            final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency());
+
+            this.registerCryptoAddress(
+                    cryptoAddress,
+                    request,
+                    wallet,
+                    vaultType
+            );
+
+            return cryptoAddress;
+
+        } catch (CantGetDefaultWalletException e) {
+            throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to get a wallet.");
+        } catch (CantRegisterCryptoAddressBookException e) {
+            throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to register the crypto address.");
+        } catch (CantGenerateCryptoAddressException e) {
+            throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to generate the crypto address.");
+        }
+
     }
 
-
-    public abstract void handleCryptoAddressesNew(/*final CryptoAddressRequest cryptoAddressRequest*/)throws CantHandleCryptoAddressesNewException;
+    public abstract CryptoAddress CryptoAddressesNew(final CryptoAddressRequest cryptoAddressRequest)throws CantCryptoAddressesNewException;
 }

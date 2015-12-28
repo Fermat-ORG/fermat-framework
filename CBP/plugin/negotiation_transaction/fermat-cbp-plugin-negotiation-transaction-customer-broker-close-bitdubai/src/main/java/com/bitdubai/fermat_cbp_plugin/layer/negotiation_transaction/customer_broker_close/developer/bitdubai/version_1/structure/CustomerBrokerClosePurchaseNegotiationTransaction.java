@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
@@ -11,10 +13,15 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCryptoAddressesNewException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.CryptoVaultSelector;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.WalletManagerSelector;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantNegotiationAddCryptoAdreessException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
@@ -150,7 +157,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
         for(Clause clause : negotiationClauses){
             if(clause.getType() == ClauseType.CUSTOMER_CRYPTO_ADDRESS){
                 negotiationClausesNew.add(
-                    addClause(clause,cryptoAdreessActor())
+                    addClause(clause,cryptoAdreessActor(null,null,null,null))
                 );
             }else{
                 negotiationClausesNew.add(
@@ -178,25 +185,37 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
-    private String cryptoAdreessActor() {
+    private String cryptoAdreessActor(final CryptoAddressesManager cryptoAddressesManager,
+                                      final CryptoAddressBookManager cryptoAddressBookManager,
+                                      final CryptoVaultSelector cryptoVaultSelector,
+                                      final WalletManagerSelector walletManagerSelector) {
 
-        String cryptoAdreess = null;
+        CryptoAddress cryptoAdreess = null;
+
+        String adreess = null;
 
         try {
 
-            CryptoPaymentRegistry cryptoPaymentRegistry = cryptoPaymentManager.getCryptoPaymentRegistry();
+            CryptoAddressRequest request = null;
+            CustomerBrokerCloseCryptoAddress customerBrokerCloseCryptoAddress = new CustomerBrokerCloseCryptoAddress(
+                    cryptoAddressesManager,
+                    cryptoAddressBookManager,
+                    cryptoVaultSelector,
+                    walletManagerSelector
+            );
 
-//            cryptoPaymentRegistry.generateCryptoPaymentRequest();
-//
-//            cryptoPaymentRegistry.getRequestById();
+            cryptoAdreess = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
 
-        } catch (CantGetCryptoPaymentRegistryException e){
+            adreess = cryptoAdreess.getAddress();
+
+        } catch (CantCryptoAddressesNewException e){
 
         }
 
-        return cryptoAdreess;
+        return adreess;
 
     }
+
     private boolean isCryptoCurrency(Collection<Clause> negotiationClauses){
 
         for(Clause clause : negotiationClauses){
@@ -210,6 +229,5 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
         return false;
 
     }
-
 
 }
