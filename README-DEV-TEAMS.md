@@ -66,8 +66,8 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 8 | New Parent Team Leader | Team Leader of a team with one sub-team. |
 | 9 | Parent Team Leader | Team Leader of a team with many sub-teams. |
 | 10 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
-| 11 | New Grand Team Leader | Team Leader with 5 sub-teams and one grand child. |
-| 12 | Grand Team Leader | Team Leader with 5 sub-teams and several grand children. |
+| 11 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
+| 12 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
 | 13 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
 | 14 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
 
