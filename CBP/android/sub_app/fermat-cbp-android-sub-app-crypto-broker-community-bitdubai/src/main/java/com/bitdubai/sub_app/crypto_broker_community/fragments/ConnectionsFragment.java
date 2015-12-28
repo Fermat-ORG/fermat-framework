@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -64,7 +64,7 @@ import static android.widget.Toast.makeText;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsFragment extends FermatFragment implements SearchView.OnCloseListener,
+public class ConnectionsFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         ActionBar.OnNavigationListener,
         AdapterView.OnItemClickListener,

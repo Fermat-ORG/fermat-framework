@@ -14,7 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -38,7 +38,7 @@ import java.util.List;
  * Creado por Jose manuel De Sousa el 30/11/2015
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionsListFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+public class ConnectionsListFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private static final int MAX = 20;

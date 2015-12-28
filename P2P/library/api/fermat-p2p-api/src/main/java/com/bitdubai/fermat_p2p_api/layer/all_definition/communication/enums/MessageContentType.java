@@ -21,7 +21,8 @@ public enum MessageContentType {
     /**
      * The enum values
      */
-    TEXT  ("TXT"),
+    TEXT  ("TEXT"),
+    JSON  ("JSON"),
     BYTE  ("BYTE"),
     IMAGE ("IMG"),
     VIDEO ("VIDEO");
@@ -59,6 +60,8 @@ public enum MessageContentType {
         switch (code) {
             case "TXT":
                 return MessageContentType.TEXT;
+            case "JSON":
+                return MessageContentType.JSON;
             case "BYTE":
                 return MessageContentType.BYTE;
             case "IMG":

@@ -6,12 +6,10 @@ import android.support.multidex.MultiDexApplication;
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_core.FermatSystem;
-
 import java.io.Serializable;
 import java.util.HashMap;
-
 
 /**
  * Reformated by Matias Furszyfer
@@ -60,7 +58,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     /**
      *  SubApps fragment factories
      */
-    private HashMap<String,FermatSubAppFragmentFactory> subAppsFragmentfFactories;
+    private HashMap<String,FermatFragmentFactory> subAppsFragmentfFactories;
 
 
 
@@ -126,7 +124,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     /**
      *  Add supApp fragment factory
      */
-    public void addSubAppFragmentFactory(String subAppType,FermatSubAppFragmentFactory fermatSubAppFragmentFactory){
+    public void addSubAppFragmentFactory(String subAppType,FermatFragmentFactory fermatSubAppFragmentFactory){
         subAppsFragmentfFactories.put(subAppType,fermatSubAppFragmentFactory);
     }
 
