@@ -9,6 +9,7 @@
         android:layout_width="100dp">
 
         <ImageView
+            android:id="@+id/assetImageUserDeliveryList"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/img_asset_without_image"
@@ -23,14 +24,16 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp">
 
-        <TextView android:id="@+id/assetNameDeliveryListText"
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNameUserDeliveryListText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Asset Name"
             android:layout_marginBottom="15dp"
             android:textSize="@dimen/abc_text_size_title_material"/>
 
-        <TextView android:id="@+id/assetsRemainingDeliveryListText"
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetsRemainingUserDeliveryListText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="94 Assets Remaining"
