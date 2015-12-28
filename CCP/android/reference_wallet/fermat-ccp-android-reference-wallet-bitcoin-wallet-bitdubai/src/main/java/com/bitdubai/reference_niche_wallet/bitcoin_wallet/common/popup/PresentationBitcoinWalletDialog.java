@@ -96,7 +96,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         txt_body = (FermatTextView) findViewById(R.id.txt_body);
         footer_title = (FermatTextView) findViewById(R.id.footer_title);
         checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
-        checkbox_not_show.setChecked(checkButton);
+        checkbox_not_show.setChecked(!checkButton);
         switch (type){
             case TYPE_PRESENTATION:
                 image_view_left = (ImageView) findViewById(R.id.image_view_left);

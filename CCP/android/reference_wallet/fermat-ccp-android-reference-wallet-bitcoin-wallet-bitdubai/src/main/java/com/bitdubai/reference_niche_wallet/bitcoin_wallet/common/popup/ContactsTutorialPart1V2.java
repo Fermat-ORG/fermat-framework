@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
@@ -11,6 +12,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.Views.SpacesItemDecoration;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -28,6 +34,8 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
     private final Activity activity;
     private FermatButton add_fermat_user;
     private FermatButton add_extra_user;
+    private CheckBox checkbox_not_show;
+    private boolean checkButton;
 
     /**
      * Constructor using Session and Resources
@@ -36,9 +44,10 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public ContactsTutorialPart1V2(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources) {
+    public ContactsTutorialPart1V2(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
+        this.checkButton = checkButton;
     }
 
     @Override
@@ -47,6 +56,8 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
 
         add_fermat_user =(FermatButton) findViewById(R.id.add_fermat_user);
         add_extra_user = (FermatButton) findViewById(R.id.add_extra_user);
+        checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
+        checkbox_not_show.setChecked(!checkButton);
 
         add_fermat_user.setOnClickListener(this);
         add_extra_user.setOnClickListener(this);
@@ -69,6 +80,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
 
         if(id == R.id.add_fermat_user){
             try {
+                saveSettings();
                 Object[] object = new Object[2];
                 changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
             } catch (Exception e) {
@@ -77,7 +89,26 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
         }
         else if(id == R.id.add_extra_user){
             getSession().setData(SessionConstant.CREATE_EXTRA_USER,Boolean.TRUE);
+            saveSettings();
             dismiss();
         }
+    }
+
+    private void saveSettings(){
+        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
+            if(checkbox_not_show.isChecked()){
+                SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
+                try {
+                    BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                    settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+                } catch (CantGetSettingsException e) {
+                    e.printStackTrace();
+                } catch (SettingsNotFoundException e) {
+                    e.printStackTrace();
+                } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                }
+            }
     }
 }
