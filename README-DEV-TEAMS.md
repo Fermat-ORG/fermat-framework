@@ -6,13 +6,13 @@
 
 All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only types of teams. We also have teams of graphic designers, 3d artists, video producers, copy writers, etc.
 
-In these file you will have a list of Fermat's developers teams. Feel free to contact their team leaders in order to join them.
+At this file you will find a list of Fermat developers teams. Feel free to contact their team leaders if you want to join them.
 
 ## Organization
 
-The ideal size of a team is 5 people. Between all, they should cover all the fields needed for these kind of projects.
+The maximun size of a team is 5 people. Among all of them, they should have all the skill sets needed for these kind of projects.
 
-In Fermat teams are organized in a hierarchical way. This helps in reviewing changes in source code, since it is expected that a child team changes are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent. At the top of the hierarchy the core developers are the only merging the final batch of changes into the bitDubai codebase.
+Fermat teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
 
 ## Team List
 
@@ -24,7 +24,7 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 * Fermat ORG Server
 * DBZ Team
 * Mordor
-* Franlkin's Team
+* Kabuto
 
 ## Current Hierarchy
 
@@ -50,7 +50,7 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 
 ## Compensation
 
-Team leaders are classified by the deepness of the hierarchy that goes below then. The following table shows the categories related to compensation:
+Team leaders are classified by the deepness of the hierarchy that lies below then. The following table shows the categories related to compensation:
 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
@@ -67,7 +67,7 @@ Team leaders are classified by the deepness of the hierarchy that goes below the
 | 11 | Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo |
 
 
-Please note that whenever with talk about a full-time developer is equivalent to two part-time developers.
+Please note that whenever with mention a full-time developer is equivalent to mention two part-time developers.
 
 <br>
 ## Team Members
