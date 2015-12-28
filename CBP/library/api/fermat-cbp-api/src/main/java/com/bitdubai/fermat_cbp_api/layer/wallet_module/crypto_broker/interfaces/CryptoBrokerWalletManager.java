@@ -1,7 +1,19 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
@@ -17,9 +29,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by nelson on 22/09/15.
@@ -88,4 +100,109 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
+    /**
+     *
+     * @param location
+     * @param uri
+     * @throws CantCreateLocationSaleException
+     */
+    void createNewLocation(String location, String uri) throws CantCreateLocationSaleException;
+
+    /**
+     *
+     * @param location
+     * @throws CantUpdateLocationSaleException
+     */
+    void updateLocation(NegotiationLocations location) throws CantUpdateLocationSaleException;
+
+    /**
+     *
+     * @param location
+     * @throws CantDeleteLocationSaleException
+     */
+    void deleteLocation(NegotiationLocations location) throws CantDeleteLocationSaleException;
+
+    List<BankAccountNumber> getAccounts(String walletPublicKey) throws CantLoadBankMoneyWalletException;
+
+    /**
+     * Method that create the transaction Restock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param cbpWalletPublicKey
+     * @param bankWalletPublicKey
+     * @param bankAccount
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     *
+     * @throws CantCreateBankMoneyRestockException
+     */
+
+    void createTransactionRestockBank(
+            String       publicKeyActor,
+            FiatCurrency fiatCurrency,
+            String       cbpWalletPublicKey,
+            String       bankWalletPublicKey,
+            String       bankAccount,
+            BigDecimal amount,
+            String       memo,
+            BigDecimal   priceReference,
+            OriginTransaction originTransaction
+    ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
+
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param cshWalletPublicKey
+     * @param cashReference
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     *
+     * @throws CantCreateCashMoneyRestockException
+     */
+    void createTransactionRestockCash(
+            String publicKeyActor,
+            FiatCurrency fiatCurrency,
+            String cbpWalletPublicKey,
+            String cshWalletPublicKey,
+            String cashReference,
+            BigDecimal amount,
+            String memo,
+            BigDecimal priceReference,
+            OriginTransaction originTransaction
+    ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
+
+
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param cryptoCurrency
+     * @param cbpWalletPublicKey
+     * @param cryWalletPublicKey
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     *
+     * @throws CantCreateCashMoneyRestockException
+     */
+    void createTransactionRestockCrypto(
+            String publicKeyActor,
+            CryptoCurrency cryptoCurrency,
+            String cbpWalletPublicKey,
+            String cryWalletPublicKey,
+            BigDecimal amount,
+            String memo,
+            BigDecimal priceReference,
+            OriginTransaction originTransaction
+    ) throws CantCreateCryptoMoneyRestockException;
 }
