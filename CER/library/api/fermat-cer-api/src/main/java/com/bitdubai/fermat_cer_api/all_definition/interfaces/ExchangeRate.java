@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_api.layer.provider.interfaces;
+package com.bitdubai.fermat_cer_api.all_definition.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
