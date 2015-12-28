@@ -200,6 +200,12 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     }
 
     @Override
+    public void onDetach() {
+        layoutManager = null;
+        super.onDetach();
+    }
+
+    @Override
     public CharSequence getTitle() {
         return null;
     }

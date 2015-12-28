@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -42,7 +43,7 @@ import java.util.List;
  * Created by Leon Acosta (laion.cj91@gmail.com) on 31/10/2015.
  */
 
-public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin {
+public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin implements FermatManager {
 
     /*
      * Init References list..
@@ -111,6 +112,10 @@ public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Error trying to execute pending actions in network service.");
+        } catch (Exception e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, "", "Unhandled error trying to start crypto addresses middleware plugin root.");
         }
 
     }
