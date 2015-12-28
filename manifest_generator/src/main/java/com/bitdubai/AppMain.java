@@ -21,6 +21,7 @@ public class AppMain {
             Fermat fermat = (Fermat) jaxbUnmarshaller.unmarshal(file);
 
             System.out.println(fermat);
+            System.out.println("FermatManifest.xml successfully read, all ok :)");
 
         } catch (JAXBException e) {
             e.printStackTrace();
