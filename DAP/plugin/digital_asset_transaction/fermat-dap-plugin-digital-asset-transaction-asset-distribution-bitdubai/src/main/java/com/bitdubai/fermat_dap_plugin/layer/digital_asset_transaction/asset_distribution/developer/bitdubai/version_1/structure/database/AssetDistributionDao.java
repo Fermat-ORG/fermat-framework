@@ -278,7 +278,7 @@ public class AssetDistributionDao {
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME,
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME
-        ).size() > 1;
+        ).size() == 1;
     }
 
     public boolean isDeliveringGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException {
