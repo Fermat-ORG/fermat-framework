@@ -4,7 +4,7 @@
     android:layout_height="75dp"
     android:background="@color/fab_material_white">
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:textSize="@dimen/abc_text_size_title_material"
         android:textColor="@color/fab_material_black"/>
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/deliveryDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         android:textSize="@dimen/abc_text_size_small_material"
         android:textColor="@color/gray"/>
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/deliveryStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

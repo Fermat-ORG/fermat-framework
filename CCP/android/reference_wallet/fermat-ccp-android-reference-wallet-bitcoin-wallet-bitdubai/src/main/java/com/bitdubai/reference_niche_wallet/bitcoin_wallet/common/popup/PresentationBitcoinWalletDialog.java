@@ -44,6 +44,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     private final Activity activity;
     private final int type;
+    private final boolean checkButton;
 
     /**
      * Members
@@ -79,10 +80,11 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationBitcoinWalletDialog(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,int type) {
+    public PresentationBitcoinWalletDialog(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;
+        this.checkButton = checkButton;
     }
 
     @Override
@@ -94,6 +96,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         txt_body = (FermatTextView) findViewById(R.id.txt_body);
         footer_title = (FermatTextView) findViewById(R.id.footer_title);
         checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
+        checkbox_not_show.setChecked(!checkButton);
         switch (type){
             case TYPE_PRESENTATION:
                 image_view_left = (ImageView) findViewById(R.id.image_view_left);
@@ -181,6 +184,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     }
 
     private void saveSettings(){
+        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
         if(checkbox_not_show.isChecked()){
             SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
             try {
