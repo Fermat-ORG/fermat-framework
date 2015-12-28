@@ -17,7 +17,7 @@ RAM = 8 Gb
 ## Part I: Setting up the Environment
 
 <br>
-### Working on Linux - PLEASE READ THIS FIRST- 
+### 1.- Working on Linux - PLEASE READ THIS FIRST- 
 
 It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution). 
 To use Ubuntu, you will need:
@@ -26,7 +26,7 @@ To use Ubuntu, you will need:
 * c) A free DVD to create the UBUNTU installation disk.
 
 <br>
-### Tools Overview
+### 2.- Tools Overview
 
 You will need the following tools in order to develop in Fermat
 
@@ -40,7 +40,10 @@ You will need the following tools in order to develop in Fermat
 Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team, by means of the automatic installationscript or following the manual installation steps.
 
 
-### Automatic installation
+### 3.- Installation
+You can try first the Automatic installation, but if you prefer to do it manually, go directly to the following section [Manual Installation] (https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md#Manual)
+
+#### A.- Automatic Installation
 
 * You can install all the needed software automatically using the following script: (please use "right-clic" and "save as.." and save it in your _$HOME_ folder ) 
 [FermatDeveloperInstaller.sh] (https://raw.githubusercontent.com/bitDubai/fermat/master/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
@@ -61,15 +64,17 @@ cd $HOME
 ./FermatDeveloperInstaller.sh
 ```
 
-It takes some time to download all the software, please, be patient.
+It takes some time to download all the software, please, be patient. As long as the script is running, the procedure is ok. 
+When the scripts finishes, then follow with <<Cloning Repository>>
 
 
 <br>
-### Manual installation (if automatic installation did no work properly)
+[[Manual]]
+#### B.- Manual installation (if automatic installation did no work properly)
 
-In case the script goes wrong or does not do its intended job, you can go with the manual set up of the environment.
+In case the script goes wrong or does not fullfill its intended job, you can follow next steps to manually set up of the environment.
 
-#### Installing Git
+##### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you will find in any Distro of Linux.
 
@@ -81,7 +86,7 @@ sudo apt-get install git
 ```
 
 <br>
-#### Installing the JDK 7
+##### Installing the JDK 7
 
 You can get a running OpenJDK in most distros, but it's advised that we use the oficial Oracle JVM when coding in Fermat.
 
@@ -99,7 +104,7 @@ sudo mv jdk* /opt/java
 ```
 
 <br>
-#### Installing Gradle
+##### Installing Gradle
 
 We can also install Gradle using the `apt` service, although the version might be out of date, we recommend that you download the one available in [gradle.org](http://gradle.org/)
 
@@ -111,7 +116,7 @@ sudo mv gradle-2.10/ /opt/gradle
 ```
 
 <br>
-#### Installing Android SDK Tools
+##### Installing Android SDK Tools
 
 We can obtain the Android SDK Tools directly from [this link](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
 
@@ -123,7 +128,7 @@ sudo mv android-sdk-linux/ /opt/android-sdk
 ```
 
 <br>
-#### Setting Up The Environment Variables
+##### Setting Up The Environment Variables
 
 We recommend that you configure your environment to recognize the tools you've downloaded and placed inside **/opt** as a part of the *bash profile*.
 
@@ -143,7 +148,7 @@ IMPORTANT: For these changes to be in effect you should log out of your current 
 TIP: You can verify that these variables are proper by using the command `env`
 
 <br>
-#### Downloading the Android SDKs and Build Tools
+##### Downloading the Android SDKs and Build Tools
 
 Before you're able to compile Fermat properly, you need to download the SDKs and build tools that Gradle will use to build Fermat.
 
@@ -184,7 +189,9 @@ sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
 
 This will enable 64-bit linux distros to run 32-bit applications like adb and aapt (Android tools). More information found here: [Android Issue 82711](https://code.google.com/p/android/issues/detail?id=82711)
 
-### Cloning Repository
+### 4.- Cloning Repository
+
+After finishing setting up the environment ( automatically or manually), you need to proceed with generating a copy of Fermat repository to work with.
 
 #### Create your fork.
 
