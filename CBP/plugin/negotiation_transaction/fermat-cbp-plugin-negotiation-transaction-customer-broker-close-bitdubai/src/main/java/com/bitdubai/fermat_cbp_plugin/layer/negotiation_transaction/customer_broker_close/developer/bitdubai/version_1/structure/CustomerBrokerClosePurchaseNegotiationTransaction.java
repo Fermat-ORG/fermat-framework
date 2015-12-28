@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
@@ -21,10 +21,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantNegotiationAddCryptoAdreessException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,14 +38,27 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
     /*Represent the Transaction database DAO */
     private CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao;
 
-    private CryptoPaymentManager                                    cryptoPaymentManager;
+    /*Represent Address Book Manager*/
+    private CryptoAddressBookManager                                cryptoAddressBookManager;
+
+    /*Represent Vault Manager*/
+    private CryptoVaultManager                                      cryptoVaultManager;
+
+    /*Represent Wallet Manager*/
+    private WalletManagerManager                                    walletManagerManager;
 
     public CustomerBrokerClosePurchaseNegotiationTransaction(
             CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
-            CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao
+            CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
+            CryptoAddressBookManager                                cryptoAddressBookManager,
+            CryptoVaultManager                                      cryptoVaultManager,
+            WalletManagerManager                                    walletManagerManager
     ){
         this.customerBrokerPurchaseNegotiationManager               = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
+        this.cryptoAddressBookManager                               = cryptoAddressBookManager;
+        this.cryptoVaultManager                                     = cryptoVaultManager;
+        this.walletManagerManager                                   = walletManagerManager;
     }
 
     //PROCESS THE UPDATE PURCHASE NEGOTIATION TRANSACTION
@@ -157,7 +167,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
         for(Clause clause : negotiationClauses){
             if(clause.getType() == ClauseType.CUSTOMER_CRYPTO_ADDRESS){
                 negotiationClausesNew.add(
-                    addClause(clause,cryptoAdreessActor(null,null,null,null))
+                    addClause(clause,cryptoAdreessActor())
                 );
             }else{
                 negotiationClausesNew.add(
@@ -185,21 +195,18 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
-    private String cryptoAdreessActor(final CryptoAddressesManager cryptoAddressesManager,
-                                      final CryptoAddressBookManager cryptoAddressBookManager,
-                                      final CryptoVaultSelector cryptoVaultSelector,
-                                      final WalletManagerSelector walletManagerSelector) {
+    private String cryptoAdreessActor() {
 
-        CryptoAddress cryptoAdreess = null;
-
-        String adreess = null;
+        CryptoVaultSelector     cryptoVaultSelector     = new CryptoVaultSelector(this.cryptoVaultManager);
+        WalletManagerSelector   walletManagerSelector   = new WalletManagerSelector(this.walletManagerManager);
+        String                  adreess                 = null;
+        CryptoAddress           cryptoAdreess;
 
         try {
 
             CryptoAddressRequest request = null;
             CustomerBrokerCloseCryptoAddress customerBrokerCloseCryptoAddress = new CustomerBrokerCloseCryptoAddress(
-                    cryptoAddressesManager,
-                    cryptoAddressBookManager,
+                    this.cryptoAddressBookManager,
                     cryptoVaultSelector,
                     walletManagerSelector
             );

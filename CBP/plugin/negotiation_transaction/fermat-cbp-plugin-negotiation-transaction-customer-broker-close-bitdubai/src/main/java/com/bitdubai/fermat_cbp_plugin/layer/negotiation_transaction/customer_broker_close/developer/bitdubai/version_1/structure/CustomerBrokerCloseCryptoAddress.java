@@ -10,17 +10,16 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.WalletManagerSelector;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 
 /**
  * Created by Yordin Alayn on 27.12.15.
  */
 public class CustomerBrokerCloseCryptoAddress extends AbstractCryptoAddress{
 
-    public CustomerBrokerCloseCryptoAddress(final CryptoAddressesManager cryptoAddressesManager,
-                                            final CryptoAddressBookManager cryptoAddressBookManager,
-                                            final CryptoVaultSelector cryptoVaultSelector,
-                                            final WalletManagerSelector walletManagerSelector
+    public CustomerBrokerCloseCryptoAddress(
+        final CryptoAddressBookManager cryptoAddressBookManager,
+        final CryptoVaultSelector cryptoVaultSelector,
+        final WalletManagerSelector walletManagerSelector
     ){
         super(cryptoAddressBookManager, cryptoVaultSelector, walletManagerSelector);
     }
