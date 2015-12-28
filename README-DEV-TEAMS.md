@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Everything done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only team. We also have teams of graphic designers, 3d artists, video producers, copy writers, etc.
+All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only team. We also have teams of graphic designers, 3d artists, video producers, copy writers, etc.
 
 In these file you will have a list of Fermat's developers teams. Feel free to contact their team leaders in order to join them.
 
