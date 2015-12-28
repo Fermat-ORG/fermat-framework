@@ -26,9 +26,11 @@ A peer-to-peer network that propagates crypto transactions and blocks every node
 secret key (aka private key)::
 	The secret number that unlocks a crypto currency sent to the corresponding crypto address. A secret key looks like this: +5J76sF8L5jTtzE96r66Sf8cka9y44wdpJjMwCxR3tzLh3ibVPxh+.((("secret key")))((("private key", see="secret key")))
 	
+[[transaction]]
 transaction::
 In simple terms, a transfer of crypto currency from one address to another. More precisely, a transaction is a signed data structure expressing a transfer of value. Transactions are transmitted over the crypto network, collected by miners, and included into blocks, made permanent on the blockchain.((("transaction")))
 
+[[wallet]]
 wallet::
 Software that holds all your crypto addresses and secret keys. Used to send, receive and store your crypto currency.
 
