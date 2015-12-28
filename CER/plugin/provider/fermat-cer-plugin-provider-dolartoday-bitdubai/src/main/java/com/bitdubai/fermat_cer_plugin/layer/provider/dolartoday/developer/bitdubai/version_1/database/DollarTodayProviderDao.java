@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -12,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_cer_api.all_definition.enums.Currency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantCreateExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.ExchangeRate;
@@ -149,7 +151,14 @@ public class DollarTodayProviderDao {
 
         Currency fromCurrency;
         try {
-            fromCurrency = Currency.getByCode(record.getStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME));
+            String fromCurrencyStr = record.getStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
+
+            if(FiatCurrency.codeExists(fromCurrencyStr))
+                fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
+            else if(CryptoCurrency.codeExists(fromCurrencyStr))
+                fromCurrency = CryptoCurrency.getByCode(fromCurrencyStr);
+            else throw new InvalidParameterException();
+
         } catch (InvalidParameterException e) {
             throw new CantCreateExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Invalid From Currency value stored in table"
                     + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
@@ -157,7 +166,14 @@ public class DollarTodayProviderDao {
 
         Currency toCurrency;
         try {
-            toCurrency = Currency.getByCode(record.getStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME));
+            String toCurrencyStr = record.getStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
+
+            if(FiatCurrency.codeExists(toCurrencyStr))
+                toCurrency = FiatCurrency.getByCode(toCurrencyStr);
+            else if(CryptoCurrency.codeExists(toCurrencyStr))
+                toCurrency = CryptoCurrency.getByCode(toCurrencyStr);
+            else throw new InvalidParameterException();
+
         } catch (InvalidParameterException e) {
             throw new CantCreateExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Invalid To Currency value stored in table"
                     + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
