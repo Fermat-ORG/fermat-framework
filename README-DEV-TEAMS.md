@@ -28,7 +28,7 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 
 ## Current Hierarchy
 
-### Fermat Framework & Network
+### Fermat Framework, Network & APPs
 
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
