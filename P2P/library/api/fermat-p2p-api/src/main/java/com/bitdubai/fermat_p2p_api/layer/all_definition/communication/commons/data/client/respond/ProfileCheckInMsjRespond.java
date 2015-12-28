@@ -1,5 +1,5 @@
 /*
- * @#RespondProfileCheckInMsj.java - 2015
+ * @#ProfileCheckInMsjRespond.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -8,14 +8,14 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ProfileCheckInMsjRespond</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RespondProfileCheckInMsj extends RespondMsg {
+public class ProfileCheckInMsjRespond extends MsgRespond {
 
     /**
      * Represent the identityPublicKey of the profile
@@ -29,7 +29,7 @@ public class RespondProfileCheckInMsj extends RespondMsg {
      * @param details
      * @param identityPublicKey
      */
-    public RespondProfileCheckInMsj(STATUS status, String details, String identityPublicKey) {
+    public ProfileCheckInMsjRespond(STATUS status, String details, String identityPublicKey) {
         super(status, details);
         this.identityPublicKey = identityPublicKey;
     }

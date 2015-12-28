@@ -1,5 +1,5 @@
 /*
- * @#RequestNearNodeList.java - 2015
+ * @#NearNodeListRequestProcessor.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -7,15 +7,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestNearNodeListMsg;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondMsg;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondNearNodeListMsg;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.NearNodeListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -36,27 +32,27 @@ import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestNearNodeList</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 26/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RequestNearNodeList extends PackageProcessor {
+public class NearNodeListRequestProcessor extends PackageProcessor {
 
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(RequestCheckInActor.class.getName());
+    private final Logger LOG = Logger.getLogger(NearNodeListRequestProcessor.class.getName());
 
     /**
      * Constructor whit parameter
      *
      * @param webSocketChannelServerEndpoint register
      */
-    public RequestNearNodeList(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.REQUEST_CHECK_IN_ACTOR);
+    public NearNodeListRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
+        super(webSocketChannelServerEndpoint, PackageType.CHECK_IN_ACTOR_REQUEST);
     }
 
     /**
@@ -73,7 +69,7 @@ public class RequestNearNodeList extends PackageProcessor {
 
         try {
 
-            RequestNearNodeListMsg messageContent = (RequestNearNodeListMsg) packageReceived.getContent();
+            NearNodeListMsgRequest messageContent = (NearNodeListMsgRequest) packageReceived.getContent();
 
             /*
              * Create the method call history
@@ -120,8 +116,8 @@ public class RequestNearNodeList extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                RespondNearNodeListMsg respondNearNodeListMsg = new RespondNearNodeListMsg(RespondNearNodeListMsg.STATUS.SUCCESS, RespondNearNodeListMsg.STATUS.SUCCESS.toString(),nodesProfileList);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_NEAR_NODE_LIST, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.SUCCESS, NearNodeListMsgRespond.STATUS.SUCCESS.toString(),nodesProfileList);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -139,8 +135,8 @@ public class RequestNearNodeList extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                RespondNearNodeListMsg respondNearNodeListMsg = new RespondNearNodeListMsg(RespondNearNodeListMsg.STATUS.FAIL, exception.getLocalizedMessage(), null);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_NEAR_NODE_LIST, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), null);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

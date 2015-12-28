@@ -1,5 +1,5 @@
 /*
- * @#RespondNearNodeListMsg.java - 2015
+ * @#NearNodeListMsgRespond.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -11,7 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondNearNodeListMsg</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.NearNodeListMsgRespond</code>
  * represent the message to request the near node list
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 26/12/15.
@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RespondNearNodeListMsg extends RespondMsg {
+public class NearNodeListMsgRespond extends MsgRespond {
 
     /**
      * Represent the list of nodes
@@ -33,7 +33,7 @@ public class RespondNearNodeListMsg extends RespondMsg {
      * @param details
      * @param nodes
      */
-    public RespondNearNodeListMsg(STATUS status, String details, List<NodeProfile> nodes) {
+    public NearNodeListMsgRespond(STATUS status, String details, List<NodeProfile> nodes) {
         super(status, details);
         this.nodes = nodes;
     }

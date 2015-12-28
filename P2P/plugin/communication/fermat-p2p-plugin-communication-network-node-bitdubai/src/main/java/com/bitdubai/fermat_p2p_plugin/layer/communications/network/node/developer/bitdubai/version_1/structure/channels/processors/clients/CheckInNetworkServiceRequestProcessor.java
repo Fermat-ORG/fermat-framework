@@ -1,5 +1,5 @@
 /*
- * @#RequestCheckInNetworkService.java - 2015
+ * @#CheckInNetworkServiceRequestProcessor.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -7,8 +7,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.RequestProfileCheckInMsg;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ProfileCheckInMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ProfileCheckInMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -24,19 +24,19 @@ import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.RequestCheckInNetworkService</code>
- * process all messages received the type <code>MessageType.REQUEST_CHECK_IN_NETWORK_SERVICE</code><p/>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInNetworkServiceRequestProcessor</code>
+ * process all messages received the type <code>MessageType.CHECK_IN_NETWORK_SERVICE_REQUEST</code><p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RequestCheckInNetworkService extends PackageProcessor {
+public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
 
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(RequestCheckInNetworkService.class.getName());
+    private final Logger LOG = Logger.getLogger(CheckInNetworkServiceRequestProcessor.class.getName());
 
     /**
      * Constructor  whit parameter
@@ -44,8 +44,8 @@ public class RequestCheckInNetworkService extends PackageProcessor {
      * @param webSocketChannelServerEndpoint register
      *
      */
-    public RequestCheckInNetworkService(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.REQUEST_CHECK_IN_NETWORK_SERVICE);
+    public CheckInNetworkServiceRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
+        super(webSocketChannelServerEndpoint, PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST);
     }
 
     /**
@@ -63,7 +63,7 @@ public class RequestCheckInNetworkService extends PackageProcessor {
 
         try {
 
-            RequestProfileCheckInMsg messageContent = (RequestProfileCheckInMsg) packageReceived.getContent();
+            ProfileCheckInMsgRequest messageContent = (ProfileCheckInMsgRequest) packageReceived.getContent();
 
             /*
              * Create the method call history
@@ -97,8 +97,8 @@ public class RequestCheckInNetworkService extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(RespondProfileCheckInMsj.STATUS.SUCCESS, RespondProfileCheckInMsj.STATUS.SUCCESS.toString(), networkServiceProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_CHECK_IN_NETWORK_SERVICE, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                ProfileCheckInMsjRespond respondProfileCheckInMsj = new ProfileCheckInMsjRespond(ProfileCheckInMsjRespond.STATUS.SUCCESS, ProfileCheckInMsjRespond.STATUS.SUCCESS.toString(), networkServiceProfile.getIdentityPublicKey());
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_NETWORK_SERVICE_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -116,8 +116,8 @@ public class RequestCheckInNetworkService extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                RespondProfileCheckInMsj respondProfileCheckInMsj = new RespondProfileCheckInMsj(RespondProfileCheckInMsj.STATUS.FAIL, exception.getLocalizedMessage(), networkServiceProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.RESPOND_CHECK_IN_CLIENT, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                ProfileCheckInMsjRespond respondProfileCheckInMsj = new ProfileCheckInMsjRespond(ProfileCheckInMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), networkServiceProfile.getIdentityPublicKey());
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
