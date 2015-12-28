@@ -80,7 +80,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 #### Thunder Team Members:
 
 
-* Rodrigo Acosta [Team Leader] <br/>
+* Rodrigo Acosta [Team Leader - Core Developer] <br/>
 ---
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
@@ -116,7 +116,7 @@ Currently we are a small team dedicated to the development of a communications l
 
 #### Team Members:
 
-* **Roberto Requena [Team Leader]**<br/>
+* **Roberto Requena [Team Leader - New Team Leader]**<br/>
 ---
     Email:   rart3001@gmail.com
     Skype:   Rart3001
@@ -140,7 +140,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 #### Team Members:
 
 
-* **Manuel Perez [Team Leader]**<br/>
+* **Manuel Perez [Team Leader - New Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
@@ -170,7 +170,7 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 
 #### Team Members:
 
-* **Franklin Marcano [Team Leader]**<br/>
+* **Franklin Marcano [Team Leader - New Team Leader]**<br/>
 ---
     Email:   franklinmarcano1970@gmail.com
     Skype:   franklginmarcano1970
@@ -199,7 +199,7 @@ In each platform mentioned, we are involved in the development of Network Servic
 #### Team Members:
 
 
-* **León Acosta [Team Leader]**<br/>
+* **León Acosta [Team Leader - Core Developer]**<br/>
 ---
     Email:   laion.cj91@gmail.com
     Skype:   leon.acosta
@@ -221,7 +221,7 @@ We are a developer team with different experience level; we give our best to del
 
 #### Team Members:
 
-* **Nelson Ramirez [Team Leader]**
+* **Nelson Ramirez [Team Leader - Full Team Leader]**
     ```
     Email:   nelsonalfo@gmail.com
     Skype:   nelalfo
