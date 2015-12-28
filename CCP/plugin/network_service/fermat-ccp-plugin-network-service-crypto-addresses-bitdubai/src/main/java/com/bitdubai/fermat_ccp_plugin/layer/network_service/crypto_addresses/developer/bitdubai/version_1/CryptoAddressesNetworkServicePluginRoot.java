@@ -259,7 +259,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     // change message state to process again
                     reprocessWaitingMessage();
                 }
-            }, 2*60*1000);
+            }, 2*3600*1000);
 
 
             /*
