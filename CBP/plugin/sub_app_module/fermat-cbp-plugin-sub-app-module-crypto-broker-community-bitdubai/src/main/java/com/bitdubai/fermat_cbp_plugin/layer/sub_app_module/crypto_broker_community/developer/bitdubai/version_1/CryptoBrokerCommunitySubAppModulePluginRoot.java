@@ -63,11 +63,13 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
         try {
 
             fermatManager = new CryptoBrokerCommunityManager(
-                 cryptoBrokerIdentityManager,
+                    cryptoBrokerIdentityManager,
                     cryptoBrokerActorConnectionManager,
                     cryptoBrokerNetworkServiceManager,
                     cryptoCustomerIdentityManager,
                     errorManager,
+                    pluginFileSystem,
+                    pluginId,
                     this.getPluginVersionReference()
             );
 

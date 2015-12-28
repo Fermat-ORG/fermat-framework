@@ -25,7 +25,7 @@ import java.util.UUID;
  * @author lnacosta
  * @version 1.0.0
  */
-public abstract class SettingsManager<Z extends FermatSettings> {
+public /*abstract */class SettingsManager<Z extends FermatSettings> {
 
     private static final String SETTINGS_DIRECTORY_NAME   = "settings";
     private static final String SETTINGS_FILE_NAME_PREFIX = "sFile_"  ;
@@ -161,6 +161,6 @@ public abstract class SettingsManager<Z extends FermatSettings> {
      *
      * @throws CantBuildSettingsObjectException if something goes wrong.
      */
-    public abstract Z buildSettingsObject(final String publicKey) throws CantBuildSettingsObjectException;
+    //public abstract Z buildSettingsObject(final String publicKey) throws CantBuildSettingsObjectException;
 
 }

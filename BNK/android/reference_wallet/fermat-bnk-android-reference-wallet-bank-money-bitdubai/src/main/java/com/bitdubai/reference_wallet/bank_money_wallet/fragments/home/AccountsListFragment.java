@@ -1,15 +1,14 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -81,7 +80,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.onActivityCreated(savedInstanceState);
         try {
             BankMoneyWalletNavigationViewPainter navigationViewPainter = new BankMoneyWalletNavigationViewPainter(getActivity());
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -96,26 +95,6 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if (item.getItemId() == R.id.action_no_filter) {
-            filterContractStatus = null;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_filter_succeed) {
-            filterContractStatus = ContractStatus.COMPLETED;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_filter_cancel) {
-            filterContractStatus = ContractStatus.CANCELLED;
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
-            return true;
-        }*/
 
         return super.onOptionsItemSelected(item);
     }

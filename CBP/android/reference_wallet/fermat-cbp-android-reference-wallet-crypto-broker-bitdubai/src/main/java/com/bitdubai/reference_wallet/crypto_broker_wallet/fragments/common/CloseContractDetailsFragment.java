@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -39,7 +39,7 @@ import java.text.NumberFormat;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CloseContractDetailsFragment extends FermatWalletFragment {
+public class CloseContractDetailsFragment extends AbstractFermatFragment {
     private static final String TAG = "CloseContractDetails";
 
     private CryptoBrokerWalletModuleManager moduleManager;

@@ -1278,6 +1278,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
 
+    @Override
+    public void registerIdentities(){
+        intraWalletUserIdentityManager.registerIdentities();
+    }
+
+
     private  String convertTime(long time){
         Date date = new Date(time);
         Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

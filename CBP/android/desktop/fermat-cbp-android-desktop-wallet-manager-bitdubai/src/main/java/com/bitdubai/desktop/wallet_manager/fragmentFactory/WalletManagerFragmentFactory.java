@@ -4,8 +4,7 @@ import com.bitdubai.desktop.wallet_manager.fragments.MainFragment;
 import com.bitdubai.desktop.wallet_manager.preference_settings.WalletManagerPreferenceSettings;
 import com.bitdubai.desktop.wallet_manager.session.WalletManagerSubAppSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -19,7 +18,7 @@ public class WalletManagerFragmentFactory extends FermatFragmentFactory<WalletMa
 
 
     @Override
-    public FermatFragment getFermatFragment(WalletManagerFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(WalletManagerFragmentsEnumType fragments) throws FragmentNotFoundException {
 
         if (fragments == MAIN_FRAGMET) {
             return MainFragment.newInstance();
