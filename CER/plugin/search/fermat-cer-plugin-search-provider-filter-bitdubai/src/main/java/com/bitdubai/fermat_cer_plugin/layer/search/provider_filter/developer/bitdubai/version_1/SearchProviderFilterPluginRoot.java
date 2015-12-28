@@ -127,11 +127,6 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
    * ProviderFilterManager interface implementation
    */
     @Override
-    public Map<String, CurrencyExchangeRateProviderManager> getProviders() throws CantGetProviderException {
-        return providerMap;
-    }
-
-    @Override
     public Collection<String> getProviderNames() throws CantGetProviderException {
         Iterator iterator = providerMap.keySet().iterator();
         List<String> providerNames = new ArrayList<>();

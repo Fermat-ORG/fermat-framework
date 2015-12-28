@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cer_api.layer.search.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
@@ -13,13 +12,6 @@ import java.util.Map;
  */
 public interface ProviderFilterManager {
 
-    //TODO: complete this
-    /**
-     * Returns a Map, containing.. what?
-     *
-     * @return something
-     */
-    Map<String, CurrencyExchangeRateProviderManager> getProviders() throws CantGetProviderException;
 
     /**
      * Provides access to the internal list of Providers in the CER Platform
