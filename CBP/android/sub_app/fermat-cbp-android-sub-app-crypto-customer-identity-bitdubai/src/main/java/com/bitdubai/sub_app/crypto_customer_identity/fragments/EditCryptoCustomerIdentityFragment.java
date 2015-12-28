@@ -19,12 +19,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
@@ -35,7 +35,7 @@ import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustom
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditCryptoCustomerIdentityFragment extends FermatFragment {
+public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment {
     // Constants
     private static final String TAG = "EditBrokerIdentity";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -65,8 +65,8 @@ public class EditCryptoCustomerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerIdentitySubAppSession) subAppsSession).getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            moduleManager = ((CryptoCustomerIdentitySubAppSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -93,7 +93,7 @@ public class EditCryptoCustomerIdentityFragment extends FermatFragment {
         mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_customer_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
 
-        CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
+        CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(IDENTITY_INFO);
 
         if (identityInfo != null) {
             mBrokerName.setText(identityInfo.getAlias());

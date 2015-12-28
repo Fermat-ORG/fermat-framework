@@ -8,24 +8,21 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database.AssetRedeemPointIdentityDao;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,12 +94,12 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
      * @param pluginFileSystem
      */
     public IdentityAssetRedeemPointManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
-        this.errorManager                 = errorManager;
-        this.logManager                   = logManager;
-        this.pluginDatabaseSystem         = pluginDatabaseSystem;
-        this.pluginFileSystem             = pluginFileSystem;
-        this.pluginId                     = pluginId;
-        this.deviceUserManager            = deviceUserManager;
+        this.errorManager = errorManager;
+        this.logManager = logManager;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.deviceUserManager = deviceUserManager;
         this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
     }
 
@@ -125,12 +122,22 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             return assetRedeemPointList;
 
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetRedeemPointException("CAN'T GET ASSET ISSUER IDENTITIES", e, "Error get logged user device", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT IDENTITIES", e, "Error get logged user device", "");
         } catch (CantListAssetRedeemPointIdentitiesException e) {
-            throw new CantListAssetRedeemPointException("CAN'T GET ASSET ISSUER  IDENTITIES", e, "", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT  IDENTITIES", e, "", "");
         } catch (Exception e) {
-            throw new CantListAssetRedeemPointException("CAN'T GET ASSET ISSUER IDENTITIES", FermatException.wrapException(e), "", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT IDENTITIES", FermatException.wrapException(e), "", "");
         }
+    }
+
+    public RedeemPointIdentity getIdentityRedeemPoint() throws CantGetRedeemPointIdentitiesException {
+        RedeemPointIdentity redeemPointIdentity = null;
+        try {
+            redeemPointIdentity = getAssetRedeemPointIdentityDao().getIdentityRedeemPoint();
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+        return redeemPointIdentity;
     }
 
     public RedeemPointIdentity createNewIdentityAssetRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
@@ -138,8 +145,8 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey   = keyPair.getPublicKey();
-            String privateKey  = keyPair.getPrivateKey();
+            String publicKey = keyPair.getPublicKey();
+            String privateKey = keyPair.getPrivateKey();
 
             getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
@@ -149,28 +156,34 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
 
             return identityAssetRedeemPoint;
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error getting current logged in device user", "");
-        } catch (CantCreateNewDeveloperException e) {
-            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error save user on database", "");
+            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
-            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", FermatException.wrapException(e), "", "");
+            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", FermatException.wrapException(e), "", "");
         }
     }
 
-    public boolean  hasRedeemPointIdentity() throws CantListAssetRedeemPointException{
+    public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityRedeemPointException {
+        try {
+            getAssetRedeemPointIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean hasRedeemPointIdentity() throws CantListAssetRedeemPointException {
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser).size() > 0)
+            if (getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser).size() > 0)
                 return true;
             else
                 return false;
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetRedeemPointException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        }  catch (CantListAssetRedeemPointIdentitiesException e) {
-            throw new CantListAssetRedeemPointException("CAN'T GET IF ASSET USER IDENTITIES EXISTS", e, "", "");
-        }catch (Exception e) {
-            throw new CantListAssetRedeemPointException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET IF NEW REDEEM POINT IDENTITIES  EXISTS", e, "Error get logged user device", "");
+        } catch (CantListAssetRedeemPointIdentitiesException e) {
+            throw new CantListAssetRedeemPointException("CAN'T GET IF NEW REDEEM POINT IDENTITIES EXISTS", e, "", "");
+        } catch (Exception e) {
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -179,18 +192,17 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             List<RedeemPointIdentity> redeemPointIdentities = getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (redeemPointIdentities.size() > 0) {
                 for (RedeemPointIdentity identityAssetRedeemPoint : redeemPointIdentities) {
-                    actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getProfileImage());
+                    actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getImage());
                 }
             }
-        }
-        catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
         } catch (CantListAssetRedeemPointIdentitiesException e) {
-            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant List Asset Redeem Point Identities", "");
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant List Asset Redeem Point Identities", "");
         } catch (CantCreateActorRedeemPointException e) {
-            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant Create Actor Redeem Point User", "");
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Create Actor Redeem Point User", "");
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
-            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant Initialize Asset Redeem Point Identity", "");
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Initialize Asset Redeem Point Identity", "");
         }
     }
 }

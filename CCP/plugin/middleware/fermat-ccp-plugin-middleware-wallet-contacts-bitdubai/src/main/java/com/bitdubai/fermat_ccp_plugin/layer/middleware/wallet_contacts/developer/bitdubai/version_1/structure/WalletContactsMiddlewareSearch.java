@@ -10,8 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDatabaseConstants;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 
@@ -45,31 +45,31 @@ public class WalletContactsMiddlewareSearch implements WalletContactsSearch {
     @Override
     public void resetFilters() {
         this.walletContactsTable = walletContactsMiddlewareDao.getWalletContactsTable();
-        walletContactsTable.setStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+        walletContactsTable.addStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
     }
 
     @Override
     public void setActorAlias(String value, boolean order) {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME;
-        walletContactsTable.setStringFilter(field, value, DatabaseFilterType.LIKE);
+        walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override
     public void setActorFirstName(String value, boolean order) {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME;
-        walletContactsTable.setStringFilter(field, value, DatabaseFilterType.LIKE);
+        walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override
     public void setActorLastName(String value, boolean order) {
         String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME;
-        walletContactsTable.setStringFilter(field, value, DatabaseFilterType.LIKE);
+        walletContactsTable.addStringFilter(field, value, DatabaseFilterType.LIKE);
         if (order)
-            walletContactsTable.setFilterOrder(field, DatabaseFilterOrder.ASCENDING);
+            walletContactsTable.addFilterOrder(field, DatabaseFilterOrder.ASCENDING);
     }
 
     @Override

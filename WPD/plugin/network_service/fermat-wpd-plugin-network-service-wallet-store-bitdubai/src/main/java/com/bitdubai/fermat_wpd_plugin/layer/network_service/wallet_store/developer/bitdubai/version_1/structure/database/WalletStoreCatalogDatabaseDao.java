@@ -37,8 +37,8 @@ import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develop
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 
 import java.net.MalformedURLException;
@@ -371,7 +371,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
 
     private List<DatabaseTableRecord> getRecordsFromDatabase (String tableName, DatabaseTableFilter filter) throws CantExecuteDatabaseOperationException, InvalidResultReturnedByDatabaseException {
         DatabaseTable table = getDatabaseTable(tableName);
-        table.setUUIDFilter(filter.getColumn(), UUID.fromString(filter.getValue()), filter.getType());
+        table.addUUIDFilter(filter.getColumn(), UUID.fromString(filter.getValue()), filter.getType());
         try {
             table.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemoryException) {
@@ -1078,7 +1078,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
 
     private DatabaseTableRecord getDeveloperRecord(UUID developerId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME);
-        databaseTable.setStringFilter(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, developerId.toString(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, developerId.toString(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().size() != 1)
@@ -1092,7 +1092,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
 
     private DatabaseTableRecord getDesignerRecord(UUID designerId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
-        databaseTable.setStringFilter(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designerId.toString(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designerId.toString(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().size() != 1)
@@ -1106,7 +1106,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
 
     private DatabaseTableRecord getTranslatorRecord(UUID translatorId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
-        databaseTable.setStringFilter(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translatorId.toString(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translatorId.toString(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().size() != 1)

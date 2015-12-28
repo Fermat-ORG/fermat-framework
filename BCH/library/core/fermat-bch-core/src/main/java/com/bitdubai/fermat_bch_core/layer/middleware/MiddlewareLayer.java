@@ -1,12 +1,9 @@
 package com.bitdubai.fermat_bch_core.layer.middleware;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_bch_core.layer.crypto_vault.bitcoin_asset_vault.BitcoinAssetVaultPluginSubsystem;
-import com.bitdubai.fermat_bch_core.layer.crypto_vault.bitcoin_vault.BitcoinVaultPluginSubsystem;
-import com.bitdubai.fermat_bch_core.layer.crypto_vault.bitcoin_watch_only_vault.BitcoinWatchOnlyVaultPluginSubsystem;
 import com.bitdubai.fermat_bch_core.layer.middleware.crypto_addresses.CryptoAddressesPluginSubsystem;
 
 /**

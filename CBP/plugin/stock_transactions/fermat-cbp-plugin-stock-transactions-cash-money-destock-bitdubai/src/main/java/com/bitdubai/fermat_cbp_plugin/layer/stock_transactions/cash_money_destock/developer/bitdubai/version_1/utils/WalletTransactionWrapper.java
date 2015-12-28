@@ -3,9 +3,12 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_desto
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -14,17 +17,19 @@ import java.util.UUID;
  *
  * Created by franklin on 17/11/15.
  */
-public class WalletTransactionWrapper implements StockTransaction {
-    private final UUID            transactionId;
-    private final FermatEnum      merchandise;
-    private final BalanceType     balanceType;
+public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRecord {
+    private final UUID transactionId;
+    private final FermatEnum merchandise;
+    private final BalanceType balanceType;
     private final TransactionType transactionType;
-    private final CurrencyType    currencyType;
-    private final String          walletPublicKey;
-    private final String          ownerPublicKey;
-    private final float           amount;
-    private final long            timeStamp;
-    private final String          memo;
+    private final CurrencyType currencyType;
+    private final String walletPublicKey;
+    private final String brokerPublicKey;
+    private final BigDecimal amount;
+    private final long timeStamp;
+    private final String memo;
+    private final BigDecimal priceReference;
+    private final OriginTransaction originTransaction;
 
     public WalletTransactionWrapper(UUID transactionId,
                                     FermatEnum merchandise,
@@ -32,28 +37,31 @@ public class WalletTransactionWrapper implements StockTransaction {
                                     TransactionType transactionType,
                                     CurrencyType currencyType,
                                     String walletPublicKey,
-                                    String ownerPublicKey,
-                                    float amount,
+                                    String brokerPublicKey,
+                                    BigDecimal amount,
                                     long timeStamp,
-                                    String memo){
+                                    String memo,
+                                    BigDecimal priceReference,
+                                    OriginTransaction originTransaction) {
 
-        this.transactionId   = transactionId;
-        this.merchandise       = merchandise;
-        this.balanceType     = balanceType;
+        this.transactionId = transactionId;
+        this.merchandise = merchandise;
+        this.balanceType = balanceType;
         this.transactionType = transactionType;
-        this.currencyType    = currencyType;
+        this.currencyType = currencyType;
         this.walletPublicKey = walletPublicKey;
-        this.ownerPublicKey  = ownerPublicKey;
-        this.amount          = amount;
-        this.timeStamp       = timeStamp;
-        this.memo            = memo;
+        this.brokerPublicKey = brokerPublicKey;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.memo = memo;
+        this.priceReference = priceReference;
+        this.originTransaction = originTransaction;
     }
 
     @Override
     public UUID getTransactionId() {
         return transactionId;
     }
-
 
     @Override
     public BalanceType getBalanceType() {
@@ -81,12 +89,12 @@ public class WalletTransactionWrapper implements StockTransaction {
     }
 
     @Override
-    public String getOwnerPublicKey() {
-        return ownerPublicKey;
+    public String getBrokerPublicKey() {
+        return brokerPublicKey;
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -98,5 +106,25 @@ public class WalletTransactionWrapper implements StockTransaction {
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public BigDecimal getPriceReference() {
+        return priceReference;
+    }
+
+    @Override
+    public OriginTransaction getOriginTransaction() {
+        return originTransaction;
+    }
+
+    @Override
+    public BigDecimal getRunningBookBalance() {
+        return new BigDecimal(0);
+    }
+
+    @Override
+    public BigDecimal getRunningAvailableBalance() {
+        return new BigDecimal(0);
     }
 }

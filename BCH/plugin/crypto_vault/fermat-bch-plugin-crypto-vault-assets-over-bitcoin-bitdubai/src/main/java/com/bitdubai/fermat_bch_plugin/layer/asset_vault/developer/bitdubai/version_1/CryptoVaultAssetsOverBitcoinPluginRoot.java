@@ -23,15 +23,26 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import org.bitcoinj.crypto.DeterministicKey;
 
 import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot</code>
@@ -45,6 +56,7 @@ import java.util.List;
  */
 public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
         AssetVaultManager,
+        PlatformCryptoVault,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.USER            , addon  = Addons .DEVICE_USER           )
@@ -143,8 +155,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
         //generateAddress();
         //sendBitcoinsTest();
 
-
-
         /**
          * Nothing left to do.
          */
@@ -173,8 +183,9 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(5000);
-                        assetCryptoVaultManager.sendAssetBitcoins("c932eb1b998ceed9e38a40dd2efa9d925007d4898dc91451c79fdc6529116cfd", new CryptoAddress("myd4UH9nGSqxwejkyk8rZWvuxQqzqLfB7J", CryptoCurrency.BITCOIN), 100000);
+                        Thread.sleep(15000);
+                        CryptoAddress address = new CryptoAddress("msXC2m8zeJMVvBo4vHkgn3uih2uxFZex7Y", CryptoCurrency.BITCOIN);
+                        assetCryptoVaultManager.sendAssetBitcoins("9a4244b25430b3c6ffc869eabc6230916113b9b44059bdccf85b954bcf3ae8c6", address, 123333);
                     } catch (CantSendAssetBitcoinsToUserException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -201,5 +212,73 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     @Override
     public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException {
         return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, addressTo, amount);
+    }
+
+    /**
+     * PlatformCryptoVault interface implementation.
+     * Generates a new Crypto Address by getting next available key path, derive it, and generate it in the specified network.
+     * @param blockchainNetworkType DEFAULT if null value is passed.
+     * @return the newly created crypto address
+     * @throws GetNewCryptoAddressException
+     */
+    @Override
+    public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return getNewAssetVaultCryptoAddress(blockchainNetworkType);
+    }
+
+    /**
+     * PlatformCryptoVault interface implementation-
+     * @return DAP
+     */
+    @Override
+    public Platforms getPlatform() {
+        return Platforms.DIGITAL_ASSET_PLATFORM;
+    }
+
+    /**
+     * Gets the amount of unused keys that are available from the passed account.
+     * @param  account the hierarchy account to get the keys from
+     * @return
+     */
+    @Override
+    public int getAvailableKeyCount(HierarchyAccount account){
+        return assetCryptoVaultManager.getAvailableKeyCount(account);
+    }
+
+
+    /**
+     * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
+     * @param plugin the pluginId invoking this call. Might not have permissions to create new keys.
+     * @param account the account to derive keys from.
+     * @param keysToDerive thre amount of keys to derive.
+     * @throws CantDeriveNewKeysException
+     */
+    @Override
+    public void deriveKeys(Plugins plugin, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+        assetCryptoVaultManager.deriveKeys(plugin, account, keysToDerive);
+    }
+
+    /**
+     * * Creates a new hierarchy Account in the vault.
+     * This will create the sets of keys and start monitoring the default network with these keys.
+     * @param description
+     * @param hierarchyAccountType
+     * @return
+     * @throws CantAddHierarchyAccountException
+     */
+    @Override
+    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
+        return assetCryptoVaultManager.addHierarchyAccount(description, hierarchyAccountType);
+    }
+
+    /**
+     * Gets the Extended Public Key from the specified account. Can't be from a master account.
+     * @param hierarchyAccount a Redeem Point account.
+     * @return the DeterministicKey that will be used by the redeem Points.
+     * @throws CantGetExtendedPublicKeyException
+     */
+    @Override
+    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
+        return assetCryptoVaultManager.getExtendedPublicKey(hierarchyAccount);
     }
 }

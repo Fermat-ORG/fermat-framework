@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -35,7 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.custom_anim.Fx;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.google.zxing.WriterException;
 
 import java.util.UUID;
@@ -43,7 +43,7 @@ import java.util.UUID;
 import static com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR.generateBitmap;
 
 
-public  class ReceiveFragment extends FermatWalletFragment {
+public  class ReceiveFragment extends AbstractFermatFragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -92,7 +92,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
     public static ReceiveFragment newInstance(int position) {
         ReceiveFragment f = new ReceiveFragment();
-        f.setReferenceWalletSession((ReferenceWalletSession) f.walletSession);
+        f.setReferenceWalletSession((ReferenceWalletSession) f.appSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

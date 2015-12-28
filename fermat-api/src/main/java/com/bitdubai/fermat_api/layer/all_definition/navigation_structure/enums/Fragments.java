@@ -30,8 +30,10 @@ public enum Fragments implements FermatFragments {
     CWP_WALLET_STORE_PAID_FRAGMENT("CWSPF"),
     CWP_WALLET_STORE_SEARCH_MODE("CWSSM"),
 
-    DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY("DSAAFMA"),
+    DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT("DAPSAAFETF"),
+    DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT("DAPSAAFPTF"),
     DAP_SUB_APP_ASSET_EDITOR_ACTIVITY("DSAAEA"),
+
     DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAPAUCAM"),
     DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
@@ -73,6 +75,7 @@ public enum Fragments implements FermatFragments {
     CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT("CCPBWRFF"),
     CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT("CCPBWSF"),
     CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT("CCPBWACF"),
+    CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT("CCPBWNIF"),
 
     /**
      * END REFERENCE
@@ -128,7 +131,12 @@ public enum Fragments implements FermatFragments {
     CWP_WALLET_PUBLISHER_MAIN("CWPM"),
 
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
+    DAP_WALLET_ASSET_ISSUER_ASSET_DETAIL("DWAIAD"),
+    DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST("DWAIUDL"),
+    DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER("DWAIUDLH"),
+
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
+
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
 
 
@@ -153,6 +161,11 @@ public enum Fragments implements FermatFragments {
     CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY("CBPCBWCH"),
     CBP_CRYPTO_BROKER_WALLET_EARNINGS("CBPCBWE"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS"),
+    CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY("CBPCBWSI"),
+    CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES("CBPCBWSM"),
+    CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS("CBPCBWSI"),
+    CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS("CBPCBWSI"),
+    CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT("CBPCBWSI"),
 
     // Crypto Customer Wallet
     CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB("CBPCCWHAONT"),
@@ -166,6 +179,11 @@ public enum Fragments implements FermatFragments {
     CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY("CBPCCWCH"),
     CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST("CBPCCWBL"),
     CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS("CBPCCWS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY("CBPCCWSI"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET("CBPCCWSBW"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SET_PROVIDERS("CBPCCWSI"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS("CBPCCWSI"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT("CBPCCWSI"),
 
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT("CBPSACBIMF"),
@@ -176,6 +194,14 @@ public enum Fragments implements FermatFragments {
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CBPSACCIMF"),
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT("CBPSACCICIF"),
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT("CBPSACCIEIF"),
+
+    //Bank Money Wallet
+    BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST("BNKBMWAL"),
+    BNK_BANK_MONEY_WALLET_ACCOUNT_DETAIL("BNKBMWAD"),
+
+    //Cash Money Wallet
+    CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY("CSHCMWBS"),
+    CSH_CASH_MONEY_WALLET_SETUP("CSHCMWS"),
 
     // CCP Identity
     CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CCPSACCIMF"),
@@ -192,10 +218,30 @@ public enum Fragments implements FermatFragments {
     // DAP REDEEM POINT IDENTITY
     DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT("DAPSARPIMF"),
     DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT("DAPSARPICIF"),
+
     // CCP Community
     CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT("CCPSAIUCF"),
     CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT("CCPSAIUCCF"),
-    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT("CCPSAIUCCDF"),;
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT("CCPSAIUCCDF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT("CCPSAIUCCNF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT("CCPSAIUCCOPF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT("CCPSAIUCCWF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT("CCPSAIUCCFLF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_SETTINGS_FRAGMENTS("CCPSAIUCCSF"),
+
+    // CBP Crypto Broker COMMUNITY .-
+    CONNECTIONS               ("CNN"),
+    CONNECTIONS_LIST          ("CLI"),
+    CONNECTIONS_NOTIFICATIONS ("CNT"),
+    CONNECTIONS_OTHER_PROFILE ("COP"),
+    CONNECTIONS_REGISTER_USER ("CRU"),
+    CONNECTIONS_REQUEST       ("CRQ"),
+    CONNECTIONS_SETTINGS      ("CST"),
+    CONNECTIONS_WORLD         ("CWD"),
+    MAIN                      ("MAI"),
+    // CBP Crypto Broker COMMUNITY .-
+
+    ;
 
 
     private String code;
@@ -205,165 +251,6 @@ public enum Fragments implements FermatFragments {
     }
 
     public static Fragments getValueFromString(String code) throws InvalidParameterException {
-        /*for (Fragments fragments : Fragments.values()) {
-            if (fragments.key.equals(name)) {
-                return fragments;
-            }
-        }*/
-//        switch (code) {
-//            case "CSL":
-//                return Fragments.CWP_SHELL_LOGIN;
-//            case "CWMM":
-//                return Fragments.CWP_WALLET_MANAGER_MAIN;
-//            case "CSAD":
-//                return Fragments.CWP_SUB_APP_DEVELOPER;
-//            case "CWMS":
-//                return Fragments.CWP_WALLET_MANAGER_SHOP;
-//            case "CSMM":
-//                return Fragments.CWP_SHOP_MANAGER_MAIN;
-//            case "CSMF":
-//                return Fragments.CWP_SHOP_MANAGER_FREE;
-//            case "CSMP":
-//                return Fragments.CWP_SHOP_MANAGER_PAID;
-//            case "CSMAN":
-//                return Fragments.CWP_SHOP_MANAGER_ACCEPTED_NEARBY;
-//            case "CWRWBTCABS":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND;
-//            case "CWRWBTCABB":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE;
-//            case "CWRWBTCABR":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE;
-//            case "CWRWBTCABT":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS;
-//            case "CWRWBTCABC":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS;
-//            case "CWRWAKABP":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE;
-//            case "CWRWAKABD":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP;
-//            case "CWRWAKABC":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS;
-//            case "CWRWAKABCT":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY;
-//            case "CWRWAABH":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME;
-//            case "CWRWAABB":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE;
-//            case "CWRWAABS":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND;
-//            case "CWRWAABR":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE;
-//            case "CWRWAABSS":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS;
-//            case "CWRWAABRF":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL;
-//            case "CWRWAABD":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS;
-//            case "CWRWAABSHS":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP;
-//            case "CWRWAABSHP":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS;
-//            case "CWRWAABSHR":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS;
-//            case "CWRWAABSHC":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT;
-//            case "CWRWAABSHH":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY;
-//            case "CWRWAABSHM":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP;
-//            case "CWRWAABAD":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS;
-//            case "CWRWAABAC":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS;
-//            case "CWRWAABAA":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL;
-//            case "CWRWAABCC":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT;
-//            case "CWRWAABC":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS;
-//            case "CWRWAABCS":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND;
-//            case "CWRWAABCNS":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_SEND;
-//            case "CWRWAABCR":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE;
-//            case "CWRWAABCNR":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE;
-//            case "CWRWAABCTX":
-//                return Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX;
-//            case "CWRAAAB":
-//                return Fragments.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE;
-//            case "CWAARR":
-//                return Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED;
-//            case "CWAARRH":
-//                return Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY;
-//            case "CWAARS":
-//                return Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND;
-//            case "CWAASH":
-//                return Fragments.CWP_WALLET_ADULTS_ALL_SEND_HISTORY;
-//            case "CWAADD":
-//                return Fragments.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT;
-//            case "CWAAWD":
-//                return Fragments.CWP_WALLET_ADULTS_ALL_WEEKLY_DISCOUNT;
-//            case "CWAAMD":
-//                return Fragments.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT;
-//            case "CSADDTD":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES;
-//            case "CSADDTT":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES;
-//            case "CSADDTR":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS;
-//            case "CSADDT":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS;
-//            case "CSADLT":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS;
-//            case "CSADLL1T":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS;
-//            case "CSADLL2T":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS;
-//            case "CSADLL3T":
-//                return Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS;
-//            case "CWSM":
-//                return Fragments.CWP_WALLET_STORE_MAIN;
-//            case "CWPM":
-//                return Fragments.CWP_WALLET_PUBLISHER_MAIN;
-//            case "CWDTDLF":
-//                return CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT;
-//            case "CWDTDTLF":
-//                return CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT;
-//            case "CWDTDTRLF":
-//                return CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT;
-//            case "CWDTDF":
-//                return CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT;
-//            case "CWDTLF":
-//                return CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT;
-//            case "CWDTLL1F":
-//                return CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT;
-//            case "CWDTLL2F":
-//                return CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT;
-//            case "CWDTLL3F":
-//                return CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT;
-//
-//            case "CWRWBTCABTB":
-//                return CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK;
-//
-//            case "CWRWBTCABTA":
-//                return CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE;
-//            case "DWAIMA":
-//                return DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY;
-//            case "DSAAFMA":
-//                return DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY;
-//            case "CCPBWTS":
-//                return CCP_BITCOIN_WALLET_TRANSACTIONS_SENT;
-//            case "CCPBWTR":
-//                return CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED;
-//            case "CCPBWRR":
-//                return CCP_BITCOIN_WALLET_REQUEST_RECEIVED;
-//            case "CCPBWRS":
-//                return CCP_BITCOIN_WALLET_REQUEST_SEND;
-//            default:
-//                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
-//        }
         for (Fragments fragments : Fragments.values()) {
             if (fragments.code.equals(code)) {
                 return fragments;

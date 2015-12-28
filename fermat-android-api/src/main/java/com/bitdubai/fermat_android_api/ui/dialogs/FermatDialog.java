@@ -2,7 +2,9 @@ package com.bitdubai.fermat_android_api.ui.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
@@ -10,8 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 /**
  * Created by Matias Furszyfer on 2015.10.18..
@@ -19,6 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 public abstract class FermatDialog <S extends FermatSession,R extends ResourceProviderManager> extends Dialog {
 
 
+    private final Activity activity;
     private S fermatSession;
 
     private R resources;
@@ -36,6 +39,14 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      */
     public FermatDialog(Activity activity,S fermatSession,R resources) {
         super(activity);
+        this.activity = activity;
+        this.fermatSession = fermatSession;
+        this.resources = resources;
+    }
+
+    public FermatDialog(Activity activity, int themeResId,S fermatSession,R resources) {
+        super(activity, themeResId);
+        this.activity = activity;
         this.fermatSession = fermatSession;
         this.resources = resources;
     }
@@ -44,7 +55,7 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            requestWindowFeature(setWindowFeacture());
+            requestWindowFeature(setWindowFeature());
             setContentView(setLayoutId());
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH,e);
@@ -52,6 +63,15 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
         }
     }
 
+    /**
+     * Send local broadcast
+     *
+     * @param broadcast Intent broadcast with channel and extras
+     */
+    public void sendLocalBroadcast(Intent broadcast) {
+        LocalBroadcastManager.getInstance(getContext())
+                .sendBroadcast(broadcast);
+    }
     /**
      *
      * Set the layout content view
@@ -63,7 +83,7 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      * Window feacture
      * @return
      */
-    protected abstract int setWindowFeacture();
+    protected abstract int setWindowFeature();
 
     /**
      *
@@ -91,10 +111,18 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
        return fermatSession.getErrorManager();
     }
 
-    protected void changeApp(Engine emgine,Object[] objects){
-        getFermatScreenSwapper().connectWithOtherApp(emgine,objects);
+    protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {
+        getFermatScreenSwapper().connectWithOtherApp(emgine,fermatAppToConnectPublicKey, objects);
     }
     protected FermatScreenSwapper getFermatScreenSwapper(){
-        return (FermatScreenSwapper) getOwnerActivity();
+        return (FermatScreenSwapper) activity;
+    }
+
+    protected Activity getActivity(){
+        return activity;
+    }
+
+    protected void toastDefaultError() {
+        Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
     }
 }

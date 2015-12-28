@@ -21,9 +21,9 @@ public class FiatIndexWorldDatabaseConstants {
     static final String FIAT_INDEX_CURRENCY_COLUMN_NAME = "currency";
     static final String FIAT_INDEX_SALE_PRICE_COLUMN_NAME = "sale_price";
     static final String FIAT_INDEX_PURCHASE_PRICE_COLUMN_NAME = "purchase_price";
-    static final String FIAT_INDEX_PROVIDER_DESCRIPTION_COLUMN_NAME = "provider description";
+    static final String FIAT_INDEX_PROVIDER_DESCRIPTION_COLUMN_NAME = "provider_description";
     static final String FIAT_INDEX_TIMESTAMP_COLUMN_NAME = "timestamp";
 
-    static final String FIAT_INDEX_FIRST_KEY_COLUMN = "transaction_id";
+    static final String FIAT_INDEX_FIRST_KEY_COLUMN = "id";
 
 }

@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
@@ -12,7 +12,6 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
@@ -24,7 +23,6 @@ import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.store.MemoryFullPrunedBlockStore;
 import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
@@ -44,6 +42,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     Wallet wallet;
     PeerGroup peerGroup;
     File walletFileName;
+    BlockChain blockChain;
+    BitcoinNetworkEvents events;
     final NetworkParameters NETWORK_PARAMETERS;
 
 
@@ -77,16 +77,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         //todo move this to the correct new thread format.
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    doTheMainTask();
-                } catch (BlockchainException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        try {
+            doTheMainTask();
+        } catch (BlockchainException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -115,83 +110,73 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private void doTheMainTask() throws BlockchainException {
         System.out.println("Crypto Network starting and connecting...");
 
-        /**
-         * creates the blockchain object for the specified network.
-         */
-//        BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
-//        BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
-        BlockStore blockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
-        BlockChain blockChain = null;
-        try {
-            blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, blockStore);
-        } catch (BlockStoreException e) {
+        try{
+            /**
+             * creates the blockchain object for the specified network.
+             */
+            BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
+            BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
+
+            /**
+             * creates the peerGroup object
+             */
+            peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
+            peerGroup.addWallet(this.wallet);
+
+            /**
+             * add the events
+             */
+            events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
+            peerGroup.addEventListener(events);
+            this.wallet.addEventListener(events);
+            blockChain.addListener(events);
+
+
+            /**
+             * I will connect to the regTest server or search for peers if we are in a different network.
+             */
+            if (NETWORK_PARAMETERS == RegTestParams.get()){
+                /**
+                 * Peer 1
+                 */
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
+                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peerGroup.addAddress(peerAddress1);
+
+                /**
+                 * Peer 2
+                 */
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peerGroup.addAddress(peerAddress2);
+            } else
+                peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
+
+            /**
+             * Define internal agent information.
+             */
+            peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
+
+            /**
+             * starts the monitoring
+             */
+            peerGroup.setDownloadTxDependencies(true);
+            peerGroup.start();
+            peerGroup.startBlockChainDownload(null);
+        } catch (Exception e){
             e.printStackTrace();
         }
 
 
-        /**
-         * creates the peerGroup object
-         */
-        peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
-        peerGroup.addWallet(this.wallet);
-
-        /**
-         * add the events
-         */
-        BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
-        peerGroup.addEventListener(events);
-        this.wallet.addEventListener(events);
-        blockChain.addListener(events);
-
-
-        /**
-         * I will connect to the regTest server or search for peers if we are in a different network.
-         */
-        if (NETWORK_PARAMETERS == RegTestParams.get()){
-            /**
-             * Peer 1
-             */
-            InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
-           PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
-            peerGroup.addAddress(peerAddress1);
-
-            /**
-             * Peer 2
-             */
-            InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
-            PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
-            peerGroup.addAddress(peerAddress2);
-        } else
-            peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
-
-        /**
-         * Define internal agent information.
-         */
-        peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
-
-        /**
-         * starts the monitoring
-         */
-        peerGroup.start();
-        peerGroup.downloadBlockChain();
-
-//        while (true){
-//            try {
-//                Thread.sleep(60000);
-//                System.out.println("*****CryptoNetwork isRunning: " + peerGroup.isRunning());
-//                System.out.println("****CryptoNetwork: connected peers " + peerGroup.getConnectedPeers().size());
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     /**
      * Broadcast a well formed, commited and signed transaction into the network
      * @param tx
+     * @param transactionId the internal fermat transaction Ifd
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(final Transaction tx, final UUID transactionId) throws CantBroadcastTransactionException {
         try{
             /**
              * I will add this transaction to the wallet.
@@ -199,10 +184,18 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
             wallet.addWalletTransaction(walletTransaction);
 
+
+            /**
+             * save the added transaction in the wallet
+             */
+            wallet.saveToFile(walletFileName);
+
+
+
             /**
              * Broadcast it.
              */
-            TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
+            final TransactionBroadcast broadcast = peerGroup.broadcastTransaction(tx);
             broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
                 @Override
                 public void onBroadcastProgress(double progress) {
@@ -210,18 +203,33 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             });
 
-            broadcast.broadcast().get(2, TimeUnit.MINUTES);
-            broadcast.future().get(2, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+            broadcast.broadcast().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
+            broadcast.future().get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
+
+            /**
+             * Store this outgoing transaction in the table
+             */
+            storeOutgoingTransaction(wallet, tx, transactionId);
+
+            /**
+             * saves the wallet again.
+             */
+            wallet.saveToFile(walletFileName);
         } catch (Exception exception){
+            exception.printStackTrace();
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
         }
 
+    }
+
+    /**
+     * Stores and outgoing transaction into the database
+     * @param wallet
+     * @param tx
+     * @param transactionId
+     */
+    private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
+        events.saveOutgoingTransaction(wallet, tx, transactionId);
     }
 
     /**
@@ -242,32 +250,43 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
 
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
-
         /**
-         * I first need to find If I have the block already in my blockchain
+         * I will check I don't get nulls in the parameters
          */
+        if (txHash == null || blockHash == null)
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "TxHash or blocHash parameters can't be null", null);
 
-        /**
-         * Will get the block from the peer
-         */
-        Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+        try{
+            /**
+             * I get the hash of the block
+             */
+            Sha256Hash blockSha256Hash = Sha256Hash.wrap(blockHash);
 
-        /**
-         * Will search all transactions from the block until I find my own.
-          */
-        for (Transaction transaction : genesisBlock.getTransactions()){
-            if (transaction.getHashAsString() == txHash){
-                return getCryptoTransactionFromBitcoinTransaction(transaction);
+
+            /**
+             * If I don't have this block, then I will get the block from the peer
+             */
+            Block genesisBlock = getBlockFromPeer(blockSha256Hash);
+
+            /**
+             * Will search all transactions from the block until I find my own.
+             */
+            for (Transaction transaction : genesisBlock.getTransactions()){
+                if (transaction.getHashAsString().contentEquals(txHash)){
+                    /**
+                     * I form the CryptoTransaction and return it.
+                     */
+                    return getCryptoTransactionFromBitcoinTransaction(transaction);
+                }
             }
+
+            /**
+             * If I couldn't find it. then I will return null.
+             * */
+            return null;
+        } catch (Exception e){
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
         }
-
-        /**
-         * If I couldn't find it. then I will return null.
-         * */
-        return null;
-
-
     }
 
     /**
@@ -276,7 +295,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromBitcoinTransaction(Transaction transaction) {
-        return null;
+        return CryptoTransaction.getCryptoTransaction(transaction);
     }
 
     /**

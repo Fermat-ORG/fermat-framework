@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragmentOld extends FermatFragment implements FermatCallback{
+public class AvailableProjectsFragmentOld extends AbstractFermatFragment implements FermatCallback{
 
     /**
      * Views
@@ -47,7 +47,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment implements Ferm
 
     private ArrayList<InstalledWallet> wallets;
 
-    public static FermatFragment newInstance() {
+    public static AbstractFermatFragment newInstance() {
         return new AvailableProjectsFragmentOld();
     }
 

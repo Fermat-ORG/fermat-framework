@@ -8,83 +8,98 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerFor
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by ciencias on 6/25/15.
+ * Created by Matias Furszyfer.
+ *
+ * @author lnacosta
+ * @author furszy
  */
-public class DeveloperModuleDatabaseTool implements DatabaseTool {
+public final class DeveloperModuleDatabaseTool implements DatabaseTool {
 
-    private Map<PluginVersionReference,Plugin> databaseLstPlugins;
-    private Map<AddonVersionReference,Addon> databaseLstAddonds;
+    private final ConcurrentHashMap<PluginVersionReference, Plugin> databaseLstPlugins;
+    private final ConcurrentHashMap<AddonVersionReference , Addon> databaseLstAddons ;
+
+    private final DeveloperModuleDatabaseObjectFactory                      objectFactory     ;
 
 
-    public DeveloperModuleDatabaseTool(Map<PluginVersionReference, Plugin> databaseLstPlugins, Map<AddonVersionReference, Addon> databaseLstAddonds
-    ){
+    public DeveloperModuleDatabaseTool(final ConcurrentHashMap<PluginVersionReference, Plugin> databaseLstPlugins,
+                                       final ConcurrentHashMap<AddonVersionReference , Addon> databaseLstAddons ) {
 
-        this.databaseLstAddonds=databaseLstAddonds;
-        this.databaseLstPlugins=databaseLstPlugins;
+        this.databaseLstAddons  = databaseLstAddons ;
+        this.databaseLstPlugins = databaseLstPlugins;
+
+        this.objectFactory      = new DeveloperModuleDatabaseObjectFactory();
     }
 
     @Override
-    public List<PluginVersionReference> getAvailablePluginList() {
-        List<PluginVersionReference> lstPlugins=new ArrayList<>();
-        for(Map.Entry<PluginVersionReference, Plugin> entry : databaseLstPlugins.entrySet()) {
-            PluginVersionReference key = entry.getKey();
-            lstPlugins.add(key);
-        }
+    public List<PluginVersionReference> listAvailablePlugins() {
+
+        List<PluginVersionReference> lstPlugins = new ArrayList<>();
+
+        for (Map.Entry<PluginVersionReference, Plugin> entry : databaseLstPlugins.entrySet())
+            lstPlugins.add(entry.getKey());
+
         return lstPlugins;
     }
 
     @Override
-    public List<AddonVersionReference> getAvailableAddonList() {
-        List<AddonVersionReference> lstAddons=new ArrayList<>();
-        for(Map.Entry<AddonVersionReference, Addon> entry : databaseLstAddonds.entrySet()) {
-            AddonVersionReference key = entry.getKey();
-            lstAddons.add(key);
-        }
+    public List<AddonVersionReference> listAvailableAddons() {
+
+        List<AddonVersionReference> lstAddons = new ArrayList<>();
+
+        for (Map.Entry<AddonVersionReference, Addon> entry : databaseLstAddons.entrySet())
+            lstAddons.add(entry.getKey());
+
         return lstAddons;
     }
 
     @Override
     public List<DeveloperDatabase> getDatabaseListFromPlugin(PluginVersionReference plugin) {
-        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstPlugins.get(plugin);
-        return databaseManagerForDevelopers.getDatabaseList(new DeveloperModuleDatabaseObjectFactory());
 
+        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugin)).getDatabaseList(this.objectFactory);
     }
 
     @Override
     public List<DeveloperDatabase> getDatabaseListFromAddon(AddonVersionReference addon) {
-        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstAddonds.get(addon);
-        return databaseManagerForDevelopers.getDatabaseList(new DeveloperModuleDatabaseObjectFactory());
+
+        return ((DatabaseManagerForDevelopers)databaseLstAddons.get(addon)).getDatabaseList(this.objectFactory);
     }
 
     @Override
-    public List<DeveloperDatabaseTable> getPluginTableListFromDatabase(PluginVersionReference plugin, DeveloperDatabase developerDatabase) {
-        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstPlugins.get(plugin);
-        return databaseManagerForDevelopers.getDatabaseTableList(new DeveloperModuleDatabaseObjectFactory(), developerDatabase);
+    public List<DeveloperDatabaseTable> getPluginTableListFromDatabase(final PluginVersionReference plugin           ,
+                                                                       final DeveloperDatabase      developerDatabase) {
+
+        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugin)).getDatabaseTableList(this.objectFactory, developerDatabase);
     }
 
     @Override
-    public List<DeveloperDatabaseTable> getAddonTableListFromDatabase(AddonVersionReference addon, DeveloperDatabase developerDatabase) {
-        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstAddonds.get(addon);
-        return databaseManagerForDevelopers.getDatabaseTableList(new DeveloperModuleDatabaseObjectFactory(), developerDatabase);
-    }
+    public List<DeveloperDatabaseTable> getAddonTableListFromDatabase(final AddonVersionReference addon            ,
+                                                                      final DeveloperDatabase     developerDatabase) {
 
-
-    @Override
-    public List<DeveloperDatabaseTableRecord> getPluginTableContent(PluginVersionReference plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstPlugins.get(plugin);
-        return databaseManagerForDevelopers.getDatabaseTableContent(new DeveloperModuleDatabaseObjectFactory(), developerDatabase, developerDatabaseTable);
+        return ((DatabaseManagerForDevelopers)databaseLstAddons.get(addon)).getDatabaseTableList(this.objectFactory, developerDatabase);
     }
 
     @Override
-    public List<DeveloperDatabaseTableRecord> getAddonTableContent(AddonVersionReference addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstAddonds.get(addon);
-        return databaseManagerForDevelopers.getDatabaseTableContent(new DeveloperModuleDatabaseObjectFactory(), developerDatabase, developerDatabaseTable);
+    public List<DeveloperDatabaseTableRecord> getPluginTableContent(final PluginVersionReference plugin                ,
+                                                                    final DeveloperDatabase      developerDatabase     ,
+                                                                    final DeveloperDatabaseTable developerDatabaseTable) {
+
+        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugin)).getDatabaseTableContent(this.objectFactory, developerDatabase, developerDatabaseTable);
     }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getAddonTableContent(final AddonVersionReference  addon                 ,
+                                                                   final DeveloperDatabase      developerDatabase     ,
+                                                                   final DeveloperDatabaseTable developerDatabaseTable) {
+
+        return ((DatabaseManagerForDevelopers)databaseLstAddons.get(addon)).getDatabaseTableContent(this.objectFactory, developerDatabase, developerDatabaseTable);
+    }
+
 }

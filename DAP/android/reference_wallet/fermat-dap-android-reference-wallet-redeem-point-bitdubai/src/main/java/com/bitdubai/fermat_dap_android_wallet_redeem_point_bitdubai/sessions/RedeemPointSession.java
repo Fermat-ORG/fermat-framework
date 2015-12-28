@@ -4,8 +4,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -21,40 +20,54 @@ import java.util.Map;
 public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,AssetRedeemPointWalletSubAppModule,WalletResourcesProviderManager> implements WalletSession {
 
 
+    private final InstalledWallet installedWallet;
+    /**
+     * Issuer Manager
+     */
     private AssetRedeemPointWalletSubAppModule manager;
 
-    private ErrorManager errorManager;
-    private InstalledWallet wallet;
-    private WalletSettings settings;
-    private WalletResourcesProviderManager resourceManager;
-
+    /**
+     * Active objects in wallet session
+     */
     private Map<String, Object> data;
+
+    /**
+     * Error manager
+     */
+    private ErrorManager errorManager;
 
 
     public RedeemPointSession(WalletResourcesProviderManager resourceManager, InstalledWallet installedWallet, ErrorManager errorManager, AssetRedeemPointWalletSubAppModule manager) {
         super(installedWallet.getWalletPublicKey(), installedWallet, errorManager, manager, null);
-        this.resourceManager = resourceManager;
-        this.wallet = installedWallet;
+        this.installedWallet = installedWallet;
+        data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.manager = manager;
     }
 
+    public RedeemPointSession() {
+
+        installedWallet = null;
+    }
 
 
     public InstalledWallet getWalletSessionType() {
-        return wallet;
+        return null;
     }
 
     @Override
     public void setData(String key, Object object) {
-        if (data == null)
-            data = new HashMap<>();
         data.put(key, object);
     }
 
     @Override
+    public String getIdentityConnection() {
+        return null;
+    }
+
+    @Override
     public Object getData(String key) {
-        return data;
+        return data.get(key);
     }
 
     @Override
@@ -63,19 +76,21 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,As
     }
 
     public WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return resourceManager;
+        return null;
     }
 
     @Override
     public WalletSettings getWalletSettings() {
-        return settings;
+        return null;
     }
 
-    public AssetRedeemPointWalletSubAppModule getRedeemManager() {
+
+    /**
+     * Get Asset Issuer Wallet Manager instance
+     *
+     * @return AssetIssuerWalletManager object
+     */
+    public AssetRedeemPointWalletSubAppModule getManager() {
         return manager;
-    }
-
-    public void setSettings(WalletSettings settings) {
-        this.settings = settings;
     }
 }

@@ -1,41 +1,69 @@
 package com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantDeleteCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Collection;
 
 /**
  * Created by angel on 16/9/15.
  */
-public interface CustomerBrokerContractSaleManager {
+public interface CustomerBrokerContractSaleManager extends FermatManager {
 
-    List<CustomerBrokerContractSale> getAllCustomerBrokerContractSaleFromCurrentDeviceUser() throws CantGetListCustomerBrokerContractSaleException;
+    /**
+     *
+     * @return  a list of all contracts
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    Collection<CustomerBrokerContractSale> getAllCustomerBrokerContractSale() throws CantGetListCustomerBrokerContractSaleException;
 
-    CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final UUID ContractId) throws CantGetListCustomerBrokerContractSaleException;
+    /**
+     *
+     * @param ContractId
+     * @return a CustomerBrokerContractSale with information of contract with ContractId
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final String ContractId) throws CantGetListCustomerBrokerContractSaleException;
 
-    DatabaseTableRecord getCustomerBrokerContractSaleTable();
+    /**
+     *
+     * @param status
+     * @return an Collection of CustomerBrokerContractSale with information of contract with status
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    Collection<CustomerBrokerContractSale> getCustomerBrokerContractSaleForStatus(final ContractStatus status) throws CantGetListCustomerBrokerContractSaleException;
 
-    public CustomerBrokerContractSale createCustomerBrokerContractSale(
-            String publicKeyCustomer,
-            String publicKeyBroker,
-            Float merchandiseAmount,
-            CurrencyType merchandiseCurrency,
-            Float referencePrice,
-            ReferenceCurrency referenceCurrency,
-            Float paymentAmount,
-            CurrencyType paymentCurrency,
-            long paymentExpirationDate,
-            long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerContractSaleException;
+    /**
+     *
+     * @return an ListsForStatus with separate lists and sorted by status
+     */
+    ListsForStatusSale getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractSaleException;
 
-    public void updateCustomerBrokerContractSale(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerContractSaleException;
+    /**
+     *
+     * @param contract
+     * @return a CustomerBrokerContractSale with information of contract created
+     * @throws CantCreateCustomerBrokerContractSaleException
+     */
+    CustomerBrokerContractSale createCustomerBrokerContractSale(CustomerBrokerContractSale contract) throws CantCreateCustomerBrokerContractSaleException;
 
-    void deleteCustomerBrokerContractSale(UUID contractID) throws CantDeleteCustomerBrokerContractSaleException;
+    /**
+     *
+     * @param contractId
+     * @param status
+     * @throws CantupdateCustomerBrokerContractSaleException
+     */
+    void updateStatusCustomerBrokerSaleContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractSaleException;
+
+    /**
+     *
+     * @param contractId
+     * @param status
+     * @throws CantupdateCustomerBrokerContractSaleException
+     */
+    void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantupdateCustomerBrokerContractSaleException;
+
 }

@@ -3,23 +3,17 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHistoryItemViewHolder;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -31,9 +25,10 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by Matias Furszyfer on 2015.09.30..
  */
-public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest, PaymentHistoryItemViewHolder> {
+public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest, PaymentHistoryItemViewHolder>  {
 
-    private View.OnClickListener mOnClickListener;
+    private onRefreshList onRefreshList;
+    // private View.OnClickListener mOnClickListener;
     CryptoWallet cryptoWallet;
     ReferenceWalletSession referenceWalletSession;
     Typeface tf;
@@ -41,11 +36,12 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession,View.OnClickListener onClickListener) {
+    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
-        this.mOnClickListener = onClickListener;
+        //this.mOnClickListener = onClickListener;
+        this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
@@ -97,9 +93,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         }
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTypeface(tf);
+        holder.getTxt_amount().setTypeface(tf) ;
 
-        holder.getTxt_contactName().setText("Mati");//data.getContact().getActorName());
+        if(data.getContact() != null)
+            holder.getTxt_contactName().setText(data.getContact().getActorName());
+        else
+            holder.getTxt_contactName().setText("Unknown");
+
         holder.getTxt_contactName().setTypeface(tf);
 
         holder.getTxt_notes().setText(data.getReason());
@@ -109,21 +109,105 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         holder.getTxt_time().setText(data.getDate());
         holder.getTxt_time().setTypeface(tf);
 
-        //TOOD: sacado para mostrar
-//        if(data.getState() != null) {
-//            holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-//            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-//            holder.getTxt_state().setText(data.getState());
-//            holder.getTxt_state().setTypeface(tf);
-//        }else{
-//            holder.getLinear_layour_container_state().setVisibility(View.GONE);
-//            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
-//        }
-        referenceWalletSession.setLastRequestSelected(data);
-        holder.getBtn_accept_request().setOnClickListener(mOnClickListener);
-        holder.getBtn_refuse_request().setOnClickListener(mOnClickListener);
+        String state = "";
+        switch (data.getState()){
+            case WAITING_RECEPTION_CONFIRMATION:
+                state = "Waiting for response";
+                break;
+            case APPROVED:
+                state = "Accepted";
+                break;
+            case PAID:
+                state = "Paid";
+                break;
+            case PENDING_RESPONSE:
+                state = "Pending response";
+                break;
+            case ERROR:
+                state = "Error";
+                break;
+            case NOT_SENT_YET:
+                state = "Not sent yet";
+                break;
+            case PAYMENT_PROCESS_STARTED:
+                state = "Payment process started";
+                break;
+            case DENIED_BY_INCOMPATIBILITY:
+                state = "Denied by incompatibility";
+                break;
+            case IN_APPROVING_PROCESS:
+                state = "In approving process";
+                break;
+            case REFUSED:
+                state = "Denied";
+                break;
+            default:
+                state = "Error, contact with support";
+                break;
+
+        }
+        if(data.getType() == 0) //SEND
+        {
+            if(data.getState() != null) {
+                holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+                holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+                holder.getTxt_state().setText(state);
+                holder.getTxt_state().setTypeface(tf);
+            }
+        }
+        else
+        {
+            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
+                holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+                holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+
+                holder.getTxt_state().setText(state);
+                holder.getTxt_state().setTypeface(tf);
+            }
+        }
 
 
+
+      /*  if(data.getState() != null) {
+          holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+            holder.getTxt_state().setText(data.getState());
+            holder.getTxt_state().setTypeface(tf);
+        }else{
+           holder.getLinear_layour_container_state().setVisibility(View.GONE);
+            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
+        }*/
+
+
+            holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        cryptoWallet.approveRequest(data.getRequestId()
+                                , referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                        Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                        notifyDataSetChanged();
+                        onRefreshList.onRefresh();
+                    } catch (Exception e) {
+                        showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                    }
+
+                }
+            });
+
+        holder.getBtn_refuse_request().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    cryptoWallet.refuseRequest(data.getRequestId());
+                    Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
+                    notifyDataSetChanged();
+                    onRefreshList.onRefresh();
+                } catch (Exception e) {
+                    showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                }
+            }
+        });
     }
 
 

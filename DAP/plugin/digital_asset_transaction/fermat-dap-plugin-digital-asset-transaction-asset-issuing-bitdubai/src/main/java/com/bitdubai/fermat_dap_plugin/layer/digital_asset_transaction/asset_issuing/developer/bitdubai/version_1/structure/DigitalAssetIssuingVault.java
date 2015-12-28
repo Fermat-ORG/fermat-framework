@@ -18,7 +18,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -62,6 +62,11 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
              * Added by Rodrigo. This might not be the right place to do this.
              */
             digitalAssetMetadataToDeliver.setGenesisBlock(genesisTransaction.getBlockHash());
+
+            /**
+             * Saving the Digital Asset metadata on disk because we might have a not null genesis block
+             */
+            this.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadataToDeliver, internalId);
             if(!isDigitalAssetMetadataHashValid(digitalAssetMetadataToDeliver,genesisTransaction)){
                 throw new CantDeliverDigitalAssetToAssetWalletException("The Digital Asset Metadata Hash is not valid:\n" +
                         "Hash: "+digitalAssetMetadataToDeliver.getDigitalAssetHash()+"\n"+
@@ -90,6 +95,8 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantGetAssetIssuerActorsException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Actor Asset Issuer");
+        } catch (CantCreateDigitalAssetFileException e) {
+            e.printStackTrace();
         }
     }
 
@@ -101,7 +108,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
         System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
-        String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+        String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
         System.out.println("ASSET ISSUING Actor Issuer public key:"+actorToPublicKey);
         System.out.println("ASSET ISSUING Transaction to deliver: "+genesisTransaction.getTransactionHash());
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(

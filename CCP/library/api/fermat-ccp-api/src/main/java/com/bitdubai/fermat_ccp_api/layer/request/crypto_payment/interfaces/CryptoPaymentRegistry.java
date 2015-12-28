@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
@@ -10,6 +11,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantG
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantUpdateRequestPaymentStateException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException;
 
@@ -48,7 +50,8 @@ public interface CryptoPaymentRegistry {
                                       CryptoAddress         cryptoAddress    ,
                                       String                description      ,
                                       long                  amount           ,
-                                      BlockchainNetworkType networkType      ) throws CantGenerateCryptoPaymentRequestException;
+                                      BlockchainNetworkType networkType      ,
+                                      ReferenceWallet       referenceWallet) throws CantGenerateCryptoPaymentRequestException;
 
     /**
      * Throw the method <code>refuseRequest</code> you can refuse a request.
@@ -159,4 +162,19 @@ public interface CryptoPaymentRegistry {
                                                                 Integer            max            ,
                                                                 Integer            offset         ) throws CantListCryptoPaymentRequestsException;
 
+
+    /**
+     * Throw the method <code>acceptIncomingRequest</code> you can update request payment sent state to accepted.
+     *
+     * @param requestId
+     */
+    void acceptIncomingRequest(UUID requestId) throws CantUpdateRequestPaymentStateException;
+
+    /**
+     * Throw the method <code>revertIncomingRequest</code> you can update request payment sent state error revert.
+     *
+     * @param requestId
+     */
+
+    void revertOutgoingRequest(UUID requestId) throws CantUpdateRequestPaymentStateException;
 }

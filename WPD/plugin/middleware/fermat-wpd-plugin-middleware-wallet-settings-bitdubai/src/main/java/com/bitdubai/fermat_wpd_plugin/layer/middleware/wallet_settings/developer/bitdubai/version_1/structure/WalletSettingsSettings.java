@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,14 +103,14 @@ public class WalletSettingsSettings implements WalletSettings {
     /**
      * This method let us set the preference settings for a wallet
      *
-     * @param preferenceWalletSettings
+     * @param
      * @throws CantSetDefaultSkinException
      */
-    @Override
+    /*@Override
     public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantSaveWalletSettings {
         String xml = XMLParser.parseObject(preferenceWalletSettings);
         recordStringXML(xml,PREFERENCE_FILENAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY);
-    }
+    }*/
     private void recordStringXML(String xml,String filename,String directory) throws CantSaveWalletSettings {
         try {
 
@@ -160,9 +160,9 @@ public class WalletSettingsSettings implements WalletSettings {
      * @return preference settings of a wallet
      * @throws CantGetDefaultSkinException
      */
-    @Override
+    /*@Override
     public String getPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings {
        return (String)XMLParser.parseXML(getStringXML(WALLET_SETTINGS_FILE_NAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY),preferenceWalletSettings);
-    }
+    }*/
 
 }

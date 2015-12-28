@@ -28,7 +28,20 @@
     <string name="ccw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
     <string name="ccw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
     <string name="no_contracts">No Contracts</string>
-    <string name="sold">Sold</string>
+    <string name="no_brokers">No Brokers</string>
+    <string name="bought">Bought</string>
     <string name="sending">Sending</string>
     <string name="receiving">Receiving</string>
+    <string name="ccw_selling_merchandise">Selling %1$s</string>
+    <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
+    <string name="ccw_identity_alias_default_text">Crypto Customer</string>
+    <string name="ccw_navigation_view_bitcoin_balance">Bitcoin Balance</string>
+    <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
+    <string name="ccw_contract_details_last_update_date">At Date: %1$s</string>
+    <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
+    <string name="ccw_contract_details_payment_method">Payment Method</string>
+    <string name="ccw_broker_information">Broker Information</string>
+    <string name="ccw_you_bought">You Bought</string>
+    <string name="ccw_price">Price</string>
+    <string name="ccw_wanted_to_buy">Wanted To Buy</string>
 </resources>

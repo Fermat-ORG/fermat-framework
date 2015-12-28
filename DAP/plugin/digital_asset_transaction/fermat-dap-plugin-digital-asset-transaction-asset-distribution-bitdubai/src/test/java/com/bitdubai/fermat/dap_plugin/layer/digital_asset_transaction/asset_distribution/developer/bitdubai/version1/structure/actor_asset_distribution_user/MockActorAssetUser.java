@@ -13,7 +13,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
  */
 public class MockActorAssetUser implements ActorAssetUser {
     @Override
-    public String getPublicKey() {
+    public String getActorPublicKey() {
         return "publicKey";
     }
 

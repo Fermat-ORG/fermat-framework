@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
 
 /**
@@ -22,9 +23,33 @@ public interface IntraUserInformation extends IdentityUserInformation {
     public String getName();
 
     /**
+     *The method <code>getPhrase</code> returns the phrase of the intra user
+     * @return the phrase of the intra user
+     */
+    public String getPhrase();
+    /**
+     * The method <code>getCity</code> returns the City of the represented intra user
+     *
+     * @return the name of the intra user
+     */
+   // public String getCity();
+    /**
+     * The method <code>getCountry</code> returns the Country of the represented intra user
+     *
+     * @return the name of the intra user
+     */
+   // public String getCountry();
+
+    /**
      * The method <code>getProfileImage</code> returns the profile image of the represented intra user
      *
      * @return the profile image
      */
     public byte[] getProfileImage();
+
+    /**
+     * The method <code>getConnectionState</code> returns the Connection State Status
+     * @return ConnectionState object
+     */
+    ConnectionState getConnectionState();
 }

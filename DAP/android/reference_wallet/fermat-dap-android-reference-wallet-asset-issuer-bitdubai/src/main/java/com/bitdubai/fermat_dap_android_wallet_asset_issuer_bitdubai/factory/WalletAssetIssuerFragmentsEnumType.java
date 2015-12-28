@@ -11,7 +11,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum WalletAssetIssuerFragmentsEnumType implements FermatFragmentsEnumType<WalletAssetIssuerFragmentsEnumType> {
 
 
-    DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),;
+    DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
+    DAP_WALLET_ASSET_ISSUER_ASSET_DETAIL("DWAIAD"),
+    DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST("DWAIUDL"),
+    DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER("DWAIUDLH");
 
     private String key;
 

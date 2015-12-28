@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 
 /**
  * The annotation <code>com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference</code>
- * haves all the data needed to build the addon version reference to assign it to the addon/plugin.
+ * contains all the data needed to build the addon version reference to assign it to the addon/plugin.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 27/10/2015.
  */

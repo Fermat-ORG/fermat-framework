@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -9,14 +10,13 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -30,44 +30,39 @@ public class DigitalAssetUserRedemptionVault extends AbstractDigitalAssetVault {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         setErrorManager(errorManager);
-        LOCAL_STORAGE_PATH="digital-asset-user-redemption/";
+        LOCAL_STORAGE_PATH = "digital-asset-user-redemption/";
     }
 
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException{
-        if(errorManager==null){
+    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
+        if (errorManager == null) {
             throw new CantSetObjectException("ErrorManager is null");
         }
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
-    public void setDigitalAssetMetadataAssetIssuerWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-        AssetUserWallet assetUserWallet=this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
-        AssetUserWalletBalance assetUserWalletBalance= assetUserWallet.getBookBalance(balanceType);
-        ActorAssetUser actorAssetUser=this.actorAssetUserManager.getActorAssetUser();
+    public void setDigitalAssetMetadataAssetUserWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, String actorToPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+        AssetUserWallet assetUserWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
+        AssetUserWalletBalance assetUserWalletBalance = assetUserWallet.getBalance();
+        ActorAssetUser actorAssetUser = this.actorAssetUserManager.getActorAssetUser();
         String actorFromPublicKey;
-        if(actorAssetUser==null){
+        if (actorAssetUser == null) {
             System.out.println("USER REDEMPTION Actor user is null");
-            actorFromPublicKey="UNDEFINED";
-        }else{
-            actorFromPublicKey=actorAssetUser.getPublicKey();
+            actorFromPublicKey = "UNDEFINED";
+        } else {
+            actorFromPublicKey = actorAssetUser.getActorPublicKey();
         }
-        System.out.println("USER REDEMPTION Actor user public key:"+actorFromPublicKey);
-        AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper=new AssetUserWalletTransactionRecordWrapper(
+        System.out.println("USER REDEMPTION Actor user public key:" + actorFromPublicKey);
+        AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper = new AssetUserWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
                 genesisTransaction,
                 actorFromPublicKey,
-                "testActorToPublicKey"
+                Actors.DAP_ASSET_USER,
+                actorToPublicKey,
+                Actors.DAP_ASSET_REDEEM_POINT
         );
         System.out.println("USER REDEMPTION AssetUserWalletTransactionRecordWrapper:" + assetUserWalletTransactionRecordWrapper.getDescription());
-        System.out.println("USER REDEMPTION Balance Type:"+balanceType);
-        //I'm gonna mock a credit in Asset issuer wallet for testing, TODO: delete this lines in advanced testing
-        try {
-            assetUserWalletBalance.credit(assetUserWalletTransactionRecordWrapper, BalanceType.BOOK);
-            assetUserWalletBalance.credit(assetUserWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
-        } catch (CantRegisterCreditException e) {
-            e.printStackTrace();
-        }
-        //End mock
+        System.out.println("USER REDEMPTION Balance Type:" + balanceType);
+
         assetUserWalletBalance.debit(assetUserWalletTransactionRecordWrapper, balanceType);
     }
 }

@@ -82,7 +82,7 @@ public class CryptoBrokerWalletIdentityMiddlewareDao {
     public void updateIdentityToWalletCryptoBrokerWalletIdentity(CryptoBrokerIdentity currentIdentity, UUID Wallet, CryptoBrokerIdentity newIdentity) throws CantUpdateCryptoBrokerWalletIdentityException {
         try {
             DatabaseTable walletIdentityTable = this.database.getTable(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_TABLE_NAME);
-            walletIdentityTable.setStringFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_ACTOR_PUBLIC_KEY_COLUMN_NAME, currentIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+            walletIdentityTable.addStringFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_ACTOR_PUBLIC_KEY_COLUMN_NAME, currentIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
 
             DatabaseTableRecord recordToUpdate   = walletIdentityTable.getEmptyRecord();
             loadRecordToUpdate(recordToUpdate, newIdentity, Wallet);
@@ -96,7 +96,7 @@ public class CryptoBrokerWalletIdentityMiddlewareDao {
     public void updateWalletToIdentityCryptoBrokerWalletIdentity(CryptoBrokerIdentity identity, UUID currentWallet, UUID newWallet) throws CantUpdateCryptoBrokerWalletIdentityException{
         try {
             DatabaseTable walletIdentityTable = this.database.getTable(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_TABLE_NAME);
-            walletIdentityTable.setUUIDFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_WALLET_ID_COLUMN_NAME, currentWallet, DatabaseFilterType.EQUAL);
+            walletIdentityTable.addUUIDFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_WALLET_ID_COLUMN_NAME, currentWallet, DatabaseFilterType.EQUAL);
 
             DatabaseTableRecord recordToUpdate   = walletIdentityTable.getEmptyRecord();
             loadRecordToUpdate(recordToUpdate, identity, newWallet);
@@ -143,7 +143,7 @@ public class CryptoBrokerWalletIdentityMiddlewareDao {
         List<String> publicKeys = new ArrayList<>();
 
         DatabaseTable identityTable = this.database.getTable(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_TABLE_NAME);
-        identityTable.setUUIDFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_WALLET_ID_COLUMN_NAME, Wallet, DatabaseFilterType.EQUAL);
+        identityTable.addUUIDFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_WALLET_ID_COLUMN_NAME, Wallet, DatabaseFilterType.EQUAL);
         identityTable.loadToMemory();
         List<DatabaseTableRecord> records = identityTable.getRecords();
         identityTable.clearAllFilters();
@@ -157,7 +157,7 @@ public class CryptoBrokerWalletIdentityMiddlewareDao {
     public List<UUID> getAllWalletAssociatedWithAIdentity(CryptoBrokerIdentity identity) throws CantLoadTableToMemoryException {
         List<UUID> wallets = new ArrayList<>();
         DatabaseTable identityTable = this.database.getTable(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_TABLE_NAME);
-        identityTable.setStringFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_ACTOR_PUBLIC_KEY_COLUMN_NAME, identity.getPublicKey(), DatabaseFilterType.EQUAL);
+        identityTable.addStringFilter(CryptoBrokerWalletIdentityMiddlewareDatabaseConstants.WALLET_IDENTITY_ACTOR_PUBLIC_KEY_COLUMN_NAME, identity.getPublicKey(), DatabaseFilterType.EQUAL);
         identityTable.loadToMemory();
         List<DatabaseTableRecord> records = identityTable.getRecords();
         identityTable.clearAllFilters();

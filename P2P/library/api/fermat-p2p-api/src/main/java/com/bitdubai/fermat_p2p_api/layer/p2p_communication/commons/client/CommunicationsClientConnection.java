@@ -43,7 +43,7 @@ public interface CommunicationsClientConnection {
      *
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias,String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
 
     /**
      * Construct a PlatformComponentProfile instance, for use in the process
@@ -105,6 +105,16 @@ public interface CommunicationsClientConnection {
      * @throws CantRequestListException this exception means the list receive is empty or a internal error
      */
     public List<PlatformComponentProfile> requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
+
+    /**
+     * Method that request to the communication cloud server the list of component registered that match
+     * whit the discovery query params
+     *
+     * @param discoveryQueryParameters
+     * @throws CantRequestListException this exception means the list receive is empty or a internal error
+     */
+    public List<PlatformComponentProfile> requestListComponentRegisteredSocket(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
+
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and

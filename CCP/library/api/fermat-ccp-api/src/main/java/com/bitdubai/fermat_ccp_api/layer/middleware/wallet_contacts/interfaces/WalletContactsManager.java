@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 
 /**
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.C
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletContactsManager {
+public interface WalletContactsManager extends FermatManager {
 
     /**
      * Through the method <code>getWalletContactsRegistry</code> you can get an instance of Wallet Contacts Registry.

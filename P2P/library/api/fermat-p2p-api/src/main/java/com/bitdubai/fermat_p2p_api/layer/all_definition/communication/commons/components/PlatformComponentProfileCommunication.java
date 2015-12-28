@@ -42,6 +42,8 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      */
     private String alias;
 
+    private String phrase;
+
     /**
      * Represent the name
      */
@@ -134,6 +136,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     public String getAlias() {
         return alias;
     }
+
 
     /**
      * Set the Alias

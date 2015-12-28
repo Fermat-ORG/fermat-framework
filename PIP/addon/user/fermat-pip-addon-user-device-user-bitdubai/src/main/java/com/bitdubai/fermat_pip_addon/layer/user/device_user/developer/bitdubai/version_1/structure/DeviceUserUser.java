@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetPersonalImageException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetPersonalImageException;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 /**
  * <p>The class <code>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure.DeviceUserUser</code>

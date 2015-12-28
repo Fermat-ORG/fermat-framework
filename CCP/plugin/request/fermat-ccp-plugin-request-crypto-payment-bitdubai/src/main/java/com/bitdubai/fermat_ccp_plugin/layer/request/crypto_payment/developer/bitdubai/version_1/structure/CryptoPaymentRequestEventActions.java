@@ -265,7 +265,8 @@ public class CryptoPaymentRequestEventActions {
                             cryptoPaymentRequest.getStartTimeStamp()   ,
                             type                                       ,
                             state                                      ,
-                            cryptoPaymentRequest.getNetworkType()
+                            cryptoPaymentRequest.getNetworkType()      ,
+                            cryptoPaymentRequest.getReferenceWallet()
                     );
 
                     cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());

@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -7,8 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -37,8 +37,8 @@ import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_red
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -172,12 +172,10 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                 for (String eventId : dao.getPendingAssetTransmissionEvents()) {
                     switch (dao.getEventTypeById(eventId)) {
                         case RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION:
-                            System.out.println("VAMM: MONITOR AGENT RECEIVED A NEW EVENT!");
-                            System.out.println("VAMM: " + eventId);
-
+                            debug("received new digital asset metadata, requesting transaction list");
                             List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
-
                             for (Transaction<DigitalAssetMetadataTransaction> transaction : newAssetTransaction) {
+                                debug("verifying if there is any transaction for me");
                                 if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
                                     //GET THE BASIC INFORMATION.
                                     DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
@@ -185,28 +183,43 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                     DigitalAsset digitalAsset = metadata.getDigitalAsset();
                                     String transactionId = assetMetadataTransaction.getGenesisTransaction();
 
+                                    //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
+                                    String actorSender = assetMetadataTransaction.getReceiverId(); //now I am the sender.
+                                    PlatformComponentType senderType = assetMetadataTransaction.getReceiverType();
+                                    String actorReceiver = assetMetadataTransaction.getSenderId(); //And the one that sends me this message is the receiver.
+                                    PlatformComponentType receiverType = assetMetadataTransaction.getSenderType();
+
+
+                                    //PERSIST METADATA
+                                    debug("persisting metadata");
+                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
+
                                     dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
+                                    debug("verifying hash");
                                     boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
                                     if (!hashValid) {
                                         dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_HASH, transactionId);
-                                        //TODO: SEND MESSAGE.
+                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_HASH);
+                                        debug("hash rejected");
                                     }
+                                    debug("hash checked.");
                                     dao.updateTransactionStatusById(DistributionStatus.HASH_CHECKED, transactionId);
 
+                                    debug("verifying contract");
                                     dao.updateTransactionStatusById(DistributionStatus.CHECKING_CONTRACT, transactionId);
                                     boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
                                     if (!contractValid) {
                                         dao.updateTransactionStatusById(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, transactionId);
-                                        //TODO: SEND MESSAGE.
+                                        assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_REJECTED_BY_CONTRACT);
+                                        debug("contract rejected");
                                     }
-
+                                    debug("contract checked");
                                     dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
 
-                                    //PERSIST METADATA
-                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
-                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
 
                                     //EVERYTHING WENT OK.
+                                    assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, DistributionStatus.ASSET_ACCEPTED);
                                     dao.updateTransactionStatusById(DistributionStatus.ASSET_ACCEPTED, transactionId);
                                     dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
                                     //UPDATE EVENT STATUS
@@ -215,15 +228,29 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                             break;
 
+                        default:
+                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
+                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
+                            //I CANNOT HANDLE THIS EVENT.
+                            break;
+                    }
+                }
+
+                for (String eventId : dao.getPendingCryptoRouterEvents()) {
+                    debug("received new crypto router event");
+                    switch (dao.getEventTypeById(eventId)) {
                         case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            debug("new transaction on crypto network");
                             boolean notifyEventOnCryptoNetwork = false;
                             for (String transactionId : dao.getPendingSubmitGenesisTransactions()) {
                                 for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
+                                    debug("verifying transactions");
                                     if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK) {
                                         //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                         //BUT THAT'S NOT YET IMPLEMENTED.
+                                        debug("loading redeem point wallet, public key is hardcoded");
                                         AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
-
+                                        debug("searching digital asset metadata");
                                         DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
 
                                         String userPublicKey = dao.getSenderPublicKeyById(transactionId);
@@ -232,13 +259,14 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                                 digitalAssetMetadata,
                                                 cryptoTransaction,
                                                 userPublicKey,
-                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey());
+                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
-                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.BOOK);
-
+                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
+                                        debug("adding credit on book balance");
                                         //CREDIT ON BOOK BALANCE
                                         walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.BOOK);
                                         //UPDATE TRANSACTION CRYPTO STATUS.
+                                        debug("update transaction status");
                                         dao.updateTransactionCryptoStatusById(CryptoStatus.ON_CRYPTO_NETWORK, transactionId);
                                         notifyEventOnCryptoNetwork = true; //Without this I'd have to put the update in there and it can result on unnecessary updates.
                                     }
@@ -253,13 +281,16 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                         case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT:
                             boolean notifyEventOnBlockChain = false;
+                            debug("new transaction on blockchain");
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
                                 for (CryptoTransaction cryptoTransaction : bitcoinNetworkManager.getCryptoTransaction(transactionId)) {
+                                    debug("verifying transactions");
                                     if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN) {
                                         String userPublicKey = dao.getSenderPublicKeyById(transactionId);
 
                                         //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                         //BUT THAT'S NOT YET IMPLEMENTED.
+                                        debug("loading wallet, public key is hardcoded");
                                         AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
 
                                         DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
@@ -268,13 +299,15 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                                 metadata,
                                                 cryptoTransaction,
                                                 userPublicKey,
-                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey());
+                                                actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
                                         //CREDIT ON AVAILABLE BALANCE.
-                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBookBalance(BalanceType.AVAILABLE);
+                                        debug("adding credit on available balance");
+                                        AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
                                         walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
 
                                         //I GOT IT, EVERYTHING WENT OK!
+                                        debug("update status");
                                         dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
                                         notifyEventOnBlockChain = true;
                                     }
@@ -286,9 +319,11 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             break;
 
                         case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            debug("reversed on crypto network");
                             //TODO IMPLEMENT THIS
                             break;
                         case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT:
+                            debug("reversed on block chain");
                             //TODO IMPLEMENT THIS
                             break;
 
@@ -316,6 +351,10 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
         public void startAgent() {
             agentRunning = true;
+        }
+
+        private void debug(String message) {
+            System.out.println("REDEEM POINT REDEMPTION - " + message);
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.NotificationNotFoundException;
@@ -31,7 +33,7 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 2015.10.16..
  */
 public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.DAO {
-       ;
+
 
 
     private Database database;
@@ -55,7 +57,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                                            NotificationDescriptor descriptor      ,
                                            long                        timestamp   ,
                                            ActorProtocolState          protocolState    ,
-                                           boolean                     flagReaded      ) throws CantCreateNotificationException {
+                                           boolean                     flagReaded,
+                                           int sentCount) throws CantCreateNotificationException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -63,7 +66,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
 
 
-            ActorNetworkServiceRecord cryptoPaymentRequestRecord = new ActorNetworkServiceRecord(
+            ActorNetworkServiceRecord connectionRequestRecord = new ActorNetworkServiceRecord(
                     notificationId        ,
                     senderAlias,
                     senderProfileImage     ,
@@ -74,13 +77,14 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                     destinationPublicKey           ,
                     timestamp   ,
                     protocolState             ,
-                    flagReaded
+                    flagReaded,
+                    sentCount
 
             );
 
-            cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
+            cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, connectionRequestRecord));
 
-            return cryptoPaymentRequestRecord;
+            return connectionRequestRecord;
 
         } catch (CantInsertRecordException e) {
 
@@ -111,7 +115,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
                 DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-                cryptoPaymentRequestTable.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+                cryptoPaymentRequestTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
 
                 cryptoPaymentRequestTable.loadToMemory();
 
@@ -134,6 +138,39 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         return null;
     }
 
+    public List<ActorNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
+
+
+            try {
+
+                List<ActorNetworkServiceRecord> actorNetworkServiceRecordList = new ArrayList<>();
+
+                DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+                cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey, DatabaseFilterType.EQUAL);
+
+                cryptoPaymentRequestTable.loadToMemory();
+
+                List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+                for (DatabaseTableRecord record : records) {
+
+                    actorNetworkServiceRecordList.add(buildActorNetworkServiceRecord(record));
+                }
+
+                return actorNetworkServiceRecordList;
+
+            } catch (CantLoadTableToMemoryException exception) {
+
+                throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            } catch (InvalidParameterException exception) {
+
+                throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
+            }
+
+    }
+
+
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
                                                       final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
@@ -147,7 +184,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -186,7 +223,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -220,7 +257,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -254,8 +291,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , notificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -288,19 +325,24 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     }
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord                      record                    ,
-                                                    com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord cryptoPaymentRequestRecord) {
+                                                    com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord connectionRequestRecord) {
 
-        record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, cryptoPaymentRequestRecord.getId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, cryptoPaymentRequestRecord.getActorSenderAlias()                              );
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME          , (cryptoPaymentRequestRecord.getActorSenderProfileImage() != null) ? cryptoPaymentRequestRecord.getActorSenderProfileImage() .toString() : null);
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , cryptoPaymentRequestRecord.getNotificationDescriptor().getCode()                                 );
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getActorDestinationType().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getActorSenderType().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME    , cryptoPaymentRequestRecord.getActorSenderPublicKey()                 );
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME    , cryptoPaymentRequestRecord.getActorDestinationPublicKey());
-        record.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, cryptoPaymentRequestRecord.getSentDate());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, cryptoPaymentRequestRecord.getActorProtocolState().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME           , String.valueOf(cryptoPaymentRequestRecord.isFlagReadead())                  );
+        record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getId());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, connectionRequestRecord.getActorSenderAlias());
+        if(connectionRequestRecord.getActorSenderProfileImage() != null && connectionRequestRecord.getActorSenderProfileImage() .length > 0)
+            record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME, connectionRequestRecord.getActorSenderProfileImage().toString());
+        else
+            record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME, "");
+
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , connectionRequestRecord.getNotificationDescriptor().getCode()                                 );
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, connectionRequestRecord.getActorDestinationType().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, connectionRequestRecord.getActorSenderType().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME    , connectionRequestRecord.getActorSenderPublicKey()                 );
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME    , connectionRequestRecord.getActorDestinationPublicKey());
+        record.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, connectionRequestRecord.getSentDate());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, connectionRequestRecord.getActorProtocolState().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME           , String.valueOf(connectionRequestRecord.isFlagReadead())                  );
+        record.setIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, connectionRequestRecord.getSentCount());
 
         return record;
     }
@@ -319,6 +361,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         String protocolState         = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
         String flagReaded  = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
 
+        int sentCount =  record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
 
 
 
@@ -329,10 +372,15 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         Actors actorDestinationType = Actors.getByCode(destinationType);
         Actors actorSenderType    = Actors.getByCode(senderType   );
 
+        byte[] profileImage = null;
+
+       if (senderProfileImage.length() > 0)
+           profileImage = senderProfileImage.getBytes();
+
         return new ActorNetworkServiceRecord(
                 notificationId        ,
                 senderAlias,
-                senderProfileImage.getBytes()     ,
+                profileImage,
                 notificationDescriptor,
                 actorDestinationType        ,
                 actorSenderType      ,
@@ -340,7 +388,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                 destinationPublicKey           ,
                 timestamp   ,
                 actorProtocolState             ,
-                readed
+                readed,
+                sentCount
 
         );
     }
@@ -383,5 +432,32 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
         }
+    }
+
+    public void delete(UUID notificationId) throws CantDeleteRecordException {
+
+        try {
+
+            DatabaseTable table = getDatabaseTable();
+            table.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+
+            for (DatabaseTableRecord record : records) {
+                table.deleteRecord(record);
+            }
+
+
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(CantLoadTableToMemoryException exception){
+
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
+        }
+
     }
 }

@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#fff"
-
+    android:background="@drawable/back"
     >
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -30,7 +29,9 @@
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_gravity="top"
+        android:paddingTop="16dp"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -45,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Empty transactions"
+            android:text="No transactions"
             android:textColor="#000"
             android:textSize="20sp"/>
 

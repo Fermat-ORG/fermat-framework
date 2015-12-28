@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 
 /**
@@ -49,6 +50,11 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
 
     @Override
     public boolean isPublished(){ return this.published; }
+
+    @Override
+    public ExposureLevel getExposureLevel() {
+        return ExposureLevel.PUBLISH;
+    }
 
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException{

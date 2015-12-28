@@ -4,14 +4,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
@@ -24,6 +27,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.UTXOProvider;
@@ -370,10 +374,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param blockchainNetworkType
      * @param tx
+     * @param transactionId the internal fermat transaction id
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-        runningAgents.get(blockchainNetworkType).broadcastTransaction(tx);
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException {
+        runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
 
@@ -468,6 +473,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     }
 
     /**
+     * Gets all the transactions stored in the specified network.
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType){
+        Wallet wallet = getWallet(blockchainNetworkType, null);
+        return wallet.getTransactionsByTime();
+    }
+
+    /**
      * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
      * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
      * @param txHash the Hash of the transaction we are going to look for.
@@ -477,6 +492,157 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      */
 
     public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        /**
+         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
+         */
+        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()){
+            return monitor.getCryptoTransactionFromBlockChain(txHash, blockHash);
+        }
+
+        /**
+         * if no agents are running, then no CryptoTransaction to return.
+         */
         return null;
+    }
+
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = null;
+        /**
+         * I will get the list of stored transactions for the default network.
+         */
+        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.DEFAULT);
+
+        for (Transaction transaction : transactions){
+            /**
+             * I will search on the inputs of each transaction and search for the passed hash.
+             */
+            for (TransactionInput input : transaction.getInputs()){
+                if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
+                    cryptoTransaction =  CryptoTransaction.getCryptoTransaction(transaction);
+            }
+        }
+
+        /**
+         * If i couldn't find a match, then I will return null.
+         */
+        if (cryptoTransaction == null)
+            return null;
+
+        /**
+         * I will add the Crypto Transaction to the list and verify if I need to inform any previous state.
+         */
+        List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
+        cryptoTransactions.add(cryptoTransaction);
+
+        /**
+         * I need to return all the previous CryptoStates of the CryptoTransaction,
+         * so I will manually add them.
+         */
+        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE){
+            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+            cryptoTransactions.add(cryptoTransaction);
+
+            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(cryptoTransaction);
+        }
+
+        if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN){
+            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(cryptoTransaction);
+        }
+
+        return cryptoTransactions;
+    }
+
+    /**
+     * Will get all the CryptoTransactions stored in the CryptoNetwork which are a child of a parent Transaction
+     * @param parentHash the parent transaction
+     * @param depth the depth of how many transactions we will navigate until we reach the parent transaction. Max is 10
+     * @return
+     * @throws CantGetCryptoTransactionException
+     */
+    public List<CryptoTransaction> getChildCryptoTransaction(String parentHash, int depth) throws CantGetCryptoTransactionException {
+        //todo implementar esto lo voy a necesitar cuando el redeem point recibe el digital asset metadata y quiere buscar la transaccion.
+        return null;
+    }
+
+    /**
+     * Gets the current Crypto Status for the specified internal Fermat transaction id
+     * @param transactionId the internal fermat transaction id
+     * @return
+     * @throws CantGetTransactionCryptoStatusException
+     */
+    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException {
+        try {
+            return getDao().getTransactionCryptoStatus(transactionId);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + transactionId.toString(), "database issue");
+        }
+    }
+
+    /**
+     * Will check and fix any inconsistency that may be in out transaction table.
+     * For example, If i don't have all adressTo or From, or coin values of zero.
+     * @throws CantFixTransactionInconsistenciesException
+     */
+    public void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
+        List<TransactionProtocolData> transactions = null;
+
+        try {
+            transactions = getDao().getAllTransactionProtocolData();
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantFixTransactionInconsistenciesException(CantFixTransactionInconsistenciesException.DEFAULT_MESSAGE, e, "Database error.", "Database error.");
+        }
+
+        /**
+         * Will iterate each transaction and fix any inconsistency
+         */
+        for (TransactionProtocolData transactionProtocolData : transactions){
+            if (transactionProtocolData.getCryptoTransaction().getAddressFrom().getAddress().contentEquals("Empty"))
+                fixAddressFromInconsistency(transactionProtocolData);
+
+            if (transactionProtocolData.getCryptoTransaction().getAddressTo().getAddress().contentEquals("Empty"))
+                fixAddressToInconsistency(transactionProtocolData);
+
+            if (transactionProtocolData.getCryptoTransaction().getCryptoAmount() == 0)
+                fixCryptoAmountInconsistency(transactionProtocolData);
+        }
+
+    }
+
+    /**
+     * Fixes any inconsistency we may have in
+     * the Crypto Amount
+     * @param transactionProtocolData
+     */
+    private void fixCryptoAmountInconsistency(TransactionProtocolData transactionProtocolData) {
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        //todo get the correct address and update the database
+    }
+
+    /**
+     * Fixes any inconsistency we may have in
+     * the AddressTo
+     * @param transactionProtocolData
+     */
+    private void fixAddressToInconsistency(TransactionProtocolData transactionProtocolData) {
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        //todo get the correct address and update the database
+    }
+
+    /**
+     * Fixes any inconsistency we may have in the AddressFrom
+     * @param transactionProtocolData
+     */
+    private void fixAddressFromInconsistency(TransactionProtocolData transactionProtocolData) {
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        //todo get the correct address and update the database
+
     }
 }

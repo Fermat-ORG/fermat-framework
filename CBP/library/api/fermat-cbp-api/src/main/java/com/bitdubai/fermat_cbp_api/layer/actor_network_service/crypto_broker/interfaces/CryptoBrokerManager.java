@@ -4,15 +4,20 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionNewsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,10 +40,20 @@ public interface CryptoBrokerManager extends FermatManager {
     void exposeIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData) throws CantExposeIdentityException;
 
     /**
+     * Through the method <code>exposeIdentities</code> we can expose the crypto identities created in the device.
+     * The information given will be shown to all the crypto customers.
+     *
+     * @param cryptoBrokerExposingDataList  list of crypto broker exposing information.
+     *
+     * @throws CantExposeIdentitiesException   if something goes wrong.
+     */
+    void exposeIdentities(final Collection<CryptoBrokerExposingData> cryptoBrokerExposingDataList) throws CantExposeIdentitiesException;
+
+    /**
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Broker Search.
      * This Crypto Broker search provides all the necessary functionality to make a Crypto Broker Search.
      *
-     * @return a CryptoBrokerSearch instance.
+     * @return a CryptoBrokerCommunitySearch instance.
      */
     CryptoBrokerSearch getSearch();
 
@@ -56,15 +71,11 @@ public interface CryptoBrokerManager extends FermatManager {
      * Through the method <code>disconnect</code> we can disconnect of a crypto broker.
      * If we don't want to negotiate anymore or the reason that you want with a broker, you can disconnect of him.
      *
-     * @param actorIdentityPublicKey the public key of the actor identity who is trying to disconnect.
-     * @param actorIdentityActorType the actor type of the actor identity who is trying to disconnect.
-     * @param cryptoBrokerPublicKey  the public key of the crypto broker with who we're trying to disconnect.
+     * @param requestId   id of the connection request to disconnect.
      *
      * @throws CantDisconnectException if something goes wrong.
      */
-    void disconnect(final String actorIdentityPublicKey,
-                    final Actors actorIdentityActorType,
-                    final String cryptoBrokerPublicKey ) throws CantDisconnectException;
+    void disconnect(final UUID requestId) throws CantDisconnectException, ConnectionRequestNotFoundException;
 
     /**
      * Through the method <code>denyConnection</code> we can deny a connection request.
@@ -100,13 +111,37 @@ public interface CryptoBrokerManager extends FermatManager {
     void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException, ConnectionRequestNotFoundException;
 
     /**
-     * Through the method <code>getPendingConnectionNews</code> we can list all the connection news
+     * Through the method <code>listPendingConnectionNews</code> we can list all the connection news
      * with a pending local action.
+     *
+     * This method is exposed for the crypto broker actor connection plug-in. Here we'll return all the new requests that arrive to him.
      *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
-     * @throws CantListPendingConnectionNewsException if something goes wrong.
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
-    List<CryptoBrokerConnectionNew> getPendingConnectionNews() throws CantListPendingConnectionNewsException;
+    List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException;
+
+    /**
+     * Through the method <code>listPendingConnectionUpdates</code> we can list all the connection news
+     * with a pending local action.
+     *
+     * This method is exposed for all the actors that try to connect with a crypto broker. Here we'll return all the updates of the requests that arrive to them.
+     *
+     * @return a list of instance of CryptoBrokerConnectionNews
+     *
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
+     */
+    List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
+
+    /**
+     * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.
+     *
+     * @param requestId  id of the connection request to confirm.
+     *
+     * @throws CantConfirmException                   if something goes wrong.
+     * @throws ConnectionRequestNotFoundException     if the connection request cannot be found.
+     */
+    void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
 
 }

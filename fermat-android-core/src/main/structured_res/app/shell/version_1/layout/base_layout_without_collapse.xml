@@ -36,7 +36,7 @@
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="25">
+                android:layout_weight="20">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
@@ -50,7 +50,8 @@
                 android:layout_gravity="center_horizontal|bottom"
                 android:orientation="horizontal"
                 android:id="@+id/radiogroup"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:paddingBottom="12dp">
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -63,72 +64,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/pager_selector"
-                    android:id="@+id/radioButton2" />
+                    android:id="@+id/radioButton2"
+                    android:layout_marginLeft="6dp"/>
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/pager_selector"
-                    android:id="@+id/radioButton3" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/pager_selector"
-                    android:id="@+id/radioButton4" />
             </RadioGroup>
 
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="0.5"
-            android:layout_marginBottom="12dp"
-            android:orientation="horizontal"
-            android:id="@+id/icons_container">
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_1"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_001" />
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_2"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_002" />
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_4"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_004" />
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_3"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_003" />
+            android:layout_height="95dp"
+            android:orientation="vertical"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:paddingStart="1dp"
+            android:id="@+id/bottom_navigation_container"
+            >
 
 
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/image_view_icon_5"
-                android:layout_weight="1"
-                android:padding="7dp"
-                android:src="@drawable/ic_005" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/bottom_navigation_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:layout_gravity="center"
+                />
+
+
 
         </LinearLayout>
 
@@ -142,30 +104,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#fff"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:id="@+id/navigation_view_header"
-                android:visibility="visible">
-
-            </FrameLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/navigation_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"/>
-
-
-        </LinearLayout>
+        <include layout="@layout/navigation_view"></include>
 
     </android.support.design.widget.NavigationView>
 

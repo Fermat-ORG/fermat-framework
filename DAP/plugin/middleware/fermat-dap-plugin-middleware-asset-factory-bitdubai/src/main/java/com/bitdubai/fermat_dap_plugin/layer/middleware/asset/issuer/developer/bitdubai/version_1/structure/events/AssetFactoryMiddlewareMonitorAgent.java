@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
@@ -14,11 +14,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Created by franklin on 12/10/15.
@@ -33,8 +32,8 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
 
 
     public AssetFactoryMiddlewareMonitorAgent(AssetFactoryMiddlewareManager assetFactoryMiddlewareManager,
-                                              AssetIssuingManager           assetIssuingManager          ,
-                                              ErrorManager                  errorManager                 ) throws CantSetObjectException {
+                                              AssetIssuingManager assetIssuingManager,
+                                              ErrorManager errorManager) throws CantSetObjectException {
 
         if (assetFactoryMiddlewareManager == null)
             throw new CantSetObjectException("AssetFactoryMiddlewareManager is null");
@@ -42,26 +41,15 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
         if (assetIssuingManager == null)
             throw new CantSetObjectException("AssetIssuingManager is null");
 
-        this.errorManager                  = errorManager                 ;
+        this.errorManager = errorManager;
         this.assetFactoryMiddlewareManager = assetFactoryMiddlewareManager;
-        this.assetIssuingManager           = assetIssuingManager          ;
+        this.assetIssuingManager = assetIssuingManager;
 
     }
 
     @Override
     public void start() throws CantStartAgentException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Asset Factory monitor agent starting");
-
         final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-
-//        try {
-//            ((MonitorAgent) this.monitorAgent).Initialize();
-//        } catch (CantInitializeAssetMonitorAgentException exception) {
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-//        }
-
-
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
@@ -118,21 +106,16 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
                 List<AssetFactory> assetFactories = getAssetFactoryAll();
 
                 for (AssetFactory assetFactory : assetFactories) {
-                    if (assetFactory.getState().getCode() != State.DRAFT.getCode()) {
+                    if (assetFactory.getState() != State.DRAFT) {
                         IssuingStatus issuingStatus = assetIssuingManager.getIssuingStatus(assetFactory.getPublicKey());
-                        if (issuingStatus.getCode() != IssuingStatus.ISSUING.getCode()) {
-                            if (issuingStatus.getCode() == IssuingStatus.ISSUED.getCode()) {
+                        if (issuingStatus != IssuingStatus.ISSUING) {
+                            if (issuingStatus == IssuingStatus.ISSUED) {
                                 assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
                             } else {
-                                assetFactoryMiddlewareManager.markAssetFactoryState(State.DRAFT, assetFactory.getPublicKey());
+                                //TODO, UPDATE THE STATUS WHEN ITS AN ERROR TO LET THE FINAL USER KNOWS WHAT HAPPENED.
                             }
                         }
-//                        int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
-                        //TODO: Revisar si puediesemos persistir la cantidad de Asset transmitidos y tener como un resumen de Asset o sacarlo de una consulta el metodo assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
-//                        int totalFaltante = assetFactory.getQuantity() - numberOfIssuedAssets;
-//                        if (totalFaltante == 0){
-//                            assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
-//                        }
+//
                     }
                 }
             } catch (CantSaveAssetFactoryException e) {

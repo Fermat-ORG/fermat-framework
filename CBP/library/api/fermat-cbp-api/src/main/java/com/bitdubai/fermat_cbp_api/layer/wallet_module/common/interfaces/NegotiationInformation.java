@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by nelson on 22/09/15.
@@ -12,9 +13,23 @@ import java.util.Map;
 public interface NegotiationInformation {
     Map<ClauseType, String> getNegotiationSummary();
 
-    Collection<ClauseInformation> getClauses();
+    Map<ClauseType, ClauseInformation> getClauses();
 
     NegotiationStatus getStatus();
 
-    long getLastUpdate();
+    String getMemo();
+
+    void setMemo(String memo);
+
+    long getLastNegotiationUpdateDate();
+
+    void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate);
+
+    long getNegotiationExpirationDate();
+
+    UUID getNegotiationId();
+
+    void setCancelReason(String cancelReason);
+
+    String getCancelReason();
 }

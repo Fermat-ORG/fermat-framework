@@ -1,18 +1,32 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
-
-
-#Installation Guide
+# Installation and Configuration Guide for Fermat Development Environment 
 
 <br>
+
 ## Introduction
 
-Currently Fermat is targeting the Android OS, once there we are going to move fordward to other OS. You will notice that this guide covers everything you need to do to set up the environmet and start using Fermat.
+Currently Fermat is targeting the Android OS (other OS will come later on).
+
+This guide covers *everything* you need to know to set up the development environment to start programming within Fermat.
+## System Requirements
+A minimum advisable requirement for ensure enough CPU power to run the project is:
+CPU = Intel i5 or higher
+RAM = 8 Gb
 
 <br>
 ## Part I: Setting up the Environment
 
 <br>
-### Overview
+### Working on Linux - PLEASE READ THIS FIRST- 
+
+It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution). 
+To use Ubuntu, you will need:
+* a) 30 Gb Free space in you hard disk, to allocate a new *partition* to install Ubuntu (this will NOT affect your Windows partition)
+* b) A valid UBUNTU disc image ( you can download it here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) )
+* c) A free DVD to create the UBUNTU installation disk.
+
+<br>
+### Tools Overview
 
 You will need the following tools in order to develop in Fermat
 
@@ -23,14 +37,38 @@ You will need the following tools in order to develop in Fermat
 * **Android build-tools 23.01**
 * **Android Development Studio or IntelliJ IDEA**
 
-Although there are many ways to configure these tools, we'll provide a recommended configuration for your development environment.
+Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team, by means of the automatic installationscript or following the manual installation steps.
+
+
+### Automatic installation
+
+* You can install all the needed software automatically using the following script: (please use "right-clic" and "save as.." and save it in your _$HOME_ folder ) 
+[FermatDeveloperInstaller.sh] (https://raw.githubusercontent.com/bitDubai/fermat/master/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
+
+* If you are running Ubuntu in 64 bit mode, skip next step and go directly to executing the script.
+
+* If you are running Ubuntu in 32-bit mode, you need to EDIT the script before. You can use Gedit, eMacs or any text editor to set some variables on and off by commenting (# symbol before the line) or uncommenting ( deleting the # before the line), eg.
+
+```shell
+platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
+#platfform="-linux-i586.tar.gz" #To use this platorm, comment the previous line and uncomment this.
+```
+
+* Then, to execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
+
+```shell
+cd $HOME
+./FermatDeveloperInstaller.sh
+```
+
+It takes some time to download all the software, please, be patient.
+
 
 <br>
-### Working on Linux
+### Manual installation (if automatic installation did no work properly)
 
-Most Fermat developers are on Linux since compilation is faster there than in Windows. 
+In case the script goes wrong or does not do its intended job, you can go with the manual set up of the environment.
 
-<br>
 #### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you will find in any Distro of Linux.
@@ -68,8 +106,8 @@ We can also install Gradle using the `apt` service, although the version might b
 This is a *zip* file that you must extract using the `unzip` commmand, then we move it to the **/opt** folder
 
 ```bash
-unzip -e gradle-2.8-all.zip
-sudo mv gradle-2.8/ /opt/gradle
+unzip -e gradle-2.10-all.zip
+sudo mv gradle-2.10/ /opt/gradle
 ```
 
 <br>
@@ -145,6 +183,146 @@ sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
 ```
 
 This will enable 64-bit linux distros to run 32-bit applications like adb and aapt (Android tools). More information found here: [Android Issue 82711](https://code.google.com/p/android/issues/detail?id=82711)
+
+### Cloning Repository
+
+#### Create your fork.
+
+* Enter to GitHub:
+https://github.com/bitDubai/fermat then create Fork:
+To fork you must press button “Fork” in the top-right corner of the url, and then, select your user.
+
+You have your Fork created!
+https://github.com/$YOUR_USER/fermat
+
+##### Create a local branch pointing to the original project.
+* Create a new local branch, pointing to the original project:
+```shell
+git remote add newbranch https://github.com/bitDubai/fermat
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/lnacosta/fermat (fetch)
+origin https://github.com/lnacosta/fermat (push)
+newbranch https://github.com/bitDubai/fermat (fetch)
+newbranch https://github.com/bitDubai/fermat (push)
+```
+
+#### Update your fork to the last release.
+
+* Open a command prompt and clone your fork:
+```shell
+git clone https://github.com/$YOUR_USER/fermat
+```
+* Enter your credentials
+
+* Well, you have cloned your fork.
+
+* Enter to your cloned repository folder and try this:
+```shell 
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/$YOUR_USER/fermat (fetch)
+origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+* Follow section: **“Create a local branch pointing to the original project”.**
+
+Now you have a local repository pointing to your fork, and a local repository pointing to the main fork.
+
+* Update your local repository to the last release:
+```shell
+git fetch newbranch
+```
+This will update all your code to the last release.
+
+* Point to the outdated local repository:
+```shell
+git checkout master
+```
+
+* Now merge the changes!
+```shell
+git merge newbranch/master
+```
+
+All changes will be updated in your oudated local repository with the last release.
+
+* Now push the changes to update your fork!
+```shell
+git push
+```
+
+If you have any problems to push then try: 
+```shell
+git config http.postBuffer 524288000
+```
+and push again.
+
+#### Pull your changes to the main fork (if you haven’t got a fork yet).
+
+If you don’t have a fork.
+
+Please go to **“Create your fork.”**
+
+Then, you must have a local repository pointing to your fork and one local repository pointing to the main fork.
+To do this then follow the next steps:
+
+* Open a command prompt and clone your fork:
+```shell
+git clone https://github.com/$YOUR_USER/fermat
+```
+Enter your credentials
+
+Well, you have cloned your fork.
+
+* Enter to your cloned repository folder and try this:
+```shell
+git remote -v
+```
+
+The console must return you something like this:
+```shell
+origin https://github.com/$YOUR_USER/fermat (fetch)
+origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+Follow section: **“Create a local branch pointing to the original project”**.
+
+Now you have a local repository pointing to your fork, and a local repository pointing to the main fork.
+
+* Point to your the repository that points to the fork:
+```shell
+git checkout master
+```
+
+Then overwrite the source code with your changes.
+
+* Commit the changes.
+
+Go to github and create a Pull Request:
+You have to go to your fork and then with the commits do the pull request.
+
+#### Pull your changes to the main fork (if you have a fork created and a branch pointing to main fork).
+
+* Update your local branch pointing to main fork to the last release:
+```shell
+git fetch mainforkbranch
+```
+This will update all your code to the last release.
+
+* Now merge the changes!
+```shell
+git merge mainforkbranch/master
+```
+
+* Commit the changes.
+
+* Go to github and create a Pull Request:
+You have to go to your fork and then with the commits do the pull request.
 
 
 <br>

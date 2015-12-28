@@ -8,14 +8,18 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCryptoBrokerWalletManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +36,8 @@ import java.util.regex.Pattern;
 public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implements
         LogManagerForDevelopers,
         CryptoBrokerWalletModuleManager {
+
+    private CryptoBrokerWalletManager walletManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -50,9 +56,12 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
 
 
     @Override
-    public CryptoBrokerWallet getCryptoBrokerWallet(String walletPublicKey) throws CantGetCryptoBrokerWalletException {
+    public CryptoBrokerWalletManager getCryptoBrokerWallet(String walletPublicKey) throws CantGetCryptoBrokerWalletException {
         try {
-            return new CryptoBrokerWalletModuleCryptoBrokerWalletManager();
+            if (walletManager == null)
+                walletManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager();
+
+            return walletManager;
         } catch (Exception e) {
             throw new CantGetCryptoBrokerWalletException(FermatException.wrapException(e));
         }
@@ -99,5 +108,15 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
              */
             return DEFAULT_LOG_LEVEL;
         }
+    }
+
+    @Override
+    public SettingsManager<FermatSettings> getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        return null;
     }
 }

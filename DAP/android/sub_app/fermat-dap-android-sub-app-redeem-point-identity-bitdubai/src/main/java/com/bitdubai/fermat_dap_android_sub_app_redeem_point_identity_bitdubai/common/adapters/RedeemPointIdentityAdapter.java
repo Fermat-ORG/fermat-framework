@@ -38,9 +38,9 @@ public class RedeemPointIdentityAdapter extends FermatAdapter<RedeemPointIdentit
 
     @Override
     protected void bindHolder(final RedeemPointIdentityViewHolder holder, final RedeemPointIdentity data, final int position) {
-        holder.getIdentityName().setText(data.getAlias() != null ? data.getAlias() : null);
+        holder.getIdentityName().setText(data.getAlias());
 
-        byte[] profileImage = data.getProfileImage();
+        byte[] profileImage = data.getImage();
         Bitmap imageBitmap = profileImage == null ?
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);

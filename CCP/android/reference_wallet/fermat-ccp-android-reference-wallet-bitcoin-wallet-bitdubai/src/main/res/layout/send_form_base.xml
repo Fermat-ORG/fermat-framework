@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transacion_form">
 
 
@@ -46,7 +46,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:id="@+id/profile_Image"
-                        android:src="@drawable/profile_image"
+                        tools:src="@drawable/ic_profile_male"
                         android:layout_marginLeft="12dp"/>
 
                     <FrameLayout
@@ -161,6 +161,7 @@
                     android:paddingLeft="7dip"
                     android:paddingBottom="3dip"
                     android:paddingTop="3dip"
+                    android:orientation="horizontal"
                     android:paddingRight="7dip">
 
 
@@ -179,17 +180,26 @@
                         android:textSize="16sp"
                         android:textStyle="normal"
                         android:hint="0 Bits"
-                        android:layout_weight="0.54"
+                        android:layout_weight="0.2"
                         android:inputType="numberDecimal"
                         android:state_selected = "true"
-                        android:background="@null"/>
+                        android:background="@null"
+                        />
+
+                    <Spinner
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/spinner"
+                        >
+
+                    </Spinner>
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#bbccc7"></View>
+                    android:background="#bbccc7"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -214,7 +224,7 @@
                         android:gravity="center_vertical"
                         android:textSize="20sp"
                         android:textStyle="normal"
-                        android:hint="Description"
+                        android:hint="Notes"
                         android:textColor="#1d1d26"
                         android:textColorHint="#9a9a9c"
                         android:paddingTop="7dip"
@@ -243,7 +253,7 @@
                         android:padding="3dp"
                         android:clickable="true"
                         android:textSize="14sp"
-                        android:text="Confirm"
+                        android:text="Send"
                         android:background="#1173aa"
                         android:textColor="#fff"
                         />

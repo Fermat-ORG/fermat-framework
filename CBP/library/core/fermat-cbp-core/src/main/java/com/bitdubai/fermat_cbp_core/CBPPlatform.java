@@ -1,14 +1,24 @@
 package com.bitdubai.fermat_cbp_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_cbp_core.layer.contract.ContractLayer;
+import com.bitdubai.fermat_cbp_core.layer.negotiation.NegotiationLayer;
+import com.bitdubai.fermat_cbp_core.layer.user_level_business_transaction.UserLevelBusinessTransactionLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_core.layer.actor_connection.ActorConnectionLayer;
+import com.bitdubai.fermat_cbp_core.layer.actor_network_service.ActorNetworkServiceLayer;
+import com.bitdubai.fermat_cbp_core.layer.business_transaction.BusinessTransactionLayer;
 import com.bitdubai.fermat_cbp_core.layer.identity.IdentityLayer;
+import com.bitdubai.fermat_cbp_core.layer.negotiation_transaction.NegotiationTransactionLayer;
+import com.bitdubai.fermat_cbp_core.layer.network_service.NetworkServiceLayer;
+import com.bitdubai.fermat_cbp_core.layer.stock_transactions.StockTransactionsLayer;
 import com.bitdubai.fermat_cbp_core.layer.sub_app_module.SubAppModuleLayer;
+import com.bitdubai.fermat_cbp_core.layer.wallet.WalletLayer;
 import com.bitdubai.fermat_cbp_core.layer.wallet_module.WalletModuleLayer;
+import com.bitdubai.fermat_cbp_core.layer.world.WorldLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_core.CBPPlatform</code>
@@ -26,12 +36,20 @@ public class CBPPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-
             registerLayer(new ActorConnectionLayer());
-            registerLayer(new IdentityLayer()       );
-            registerLayer(new SubAppModuleLayer()   );
-            registerLayer(new WalletModuleLayer()   );
-
+            registerLayer(new ActorNetworkServiceLayer());
+            registerLayer(new BusinessTransactionLayer());
+            registerLayer(new ContractLayer());
+            registerLayer(new IdentityLayer());
+            registerLayer(new NegotiationLayer());
+            registerLayer(new NegotiationTransactionLayer());
+            registerLayer(new NetworkServiceLayer());
+            registerLayer(new StockTransactionsLayer());
+            registerLayer(new SubAppModuleLayer());
+            registerLayer(new UserLevelBusinessTransactionLayer());
+            registerLayer(new WalletLayer());
+            registerLayer(new WalletModuleLayer());
+            registerLayer(new WorldLayer());
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(

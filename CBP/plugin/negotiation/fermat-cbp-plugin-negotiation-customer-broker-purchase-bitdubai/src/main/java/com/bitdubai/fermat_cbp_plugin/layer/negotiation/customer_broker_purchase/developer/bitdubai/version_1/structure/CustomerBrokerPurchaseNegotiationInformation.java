@@ -16,15 +16,21 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
     private final UUID   negotiationId;
     private final String publicKeyCustomer;
     private final String publicKeyBroker;
-    private final long   startDataTime;
+    private final Long   startDataTime;
+    private final Long   negotiationExpirationDate;
     private NegotiationStatus statusNegotiation;
     private final Collection<Clause> clauses;
+
+    private Long   lastNegotiationUpdateDate;
+    private String cancelReason;
+    private String memo;
 
     public CustomerBrokerPurchaseNegotiationInformation(
             UUID   negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
-            long startDataTime,
+            Long startDataTime,
+            Long negotiationExpirationDate,
             NegotiationStatus statusNegotiation,
             Collection<Clause> clauses
     ){
@@ -32,6 +38,7 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
         this.publicKeyCustomer = publicKeyCustomer;
         this.publicKeyBroker = publicKeyBroker;
         this.startDataTime = startDataTime;
+        this.negotiationExpirationDate = negotiationExpirationDate;
         this.statusNegotiation = statusNegotiation;
         this.clauses = clauses;
     }
@@ -52,8 +59,23 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
     }
 
     @Override
-    public long getStartDate() {
+    public Long getStartDate() {
         return this.startDataTime;
+    }
+
+    @Override
+    public Long getLastNegotiationUpdateDate() {
+        return this.lastNegotiationUpdateDate;
+    }
+
+    @Override
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
+    }
+
+    @Override
+    public Long getNegotiationExpirationDate() {
+        return this.negotiationExpirationDate;
     }
 
     @Override
@@ -62,8 +84,8 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
     }
 
     @Override
-    public void setStatus(NegotiationStatus status) {
-        this.statusNegotiation = status;
+    public Boolean getNearExpirationDatetime() {
+        return null;
     }
 
     @Override
@@ -71,5 +93,24 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
         return this.clauses;
     }
 
+    @Override
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
+    }
+
+    @Override
+    public String getCancelReason() {
+        return this.cancelReason;
+    }
+
+    @Override
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    @Override
+    public String getMemo() {
+        return this.memo;
+    }
 
 }

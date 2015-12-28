@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+
 /**
  * Created by rodrigoa on 20/05/15.
  */
-public interface BitcoinManager {
+public interface BitcoinManager extends FermatManager {
 
     // changed from UUID to Strubg representing a public key
     // Ezequiel Postan August 15th 2015
@@ -34,21 +36,13 @@ public interface BitcoinManager {
     /**
      * Bitcoin server hosted in cloud
      */
-
-    //public final String REGTEST_SERVER_1_ADDRESS = "52.27.201.67";
-    //public final int REGTEST_SERVER_1_PORT = 18444;
-
-    public final String REGTEST_SERVER_1_ADDRESS = "192.168.1.140";
-
+    public final String REGTEST_SERVER_1_ADDRESS = "52.27.68.19";
     public final int REGTEST_SERVER_1_PORT = 19000;
 
-    //public final String REGTEST_SERVER_2_ADDRESS = "52.88.160.234";
-    //public final int REGTEST_SERVER_2_PORT = 18444;
 
-
-    public final String REGTEST_SERVER_2_ADDRESS = "192.168.1.140";
-
+    public final String REGTEST_SERVER_2_ADDRESS = "52.34.251.168";
     public final int REGTEST_SERVER_2_PORT = 19010;
+
 
 
 

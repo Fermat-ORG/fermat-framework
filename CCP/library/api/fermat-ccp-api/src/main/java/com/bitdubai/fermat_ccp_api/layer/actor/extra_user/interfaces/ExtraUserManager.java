@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -15,7 +16,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNo
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ExtraUserManager {
+public interface ExtraUserManager extends FermatManager {
 
     /**
      * Throw the method <code>createActor</code> we can create a new user (this, without picture).

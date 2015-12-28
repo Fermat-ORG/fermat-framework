@@ -2,33 +2,33 @@ package com.bitdubai.sub_app.wallet_store.common.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.sub_app.wallet_store.common.holders.BitmapViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.holders.ImageViewHolder;
 import com.wallet_store.bitdubai.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by nelson on 27/08/15.
+ * Adapter para mostrar una lista de imagenes. Estas imagenes pueden estar representadas como Bitmap o ser un ResourceId
+ *
+ * @author Nelson Ramirez
+ * @since 04/12/2015
  */
-public class ImagesAdapter extends FermatAdapter<Bitmap, BitmapViewHolder> {
+public class ImagesAdapter extends FermatAdapter<Object, ImageViewHolder> {
 
     public ImagesAdapter(Context context) {
         super(context);
     }
 
-    public ImagesAdapter(Context context, ArrayList<Bitmap> dataSet) {
+    public ImagesAdapter(Context context, List<Object> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected BitmapViewHolder createHolder(View itemView, int type) {
-        return new BitmapViewHolder(itemView);
+    protected ImageViewHolder createHolder(View itemView, int type) {
+        return new ImageViewHolder(itemView);
     }
 
     @Override
@@ -37,8 +37,11 @@ public class ImagesAdapter extends FermatAdapter<Bitmap, BitmapViewHolder> {
     }
 
     @Override
-    protected void bindHolder(BitmapViewHolder holder, Bitmap data, int position) {
-        holder.getWalletScreenshot().setImageBitmap(data);
+    protected void bindHolder(ImageViewHolder holder, Object data, int position) {
+        if (data instanceof Bitmap)
+            holder.getWalletScreenshot().setImageBitmap((Bitmap) data);
+        else
+            holder.getWalletScreenshot().setImageResource((int) data);
     }
 
 

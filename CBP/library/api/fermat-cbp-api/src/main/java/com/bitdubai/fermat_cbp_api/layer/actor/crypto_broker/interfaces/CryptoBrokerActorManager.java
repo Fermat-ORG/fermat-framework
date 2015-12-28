@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
@@ -11,7 +12,7 @@ import java.util.UUID;
  * Created by Angel 17-11-15
  */
 
-public interface CryptoBrokerActorManager {
+public interface CryptoBrokerActorManager extends FermatManager {
 
     BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 

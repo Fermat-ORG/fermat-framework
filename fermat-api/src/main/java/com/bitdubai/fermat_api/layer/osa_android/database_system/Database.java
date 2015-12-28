@@ -31,5 +31,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 
     void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException;
 
+   @Deprecated // is not used anymore
     void closeDatabase();
 }

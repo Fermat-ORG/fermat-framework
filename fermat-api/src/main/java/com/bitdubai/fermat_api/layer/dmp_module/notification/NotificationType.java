@@ -14,7 +14,8 @@ public enum NotificationType {
     INCOMING_CONNECTION     ("IC"),
     MONEY_REQUEST ("MR"),
     CLOUD_CONNECTED_NOTIFICATION("CCN"),
-    INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN");
+    INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN"),
+    OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION("OIARTN");
 
     /**
      * Represent the key
@@ -57,6 +58,8 @@ public enum NotificationType {
                 return CLOUD_CONNECTED_NOTIFICATION;
             case "IIARCN":
                 return INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION;
+            case "OIARTN":
+                return OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
 

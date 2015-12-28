@@ -5,7 +5,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWizard;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +46,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     SideMenu sideMenu;
 
+    Footer footer;
+
     MainMenu mainMenu;
 
     TabStrip tabStrip;
@@ -52,7 +56,10 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     StatusBar statusBar;
 
-    Map<WizardTypes, Wizard> wizards;
+    /**
+     * String wizard types enum
+     */
+    Map<String, Wizard> wizards;
 
     // esto es para ver a que wallet o subApp hay que hacer el back
     String backPublicKey;
@@ -61,6 +68,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Header header;
     private boolean fullScreen;
+    private String backgroundColor;
 
     public Activity() {
     }
@@ -118,6 +126,9 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.backPublicKey = backPublicKey;
     }
 
+    public void setFooter(Footer footer) {
+        this.footer = footer;
+    }
 
     /**
      * Activity  interface implementation.
@@ -167,6 +178,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
+    public FermatFooter getFooter() {
+        return footer;
+    }
+
+    @Override
     public String getBackAppPublicKey() {
         return backPublicKey;
     }
@@ -175,6 +191,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException {
         this.backPublicKey = appPublicKeyback;
         this.backActivity = Activities.getValueFromString(activityCode);
+    }
+
+    @Override
+    public FermatWizard getWizard(String wizardCode) {
+        return wizards.get(wizardCode);
     }
 
     // TODO VER COMO HACER ESTO
@@ -209,13 +230,13 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     /**
      * Add runtime Wizard to this Activity
      *
-     * @param wizardType WizardType enumerable
+     * @param wizardTypeCode WizardType enumerable
      * @param wizard     runtime wizard object to attach to this activity
      */
-    public void addWizard(WizardTypes wizardType, Wizard wizard) {
+    public void addWizard(String wizardTypeCode, Wizard wizard) {
         if (wizards == null)
             wizards = new HashMap<>();
-        wizards.put(wizardType, wizard);
+        wizards.put(wizardTypeCode, wizard);
     }
 
     /***
@@ -223,7 +244,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      *
      * @return HasMap Wizards
      */
-    public Map<WizardTypes, Wizard> getWizards() {
+    public Map<String, Wizard> getWizards() {
         return wizards;
     }
 
@@ -245,6 +266,14 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setFullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
     }
 }
 

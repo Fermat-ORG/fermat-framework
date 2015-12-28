@@ -3,12 +3,21 @@ package com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions;
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Yordin Alayn on 10.09.15.
+ * The exception <code>com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException</code>
+ * is thrown when there is an error trying to BLABLABLA.
+ * <p/>
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/12/2015.
  */
-
 public class CantGetCryptoBrokerIdentityException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "Falled To Get Crypto Broker Identity.";
+
+    private static final String DEFAULT_MESSAGE = "CAN'T GET CRYPTO BROKER IDENTITY EXCEPTION";
+
     public CantGetCryptoBrokerIdentityException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantGetCryptoBrokerIdentityException(Exception cause, String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
 }

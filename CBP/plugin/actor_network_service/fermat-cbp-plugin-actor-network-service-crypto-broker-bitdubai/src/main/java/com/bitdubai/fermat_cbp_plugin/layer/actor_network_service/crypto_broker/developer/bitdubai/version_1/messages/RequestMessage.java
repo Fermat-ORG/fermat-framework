@@ -1,119 +1,113 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.InformationMessage</code>
- * contains the structure of a Information message for this plugin.
+ * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.RequestMessage</code>
+ * contains the structure of a Request message for this plugin. Connection or Disconnection.
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public class RequestMessage extends NetworkServiceMessage {
 
-    private final UUID                  requestId        ;
-    private final String                identityPublicKey;
-    private final Actors                identityType     ;
-    private final String                actorPublicKey   ;
-    private final Actors                actorType        ;
-    private final String                description      ;
-    private final CryptoAddress         cryptoAddress    ;
-    private final long                  amount           ;
-    private final long                  startTimeStamp   ;
-    private final RequestAction         action           ;
-    private final BlockchainNetworkType networkType      ;
+    private final UUID                    requestId           ;
+    private final String                  senderPublicKey     ;
+    private final Actors                  senderActorType     ;
+    private final String                  senderAlias         ;
+    private final String                  senderImage         ;
+    private final String                  destinationPublicKey;
+    private final ConnectionRequestAction requestAction       ;
+    private final long                    sentTime            ;
 
-    public RequestMessage(final UUID                  requestId        ,
-                          final String                identityPublicKey,
-                          final Actors                identityType     ,
-                          final String                actorPublicKey   ,
-                          final Actors                actorType        ,
-                          final String                description      ,
-                          final CryptoAddress         cryptoAddress    ,
-                          final long                  amount           ,
-                          final long                  startTimeStamp   ,
-                          final RequestAction         action           ,
-                          final BlockchainNetworkType networkType      ) {
+    public RequestMessage(final UUID                    requestId           ,
+                          final String                  senderPublicKey     ,
+                          final Actors                  senderActorType     ,
+                          final String                  senderAlias         ,
+                          final String                  senderImage         ,
+                          final String                  destinationPublicKey,
+                          final ConnectionRequestAction requestAction       ,
+                          final long                    sentTime            ) {
 
-        super(MessageTypes.REQUEST);
-
-        this.requestId         = requestId        ;
-        this.identityPublicKey = identityPublicKey;
-        this.identityType      = identityType     ;
-        this.actorPublicKey    = actorPublicKey   ;
-        this.actorType         = actorType        ;
-        this.description       = description      ;
-        this.cryptoAddress     = cryptoAddress    ;
-        this.amount            = amount           ;
-        this.startTimeStamp    = startTimeStamp   ;
-        this.action            = action           ;
-        this.networkType       = networkType      ;
+        this.requestId            = requestId           ;
+        this.senderPublicKey      = senderPublicKey     ;
+        this.senderActorType      = senderActorType     ;
+        this.senderAlias          = senderAlias         ;
+        this.senderImage          = senderImage         ;
+        this.destinationPublicKey = destinationPublicKey;
+        this.requestAction        = requestAction       ;
+        this.sentTime             = sentTime            ;
     }
 
-    public UUID getRequestId() {
+    /**
+     * @return an uuid representing the request id.
+     */
+    public final UUID getRequestId() {
         return requestId;
     }
 
-    public String getIdentityPublicKey() {
-        return identityPublicKey;
+    /**
+     * @return a string representing the sender public key.
+     */
+    public final String getSenderPublicKey() {
+        return senderPublicKey;
     }
 
-    public Actors getIdentityType() {
-        return identityType;
+    /**
+     * @return an element of actors enum representing the actor type of the sender.
+     */
+    public final Actors getSenderActorType() {
+        return senderActorType;
     }
 
-    public String getActorPublicKey() {
-        return actorPublicKey;
+    /**
+     * @return a string representing the alias of the crypto broker.
+     */
+    public final String getSenderAlias() {
+        return senderAlias;
     }
 
-    public Actors getActorType() {
-        return actorType;
+    /**
+     * @return an array of bytes with the image exposed by the Crypto Broker.
+     */
+    public final String getSenderImage() {
+        return senderImage;
     }
 
-    public String getDescription() {
-        return description;
+    /**
+     * @return a string representing the destination public key.
+     */
+    public final String getDestinationPublicKey() {
+        return destinationPublicKey;
     }
 
-    public CryptoAddress getCryptoAddress() {
-        return cryptoAddress;
+    /**
+     * @return an element of ConnectionRequestAction enum indicating the action that must to be done.
+     */
+    public final ConnectionRequestAction getRequestAction() {
+        return requestAction;
     }
 
-    public long getAmount() {
-        return amount;
-    }
-
-    public long getStartTimeStamp() {
-        return startTimeStamp;
-    }
-
-    public RequestAction getAction() {
-        return action;
-    }
-
-    public BlockchainNetworkType getNetworkType() {
-        return networkType;
+    /**
+     * @return the time when the action was performed.
+     */
+    public final long getSentTime() {
+        return sentTime;
     }
 
     @Override
     public String toString() {
-        return "RequestMessage{" +
+        return "CryptoBrokerConnectionRequest{" +
                 "requestId=" + requestId +
-                ", identityPublicKey='" + identityPublicKey + '\'' +
-                ", identityType=" + identityType +
-                ", actorPublicKey='" + actorPublicKey + '\'' +
-                ", actorType=" + actorType +
-                ", description='" + description + '\'' +
-                ", cryptoAddress=" + cryptoAddress +
-                ", amount=" + amount +
-                ", startTimeStamp=" + startTimeStamp +
-                ", action=" + action +
-                ", networkType=" + networkType +
+                ", senderPublicKey='" + senderPublicKey + '\'' +
+                ", senderActorType=" + senderActorType +
+                ", senderAlias='" + senderAlias + '\'' +
+                ", senderImage=" + senderImage + '\'' +
+                ", destinationPublicKey='" + destinationPublicKey + '\'' +
+                ", requestAction=" + requestAction +
+                ", sentTime=" + sentTime +
                 '}';
     }
-
 }

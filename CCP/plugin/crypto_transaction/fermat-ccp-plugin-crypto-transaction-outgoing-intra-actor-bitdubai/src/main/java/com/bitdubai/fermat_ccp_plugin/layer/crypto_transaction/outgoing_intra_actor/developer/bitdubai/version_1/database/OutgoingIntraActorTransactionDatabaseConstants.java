@@ -24,6 +24,7 @@ public class OutgoingIntraActorTransactionDatabaseConstants {
     public static final String OUTGOING_INTRA_ACTOR_TABLE_NAME = "outgoing_intra_actor";
 
     public static final String OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    public static final String OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME = "request_id";
     public static final String OUTGOING_INTRA_ACTOR_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME = "wallet_id_to_debit_from";
     public static final String OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
     public static final String OUTGOING_INTRA_ACTOR_ADDRESS_FROM_COLUMN_NAME = "address_from";
@@ -40,6 +41,7 @@ public class OutgoingIntraActorTransactionDatabaseConstants {
     public static final String OUTGOING_INTRA_ACTOR_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME = "actor_to_public_key";
     public static final String OUTGOING_INTRA_ACTOR_ACTOR_TO_TYPE_COLUMN_NAME = "actor_to_type";
     public static final String OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME = "reference_wallet";
+    public static final String OUTGOING_INTRA_ACTOR_SAME_DEVICE_COLUMN_NAME = "same_device";
 
     public static final String OUTGOING_INTRA_ACTOR_FIRST_KEY_COLUMN = "transaction_id";
 }

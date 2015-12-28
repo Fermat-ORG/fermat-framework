@@ -3,14 +3,13 @@ package com.bitdubai.android_core.app;
 
 import android.support.multidex.MultiDexApplication;
 
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_core.FermatSystem;
-
 import java.io.Serializable;
 import java.util.HashMap;
-
 
 /**
  * Reformated by Matias Furszyfer
@@ -24,13 +23,14 @@ import java.util.HashMap;
  */
 
 
-public class ApplicationSession extends MultiDexApplication implements Serializable {
+public class ApplicationSession extends MultiDexApplication implements Serializable,FermatApplicationSession {
 
     /**
      * Application states
      */
     public static final int STATE_NOT_CREATED=0;
     public static final int STATE_STARTED=1;
+    public static final int STATE_STARTED_DESKTOP=2;
 
     /**
      *  Fermat platform
@@ -53,12 +53,13 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     /**
      *  Application state
      */
-    private int applicationState=STATE_NOT_CREATED;
+    public static int applicationState=STATE_NOT_CREATED;
 
     /**
      *  SubApps fragment factories
      */
-    private HashMap<String,FermatSubAppFragmentFactory> subAppsFragmentfFactories;
+    private HashMap<String,FermatFragmentFactory> subAppsFragmentfFactories;
+
 
 
     /**
@@ -123,7 +124,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     /**
      *  Add supApp fragment factory
      */
-    public void addSubAppFragmentFactory(String subAppType,FermatSubAppFragmentFactory fermatSubAppFragmentFactory){
+    public void addSubAppFragmentFactory(String subAppType,FermatFragmentFactory fermatSubAppFragmentFactory){
         subAppsFragmentfFactories.put(subAppType,fermatSubAppFragmentFactory);
     }
 

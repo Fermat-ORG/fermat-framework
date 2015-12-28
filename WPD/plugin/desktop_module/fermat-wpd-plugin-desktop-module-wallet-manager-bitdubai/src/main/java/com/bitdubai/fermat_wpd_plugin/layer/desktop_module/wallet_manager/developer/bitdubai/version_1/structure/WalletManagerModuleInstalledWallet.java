@@ -152,6 +152,11 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
 
 
     @Override
+    public String getAppName() {
+        return walletName;
+    }
+
+    @Override
     public String getAppPublicKey() {
         return publicKey;
     }

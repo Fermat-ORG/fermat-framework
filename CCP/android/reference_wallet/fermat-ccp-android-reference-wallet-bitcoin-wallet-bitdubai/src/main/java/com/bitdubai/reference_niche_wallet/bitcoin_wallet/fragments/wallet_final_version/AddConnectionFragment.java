@@ -4,7 +4,11 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_fina
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -13,14 +17,18 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -40,6 +48,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private ErrorManager errorManager;
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
     private ReferenceWalletSession referenceWalletSession;
+    private ImageView empty_screen;
 
 
     public static AddConnectionFragment newInstance() {
@@ -52,7 +61,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
         try {
             // setting up  module
-            referenceWalletSession = (ReferenceWalletSession) walletSession;
+            referenceWalletSession = (ReferenceWalletSession) appSession;
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = referenceWalletSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -64,16 +73,13 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
         try {
-
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
-
+            empty_screen = (ImageView) layout.findViewById(R.id.empty_screen);
             setUpScreen();
-
-        } catch (Exception e)
-        {
+            onRefresh();
+        } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -87,7 +93,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -120,6 +126,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 intraUserInformationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(intraUserInformationList);
+                if(intraUserInformationList.isEmpty()){
+                    empty_screen.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
@@ -151,6 +160,53 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //inflater.inflate(R.menu.home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+
+            int id = item.getItemId();
+
+            if(id == BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION){
+                for(CryptoWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
+                    try {
+                        if (cryptoWalletIntraUserActor.isSelected()) {
+                            moduleManager.convertConnectionToContact(
+                                    cryptoWalletIntraUserActor.getAlias(),
+                                    Actors.INTRA_USER,
+                                    cryptoWalletIntraUserActor.getPublicKey(),
+                                    cryptoWalletIntraUserActor.getProfileImage(),
+                                    Actors.INTRA_USER,
+                                    referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                    ,appSession.getAppPublicKey(),
+                                    CryptoCurrency.BITCOIN,
+                                    BlockchainNetworkType.DEFAULT);
+                            Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
+                        }
+
+                    }catch (Exception e){
+                        Toast.makeText(getActivity(),"Please try again later",Toast.LENGTH_SHORT).show();
+                        errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                    }
+                }
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getActivity(), "Oooops! recovering from system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public List<CryptoWalletIntraUserActor> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoWalletIntraUserActor> data = new ArrayList<>();
 
@@ -169,7 +225,6 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             e.printStackTrace();
         }
 
-
         return data;
     }
 
@@ -178,6 +233,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     public void onItemClickListener(CryptoWalletIntraUserActor data, int position) {
         //intraUserIdentitySubAppSession.setData(SessionConstants.IDENTITY_SELECTED,data);
         //changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+        //data.setSelected(!data.isSelected());
+        //adapter.notifyDataSetChanged();
+
     }
 
     @Override

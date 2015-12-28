@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-
-import java.io.Serializable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
 
 /**
@@ -23,7 +22,7 @@ import java.io.Serializable;
  *  @since   18/01/15.
  * */
 
- public interface PlatformDatabaseSystem extends Serializable {
+ public interface PlatformDatabaseSystem extends FermatManager {
 
     Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 

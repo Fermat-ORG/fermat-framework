@@ -1,12 +1,8 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
 
-import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,28 +17,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
-import com.bitdubai.sub_app.wallet_manager.holder.DesktopHolderClickCallback;
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
+import com.bitdubai.sub_app.wallet_manager.popup.FolderDialog;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
-import com.bitdubai.sub_app.wallet_manager.structure.Item;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends FermatFragment implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -76,14 +75,9 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
     private DesktopAdapter adapter;
     private boolean isStartList;
 
-
-    private ProgressDialog mDialog;
-
-
     // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    //private ActorAdapter adapter;
 
     private View rootView;
 
@@ -121,9 +115,9 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         try {
 
             // setting up  module
-            //desktopSession = ((DesktopSession) subAppsSession);
+            //desktopSession = ((DesktopSession) appSession);
             //moduleManager = desktopSession.getModuleManager();
-            //errorManager = subAppsSession.getErrorManager();
+            //errorManager = appSession.getErrorManager();
 
 //            //get search name if
 //            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
@@ -144,19 +138,11 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         try {
 
             rootView = inflater.inflate(R.layout.desktop_main, container, false);
-            /* adapt the image to the size of the display */
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-                    getResources(), R.drawable.bg_xxhpdi),size.x,size.y,true);
-            getActivity().getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), bmp));
-
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new DesktopAdapter(getActivity(), lstItems,this);
+            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP);
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
 
@@ -170,6 +156,8 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
    //         Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
 
+        }catch (OutOfMemoryError outOfMemoryError){
+            outOfMemoryError.printStackTrace();
         }
 
 
@@ -183,6 +171,12 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         onRefresh();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getPaintActivtyFeactures().addDesktopCallBack(this);
     }
 
     private void setUpData() {
@@ -201,12 +195,12 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
         InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
         Item item = new Item(installedSubApp);
-        item.setIconResource(R.drawable.intra_user);
+        item.setIconResource(R.drawable.intra_user_identity);
         lstItems.add(item);
 
         installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
         Item item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.intra_user);
+        item1.setIconResource(R.drawable.intra_user_community);
         lstItems.add(item1);
     }
 
@@ -322,37 +316,152 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
 
             lstInstalledWallet = moduleManager.getUserWallets();
             List<Item> lstItemsWithIcon = new ArrayList<>();
-            Item[] arrItemsWithoutIcon = new Item[20];
+            Item[] arrItemsWithoutIcon = new Item[12];
 
 
             for(InstalledWallet installedWallet: lstInstalledWallet) {
                 Item item = new Item(installedWallet);
                 item.setIconResource(R.drawable.bitcoin_wallet);
-                item.setPosition(16);
+                item.setPosition(0);
                 lstItemsWithIcon.add(item);
             }
 
+            InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "crypto_broker",
+                    "Crypto Broker",
+                    "crypto_broker_wallet",
+                    "wallet_crypto_broker_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            Item item = new Item(installedWallet);
+            item.setIconResource(R.drawable.crypto_broker);
+            item.setPosition(1);
+            lstItemsWithIcon.add(item);
 
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
-            Item item2 = new Item(installedSubApp);
-            item2.setIconResource(R.drawable.intra_user);
-            item2.setPosition(5);
-            lstItemsWithIcon.add(item2);
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "crypto_customer",
+                    "Crypto Customer",
+                    "crypto_customer_wallet",
+                    "wallet_crypto_customer_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.crypto_customer);
+            item.setPosition(2);
+            lstItemsWithIcon.add(item);
 
-            installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
-            Item item1 = new Item(installedSubApp);
-            item1.setIconResource(R.drawable.intra_user);
-            item1.setPosition(7);
-            lstItemsWithIcon.add(item1);
+            // Harcoded para testear el circuito más arriba
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "asset_issuer",
+                    "Asset Issuer",
+                    "asset_issuer",
+                    "wallet_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.asset_issuer);
+            item.setPosition(3);
+            lstItemsWithIcon.add(item);
+
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "asset_user",
+                    "Asset User",
+                    "asset_user",
+                    "wallet_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.asset_user_wallet);
+            item.setPosition(4);
+            lstItemsWithIcon.add(item);
+
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "redeem_point",
+                    "Redeem Point",
+                    "redeem_point",
+                    "wallet_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.redeem_point);
+            item.setPosition(5);
+            lstItemsWithIcon.add(item);
+
+            //Banking Wallet
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "banking_wallet",
+                    "Banking Wallet",
+                    "banking_wallet",
+                    "wallet_banking_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.bank_wallet_xxhdpi);
+            item.setPosition(6);
+            lstItemsWithIcon.add(item);
+
+            //Cash Wallet
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "cash_wallet",
+                    "Cash Wallet",
+                    "cash_wallet",
+                    "wallet_cash_platform_identifier",
+                    new Version(1,0,0));
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.cash_wallet_xxhdpi);
+            item.setPosition(7);
+            lstItemsWithIcon.add(item);
+
+            //subApps
+//            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
+//            Item item2 = new Item(installedSubApp);
+//            item2.setIconResource(R.drawable.intra_user_image);
+//            item2.setPosition(1);
+//            //lstItemsWithIcon.add(item2);
+//            installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Community","public_key_intra_user_commmunity","intra_user_community_sub_app",new Version(1,0,0));
+//            Item item1 = new Item(installedSubApp);
+//            item1.setIconResource(R.drawable.intra_user_2);
+//            item1.setPosition(0);
+//            //lstItemsWithIcon.add(item1);
+//            List<Item> lstFolderItems = new ArrayList<>();
+//            lstFolderItems.add(item1);
+//            lstFolderItems.add(item2);
+//            FermatFolder folder = new FermatFolder("things",lstFolderItems,11);
+//            Item itemFolder = new Item(folder);
+//            itemFolder.setIconResource(R.drawable.bg_launcher_folder);
+//            itemFolder.setPosition(4);
+//            lstItemsWithIcon.add(itemFolder);
 
 
-            for(int i=0;i<20;i++){
+            for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
-            for(Item item: lstItemsWithIcon){
-                arrItemsWithoutIcon[item.getPosition()]= item;
+            for(Item itemIcon: lstItemsWithIcon){
+                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
             }
 
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
@@ -382,12 +491,24 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         try {
             switch (data.getType()) {
                 case SUB_APP:
-                    selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    if(((InstalledSubApp)data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)){
+                        Toast.makeText(getActivity(),"Coming soon",Toast.LENGTH_SHORT).show();
+                    }else selectSubApp((InstalledSubApp) data.getInterfaceObject());
                     break;
                 case WALLET:
                     selectWallet((InstalledWallet) data.getInterfaceObject());
                     break;
                 case EMPTY:
+                    break;
+                case FOLDER:
+                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,desktopSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
+//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+//                    folderDialog.getWindow().setAttributes(lp);
+                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    folderDialog.show();
                     break;
                 default:
                     break;
@@ -395,6 +516,15 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void onDestroy() {
+
+        adapter = null;
+        mItemTouchHelper = null;
+        super.onDestroy();
     }
 }
 

@@ -14,7 +14,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -22,11 +22,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
-import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
@@ -45,7 +45,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment {
+public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermatFragment {
 
     View rootView;
     private ErrorManager errorManager;
@@ -73,8 +73,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.subAppsSession!=null){
-            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.appSession !=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
 
             resource = (Resource)developerSubAppSession.getData("resource");
             developerDatabaseTable = (DeveloperDatabaseTable)developerSubAppSession.getData("databaseTable");
@@ -83,7 +83,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
 
         errorManager = developerSubAppSession.getErrorManager();
         try {
-            ToolManager toolManager = developerSubAppSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getModuleManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -106,8 +106,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
                 AddonVersionReference addon = AddonVersionReference.getByKey(resource.code);
                 this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
             } else if (resource.type== Databases.TYPE_PLUGIN) {
-                PluginVersionReference plugin = PluginVersionReference.getByKey(resource.code);
-                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
+                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(resource.pluginVersionReference, developerDatabase, developerDatabaseTable);
             }
 
             columnNames = developerDatabaseTable.getFieldNames();

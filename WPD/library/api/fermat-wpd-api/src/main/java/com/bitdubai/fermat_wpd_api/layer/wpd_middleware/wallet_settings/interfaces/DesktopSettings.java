@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
@@ -12,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by mati on 2015.11.21..
  */
-public interface DesktopSettings extends FermatSettings{
+public interface DesktopSettings extends FermatSettings {
 
     /**
      * This method let us know the default language of a wallet

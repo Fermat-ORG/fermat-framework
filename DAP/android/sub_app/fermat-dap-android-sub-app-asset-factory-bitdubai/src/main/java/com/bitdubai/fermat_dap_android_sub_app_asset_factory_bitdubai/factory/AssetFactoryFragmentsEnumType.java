@@ -11,7 +11,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum AssetFactoryFragmentsEnumType implements FermatFragmentsEnumType<AssetFactoryFragmentsEnumType> {
 
 
-    DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY("DSAAFMA"),
+    DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT("DAPSAAFETF"),
+    DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT("DAPSAAFPTF"),
     DAP_SUB_APP_ASSET_EDITOR_ACTIVITY("DSAAEA");
 
     private String key;

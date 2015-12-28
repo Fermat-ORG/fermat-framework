@@ -2,7 +2,7 @@ package com.bitdubai.desktop.sub_app_manager.provisory_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 
@@ -113,6 +113,11 @@ public class CbpInstalledSubApp implements InstalledSubApp {
         return version;
     }
 
+
+    @Override
+    public String getAppName() {
+        return subApps.getCode();
+    }
 
     @Override
     public String getAppPublicKey() {

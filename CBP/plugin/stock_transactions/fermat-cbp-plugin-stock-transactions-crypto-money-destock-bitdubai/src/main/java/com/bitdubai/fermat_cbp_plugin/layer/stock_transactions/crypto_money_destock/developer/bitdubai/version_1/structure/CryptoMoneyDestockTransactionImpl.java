@@ -3,8 +3,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_des
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -19,10 +21,11 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
     String                          cryWalletPublicKey;
     String                          memo;
     String                          concept;
-    String                          bankAccount;
-    float                           amount;
+    BigDecimal                      amount;
     Timestamp                       timeStamp;
     TransactionStatusRestockDestock transactionStatus;
+    BigDecimal                      priceReference;
+    OriginTransaction               originTransaction;
 
     public CryptoMoneyDestockTransactionImpl(){
 
@@ -35,10 +38,11 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
                                              String cryWalletPublicKey,
                                              String memo,
                                              String concept,
-                                             String bankAccount,
-                                             float amount,
+                                             BigDecimal amount,
                                              Timestamp timeStamp,
-                                             TransactionStatusRestockDestock transactionStatus){
+                                             TransactionStatusRestockDestock transactionStatus,
+                                             BigDecimal priceReference,
+                                             OriginTransaction originTransaction){
         this.transactionId      = transactionId;
         this.actorPublicKey     = actorPublicKey;
         this.cryptoCurrency     = cryptoCurrency;
@@ -46,10 +50,11 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
         this.cryWalletPublicKey = cryWalletPublicKey;
         this.memo               = memo;
         this.concept            = concept;
-        this.bankAccount        = bankAccount;
         this.amount             = amount;
         this.timeStamp          = timeStamp;
         this.transactionStatus  = transactionStatus;
+        this.priceReference     = priceReference;
+        this.originTransaction  = originTransaction;
     }
 
 
@@ -115,12 +120,12 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     @Override
-    public void setAmount(float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -152,5 +157,25 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
     @Override
     public void setTransactionStatus(TransactionStatusRestockDestock transactionStatus) {
         this.transactionStatus = transactionStatus;
+    }
+
+    @Override
+    public BigDecimal getPriceReference() {
+        return priceReference;
+    }
+
+    @Override
+    public void setPriceReference(BigDecimal priceReference) {
+        this.priceReference = priceReference;
+    }
+
+    @Override
+    public OriginTransaction getOriginTransaction() {
+        return originTransaction;
+    }
+
+    @Override
+    public void setOriginTransaction(OriginTransaction originTransaction) {
+        this.originTransaction = originTransaction;
     }
 }

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -36,7 +37,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -47,8 +49,8 @@ import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdub
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,13 +72,14 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    //Commented by Manuel Perez to eliminate cyclic reference exception
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_DISTRIBUTION)
-    AssetDistributionManager assetDistributionManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    private ActorAssetUserManager actorAssetUserManager;
 
     private static final String WALLET_ISSUER_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletIssuer = new HashMap<>();
@@ -84,17 +87,18 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public AssetIssuerWalletPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
+
     boolean existWallet = false;
     String walletPublicKey = "walletPublicKeyTest";
     AssetIssuerWallet assetIssuerWallet;
 
     @Override
     public void start() throws CantStartPluginException {
-        try{
+        try {
             loadWalletIssuerMap();
 
             try {
-                if(!existWallet) {
+                if (!existWallet) {
                     createWalletAssetIssuer(walletPublicKey);
                 }
 
@@ -107,10 +111,10 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
             //testWallet();
             System.out.println("Start Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
-        }catch(CantStartPluginException exception){
+        } catch (CantStartPluginException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
-        }catch(Exception exception){
+        } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
 
@@ -199,13 +203,11 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey) throws CantLoadWalletException {
 
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId/*, assetDistributionManager*/);
-
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, actorAssetRedeemPointManager);
             UUID internalAssetIssuerWalletId = walletIssuer.get(walletPublicKey);
             assetIssuerWallet.initialize(internalAssetIssuerWalletId);
             return assetIssuerWallet;
-
-        }catch (CantInitializeAssetIssuerWalletException exception) {
+        } catch (CantInitializeAssetIssuerWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantLoadWalletException("I can't initialize wallet", exception, "", "");
         } catch (Exception exception) {
@@ -217,12 +219,12 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createWalletAssetIssuer(String walletPublicKey) throws CantCreateWalletException {
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId/*, assetDistributionManager*/);
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, actorAssetRedeemPointManager);
 
             UUID internalAssetIssuerWalletId = assetIssuerWallet.create(walletPublicKey);
 
             walletIssuer.put(walletPublicKey, internalAssetIssuerWalletId);
-        }catch (CantCreateWalletException exception) {
+        } catch (CantCreateWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateWalletException("Wallet Creation Failed", exception, "walletId: " + walletPublicKey, "");
         } catch (Exception exception) {
@@ -231,7 +233,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void testWallet(){
+    private void testWallet() {
         DigitalAsset digitalAsset = new DigitalAsset();
         digitalAsset.setPublicKey("assetPublicKeyNew1");
         digitalAsset.setName("McDonald Coupon");
@@ -254,8 +256,9 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 0,
                 "memo",
                 "digitalAssetMetadaHash",
-                UUID.randomUUID().toString()
-                );
+                "",
+                UUID.randomUUID().toString(), ""
+        );
 
         DigitalAsset digitalAsset1 = new DigitalAsset();
         digitalAsset1.setPublicKey("assetPublicKeyNew2");
@@ -279,7 +282,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 20000,
                 "memo",
                 "digitalAssetMetadaHash",
-                UUID.randomUUID().toString()
+                "",
+                UUID.randomUUID().toString(), ""
         );
         try {
 
@@ -303,7 +307,8 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     10000,
                     "memo",
                     "digitalAssetMetadaHash",
-                    UUID.randomUUID().toString()
+                    "",
+                    UUID.randomUUID().toString(), ""
             );
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper2 = new AssetIssuerWalletTransactionRecordWrapper(
                     digitalAsset,
@@ -320,11 +325,12 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     0,
                     "memo",
                     "digitalAssetMetadaHash",
-                    UUID.randomUUID().toString()
+                    "",
+                    UUID.randomUUID().toString(), ""
             );
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper1, BalanceType.AVAILABLE);
-            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).debit (assetIssuerWalletTransactionRecordWrapper2, BalanceType.AVAILABLE);
-        } catch (Exception e){
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).debit(assetIssuerWalletTransactionRecordWrapper2, BalanceType.AVAILABLE);
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             e.printStackTrace();
         }
@@ -376,7 +382,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                 }
 
                 @Override
-                public String getPublicKey() {
+                public String getActorPublicKey() {
                     return "publicKeyActor";
                 }
 
@@ -442,7 +448,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
             };
             //assetIssuerWallet.distributionAssets("assetPublicKeyNew2", "walletPublicKeyTest", actorAssetUser);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             e.printStackTrace();
         }

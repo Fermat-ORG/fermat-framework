@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**
  * Created by franklin on 26/09/15.
  */
-public class AssetIssuerIdentity implements IdentityAssetIssuer{
+public class AssetIssuerIdentity implements IdentityAssetIssuer {
     String alias;
     String publicKey;
     String mensage;
@@ -21,7 +21,12 @@ public class AssetIssuerIdentity implements IdentityAssetIssuer{
     }
 
     @Override
-    public byte[] getProfileImage() {
+    public Actors getActorType() {
+        return Actors.DAP_ASSET_ISSUER;
+    }
+
+    @Override
+    public byte[] getImage() {
         return new byte[0];
     }
 

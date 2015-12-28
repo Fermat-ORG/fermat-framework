@@ -154,6 +154,11 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public String getAppName() {
+        return walletName;
+    }
+
+    @Override
     public String getAppPublicKey() {
         return publicKey;
     }

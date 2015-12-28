@@ -1,37 +1,69 @@
 package com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Collection;
 
 /**
  * Created by angel on 16/9/15.
  */
-public interface CustomerBrokerContractPurchaseManager {
 
-    List<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchaseFromCurrentDeviceUser() throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+public interface CustomerBrokerContractPurchaseManager extends FermatManager{
 
-    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(final UUID ContractId) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+    /**
+     *
+     * @return  a list of all contracts
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    Collection<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchase() throws CantGetListCustomerBrokerContractPurchaseException;
 
-    DatabaseTableRecord getCustomerBrokerPurchaseContractTable();
+    /**
+     *
+     * @param ContractId
+     * @return a CustomerBrokerContractPurchase with information of contract with ContractId
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(final String ContractId) throws CantGetListCustomerBrokerContractPurchaseException;
 
-    CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(
-            String publicKeyCustomer,
-            String publicKeyBroker,
-            Float merchandiseAmount,
-            CurrencyType merchandiseCurrency,
-            Float referencePrice,
-            ReferenceCurrency referenceCurrency,
-            Float paymentAmount,
-            CurrencyType paymentCurrency,
-            long paymentExpirationDate,
-            long merchandiseDeliveryExpirationDate) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
+    /**
+     *
+     * @param status
+     * @return an Collection of CustomerBrokerContractPurchase with information of contract with status
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    Collection<CustomerBrokerContractPurchase> getCustomerBrokerContractPurchaseForStatus(final ContractStatus status) throws CantGetListCustomerBrokerContractPurchaseException;
 
-    void updateCustomerBrokerContractPurchase(UUID contractId, ContractStatus status) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
+    /**
+     *
+     * @return an ListsForStatus with separate lists and sorted by status
+     */
+    ListsForStatusPurchase getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractPurchaseException;
 
-    void deleteCustomerBrokerContractPurchase(UUID contractID) throws com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantDeleteCustomerBrokerContractPurchaseException;
+    /**
+     *
+     * @param contract
+     * @return a CustomerBrokerContractPurchase with information of contract created
+     * @throws CantCreateCustomerBrokerContractPurchaseException
+     */
+    CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param contractId
+     * @param status
+     * @throws CantupdateCustomerBrokerContractPurchaseException
+     */
+    void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param contractId
+     * @param status
+     * @throws CantupdateCustomerBrokerContractPurchaseException
+     */
+    void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantupdateCustomerBrokerContractPurchaseException;
 }

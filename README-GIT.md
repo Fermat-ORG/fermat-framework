@@ -1,13 +1,16 @@
+
+<!-- all links tested - laderuner -->
+
 # Git Management
 
-In order to have a better understanding of the content, please read the following document: [Contributing](https://github.com/bitDubai/fermat/CONTRIBUTING.md)
+In order to have a better understanding of the content, please read the following document: [Contributing](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md)
 
 When it comes to contributing via git we've identified two roles, the first is the one who commits to his changes, while the other is responsible of mixing said committed changes.
 
 From now on we'll call them Developer & Responsible respectively.
 
 We currently have a hierarchy architecture of several levels in which we're working to manage the contributions:
-* **Fermat Core Developers**: [Responsible | Developer]  They are the only ones who can send/approve Pull Requests to bitDubai's fermat repository, they are identified in [Core Developers](https://bitDubai.com/wp/#team)
+* **Fermat Core Developers**: [Responsible | Developer]  They are the only ones who can send/approve Pull Requests to bitDubai's fermat repository, they are identified in [Core Developers](https://bitDubai.com/wp/#team) 
 * **Fermat Team Leaders**: [Responsible | Developer] They manage the teams by reviewing and approving the _Developers_ Pull Requests (in some cases even the _Team Leaders_ Pull Requests when they are the ones responsible of them) and they send said Pull Requests to the _Core Developers_ in order to be able to get to _bitDubai_.
 * **Fermat Developers**: [Developer] They can only do Pull Requests to the person that is responsible for them (_Team Leader_ o _Core Developer_).
 

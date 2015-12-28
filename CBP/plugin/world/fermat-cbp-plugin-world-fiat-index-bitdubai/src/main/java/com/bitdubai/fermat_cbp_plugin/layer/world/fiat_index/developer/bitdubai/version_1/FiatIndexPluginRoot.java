@@ -34,10 +34,11 @@ import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.exceptions.CantInitializeFiatIndexWorldDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.interfaces.IndexProvider;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -62,11 +63,7 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-
-
     FiatIndexWorldDao dao;
-
-
 
     /*
      * PluginRoot Constructor
@@ -76,19 +73,52 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
     }
 
 
+    /*
+     *  TESTING STUFFS
+     */
+
+    public void testGetCurrentIndex(){
+        System.out.println("FIATINDEX - testGetCurrentIndex CALLED");
+
+        FiatIndex index = null;
+        try{
+            index = getCurrentIndex(FiatCurrency.CANADIAN_DOLLAR);
+        } catch (CantGetIndexException e){
+            System.out.println("FIATINDEX - testGetCurrentIndex DAO EXCEPTION");
+        }
+        System.out.println("");
+        System.out.println("");
+        System.out.println("FIATINDEX - PROVIDER DESC: " + index.getProviderDescription());
+        System.out.println("FIATINDEX - CURRENCY: " + index.getCurrency().getCode());
+        System.out.println("FIATINDEX - REFERENCE CURRENCY: " + index.getReferenceCurrency().getCode());
+        System.out.println("FIATINDEX - TIMESTAMP: " + index.getTimestamp());
+        System.out.println("FIATINDEX - PURCHASE: " + index.getPurchasePrice());
+        System.out.println("FIATINDEX - SALE: " + index.getSalePrice());
+
+    }
+
+
+
+
+
 
     /*
      * Service interface implementation
      */
     @Override
     public void start() throws CantStartPluginException {
+        System.out.println("FIATINDEX - PluginRoot START");
+
         try {
             dao = new FiatIndexWorldDao(pluginDatabaseSystem, pluginId, errorManager);
+            dao.initialize();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
+
+        // testGetCurrentIndex();
     }
 
 
@@ -99,10 +129,8 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
 
     @Override
     public Collection<FiatCurrency> getSupportedCurrencies() {
-        Collection<FiatCurrency> c = new HashSet<>();
-        for (FiatCurrency f : FiatCurrency.values())
-            c.add(f);
-        return c;
+
+        return new HashSet<>(Arrays.asList(FiatCurrency.values()));
     }
 
     @Override
@@ -111,12 +139,12 @@ public class FiatIndexPluginRoot extends AbstractPlugin implements DatabaseManag
         IndexProvider ip = FiatIndexProviders.valueOf(currencyCode).getProviderInstance();
         FiatIndex fiatIndex = ip.getCurrentIndex(currency);
 
-       /* try {
+       try {
             dao.saveFiatIndex(fiatIndex);
 
         } catch(CantCreateFiatIndexException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }*/
+        }
 
         return fiatIndex;
     }

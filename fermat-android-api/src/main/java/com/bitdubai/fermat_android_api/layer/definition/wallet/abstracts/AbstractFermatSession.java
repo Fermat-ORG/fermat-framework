@@ -2,11 +2,12 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +22,11 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     private ErrorManager errorManager;
     private Map<String,Object> data;
 
+    /**
+     * Map with subApps and public that wallet can connect
+     */
+    protected List<FermatApp> fermatAppsPosibleConnections;
+
 
     public AbstractFermatSession(String publicKey, A fermatApp, ErrorManager errorManager,M moduleManager,R resourceProviderManager) {
         this.publicKey = publicKey;
@@ -28,6 +34,10 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
         this.moduleManager = moduleManager;
         this.errorManager = errorManager;
         this.resourceProviderManager = resourceProviderManager;
+        this.data = new HashMap<>();
+    }
+
+    protected AbstractFermatSession() {
         this.data = new HashMap<>();
     }
 
@@ -48,6 +58,8 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     public Object getData(String key){
         return data.get(key);
     }
+
+
 
     /**
      *
@@ -74,5 +86,36 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
         return resourceProviderManager;
     }
 
+    public void setFermatAppsPosibleConnections(List<FermatApp> fermatAppsPosibleConnections) {
+        this.fermatAppsPosibleConnections = fermatAppsPosibleConnections;
+    }
 
+    public List<FermatApp> getPosibleConnections(){
+        return fermatAppsPosibleConnections;
+    }
+
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public void setFermatApp(A fermatApp) {
+        this.fermatApp = fermatApp;
+    }
+
+    public void setModuleManager(M moduleManager) {
+        this.moduleManager = moduleManager;
+    }
+
+    public void setResourceProviderManager(R resourceProviderManager) {
+        this.resourceProviderManager = resourceProviderManager;
+    }
+
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    public void removeData(String string){
+        data.remove(string);
+    }
 }

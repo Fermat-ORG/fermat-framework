@@ -20,9 +20,6 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.util.JsonAssetUserANSAttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressReceiveAssetUserActorNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressRequestAssetUserActorNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -79,13 +76,13 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
                         ActorAssetIssuer actorAssetIssuerSender = gson.fromJson(jsonObject.get(JsonAssetUserANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
                         ActorAssetUser actorAssetUserDestination = gson.fromJson(jsonObject.get(JsonAssetUserANSAttNamesConstants.USER).getAsString(), AssetUserActorRecord.class);
-
+                        String message = null;
                         System.out.print("Actor Asset User: SE LANZARA EVENTO PARA REQUEST CRYPTO ADDRESS");
 
-                        FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
-                        event.setSource(EventSource.ACTOR_ASSET_USER);
-                        ((NewCryptoAddressRequestAssetUserActorNotificationEvent) event).setNewCryptoAddressRequest(actorAssetIssuerSender, actorAssetUserDestination);
-                        eventManager.raiseEvent(event);
+//                        FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
+//                        event.setSource(EventSource.ACTOR_ASSET_USER);
+//                        ((NewCryptoAddressRequestAssetUserActorNotificationEvent) event).setNewCryptoAddressRequest(actorAssetIssuerSender, actorAssetUserDestination, message);
+//                        eventManager.raiseEvent(event);
 
 
                     } else {
@@ -97,10 +94,10 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
                         System.out.print("Actor Asset User: SE LANZARA EVENTO PARA RECEIVE CRYPTO ADDRESS");
 
-                        FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER);
-                        event.setSource(EventSource.ACTOR_ASSET_USER);
-                        ((NewCryptoAddressReceiveAssetUserActorNotificationEvent) event).setNewCryptoAddressReceive(actorAssetUserSender, actorAssetIssuerDestination, cryptoAddress);
-                        eventManager.raiseEvent(event);
+//                        FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER);
+//                        event.setSource(EventSource.ACTOR_ASSET_USER);
+//                        ((NewCryptoAddressReceiveAssetUserActorNotificationEvent) event).setNewCryptoAddressReceive(actorAssetUserSender, actorAssetIssuerDestination, cryptoAddress);
+//                        eventManager.raiseEvent(event);
 
                     }
                 }

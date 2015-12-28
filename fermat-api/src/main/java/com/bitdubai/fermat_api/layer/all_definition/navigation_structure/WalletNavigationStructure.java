@@ -41,6 +41,11 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     private Activities startActivity;
 
     /**
+     * Activity used to block something
+     */
+    private Activities blockActivity;
+
+    /**
      * Last active screen
      */
 
@@ -120,6 +125,17 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     @Override
     public void setPublicKey(String publicKey) {
         this.publicKey=publicKey;
+    }
+
+    @Override
+    public void clear() {
+        for(Activity activity : activities.values()){
+            SideMenu sideMenu = activity.getSideMenu();
+            if (sideMenu!=null){
+                sideMenu.clearSelected();
+            }
+
+        }
     }
 
     /**

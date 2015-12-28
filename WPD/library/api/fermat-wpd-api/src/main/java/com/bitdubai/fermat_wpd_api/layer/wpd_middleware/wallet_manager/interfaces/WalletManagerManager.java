@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -31,7 +32,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletManagerManager {
+public interface WalletManagerManager extends FermatManager {
 
     /**
      * This method let the client create a new wallet of a type already intalled by the user.

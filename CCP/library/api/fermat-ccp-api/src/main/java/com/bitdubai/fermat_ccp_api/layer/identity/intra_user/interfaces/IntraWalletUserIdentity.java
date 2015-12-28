@@ -1,32 +1,20 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
 /**
  * The interface <code>IntraWalletUser</code>
  * defines the methods related to the extraction of the information of an intra user
  */
-public interface IntraWalletUserIdentity extends ActiveIdentity{
+public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation {
 
     /**
-     * The method <code>getAlias</code> returns the alias of the represented intra user
-     *
-     * @return the alias of the represented intra user
+     * The method <code>getPhrase</code> returns the phrase created by the intra user
+     * @return string phrase object
      */
-    String getAlias();
 
-    /**
-     * The method <code>getPublicKey</code> returns the public key of the represented intra user
-     * @return the public key of the represented intra user
-     */
-    String getPublicKey();
-
-    /**
-     * The method <code>getProfileImage</code> gives us the profile image of the represented intra user
-     * @return the profile image of the represented intra user
-     */
-    byte[] getProfileImage();
+    String getPhrase();
 
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image

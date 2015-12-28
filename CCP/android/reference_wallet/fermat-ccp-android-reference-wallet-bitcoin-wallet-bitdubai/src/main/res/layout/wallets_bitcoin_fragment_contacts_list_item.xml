@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
@@ -19,15 +20,15 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/contact_profile_image"
-            android:src="@drawable/ginny_profile_picture"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/contact_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="20sp"
-            android:text="Luis Molina"
+            tools:text="Luis Molina"
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:textColor="#000"/>
@@ -36,6 +37,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1sp"
+        android:id="@+id/separator_line"
         android:background="#fff"
+        android:visibility="gone"
         />
 </RelativeLayout>

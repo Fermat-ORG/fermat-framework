@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -11,6 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDisconnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantGetNotificationsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorInIntraUserSearchException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingCacheSuggestionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by loui on 18/02/15.
  */
-public interface IntraUserManager {
+public interface IntraUserManager extends FermatManager {
 
     /**
      * The method <code>searchIntraUserByName</code> searches for the intra users that matches the alias
@@ -39,13 +41,25 @@ public interface IntraUserManager {
      */
     public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
 
+
     /**
-     * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.
-     *
-     * @param intraUserLoggedInPublicKey The public key of the intra user sending the request
-     * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
-     * @param myProfileImage             The profile image of the user sending the request
+     * The method <code>getCacheIntraUsersSuggestions</code> returns a cache list of intra users that the logged in
+     * intra user may want to add as connections.
+     * @param max
+     * @param offset
+     * @return
+     * @throws ErrorSearchingCacheSuggestionsException
      */
+    List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException;
+
+
+    /**
+         * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.
+         *
+         * @param intraUserLoggedInPublicKey The public key of the intra user sending the request
+         * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
+         * @param myProfileImage             The profile image of the user sending the request
+         */
     void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException;
 
     /**
@@ -108,6 +122,7 @@ public interface IntraUserManager {
      * Regist
      */
     public void registrateActors(List<Actor> actor);
+    void registrateActor(Actor actor);
 
-    Actor contructIdentity(String publicKey, String alias,Actors actors ,byte[] profileImage);
+    Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors ,byte[] profileImage);
 }

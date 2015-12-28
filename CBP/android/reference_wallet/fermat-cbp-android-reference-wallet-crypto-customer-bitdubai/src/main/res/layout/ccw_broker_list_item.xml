@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/waiting_for_broker_list_item_background"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="3dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/ccw_broker_image"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:contentDescription="@string/identity_img"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/profile_image"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_merchandise_to_sell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/ccw_broker_image"
+            android:layout_toRightOf="@+id/ccw_broker_image"
+            android:layout_marginTop="8dp"
+            android:singleLine="true"
+            android:textColor="@color/ccw_first_line_item"
+            android:textSize="18sp"
+            android:text="@string/ccw_selling_merchandise"/>
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_broker_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/ccw_second_line_item"
+            android:textSize="16sp"
+            tools:text="Nelson Ramirez"
+            android:layout_below="@+id/ccw_merchandise_to_sell"
+            android:layout_toRightOf="@+id/ccw_broker_image"
+            android:layout_toEndOf="@+id/ccw_broker_image"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_exchange_rate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="EXCHANGE RATE"
+            android:background="#78a9ff"
+            android:layout_below="@+id/ccw_broker_image"
+            android:textColor="@color/withe"
+            android:paddingStart="6dp"
+            android:paddingLeft="6dp"
+            android:paddingEnd="6dp"
+            android:paddingRight="6dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+        <View
+            android:id="@+id/ccw_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/ccw_exchange_rate_text"
+            android:background="#78a9ff"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ccw_broker_exchange_rates"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ccw_divider"
+            android:background="#78a9ff"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

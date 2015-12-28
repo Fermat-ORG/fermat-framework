@@ -1,18 +1,18 @@
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/COR.jpg[Core]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Coins/COR.jpg[Core]
 
 == Chapter 3: Fermat Core Platform
-This is the *core platform* of Fermat Multi-platform System. It contains the deepest levels of layers in the layers stack. Its components encapsulate the basics definitions and functionalities that let Fermat operate as an _integrated system_. +
-The platform first defines a _plug-in identity_ for each plug-in (this is done only ONCE for the whole system), which let the plug-in be *recognized* as member of Fermat and then access to certain data specifically owned by it (like accessing to the file system or data base systems, etc). Then it put them to run ( see [system initialization] ) and builds the pattern of relationships between the isolated plug-ins, thus deploying all the system wide infrastructure. +
-Fermat Core Platform is written in JAVA as the most of Fermat, and that there is a JAVA implementation for each known operating system, that makes Fermat *code base portable*. + 
+This is the *core platform* of the Fermat Multi-platform System. It contains the deepest levels of layers in the stack layers. Its components encapsulate the basic definitions and functionalities that let Fermat operate as an _integrated system_. +
+The platform first defines a _Plug-in identity_ for each Plug-in (this is done only ONCE for the whole system), which lets the Plug-in be *recognized* as member of Fermat and then gain access to certain data specifically owned by it (like accessing the file system or data base systems, etc). Then it puts them to run (see [system initialization]) and builds the pattern of relationships between the isolated Plug-ins, that way deploying all the system’s wide infrastructure. +
+Fermat Core Platform is written in JAVA like most of Fermat, and there is a JAVA implementation for each known operating system, that makes the Fermat *code base portable*. + 
 After initialization, this platform monitors the way the system is behaving as a whole.
 
 .Platform components
-fermat core :: 
-Initializes all system-wide plug-ins and start a specific *core component* for each platform/superlayer running on Fermat, which in turn initializes the platform/superlayer's specific set of plugins.
-android core :: 
+Fermat core :: 
+Initializes all system-wide Plug-ins and starts a specific *core component* for each platform/superlayer running on Fermat, which in return initializes the platform/superlayer's specific set of Plug-ins.
+Android core :: 
 Initializes android's components that connect Fermat to the android user's environment.
-platform specific core ::
-There's a *core component* for each one of the platform existent in Fermat, which creates the _plug-in identity_ and initializes all platform/superlayer's specific plug-ins: +
+Platform specific core ::
+There's a *core component* for each of the existent platforms in Fermat, which creates the _Plug-in identity_ and initializes all platform/superlayer's specific Plug-ins: +
 
 ////
 . _Operating Systems core_
@@ -53,13 +53,13 @@ TIP: Following in this chapter the description of each platform and each layer w
 ////
 
 
-:numbered!:
-
-image::https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg[FermatCoin]
+===
   
-=== _Continue Reading ..._
+==== _Continue Reading ..._
 link:book-chapter-04.asciidoc[Next Chapter]
 
 link:book-chapter-02.asciidoc[Previous Chapter]
+
 
 

@@ -67,10 +67,12 @@ public class StockTransactionsCryptoMoneyDestockDatabaseFactory {
             table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_CRY_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_BANK_ACCOUNT_COLUMN_NAME,          DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_CONCEPT_COLUMN_NAME,               DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_AMOUNT_COLUMN_NAME,                DatabaseDataType.REAL, 0, Boolean.FALSE);
+            table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_AMOUNT_COLUMN_NAME,                DatabaseDataType.MONEY, 0, Boolean.FALSE);
             table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME,             DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_MEMO_COLUMN_NAME,                  DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
+            table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME,       DatabaseDataType.MONEY, 0, Boolean.FALSE);
+            table.addColumn(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
 
             table.addIndex(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_FIRST_KEY_COLUMN);
 

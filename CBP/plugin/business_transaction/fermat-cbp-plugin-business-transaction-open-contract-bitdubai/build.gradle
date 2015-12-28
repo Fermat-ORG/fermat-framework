@@ -5,7 +5,6 @@ apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
 sourceCompatibility = 1.7
-version = '1.0'
 
 repositories {
     mavenCentral()
@@ -18,15 +17,16 @@ configurations {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':fermat-pip-api')
     compile project(':fermat-api')
     compile project(':fermat-cbp-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-p2p-api')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
-    testCompile 'info.cukes:cucumber-java:1.2.4'
-    testCompile 'info.cukes:cucumber-junit:1.2.4'
+    testCompile "org.mockito:mockito-core:1.9.5"
 }
 
 pmd {
@@ -45,17 +45,6 @@ def jacocoHtmlReport = ""
 jacocoTestReport{
     reports{
         jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
-    }
-}
-
-task cucumber() {
-    dependsOn assemble, compileTestJava
-    doLast {
-        javaexec {
-            main = "cucumber.api.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
-        }
     }
 }
 

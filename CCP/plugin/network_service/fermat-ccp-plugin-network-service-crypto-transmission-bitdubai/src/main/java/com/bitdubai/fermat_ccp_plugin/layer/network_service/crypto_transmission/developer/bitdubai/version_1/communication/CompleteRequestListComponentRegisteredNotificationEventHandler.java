@@ -30,7 +30,6 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler exte
         super(networkService);
     }
 
-
     @Override
     public void processEvent(CompleteRequestListComponentRegisteredNotificationEvent event) {
         this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(event.getRegisteredComponentList());

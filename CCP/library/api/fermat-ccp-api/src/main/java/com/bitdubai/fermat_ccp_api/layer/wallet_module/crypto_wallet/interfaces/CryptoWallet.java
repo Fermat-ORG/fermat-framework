@@ -9,7 +9,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
@@ -342,6 +345,28 @@ public interface CryptoWallet extends Serializable {
                                                                                                                                         int offset) throws CantListTransactionsException;
 
     /**
+     * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor
+     * who have made transactions with the specified wallet.
+     *
+     * @param balanceType
+     * @param transactionType
+     * @param walletPublicKey
+     * @param actorPublicKey
+     * @param intraUserLoggedInPublicKey
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListTransactionsException
+     */
+    List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
+                                                                 TransactionType transactionType,
+                                                                 String walletPublicKey,
+                                                                 String actorPublicKey,
+                                                                 String intraUserLoggedInPublicKey,
+                                                                 int max,
+                                                                 int offset) throws CantListTransactionsException;
+
+    /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
      *
      * @param walletPublicKey public key of the wallet in where you're working.
@@ -393,12 +418,13 @@ public interface CryptoWallet extends Serializable {
     /**
      * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
      * @param requestId
+     * @param intraUserLoggedInPublicKey
      * @throws CantApproveCryptoPaymentRequestException
      * @throws CryptoPaymentRequestNotFoundException
      * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
      */
 
-    void approveRequest(UUID requestId) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
+    void approveRequest(UUID requestId,String intraUserLoggedInPublicKey) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
 
     /**
      *
@@ -433,6 +459,10 @@ public interface CryptoWallet extends Serializable {
                                    final CryptoAddress         cryptoAddress    ,
                                    final String                description      ,
                                    final long                  amount           ,
-                                   final BlockchainNetworkType networkType      ) throws CantSendCryptoPaymentRequestException;
+                                   final BlockchainNetworkType networkType      ,
+                                   final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException;
 
+    void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
+
+    public void registerIdentities();
 }

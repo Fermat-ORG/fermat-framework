@@ -25,8 +25,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -361,7 +361,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
             return true;
         }
-
+        poolConnectionsWaitingForResponse.remove(actorPublicKey);
         return false;
     }
 
@@ -376,8 +376,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             case DAP_ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
 
             default: throw new InvalidParameterException(
-                  " actor type: "+type.name()+"  type-code: "+type.getCode(),
-                  " type of actor not expected."
+                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
+                    " type of actor not expected."
             );
         }
     }
@@ -403,12 +403,13 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                 cpr.getAmount()           ,
                 cpr.getStartTimeStamp()   ,
                 cpr.getAction()           ,
-                cpr.getNetworkType()
+                cpr.getNetworkType(),
+                cpr.getReferenceWallet()
         ).toJson();
     }
 
     private void toWaitingResponse(final UUID requestId) throws CantChangeRequestProtocolStateException,
-                                                                RequestNotFoundException               {
+            RequestNotFoundException               {
 
         cryptoPaymentRequestNetworkServiceDao.changeProtocolState(
                 requestId,
@@ -417,7 +418,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     }
 
     public void confirmRequest(final UUID requestId) throws CantTakeActionException,
-                                                            RequestNotFoundException   {
+            RequestNotFoundException   {
 
         cryptoPaymentRequestNetworkServiceDao.takeAction(
                 requestId,

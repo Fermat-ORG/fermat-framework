@@ -84,6 +84,10 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
         return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
     }
 
+    public List<String> getPendingCryptoRouterEvents() throws CantLoadAssetRedemptionEventListException {
+        return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
+    }
+
     public EventType getEventTypeById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
         return EventType.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
@@ -117,7 +121,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
                     + "Receiver Public Key: " + receiverId
                     + "CryptoStatus: " + cryptoStatus.getCode();
 
-            DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
             DatabaseTableRecord metadataRecord = databaseTable.getEmptyRecord();
 
             metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId);
@@ -197,7 +201,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
         try {
             DatabaseTable metadataTable;
             metadataTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
-            metadataTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            metadataTable.addStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             metadataTable.loadToMemory();
             if (metadataTable.getRecords().isEmpty()) {
                 throw new RecordsNotFoundException(null, context, "");
@@ -218,7 +222,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
         try {
             DatabaseTable eventRecordedTable;
             eventRecordedTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
-            eventRecordedTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            eventRecordedTable.addStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             eventRecordedTable.loadToMemory();
             if (eventRecordedTable.getRecords().isEmpty()) {
                 throw new RecordsNotFoundException(null, context, "");
@@ -239,7 +243,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
-            databaseTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
@@ -259,7 +263,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
-            databaseTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
@@ -297,7 +301,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
                             new ArrayList<DatabaseTableFilterGroup>(),
                             DatabaseFilterOperator.AND));
 
-            eventsRecordedTable.setFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            eventsRecordedTable.addFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             eventsRecordedTable.loadToMemory();
             List<String> eventIdList = new ArrayList<>();
@@ -320,8 +324,8 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
         try {
             DatabaseTable metadataTable;
             metadataTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
-            metadataTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
-            metadataTable.setFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            metadataTable.addStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            metadataTable.addFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             metadataTable.loadToMemory();
             List<String> genesisTransactionList = new ArrayList<>();

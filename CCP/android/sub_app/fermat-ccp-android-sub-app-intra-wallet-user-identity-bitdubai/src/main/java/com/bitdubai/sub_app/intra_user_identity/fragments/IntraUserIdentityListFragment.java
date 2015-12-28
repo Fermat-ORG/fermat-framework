@@ -16,14 +16,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
 
 import com.bitdubai.sub_app.intra_user_identity.common.views.DividerItemDecoration;
 
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
-import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -54,9 +53,9 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
         try {
             // setting up  module
-            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) subAppsSession;
+            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -73,7 +72,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
              newIdentityButton.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View view) {
-                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode(),subAppsSession.getAppPublicKey());
+                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
                  }
              });
 

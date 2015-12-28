@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">fermat-dap-android-wallet-redeem-point-bitdubai</string>
+    <string name="action_new">New Action</string>
+    <string name="dap_identity_alias_default_text">Redeem Point</string>
+
+    <string name="no_assets">No Assets</string>
 </resources>

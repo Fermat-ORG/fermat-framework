@@ -2,8 +2,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_desto
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -19,10 +21,11 @@ public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
     String                          memo;
     String                          concept;
     String                          cashReference;
-    float                           amount;
+    BigDecimal                      amount;
     Timestamp                       timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-
+    BigDecimal                      priceReference;
+    OriginTransaction               originTransaction;
 
     public CashMoneyDestockTransactionImpl(){
 
@@ -36,9 +39,11 @@ public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
                                            String memo,
                                            String concept,
                                            String cashReference,
-                                           float amount,
+                                           BigDecimal amount,
                                            Timestamp timeStamp,
-                                           TransactionStatusRestockDestock transactionStatus){
+                                           TransactionStatusRestockDestock transactionStatus,
+                                           BigDecimal priceReference,
+                                           OriginTransaction originTransaction){
         this.transactionId      = transactionId;
         this.actorPublicKey     = actorPublicKey;
         this.fiatCurrency       = fiatCurrency;
@@ -46,10 +51,12 @@ public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
         this.bnkWalletPublicKey = bnkWalletPublicKey;
         this.memo               = memo;
         this.concept            = concept;
-        this.cashReference        = cashReference;
+        this.cashReference      = cashReference;
         this.amount             = amount;
         this.timeStamp          = timeStamp;
         this.transactionStatus  = transactionStatus;
+        this.priceReference     = priceReference;
+        this.originTransaction  = originTransaction;
     }
 
 
@@ -125,12 +132,12 @@ public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     @Override
-    public void setAmount(float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -162,5 +169,25 @@ public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
     @Override
     public void setTransactionStatus(TransactionStatusRestockDestock transactionStatus) {
         this.transactionStatus = transactionStatus;
+    }
+
+    @Override
+    public BigDecimal getPriceReference() {
+        return priceReference;
+    }
+
+    @Override
+    public void setPriceReference(BigDecimal priceReference) {
+        this.priceReference = priceReference;
+    }
+
+    @Override
+    public OriginTransaction getOriginTransaction() {
+        return originTransaction;
+    }
+
+    @Override
+    public void setOriginTransaction(OriginTransaction originTransaction) {
+        this.originTransaction = originTransaction;
     }
 }

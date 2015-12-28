@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  * provides the methods for the Crypto Customer Identity sub app.
  */
 
-public interface CryptoCustomerIdentityModuleManager extends ModuleManager {
+public interface CryptoCustomerIdentityModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
 
 
@@ -31,20 +33,20 @@ public interface CryptoCustomerIdentityModuleManager extends ModuleManager {
     public CryptoCustomerIdentityInformation createCryptoCustomerIdentity(String cryptoBrokerName, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
 
     /**
-     * The method <code>publishCryptoBrokerIdentity</code> is used to publish a Broker identity
+     * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param cryptoCustomerPublicKey the public key of the crypto Broker to publish
      *
-     * @throws CouldNotPublishCryptoBrokerException
+     * @throws CantPublishCryptoBrokerException
      */
     public void publishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws CouldNotPublishCryptoCustomerException;
 
     /**
-     * The method <code>publishCryptoBrokerIdentity</code> is used to publish a Broker identity
+     * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param cryptoCustomerPublicKey the public key of the crypto Broker to publish
      *
-     * @throws CouldNotPublishCryptoBrokerException
+     * @throws CantPublishCryptoBrokerException
      */
     public void unPublishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotUnPublishCryptoCustomerException;
 

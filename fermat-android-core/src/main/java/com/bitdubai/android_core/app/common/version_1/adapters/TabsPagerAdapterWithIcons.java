@@ -9,18 +9,18 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip.IconTabProvider;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -40,12 +40,12 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
     private Activity activity;
 
-    private WalletFragmentFactory walletFragmentFactory;
+    private FermatFragmentFactory walletFragmentFactory;
 
     private TabStrip tabStrip;
 
 
-    private WalletSession walletSession;
+    private FermatSession walletSession;
 
     private ErrorManager errorManager;
 
@@ -90,7 +90,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
     }
 
-    public TabsPagerAdapterWithIcons(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
+    public TabsPagerAdapterWithIcons(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
         super(fm);
         this.context=context;
 
@@ -181,7 +181,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
         try {
             if(walletFragmentFactory !=null){
-                currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettings,walletResourcesProviderManager);
+                currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletResourcesProviderManager);
             }
         } catch (FragmentNotFoundException e) {
             e.printStackTrace();
@@ -190,7 +190,7 @@ public class TabsPagerAdapterWithIcons extends FragmentStatePagerAdapter impleme
 
         try {
             if(subAppFragmentFactory !=null){
-                currentFragment= subAppFragmentFactory.getFragment(fragmentType.getKey(),subAppsSession,subAppSettings,subAppResourcesProviderManager);
+                currentFragment= subAppFragmentFactory.getFragment(fragmentType.getKey(),subAppsSession,subAppResourcesProviderManager);
             }
         } catch (FragmentNotFoundException e) {
             e.printStackTrace();

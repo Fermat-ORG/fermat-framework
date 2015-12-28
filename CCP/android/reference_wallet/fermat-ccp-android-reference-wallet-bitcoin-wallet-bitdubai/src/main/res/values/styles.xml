@@ -6,6 +6,10 @@
         <item name="android:background">@color/color_gray_light</item>
     </style>
 
+    <style name="menu_labels_style">
+        <item name="android:background">#959bf1</item>
+        <item name="android:textColor">#fff</item>
+    </style>
 
 
 

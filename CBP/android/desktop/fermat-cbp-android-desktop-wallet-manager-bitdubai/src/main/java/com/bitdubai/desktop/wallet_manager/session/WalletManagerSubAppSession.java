@@ -1,12 +1,15 @@
 package com.bitdubai.desktop.wallet_manager.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.desktop.InstalledDesktop;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.interfaces.CryptoDesktopSubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -84,6 +87,11 @@ public class WalletManagerSubAppSession implements SubAppsSession {
         return data.get(key);
     }
 
+    @Override
+    public void removeData(String key) {
+        data.remove(key);
+    }
+
     /**
      * Return the Error Manager
      *
@@ -99,14 +107,16 @@ public class WalletManagerSubAppSession implements SubAppsSession {
         return null;
     }
 
-    /**
-     * Return the Wallet Store Module
-     *
-     * @return reference to the Wallet Store Module
-     */
-    public CryptoDesktopSubAppModuleManager getModuleManager() {
-        return moduleManager;
+    @Override
+    public List<FermatApp> getPosibleConnections() {
+        return null;
     }
+
+    @Override
+    public FermatApp getFermatApp() {
+        return getFermatApp();
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -124,8 +134,4 @@ public class WalletManagerSubAppSession implements SubAppsSession {
         return subApp.hashCode();
     }
 
-    @Override
-    public InstalledSubApp getSubAppSessionType() {
-        return null;
-    }
 }

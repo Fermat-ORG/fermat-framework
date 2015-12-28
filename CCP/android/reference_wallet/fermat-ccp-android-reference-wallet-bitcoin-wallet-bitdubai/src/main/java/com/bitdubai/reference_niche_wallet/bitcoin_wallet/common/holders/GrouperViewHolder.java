@@ -1,9 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -15,10 +12,10 @@ import android.content.res.Resources;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -86,16 +83,29 @@ public class GrouperViewHolder extends ParentViewHolder {
     public void bind(int childCount,CryptoWalletTransaction cryptoWalletTransaction) {
 
         byte[] photo = null;
-            photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+        String contactName = "Uninformed";
+
+        //involved actor is not a wallet contact
+        if(cryptoWalletTransaction.getInvolvedActor() != null)
+            {
+                photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+                contactName = cryptoWalletTransaction.getInvolvedActor().getName();
+            }
 
         //TODO Ver porque se cae cuando el contacto tiene algunos bytes
-     //   if(photo!=null && photo.length > 0)
-        //    contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
-       // else
-         contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res, R.drawable.helen_profile_picture));
+        try {
+            if (photo != null) {
+//            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon,res,true);
+                bitmapWorkerTask.execute(photo);
+            } else
+                Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
+        }catch (Exception e){
+            Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
 
+        }
 
-        txt_contactName.setText(cryptoWalletTransaction.getInvolvedActor().getName());
+        txt_contactName.setText(contactName);
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());
@@ -108,10 +118,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         //txt_total_balance.setText();
     }
 
-    public void setBackgroundColor(int colorResource) {
-        //int color = itemView.getResources().getColor(colorResource);
-        //itemView.setBackgroundColor(color);
-    }
+
 
     @Override
     @SuppressLint("NewApi")
@@ -153,6 +160,6 @@ public class GrouperViewHolder extends ParentViewHolder {
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
+        return ImagesUtils.getRoundedBitmap(res, R.drawable.ic_profile_male);
     }
 }
