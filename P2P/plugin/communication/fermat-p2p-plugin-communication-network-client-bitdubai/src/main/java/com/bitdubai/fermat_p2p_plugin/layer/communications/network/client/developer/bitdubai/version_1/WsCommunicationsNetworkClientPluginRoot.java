@@ -53,24 +53,29 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
 
 
     /**
-     * ErrorManager references definition.
+     * Addons References definition.
      */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    /**
-     * EventManager references definition.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     /**
      * PluginFileSystem references definition.
      */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem        ;
 
     /**
      * PluginDatabaseSystem references definition.
      */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
