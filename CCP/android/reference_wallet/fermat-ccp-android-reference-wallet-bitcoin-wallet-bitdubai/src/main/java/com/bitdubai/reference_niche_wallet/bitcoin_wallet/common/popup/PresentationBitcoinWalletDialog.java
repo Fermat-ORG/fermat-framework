@@ -19,7 +19,12 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -146,6 +151,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
             } catch (CantGetCryptoWalletException e) {
                 e.printStackTrace();
             }
+            saveSettings();
             dismiss();
         }
         else if(id == R.id.btn_right){
@@ -166,9 +172,28 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
             } catch (CantGetCryptoWalletException e) {
                 e.printStackTrace();
             }
+            saveSettings();
             dismiss();
         } else if ( id == R.id.btn_dismiss){
+            saveSettings();
             dismiss();
+        }
+    }
+
+    private void saveSettings(){
+        if(checkbox_not_show.isChecked()){
+            SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
+            try {
+                BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -178,13 +203,6 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
-    }
-
-    private byte[] test3(Bitmap bitmap){
-        final int lnth=bitmap.getByteCount();
-        ByteBuffer dst= ByteBuffer.allocate(lnth);
-        bitmap.copyPixelsToBuffer( dst);
-        return dst.array();
     }
 
     @Override
