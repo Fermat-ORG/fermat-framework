@@ -221,38 +221,34 @@ We are a developer team with different experience level; we give our best to del
 
 #### Team Members:
 
-* **Nelson Ramirez [Team Leader - Full Team Leader]**
-    ```
+* **Nelson Ramirez [Team Leader - Full Team Leader]**<br/>
+---
     Email:   nelsonalfo@gmail.com
     Skype:   nelalfo
     Github:  https://github.com/nelsonalfo
-    ```
-    
-* **Angel Veloz**
-    ```
-    Skype:   vlzangel
-    Github:  https://github.com/vlzangel
-    ```
 
+* **Angel Veloz**
+---
+      Skype:   vlzangel
+      Github:  https://github.com/vlzangel
+   
 * **Alejandro Bicelis**
-    ```
-    Skype:   seed_1987
-    Github:  https://github.com/abicelis
-    ```
+---
+      Skype:   seed_1987
+      Github:  https://github.com/abicelis
+    
 
 * **Guillermo Gutierrez**
-   ```
-    Email:   guillermo20@gmail.com
-    Skype:   guillermo20
-    Github:  https://github.com/guillermo20
-    ```
+---
+      Email:   guillermo20@gmail.com
+      Skype:   guillermo20
+      Github:  https://github.com/guillermo20
 
 * **Yordin Alayn**
-   ```
-    Email:   y.alayn@gmail.com
-    Skype:   y_alayn
-    Github:  https://github.com/yalayn
-    ```
+---
+      Email:   y.alayn@gmail.com
+      Skype:   y_alayn
+      Github:  https://github.com/yalayn
 
 We can talk about any topic outside work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and the like! If you want to join our team you're more that welcome!
 
