@@ -21,7 +21,7 @@ So, each *vault component* uses its _master key_ as an HD wallet, to issue deriv
  
  
 Bitcoin Vault :: it stores the entire system's children keys that let all Fermat Bitcoin Wallets *unlock* the funds owned by their users, so it can be thought that this vault "stores" the available _Bitcoin_ funds of the entire system. (*value storage*). 
-Assets over Bitcoin :: it "stores" (as mntioned mentioned) each little amount of_Bitcoin_ used to validate a *Digital Asset* ( called assets _proof of existence_ ). It is more a *meta-data storage* of what is represented by the *asset* than a storage of *value*. +
+Assets over Bitcoin :: it "stores" (in the above mentioned sense) each little amount of_Bitcoin_ used to validate a *Digital Asset* ( called assets _proof of existence_ ). It is more a *meta-data storage* of what is represented by the *asset* than a storage of *value*. +
 Bitcoin Watch Only Vault :: it stores "receive only" type of Bitcoin transactions, what that means is that the transaction is showed in the ledger, but there is no _private key_ available to claim the Bitcoins transfered. This type of *addresses* are used in the _Digital Asset Platform_ to allow *redeem points* wallet to work, showing they have received an Asset to be redeem by the *Assets Issuer*. +
 
 === _Crypto Components layer_
