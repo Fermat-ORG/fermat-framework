@@ -342,3 +342,30 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
 We welcome everyone who would like to join us. JavaScript is a hard languages when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
 
 <br/>
+
+### Fermat ORG Sierra:
+-----------------------------------
+In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with a different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
+
+#### Team Members:
+
+* **Luis Fuenmayor [ORG New Team Leader - ORG Veteran]**<br/>
+---
+    Email:   fuelusumar@gmail.com
+    Skype:   fuelusumar
+    Github:  https://github.com/fuelusumar
+    
+* **German Mendoza**<br/>
+---
+      Email:   german.mendoza.187@gmail.com
+      Skype:   german0296
+      Github:  https://github.com/kyxer
+
+* **Luis Campo**<br/>
+---
+    Email:   campusprize@gmail.com
+    Skype:   campol
+    Github:  https://github.com/campol
+
+<br/>
+
