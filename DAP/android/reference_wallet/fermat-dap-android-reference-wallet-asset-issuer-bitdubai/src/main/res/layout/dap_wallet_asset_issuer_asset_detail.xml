@@ -131,6 +131,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/assetDetailRemainingLayout"
             android:layout_width="360dp"
             android:layout_height="75dp">
 
