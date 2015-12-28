@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cer_api.all_definition.enums.Currency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyPair;
 
 /**
