@@ -44,6 +44,10 @@ public final class FermatPluginManager {
 
     private       FermatPluginIdsManager  pluginIdsManager;
 
+    // todo temporal
+    private DealsWithDatabaseManagers dealsWithDatabaseManagers;
+    private DealsWithLogManagers dealsWithLogManagers;
+
     /**
      * Constructor with params:
      *
@@ -96,12 +100,32 @@ public final class FermatPluginManager {
         }
     }
 
+    @Deprecated // TODO temporal
+    private void initDeveloperTools() throws Exception {
+        if (dealsWithLogManagers == null) {
+            dealsWithDatabaseManagers = (DealsWithDatabaseManagers) systemContext.getPluginVersion(
+                    new PluginVersionReference(
+                            Platforms.PLUG_INS_PLATFORM,
+                            Layers.SUB_APP_MODULE,
+                            Plugins.DEVELOPER,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+
+            dealsWithLogManagers = (DealsWithLogManagers) dealsWithDatabaseManagers;
+        }
+    }
+
     public final FermatManager startPluginAndReferences(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
                                                                                                                     VersionNotFoundException {
 
         try {
 
             final FermatPluginIdsManager pluginIdsManager = getPluginIdsManager();
+
+            // todo temporal
+            initDeveloperTools();
 
             final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
 
@@ -142,10 +166,15 @@ public final class FermatPluginManager {
 
             abstractPlugin.setId(pluginIdsManager.getPluginId(pluginVersionReference));
 
-            startPlugin(abstractPlugin);
+            // todo temporal
+            if(abstractPlugin instanceof DatabaseManagerForDevelopers)
+                dealsWithDatabaseManagers.addDatabaseManager(abstractPlugin.getPluginVersionReference(), abstractPlugin);
 
-            checkDatabaseManagerForDevelopers(abstractPlugin);
-            checkLogManagerForDevelopers(abstractPlugin);
+            // todo temporal
+            if(abstractPlugin instanceof LogManagerForDevelopers)
+                dealsWithLogManagers.addLogManager(abstractPlugin.getPluginVersionReference(), abstractPlugin);
+
+            startPlugin(abstractPlugin);
 
             if (abstractPlugin.getManager() != null)
                 return abstractPlugin.getManager();
@@ -169,58 +198,13 @@ public final class FermatPluginManager {
         } catch (final CyclicalRelationshipFoundException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
-        }
-    }
-
-    private DealsWithDatabaseManagers dealsWithDatabaseManagers;
-
-    @Deprecated // TODO make this correct. Annotation: @DatabaseManagerForDevelopers think about it.
-    private void checkDatabaseManagerForDevelopers(final AbstractPlugin abstractPlugin) {
-
-        try {
-            if (dealsWithDatabaseManagers == null)
-                dealsWithDatabaseManagers = (DealsWithDatabaseManagers) startPluginAndReferences(
-                        new PluginVersionReference(
-                                Platforms .PLUG_INS_PLATFORM,
-                                Layers    .SUB_APP_MODULE   ,
-                                Plugins   .DEVELOPER        ,
-                                Developers.BITDUBAI         ,
-                                new Version()
-                        )
-                );
-
-            if(abstractPlugin instanceof DatabaseManagerForDevelopers)
-                dealsWithDatabaseManagers.addDatabaseManager(abstractPlugin.getPluginVersionReference(), (DatabaseManagerForDevelopers) abstractPlugin);
-
         } catch (Exception e) {
-            System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
-            System.out.println(e.toString());
-        }
-    }
 
-    private DealsWithLogManagers dealsWithLogManagers;
-
-    @Deprecated // TODO make this correct. Annotation: @LogManagerForDevelopers think about it.
-    private void checkLogManagerForDevelopers(final AbstractPlugin abstractPlugin) {
-
-        try {
-            if (dealsWithLogManagers == null)
-                dealsWithLogManagers = (DealsWithLogManagers) startPluginAndReferences(
-                        new PluginVersionReference(
-                                Platforms .PLUG_INS_PLATFORM,
-                                Layers    .SUB_APP_MODULE   ,
-                                Plugins   .DEVELOPER        ,
-                                Developers.BITDUBAI         ,
-                                new Version()
-                        )
-                );
-
-            if(abstractPlugin instanceof LogManagerForDevelopers)
-                dealsWithLogManagers.addLogManager(abstractPlugin.getPluginVersionReference(), (LogManagerForDevelopers) abstractPlugin);
-
-        } catch (Exception e) {
-            System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
-            System.out.println(e.toString());
+            throw new CantStartPluginException(
+                    e,
+                    pluginVersionReference.toString3(),
+                    "Unhandled exception trying to start the plugin or one of its references."
+            );
         }
     }
 
@@ -326,7 +310,7 @@ public final class FermatPluginManager {
 
             throw new CantStartPluginException(
                     e,
-                    abstractPlugin.getPluginVersionReference().toString(),
+                    abstractPlugin.getPluginVersionReference().toString3(),
                     "Unhandled exception trying to start the plugin."
             );
         }

@@ -41,7 +41,7 @@ import java.util.List;
  *
  * Created by Nerio on 13/10/15.
  */
-@NeededIndirectPluginReferences({
+@NeededIndirectPluginReferences(indirectReferences = {
         @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_EXTRA_USER),
         @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_INTRA_USER)
 //        @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.MIDDLEWARE, plugin = Plugins.CRYPTO_ADDRESSES)
