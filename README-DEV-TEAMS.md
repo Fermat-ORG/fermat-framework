@@ -56,17 +56,20 @@ Team leaders are classified by the deepness of the hierarchy that lies below the
 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
-| 1 | Entry Level | New developer on the project. |
-| 2 | Veteran | Veteran developer. Working full time 3+ months or part-time 6+ months. |
-| 3 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
-| 4 | Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 5 | New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 6 | Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 7 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
-| 8 | New Grand Team Leader | Team Leader with 5 sub-teams and one grand child. |
-| 9 | Grand Team Leader | Team Leader with 5 sub-teams and several grand children. |
-| 10 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
-| 11 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
+| 1 | Contributor | Casual contributor to the project. |
+| 2 | Part-Time - Entry Level | New part-time developer on the project. |
+| 3 | Part-Time Veteran | Veteran part-time developer. Working part-time 6+ months. |
+| 4 | Entry Level | New developer on the project. |
+| 5 | Veteran | Veteran developer. Working full time 3+ months. |
+| 6 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 7 | Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 8 | New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 9 | Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 10 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 11 | New Grand Team Leader | Team Leader with 5 sub-teams and one grand child. |
+| 12 | Grand Team Leader | Team Leader with 5 sub-teams and several grand children. |
+| 13 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
+| 14 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
 
 ### Fermat ORG Site
 
