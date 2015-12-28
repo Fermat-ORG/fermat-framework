@@ -87,6 +87,11 @@ public class WalletManagerSubAppSession implements SubAppsSession {
         return data.get(key);
     }
 
+    @Override
+    public void removeData(String key) {
+        data.remove(key);
+    }
+
     /**
      * Return the Error Manager
      *
