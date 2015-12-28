@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
@@ -46,12 +47,12 @@ import java.util.UUID;
  */
 public class AssetDistributionDao {
 
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final DigitalAssetDistributionVault digitalAssetDistributionVault;
     //VARIABLE DECLARATION
     private UUID pluginId;
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private final ActorAssetUserManager actorAssetUserManager;
-    private final DigitalAssetDistributionVault digitalAssetDistributionVault;
 
 
     //CONSTRUCTORS
@@ -120,6 +121,22 @@ public class AssetDistributionDao {
         } catch (Exception exception) {
             throw new CantPersistDigitalAssetException(exception, "Persisting a forming genesis digital asset", "Unexpected exception");
         }
+    }
+
+    public void updateActorAssetUser(ActorAssetUser user, String genesisTransaction) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
+        String context = "User: " + user + " - Genesis Tx: " + genesisTransaction;
+        DatabaseTable databaseTable = this.database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
+        databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.isEmpty()) {
+            throw new RecordsNotFoundException(null, context, null);
+        }
+
+        DatabaseTableRecord record = databaseTableRecords.get(0);
+        record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME, user.getActorPublicKey());
+        record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME, user.getCryptoAddress().getAddress());
+        databaseTable.updateRecord(record);
     }
 
     public void updateDistributionStatusByGenesisTransaction(DistributionStatus distributionStatus, String genesisTransaction) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
@@ -261,7 +278,7 @@ public class AssetDistributionDao {
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME,
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME
-        ).isEmpty();
+        ).size() > 1;
     }
 
     public boolean isDeliveringGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException {
