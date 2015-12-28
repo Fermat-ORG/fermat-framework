@@ -39,7 +39,7 @@ public class GetFragmentTest {
     @Test
     public void fragmentFound() throws Exception {
 //        Fragment actualFragment = fragmentFactory.getFragment("CBPCBWHART", session, settings, providerManager);
-//        assertThat(actualFragment).isInstanceOf(FermatFragment.class);
+//        assertThat(actualFragment).isInstanceOf(fermatFragment.class);
     }
 
     @Test

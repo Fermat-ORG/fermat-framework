@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -48,7 +48,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class DetailsActivityFragment extends FermatFragment {
+public class DetailsActivityFragment extends AbstractFermatFragment {
     private final String TAG = "DetailsActivityFragment";
 
     // MODULE
@@ -86,14 +86,14 @@ public class DetailsActivityFragment extends FermatFragment {
         return new DetailsActivityFragment();
     }
 
-    @Override
-    public void setSubAppsSession(SubAppsSession subAppsSession) {
-        super.setSubAppsSession(subAppsSession);
-
-        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
-        moduleManager = session.getModuleManager();
-        errorManager = subAppsSession.getErrorManager();
-    }
+//    @Override
+//    public void setSubAppsSession(SubAppsSession subAppsSession) {
+//        super.setSubAppsSession(subAppsSession);
+//
+//        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
+//        moduleManager = session.getModuleManager();
+//        errorManager = subAppsSession.getErrorManager();
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

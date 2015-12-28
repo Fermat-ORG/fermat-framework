@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
@@ -41,6 +42,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -61,6 +63,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     private final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager;
     private final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ;
     private final ErrorManager                       errorManager                          ;
+    private final PluginFileSystem                   pluginFileSystem                      ;
+    private final UUID                               pluginId                              ;
     private final PluginVersionReference             pluginVersionReference                ;
 
     public CryptoBrokerCommunityManager(final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ,
@@ -68,6 +72,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                                         final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager,
                                         final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ,
                                         final ErrorManager                       errorManager                          ,
+                                        final PluginFileSystem                   pluginFileSystem                      ,
+                                        final UUID                               pluginId                              ,
                                         final PluginVersionReference             pluginVersionReference                ) {
 
         this.cryptoBrokerIdentityManager            = cryptoBrokerIdentityManager           ;
@@ -75,6 +81,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         this.cryptoBrokerActorNetworkServiceManager = cryptoBrokerActorNetworkServiceManager;
         this.cryptoCustomerIdentityManager          = cryptoCustomerIdentityManager         ;
         this.errorManager                           = errorManager                          ;
+        this.pluginFileSystem                       = pluginFileSystem                      ;
+        this.pluginId                               = pluginId                              ;
         this.pluginVersionReference                 = pluginVersionReference                ;
     }
 
@@ -371,14 +379,29 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         return false;
     }
 
+    private SettingsManager<CryptoBrokerCommunitySettings> settingsManager;
+
     @Override
-    public SettingsManager getSettingsManager() {
-        return null;
+    public SettingsManager<CryptoBrokerCommunitySettings> getSettingsManager() {
+
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
     public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        // todo implement
-        return new SelectableIdentity("hola", "como estas", Actors.CBP_CRYPTO_BROKER, null);
+
+        try {
+            return getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
+        }catch (Exception e) {
+            throw new CantGetSelectedActorIdentityException(e, "", "Unhandled Error.");
+        }
     }
 }

@@ -27,6 +27,16 @@ public class DesktopDatabaseSelectOperator  implements DatabaseSelectOperator {
     private String alias;
 
 
+    public DesktopDatabaseSelectOperator(){}
+
+
+    public DesktopDatabaseSelectOperator(String column, DataBaseSelectOperatorType type, String alias){
+        this.column=column;
+        this.type=type;
+        this.alias=alias;
+    }
+
+
     /**
      * DatabaseSelectOperator interface implementation.
      */

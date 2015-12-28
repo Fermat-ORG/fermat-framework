@@ -84,7 +84,6 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         cryptoBroker.getPublicKey(),
                         (cryptoBroker.getAlias().toLowerCase()),
-                        "", //phrase
                         (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_BROKER,

@@ -85,7 +85,7 @@ public class WsCommunicationsCloudServerPingAgent extends Thread {
 
                         }catch (RuntimeException ex){
 
-                            LOG.error("Error occurred sending ping to the node, or pending pong message not received");
+                            LOG.error("Error occurred sending ping to the client "+connection.getRemoteSocketAddress()+", or pending pong message not received");
                             LOG.error("Pending pong message = "+wsCommunicationCloudServer.getPendingPongMessageByConnection().containsKey(connection.hashCode()));
 
                             wsCommunicationCloudServer.onClose(connection, 1000, " - Connection no alive", true);

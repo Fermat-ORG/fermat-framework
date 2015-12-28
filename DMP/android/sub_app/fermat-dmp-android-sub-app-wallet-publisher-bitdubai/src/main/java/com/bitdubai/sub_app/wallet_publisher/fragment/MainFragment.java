@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -92,7 +92,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     /**
      * (no-javadoc)
      *
-     * @see FermatFragment#onCreate(Bundle)
+     * @see AbstractFermatFragment#onCreate(Bundle)
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {

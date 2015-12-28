@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import org.restlet.data.CharacterSet;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
@@ -82,10 +83,11 @@ public class ComponentRegisteredListWebService extends ServerResource {
              * Construct the json object
              */
             JSONObject requestParametersJsonObject = (new JsonRepresentation(entity)).getJsonObject();
-
-
             String clientIdentityPublicKey = requestParametersJsonObject.getString(JsonAttNamesConstants.NAME_IDENTITY);
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(requestParametersJsonObject.getString(JsonAttNamesConstants.DISCOVERY_PARAM));
+
+            LOG.info("clientIdentityPublicKey  = " + clientIdentityPublicKey);
+            LOG.info("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
 
             /*
              * hold the result list
@@ -126,6 +128,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
         String jsonString = gson.toJson(jsonObjectRespond);
 
         JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(jsonString.trim());
+        jsonRepresentationRespond.setCharacterSet(CharacterSet.UTF_8);
 
         LOG.info("jsonString.length() = " + jsonString.length());
         LOG.info("jsonRepresentationRespond.getSize() = " + jsonRepresentationRespond.getSize());

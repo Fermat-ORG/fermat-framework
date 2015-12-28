@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onli
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.event_handler.BrokerAckOnlinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -226,6 +227,15 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager);
             brokerAckOnlinePaymentMonitorAgent.start();
+
+            /**
+             * Init event recorder service.
+             */
+            BrokerAckOnlinePaymentRecorderService brokerAckOnlinePaymentRecorderService=
+                    new BrokerAckOnlinePaymentRecorderService(
+                            brokerAckOnlinePaymentBusinessTransactionDao,
+                            eventManager);
+            brokerAckOnlinePaymentRecorderService.start();
 
             /**
              * Initialize plugin manager
