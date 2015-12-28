@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,6 +33,7 @@ import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -207,7 +209,18 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
         try {
             moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
+                    if((Boolean)o){
+                        onRefresh();
+                        appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
+                    }
+                }
+            });
             notificationAcceptDialog.show();
+
         } catch (CantAcceptRequestException | CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

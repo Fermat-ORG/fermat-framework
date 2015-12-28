@@ -27,6 +27,11 @@ public interface FermatSession<A extends FermatApp>{
 
     /**
      *
+     */
+    void removeData(String key);
+
+    /**
+     *
      * @return
      */
     public ErrorManager getErrorManager();
