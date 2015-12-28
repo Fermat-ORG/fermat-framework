@@ -139,7 +139,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
         if(id == R.id.btn_left){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.profile_image_standard));
+                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.ic_profile_male));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
@@ -157,8 +157,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
 
                         try {
-                            //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.profile_standard_female);
-                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
+                            //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
+                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
                         } catch (CantCreateNewIntraWalletUserException e) {
                             e.printStackTrace();
                         }
@@ -175,22 +175,9 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
-    }
-
-    private byte[] copyToBuffer(Bitmap bitmap) {
-        ByteBuffer buffer = ByteBuffer.allocate((bitmap.getByteCount()));
-        bitmap.copyPixelsToBuffer(buffer);
-        boolean check = buffer.hasArray();
-        buffer.rewind();
-        if (check)
-        {
-            byte [] NewData = buffer.array();
-            return NewData;
-        }
-        else return null;
     }
 
     private byte[] test3(Bitmap bitmap){

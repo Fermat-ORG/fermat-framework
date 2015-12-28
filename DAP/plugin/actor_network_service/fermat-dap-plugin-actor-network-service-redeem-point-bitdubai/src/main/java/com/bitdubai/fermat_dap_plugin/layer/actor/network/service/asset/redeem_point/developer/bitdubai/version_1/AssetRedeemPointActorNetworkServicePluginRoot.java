@@ -1017,6 +1017,11 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
         }
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
+
     /**
      * Initialize the event listener and configure
      */

@@ -248,12 +248,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact,getResources(),true);
                 bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
             } catch (Exception e) {
-                Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
+                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
             contactName.setText(cryptoWalletWalletContact.getActorName());
 
         }else{
-            Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
+            Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
 
     }

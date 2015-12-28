@@ -931,6 +931,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
+
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_RECEIVE.

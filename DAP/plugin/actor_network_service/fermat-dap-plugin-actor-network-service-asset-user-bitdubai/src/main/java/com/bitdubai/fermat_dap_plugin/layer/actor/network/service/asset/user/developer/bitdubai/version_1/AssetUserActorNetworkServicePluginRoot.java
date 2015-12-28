@@ -1162,4 +1162,9 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     public void handleNewMessages(FermatMessage message) {
 
     }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
 }

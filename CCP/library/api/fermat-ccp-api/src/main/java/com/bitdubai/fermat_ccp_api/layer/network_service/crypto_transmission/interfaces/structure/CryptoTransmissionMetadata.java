@@ -41,4 +41,5 @@ public interface CryptoTransmissionMetadata {
     public long getTimestamp();
 
 
+    void setPendingToRead(boolean pending);
 }

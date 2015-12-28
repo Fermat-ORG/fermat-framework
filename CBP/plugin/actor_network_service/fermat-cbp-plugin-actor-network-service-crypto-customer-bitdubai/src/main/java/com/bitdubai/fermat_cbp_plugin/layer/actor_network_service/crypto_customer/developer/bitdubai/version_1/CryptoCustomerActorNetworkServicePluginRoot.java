@@ -519,6 +519,11 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
+
     /**
      * Handles the events VPNConnectionCloseNotificationEvent
      * @param fermatEvent
