@@ -23,8 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DollarTodayProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DollarTodayProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
@@ -39,11 +39,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
-     * Created by Alejandro Bicelis on 11/2/2015.
-     */
+ * Created by Alejandro Bicelis on 11/2/2015.
+ */
 
 
-public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
+public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
 
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -62,11 +62,10 @@ public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements Dat
     List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
 
 
-
     /*
      * PluginRoot Constructor
      */
-    public ProviderDollarTodayPluginRoot() {
+    public ProviderDolarTodayPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -95,10 +94,6 @@ public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements Dat
     }*/
 
 
-
-
-
-
     /*
      * Service interface implementation
      */
@@ -124,10 +119,15 @@ public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements Dat
 
 
 
-
     /*
      * CurrencyExchangeRateProviderManager interface implementation
      */
+
+    @Override
+    public String getProviderName() {
+        return "DolarToday";
+    }
+
     @Override
     public Collection<CurrencyPair> getSupportedCurrencyPairs() {
         return supportedCurrencyPairs;
@@ -135,8 +135,8 @@ public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements Dat
 
     @Override
     public boolean isCurrencyPairSupported(CurrencyPair currencyPair) throws IllegalArgumentException {
-        for(CurrencyPair cp : supportedCurrencyPairs) {
-            if(currencyPair.equals(cp))
+        for (CurrencyPair cp : supportedCurrencyPairs) {
+            if (currencyPair.equals(cp))
                 return true;
         }
         return false;
@@ -180,9 +180,9 @@ public class ProviderDollarTodayPluginRoot extends AbstractPlugin implements Dat
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch(CantInitializeDollarTodayProviderDatabaseException cantInitializeException) {
+        } catch (CantInitializeDollarTodayProviderDatabaseException cantInitializeException) {
             FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "ProviderDolartodayPluginRoot", null);
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
