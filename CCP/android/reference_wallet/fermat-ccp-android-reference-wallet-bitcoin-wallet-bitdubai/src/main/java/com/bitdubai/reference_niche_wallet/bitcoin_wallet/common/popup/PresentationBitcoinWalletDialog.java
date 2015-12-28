@@ -27,6 +27,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Created by mati on 2015.11.27..
@@ -138,7 +139,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
         if(id == R.id.btn_left){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.profile_image_standard));
+                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.ic_profile_male));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
@@ -153,18 +154,15 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
                 //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+
+
                         try {
-                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.profile_standard_female));
+                            //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
+                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
                         } catch (CantCreateNewIntraWalletUserException e) {
                             e.printStackTrace();
                         }
-                        //cryptoWallet.registerIdentities();
-                    }
-                });
-                thread.start();
+
             } catch (CantGetCryptoWalletException e) {
                 e.printStackTrace();
             }
@@ -177,9 +175,16 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+    private byte[] test3(Bitmap bitmap){
+        final int lnth=bitmap.getByteCount();
+        ByteBuffer dst= ByteBuffer.allocate(lnth);
+        bitmap.copyPixelsToBuffer( dst);
+        return dst.array();
     }
 
     @Override

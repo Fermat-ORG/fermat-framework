@@ -474,7 +474,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     type,
                     action,
                     dealer,
-                    blockchainNetworkType
+                    blockchainNetworkType,
+                    1
             );
 
             System.out.println("********* Crypto Addresses: Successful Address Exchange Request creation. ");
@@ -819,6 +820,9 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 "--------------------------------------------------------");
         cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
+        //I check my time trying to send the message
+        //checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+
     }
 
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
@@ -927,6 +931,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
+
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_RECEIVE.
@@ -952,7 +961,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     type,
                     action,
                     requestMessage.getCryptoAddressDealer(),
-                    requestMessage.getBlockchainNetworkType()
+                    requestMessage.getBlockchainNetworkType(),
+                    1
             );
 
         } catch(CantCreateRequestException e) {
@@ -1023,5 +1033,51 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     private void reportUnexpectedException(Exception e) {
         errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+    }
+
+    private void checkFailedDeliveryTime(String destinationPublicKey)
+    {
+        try{
+
+            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listRequestsByActorPublicKey(destinationPublicKey);
+
+            //if I try to send more than 5 times I put it on hold
+            for (CryptoAddressRequest record : cryptoAddressRequestList) {
+
+                if(!record.getState().getCode().equals(ProtocolState.WAITING_RESPONSE.getCode()))
+                {
+                    if(record.getSentNumber() > 5 )
+                    {
+                         //update state and process again later
+                        cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.WAITING_RESPONSE);
+                    }
+                    else
+                    {
+                        cryptoAddressesNetworkServiceDao.changeSentNumber(record.getRequestId(),record.getSentNumber() + 1);
+                    }
+                }
+                else
+                {
+                    //I verify the number of days I'm around trying to send if it exceeds seven I delete record
+
+                    //long sentDate = record.get();
+                    //long currentTime = System.currentTimeMillis();
+
+                    //long dif = currentTime - sentDate;
+
+                    //if(dif > 604800000)
+                        cryptoAddressesNetworkServiceDao.delete(record.getRequestId());
+                }
+
+            }
+
+
+        }
+        catch(Exception e)
+        {
+            System.out.print("EXCEPCION VERIFICANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+
     }
 }

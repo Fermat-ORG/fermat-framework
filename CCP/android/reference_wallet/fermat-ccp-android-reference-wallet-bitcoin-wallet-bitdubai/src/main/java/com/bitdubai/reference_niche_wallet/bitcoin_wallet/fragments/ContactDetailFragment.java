@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -51,7 +51,7 @@ import static android.widget.Toast.makeText;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class ContactDetailFragment extends FermatWalletFragment implements View.OnClickListener {
+public class ContactDetailFragment extends AbstractFermatFragment implements View.OnClickListener {
 
 
     /**
@@ -217,9 +217,9 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
                             bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
                             image_view_profile.setImageBitmap(bitmapDrawable);
                     } else
-                        Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                        Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
                 }catch (Exception e){
-                    Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
                 }
             }
             if (edit_text_name != null)

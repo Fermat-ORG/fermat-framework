@@ -444,8 +444,8 @@ public abstract class FermatActivity extends AppCompatActivity
                         @Override
                         public void onClick(View v) {
                             Object[] object = new Object[2];
-                            if(viewPainter.hasClickListener())
-                            connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY,"public_key_ccp_intra_user_identity",object);
+                            if (viewPainter.hasClickListener())
+                                connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY, "public_key_ccp_intra_user_identity", object);
                         }
                     });
                     /**
@@ -523,20 +523,9 @@ public abstract class FermatActivity extends AppCompatActivity
             }
 
             } else {
-                mToolbar.setNavigationIcon(R.drawable.ic_action_back);
-                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Check if no view has focus:
-                        View view = getCurrentFocus();
-                        if (view != null) {
-                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        }
-                        onBackPressed();
-                    }
-                });
                 mDrawerLayout.setEnabled(false);
+                //test
+                mDrawerToggle.onDrawerClosed(mDrawerLayout);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -641,7 +630,19 @@ public abstract class FermatActivity extends AppCompatActivity
 
     private void paintToolbarIcon(TitleBar titleBar) {
         if (titleBar.getIconName() != null) {
-            mToolbar.setLogo(R.drawable.world);
+            mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Check if no view has focus:
+                    View view = getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    onBackPressed();
+                }
+            });
         }
         byte[] toolbarIcon = titleBar.getNavigationIcon();
         if (toolbarIcon != null)
@@ -1785,6 +1786,8 @@ public abstract class FermatActivity extends AppCompatActivity
                     case CLOUD_CONNECTED_NOTIFICATION:
                         launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
+                    case OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION:
+                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                     default:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;

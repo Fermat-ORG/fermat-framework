@@ -224,12 +224,7 @@ public class IncomingNotificationDao implements DAO {
 
     }
 
-    public List<ActorNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
 
-
-        return null;
-
-    }
 
 
     public void changeProtocolState(final UUID               requestId    ,

@@ -18,7 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * Created by francisco on 21/10/15.
  */
-public class IssuerCommunityHomeFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class IssuerCommunityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static AssetIssuerCommunitySubAppModuleManager manager;
     private List<ActorIssuer> actors;

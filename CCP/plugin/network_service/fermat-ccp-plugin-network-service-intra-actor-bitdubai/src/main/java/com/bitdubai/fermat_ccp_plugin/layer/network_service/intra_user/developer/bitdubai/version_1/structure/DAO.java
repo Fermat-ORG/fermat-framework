@@ -37,7 +37,6 @@ public interface DAO {
 
     public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException;
 
-    public List<ActorNetworkServiceRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetNotificationException, NotificationNotFoundException;
 
 
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,

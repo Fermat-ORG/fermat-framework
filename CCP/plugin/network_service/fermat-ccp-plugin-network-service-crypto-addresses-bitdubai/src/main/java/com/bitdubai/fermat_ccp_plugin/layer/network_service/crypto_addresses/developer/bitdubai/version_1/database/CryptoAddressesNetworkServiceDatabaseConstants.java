@@ -31,6 +31,7 @@ public final class CryptoAddressesNetworkServiceDatabaseConstants {
     public static final String ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME                         = "action"                        ;
     public static final String ADDRESS_EXCHANGE_REQUEST_DEALER_COLUMN_NAME                         = "dealer"                        ;
     public static final String ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME        = "blockchain_network_type"       ;
+    public static final String ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME                     = "sent_number"       ;
 
     public static final String ADDRESS_EXCHANGE_REQUEST_FIRST_KEY_COLUMN                           = "id"                            ;
 

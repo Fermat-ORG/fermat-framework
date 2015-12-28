@@ -9,11 +9,11 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 
 
-public  class RequestsReceivedFragment extends FermatWalletFragment {
+public  class RequestsReceivedFragment extends AbstractFermatFragment {
 
     private static final String ARG_POSITION = "position";
 

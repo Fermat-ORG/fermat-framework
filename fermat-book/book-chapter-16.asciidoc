@@ -7,8 +7,8 @@ These two platforms form the basic infrastructure to interact with the legacy fi
 === New components
 The new components added to the framework offer the following functionalities:
 [horizontal]
-Cash Money transactions :: to keep track of transaction where cash money is involved.
-Bank Money transactions :: to keep track of transaction where bank money is involved.
+Cash Money transactions :: to keep track of transactions where cash money is involved.
+Bank Money transactions :: to keep track of transactions where bank money is involved.
 Cash Money Wallet ::  only a *reference wallet* to provide services to other high level wallets by holding the accountancy of the end user's amount of cash.
 Bank Money Wallet ::  only a *reference wallet* to provide services to other high level wallets by holding the accountancy of the end user's amount of money in an specific bank account. +
 
