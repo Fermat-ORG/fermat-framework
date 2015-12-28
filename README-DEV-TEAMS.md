@@ -28,7 +28,7 @@ Fermat teams are organized in a hierarchical way. This helps the task of reviewi
 
 ## Current Hierarchy
 
-### Fermat Framework, Network & APPs
+### Fermat Network, Framework & APPs
 
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
@@ -52,22 +52,35 @@ Fermat teams are organized in a hierarchical way. This helps the task of reviewi
 
 Team leaders are classified by the deepness of the hierarchy that lies below then. The following table shows the categories related to compensation:
 
+### Fermat Network, Framework & APPs
+
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
 | 1 | Entry Level | New developer on the project. |
-| 2 | Veteran | Veteran developer. Working full time 3+ months. |
+| 2 | Veteran | Veteran developer. Working full time 3+ months or part-time 6+ months. |
 | 3 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 4 | Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 5 | New Parent Team Leader | Team Leader of a team with one sub-team |
-| 6 | Parent Team Leader | Team Leader of a team with many sub-teams |
-| 7 | Full Parent Team Leader | Team Leader with 5 sub-teams |
-| 8 | New Grand Team Leader | Team Leader with 5 sub-teams and one grand child |
-| 9 | Grand Team Leader | Team Leader with 5 sub-teams and several grand children |
-| 10 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children |
-| 11 | Core Developer | Veteran full-time developer allowed to push changes to the bitDubai repo |
+| 5 | New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 6 | Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 7 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 8 | New Grand Team Leader | Team Leader with 5 sub-teams and one grand child. |
+| 9 | Grand Team Leader | Team Leader with 5 sub-teams and several grand children. |
+| 10 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
+| 11 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
 
+### Fermat ORG Site
 
-Please note that whenever with mention a full-time developer is equivalent to mention two part-time developers.
+| # | Category | Description |
+|:-----:|:-----:|:-----| 
+| 1 | ORG Entry Level | New developer on the project. |
+| 2 | ORG Veteran | Veteran developer. Working full time 3+ months or part-time 6+ months. |
+| 3 | ORG New Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 4 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 5 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 6 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 7 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
+
+Please note that whenever we mention a full-time developer is equivalent to mention two part-time developers.
 
 <br>
 ## Team Members
