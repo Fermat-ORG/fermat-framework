@@ -57,7 +57,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
 | 1 | Contributor | Casual contributor to the project. |
-| 2 | Part-Time - Entry Level | New part-time developer on the project. |
+| 2 | Part-Time Entry Level | New part-time developer on the project. |
 | 3 | Part-Time Veteran | Veteran part-time developer. Working part-time 6+ months. |
 | 4 | Entry Level | New developer on the project. |
 | 5 | Veteran | Veteran developer. Working full time 3+ months. |
