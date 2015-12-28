@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<fermat xmlns="http://bitdubai.com/fermat/schemas"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://bitdubai.com/fermat/schemas FermatManifest.xsd" >
+<fermat>
     <platforms>
         <platform code="COR" name="Core And Api" logo="COR_logo.png">
 
