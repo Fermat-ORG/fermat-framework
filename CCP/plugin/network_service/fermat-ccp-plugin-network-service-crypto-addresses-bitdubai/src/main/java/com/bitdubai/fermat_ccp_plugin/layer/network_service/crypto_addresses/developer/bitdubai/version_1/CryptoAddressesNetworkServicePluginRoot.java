@@ -61,6 +61,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantCreateRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException;
@@ -90,6 +91,8 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -245,6 +248,19 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             }
 
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
+
+
+            //declare a schedule to process waiting request message
+            Timer timer = new Timer();
+
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // change message state to process again
+                    reprocessWaitingMessage();
+                }
+            }, 2*60*1000);
+
 
             /*
              * Its all ok, set the new status
@@ -475,7 +491,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     action,
                     dealer,
                     blockchainNetworkType,
-                    1
+                    1,
+                    System.currentTimeMillis()
             );
 
             System.out.println("********* Crypto Addresses: Successful Address Exchange Request creation. ");
@@ -821,7 +838,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
         //I check my time trying to send the message
-        //checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
 
     }
 
@@ -962,7 +979,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     action,
                     requestMessage.getCryptoAddressDealer(),
                     requestMessage.getBlockchainNetworkType(),
-                    1
+                    1,
+                    System.currentTimeMillis()
             );
 
         } catch(CantCreateRequestException e) {
@@ -1058,15 +1076,21 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 }
                 else
                 {
-                    //I verify the number of days I'm around trying to send if it exceeds seven I delete record
+                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
 
-                    //long sentDate = record.get();
-                    //long currentTime = System.currentTimeMillis();
+                    long sentDate = record.getSentDate();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
 
-                    //long dif = currentTime - sentDate;
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
-                    //if(dif > 604800000)
+                    if((int) dias > 3)
+                    {
+                        //notify the user does not exist to intra user actor plugin
+
                         cryptoAddressesNetworkServiceDao.delete(record.getRequestId());
+                    }
+
                 }
 
             }
@@ -1079,5 +1103,24 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             e.printStackTrace();
         }
 
+    }
+
+
+    private void reprocessWaitingMessage()
+    {
+        try {
+
+            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
+
+            for(CryptoAddressRequest record : cryptoAddressRequestList) {
+
+                cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
+        {
+            System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
     }
 }
