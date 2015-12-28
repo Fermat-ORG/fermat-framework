@@ -394,7 +394,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             requestHeaders.setAccept(Collections.singletonList(new org.springframework.http.MediaType("application", "json")));
 
             HttpEntity<?> requestEntity = new HttpEntity<Object>(jsonObject.toString(), requestHeaders);
-            RestTemplate restTemplate = new RestTemplate();
+            RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(WEB_SERVICE_URL, HttpMethod.POST, requestEntity, String.class);
