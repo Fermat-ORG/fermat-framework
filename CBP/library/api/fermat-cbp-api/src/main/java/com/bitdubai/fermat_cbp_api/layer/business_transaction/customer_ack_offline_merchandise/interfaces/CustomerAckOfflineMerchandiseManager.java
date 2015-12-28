@@ -13,6 +13,6 @@ public interface CustomerAckOfflineMerchandiseManager extends CustomerAckMerchan
      * @param contractHash
      * @throws CantAckMerchandiseException
      */
-    void ackMerchandise(String walletPublicKey, String contractHash)throws CantAckMerchandiseException;
+    void ackMerchandise(String contractHash)throws CantAckMerchandiseException;
 
 }

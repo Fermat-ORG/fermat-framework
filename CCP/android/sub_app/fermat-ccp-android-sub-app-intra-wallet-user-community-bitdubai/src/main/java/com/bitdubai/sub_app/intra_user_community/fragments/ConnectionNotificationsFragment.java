@@ -14,7 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Creado por Jose manuel De Sousa el 30/11/2015
  */
-public class ConnectionNotificationsFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+public class ConnectionNotificationsFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private static final int MAX = 20;
@@ -141,16 +141,7 @@ public class ConnectionNotificationsFragment extends FermatFragment implements S
         return dataSet;
     }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-//        /**
-//         * add navigation header
-//         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
-//
-//        /**
-//         * Navigation view items
-//         */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
+
     }
 
     @Override

@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenNegotiationDetailsFragment extends FermatWalletFragment implements FooterViewHolder.OnFooterButtonsClickListener {
+public class OpenNegotiationDetailsFragment extends AbstractFermatFragment implements FooterViewHolder.OnFooterButtonsClickListener {
     private static final String TAG = "OpenNegotiationDetails";
 
     // UI

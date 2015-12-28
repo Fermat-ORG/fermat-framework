@@ -48,6 +48,7 @@ import org.java_websocket.drafts.Draft_17;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -57,6 +58,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -163,10 +165,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#constructPlatformComponentProfileFactory(String, String, String,String, NetworkServiceType, PlatformComponentType, String)
+     * @see CommunicationsClientConnection#constructPlatformComponentProfileFactory(String, String,String, NetworkServiceType, PlatformComponentType, String)
      */
     @Override
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String phrase,String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
 
         try {
 
@@ -195,7 +197,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              * Construct a PlatformComponentProfile instance
              */
             return new PlatformComponentProfileCommunication(alias,
-                                                            phrase,
                                                              wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
                                                              identityPublicKey,
                                                              location,
@@ -230,7 +231,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             }
 
             return new PlatformComponentProfileCommunication(null,
-                                                            null,
                                                             wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
                                                             identityPublicKey,
                                                             null,
@@ -247,9 +247,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String,String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias,String phrase, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
 
         //Validate parameters
         if (platformComponentType == null && networkServiceType == null){
@@ -259,7 +259,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         /*
          * Construct a PlatformComponentProfile instance
          */
-        return new DiscoveryQueryParametersCommunication(alias, phrase,identityPublicKey, location, distance, name, networkServiceType, platformComponentType, extraData, offset, max, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, networkServiceType, platformComponentType, extraData, offset, max, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
 
     }
 
@@ -290,16 +290,19 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              /*
              * Construct a fermat packet whit the PlatformComponentProfile
              */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                     gson.toJson(jsonObject),                                                 //Message Content
                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
+
+            String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
+
             /*
              * Send the encode packet to the server
              */
-            wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            wsCommunicationsCloudClientChannel.send(fermatPacketEncode);
 
 
         }catch (Exception e){
@@ -383,16 +386,16 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             Gson gson = new Gson();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
-            //jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, "09A3B707D154r3B12C7CC626BCD7CF19EA8813B1B56A1B75E1C27335F8086C7ED588A7A06BCA67A289B73097FF67F5B1A0844FF2D550A6FCEFB66277EFDEB13A1");
             jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
             // Create a new RestTemplate instance
             HttpHeaders requestHeaders = new HttpHeaders();
             requestHeaders.set("Connection", "Close");
             requestHeaders.setAccept(Collections.singletonList(new org.springframework.http.MediaType("application", "json")));
+
             HttpEntity<?> requestEntity = new HttpEntity<Object>(jsonObject.toString(), requestHeaders);
             RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+            restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(WEB_SERVICE_URL, HttpMethod.POST, requestEntity, String.class);
 

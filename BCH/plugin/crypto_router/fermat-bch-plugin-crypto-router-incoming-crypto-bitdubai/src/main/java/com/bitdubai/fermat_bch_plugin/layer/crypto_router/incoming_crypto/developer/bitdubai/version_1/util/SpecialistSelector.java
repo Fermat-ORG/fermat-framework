@@ -50,9 +50,32 @@ public class SpecialistSelector {
             }
 
         } catch (CantGetCryptoAddressBookRecordException|CryptoAddressBookRecordNotFoundException e) {
-            // todo ver como manejar CryptoAddressBookRecordNotFoundException
-            // This exception will be managed by the relay agent
-            throw new CantSelectSpecialistException("Can't get actor address from registry", e,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
+            cryptoAddress.setAddress(cryptoTransaction.getAddressFrom().getAddress());
+            cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
+
+            try {
+                CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoAddress);
+                switch (cryptoAddressBookRecord.getDeliveredToActorType()) {
+                    case DEVICE_USER:
+                        return Specialist.DEVICE_USER_SPECIALIST;
+                    case INTRA_USER:
+                        return Specialist.INTRA_USER_SPECIALIST;
+                    case EXTRA_USER:
+                        return Specialist.EXTRA_USER_SPECIALIST;
+                    case DAP_ASSET_ISSUER:
+                        return Specialist.ASSET_ISSUER_SPECIALIST;
+                    case DAP_ASSET_USER:
+                        return Specialist.ASSET_USER_SPECIALIST;
+                    default:
+                        // Here we have a serious problem
+                        throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Actor: " + cryptoAddressBookRecord.getDeliveredToActorType() + " with code " + cryptoAddressBookRecord.getDeliveredToActorType().getCode(),"Actor not considered in switch statement");
+                }
+
+            } catch (CantGetCryptoAddressBookRecordException|CryptoAddressBookRecordNotFoundException e1) {
+                // todo ver como manejar CryptoAddressBookRecordNotFoundException
+                // This exception will be managed by the relay agent
+                throw new CantSelectSpecialistException("Can't get actor address from registry", e1,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
+            }
         }
     }
 }

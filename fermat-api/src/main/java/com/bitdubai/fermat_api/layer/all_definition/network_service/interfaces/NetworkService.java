@@ -66,7 +66,7 @@ public interface NetworkService {
      * @param platformComponentType
      * @param networkServiceType
      * @param alias
-     * @param phrase
+
      * @param identityPublicKey
      * @param location
      * @param distance
@@ -78,7 +78,7 @@ public interface NetworkService {
      * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias,String phrase, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
+    DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
 
     /**

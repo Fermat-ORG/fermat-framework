@@ -4,15 +4,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 17/12/15.
@@ -56,6 +59,9 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                            String contractHash) throws
             CantAckPaymentException {
         try{
+            //Checking the arguments
+            Object[] arguments={walletPublicKey, contractHash};
+            ObjectChecker.checkArguments(arguments);
             //First we check if the contract exits in this plugin database
             boolean contractExists=
                     this.brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(
@@ -63,10 +69,10 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             CustomerBrokerContractSale customerBrokerContractSale;
             if(!contractExists){
                 /**
-                 * If the contract is not in database, we going to check if exists in contract Layer,
+                 * If the contract is not in database, we are going to check if exists in contract Layer,
                  * in theory this won't happen, when a contract is open is created in contract layer
                  * and is raised an event that build a record in this plugin database. In this case we
-                 * will suppose that the agent in this plugin is not created the contract, but exists in
+                 * will suppose that the agent in this plugin has not created the contract, but exists in
                  * contract layer.
                  */
                 customerBrokerContractSale=
@@ -83,7 +89,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             } else{
                 /**
                  * The contract exists in database, we are going to check the contract status.
-                 * We going to get the record from this contract and
+                 * We are going to get the record from this contract and
                  * update the status to indicate the agent to send a ack notification to a Crypto Customer.
                  */
                 ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(
@@ -126,6 +132,10 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot update the contract status in database");
+        } catch (ObjectNotSetException e) {
+            throw new CantAckPaymentException(e,
+                    "Creating Broker Ack Offline Payment Business Transaction",
+                    "Invalid input to this manager");
         }
 
     }
@@ -140,7 +150,18 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
     public ContractTransactionStatus getContractTransactionStatus(
             String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        return this.brokerAckOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(
-                contractHash);
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
+            return this.brokerAckOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(
+                    contractHash);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    "Cannot check a null contractHash/Id");
+        }
+
     }
 }

@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -42,7 +42,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionOtherProfileFragment extends FermatFragment implements MessageReceiver {
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements MessageReceiver {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private Resources res;
@@ -168,18 +168,6 @@ public class ConnectionOtherProfileFragment extends FermatFragment implements Me
         return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), cryptoBrokerCommunitySubAppSession.getModuleManager().getSelectedActorIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
-    }
 
     @Override
     public void onMessageReceive(Context context, Intent data) {

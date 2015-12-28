@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -44,7 +44,7 @@ import static com.bitdubai.fermat_dap_api.layer.all_definition.enums.State.FINAL
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class PublishedAssetsFragment extends FermatFragment implements
+public class PublishedAssetsFragment extends AbstractFermatFragment implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     /**

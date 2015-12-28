@@ -1,13 +1,18 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWizardPageFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -21,9 +26,12 @@ import java.util.Map;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandisesFragment extends FermatWalletFragment implements WizardPageListener {
-    private static final String TAG = "WizardPageMerchandises";
+public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
 
+    // Constants
+    private static final String TAG = "WizardPageSetMerchand";
+
+    // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
 
@@ -39,8 +47,8 @@ public class WizardPageSetMerchandisesFragment extends FermatWalletFragment impl
         try {
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-
             errorManager = appSession.getErrorManager();
+
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -52,31 +60,18 @@ public class WizardPageSetMerchandisesFragment extends FermatWalletFragment impl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
-    }
+        super.onCreateView(inflater, container, savedInstanceState);
 
-    @Override
-    public boolean validate() {
-        return false;
-    }
+        View layout = inflater.inflate(R.layout.cbw_wizard_step_set_merchandises, container, false);
 
-    @Override
-    public void savePage() {
+        View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS, appSession.getAppPublicKey());
+            }
+        });
 
-    }
-
-    @Override
-    public void onWizardFinish(Map<String, Object> data) {
-
-    }
-
-    @Override
-    public void onActivated(Map<String, Object> data) {
-
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return null;
+        return layout;
     }
 }

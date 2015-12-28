@@ -21,6 +21,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
@@ -28,6 +31,12 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.event_handler.CustomerAckOfflineMerchandiseRecorderService;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.structure.CustomerAckOfflineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.structure.CustomerAckOfflineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -79,7 +88,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
     /**
      * Represents the plugin CustomerOnlinePaymentBusinessTransactionDatabaseFactory
      */
-    //CustomerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
+    CustomerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory customerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
 
     /**
      * Represents the database
@@ -100,7 +109,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.CustomerAckOfflineMerchandisePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.CustomerAckOfflineMerchandisePluginRoot");
         return returnedClasses;
     }
 
@@ -127,60 +136,60 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
      *
      * @throws CantInitializeDatabaseException
      */
-//    private void initializeDb() throws CantInitializeDatabaseException {
-//
-//        try {
-//            /*
-//             * Open new database connection
-//             */
-//            this.database = this.pluginDatabaseSystem.openDatabase(
-//                    pluginId,
-//                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
-//
-//        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-//
-//            /*
-//             * The database exists but cannot be open. I can not handle this situation.
-//             */
-//            errorManager.reportUnexpectedPluginException(
-//                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-//                    cantOpenDatabaseException);
-//            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-//
-//        } catch (DatabaseNotFoundException e) {
-//
-//            /*
-//             * The database no exist may be the first time the plugin is running on this device,
-//             * We need to create the new database
-//             */
-//            CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory =
-//                    new CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
-//
-//            try {
-//
-//                /*
-//                 * We create the new database
-//                 */
-//                this.database = customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(
-//                        pluginId,
-//                        CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
-//
-//            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-//
-//                /*
-//                 * The database cannot be created. I can not handle this situation.
-//                 */
-//                errorManager.reportUnexpectedPluginException(
-//                        Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-//                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-//                        cantOpenDatabaseException);
-//                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-//
-//            }
-//        }
-//
-//    }
+    private void initializeDb() throws CantInitializeDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.database = this.pluginDatabaseSystem.openDatabase(
+                    pluginId,
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantOpenDatabaseException);
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory =
+                    new CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.database = customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(
+                        pluginId,
+                        CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        cantOpenDatabaseException);
+                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
 
     @Override
     public void start() throws CantStartPluginException {
@@ -189,37 +198,37 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             /**
              * Initialize database
              */
-            //initializeDb();
+            initializeDb();
 
             /**
              * Initialize Developer Database Factory
              */
-            /*customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory = new
-                    CustomerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+            customerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory = new
+                    CustomerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
                     pluginId);
-            customerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
+            customerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             /**
              * Initialize Dao
              */
-            /*CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao=
-                    new CustomerAckOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
+            CustomerAckOfflineMerchandiseBusinessTransactionDao customerAckOfflineMerchandiseBusinessTransactionDao=
+                    new CustomerAckOfflineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
                             database);
 
             /**
              * Init event recorder service.
              */
-            /*CustomerAckOnlineMerchandiseRecorderService customerAckOnlineMerchandiseRecorderService=
-                    new CustomerAckOnlineMerchandiseRecorderService(
-                            customerAckOnlineMerchandiseBusinessTransactionDao,
+            CustomerAckOfflineMerchandiseRecorderService customerAckOfflineMerchandiseRecorderService=
+                    new CustomerAckOfflineMerchandiseRecorderService(
+                            customerAckOfflineMerchandiseBusinessTransactionDao,
                             eventManager);
-            customerAckOnlineMerchandiseRecorderService.start();
+            customerAckOfflineMerchandiseRecorderService.start();
 
             /**
              * Init monitor Agent
              */
-            /*CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent=new CustomerAckOnlineMerchandiseMonitorAgent(
+            CustomerAckOfflineMerchandiseMonitorAgent customerAckOfflineMerchandiseMonitorAgent=new CustomerAckOfflineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -228,17 +237,17 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager);
-            customerAckOnlineMerchandiseMonitorAgent.start();
+            customerAckOfflineMerchandiseMonitorAgent.start();
 
             /**
              * Initialize plugin manager
              */
-            //TODO: partial implementation, only for compilation.
-            this.customerAckOfflineMerchandiseTransactionManager=new CustomerAckOfflineMerchandiseTransactionManager();
-            /*this.customerAckOfflineMerchandiseTransactionManager = new CustomerAckOnlineMerchandiseTransactionManager(
-                    customerAckOnlineMerchandiseBusinessTransactionDao);*/
+            this.customerAckOfflineMerchandiseTransactionManager = new CustomerAckOfflineMerchandiseTransactionManager(
+                    customerAckOfflineMerchandiseBusinessTransactionDao,
+                    customerBrokerContractPurchaseManager,
+                    errorManager);
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Customer Ack Offline Merchandise Starting");
+            //System.out.println("Customer Ack Offline Merchandise Starting");
         } catch (Exception exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,

@@ -41,7 +41,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception,
-                    "Cannot set the broker ack online payment database handler",
+                    "Cannot set the customer ack offline merchandise database handler",
                     "The database handler is null");
         }
     }
