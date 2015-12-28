@@ -50,7 +50,7 @@ Fermat teams are organized in a hierarchical way. This helps the task of reviewi
 
 ## Compensation
 
-Team leaders are classified by the deepness of the hierarchy that lies below then. The following table shows the categories related to compensation:
+Developers and team leaders in particular are classified by the deepness of the hierarchy that lies below then. The following table shows the categories related to compensation:
 
 ### Fermat Network, Framework & APPs
 
