@@ -134,7 +134,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 
 We are passionate geeks , always on the edge of technology and a little more. 
 With the only phrase "Keep moving forward" we just walk through Fermat.
-We are in charge of Android-core,core, Android framework development and platforms like CCP, CCM among others.
+We are in charge of Android-core,Fermat-Core, Android framework development and platforms like CCP, CCM among others.
 
 #### CoinDiggers Team Members:
 
