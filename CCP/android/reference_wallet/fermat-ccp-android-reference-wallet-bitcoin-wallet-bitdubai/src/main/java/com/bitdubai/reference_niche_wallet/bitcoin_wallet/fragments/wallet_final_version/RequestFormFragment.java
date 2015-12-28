@@ -156,9 +156,9 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
             if(cryptoWalletWalletContact.getProfilePicture()!=null) {
                 imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
 
-            } else  Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
+            } else  Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }catch (Exception e){
-            Picasso.with(getActivity()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView_contact);
+            Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
         contactName.setText(cryptoWalletWalletContact.getActorName());
     }
