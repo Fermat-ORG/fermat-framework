@@ -90,7 +90,7 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_FIRST_KEY_COLUMN);
+            table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME);
 
             try {
                 //Create the table
@@ -110,7 +110,7 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
-            table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_FIRST_KEY_COLUMN);
+            table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
 
             try {
                 //Create the table

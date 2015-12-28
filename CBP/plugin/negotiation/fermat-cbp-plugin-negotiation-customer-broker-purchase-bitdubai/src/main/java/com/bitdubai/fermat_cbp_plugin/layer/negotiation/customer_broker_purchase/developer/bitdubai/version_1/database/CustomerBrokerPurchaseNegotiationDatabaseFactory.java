@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 08/12/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 21/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -82,6 +82,7 @@ public class CustomerBrokerPurchaseNegotiationDatabaseFactory implements DealsWi
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CANCEL_REASON_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_FIRST_KEY_COLUMN);
 

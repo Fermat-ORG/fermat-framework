@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cus
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -31,6 +32,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.MissingCustomerBrokerPurchaseDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.utils.CustomerBrokerPurchaseImpl;
+import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -54,6 +56,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     private final FiatIndexManager fiatIndexManager;
+    private final NotificationManagerMiddleware notificationManagerMiddleware;
 
     public UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(ErrorManager errorManager,
                                                                           CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
@@ -62,7 +65,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                                                                           OpenContractManager openContractManager,
                                                                           CloseContractManager closeContractManager,
                                                                           CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-                                                                          FiatIndexManager fiatIndexManager) {
+                                                                          FiatIndexManager fiatIndexManager,
+                                                                          NotificationManagerMiddleware notificationManagerMiddleware) {
 
         this.errorManager                                                  = errorManager;
         this.customerBrokerPurchaseNegotiationManager                      = customerBrokerPurchaseNegotiationManager;
@@ -70,6 +74,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
         this.closeContractManager                                          = closeContractManager;
         this.customerBrokerContractPurchaseManager                         = customerBrokerContractPurchaseManager;
         this.fiatIndexManager                                              = fiatIndexManager;
+        this.notificationManagerMiddleware                                 = notificationManagerMiddleware;
+
         this.userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao(pluginDatabaseSystem, pluginId);
     }
     @Override
@@ -181,6 +187,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                             if (timeStampToday <= DELAY_HOURS)
                             {
                                 customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
+                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                             }
                         }
                     }
@@ -221,6 +228,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent impl
                             if (timeStampToday <= DELAY_HOURS)
                             {
                                 customerBrokerContractPurchaseManager.updateContractNearExpirationDatetime(customerBrokerContractPurchase.getContractId(), true);
+                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                             }
                         }
                     }
