@@ -123,6 +123,45 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 
 
 <br>
+-----------------------------------
+<br>
+### <img src="https://cloud.githubusercontent.com/assets/13594347/11161999/6d16609a-8a60-11e5-8fa2-e4b9d2f6c080.jpg" width="600" height="300"/>
+
+We are passionate geeks , always on the edge of technology and a little more. 
+With the only phrase "Keep moving forward" we just walk through Fermat.
+We are in charge of Android-core,core, Android framework development and platforms like CCP, CCM among others.
+
+#### CoinDiggers Team Members:
+
+
+* Matias Furszyfer [Team Leader - Core Developer] <br/>
+---
+    Email:   matiasfurszyfer@gmail.com
+    Skype:   matias.furszyfer
+    Github:  https://github.com/furszy
+    
+    
+*  Natalia Cortez <br/>
+---
+      Email:   nattyco@gmail.com
+      Skype:   nattyco
+      Github:  https://github.com/nattyco
+
+* Joaquin Carrasquero <br/>
+---
+      Email:   jc.juaco@gmail.com
+      Skype:   j-u-a-c-o@hotmail.com
+      Github:  https://github.com/Exilum
+
+* Jose Manuel de Sousa<br/>
+---
+      Email:   -----
+      Skype:   -----
+      Github:  https://github.com/josemanueldsds
+
+
+<br>
+
 ### Disruptor Team:
 -----------------------------------
 
