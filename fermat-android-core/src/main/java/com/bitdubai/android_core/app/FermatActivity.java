@@ -525,7 +525,7 @@ public abstract class FermatActivity extends AppCompatActivity
             } else {
                 mDrawerLayout.setEnabled(false);
                 //test
-                mDrawerToggle.onDrawerClosed(mDrawerLayout);
+                //mDrawerToggle.onDrawerClosed(mDrawerLayout);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);

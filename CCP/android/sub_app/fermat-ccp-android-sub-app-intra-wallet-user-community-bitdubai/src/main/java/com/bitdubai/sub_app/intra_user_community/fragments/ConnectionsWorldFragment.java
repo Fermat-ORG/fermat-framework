@@ -102,6 +102,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
 
+    ProgressDialog dialog;
+
     /**
      * Create a new instance of this fragment
      *
@@ -165,7 +167,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             swipeRefresh.setRefreshing(true);
+            showEmpty(true, emptyView);
+            dialog = ProgressDialog.show(getActivity(), "",
+                    "Loading. Please wait...", true);
+            dialog.show();
             onRefresh();
+
+
             /**
              * Code to show cache data
              */
@@ -234,6 +242,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
+                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
@@ -249,16 +258,20 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                         }
                     } else
                         showEmpty(true, emptyView);
+
+
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     isRefreshing = false;
+                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                     ex.printStackTrace();
+
                 }
             });
             worker.execute();
