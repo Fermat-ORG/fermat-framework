@@ -48,7 +48,7 @@
                     android:layout_margin="8dp"
                     android:textSize="14sp"
                     android:text="Username"
-                    android:textColor="@android:color/black"
+                    android:textColor="#919090"
                     android:id="@+id/crypto_broker_name_title"/>
 
                 <EditText
@@ -83,7 +83,7 @@
                 android:background="@android:color/transparent"
                 android:layout_margin="8dp"
                 android:textSize="14sp"
-                android:textColor="@android:color/black"
+                android:textColor="#919090"
                 android:id="@+id/crypto_broker_phrase_title"/>
 
 
