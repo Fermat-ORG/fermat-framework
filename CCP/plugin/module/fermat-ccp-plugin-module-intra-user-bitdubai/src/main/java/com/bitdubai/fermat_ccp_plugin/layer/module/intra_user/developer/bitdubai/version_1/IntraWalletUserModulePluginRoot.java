@@ -310,7 +310,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
                 //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),"",intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
