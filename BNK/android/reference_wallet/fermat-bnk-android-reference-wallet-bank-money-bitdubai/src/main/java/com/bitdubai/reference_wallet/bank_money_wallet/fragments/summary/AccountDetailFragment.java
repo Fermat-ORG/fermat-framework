@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,17 +89,17 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     protected int getLayoutResource() {
-        return 0;
+        return R.layout.bw_account_detail_summary;
     }
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;
+        return R.id.transactions_recycler_view;
     }
 
     @Override
     protected int getRecyclerLayoutId() {
-        return 0;
+        return R.id.transactions_recycler_view;
     }
 
     @Override
@@ -123,7 +124,10 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
-        return null;
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
+        return layoutManager;
     }
 
     @Override
