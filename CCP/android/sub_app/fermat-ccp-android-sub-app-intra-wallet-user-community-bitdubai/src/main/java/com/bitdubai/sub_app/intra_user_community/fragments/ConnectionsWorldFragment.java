@@ -7,11 +7,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,8 +85,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private AppListAdapter adapter;
     private boolean isStartList = false;
 
+    FermatWorker worker;
 
-    private ProgressDialog mDialog;
+    //private ProgressDialog mDialog;
 
 
     // recycler
@@ -102,7 +105,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
 
-    ProgressDialog dialog;
+    //ProgressDialog dialog;
 
     /**
      * Create a new instance of this fragment
@@ -150,6 +153,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
+            rootView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        worker.shutdownNow();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
@@ -168,23 +181,23 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             swipeRefresh.setRefreshing(true);
             showEmpty(true, emptyView);
-            dialog = ProgressDialog.show(getActivity(), "",
-                    "Loading. Please wait...", true);
-            dialog.show();
-            onRefresh();
+//            dialog = ProgressDialog.show(getActivity(), "",
+//                    "Loading. Please wait...", true);
+            //dialog.show();
+            //onRefresh();
 
 
             /**
              * Code to show cache data
              */
-            /*adapter.changeDataSet(dataSet);
+            adapter.changeDataSet(dataSet);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     onRefresh();
                 }
-            }, 1500);*/
+            }, 1500);
             SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
             if (!pref.getBoolean("isChecked", false)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
@@ -230,7 +243,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             isRefreshing = true;
             if (swipeRefresh != null)
                 swipeRefresh.setRefreshing(true);
-            FermatWorker worker = new FermatWorker() {
+            worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
@@ -242,7 +255,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
-                    dialog.dismiss();
+                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
@@ -265,7 +278,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     isRefreshing = false;
-                    dialog.dismiss();
+                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
@@ -473,6 +486,9 @@ Updates the count of notifications in the ActionBar.
             updateNotificationsBadge(count);
         }
     }
+
+
+
 
 }
 
