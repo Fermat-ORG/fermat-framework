@@ -24,6 +24,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
+
     public static final int TYPE_PRESENTATION = 1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES = 2;
     private final Activity activity;
