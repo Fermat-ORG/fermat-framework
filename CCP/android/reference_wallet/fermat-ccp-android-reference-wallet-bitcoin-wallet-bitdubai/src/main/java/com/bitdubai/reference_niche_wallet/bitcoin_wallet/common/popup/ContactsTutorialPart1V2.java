@@ -96,19 +96,23 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
 
     private void saveSettings(){
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
-            if(checkbox_not_show.isChecked()){
+            try {
                 SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
-                try {
-                    BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                    settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
-                } catch (CantGetSettingsException e) {
-                    e.printStackTrace();
-                } catch (SettingsNotFoundException e) {
-                    e.printStackTrace();
-                } catch (CantPersistSettingsException e) {
-                    e.printStackTrace();
-                }
+                BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                bitcoinWalletSettings.setIsContactsHelpEnabled((checkbox_not_show.isChecked()) ? false : true);
+                settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
             }
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveSettings();
+        super.onBackPressed();
     }
 }

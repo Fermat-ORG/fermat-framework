@@ -222,6 +222,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     @Override
     public void onBackPressed() {
+        saveSettings();
         super.onBackPressed();
     }
 }
