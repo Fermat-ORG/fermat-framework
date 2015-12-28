@@ -20,8 +20,8 @@ Fermat teams are organized in a hierarchical way. This helps the task of reviewi
 * Code Butchers
 * Coin Diggers
 * Disruptors
-* Fermat ORG Client
-* Fermat ORG Server
+* Fermat ORG Charlie
+* Fermat ORG Sierra
 * DBZ Team
 * Mordor
 * Kabuto
@@ -45,12 +45,12 @@ Fermat teams are organized in a hierarchical way. This helps the task of reviewi
 
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
-| Fermat ORG Client | | | |
-| Fermat ORG Server | | | |
+| Fermat ORG Charlie | | | |
+| Fermat ORG Sierra | | | |
 
 ## Compensation
 
-Developers and team leaders in particular are classified by the deepness of the hierarchy that lies below then. The following table shows the categories related to compensation:
+Developers and team leaders in particular are classified by the deepness of the hierarchy that lies below them. The following table shows the categories related to compensation:
 
 ### Fermat Network, Framework & APPs
 
@@ -267,5 +267,34 @@ We are a developer team with different experience level; we give our best to del
       Github:  https://github.com/yalayn
 
 We can talk about any topic outside work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and the like! If you want to join our team you're more that welcome!
+
+<br/>
+
+### Fermat ORG Charlie:
+-----------------------------------
+Developers of dev.fermat.org in the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
+
+#### Team Members:
+
+* **Miguel Celedon [ORG New Team Leader - ORG Veteran]**<br/>
+---
+    Email:   miguelceledon@outlook.com
+    Skype:   miguel-209
+    Github:  https://github.com/miguelcldn
+    
+    
+* **Ricardo Delgado**<br/>
+---
+      Email:   ricardodelgado460@hotmail.com
+      Skype:   ricardodelgado460
+      Github:  https://github.com/ricardo460
+
+* **Emmanuel Colina**<br/>
+---
+    Email:   emmanuelcolina14@gmail.com
+    Skype:   ecolina4
+    Github:  https://github.com/emmanuelcolina
+
+We welcome everyone who would like to join us. JavaScript is a hard languages when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
 
 <br/>
