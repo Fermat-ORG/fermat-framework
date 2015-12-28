@@ -38,21 +38,30 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
                                                UUID pluginId,
                                                PluginDatabaseSystem pluginDatabaseSystem,
                                                PluginFileSystem pluginFileSystem,
-                                               BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                               BitcoinNetworkManager bitcoinNetworkManager,
+                                               DigitalAssetDistributionVault digitalAssetDistributionVault,
+                                               AssetDistributionDao assetDistributionDao,
+                                               AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
+                                               ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         setAssetVaultManager(assetVaultManager);
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setPluginFileSystem(pluginFileSystem);
-        this.digitalAssetDistributor=new DigitalAssetDistributor(/*assetVaultManager,*/
+        setAssetVaultManager(assetVaultManager);
+        setDigitalAssetDistributionVault(digitalAssetDistributionVault);
+        setAssetDistributionDatabaseDao(assetDistributionDao);
+        setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
+        setBitcoinManager(bitcoinNetworkManager);
+        setActorAssetIssuerManager(actorAssetIssuerManager);
+        this.digitalAssetDistributor = new DigitalAssetDistributor(assetVaultManager,
                 errorManager,
                 pluginId,
                 pluginFileSystem,
                 bitcoinNetworkManager);
-        this.digitalAssetDistributor.setAssetVaultManager(assetVaultManager);
     }
 
-    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) throws CantSetObjectException{
-        if(assetTransmissionNetworkServiceManager==null){
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) throws CantSetObjectException {
+        if (assetTransmissionNetworkServiceManager == null) {
             throw new CantSetObjectException("assetTransmissionNetworkServiceManager is null");
         }
         this.digitalAssetDistributor.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
@@ -62,56 +71,57 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.digitalAssetDistributor.setAssetDistributionDao(assetDistributionDatabaseDao);
     }
 
-    public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException{
+    public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException {
         this.digitalAssetDistributor.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
     }
 
-    public void setBitcoinManager(BitcoinNetworkManager bitcoinNetworkManager){
+    public void setBitcoinManager(BitcoinNetworkManager bitcoinNetworkManager) {
         this.digitalAssetDistributor.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
     }
 
-    public void setPluginId(UUID pluginId) throws CantSetObjectException{
-        if(pluginId==null){
+    public void setPluginId(UUID pluginId) throws CantSetObjectException {
+        if (pluginId == null) {
             throw new CantSetObjectException("PluginId is null");
         }
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem)throws CantSetObjectException{
-        if(pluginDatabaseSystem==null){
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) throws CantSetObjectException {
+        if (pluginDatabaseSystem == null) {
             throw new CantSetObjectException("pluginDatabaseSystem is null");
         }
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
-        if(pluginFileSystem==null){
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException {
+        if (pluginFileSystem == null) {
             throw new CantSetObjectException("pluginFileSystem is null");
         }
-        this.pluginFileSystem=pluginFileSystem;
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
-        if(errorManager==null){
+        if (errorManager == null) {
             throw new CantSetObjectException("ErrorManager is null");
         }
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{
-        if(assetVaultManager==null){
+    public void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException {
+        if (assetVaultManager == null) {
             throw new CantSetObjectException("AssetVaultManager is null");
         }
-        this.assetVaultManager=assetVaultManager;
+        this.assetVaultManager = assetVaultManager;
     }
 
-    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException{
-        if(actorAssetIssuerManager==null){
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        if (actorAssetIssuerManager == null) {
             throw new CantSetObjectException("actorAssetIssuerManager is null");
-        }try{
+        }
+        try {
             this.digitalAssetDistributor.setActorAssetIssuerManager(actorAssetIssuerManager);
         } catch (CantGetActorAssetIssuerException exception) {
-            throw new CantSetObjectException(exception, "Setting the Actor Asset Issuer Manager", "Getting the Actor Asset Issuer" );
+            throw new CantSetObjectException(exception, "Setting the Actor Asset Issuer Manager", "Getting the Actor Asset Issuer");
         }
 
     }
@@ -123,7 +133,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
             this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
         } catch (CantSetObjectException exception) {
             throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "The wallet public key is null");
-        } catch(Exception exception){
+        } catch (Exception exception) {
             throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "Unexpected exception");
         }
 
