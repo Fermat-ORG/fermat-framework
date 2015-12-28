@@ -19,6 +19,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.TransactionListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 
@@ -45,12 +47,12 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         return new AccountDetailFragment();
     }
 
-    @Override
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.bw_account_detail_summary, container, false);
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,11 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public FermatAdapter getAdapter() {
-        return null;
+        if(adapter == null){
+            adapter = new TransactionListAdapter(getActivity(), transactionList);
+            adapter.setFermatListEventListener(this);
+        }
+        return adapter;
     }
 
     @Override
