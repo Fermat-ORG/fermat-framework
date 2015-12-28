@@ -89,6 +89,9 @@ Please note that whenever we mention a full-time developer is equivalent to ment
 ## Team Members
 
 <br>
+### Thunder Team:
+-----------------------------------
+<br>
 ### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/c538d5f1256c25d5e8c3ebdd19dd154d6c8a54e1/Logotype/FermatTeams/logo_thunder_team.jpg "Thunder Team Logo"")
 
 More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and deailing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
@@ -123,6 +126,8 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 
 
 <br>
+
+### Coin Diggers Team:
 -----------------------------------
 <br>
 ### <img src="https://cloud.githubusercontent.com/assets/13594347/11161999/6d16609a-8a60-11e5-8fa2-e4b9d2f6c080.jpg" width="600" height="300"/>
