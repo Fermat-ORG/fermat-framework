@@ -12,8 +12,6 @@
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="8dp">
 
-
-
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/transaction"
         android:layout_width="wrap_content"
@@ -46,7 +44,7 @@
         android:layout_alignParentRight="true"
         android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
-        tools:text="03 Feb 2015"/>
+        tools:text="transaction type"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/transaction_currency"
@@ -59,4 +57,17 @@
         android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
         android:text="transaction currency"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/transaction_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/transaction_currency"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/text_color_bold"
+            android:textSize="@dimen/text_size"
+            tools:text="03 Feb 2015"/>
+
 </RelativeLayout>

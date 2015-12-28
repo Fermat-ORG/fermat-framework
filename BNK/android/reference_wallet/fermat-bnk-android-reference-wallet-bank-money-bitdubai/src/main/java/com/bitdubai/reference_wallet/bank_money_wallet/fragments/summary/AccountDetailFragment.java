@@ -96,7 +96,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return R.id.transactions_recycler_view;
+        return R.id.transactions_swipe_refresh;
     }
 
     @Override
