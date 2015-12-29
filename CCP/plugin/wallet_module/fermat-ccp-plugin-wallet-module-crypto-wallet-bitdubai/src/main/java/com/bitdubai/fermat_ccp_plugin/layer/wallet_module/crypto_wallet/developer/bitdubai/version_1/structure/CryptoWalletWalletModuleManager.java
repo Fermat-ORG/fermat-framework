@@ -105,6 +105,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develope
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -113,6 +115,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager</code>
@@ -321,13 +324,23 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             List<IntraWalletUserActor> intraUserList = intraUserManager.getAllIntraWalletUsers(intraUserIdentityPublicKey, max, offset);
 
-            for(IntraWalletUserActor intraUser : intraUserList)
+            List<CryptoWalletWalletContact> lstContacts = listWalletContacts(walletPublicKey, intraUserIdentityPublicKey);;
+            for(final IntraWalletUserActor intraUser : intraUserList) {
+                boolean isContact = CollectionUtils.exists(lstContacts,
+                        new org.apache.commons.collections.Predicate() {
+                            public boolean evaluate(Object object) {
+                                CryptoWalletWalletContact cryptoWalletWalletContact = (CryptoWalletWalletContact) object;
+                                return cryptoWalletWalletContact.getActorPublicKey().equals(intraUser.getPublicKey());
+
+                            }
+                        });
+                if(!isContact)
                 intraUserActorList.add(new CryptoWalletWalletModuleIntraUserActor(
                         intraUser.getName(),
-                        false,
+                        isContact,
                         intraUser.getProfileImage(),
                         intraUser.getPublicKey()));
-
+            }
             return intraUserActorList;
         } catch (CantGetIntraWalletUsersException e) {
             throw new CantGetAllIntraUserConnectionsException(CantGetAllIntraUserConnectionsException.DEFAULT_MESSAGE, e, "", "Problem trying yo get actors from Intra-User Actor plugin.");
@@ -335,6 +348,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             throw new CantGetAllIntraUserConnectionsException(CantGetAllIntraUserConnectionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
+
 
     private CryptoWalletIntraUserActor enrichIntraUser(IntraWalletUserActor intraWalletUser,
                                                        String walletPublicKey) throws CantEnrichIntraUserException {
