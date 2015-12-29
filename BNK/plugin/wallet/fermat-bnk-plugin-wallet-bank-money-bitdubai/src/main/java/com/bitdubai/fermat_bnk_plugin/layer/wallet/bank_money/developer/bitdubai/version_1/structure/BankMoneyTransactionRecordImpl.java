@@ -58,7 +58,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
 
     @Override
     public BankTransactionStatus getStatus() {
-        return null;
+        return BankTransactionStatus.CONFIRMED;
     }
 
     @Override
@@ -68,6 +68,11 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
 
     @Override
     public TransactionType getTransactionType() {
+        try{
+            return TransactionType.getByCode(transactionType);
+        }catch (Exception e){
+
+        }
         return null;
     }
 
@@ -79,7 +84,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     @Override
     public FiatCurrency getCurrencyType() {
         try {
-            FiatCurrency.getByCode(cashCurrencyType);
+            return FiatCurrency.getByCode(cashCurrencyType);
         }catch (Exception e){
 
         }

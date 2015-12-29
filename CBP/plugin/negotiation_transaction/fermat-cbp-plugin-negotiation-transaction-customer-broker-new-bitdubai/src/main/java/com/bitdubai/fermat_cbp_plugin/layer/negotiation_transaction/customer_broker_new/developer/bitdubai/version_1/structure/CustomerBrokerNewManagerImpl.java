@@ -56,7 +56,7 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao
             );
-            customerBrokerNewPurchaseNegotiationTransaction.newPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+            customerBrokerNewPurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
         } catch (CantNewPurchaseNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -74,7 +74,7 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
                     customerBrokerSaleNegotiationManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao
             );
-            customerBrokerNewSaleNegotiationTransaction.newSaleNegotiationTranasction(customerBrokerSaleNegotiation);
+            customerBrokerNewSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
         } catch (CantNewSaleNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerNewSaleNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerNewSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");

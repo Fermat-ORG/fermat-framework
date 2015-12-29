@@ -138,7 +138,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
         buyingDetails.setText(getResources().getString(R.string.cbw_buying_details, amount, merchandise));
 
         negotiationSteps = walletManager.getSteps(negotiationInfo);
-        NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), walletManager, negotiationInfo, negotiationSteps);
+        NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
         adapter.setFooterListener(this);
 
         recyclerView.setAdapter(adapter);
