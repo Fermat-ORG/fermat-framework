@@ -11,4 +11,7 @@
     <color name="fab_normal">#6633B5E5</color>
     <color name="white">#ffffff</color>
     <color name="fab_black_semi_transparent">#B2000000</color>
+
+    <color name="bnk_fab_color_normal_w">#FD0018</color>
+    <color name="bnk_fab_color_normal_d">#00B8FE</color>
 </resources>
