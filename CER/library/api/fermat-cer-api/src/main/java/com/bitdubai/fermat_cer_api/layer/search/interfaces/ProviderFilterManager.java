@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderExcept
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/26/2015.
@@ -16,29 +17,36 @@ public interface ProviderFilterManager {
     /**
      * Provides access to the internal list of Providers in the CER Platform
      *
-     * @return a complete list of Provider Names
+     * @return a map containing both the ProviderID and the ProviderName for each registered provider
      */
-    Collection<String> getProviderNames() throws CantGetProviderException;
+    Map<UUID, String> getProviderNames() throws CantGetProviderException;
 
     /**
-     * Provides a list of Providers which can obtain the ExchangeRate of the given CurrencyPair
+     * Returns a list of Providers able to obtain the ExchangeRate of the given CurrencyPair
      *
-     * @return a list or Provider Names
+     * @return a map containing both the ProviderID and the ProviderName for each applicable provider
      */
-    Collection<String> getProviderNamesListFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException;
+    Map<UUID, String> getProviderNamesListFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException;
 
     /**
-     * Returns a reference to the requested provider by its name
+     * Returns a reference to the requested provider, by its name
      *
      * @return a reference to the provider
      */
-    CurrencyExchangeRateProviderManager getProviderReference(String providerName) throws CantGetProviderException;
+    CurrencyExchangeRateProviderManager getProviderReference(UUID providerId) throws CantGetProviderException;
+
+    /**
+     * Returns a list of references of all the registered providers
+     *
+     * @return a Collection of provider reference pairs
+     * */
+    Collection<CurrencyExchangeRateProviderManager> getAllProviderReferences() throws CantGetProviderException;
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
      *
-     * @return a Map of name/provider reference pairs
+     * @return a Collection of provider reference pairs
      * */
-    Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException;
+    Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException;
 
 }

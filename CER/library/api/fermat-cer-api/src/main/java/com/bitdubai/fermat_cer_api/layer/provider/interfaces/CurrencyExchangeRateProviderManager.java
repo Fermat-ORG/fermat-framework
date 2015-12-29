@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cer_api.layer.provider.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -13,14 +14,19 @@ import java.util.Collection;
  */
 public interface CurrencyExchangeRateProviderManager extends FermatManager {
 
-    //TODO: this manager needs methods like getExchangeRateBetweenDates, getExchangeRatesOfASpecificWeek. Talk to nelson.
-
     /**
      * Returns the name of the provider
      *
-     * @return a string containing tha name of the provider
+     * @return a string containing the name of the provider
      */
     String getProviderName();
+
+    /**
+     * Returns the ID of the provider
+     *
+     * @return an UUID containing the Id of the provider
+     */
+    String getProviderId();
 
     /**
      * Returns the provider's supported currency pairs
@@ -30,7 +36,7 @@ public interface CurrencyExchangeRateProviderManager extends FermatManager {
     Collection<CurrencyPair> getSupportedCurrencyPairs();
 
     /**
-     * Returns a boolean which indicates of the provided CurrencyPair is supported by the provider or not
+     * Returns a boolean which indicates if the provided CurrencyPair is supported by the provider or not
      *
      * @return a boolean, true if CurrencyPair is supported, false if not
      */
@@ -44,17 +50,24 @@ public interface CurrencyExchangeRateProviderManager extends FermatManager {
     ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
-     * Returns a list of exchange rates of a given date, for a specific currencyPair
+     * Returns an exchange rate of a given date, for a specific currencyPair
      *
-     * @return a list of exchangeRate objects
+     * @return an exchangeRate object
      */
-    Collection<ExchangeRate> getExchangeRateListFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
-     * Returns a list of queried exchange rates, for a specific supplied currencyPair
+     * Given a TimeUnit (Days,weeks,months) and a currencyPair, returns a list of max ExchangeRates, starting from the given offset
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws CantGetExchangeRateException;
+
+    /**
+     * Returns a list of queried exchange rates, for a specific currencyPair
+     *
+     * @return a list of exchangeRate objects
+     */
+    Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
 }
