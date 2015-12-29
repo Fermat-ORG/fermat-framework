@@ -10,7 +10,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
  */
 public class CustomerBrokerCloseCryptoAddressRequestImpl implements CustomerBrokerCloseCryptoAddressRequest {
 
-    private String                  walletPublicKey;
     private Actors                  identityTypeRequesting;
     private Actors                  identityTypeResponding;
     private String                  identityPublicKeyRequesting;
@@ -19,7 +18,6 @@ public class CustomerBrokerCloseCryptoAddressRequestImpl implements CustomerBrok
     private BlockchainNetworkType   blockchainNetworkType;
 
     public CustomerBrokerCloseCryptoAddressRequestImpl(
-        String                  walletPublicKey,
         Actors                  identityTypeRequesting,
         Actors                  identityTypeResponding,
         String                  identityPublicKeyRequesting,
@@ -27,7 +25,6 @@ public class CustomerBrokerCloseCryptoAddressRequestImpl implements CustomerBrok
         CryptoCurrency          cryptoCurrency,
         BlockchainNetworkType   blockchainNetworkType
     ){
-        this.walletPublicKey                = walletPublicKey;
         this.identityTypeRequesting         = identityTypeRequesting;
         this.identityTypeResponding         = identityTypeResponding;
         this.identityPublicKeyRequesting    = identityPublicKeyRequesting;
@@ -35,8 +32,6 @@ public class CustomerBrokerCloseCryptoAddressRequestImpl implements CustomerBrok
         this.cryptoCurrency                 = cryptoCurrency;
         this.blockchainNetworkType          = blockchainNetworkType;
     }
-
-    public String getWalletPublicKey(){ return this.walletPublicKey; }
 
     public Actors getIdentityTypeRequesting(){ return this.identityTypeRequesting;}
 

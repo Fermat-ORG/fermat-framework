@@ -7,6 +7,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGenerateAndRegisterCryptoAddressException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCryptoAddressesNewException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.AbstractCryptoAddress;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerCloseCryptoAddressRequest;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.WalletManagerSelector;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
@@ -25,7 +26,7 @@ public class CustomerBrokerCloseCryptoAddress extends AbstractCryptoAddress{
     }
 
     @Override
-    public CryptoAddress CryptoAddressesNew(final CryptoAddressRequest request) throws CantCryptoAddressesNewException {
+    public CryptoAddress CryptoAddressesNew(final CustomerBrokerCloseCryptoAddressRequest request) throws CantCryptoAddressesNewException {
 
         try {
             CryptoAddress cryptoAddress = null;
@@ -44,6 +45,5 @@ public class CustomerBrokerCloseCryptoAddress extends AbstractCryptoAddress{
         } catch (CantGenerateAndRegisterCryptoAddressException e){
             throw new CantCryptoAddressesNewException(e, "", "There was an error trying to generate the crypto address.");
         }
-
     }
 }

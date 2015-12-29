@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
@@ -14,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantCryptoAddressesNewException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerCloseCryptoAddressRequest;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.utils.WalletManagerSelector;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
@@ -71,6 +75,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             CustomerBrokerPurchaseNegotiation purchaseNegotiation;
 
             //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
+            //
             purchaseNegotiation = getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
 
             //SAVE CRYPTO ADREESS OF THE CUSTOMER
@@ -126,6 +131,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
+    //UPDATE THE NEGOTIATION FOR ADD NEW CRYPTO ADDRESS
     private CustomerBrokerPurchaseNegotiation getNegotiationAddCryptoAdreess(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantNegotiationAddCryptoAdreessException{
 
         CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiation;
@@ -134,9 +140,9 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             if (isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses())) {
 
-                Collection<Clause> negotiationClauses;
 
-                negotiationClauses = addCryptoAdreess(customerBrokerPurchaseNegotiation.getClauses());
+                CustomerBrokerCloseCryptoAddressRequest request             = getRequest(purchaseNegotiation);
+                Collection<Clause>                      negotiationClauses  = addCryptoAdreess(customerBrokerPurchaseNegotiation.getClauses(), request);
 
                 purchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl(
                         customerBrokerPurchaseNegotiation.getNegotiationId(),
@@ -160,14 +166,15 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
-    private Collection<Clause> addCryptoAdreess(Collection<Clause> negotiationClauses){
+    //ADD NEW CRYPTO ADDRESS A THE CLAUSES
+    private Collection<Clause> addCryptoAdreess(Collection<Clause> negotiationClauses, CustomerBrokerCloseCryptoAddressRequest request){
 
         Collection<Clause> negotiationClausesNew = new ArrayList<>();
 
         for(Clause clause : negotiationClauses){
             if(clause.getType() == ClauseType.CUSTOMER_CRYPTO_ADDRESS){
                 negotiationClausesNew.add(
-                    addClause(clause,cryptoAdreessActor())
+                    addClause(clause,cryptoAdreessActor(request))
                 );
             }else{
                 negotiationClausesNew.add(
@@ -180,6 +187,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
+    //ADD VALUES A THE CLAUSES
     private Clause addClause(Clause clause, String value){
 
         Clause clauseNew = new CustomerBrokerNegotiationClauseImpl(
@@ -195,7 +203,24 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
-    private String cryptoAdreessActor() {
+    //RETURN REQUEST THE CRYPTO ADDRESS
+    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerPurchaseNegotiation purchaseNegotiation){
+
+        CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
+                Actors.CBP_CRYPTO_BROKER,
+                Actors.CBP_CRYPTO_CUSTOMER,
+                purchaseNegotiation.getBrokerPublicKey(),
+                purchaseNegotiation.getCustomerPublicKey(),
+                CryptoCurrency.BITCOIN,
+                BlockchainNetworkType.TEST
+        );
+
+        return request;
+
+    }
+
+    //GENERATE AND REGISTER THE NEW CRYPTO ADDRESS OF THE ACTOR
+    private String cryptoAdreessActor(CustomerBrokerCloseCryptoAddressRequest request) {
 
         CryptoVaultSelector     cryptoVaultSelector     = new CryptoVaultSelector(this.cryptoVaultManager);
         WalletManagerSelector   walletManagerSelector   = new WalletManagerSelector(this.walletManagerManager);
@@ -204,7 +229,6 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
         try {
 
-            CryptoAddressRequest request = null;
             CustomerBrokerCloseCryptoAddress customerBrokerCloseCryptoAddress = new CustomerBrokerCloseCryptoAddress(
                     this.cryptoAddressBookManager,
                     cryptoVaultSelector,
@@ -223,6 +247,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
     }
 
+    //CHECK IF IS CRYPTO CURRENCY
     private boolean isCryptoCurrency(Collection<Clause> negotiationClauses){
 
         for(Clause clause : negotiationClauses){

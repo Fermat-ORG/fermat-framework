@@ -9,8 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
  */
 public interface CustomerBrokerCloseCryptoAddressRequest {
 
-    String getWalletPublicKey();
-
     Actors getIdentityTypeRequesting();
 
     Actors getIdentityTypeResponding();

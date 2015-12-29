@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -87,14 +86,14 @@ public abstract class AbstractCryptoAddress {
 
     /*REGISTER THE CRYPTO ADDRESS*/
     protected final void registerCryptoAddress(
-        final CryptoAddress        cryptoAddress  ,
-        final CryptoAddressRequest request        ,
+        final CryptoAddress        cryptoAddress,
+        final CustomerBrokerCloseCryptoAddressRequest request,
         final InstalledWallet      installedWallet,
         final VaultType            vaultType
     ) throws CantRegisterCryptoAddressBookException{
 
         try {
-            //TODO CHECK CryptoAddressRequest.
+
             FermatVaultEnum fermatVaultEnum = cryptoVaultSelector.getVaultEnum(vaultType, request.getCryptoCurrency());
 
             ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(installedWallet.getWalletCategory(), installedWallet.getWalletPlatformIdentifier());
@@ -112,6 +111,7 @@ public abstract class AbstractCryptoAddress {
                     installedWallet.getWalletPublicKey(),
                     referenceWallet
             );
+
         } catch (InvalidParameterException | CallToGetByCodeOnNONEException e){
             throw new CantRegisterCryptoAddressBookException(e, "walletCategory: "+installedWallet.getWalletCategory()+" - walletPlatformIdentifier: "+installedWallet.getWalletPlatformIdentifier(), "Error trying to get the reference wallet type.");
         } catch (CantRegisterCryptoAddressBookRecordException e) {
@@ -123,7 +123,7 @@ public abstract class AbstractCryptoAddress {
     protected final CryptoAddress generateAndRegisterCryptoAddress(
         final Platforms            platform ,
         final VaultType            vaultType,
-        final CryptoAddressRequest request
+        final CustomerBrokerCloseCryptoAddressRequest request
     ) throws CantGenerateAndRegisterCryptoAddressException{
 
         try {
@@ -156,5 +156,6 @@ public abstract class AbstractCryptoAddress {
 
     }
 
-    public abstract CryptoAddress CryptoAddressesNew(final CryptoAddressRequest cryptoAddressRequest)throws CantCryptoAddressesNewException;
+    //REQUEST THE GENERATE AND REGISTER OF THE CRYPTO ADDRESS
+    public abstract CryptoAddress CryptoAddressesNew(final CustomerBrokerCloseCryptoAddressRequest request)throws CantCryptoAddressesNewException;
 }
