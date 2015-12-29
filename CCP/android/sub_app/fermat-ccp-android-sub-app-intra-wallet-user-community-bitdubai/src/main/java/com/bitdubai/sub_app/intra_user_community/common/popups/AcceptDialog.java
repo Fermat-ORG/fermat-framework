@@ -18,6 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 
 /**
  * Created by Joaquin C on 12/11/15.
@@ -89,6 +90,7 @@ public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppRes
             try {
                 if (intraUserInformation != null && identity != null) {
                     getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
+                    getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED,Boolean.TRUE);
                     Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();

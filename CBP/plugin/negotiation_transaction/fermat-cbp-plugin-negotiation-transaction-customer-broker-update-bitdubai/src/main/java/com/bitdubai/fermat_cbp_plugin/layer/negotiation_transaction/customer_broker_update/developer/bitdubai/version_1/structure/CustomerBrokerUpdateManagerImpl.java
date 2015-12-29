@@ -60,7 +60,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
                 customerBrokerPurchaseNegotiationManager,
                 customerBrokerUpdateNegotiationTransactionDatabaseDao
             );
-            customerBrokerUpdatePurchaseNegotiationTransaction.updatePurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+            customerBrokerUpdatePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
         } catch (CantUpdatePurchaseNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -80,7 +80,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
                 customerBrokerSaleNegotiationManager,
                 customerBrokerUpdateNegotiationTransactionDatabaseDao
             );
-            customerBrokerUpdateSaleNegotiationTransaction.updateSaleNegotiationTranasction(customerBrokerSaleNegotiation);
+            customerBrokerUpdateSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
         } catch (CantUpdateSaleNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException(e.getMessage(), e, CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -99,7 +99,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerUpdateNegotiationTransactionDatabaseDao
             );
-            customerBrokerUpdatePurchaseNegotiationTransaction.cancelPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+            customerBrokerUpdatePurchaseNegotiationTransaction.SendCancelPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
         } catch (CantCancelPurchaseNegotiationTransactionException e){
             throw new CantCancelNegotiationException(e.getMessage(), e, CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
@@ -117,7 +117,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
                     customerBrokerSaleNegotiationManager,
                     customerBrokerUpdateNegotiationTransactionDatabaseDao
             );
-            customerBrokerUpdateSaleNegotiationTransaction.cancelSaleNegotiationTranasction(customerBrokerSaleNegotiation);
+            customerBrokerUpdateSaleNegotiationTransaction.sendCancelSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
         } catch (CantCancelSaleNegotiationTransactionException e){
             throw new CantCancelNegotiationException(e.getMessage(), e, CantCancelNegotiationException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
