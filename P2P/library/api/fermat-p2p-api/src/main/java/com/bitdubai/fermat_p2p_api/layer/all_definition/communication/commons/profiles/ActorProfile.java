@@ -18,7 +18,7 @@ import com.google.gson.Gson;
  */
 public class ActorProfile extends Profile {
 
-    /**y
+    /**
      * Represent the actorType
      */
     private String actorType;
