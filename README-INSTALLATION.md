@@ -195,20 +195,6 @@ To fork you must press button “Fork” in the top-right corner of the url, and
 You have your Fork created!
 https://github.com/$YOUR_USER/fermat
 
-##### Create a local branch pointing to the original project.
-* Create a new local branch, pointing to the original project:
-```shell
-git remote add newbranch https://github.com/bitDubai/fermat
-git remote -v
-```
-* The console must return you something like this:
-```shell
-origin https://github.com/lnacosta/fermat (fetch)
-origin https://github.com/lnacosta/fermat (push)
-newbranch https://github.com/bitDubai/fermat (fetch)
-newbranch https://github.com/bitDubai/fermat (push)
-```
-
 #### Update your fork to the last release.
 
 * Open a command prompt and clone your fork:
@@ -227,6 +213,20 @@ git remote -v
 ```shell
 origin https://github.com/$YOUR_USER/fermat (fetch)
 origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+##### Create a local branch pointing to the original project.
+* Create a new local branch, pointing to the original project:
+```shell
+git remote add newbranch https://github.com/bitDubai/fermat
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/lnacosta/fermat (fetch)
+origin https://github.com/lnacosta/fermat (push)
+newbranch https://github.com/bitDubai/fermat (fetch)
+newbranch https://github.com/bitDubai/fermat (push)
 ```
 
 * Follow section: **“Create a local branch pointing to the original project”.**
@@ -330,12 +330,74 @@ You have to go to your fork and then with the commits do the pull request.
 
 <br>
 ### Compiling
-
+Para abrir el proyecto debemos iniciar el IDE que en este caso puede ser Android Studio o IntelliJ IDEA (cualquiera que se haya elegido para trabajar).
 <br>
+Al iniciar el IDE se mostrará el formulario de bienvenida y se listarán diferentes opciones entre ellas la  de “Open an existing Android Studio Project” o simplemente “Open” depende del IDE que hayan seleccionado para trabajar.
+<br>
+Seleccionamos esta última opción nombrada para abrir el proyecto y nos dirigimos al directorio donde fue clonado el mismo.
+<br>
+#### Nota.
+_Al clonar el proyecto se creará un directorio llamado “fermat” y es este el que debe ser seleccionado para abrir el proyecto. 
+Se recomienda utilizar el IDE Android Studio debido a que presenta mayor estabilidad y cuenta con más documentación de ayuda._
+<br>
+<br>
+Al Abrir el proyecto comienza un proceso de carga normal del IDE que puede demorar unos cuantos minutos al principio y más si es abierto por primera vez. Esto es normal y solo hay que dejar que este proceso continue hasta que final.
+Una vez abierto el proyecto procedemos a compilarlo. 
+<br>
+Para compilar nos dirigimos a “build” en la barra de herramientas y hacemos click en “Make Project” o simplemente recurrimos a la combinación de teclas Ctrl + F9 para Compilar el proyecto. Este proceso durará varios minutos probablemente. 
+<br>
+Para verificar el avance de la compilación y las tareas que se están ejecutando podemos abrir el Gradle Console que nos mostrará el avance, y una vez que finalice la compilación mostrará si fue exitosa o no con la siguiente leyenda:
+<br>
+* “BUILD SUCCESSFUL” en caso de ser exitosa. 
+* “BUILD FAILED” en caso de que haya fallado. 
+<br>
+
 ### Running
-
+Antes de correr la aplicación se requiere, ya sea de un dispositivo físico (que soporte la aplicación), o un dispositivo creado a través de la máquina virtual.
 <br>
+Dentro del IDE  viene por defecto una aplicación conocida como “Android Virtual Device Manager” o “AVD Manager” que permite crear máquinas virtuales para ejecutar la aplicación en caso de no contar con un dispositivo  físico.
+<br>
+#### Nota:
+_Al ejecutar el proyecto a través de un dispositivo móvil físico el rendimiento de procesamiento será mayor que al usar “AVD Manager” el cual demandará mayor consumo de recursos. 
+También se permite utilizar otras aplicaciones equivalentes al “AVD Manager” como “Genymotion” o similares, para crear máquinas virtuales._ 
+<br>
+<br>
+Para correr la aplicación simplemente debemos dirigimos al item “Run” del menú y luego hacer click en el “Run” o presionando Mayus + F10.
+<br>
+Es probable que al correr el proyecto comience a compilar. Esto es por defecto así, pero si queremos evitar que compile al correr debemos dirigirnos  al item “Run” del menú y luego al item “Edit Configurations” y se abrirá una ventana que nos permitirá configurar las diferentes maneras de ejecutar el proyecto.
+<br>
+En el item “Android Aplication” encontraremos la aplicación con el nombre “fermat-android-core”. Al hacer click sobre ella se mostrarán las diferentes opciones para configurar y correr la aplicación. 
+<br>
+En el item “Before Launch” debemos eliminar de la lista el item “Make”. De esta forma el proyecto se podrá ejecutar sin necesidad de compilar antes.
+<br>
+<br>
+#### Nota
+_Es necesario  compilar siempre la aplicación antes de correr. Muchas veces la tarea de compilar y correr la aplicación se hace por separado. Por eso mismo se ha explicado la manera de hacer las dos tareas de forma separada._
+<br>
+<br>
+Al correr la aplicación se mostrará una ventana llamada “Choose Device” que dentro de la misma se listarán, principalmente, dos opciones: 
+<br>
+* “Choose a running device”: Dentro de esta opción se podrá seleccionar los dispositivo físicos conectados al equipo para correr la aplicación.
+* “Launch emulator”:  Dentro de esta opción se listan las máquinas virtuales para correr la aplicación.
+<br>
+
+Cualquiera sean las opciones elegidas probablemente la ejecución demore varios minutos y más si es la primera vez que se ejecuta, ya que requiere de la instalación de la misma. 
+<br>
+<br>
+
 ### Debbuging
+
+Para iniciar la aplicación en modo Debugging, en el item “Run” del menú hacemos click en “Debug” o presionamos Alt+Ctrl+F9. De esta manera la aplicación se coloca en modo debug.                                                                  Al igual que cuando se corre la aplicación nos mostrará la ventana “Choose Device”, seleccionamos la opción conveniente y la aplicación se ejecutara en modo  Debugging.
+<br>
+<br>
+De esta manera podremos acceder a varios recursos que el IDE proporciona para realizar esta tarea:
+* Ver el system log.
+* Set breakpoints en el código.
+* Examinar variables y Evaluar expresiones en el run time.
+* Ejecute las herramientas de depuración desde el SDK de Android.
+
+Y otras funcionalidades.
+
 
 <br>
 ### Developer Sub App
