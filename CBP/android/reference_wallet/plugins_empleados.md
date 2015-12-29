@@ -17,8 +17,8 @@ Notas:
 
 #### Home Open Negotiations Tab [I]
 Metodos:
-- Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) 
-- Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset)
+- `Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset)` 
+- `Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset)`
 
 Plguins y Flujos:
   - **(A) Esperando por Broker** >> `Customer Broker Sale Negotiation`
@@ -26,8 +26,8 @@ Plguins y Flujos:
 
 #### Home Open Contracts Tab [I]
 Metodos:
-- Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset)
-- Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset)
+- `Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset)`
+- `Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset)`
 
 Plguins y Flujos:
   - **(A) Esperando por Broker** >> `Customer Broker Sale Contract`
@@ -35,16 +35,16 @@ Plguins y Flujos:
 
 #### Negotiation Details
 Metodos
-  - List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);
-  - boolean isNothingLeftToConfirm(List<NegotiationStep> steps);
-  - CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> steps);
-  - void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues)
-  - List<String> getPaymentMethods(String currencyToSell);
-  - Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)
-  - [implementar] metodo que devuelva lista de NegotiationBankAccount registrados como setting
-  - [implementar] FiatIndex getMarketRate(Currency merchandise, Currency fiatCurrency, CurrencyType currencyType)
+  - `List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);`
+  - `boolean isNothingLeftToConfirm(List<NegotiationStep> steps);`
+  - `CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> steps);`
+  - `void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues)`
+  - `List<String> getPaymentMethods(String currencyToSell);`
+  - `Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)`
+  - [implementar] metodo que devuelva lista de `NegotiationBankAccount` registrados como setting
+  - [implementar] `FiatIndex getMarketRate(Currency merchandise, Currency fiatCurrency, CurrencyType currencyType)`
     - FiatIdex propio de la wallet
-  - [implementar] CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
+  - [implementar] `CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);`
 
 Plugins y Flujos
   - **(A) Agregar notas** >> `Customer Broker Sale Negotiation`
@@ -82,8 +82,8 @@ Plugins y Flujos
 
 #### Contract Details (terminar de definir metodos del Module)
 Metodos
-  - [implementar] CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final String ContractId)
-    - plugin dueño: CustomerBrokerContractSaleManager#getCustomerBrokerContractSaleForContractId(final String ContractId)
+  - [implementar] `CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final String ContractId)`
+    - plugin dueño: `CustomerBrokerContractSaleManager#getCustomerBrokerContractSaleForContractId(final String ContractId)`
 
 Puglis y Flujos
   - **(A) Datos ingresados** >> `Customer BrokerSale Contract` usando `Customer Broker Sale Negotiation` para obtener el detalle de la negociacion y terminar de armar la data a mostrar
@@ -96,9 +96,9 @@ Puglis y Flujos
 
 #### Market Rates [I]
 Metodos
-  - Collection<IndexSummary> getCurrentIndexSummaryForStockCurrencies()
-  - [implementar] List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String cbpWalletPublicKey) 
-  - [implementar] Collection<ExchangeRate> getExchangeRateListFromDate(UUID providerId, Currency from, Currency to, long timestamp);
+  - `Collection<IndexSummary> getCurrentIndexSummaryForStockCurrencies()`
+  - [implementar] `List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String cbpWalletPublicKey)`
+  - [implementar] `Collection<ExchangeRate> getExchangeRateListFromDate(UUID providerId, Currency from, Currency to, long timestamp)`;
 
 Plugins y Flujos
   - **(A) Lista de referencias a los proveedores** >> `Customer Broker Wallet`
@@ -107,10 +107,10 @@ Plugins y Flujos
 
 #### Stock Merchandise
 Metodos
-- [implementar] List<CryptoBrokerStockTransaction> getStockHistory(FermatEmun merchandise, CurrencyType currencyType, int offset, long timestamp, String publicKey) 
+- [implementar] `List<CryptoBrokerStockTransaction> getStockHistory(FermatEmun merchandise, CurrencyType currencyType, int offset, long timestamp, String publicKey)`
   - El historial va a ser diario
-- [implementar] List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String publicKey)
-- [implementar] float getAvailableBalance(FermatEnum merchandise, String publicKey) 
+- [implementar] `List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String publicKey)`
+- [implementar] `float getAvailableBalance(FermatEnum merchandise, String publicKey)`
 
 Plugins y Flujos
   - **(A) Lista de mercancias seleccionadas como stock** >> `Crypto Broker Wallet`
@@ -120,8 +120,8 @@ Plugins y Flujos
 
 #### Contract History [I]
 Metodos
- - Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) 
-   - Plugin dueño: CustomerBrokerContractSaleManager#Collection<CustomerBrokerContractSale> getCustomerBrokerContractSaleForStatus(final ContractStatus status)
+ - `Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset)`
+   - Plugin dueño: `CustomerBrokerContractSaleManager#Collection<CustomerBrokerContractSale> getCustomerBrokerContractSaleForStatus(final ContractStatus status)`
 
   - **(A) Lista de contratos cerrados y cancelados** >> `Customer Broker Sale Contract`
   - **(A) Metodo para filtrar contratos por estado** >> `Customer Broker Sale Contract`
@@ -135,8 +135,8 @@ Plugins y Flujos
 
 #### Wizard Identity [I]
 Metodos
-  - boolean associateIdentity(String brokerPublicKey);
-  - List<CryptoBrokerIdentity> getListOfIdentities();
+  - `boolean associateIdentity(String brokerPublicKey);`
+  - `List<CryptoBrokerIdentity> getListOfIdentities();`
 
 Plugins y flujos
   - **(A) Lista de Identidades** >> `Crypto Broker Identity`
@@ -144,13 +144,13 @@ Plugins y flujos
 
 #### Wizard Stock Merchandises [I]
 Metodos
-  - List<InstalledWallet> getInstallWallets()
-  - List<BankAccountNumber> getAccounts(String walletPublicKey) 
-  - CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting() 
-  - CryptoBrokerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() 
-  - FiatCurrency getCashCurrency(String walletPublicKey) 
-  - void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread, String publicKeyWalletCryptoBrokerInstall)
-  - void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall) 
+  - `List<InstalledWallet> getInstallWallets()`
+  - `List<BankAccountNumber> getAccounts(String walletPublicKey)`
+  - `CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting()`
+  - `CryptoBrokerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting()`
+  - `FiatCurrency getCashCurrency(String walletPublicKey)`
+  - `void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread, String publicKeyWalletCryptoBrokerInstall)`
+  - `void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall)`
 
 Plugins y flujos
   - **(A) Plataformas (tipos de wallet: bank, cash o crypto)** >> Enum `Platforms`
@@ -168,9 +168,9 @@ Plugins y flujos
 
 #### Wizard Earning Merchandises (terminar de definir metodos del Module y del plugin MatchigEngine)
 Metodos
-  - List<InstalledWallet> getInstallWallets()
-  - [propuesto] CryptoBrokerEarningWalletAssociatedSetting newEmptyCryptoBrokerEarningWalletAssociatedSetting() 
-  - [propuesto] void saveEarmingWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall) 
+  - `List<InstalledWallet> getInstallWallets()`
+  - [propuesto] `CryptoBrokerEarningWalletAssociatedSetting newEmptyCryptoBrokerEarningWalletAssociatedSetting()`
+  - [propuesto] `void saveEarmingWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall)`
 
 Plugin y Flujos
   - **(A) Plataformas (tipos de wallet: bank, cash o crypto)** >> Enum `Platforms`
@@ -183,9 +183,9 @@ Plugin y Flujos
 
 #### Wizard Providers (implementar metodos del module)
 Metodos
-  - [implementar] Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)
-  - [implementar] CryptoBrokerWalletAssociatedSetting newEmptyCryptoBrokerWalletProviderSetting() 
-  - [implementar] void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting)
+  - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
+  - [implementar] `CryptoBrokerWalletAssociatedSetting newEmptyCryptoBrokerWalletProviderSetting()`
+  - [implementar] `void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting)`
 
 Plugins y flujos
   - **Obtener Pares de Monedas** >> Enums `FiatCurrency` y `CryptoCurrency` que implementan `Currency`
@@ -198,7 +198,7 @@ Plugins y flujos
 
 #### Wizard Locations
 Metodos:
-  - void createNewLocation(String location, String uri)
+  - `void createNewLocation(String location, String uri)`
     - uri es opcional, puede ser null 
 
 Plugins y Flujos
@@ -209,11 +209,11 @@ Plugins y Flujos
 
 #### Wizard Bank Accounts (implementar metodos del module. Depende del plugin MatchingEarnings)
 Metodos:
-  - [implementar] List<Object> getEarningWallets(); 
-    - esto depende del plugin MatchingEarnings
-  - List<BankAccountNumber> getAccounts(String walletPublicKey);
-  - [implementar] NegotiationBankAccountImpl newEmptyNegotiationBankAccount();
-  - [implementar] void createNewBankAccount(NegotiationBankAccount bankAccount);
+  - [implementar] `List<Object> getEarningWallets();`
+    - Esto depende del plugin MatchingEarnings
+  - `List<BankAccountNumber> getAccounts(String walletPublicKey);`
+  - [implementar] `NegotiationBankAccountImpl newEmptyNegotiationBankAccount();`
+  - [implementar] `void createNewBankAccount(NegotiationBankAccount bankAccount);`
     - El metodo esta tambien en Customer Broker Sale Negotiation
 
 Plugins y flujos:  
@@ -234,10 +234,10 @@ Plugins y flujos:
 
 #### Settings Locations
 Metodos
-  - Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)
-  - void createNewLocation(String location, String uri);
-  - void updateLocation(NegotiationLocations location);
-  - void deleteLocation(NegotiationLocations location);
+  - `Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)`
+  - `void createNewLocation(String location, String uri);`
+  - `void updateLocation(NegotiationLocations location);`
+  - `void deleteLocation(NegotiationLocations location);`
 
 Plugins y Flujos
   - **(A) Lista de Locaciones actuales** >> `Customer Broker Sale Negotiation`
@@ -247,14 +247,14 @@ Plugins y Flujos
 
 #### Settings Bank Accounts
 Metodos:
-  - [implementar] metodo que devuelva lista de NegotiationBankAccount registrados como setting
-  - [implementar] List<Object> getEarningWallets();
+  - [implementar] metodo que devuelva lista de `NegotiationBankAccount` registrados como setting
+  - [implementar] `List<Object> getEarningWallets();`
     - Esto depende del plugin MatchingEarnings
-  - List<BankAccountNumber> getAccounts(String walletPublicKey);
-  - [implementar] NegotiationBankAccountImpl newEmptyNegotiationBankAccount();
-  - [implementar] void createNewBankAccount(NegotiationBankAccount bankAccount); 
+  - `List<BankAccountNumber> getAccounts(String walletPublicKey);`
+  - [implementar] `NegotiationBankAccountImpl newEmptyNegotiationBankAccount();`
+  - [implementar] `void createNewBankAccount(NegotiationBankAccount bankAccount);`
     - El metodo esta tambien en Customer Broker Sale Negotiation
-  - [implementar] void deleteBankAccount(NegotiationBankAccount bankAccount); 
+  - [implementar] `void deleteBankAccount(NegotiationBankAccount bankAccount);`
     - El metodo esta tambien en Customer Broker Sale Negotiation
   
 Plugins yFlujos:
