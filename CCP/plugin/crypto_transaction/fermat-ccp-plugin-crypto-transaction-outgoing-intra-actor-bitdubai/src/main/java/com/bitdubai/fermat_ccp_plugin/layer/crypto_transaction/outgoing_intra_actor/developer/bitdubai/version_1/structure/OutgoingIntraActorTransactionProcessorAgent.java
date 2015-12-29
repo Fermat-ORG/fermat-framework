@@ -295,7 +295,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction,true);
+                            roolback(transaction,false);
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
@@ -319,6 +319,20 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (CouldNotSendMoneyException | CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
                         //If we cannot send the money at this moment then we'll keep trying.
                         reportUnexpectedException(e);
+
+                        //if I spend more than a day I canceled
+                        long sentDate = transaction.getTimestamp();
+                        long currentTime = System.currentTimeMillis();
+                        long dif = currentTime - sentDate;
+
+                        double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                        if((int) dias > 1)
+                        {
+                            dao.cancelTransaction(transaction);
+                            roolback(transaction,true);
+                        }
+
                     }
                 }
 
