@@ -5,9 +5,11 @@ import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/7/2015.
@@ -19,14 +21,14 @@ public interface CurrencyExchangeRateProviderManager extends FermatManager {
      *
      * @return a string containing the name of the provider
      */
-    String getProviderName();
+    String getProviderName() throws CantGetProviderInfoException;
 
     /**
      * Returns the ID of the provider
      *
      * @return an UUID containing the Id of the provider
      */
-    String getProviderId();
+    UUID getProviderId() throws CantGetProviderInfoException;
 
     /**
      * Returns the provider's supported currency pairs
