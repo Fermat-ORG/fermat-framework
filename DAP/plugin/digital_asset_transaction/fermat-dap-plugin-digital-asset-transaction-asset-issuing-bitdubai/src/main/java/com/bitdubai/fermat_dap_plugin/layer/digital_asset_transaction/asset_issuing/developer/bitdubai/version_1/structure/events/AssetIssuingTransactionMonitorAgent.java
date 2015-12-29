@@ -480,12 +480,23 @@ public class AssetIssuingTransactionMonitorAgent implements Agent, DealsWithLogg
 
         //I left working this method for testing porpoises
         private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetCryptoTransactionException {
-            //CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
-            //This mock is for testing porpoises
-            CryptoTransaction mockCryptoTransaction = new CryptoTransaction();
-            mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-            mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-            return mockCryptoTransaction;
+            List<CryptoTransaction> cryptoTransactions = bitcoinNetworkManager.getCryptoTransaction(transactionHash);
+
+            /**
+             * I will return the more mature crypto transaction
+             */
+            for (CryptoTransaction cryptoTransaction : cryptoTransactions){
+                if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE)
+                    return cryptoTransaction;
+
+                if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN)
+                    return cryptoTransaction;
+
+                if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_CRYPTO_NETWORK)
+                    return cryptoTransaction;
+            }
+            return null;
+
         }
 
         private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {

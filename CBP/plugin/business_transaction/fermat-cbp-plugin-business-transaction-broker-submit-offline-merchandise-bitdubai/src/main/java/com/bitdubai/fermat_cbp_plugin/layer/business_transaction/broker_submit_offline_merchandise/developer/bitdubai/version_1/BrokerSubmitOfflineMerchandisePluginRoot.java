@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -28,15 +29,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.event_handler.BrokerSubmitOfflineMerchandiseRecorderService;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeBrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -71,13 +77,19 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
     private TransactionTransmissionManager transactionTransmissionManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.BANK_MONEY_DESTOCK)
+    private BankMoneyDestockManager bankMoneyDestockManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CASH_MONEY_DESTOCK)
+    private CashMoneyDestockManager cashMoneyDestockManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
@@ -221,7 +233,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             this.brokerSubmitOfflineMerchandiseTransactionManager=new BrokerSubmitOfflineMerchandiseTransactionManager(
                     brokerSubmitOfflineMerchandiseBusinessTransactionDao,
                     this.customerBrokerContractSaleManager,
-                    this.customerBrokerSaleNegotiationManager
+                    this.customerBrokerSaleNegotiationManager,
+                    errorManager
             );
 
             /**
@@ -236,7 +249,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             /**
              * Init monitor Agent
              */
-            /*BrokerSubmitOnlineMerchandiseMonitorAgent brokerSubmitOnlineMerchandiseMonitorAgent=new BrokerSubmitOnlineMerchandiseMonitorAgent(
+            BrokerSubmitOfflineMerchandiseMonitorAgent brokerSubmitOfflineMerchandiseMonitorAgent=new BrokerSubmitOfflineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -245,19 +258,33 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
-                    outgoingIntraActorManager,
-                    cryptoMoneyDeStockManager);
-            brokerSubmitOnlineMerchandiseMonitorAgent.start();*/
+                    cashMoneyDestockManager,
+                    bankMoneyDestockManager
+                    );
+            brokerSubmitOfflineMerchandiseMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker submit offline merchandise starting");
-        } catch (Exception exception) {
-            //TODO: handle correctly this method exceptions
+        } catch (CantInitializeBrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
-                    CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
-                    null,
-                    null);
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the plugin database factory");
+        } catch (CantInitializeDatabaseException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the database plugin");
+        } catch (CantStartAgentException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the plugin monitor agent");
+        } catch (CantStartServiceException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the plugin recorder service");
         }
     }
 

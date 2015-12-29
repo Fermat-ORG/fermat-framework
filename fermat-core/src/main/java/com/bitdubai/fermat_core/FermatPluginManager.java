@@ -181,7 +181,7 @@ public final class FermatPluginManager {
             else
                 return (FermatManager) abstractPlugin;
 
-        } catch (CantListNeededReferencesException e) {
+        } catch (final CantListNeededReferencesException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
         } catch(CantAssignReferenceException   |
@@ -198,7 +198,7 @@ public final class FermatPluginManager {
         } catch (final CyclicalRelationshipFoundException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
-        } catch (Exception e) {
+        } catch (final Exception e) {
 
             throw new CantStartPluginException(
                     e,

@@ -42,7 +42,6 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      */
     private String alias;
 
-
     /**
      * Represent the name
      */

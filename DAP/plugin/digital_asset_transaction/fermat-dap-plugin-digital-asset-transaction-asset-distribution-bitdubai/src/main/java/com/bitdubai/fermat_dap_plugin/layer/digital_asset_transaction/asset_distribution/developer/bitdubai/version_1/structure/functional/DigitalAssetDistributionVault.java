@@ -44,7 +44,7 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         this.errorManager = errorManager;
     }
 
-    public void setDigitalAssetMetadataAssetIssuerWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, String actorToPublicKey, boolean credit) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
+    public void updateIssuerWalletBalance(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, String actorToPublicKey, boolean credit) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
         AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance = assetIssuerWallet.getBookBalance(balanceType);
         ActorAssetIssuer actorAssetIssuer = this.actorAssetIssuerManager.getActorAssetIssuer();

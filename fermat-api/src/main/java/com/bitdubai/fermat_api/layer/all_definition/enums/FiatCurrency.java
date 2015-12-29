@@ -75,6 +75,15 @@ public enum FiatCurrency implements Currency {
         }
     }
 
+    public static boolean codeExists(String code) {
+        try {
+            getByCode(code);
+            return true;
+        } catch(InvalidParameterException e) {
+            return false;
+        }
+    }
+
     @Override
     public String getCode() {
         return this.code;
