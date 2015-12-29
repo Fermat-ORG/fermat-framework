@@ -37,10 +37,18 @@
             app:typeface="ROBOTO_REGULAR"
             tools:ignore="HardcodedText" />
 
+        <ImageView
+            android:id="@+id/connection_state"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_home_friend"
+            android:visibility="gone" />
 
     </RelativeLayout>
-
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/connection_state_user"
         android:layout_width="match_parent"
         android:layout_height="18dp"
         android:background="#0072bb"

@@ -59,7 +59,7 @@ public class TransactionViewHolder extends ChildViewHolder {
         }else {
             txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
 
-            txt_notes.setText(cryptoWalletTransaction.getMemo());
+            txt_notes.setText((cryptoWalletTransaction.getMemo()==null) ? "No information" : cryptoWalletTransaction.getMemo());
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()));

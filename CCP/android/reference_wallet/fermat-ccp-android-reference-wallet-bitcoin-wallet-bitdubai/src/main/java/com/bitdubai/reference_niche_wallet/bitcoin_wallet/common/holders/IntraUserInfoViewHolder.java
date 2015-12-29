@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -16,6 +17,7 @@ public class IntraUserInfoViewHolder extends FermatViewHolder {
     public ImageView thumbnail;
     public FermatTextView name;
     public RelativeLayout container_data;
+    public CheckBox checkbox_connection;
     /**
      * Constructor
      *
@@ -26,6 +28,7 @@ public class IntraUserInfoViewHolder extends FermatViewHolder {
         thumbnail = (ImageView) itemView.findViewById(R.id.intra_user_image);
         name = (FermatTextView) itemView.findViewById(R.id.intra_user_alias);
         container_data = (RelativeLayout) itemView.findViewById(R.id.container_data);
+        checkbox_connection = (CheckBox) itemView.findViewById(R.id.checkbox_connection);
     }
 
     public ImageView getThumbnail() {
@@ -38,5 +41,9 @@ public class IntraUserInfoViewHolder extends FermatViewHolder {
 
     public RelativeLayout getContainer_data() {
         return container_data;
+    }
+
+    public CheckBox getCheckbox_connection() {
+        return checkbox_connection;
     }
 }

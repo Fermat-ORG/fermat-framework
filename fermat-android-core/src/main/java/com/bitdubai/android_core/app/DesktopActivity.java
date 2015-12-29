@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 /**
  * Created by mati on 2015.11.19..
@@ -53,6 +55,25 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
 
+        if(getIntent().getExtras()!=null) {
+            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
+                System.out.println("EJECUTANDO START ALL");
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
+                        } catch (CantStartAllRegisteredPlatformsException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                thread.start();
+
+
+            }
+        }
         try {
 
             loadUI();
