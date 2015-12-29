@@ -293,7 +293,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
-        return databaseTable.getRecords().isEmpty();
+        return !databaseTable.getRecords().isEmpty();
     }
 
     /**
