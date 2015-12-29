@@ -24,7 +24,7 @@ public class TransactionListAdapter extends FermatAdapter<BankMoneyTransactionRe
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.bw_account_list_item;
+        return R.layout.bw_transaction_list_item;
     }
 
     @Override
