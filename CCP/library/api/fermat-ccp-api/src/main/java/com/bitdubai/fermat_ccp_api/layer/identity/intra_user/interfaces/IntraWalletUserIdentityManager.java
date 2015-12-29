@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -37,18 +38,8 @@ public interface IntraWalletUserIdentityManager extends ModuleManager<FermatSett
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException if something goes wrong.
      */
     IntraWalletUserIdentity createNewIntraWalletUser(String alias ,String phrase      ,
-                                             byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+                                             byte[] profileImage, PhotoType photoType) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 
-
-    /**
-     *
-     * @param alias
-     * @param profileImage
-     * @return
-     * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException
-     */
-    IntraWalletUserIdentity createNewIntraWalletUser(String alias ,
-                                                     byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 
 
     /**

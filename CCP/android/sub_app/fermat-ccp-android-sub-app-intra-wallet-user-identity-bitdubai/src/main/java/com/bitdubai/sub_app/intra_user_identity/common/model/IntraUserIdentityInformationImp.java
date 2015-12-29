@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_identity.common.model;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 
 /**
@@ -12,12 +13,14 @@ public class IntraUserIdentityInformationImp implements IntraWalletUserIdentity 
     private String intraUserPhrase;
     private byte[] profileImage;
     private String publicKey;
+    private PhotoType photoType;
 
-    public IntraUserIdentityInformationImp(String intraUserName, String intraUserPhrase,String publicKey,byte[] profileImage) {
+    public IntraUserIdentityInformationImp(String intraUserName, String intraUserPhrase,String publicKey,byte[] profileImage,PhotoType photoType) {
         this.intraUserName = intraUserName;
         this.intraUserPhrase = intraUserPhrase;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
+        this.photoType = photoType;
     }
 
     @Override
@@ -45,6 +48,8 @@ public class IntraUserIdentityInformationImp implements IntraWalletUserIdentity 
     public Actors getActorType() {
         return null;
     }
+
+    public PhotoType getPhotoType() { return photoType; }
 
     @Override
     public void setNewProfileImage(byte[] newProfileImage)  {
