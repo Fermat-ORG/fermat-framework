@@ -464,15 +464,30 @@ public class OpenContractMonitorAgent implements
                 }
                 //TODO: look a better way to deal with this exceptions
             } catch (CantDeliverPendingTransactionsException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot deliver pending transaction");
             } catch (CantUpdateRecordException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the database record");
             } catch (CantUpdateCustomerBrokerContractPurchaseException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the purchase contract");
             } catch (CantConfirmTransactionException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot confirm transaction");
             } catch (CantUpdateCustomerBrokerContractSaleException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the sale contract");
             }
 
         }
