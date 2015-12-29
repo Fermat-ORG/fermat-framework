@@ -15,8 +15,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDatabaseFactory;
@@ -24,6 +31,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantDeleteIntraWalletCacheUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletCacheUserException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -159,6 +167,64 @@ public class IntraActorNetworkServiceDao {
         }
 
     }
+
+
+   /* private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
+
+        try {
+
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(profileImage);
+            file.persistToMedia();
+
+        } catch (CantPersistFileException e) {
+            throw new CantPersistProfileImageException(e, "Error persist file.", null);
+
+        } catch (CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(e, "Error creating file.", null);
+        } catch (Exception e) {
+
+            throw new CantPersistProfileImageException(FermatException.wrapException(e), "", "");
+        }
+    }
+
+
+    private byte[] getIntraUserProfileImagePrivateKey(final String publicKey) throws CantGetIntraWalletUserActorProfileImageException,FileNotFoundException {
+
+        try {
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.loadFromMedia();
+
+            return file.getContent();
+
+        } catch (CantLoadFileException e) {
+            throw new CantGetIntraWalletUserActorProfileImageException(e, "Error loaded file.", null);
+
+        } catch (FileNotFoundException | CantCreateFileException e) {
+
+            throw new FileNotFoundException(e, "", null);
+        } catch (Exception e) {
+
+            throw new CantGetIntraWalletUserActorProfileImageException(FermatException.wrapException(e), "", "");
+        }
+    }
+
+    private String buildProfileImageFileName(final String publicKey) {
+        return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
+    }*/
 
 
     private IntraUserInformation buildIntraUserRecord(DatabaseTableRecord record) throws InvalidParameterException {

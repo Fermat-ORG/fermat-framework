@@ -530,6 +530,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             connectionArrived = new AtomicBoolean(false);
 
+            // change message state to process again first time
+            reprocessWaitingMessage();
+
             //declare a schedule to process waiting request message
             Timer timer = new Timer();
 
@@ -982,7 +985,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
                 {
-                    if(record.getSentCount() > 5 )
+                    if(record.getSentCount() > 10 )
                     {
                         record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
                         //update state and process again later
