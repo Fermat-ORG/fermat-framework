@@ -176,7 +176,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                                 case META_DATA_TRANSMIT:
                                     if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
                                         System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
-                                        continue;
+                                        break;
                                     }
                                     System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
                                     digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
@@ -190,8 +190,8 @@ public class AssetReceptionMonitorAgent implements Agent {
                             }
                             assetTransmissionManager.confirmReception(transaction.getTransactionID());
                         }
-                        assetReceptionDao.updateEventStatus(assetReceptionDao.getPendingNetworkLayerEvents().get(0));
                     }
+                    assetReceptionDao.updateEventStatus(assetReceptionDao.getPendingNetworkLayerEvents().get(0));
                 }
 
                 if (assetReceptionDao.isAcceptedAssets()) {

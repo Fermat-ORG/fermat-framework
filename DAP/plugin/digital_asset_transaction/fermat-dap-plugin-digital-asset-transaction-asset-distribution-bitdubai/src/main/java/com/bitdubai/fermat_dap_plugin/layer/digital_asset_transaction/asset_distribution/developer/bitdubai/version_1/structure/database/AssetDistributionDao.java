@@ -178,7 +178,7 @@ public class AssetDistributionDao {
 
             databaseTableRecord = databaseTableRecords.get(0);
 
-            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode());
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, status.getCode());
             databaseTable.updateRecord(databaseTableRecord);
         } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
             throw new CantCheckAssetDistributionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
