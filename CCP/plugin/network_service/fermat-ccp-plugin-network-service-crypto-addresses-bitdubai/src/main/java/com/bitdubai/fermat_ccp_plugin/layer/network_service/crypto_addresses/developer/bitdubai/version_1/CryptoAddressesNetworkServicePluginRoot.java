@@ -1066,7 +1066,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 if(!record.getState().getCode().equals(ProtocolState.WAITING_RESPONSE.getCode()))
                 {
-                    if(record.getSentNumber() > 5 )
+                    if(record.getSentNumber() > 10)
                     {
                          //update state and process again later
                         cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.WAITING_RESPONSE);
