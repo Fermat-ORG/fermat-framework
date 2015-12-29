@@ -35,7 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:hint="City"
+                android:hint="@string/cbw_city"
                 android:textColor="@color/black"
                 android:textColorHint="#AAA"
                 android:textSize="16sp"
@@ -54,7 +54,7 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:hint="State/Province"
+                android:hint="@string/cbw_state_province"
                 android:textColorHint="#AAA"
                 android:textSize="16sp"/>
 
@@ -63,7 +63,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:hint="Zip/Postal Code"
+                android:hint="@string/cbw_zip_postal_code"
                 android:textColorHint="#AAA"
                 android:textSize="16sp"/>
         </LinearLayout>
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginBottom="16dp"
-            android:hint="Address line 1"
+            android:hint="@string/cbw_address_line_1"
             android:textColorHint="#AAA"
             android:textSize="16sp"/>
 
@@ -81,7 +81,7 @@
             android:id="@+id/cbw_address_line_2_edit_text"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:hint="Address line 2"
+            android:hint="@string/cbw_address_line_2"
             android:textColorHint="#AAA"
             android:textSize="16sp"/>
     </LinearLayout>
@@ -93,7 +93,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#42ba70"
-        android:text="Create"
+        android:text="@string/cbw_create"
         android:textAllCaps="true"
         android:textColor="@color/white"
         />
