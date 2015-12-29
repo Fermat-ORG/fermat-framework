@@ -86,7 +86,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 Please note that whenever we mention a full-time developer is equivalent to mention two part-time developers.
 
 <br>
-## Team Members
+## Teams presentations and members
 
 <br>
 ### <img src="https://cloud.githubusercontent.com/assets/13594347/10977876/17cab794-83c6-11e5-9f42-35d74b8a1583.png" width="300" height="300"/>
