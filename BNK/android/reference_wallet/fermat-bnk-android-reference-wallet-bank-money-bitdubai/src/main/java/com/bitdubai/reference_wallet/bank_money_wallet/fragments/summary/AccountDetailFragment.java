@@ -39,6 +39,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private String walletPublicKey= "banking_wallet";
     private BankAccountNumber bankAccountNumber;
 
+    com.getbase.floatingactionbutton.FloatingActionsMenu fab;
     CreateTransactionFragmentDialog dialog;
 
     private static final String TAG = "AccountListActivityFragment";
@@ -49,12 +50,6 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         return new AccountDetailFragment();
     }
 
-    /*@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.bw_account_detail_summary, container, false);
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +74,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
+        this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
         layout.findViewById(R.id.bw_fab_withdraw).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +93,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     private void launchCreateTransactionDialog(TransactionType transactionType){
         dialog = new CreateTransactionFragmentDialog(getActivity(), (BankMoneyWalletSession) appSession, getResources(), transactionType);
+        dialog.setOnDismissListener(this);
+        dialog.show();
     }
 
     private void configureToolbar() {
@@ -167,7 +165,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-
+        fab.collapse();
+        onRefresh();
     }
 
     @Override

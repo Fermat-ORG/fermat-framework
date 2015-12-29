@@ -197,6 +197,13 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             }*/
 
             //TODO: solicitar al module que haga las transacciones.
+
+            if (transactionType == TransactionType.DEBIT) {
+                System.out.println("DIALOG = "+TransactionType.DEBIT.getCode());
+            }
+            if (transactionType == TransactionType.CREDIT) {
+                System.out.println("DIALOG = "+TransactionType.DEBIT.getCode());
+            }
         } catch (Exception e) {
             bankMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
