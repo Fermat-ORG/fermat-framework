@@ -18,10 +18,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -29,8 +27,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.Crypto
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerIdentityWalletRelationshipRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerActorProfileImageException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantUpdateConnectionRegisterCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl;
@@ -106,18 +102,11 @@ public class CryptoCustomerActorDatabaseDao {
 
                 table.insertRecord(record);
 
-                persistPrivateKey(actorPrivateKey, actorPublicKey);
-
-                if(actorPhoto!=null) persistNewCryptoCustomerActorProfileImage(actorPublicKey, actorPhoto);
             }
 
         } catch (CantInsertRecordException e){
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
         } catch (CantUpdateConnectionRegisterCryptoCustomerActorException e){
-            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
-        } catch (CantPersistPrivateKeyException e){
-            throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
-        } catch (CantPersistProfileImageException e){
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), e, "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, insert database problems.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Crypto Customer Actor", "Cant create new Crypto Customer Actor, unknown failure.");
@@ -421,43 +410,6 @@ public class CryptoCustomerActorDatabaseDao {
             throw new CantRegisterCryptoCustomerActorException (em.getMessage(), em, "Crypto Customer Actor It Already Exists", "Cant load " + CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCryptoCustomerActorException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor It Already Exists", "unknown failure.");
-        }
-    }
-
-    private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
-        try {
-            PluginTextFile file = this.pluginFileSystem.createTextFile(
-                    pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName() + "/" + CryptoCustomerActorPluginRoot.ACTOR_CRYPTO_CUSTOMER_PRIVATE_KEYS_DIRECTORY_NAME,
-                    publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-            file.setContent(privateKey);
-            file.persistToMedia();
-        } catch (CantPersistFileException | CantCreateFileException e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
-        } catch (Exception e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
-        }
-    }
-
-    private void  persistNewCryptoCustomerActorProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
-        try {
-            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
-                DeviceDirectory.LOCAL_USERS.getName(),
-                CryptoCustomerActorPluginRoot.ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME + "_" + publicKey,
-                FilePrivacy.PRIVATE,
-                FileLifeSpan.PERMANENT
-            );
-            file.setContent(profileImage);
-            file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
-        } catch (CantCreateFileException e) {
-            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
-        } catch (Exception e) {
-            throw  new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ",FermatException.wrapException(e),"", "");
         }
     }
 
