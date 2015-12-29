@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -97,8 +98,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
 
-    //ProgressDialog dialog;
-
     /**
      * Create a new instance of this fragment
      *
@@ -163,17 +162,62 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
             recyclerView.setAdapter(adapter);
             adapter.setFermatListEventListener(this);
-
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
+            swipeRefresh.setRefreshing(true);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            /**
-             * Code to show cache data
-             */
+            SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+            if (!pref.getBoolean("isChecked", false)) {
+                if (moduleManager.getActiveIntraUserIdentity() != null) {
+                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                                intraUserSubAppSession,
+                                null,
+                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                        presentationIntraUserCommunityDialog.show();
+                        presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                showCriptoUsersCache();
+                            }
+                        });
+                    }
+                } else {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            showCriptoUsersCache();
+                        }
+                    });
+                }
+            } else {
+                showCriptoUsersCache();
+            }
+        } catch (Exception ex) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        return rootView;
+    }
+
+    private void showCriptoUsersCache() {
+        if (dataSet.isEmpty()) {
+            showEmpty(true, emptyView);
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
+        } else {
             adapter.changeDataSet(dataSet);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -182,24 +226,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                     onRefresh();
                 }
             }, 1500);
-            SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-            if (!pref.getBoolean("isChecked", false)) {
-                if (moduleManager.getActiveIntraUserIdentity() != null) {
-                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
-                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
-                        presentationIntraUserCommunityDialog.show();
-                    }
-                } else {
-                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
-                    presentationIntraUserCommunityDialog.show();
-                }
-            }
-
-        } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-        return rootView;
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -242,33 +269,31 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
+                    progressDialog.dismiss();
                     isRefreshing = false;
-                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
-                        progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
+
                             } else {
                                 showEmpty(false, emptyView);
                             }
                         }
-                    } else
+                    } else {
                         showEmpty(true, emptyView);
-
-
+                    }
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     progressDialog.dismiss();
                     isRefreshing = false;
-                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
@@ -443,14 +468,6 @@ Updates the count of notifications in the ActionBar.
         changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
 
 
-        /*ConnectDialog connectDialog = null;
-        try {
-            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
-            connectDialog.show();
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }*/
-
     }
 
     @Override
@@ -476,8 +493,6 @@ Updates the count of notifications in the ActionBar.
             updateNotificationsBadge(count);
         }
     }
-
-
 
 
 }
