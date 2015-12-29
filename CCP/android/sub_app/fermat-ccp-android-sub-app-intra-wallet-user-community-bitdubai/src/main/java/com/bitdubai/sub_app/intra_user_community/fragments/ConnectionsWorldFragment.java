@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -44,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
+import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -169,14 +169,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-            if (!pref.getBoolean("isChecked", false)) {
+            SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
+            if (pref.getBoolean("isChecked", true)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
                         PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
                                 intraUserSubAppSession,
                                 null,
-                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                                moduleManager,
+                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
                         presentationIntraUserCommunityDialog.show();
                         presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -184,17 +185,43 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                                 showCriptoUsersCache();
                             }
                         });
+                    } else {
+                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                                intraUserSubAppSession,
+                                null,
+                                moduleManager,
+                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                        presentationIntraUserCommunityDialog.show();
+                        presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                                if (isBackPressed != null) {
+                                    if (isBackPressed) {
+                                        getActivity().finish();
+                                    }
+                                } else
+                                    showCriptoUsersCache();
+                            }
+                        });
                     }
                 } else {
                     PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
                             intraUserSubAppSession,
                             null,
+                            moduleManager,
                             PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
                     presentationIntraUserCommunityDialog.show();
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            showCriptoUsersCache();
+                            Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                            if (isBackPressed != null) {
+                                if (isBackPressed) {
+                                    getActivity().onBackPressed();
+                                }
+                            } else
+                                showCriptoUsersCache();
                         }
                     });
                 }
@@ -223,7 +250,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    onRefresh();
+                    swipeRefresh.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                        }
+                    });
                 }
             }, 1500);
         }
@@ -254,10 +286,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             isRefreshing = true;
             if (swipeRefresh != null)
                 swipeRefresh.setRefreshing(true);
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -269,7 +297,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -292,7 +319,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -463,11 +489,15 @@ Updates the count of notifications in the ActionBar.
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-
-        appSession.setData(INTRA_USER_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
-
+        try {
+            if (moduleManager.getActiveIntraUserIdentity() != null) {
+                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
+                    appSession.setData(INTRA_USER_SELECTED, data);
+                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+            }
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
