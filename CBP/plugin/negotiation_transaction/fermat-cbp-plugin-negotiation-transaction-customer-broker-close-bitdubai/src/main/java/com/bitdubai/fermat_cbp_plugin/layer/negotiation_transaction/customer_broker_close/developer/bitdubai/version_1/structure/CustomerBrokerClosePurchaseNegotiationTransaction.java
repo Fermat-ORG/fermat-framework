@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantReceiveCryptoAddressNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
@@ -100,7 +101,6 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
         try {
 
-
             CustomerBrokerPurchaseNegotiation purchaseNegotiation;
 
             //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
@@ -134,7 +134,29 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
         }
     }
 
-    public void receiveCryptoAddress(){
+    public void receiveCryptoAddress(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantReceiveCryptoAddressNegotiationTransactionException{
 
+        try {
+
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation;
+
+            //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
+            negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
+                    this.cryptoAddressBookManager,
+                    this.cryptoVaultManager,
+                    this.walletManagerManager
+            );
+            purchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
+
+            //SAVE CRYPTO ADREESS OF THE CUSTOMER
+            this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(purchaseNegotiation);
+
+        } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
+            throw new CantReceiveCryptoAddressNegotiationTransactionException(e.getMessage(),e, CantReceiveCryptoAddressNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CRYPTO ADDRESS IN CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+//        } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e) {
+//            throw new CantReceiveCryptoAddressNegotiationTransactionException(e.getMessage(),e, CantReceiveCryptoAddressNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CRYPTO ADDRESS IN CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+        } catch (Exception e){
+            throw new CantReceiveCryptoAddressNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantReceiveCryptoAddressNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CRYPTO ADDRESS IN CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
+        }
     }
 }

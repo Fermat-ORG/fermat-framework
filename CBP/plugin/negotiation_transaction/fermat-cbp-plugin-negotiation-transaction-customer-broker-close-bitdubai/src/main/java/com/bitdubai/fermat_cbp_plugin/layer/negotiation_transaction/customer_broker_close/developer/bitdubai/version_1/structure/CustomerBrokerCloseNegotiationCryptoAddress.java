@@ -154,12 +154,12 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
         try {
 
             Clause newClause = new CustomerBrokerNegotiationClauseImpl(
-                    clause.getClauseId(),
-                    clause.getType(),
-                    value,
-                    clause.getStatus(),
-                    clause.getProposedBy(),
-                    clause.getIndexOrder()
+                clause.getClauseId(),
+                clause.getType(),
+                value,
+                clause.getStatus(),
+                clause.getProposedBy(),
+                clause.getIndexOrder()
             );
 
             return newClause;
@@ -196,12 +196,12 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
         try {
 
             CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
-                    Actors.CBP_CRYPTO_CUSTOMER,
-                    Actors.CBP_CRYPTO_BROKER,
-                    negotiation.getCustomerPublicKey(),
-                    negotiation.getBrokerPublicKey(),
-                    CryptoCurrency.BITCOIN,
-                    BlockchainNetworkType.TEST
+                Actors.CBP_CRYPTO_CUSTOMER,
+                Actors.CBP_CRYPTO_BROKER,
+                negotiation.getCustomerPublicKey(),
+                negotiation.getBrokerPublicKey(),
+                CryptoCurrency.BITCOIN,
+                BlockchainNetworkType.TEST
             );
 
             return request;
