@@ -38,8 +38,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -290,7 +288,7 @@ Updates the count of notifications in the ActionBar.
     public boolean onQueryTextSubmit(String alias) {
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchCryptoBroker(moduleManager.getSelectedActorIdentity());
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
             cryptoBrokerCommunitySearch.addAlias(alias);
 
         } catch(Exception e) {
@@ -330,7 +328,7 @@ Updates the count of notifications in the ActionBar.
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchCryptoBroker(moduleManager.getSelectedActorIdentity());
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
 
             dataSet.addAll(cryptoBrokerCommunitySearch.getResult());
             offset = dataSet.size();
