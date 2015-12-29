@@ -216,8 +216,6 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
-            //testDeveloperDatabase();
-
             /**
              * I will start the Monitor Agent at start up
              */
