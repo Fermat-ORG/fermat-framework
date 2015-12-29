@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -36,8 +38,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewPurchaseNegotiationTransaction;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewSaleNegotiationTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -71,6 +71,15 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION,         plugin = Plugins.CUSTOMER_BROKER_PURCHASE)
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION,         plugin = Plugins.CUSTOMER_BROKER_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
+    private NegotiationTransmissionManager negotiationTransmissionManager;
+
     /*Represent the dataBase*/
     private Database                                                        dataBase;
 
@@ -85,21 +94,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
     /*Represent Agent*/
     private CustomerBrokerNewAgent                                          customerBrokerNewAgent;
-
-    /*Represent Network Service Negotiation Transmission*/
-    private NegotiationTransmissionManager                                  negotiationTransmissionManager;
-
-    /*Represent the Transaction Negotiation Purchase*/
-    private CustomerBrokerNewPurchaseNegotiationTransaction                 customerBrokerNewPurchaseNegotiationTransaction;
-
-    /*Represent the Transaction Negotiation Sale*/
-    private CustomerBrokerNewSaleNegotiationTransaction                     customerBrokerNewSaleNegotiationTransaction;
-
-    /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager                        customerBrokerPurchaseNegotiationManager;
-
-    /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager                            customerBrokerSaleNegotiationManager;
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiation                               customerBrokerPurchaseNegotiation;
