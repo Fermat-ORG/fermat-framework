@@ -81,10 +81,13 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY)
     CashMoneyWalletManager cashMoneyWalletManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.BANK_MONEY_DESTOCK)
     BankMoneyDestockManager bankMoneyDestockManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CASH_MONEY_DESTOCK)
     CashMoneyDestockManager cashMoneyDestockManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CRYPTO_MONEY_DESTOCK)
     CryptoMoneyDestockManager cryptoMoneyDestockManager;
 
     public CryptoBrokerWalletModulePluginRoot() {
