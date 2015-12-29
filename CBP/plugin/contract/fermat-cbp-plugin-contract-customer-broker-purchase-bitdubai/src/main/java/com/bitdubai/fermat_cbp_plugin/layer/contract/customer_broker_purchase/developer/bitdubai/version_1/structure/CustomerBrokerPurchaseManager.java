@@ -54,7 +54,7 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerContractPurc
 
     @Override
     public void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantupdateCustomerBrokerContractPurchaseException {
-
+        this.updateContractNearExpirationDatetime(contractId, status);
     }
 
 }

@@ -289,7 +289,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                     businessTransactionRecord =customerOnlinePaymentBusinessTransactionDao.
                             getCustomerOnlinePaymentRecord(pendingContractHash);
                     outgoingCryptoTransactionId=intraActorCryptoTransactionManager.sendCrypto(
-                            businessTransactionRecord.getCryptoWalletPublicKey(),
+                            businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
