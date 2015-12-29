@@ -236,6 +236,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
         else
             trxId = transactionId;
 
+        /**
+         * I will verify that this txId doesn't already exists. If it does, then is an error
+         */
+        if (isDuplicateTransaction(trxId)){
+            StringBuilder output = new StringBuilder(("The specified TransactionId already exists."));
+            output.append(System.lineSeparator());
+            output.append(trxId.toString());
+            output.append(System.lineSeparator());
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, output.toString(), "Multiple calls from transaction plugin to send bitcoins using the same transaction");
+        }
+
+
+
         record.setUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, trxId);
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, hash);
         /**
@@ -263,6 +276,24 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
             throw new CantExecuteDatabaseOperationException (CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue.");
         }
+    }
+
+    /**
+     * will validate if the transaction ID already exists in the database
+     * @param trxId
+     * @return
+     */
+    private boolean isDuplicateTransaction(UUID trxId) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+        databaseTable.addUUIDFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, trxId, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        return databaseTable.getRecords().isEmpty();
     }
 
     /**
