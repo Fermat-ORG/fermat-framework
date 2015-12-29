@@ -517,9 +517,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication);
+            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
-            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication);
+            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication,this.pluginFileSystem, this.pluginId);
 
             intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
 
