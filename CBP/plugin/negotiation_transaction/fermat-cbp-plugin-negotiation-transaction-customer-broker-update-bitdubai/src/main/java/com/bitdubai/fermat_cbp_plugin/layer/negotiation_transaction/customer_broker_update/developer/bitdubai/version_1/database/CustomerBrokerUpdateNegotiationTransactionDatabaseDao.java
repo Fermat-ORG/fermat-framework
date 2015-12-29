@@ -71,13 +71,11 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
     }
 
     //CREATE NEW NEGOTIATION TRANSACTION
-    public void createRegisterCustomerBrokerUpdateNegotiationTranasction(Negotiation negotiation, NegotiationType negotiationType) throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
+    public void createCustomerBrokerUpdateNegotiationTransaction(UUID transactionId, Negotiation negotiation, NegotiationType negotiationType, NegotiationTransactionStatus statusTransaction) throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
 
-        UUID transactionId = UUID.randomUUID();
+
         Date time = new Date();
         long timestamp = time.getTime();
-        NegotiationTransactionStatus statusTransaction = NegotiationTransactionStatus.PENDING_SUBMIT;
-        NegotiationTransmissionState stateTransmission = NegotiationTransmissionState.PROCESSING_SEND;
         String negotiationXML = XMLParser.parseObject(negotiation);
 
         try {
@@ -90,8 +88,6 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_BROKER_COLUMN_NAME, negotiation.getBrokerPublicKey());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, negotiation.getCustomerPublicKey());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, statusTransaction.getCode());
-            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_NEGOTIATION_COLUMN_NAME, negotiation.getStatus().getCode());
-            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATE_TRANSMISSION_COLUMN_NAME, stateTransmission.getCode());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationType.getCode());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_XML_COLUMN_NAME, negotiationXML);
             record.setLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME, timestamp);
@@ -274,7 +270,31 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
         }
     }
 
-    /*PUBLIC METHOD*/
+    //GET EVENT TYPE OF TRANSACTION
+    public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            table.addStringFilter(
+                    CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records
+                    .get(0)
+                    .getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TYPE_COLUMN_NAME);
+            return value;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        }
+
+    }
+
+    //SAVE NEW EVENT
     public void saveNewEventTansaction(String eventType, String eventSource) throws CantSaveEventException {
         try {
 
@@ -295,6 +315,22 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
         } catch(Exception exception){
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+        }
+    }
+
+    //UPDATE STATUS THE EVENT
+    public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            table.addUUIDFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME, eventStatus.getCode());
+            table.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Updating parameter "+CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME,"");
         }
     }
 

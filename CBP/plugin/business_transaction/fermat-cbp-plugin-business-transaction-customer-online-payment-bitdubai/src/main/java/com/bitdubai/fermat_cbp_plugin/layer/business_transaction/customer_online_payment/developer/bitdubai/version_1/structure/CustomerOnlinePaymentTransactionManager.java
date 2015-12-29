@@ -1,13 +1,16 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.interfaces.CustomerOnlinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -20,6 +23,8 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmissio
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantGetCryptoAddressException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantGetCryptoAmountException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -43,6 +48,11 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
      * Represents the customerBrokerPurchaseNegotiationManager
      */
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    /**
+     * Represents the ErrorManager
+     */
+    ErrorManager errorManager;
 
     /**
      * Represents the TransactionTransmissionManager
@@ -162,6 +172,9 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
          * TODO: Get contract, persist in database the base information, leave the send crypto to monitor agent
          */
         try{
+            //Checking the arguments
+            Object[] arguments={walletPublicKey, contractHash};
+            ObjectChecker.checkArguments(arguments);
             //Get contract
             CustomerBrokerContractPurchase customerBrokerContractPurchase=
                     customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
@@ -203,6 +216,11 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     e,
                     "Sending online payment",
                     "Cannot get the Crypto Amount");
+        } catch (ObjectNotSetException e) {
+            throw new CantSendPaymentException(
+                    e,
+                    "Sending online payment",
+                    "An argument is null");
         }
 
     }
@@ -210,8 +228,18 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
     @Override
     public ContractTransactionStatus getContractTransactionStatus(String contractHash)
             throws UnexpectedResultReturnedFromDatabaseException {
-        return this.customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(
-                contractHash);
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
+            return this.customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(
+                    contractHash);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    "Cannot check a null contractHash/Id");
+        }
     }
 
     //TODO: define if this is necessary in this plugin

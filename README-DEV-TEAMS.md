@@ -89,7 +89,10 @@ Please note that whenever we mention a full-time developer is equivalent to ment
 ## Team Members
 
 <br>
-### <img src="https://cloud.githubusercontent.com/assets/13594347/10977876/17cab794-83c6-11e5-9f42-35d74b8a1583.png" width="300" height="300"/>
+### Thunder Team:
+-----------------------------------
+<br>
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/c538d5f1256c25d5e8c3ebdd19dd154d6c8a54e1/Logotype/FermatTeams/logo_thunder_team.jpg "Thunder Team Logo"")
 
 More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and deailing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
 
@@ -101,8 +104,8 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
-    
-    
+
+
 * Nerio Enrique Indriago Ortega <br/>
 ---
       Email:   nerioindriago@gmail.com
@@ -123,6 +126,47 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 
 
 <br>
+
+### Coin Diggers Team:
+-----------------------------------
+<br>
+### <img src="https://cloud.githubusercontent.com/assets/13594347/11161999/6d16609a-8a60-11e5-8fa2-e4b9d2f6c080.jpg" width="600" height="300"/>
+
+We are passionate geeks , always on the edge of technology and a little more.
+With the only phrase "Keep moving forward" we just walk through Fermat.
+We are in charge of Android-core,Fermat-Core, Android framework development and platforms like CCP, CCM among others.
+
+#### CoinDiggers Team Members:
+
+
+* Matias Furszyfer [Team Leader - Core Developer] <br/>
+---
+    Email:   matiasfurszyfer@gmail.com
+    Skype:   matias.furszyfer
+    Github:  https://github.com/furszy
+
+
+*  Natalia Cortez <br/>
+---
+      Email:   nattyco@gmail.com
+      Skype:   nattyco
+      Github:  https://github.com/nattyco
+
+* Joaquin Carrasquero <br/>
+---
+      Email:   jc.juaco@gmail.com
+      Skype:   j-u-a-c-o@hotmail.com
+      Github:  https://github.com/Exilum
+
+* Jose Manuel de Sousa<br/>
+---
+      Email:   -----
+      Skype:   -----
+      Github:  https://github.com/josemanueldsds
+
+
+<br>
+
 ### Disruptor Team:
 -----------------------------------
 
@@ -161,8 +205,8 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
     Github:  https://github.com/darkestpriest
-    
-    
+
+
 * **Gabriel Araujo**<br/>
 ---
       Email:   gabe_512@hotmail.com
@@ -174,7 +218,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Email:   miguel_payarez@hotmail.com
     Skype:   payarez
     Github:  https://github.com/lostwood
-    
+
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
@@ -220,8 +264,8 @@ In each platform mentioned, we are involved in the development of Network Servic
     Email:   laion.cj91@gmail.com
     Skype:   leon.acosta
     Github:  https://github.com/lnacosta
-    
-    
+
+
 * **Patricio Gesualdi**<br/>
 ---
       Email:   pmgesualdi@hotmail.com
