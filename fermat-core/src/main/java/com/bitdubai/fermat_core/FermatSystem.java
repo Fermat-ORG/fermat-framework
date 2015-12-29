@@ -295,34 +295,16 @@ public final class FermatSystem {
         for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
             try {
                 fermatAddonManager.startAddonAndReferences(addon.getValue());
-            } catch (final CantStartAddonException e) {
-                System.err.println(e.toString());
-                // throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting add-ons or plug-ins during the start of all platforms.");
             } catch (Exception e) {
                 System.err.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Error.");
             }
         }
         for(ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
             try {
-                fermatPluginManager.startPluginAndReferences(plugin.getValue());
-            } catch (final CantStartPluginException e) {
-                System.out.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting plug-ins during the start of all platforms.");
+                fermatPluginManager.startPluginAndReferences(plugin.getKey());
             } catch (Exception e) {
                 System.out.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Error.");
             }
-        }
-
-        try {
-            FermatManager developerModule = startAndGetPluginVersion(new PluginVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.SUB_APP_MODULE, Plugins.DEVELOPER, Developers.BITDUBAI, new Version()));
-
-//            ((DealsWithDatabaseManager) developerModule).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
-//            ((DealsWithLogManagers) developerModule).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
-        } catch (Exception e) {
-            System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
-            System.out.println(e.toString());
         }
     }
 }
