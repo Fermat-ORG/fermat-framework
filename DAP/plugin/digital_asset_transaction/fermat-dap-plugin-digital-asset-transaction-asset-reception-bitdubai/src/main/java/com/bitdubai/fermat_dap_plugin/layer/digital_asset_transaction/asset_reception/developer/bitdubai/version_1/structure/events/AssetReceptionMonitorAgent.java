@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rec
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -11,14 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -29,8 +23,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -43,7 +35,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exception
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
@@ -52,13 +43,10 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rece
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptor;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -66,95 +54,51 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/10/15.
  */
-public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetReceptionMonitorAgent implements Agent {
 
-    Database database;
-    String userPublicKey;
-    MonitorAgent monitorAgent;
-    Thread agentThread;
-    LogManager logManager;
-    EventManager eventManager;
-    ErrorManager errorManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
-    UUID pluginId;
-    DigitalAssetReceptionVault digitalAssetReceptionVault;
-    DigitalAssetReceptor digitalAssetReceptor;
-    AssetTransmissionNetworkServiceManager assetTransmissionManager;
-    BitcoinNetworkManager bitcoinNetworkManager;
-    ActorAssetUserManager actorAssetUserManager;
-    ActorAssetIssuerManager actorAssetIssuerManager;
+    private MonitorAgent monitorAgent;
+    private Thread agentThread;
+    private LogManager logManager;
+    private ErrorManager errorManager;
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
+    private DigitalAssetReceptionVault digitalAssetReceptionVault;
+    private DigitalAssetReceptor digitalAssetReceptor;
+    private AssetTransmissionNetworkServiceManager assetTransmissionManager;
+    private BitcoinNetworkManager bitcoinNetworkManager;
+    private ActorAssetUserManager actorAssetUserManager;
 
-    public AssetReceptionMonitorAgent(EventManager eventManager,
-                                      PluginDatabaseSystem pluginDatabaseSystem,
+    public AssetReceptionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                       ErrorManager errorManager,
                                       UUID pluginId,
-                                      String userPublicKey) {
-        this.eventManager = eventManager;
+                                      LogManager logManager,
+                                      BitcoinNetworkManager bitcoinNetworkManager,
+                                      AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
+                                      ActorAssetUserManager actorAssetUserManager,
+                                      DigitalAssetReceptor digitalAssetReceptor,
+                                      DigitalAssetReceptionVault digitalAssetReceptionVault) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.userPublicKey = userPublicKey;
-    }
-
-    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
-        if (bitcoinNetworkManager == null) {
-            throw new CantSetObjectException("bitcoinNetworkManager is null");
-        }
+        this.logManager = logManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
-    }
-
-    public void setDigitalAssetDistributionVault(DigitalAssetReceptionVault digitalAssetReceptionVault) throws CantSetObjectException {
-        if (digitalAssetReceptionVault == null) {
-            throw new CantSetObjectException("digitalAssetReceptionVault is null");
-        }
-        this.digitalAssetReceptionVault = digitalAssetReceptionVault;
-    }
-
-    public void setDigitalAssetReceptor(DigitalAssetReceptor digitalAssetReceptor) throws CantSetObjectException {
-        if (digitalAssetReceptor == null) {
-            throw new CantSetObjectException("digitalAssetReceptor is null");
-        }
-        this.digitalAssetReceptor = digitalAssetReceptor;
-    }
-
-    public void setAssetTransmissionManager(AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException {
-        if (assetTransmissionManager == null) {
-            throw new CantSetObjectException("assetTransmissionManager is null");
-        }
-        this.assetTransmissionManager = assetTransmissionManager;
-    }
-
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        if (assetTransmissionManager == null) {
-            throw new CantSetObjectException("actorAssetUserManager is null");
-        }
+        this.assetTransmissionManager = assetTransmissionNetworkServiceManager;
         this.actorAssetUserManager = actorAssetUserManager;
-    }
-
-    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        if (actorAssetIssuerManager == null) {
-            throw new CantSetObjectException("actorAssetIssuerManager is null");
-        }
-        this.actorAssetIssuerManager = actorAssetIssuerManager;
+        this.digitalAssetReceptor = digitalAssetReceptor;
+        this.digitalAssetReceptionVault = digitalAssetReceptionVault;
     }
 
     @Override
     public void start() throws CantStartAgentException {
-
-        monitorAgent = new MonitorAgent();
-
-        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
-
         try {
-            this.monitorAgent.Initialize();
-        } catch (CantInitializeAssetMonitorAgentException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            monitorAgent = new MonitorAgent();
+            this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            this.monitorAgent.setErrorManager(this.errorManager);
+            this.agentThread = new Thread(monitorAgent);
+            this.agentThread.start();
+        } catch (Exception e) {
+            throw new CantStartAgentException(e, null, null);
         }
-
-        this.agentThread = new Thread(monitorAgent);
-        this.agentThread.start();
-
     }
 
     @Override
@@ -162,30 +106,6 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
         this.agentThread.interrupt();
     }
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
 
     private class MonitorAgent implements AssetIssuingTransactionNotificationAgent, DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
 
@@ -235,48 +155,38 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
         }
 
-        public void Initialize() throws CantInitializeAssetMonitorAgentException {
-            try {
-
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
-            } catch (DatabaseNotFoundException databaseNotFoundException) {
-                AssetReceptionDatabaseFactory assetIssuingTransactionDatabaseFactory = new AssetReceptionDatabaseFactory(this.pluginDatabaseSystem);
-                try {
-                    database = assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, userPublicKey);
-                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                    throw new CantInitializeAssetMonitorAgentException(cantCreateDatabaseException, "Initialize Monitor Agent - trying to create the plugin database", "Please, check the cause");
-                }
-            } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantInitializeAssetMonitorAgentException(exception, "Initialize Monitor Agent - trying to open the plugin database", "Please, check the cause");
-            }
-        }
-
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetReceptionProgressException {
             try {
                 assetReceptionDao = new AssetReceptionDao(pluginDatabaseSystem, pluginId);
                 if (assetReceptionDao.isPendingNetworkLayerEvents()) {
                     System.out.println("ASSET RECEPTION is network layer pending events");
-                    List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
-                    System.out.println("ASSET RECEPTION is " + pendingEventsList.size() + " events");
-                    for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
+                    List<Transaction<DigitalAssetMetadataTransaction>> pendingTransactions = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
+                    System.out.println("ASSET RECEPTION is " + pendingTransactions.size() + " events");
+                    for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingTransactions) {
                         if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
                             DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
                             System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
                             DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
                             System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
-                            if (digitalAssetMetadataTransactionType.getCode().equals(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT.getCode())) {
-                                String senderId = digitalAssetMetadataTransaction.getSenderId();
-                                System.out.println("ASSET RECEPTION Digital Asset Metadata Sender Id: " + senderId);
-                                DigitalAssetMetadata digitalAssetMetadataReceived = digitalAssetMetadataTransaction.getDigitalAssetMetadata();
-                                String genesisTransaction = digitalAssetMetadataReceived.getGenesisTransaction();
-                                if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
-                                    System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
-                                    continue;
-                                }
-                                System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
-                                digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
+                            String senderId = digitalAssetMetadataTransaction.getSenderId();
+                            System.out.println("ASSET RECEPTION Digital Asset Metadata Sender Id: " + senderId);
+                            DigitalAssetMetadata digitalAssetMetadataReceived = digitalAssetMetadataTransaction.getDigitalAssetMetadata();
+                            String genesisTransaction = digitalAssetMetadataReceived.getGenesisTransaction();
+                            switch (digitalAssetMetadataTransactionType) {
+                                case META_DATA_TRANSMIT:
+                                    if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
+                                        System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
+                                        continue;
+                                    }
+                                    System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
+                                    digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
+                                    break;
+                                case TRANSACTION_STATUS_UPDATE:
+                                    assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CANCELLED, genesisTransaction);
+                                    break;
+                                default:
+                                    //wut?
+                                    break;
                             }
                             assetTransmissionManager.confirmReception(transaction.getTransactionID());
                         }
@@ -449,17 +359,6 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
             }
         }
 
-        private ActorAssetIssuer getActorAssetIssuer(String senderId) throws CantGetAssetIssuerActorsException {
-            List<ActorAssetIssuer> actorAssetIssuerList = actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
-            for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuerList) {
-                if (actorAssetIssuer.getActorPublicKey().equals(senderId)) {
-                    return actorAssetIssuer;
-                }
-            }
-            throw new CantGetAssetIssuerActorsException(CantGetAssetIssuerActorsException.DEFAULT_MESSAGE, null,
-                    "Getting the ActorAssetUser", "Cannot find sender id\n" + senderId + "\nfrom AssetIssuerActors registered");
-        }
-
         private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
             boolean isPending = assetReceptionDao.isPendingTransactions(cryptoStatus);
             return isPending;
@@ -476,9 +375,9 @@ public class AssetReceptionMonitorAgent implements Agent, DealsWithLogger, Deals
         private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
             /**
              * I will get the genesis transaction from the CryptoNetwork
-              */
+             */
             List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
-            if (transactionListFromCryptoNetwork.size() == 0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ){
+            if (transactionListFromCryptoNetwork.size() == 0) {
                 /**
                  * If I didn't get it, I will get the child of the genesis Transaction
                  */

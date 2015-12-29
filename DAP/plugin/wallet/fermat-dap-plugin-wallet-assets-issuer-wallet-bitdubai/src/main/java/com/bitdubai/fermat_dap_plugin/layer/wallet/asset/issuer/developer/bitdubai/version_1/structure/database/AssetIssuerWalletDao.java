@@ -137,8 +137,6 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     public void addDebit(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
             System.out.println("Agregando Debito-----------------------------------------------------------");
-            if (isTransactionInTable(assetIssuerWalletTransactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
-                throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
@@ -151,7 +149,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-quantityBookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetIssuerWalletTransactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetIssuerTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetIssuerTransactionException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -165,8 +163,6 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
 
         try {
             System.out.println("Agregando Credito-----------------------------------------------------------");
-            if (isTransactionInTable(assetIssuerWalletTransactionRecord.getIdTransaction(), TransactionType.CREDIT, balanceType))
-                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
@@ -179,7 +175,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(quantityBookAmount, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetIssuerWalletTransactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
-        } catch (CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteAssetIssuerTransactionException exception) {
+        } catch (CantGetBalanceRecordException | CantExecuteAssetIssuerTransactionException exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
