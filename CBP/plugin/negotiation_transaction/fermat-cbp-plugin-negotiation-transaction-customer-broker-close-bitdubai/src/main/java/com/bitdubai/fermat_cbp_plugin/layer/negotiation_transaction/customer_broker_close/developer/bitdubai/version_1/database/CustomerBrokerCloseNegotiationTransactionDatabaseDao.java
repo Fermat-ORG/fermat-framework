@@ -290,7 +290,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
 
     }
 
-    /*PUBLIC METHOD*/
+    //SAVE NEW EVENT
     public void saveNewEventTansaction(String eventType, String eventSource) throws CantSaveEventException {
         try {
 
@@ -314,6 +314,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
         }
     }
 
+    //UPDATE STATUS THE EVENT
     public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
         try{
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
@@ -328,7 +329,6 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             throw new UnexpectedResultReturnedFromDatabaseException(exception,"Updating parameter "+CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_STATUS_COLUMN_NAME,"");
         }
     }
-    /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/
     private boolean transactionExists(UUID transactionId) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException {
