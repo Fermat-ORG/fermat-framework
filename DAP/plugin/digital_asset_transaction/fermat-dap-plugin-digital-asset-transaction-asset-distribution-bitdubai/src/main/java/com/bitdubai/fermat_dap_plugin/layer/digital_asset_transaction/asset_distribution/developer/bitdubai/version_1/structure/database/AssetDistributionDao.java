@@ -46,7 +46,6 @@ import java.util.UUID;
  */
 public class AssetDistributionDao {
 
-    private final ActorAssetUserManager actorAssetUserManager;
     private final DigitalAssetDistributionVault digitalAssetDistributionVault;
     //VARIABLE DECLARATION
     private UUID pluginId;
@@ -57,11 +56,9 @@ public class AssetDistributionDao {
     //CONSTRUCTORS
     public AssetDistributionDao(PluginDatabaseSystem pluginDatabaseSystem,
                                 UUID pluginId,
-                                DigitalAssetDistributionVault digitalAssetDistributionVault,
-                                ActorAssetUserManager actorAssetUserManager) throws CantExecuteDatabaseOperationException {
+                                DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantExecuteDatabaseOperationException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.actorAssetUserManager = actorAssetUserManager;
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
         database = openDatabase();
     }
@@ -556,7 +553,7 @@ public class AssetDistributionDao {
             DeliverRecord recordToReturn = new DeliverRecord();
             recordToReturn.setTransactionId(transactionId);
             recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME));
-            recordToReturn.setActorAssetUser(actorAssetUserManager.getActorByPublicKey(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME)));
+            recordToReturn.setActorAssetUserPublicKey(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME));
             recordToReturn.setDigitalAssetMetadata(digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME)));
             recordToReturn.setStartTime(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME)));
             recordToReturn.setTimeOut(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME)));
