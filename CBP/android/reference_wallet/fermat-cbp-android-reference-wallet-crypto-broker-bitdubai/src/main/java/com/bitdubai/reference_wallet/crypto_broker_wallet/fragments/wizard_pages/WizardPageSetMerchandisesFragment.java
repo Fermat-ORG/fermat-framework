@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by nelson on 22/12/15.
@@ -183,7 +185,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
                 public void onItemSelected(InstalledWallet selectedItem) {
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
 
-                        if (!stockWallets.contains(selectedItem)) {
+                        if (!containWallet(selectedItem)) {
                             switchToEmptyView();
                             stockWallets.add(selectedItem);
                             adapter.changeDataSet(stockWallets);
@@ -211,31 +213,44 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
     }
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
-        List<String> accounts = walletManager.getBrokerBankAccounts();
+        try {
+            List<BankAccountNumber> accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
 
-        // TODO cambiar el tipo a BankAccountNumber cuando Franklin me pase el metodo
-        SimpleListDialogFragment<String> accountsDialog = new SimpleListDialogFragment<>();
-        accountsDialog.configure("Select an Account", accounts);
-        accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
-            @Override
-            public void onItemSelected(String selectedAccount) {
+            SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
+            accountsDialog.configure("Select an Account", accounts);
+            accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
+                @Override
+                public void onItemSelected(BankAccountNumber selectedAccount) {
 
-                FiatCurrency currency = FiatCurrency.US_DOLLAR; // TODO cambiar con lo de franklin
-                String account = "Esto es una cuenta"; // TODO cambiar con lo de franklin
-                bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
-                bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
+                    FiatCurrency currency = selectedAccount.getCurrencyType();
+                    String account = selectedAccount.getAccount();
 
-                if (!stockWallets.contains(selectedWallet)) {
-                    switchToEmptyView();
-                    stockWallets.add(selectedWallet);
+                    bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
+                    bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
+
+                    if (!containWallet(selectedWallet)) {
+                        switchToEmptyView();
+                        stockWallets.add(selectedWallet);
+                        adapter.changeDataSet(stockWallets);
+                    }
+
                     adapter.changeDataSet(stockWallets);
                 }
+            });
 
-                adapter.changeDataSet(stockWallets);
+            accountsDialog.show(getFragmentManager(), "accountsDialog");
+
+        } catch (FermatException ex) {
+            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
             }
-        });
-
-        accountsDialog.show(getFragmentManager(), "accountsDialog");
+        }
     }
 
     private void saveSettingAndGoNextStep() {
@@ -260,7 +275,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
 
                 CryptoBrokerWalletAssociatedSetting associatedSetting = walletManager.newEmptyCryptoBrokerWalletAssociatedSetting();
                 associatedSetting.setBrokerPublicKey(appSession.getAppPublicKey());
-                associatedSetting.setId(null);
+                associatedSetting.setId(UUID.randomUUID());
                 associatedSetting.setWalletPublicKey(walletPublicKey);
                 associatedSetting.setPlatform(platform);
 
@@ -274,14 +289,13 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
                     associatedSetting.setMerchandise(wallet.getCryptoCurrency());
 
                 } else {
+                    FiatCurrency cashCurrency = walletManager.getCashCurrency(walletPublicKey);
+                    associatedSetting.setMerchandise(cashCurrency);
                     associatedSetting.setCurrencyType(CurrencyType.CASH_ON_HAND_MONEY);
-                    // TODO usar metodo que va a crear franklin para el currency de cash
                 }
 
                 walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
             }
-
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS, appSession.getAppPublicKey());
 
         } catch (FermatException ex) {
             Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
@@ -294,6 +308,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
                         ex);
             }
         }
+
+        //TODO: agregar esta instruccion en el try/catch cuando funcione el saveSettingSpread
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS, appSession.getAppPublicKey());
     }
 
     @Override
@@ -312,5 +329,20 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
             emptyView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private boolean containWallet(InstalledWallet selectedWallet) {
+        if (stockWallets.isEmpty())
+            return false;
+
+        for (InstalledWallet wallet : stockWallets) {
+            String walletPublicKey = wallet.getWalletPublicKey();
+            String selectedWalletPublicKey = selectedWallet.getWalletPublicKey();
+
+            if (walletPublicKey.equals(selectedWalletPublicKey))
+                return true;
+        }
+
+        return false;
     }
 }
