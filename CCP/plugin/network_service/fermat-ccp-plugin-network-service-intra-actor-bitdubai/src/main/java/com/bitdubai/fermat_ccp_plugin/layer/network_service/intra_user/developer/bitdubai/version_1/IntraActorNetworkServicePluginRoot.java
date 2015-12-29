@@ -530,6 +530,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             connectionArrived = new AtomicBoolean(false);
 
+            // change message state to process again first time
+            reprocessWaitingMessage();
+
             //declare a schedule to process waiting request message
             Timer timer = new Timer();
 

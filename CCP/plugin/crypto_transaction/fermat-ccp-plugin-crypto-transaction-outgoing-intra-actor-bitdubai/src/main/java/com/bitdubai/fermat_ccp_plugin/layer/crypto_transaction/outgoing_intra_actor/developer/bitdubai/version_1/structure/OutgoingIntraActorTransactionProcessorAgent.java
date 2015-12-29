@@ -232,7 +232,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                             System.out.print("Debit new transaction.");
                         } else {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction);
+                            roolback(transaction,false);
                             // TODO: Lanzar un evento de fondos insuficientes
                             System.out.print("fondos insuficientes");
                         }
@@ -295,7 +295,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction);
+                            roolback(transaction,true);
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
@@ -306,7 +306,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (InvalidSendToAddressException e) {
                         try {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction);
+                            roolback(transaction,true);
                             reportUnexpectedException(e);
                         } catch (OutgoingIntraActorCantCancelTransactionException e1) {
                             reportUnexpectedException(e1);
@@ -384,13 +384,15 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
          *
          * @param transaction
          */
-        private void roolback(OutgoingIntraActorTransactionWrapper transaction) {
+        private void roolback(OutgoingIntraActorTransactionWrapper transaction, boolean credit) {
             try {
                 switch (transaction.getReferenceWallet()) {
                     case BASIC_WALLET_BITCOIN_WALLET:
                         //TODO: hay que disparar un evento para que la wallet avise que la transaccion no se completo y eliminarla
                         BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
+                       if(credit)
+                            bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
+
                         bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
                         //if the transaction is a payment request, rollback it state too
                         notificateRollbackToGUI(transaction);

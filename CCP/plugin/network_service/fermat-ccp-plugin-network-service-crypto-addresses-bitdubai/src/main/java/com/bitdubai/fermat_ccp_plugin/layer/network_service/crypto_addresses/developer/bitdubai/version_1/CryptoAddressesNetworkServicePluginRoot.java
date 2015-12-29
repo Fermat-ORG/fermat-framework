@@ -249,6 +249,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
+            // change message state to process again first time
+            reprocessWaitingMessage();
 
             //declare a schedule to process waiting request message
             Timer timer = new Timer();
