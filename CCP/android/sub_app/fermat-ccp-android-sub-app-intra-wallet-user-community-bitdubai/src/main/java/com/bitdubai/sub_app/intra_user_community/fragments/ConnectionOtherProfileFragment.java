@@ -156,6 +156,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
