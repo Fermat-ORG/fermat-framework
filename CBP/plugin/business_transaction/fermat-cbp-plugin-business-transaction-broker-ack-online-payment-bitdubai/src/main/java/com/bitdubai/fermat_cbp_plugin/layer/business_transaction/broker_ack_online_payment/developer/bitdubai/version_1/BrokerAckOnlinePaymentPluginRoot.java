@@ -235,7 +235,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                     new BrokerAckOnlinePaymentRecorderService(
                             brokerAckOnlinePaymentBusinessTransactionDao,
                             eventManager);
-            brokerAckOnlinePaymentRecorderService.start();
+//            brokerAckOnlinePaymentRecorderService.start();
 
             /**
              * Initialize plugin manager
