@@ -55,9 +55,6 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     private EventManager eventManager;
 
-    /**
-     * Represent the wsCommunicationsCloudClientConnection
-     */
     private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
     /*

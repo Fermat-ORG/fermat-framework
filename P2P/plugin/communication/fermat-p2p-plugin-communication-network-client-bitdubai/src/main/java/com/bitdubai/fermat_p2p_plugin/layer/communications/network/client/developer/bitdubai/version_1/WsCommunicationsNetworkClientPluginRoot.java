@@ -9,8 +9,12 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -27,9 +31,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.CommunicationsNetworkClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.util.HarcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -38,6 +44,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 
 import java.lang.System;
+import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -53,24 +60,29 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
 
 
     /**
-     * ErrorManager references definition.
+     * Addons References definition.
      */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    /**
-     * EventManager references definition.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     /**
      * PluginFileSystem references definition.
      */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem        ;
 
     /**
      * PluginDatabaseSystem references definition.
      */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
@@ -92,10 +104,12 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
      */
     private NetworkClientP2PDatabaseFactory networkClientP2PDatabaseFactory;
 
-    /*
-    * Represent the Device Location
+    /**
+     * Represent the SERVER_IP by default conexion to request nodes list
      */
-    private LocationManager locationManager;
+    public static final String SERVER_IP = HarcodeConstants.SERVER_IP_DEFAULT;
+
+    private CommunicationsNetworkClientConnection communicationsNetworkClientConnection;
 
     @Override
     public void setId(UUID pluginId) {
@@ -150,6 +164,9 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
              */
             initializeDb();
 
+            URI uri = new URI(HarcodeConstants.WS_PROTOCOL + WsCommunicationsNetworkClientPluginRoot.SERVER_IP + ":" + HarcodeConstants.DEFAULT_PORT);
+            communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(uri,eventManager,locationManager, identity);
+            communicationsNetworkClientConnection.start();
 
 
         }catch (Exception exception){
