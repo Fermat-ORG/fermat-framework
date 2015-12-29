@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -35,12 +34,11 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     private String publicKey;
     private byte[] image;
     private String privateKey;
-    private PhotoType photoType;
 
     /**
      * Constructor
      */
-    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image,PhotoType photoType, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.alias = alias;
         this.phrase = phrase;
         this.publicKey = publicKey;
@@ -48,7 +46,6 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
         this.privateKey = privateKey;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
-        this.photoType = photoType;
     }
 
     @Override
@@ -75,9 +72,6 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     public Actors getActorType() {
         return Actors.INTRA_USER;
     }
-
-    public PhotoType getPhotoType() {return this.photoType; }
-
 
     @Override
     public String createMessageSignature(String message){ //throws CantSignIntraWalletUserMessageException {
@@ -148,10 +142,6 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
 
     }
 
-    public void setPhotoType(PhotoType photoType) {
-        this.photoType = photoType;
-    }
-
     /**
      * DealsWithPluginIdentity Interface implementation.
      */
@@ -172,4 +162,3 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
                 '}';
     }
 }
-

@@ -23,7 +23,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -147,20 +146,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                 if (intraUserInformation.getProfileImage().length > 0) {
                     bitmap = BitmapFactory.decodeByteArray(intraUserInformation.getProfileImage(), 0, intraUserInformation.getProfileImage().length);
                 } else {
-                  //  if (intraUserInformation.getPhotoType().getCode().equals(PhotoType.DEFAULT_MALE))
                     bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-//                    else
-//                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.drawable.profile_standard_female);
                 }
                 bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             } else {
                 Bitmap bitmap;
-              //  if (intraUserInformation.getPhotoType().getCode().equals(PhotoType.DEFAULT_MALE))
-                //    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-//                else
-//                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.drawable.profile_standard_female);
-
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));

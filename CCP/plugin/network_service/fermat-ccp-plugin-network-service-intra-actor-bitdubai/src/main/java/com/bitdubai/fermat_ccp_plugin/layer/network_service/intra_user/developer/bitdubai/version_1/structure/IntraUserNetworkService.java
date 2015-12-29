@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
 /**
@@ -15,14 +14,12 @@ public class IntraUserNetworkService  implements IntraUserInformation {
     private String name;
 
     private String phrase;
-    private PhotoType photoType;
 
-    public IntraUserNetworkService(String publicKey,byte[] profileImage,String name, String phrase, PhotoType photoType){
+    public IntraUserNetworkService(String publicKey,byte[] profileImage,String name, String phrase){
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.name = name;
         this.phrase = phrase;
-        this.photoType = photoType;
     }
 
     @Override
@@ -43,11 +40,6 @@ public class IntraUserNetworkService  implements IntraUserInformation {
     @Override
     public String getPhrase() {
         return this.phrase;
-    }
-
-    @Override
-    public PhotoType getPhotoType() {
-        return this.photoType;
     }
 
     @Override

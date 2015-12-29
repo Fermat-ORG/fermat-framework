@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
@@ -32,7 +31,7 @@ public interface WalletManager extends ModuleManager<FermatSettings, ActiveActor
      * @throws WalletCreateNewIntraUserIdentityException
      */
 
-     void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, PhotoType photoType) throws WalletCreateNewIntraUserIdentityException;
+     void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException;
 
 
     /**

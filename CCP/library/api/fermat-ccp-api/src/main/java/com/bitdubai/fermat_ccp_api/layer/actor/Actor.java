@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.actor;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PhotoType;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
 /**
@@ -23,8 +22,6 @@ public interface Actor {
     Actors getType();
 
     byte[] getPhoto();
-
-    PhotoType getPhotoType();
 
     String createMessageSignature(String message) throws CantSignExtraUserMessageException;
 

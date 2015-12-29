@@ -119,7 +119,6 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
         intraUsersOnlineColumns.add(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME);
         intraUsersOnlineColumns.add(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME);
         intraUsersOnlineColumns.add(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME);
-        intraUsersOnlineColumns.add(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHOTO_TYPE_COLUMN_NAME);
         /**
          * Table outgoing messages addition.
          */

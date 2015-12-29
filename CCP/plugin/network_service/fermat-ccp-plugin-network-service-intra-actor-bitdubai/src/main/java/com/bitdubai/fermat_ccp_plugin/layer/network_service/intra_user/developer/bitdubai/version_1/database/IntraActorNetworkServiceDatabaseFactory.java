@@ -55,7 +55,6 @@ public class IntraActorNetworkServiceDatabaseFactory {
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME,                   DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME,                      DatabaseDataType.STRING, 130, Boolean.FALSE);
             table.addColumn(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME               ,DatabaseDataType.STRING,  255, Boolean.FALSE);
-            table.addColumn(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHOTO_TYPE_COLUMN_NAME,                  DatabaseDataType.STRING,  100, Boolean.FALSE);
 
             table.addIndex(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_FIRST_KEY_COLUMN);
 
