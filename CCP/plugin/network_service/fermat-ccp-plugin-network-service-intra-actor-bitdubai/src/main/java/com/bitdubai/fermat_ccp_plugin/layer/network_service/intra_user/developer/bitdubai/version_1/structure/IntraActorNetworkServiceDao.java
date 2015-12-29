@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantAddIntraWalletCacheUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantDeleteIntraWalletCacheUserException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserProfileImageException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletCacheUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
@@ -45,9 +47,19 @@ public class IntraActorNetworkServiceDao {
 
     private Database database;
 
-    public IntraActorNetworkServiceDao(Database database) {
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME   = DeviceDirectory.LOCAL_USERS.getName() + "/CCP/intraUserNS";
+    private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
+
+    private final PluginFileSystem     pluginFileSystem    ;
+    private final UUID                 pluginId            ;
+
+    public IntraActorNetworkServiceDao(Database database,
+                                       final PluginFileSystem pluginFileSystem,
+                                       final UUID pluginId) {
 
         this.database = database;
+        this.pluginFileSystem     = pluginFileSystem    ;
+        this.pluginId             = pluginId            ;
     }
 
 
@@ -80,15 +92,19 @@ public class IntraActorNetworkServiceDao {
 
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, intraUserInformation.getPublicKey());
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME, intraUserInformation.getName());
-                if(intraUserInformation.getProfileImage() != null && intraUserInformation.getProfileImage() .length > 0)
-                    record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME, intraUserInformation.getProfileImage().toString());
-                else
-                    record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME, "");
 
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME, intraUserInformation.getPhrase());
                 record.setLongValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME, milliseconds);
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME, "");
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME, "");
+
+
+                /**
+                 * Persist profile image on a file
+                 */
+                if(intraUserInformation.getProfileImage()!=null && intraUserInformation.getProfileImage().length > 0)
+                    persistNewUserProfileImage(intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
+
 
                 table.insertRecord(record);
             }
@@ -169,7 +185,7 @@ public class IntraActorNetworkServiceDao {
     }
 
 
-   /* private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
+    private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
 
         try {
 
@@ -184,19 +200,19 @@ public class IntraActorNetworkServiceDao {
             file.persistToMedia();
 
         } catch (CantPersistFileException e) {
-            throw new CantPersistProfileImageException(e, "Error persist file.", null);
+            throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,e, "Error persist file.", null);
 
         } catch (CantCreateFileException e) {
 
-            throw new CantPersistProfileImageException(e, "Error creating file.", null);
+            throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,e, "Error creating file.", null);
         } catch (Exception e) {
 
-            throw new CantPersistProfileImageException(FermatException.wrapException(e), "", "");
+            throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,FermatException.wrapException(e), "", "");
         }
     }
 
 
-    private byte[] getIntraUserProfileImagePrivateKey(final String publicKey) throws CantGetIntraWalletUserActorProfileImageException,FileNotFoundException {
+    private byte[] getIntraUserProfileImagePrivateKey(final String publicKey) throws CantGetIntraUserProfileImageException,FileNotFoundException {
 
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -211,35 +227,47 @@ public class IntraActorNetworkServiceDao {
             return file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new CantGetIntraWalletUserActorProfileImageException(e, "Error loaded file.", null);
+            throw new CantGetIntraUserProfileImageException(CantGetIntraUserProfileImageException.DEFAULT_MESSAGE,e, "Error loaded file.", null);
 
         } catch (FileNotFoundException | CantCreateFileException e) {
 
             throw new FileNotFoundException(e, "", null);
         } catch (Exception e) {
 
-            throw new CantGetIntraWalletUserActorProfileImageException(FermatException.wrapException(e), "", "");
+            throw new CantGetIntraUserProfileImageException(CantGetIntraUserProfileImageException.DEFAULT_MESSAGE,FermatException.wrapException(e), "", "");
         }
     }
 
     private String buildProfileImageFileName(final String publicKey) {
         return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
-    }*/
+    }
 
 
     private IntraUserInformation buildIntraUserRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        String intraUserAlias              = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME);
-        String intraUserProfileImage       = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME);
-        String intraUserPublicKey          = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME);
-        String intraUserPhrase             = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME);
+        try
+        {
+            String intraUserAlias              = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME);
+            //String intraUserProfileImage       = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME);
+            String intraUserPublicKey          = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME);
+            String intraUserPhrase             = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME);
 
-        byte[] profileImage = null;
+            byte[] profileImage = null;
 
-        if (intraUserProfileImage.length() > 0)
-            profileImage = intraUserProfileImage.getBytes();
+            try {
+                profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME));
+            } catch(FileNotFoundException e) {
+                profileImage = new  byte[0];
+            }
 
-        return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase);
+            return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase);
+        }
+        catch(Exception e)
+        {
+            throw  new InvalidParameterException();
+        }
+
+
     }
 
 }
