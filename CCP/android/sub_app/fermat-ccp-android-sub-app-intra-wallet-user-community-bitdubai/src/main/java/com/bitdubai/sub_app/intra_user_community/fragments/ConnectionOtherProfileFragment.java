@@ -23,7 +23,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
@@ -33,13 +32,12 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.MessageReceiver;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
  * Creado por Jose Manuel De Sousa on 29/11/15.
@@ -48,6 +46,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements MessageReceiver, View.OnClickListener {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
+    private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
@@ -167,6 +166,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btn_conect) {
+            CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             ConnectDialog connectDialog;
             try {
                 connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
@@ -187,6 +187,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             }
         }
         if (i == R.id.btn_disconect) {
+            CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             final DisconectDialog disconectDialog;
             try {
                 disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
@@ -205,9 +206,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             }
         }
         if (i == R.id.btn_connection_request_send) {
+            CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
+            CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
         }
     }
