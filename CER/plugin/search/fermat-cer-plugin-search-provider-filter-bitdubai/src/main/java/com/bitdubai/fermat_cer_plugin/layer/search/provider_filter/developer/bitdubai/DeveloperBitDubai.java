@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai;
+package com.bitdubai.fermat_cer_plugin.layer.search.provider_filter.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -8,11 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.ProviderDolarTodayPluginRoot;
+import com.bitdubai.fermat_cer_plugin.layer.search.provider_filter.developer.bitdubai.version_1.SearchProviderFilterPluginRoot;
 
 
 /**
- * Created by Alejandro Bicelis on 11/17/2015
+ * Created by Alejandro Bicelis on 12/26/2015.
  */
 
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
@@ -25,7 +25,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new ProviderDolarTodayPluginRoot());
+            this.registerVersion(new SearchProviderFilterPluginRoot());
 
         } catch (CantRegisterVersionException e) {
 
