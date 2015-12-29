@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliveryFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDetailActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListFragment;
@@ -36,6 +37,9 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
                     break;
                 case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER:
                     currentFragment = new UserDeliveryListHeaderFragment();
+                    break;
+                case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY:
+                    currentFragment = new AssetDeliveryFragment();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");
