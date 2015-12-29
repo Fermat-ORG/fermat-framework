@@ -42,9 +42,13 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
 
 
     public CustomerBrokerNewManagerImpl(
-        CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao
+        CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao,
+        CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager,
+        CustomerBrokerSaleNegotiationManager                customerBrokerSaleNegotiationManager
     ){
         this.customerBrokerNewNegotiationTransactionDatabaseDao = customerBrokerNewNegotiationTransactionDatabaseDao;
+        this.customerBrokerPurchaseNegotiationManager           = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager               = customerBrokerSaleNegotiationManager;
     }
 
     /*IMPLEMENTATION CustomerBrokerNewManager*/
