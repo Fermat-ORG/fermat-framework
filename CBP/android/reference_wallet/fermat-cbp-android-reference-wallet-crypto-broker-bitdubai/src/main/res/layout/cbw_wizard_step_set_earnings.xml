@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        android:id="@+id/cbw_wizard_title_container"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/cbw_wizard_color"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Choose Earning Merchandises"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="You must select a Wallet or Wallets that will work as Merchandise"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cbw_selected_stock_wallets_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cbw_wizard_title_container"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select a Earning Merchandise"
+            android:textColor="@color/cbw_wizard_color"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/cbw_wizard_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/cbw_select_crypto_wallets"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@color/cbw_wizard_color"
+                android:text="Crypto"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/cbw_select_cash_wallets"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@color/cbw_wizard_color"
+                android:text="Cash"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/cbw_select_bank_wallets"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@color/cbw_wizard_color"
+                android:text="Bank"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cbw_selected_earning_wallets_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
+            tools:listitem="@layout/cbw_wizard_recycler_view_item"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/cbw_next_step_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="@color/cbw_wizard_color"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/cbw_next_step"
+            android:textColor="@color/white"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrow_right_selected"
+            tools:ignore="contentDescription"/>
+    </RelativeLayout>
+
+</RelativeLayout>
