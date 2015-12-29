@@ -8,14 +8,14 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ProfileCheckInMsjRespond</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ProfileCheckInMsjRespond extends MsgRespond {
+public class CheckInProfileMsjRespond extends MsgRespond {
 
     /**
      * Represent the identityPublicKey of the profile
@@ -29,7 +29,7 @@ public class ProfileCheckInMsjRespond extends MsgRespond {
      * @param details
      * @param identityPublicKey
      */
-    public ProfileCheckInMsjRespond(STATUS status, String details, String identityPublicKey) {
+    public CheckInProfileMsjRespond(STATUS status, String details, String identityPublicKey) {
         super(status, details);
         this.identityPublicKey = identityPublicKey;
     }
