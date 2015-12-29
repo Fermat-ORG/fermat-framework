@@ -75,7 +75,6 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
                     cryptoAddressBookManager,
                     cryptoVaultManager,
                     walletManagerManager
-
             );
             customerBrokerClosePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
@@ -95,7 +94,10 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
 
             customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
                     customerBrokerSaleNegotiationManager,
-                    customerBrokerCloseNegotiationTransactionDatabaseDao
+                    customerBrokerCloseNegotiationTransactionDatabaseDao,
+                    cryptoAddressBookManager,
+                    cryptoVaultManager,
+                    walletManagerManager
             );
             customerBrokerCloseSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 

@@ -168,8 +168,10 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                      customerBrokerPurchaseNegotiation,
                      customerBrokerSaleNegotiation,
                      customerBrokerPurchaseNegotiationManager,
-                     customerBrokerSaleNegotiationManager
-
+                     customerBrokerSaleNegotiationManager,
+                     cryptoAddressBookManager,
+                     cryptoVaultManager,
+                     walletManagerManager
              );
              customerBrokerCloseAgent.start();
 

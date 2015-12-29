@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by yordin on 28/12/15.
  */
-public class CantReceiveCryptoAddressNegotiationTransactionException extends FermatException {
+public class CantReceiveConfirmNegotiationTransactionException extends FermatException {
     public static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER CLOSE. CAN'T RECEIVE CRYPTO ADDRESS IN NEGOTIATION";
 
     /**
@@ -16,7 +16,7 @@ public class CantReceiveCryptoAddressNegotiationTransactionException extends Fer
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantReceiveCryptoAddressNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantReceiveConfirmNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

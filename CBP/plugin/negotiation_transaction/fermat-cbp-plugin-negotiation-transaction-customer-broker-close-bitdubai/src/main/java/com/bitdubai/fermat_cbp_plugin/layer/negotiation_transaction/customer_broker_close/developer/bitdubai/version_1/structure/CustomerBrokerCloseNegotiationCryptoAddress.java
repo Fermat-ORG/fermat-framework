@@ -118,6 +118,27 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
         }
     }
 
+    //CHECK IF IS CRYPTO CURRENCY
+    public boolean isCryptoCurrency(Collection<Clause> negotiationClauses, ClauseType paymentMethod) throws CantDetermineCryptoCurrencyException {
+
+        try {
+
+            for (Clause clause : negotiationClauses) {
+                if (clause.getType().equals(paymentMethod)) {
+                    if (clause.getValue().equals(CurrencyType.CRYPTO_MONEY)) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+
+        } catch (Exception e){
+            throw new CantDetermineCryptoCurrencyException(e.getMessage(), FermatException.wrapException(e), CantDetermineCryptoCurrencyException.DEFAULT_MESSAGE, "ERROR DETERMINE CRYPTO CURRENCY, UNKNOWN FAILURE.");
+        }
+
+    }
+
     //ADD NEW CRYPTO ADDRESS A THE CLAUSES
     private Collection<Clause> addCryptoAdreess(
             Collection<Clause> negotiationClauses,
@@ -239,26 +260,4 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
         return adreess;
 
     }
-
-    //CHECK IF IS CRYPTO CURRENCY
-    private boolean isCryptoCurrency(Collection<Clause> negotiationClauses, ClauseType paymentMethod) throws CantDetermineCryptoCurrencyException {
-
-        try {
-
-            for (Clause clause : negotiationClauses) {
-                if (clause.getType().equals(paymentMethod)) {
-                    if (clause.getValue().equals(CurrencyType.CRYPTO_MONEY)) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-
-        } catch (Exception e){
-            throw new CantDetermineCryptoCurrencyException(e.getMessage(), FermatException.wrapException(e), CantDetermineCryptoCurrencyException.DEFAULT_MESSAGE, "ERROR DETERMINE CRYPTO CURRENCY, UNKNOWN FAILURE.");
-        }
-
-    }
-
 }
