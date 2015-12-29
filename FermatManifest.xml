@@ -4712,21 +4712,6 @@
                         <certifications>
                         </certifications>
                     </android>
-                    
-                    <android name="Suppliers"
-                        description=""
-                        difficulty="6"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                        </authors>
-                        <maintainers>
-                        </maintainers>
-                        <certifications>
-                        </certifications>
-                    </android>
                 </androids>
             </layer>
 
@@ -4935,21 +4920,6 @@
                         <certifications>
                         </certifications>
                     </plugin>
-                    <plugin	name="Wholesalers"
-                        description=""
-                        difficulty="4"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="vlzangel" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <maintainers>
-                        </maintainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
                 </plugins>
             </layer>
 
@@ -5075,13 +5045,13 @@
                     <plugin name="Broker Submit Offline Merchandise"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -5091,13 +5061,13 @@
                     <plugin name="Customer Ack Online Merchandise"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -5107,13 +5077,13 @@
                     <plugin name="Customer Ack Offline Merchandise"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="darkestpriest" scope="implementation" percentage="15"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -5144,34 +5114,6 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="darkestpriest" scope="implementation" percentage="100"></author>
-                        </authors>
-                        <maintainers>
-                        </maintainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin name="Wholesaler Crypto Sale"
-                        description=""
-                        difficulty="0"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                        </authors>
-                        <maintainers>
-                        </maintainers>
-                        <certifications>
-                        </certifications>
-                    </plugin>
-                    <plugin name="Wholesaler Fiat Sale"
-                        description=""
-                        difficulty="0"
-                        code-level="concept"
-                        >
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -5519,7 +5461,7 @@
                     <plugin	name="Crypto Broker"
                         description=""
                         difficulty="8"
-                        code-level="development">
+                        code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -5533,7 +5475,7 @@
                     <plugin	name="Crypto Customer"
                         description=""
                         difficulty="6"
-                        code-level="development">
+                        code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -12142,5 +12084,79 @@
 
             </steps>
         </process>
+        
+        <process platform="COR"
+		name="Test Process"
+		description="This is a process intended to test the workflow drawing"
+		previous="">
+			<steps>
+				<step id="0"
+					type="start"
+					title="Start step"
+					description="This is the first step"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					type="activity"
+					title="Next step"
+					description="This is the first step, this one has a bifurcation, which can be parallel process or an 'if'"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="2" type="direct call"></step>
+						<step id="3" type="direct call"></step>
+					</next>
+					</step>
+				<step id="2"
+					type="activity"
+					title="True state"
+					description="This step is executed if the sentence is true"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="4" type="direct call"></step>
+					</next>
+				</step>
+				<step id="3"
+					type="activity"
+					title="False state"
+					description="This step is executed if the sentence is false, it loops back"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="4"
+					type="end"
+					title="Out of loop"
+					description="This is out of the loop"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+					</next>
+				</step>
+			</steps>
+		</process>
+        
     </processes>
 </fermat>

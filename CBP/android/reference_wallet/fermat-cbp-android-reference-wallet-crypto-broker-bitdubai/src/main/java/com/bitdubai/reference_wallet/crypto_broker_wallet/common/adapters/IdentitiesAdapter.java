@@ -32,12 +32,12 @@ public class IdentitiesAdapter extends FermatAdapter<CryptoBrokerIdentity, Actor
 
     @Override
     protected void bindHolder(ActorIdentityViewHolder holder, CryptoBrokerIdentity data, int position) {
-        boolean selected = position == selectedPosition;
+        boolean selected = (position == selectedPosition);
         holder.bind(data, selected);
     }
 
     public void selectItem(int position) {
         selectedPosition = position;
-        notifyItemChanged(position);
+        notifyDataSetChanged();
     }
 }

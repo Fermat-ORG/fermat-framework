@@ -319,8 +319,8 @@ public class BankMoneyWalletDao {
     }
 
     public List<BankMoneyTransactionRecord> getTransactions(TransactionType transactionType,String account) throws CantGetTransactionsException {
-        int max=0;
-        int offset=20;
+        int max=100;
+        int offset=0;
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
 
         table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);

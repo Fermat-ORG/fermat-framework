@@ -1,7 +1,7 @@
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png[FermatLogo]
-== Appendix 01 - Fermat's Principles in Detail
+== Appendix 01 - Detailed Fermat Principles
 
-Here is an in depth analysis of Fermat's principles.
+Here is an in depth analysis of Fermat principles.
 
 === 1. Fermat must not allow censorship.
 
@@ -11,10 +11,10 @@ Here is an in depth analysis of Fermat's principles.
 === 2. Fermat must not allow spying on their user base.
 
 * Point to point encrypted communications.
-* Geofenced P2P network enabling the shortest communication path between peers.
-* Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).
+* Geofenced P2P network, enabling the shortest communication path between peers.
+* Multi-technology communication layer (cloud, p2p, wi-fi, bluetooth, nfc, mesh, etc.).
 
-=== 3. Fermat must be secure and resistant to all kind of attacks.
+=== 3. Fermat must be secure and resistant to all kinds of attacks.
 
 * No centralized point to be attacked.
 * Multiple identities and roles per user.
@@ -25,7 +25,7 @@ Here is an in depth analysis of Fermat's principles.
 === 4. Fermat must never loose a user's funds or assets.
 
 * Transaction responsibility transmission protocols.
-* Remote technical support by wallet and plugins developers.
+* Remote technical support by wallet and Plug-ins developers.
 
 === 5. Fermat must be useful to each segment of the world population.
 
@@ -34,42 +34,42 @@ Here is an in depth analysis of Fermat's principles.
 
 === 6. Fermat must be extensible and open to innovation with a master plan approach.
 
-* Plugins architecture.
-* Multi dimensional layer architecture.
+* Plug-ins architecture.
+* Multi-dimensional layer architecture.
 
 === 7. Fermat must be open to any developer to participate.
 
 * Any developer could contribute to the shared infrastructure.
-* Any developer could write code for new plugins.
+* Any developer could write code for new Plug-ins.
 * Any developer could write code for new niche wallets.
 * Any developer could fork an existing niche wallet to further specialize it.
-* Any graphic / UX designer could provide skins to existing wallets.
+* Any graphic/UX designer could provide skins to existing wallets.
 * Anyone could provide language packs to existing wallets.
 
-=== 8. Fermat must compensate each developer by their contribution.
+=== 8. Fermat must compensate each developer for their contribution.
 
 * Micro license concept.
 * Micro license structure concept.
 * Fermat automatically enforcing license agreements.
-* Plug-in ownership concept.
+* Plug-ins ownership concept.
 * Niche wallet ownership concept.
 * Branded wallet ownership concept.
-* Master plan design concept, with no overlapping functionality but shared ownership.
+* Master plan design concept, with no overlapping functionality, but shared ownership.
 
 === 9. Fermat's user base must be a shared asset.
 
-* Any developer should be able to profit from the growing Fermat user base by writing Plugins this user base could consume via the developers of the wallets they are using.
+* Any developer should be able to profit from the growing Fermat user base, by writing Plug-ins other user base could consume via the developers of the wallets they are using.
 
 === 10. Fermat must be inclusive with crypto currency industry members.
 
-* Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both Fermat developers and the Fermat user base.
-* Any alt-coin community could write plugins to enable their crypto currency within the Fermat wallet ecosystem.
+* Any bitcoin | crypto | blockchain established startup could write their own Plug-ins and expose their services to both Fermat developers and the Fermat user base.
+* Any altcoin community could write Plug-ins to enable their crypto currency within the Fermat wallet ecosystem.
 
 === 11. Fermat must be inclusive with the legacy financial industry members.
 
-* Banks and financial institutions could write plugins to enable Fermat wallets hold funds in banks and other financial institutions.
+* Banks and financial institutions could write Plug-ins to enable Fermat wallets to hold funds in banks and other financial institutions.
 
-* Fermat allows it users to move money both through public value transport networks as crypto currency networks and also through private or legacy financial networks.
+* Fermat allows it users to move money through both public value transport networks as crypto currency networks and also through private or legacy financial networks.
 
 === 12. Fermat must be un-banked-people friendly.
 
@@ -84,7 +84,7 @@ Here is an in depth analysis of Fermat's principles.
 === 14. Fermat must learn from its user base.
 
 * Integrated feedback functionality.
-* Voting over feature wish-lists concept.
+* Voting over feature wish-list concept.
 
 === 15. Fermat must be the financially most efficient way to hold, move or spend the end user's money.
 

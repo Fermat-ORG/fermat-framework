@@ -240,7 +240,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public String getCryptoWalletPublicKey() {
+//            public String getExternalWalletPublicKey() {
 //                return "walletPublicKeyTest";
 //            }
 //
@@ -311,7 +311,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public String getCryptoWalletPublicKey() {
+//            public String getExternalWalletPublicKey() {
 //                return "walletPublicKeyTest";
 //            }
 //

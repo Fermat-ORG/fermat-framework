@@ -18,6 +18,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenNeg
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetBankAccountsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetEarningsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetLocationsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetMerchandisesFragment;
@@ -64,6 +65,8 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return WizardPageSetIdentityFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES:
                 return WizardPageSetMerchandisesFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS:
+                return WizardPageSetEarningsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS:
                 return WizardPageSetProvidersFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS:
