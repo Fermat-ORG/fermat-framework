@@ -58,9 +58,10 @@ public class BankingWalletModuleImpl implements BankingWallet {
         try{
             transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.CREDIT, 100, 0, account));
             transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.DEBIT, 100, 0, account));
-            transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.HOLD, 100, 0, account));
+            /*transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.HOLD, 100, 0, account));
             transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.UNHOLD, 100, 0, account));
-
+            */
+            //TODO: mostrar los hold y unhold???
         }catch (Exception e){
             System.out.println("module error cargando transacciones  "+e.getMessage() );
         }

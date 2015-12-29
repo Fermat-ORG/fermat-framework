@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by angel on 18/9/15.
  */
-public class CantupdateCustomerBrokerContractPurchaseException extends FermatException {
+public class CantUpdateCustomerBrokerContractSaleException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE THE CONTRACT CUSTOMER BROKER PURCHASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE THE CONTRACT CUSTOMER BROKER SALE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantupdateCustomerBrokerContractPurchaseException extends FermatExc
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantupdateCustomerBrokerContractPurchaseException(String message, Exception cause, String context, String possibleReason) {
+    public CantUpdateCustomerBrokerContractSaleException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
