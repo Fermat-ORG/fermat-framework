@@ -35,10 +35,10 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     private CustomerBrokerNewSaleNegotiationTransaction         customerBrokerNewSaleNegotiationTransaction;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    private CustomerBrokerSaleNegotiationManager                customerBrokerSaleNegotiationManager;
 
 
     public CustomerBrokerNewManagerImpl(
