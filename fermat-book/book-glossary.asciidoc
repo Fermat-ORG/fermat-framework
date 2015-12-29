@@ -31,6 +31,12 @@ framework (software framework)::
 In computer programming, a software framework is an abstraction in which software providing generic functionality can be selectively changed by additional user-written code, thus providing application-specific software. A software framework is a universal, reusable software environment that provides particular functionality as part of a larger software platform to facilitate development of software applications, products and solutions. Software frameworks may include support programs, compilers, code libraries, tool sets, and application programming interfaces (APIs) that bring together all the different components to enable development of a project or solution.
 ( for more information, follow the original wikipedia entry https://en.wikipedia.org/wiki/Software_framework )
 
+[iot]
+The Internet of Things (IoT)::
+The Internet of Things (IoT) is the network of physical objects or "things" embedded with electronics, software, sensors, and network connectivity, which enables these objects to collect and exchange data. The Internet of Things allows objects to be sensed and controlled remotely across existing network infrastructure, creating opportunities for more direct integration between the physical world and computer-based systems, and resulting in improved efficiency, accuracy and economic benefit.
+Each thing is uniquely identifiable through its embedded computing system but is able to interoperate within the existing Internet infrastructure. Experts estimate that the IoT will consist of almost 50 billion objects by 2020.
+( for more information, follow the original wikipedia entry https://en.wikipedia.org/wiki/Internet_of_Things )
+
 [[transaction]]
 transaction::
 In simple terms, a transfer of crypto currency from one address to another. More precisely, a transaction is a signed data structure expressing a transfer of value. Transactions are transmitted over the crypto network, collected by miners, and included into blocks, made permanent on the blockchain.((("transaction")))
