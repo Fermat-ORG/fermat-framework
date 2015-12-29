@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -28,12 +27,12 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity> implements FermatListItemListeners<CryptoBrokerIdentity>, WizardPageListener {
+public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity>
+        implements FermatListItemListeners<CryptoBrokerIdentity> {
 
     private List<CryptoBrokerIdentity> identities;
     private CryptoBrokerIdentity selectedIdentity;
@@ -176,33 +175,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     }
 
     @Override
-    public boolean validate() {
-        return false;
-    }
-
-    @Override
-    public void savePage() {
-
-    }
-
-    @Override
-    public void onWizardFinish(Map<String, Object> data) {
-
-    }
-
-    @Override
-    public void onActivated(Map<String, Object> data) {
-
-    }
-
-    @Override
     public void onDetach() {
         layoutManager = null;
         super.onDetach();
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return null;
     }
 }

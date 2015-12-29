@@ -573,16 +573,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     }
 
     /**
-     * Gets the current Crypto Status for the specified internal Fermat transaction id
-     * @param transactionId the internal fermat transaction id
-     * @return
+     * gets the current Crypto Status for the specified Transaction ID
+     * @param txHash the Bitcoin transaction hash
+     * @return the last crypto status
      * @throws CantGetTransactionCryptoStatusException
      */
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException {
+    public CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException {
         try {
-            return getDao().getTransactionCryptoStatus(transactionId);
+            return getDao().getTransactionCryptoStatus(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + transactionId.toString(), "database issue");
+            throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + txHash, "database issue");
         }
     }
 

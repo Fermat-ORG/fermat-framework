@@ -226,8 +226,14 @@ public class NegotiationTransmissionAgent {
                         if (wsCommunicationsCloudClientManager != null) {
                             if (platformComponentProfile != null) {
 
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorSend(), NetworkServiceType.UNDEFINED, negotiationTransmission.getActorSendType());
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorReceive(), NetworkServiceType.UNDEFINED, negotiationTransmission.getActorReceiveType());
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
+                                        negotiationTransmission.getPublicKeyActorSend(),
+                                        NetworkServiceType.UNDEFINED,
+                                        negotiationTransmission.getActorSendType());
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
+                                        negotiationTransmission.getPublicKeyActorReceive(),
+                                        NetworkServiceType.UNDEFINED,
+                                        negotiationTransmission.getActorReceiveType());
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
                                 // pass the negotiationTransmission to a pool waiting for the response of the other peer or server failure
                                 poolConnectionsWaitingForResponse.put(receiverPublicKey, negotiationTransmission);
@@ -242,7 +248,6 @@ public class NegotiationTransmissionAgent {
 
                             System.out.print("-----------------------\n SENDING NEGOTIATION TRANSACTION RECORD To:" + receiverPublicKey + "-----------------------\n");
 
-                            // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
                             Gson gson = new Gson();
 
                             NegotiationMessage negotiationMessage = new NegotiationMessage(
@@ -356,7 +361,7 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION UPDATE");
 
                         }else{
 
@@ -375,7 +380,7 @@ public class NegotiationTransmissionAgent {
                             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
                             eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                             eventManager.raiseEvent(eventToRaise);
-                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CLOSE");
 
                         }else{
 
@@ -406,5 +411,5 @@ public class NegotiationTransmissionAgent {
             }
         }
     }
-    /*PRIVATE*/
+    /*END PRIVATE*/
 }

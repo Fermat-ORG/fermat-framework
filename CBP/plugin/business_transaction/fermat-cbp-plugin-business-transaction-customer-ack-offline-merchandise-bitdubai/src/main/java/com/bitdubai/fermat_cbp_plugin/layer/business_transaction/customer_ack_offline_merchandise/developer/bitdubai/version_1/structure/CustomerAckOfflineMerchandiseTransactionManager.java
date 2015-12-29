@@ -4,8 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_offline_merchandise.interfaces.CustomerAckOfflineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -46,6 +48,7 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
     @Override
     public void ackMerchandise(String contractHash) throws CantAckMerchandiseException {
         try{
+            ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
             //First we check if the contract exits in this plugin database
             boolean contractExists =
                     this.customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(
@@ -117,7 +120,11 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Cannot update the contract status in database");
-    }
+    } catch (ObjectNotSetException e) {
+            throw new CantAckMerchandiseException(e,
+                "Creating Customer Ack Offline Merchandise Business Transaction",
+                "The contract hash/Id is null");
+        }
 
     }
 
@@ -130,7 +137,18 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
     @Override
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        return this.customerAckOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(
-                contractHash);
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
+            return this.customerAckOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(
+                    contractHash);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    "Cannot check a null contractHash/Id");
+        }
+
     }
 }

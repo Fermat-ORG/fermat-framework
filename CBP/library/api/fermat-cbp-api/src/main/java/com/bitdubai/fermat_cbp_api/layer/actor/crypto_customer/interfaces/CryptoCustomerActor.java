@@ -15,7 +15,7 @@ import java.util.UUID;
  * Modified by Yordin Alayn 11.11.2015
  */
 
-public interface CryptoCustomerActor extends Actor {
+public interface CryptoCustomerActor{
 
     // TODO OUR IDENTITY IS NOT AN ACTOR. PLEASE CHECK IF THIS IS OK
 

@@ -19,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.ListsForStatusPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
@@ -102,7 +102,7 @@ public class CustomerBrokerContractPurchaseDao {
             }
         }
 
-        public void updateStatusCustomerBrokerPurchaseContract(String contractID, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException {
+        public void updateStatusCustomerBrokerPurchaseContract(String contractID, ContractStatus status) throws CantUpdateCustomerBrokerContractPurchaseException {
             try {
                 DatabaseTable PurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
                 PurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
@@ -110,11 +110,11 @@ public class CustomerBrokerContractPurchaseDao {
                 recordToUpdate.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, status.getCode());
                 PurchaseTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantupdateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
+                throw new CantUpdateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
             }
         }
 
-        public void updateNegotiationNearExpirationDatetime(String contractId, Boolean status) throws CantupdateCustomerBrokerContractPurchaseException {
+        public void updateNegotiationNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractPurchaseException {
             try {
                 DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
                 PurchaseNegotiationClauseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId, DatabaseFilterType.EQUAL);
@@ -126,7 +126,7 @@ public class CustomerBrokerContractPurchaseDao {
                 recordsToUpdate.setIntegerValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, NearExpirationDatetime);
                 PurchaseNegotiationClauseTable.updateRecord(recordsToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantupdateCustomerBrokerContractPurchaseException(CantupdateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerContractPurchaseException(CantUpdateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
