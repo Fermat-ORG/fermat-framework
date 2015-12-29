@@ -55,19 +55,19 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
         try {
 
-            if (isCryptoCurrency(negotiation.getClauses())) {
+            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
 
                 CustomerBrokerCloseCryptoAddressRequest request             = getRequest(negotiation);
-                Collection<Clause>                      negotiationClauses  = addCryptoAdreess(negotiation.getClauses(), request);
+                Collection<Clause>                      negotiationClauses  = addCryptoAdreess(negotiation.getClauses(), request, ClauseType.CUSTOMER_CRYPTO_ADDRESS);
 
                 newNegotiation = new CustomerBrokerPurchaseNegotiationImpl(
-                        negotiation.getNegotiationId(),
-                        negotiation.getCustomerPublicKey(),
-                        negotiation.getBrokerPublicKey(),
-                        negotiation.getStartDate(),
-                        negotiation.getNegotiationExpirationDate(),
-                        negotiation.getStatus(),
-                        negotiationClauses
+                    negotiation.getNegotiationId(),
+                    negotiation.getCustomerPublicKey(),
+                    negotiation.getBrokerPublicKey(),
+                    negotiation.getStartDate(),
+                    negotiation.getNegotiationExpirationDate(),
+                    negotiation.getStatus(),
+                    negotiationClauses
                 );
 
             }
@@ -89,19 +89,19 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
         try {
 
-            if (isCryptoCurrency(negotiation.getClauses())) {
+            if (isCryptoCurrency(negotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
 
                 CustomerBrokerCloseCryptoAddressRequest request             = getRequest(negotiation);
-                Collection<Clause>                      negotiationClauses  = addCryptoAdreess(negotiation.getClauses(), request);
+                Collection<Clause>                      negotiationClauses  = addCryptoAdreess(negotiation.getClauses(), request, ClauseType.BROKER_CRYPTO_ADDRESS);
 
-                newNegotiation = new CustomerBrokerPurchaseNegotiationImpl(
-                        negotiation.getNegotiationId(),
-                        negotiation.getCustomerPublicKey(),
-                        negotiation.getBrokerPublicKey(),
-                        negotiation.getStartDate(),
-                        negotiation.getNegotiationExpirationDate(),
-                        negotiation.getStatus(),
-                        negotiationClauses
+                newNegotiation = new CustomerBrokerSaleNegotiationImpl(
+                    negotiation.getNegotiationId(),
+                    negotiation.getCustomerPublicKey(),
+                    negotiation.getBrokerPublicKey(),
+                    negotiation.getStartDate(),
+                    negotiation.getNegotiationExpirationDate(),
+                    negotiation.getStatus(),
+                    negotiationClauses
                 );
 
             }
@@ -117,18 +117,22 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
     }
 
     //ADD NEW CRYPTO ADDRESS A THE CLAUSES
-    private Collection<Clause> addCryptoAdreess(Collection<Clause> negotiationClauses, CustomerBrokerCloseCryptoAddressRequest request){
+    private Collection<Clause> addCryptoAdreess(
+            Collection<Clause> negotiationClauses,
+            CustomerBrokerCloseCryptoAddressRequest request,
+            ClauseType cryptoAddressType)
+    throws CantAddCryptoAddressNegotiationException{
 
         Collection<Clause> negotiationClausesNew = new ArrayList<>();
 
         for(Clause clause : negotiationClauses){
-            if(clause.getType() == ClauseType.CUSTOMER_CRYPTO_ADDRESS){
+            if(clause.getType() == cryptoAddressType){
                 negotiationClausesNew.add(
-                        addClause(clause,cryptoAdreessActor(request))
+                    addClause(clause,cryptoAdreessActor(request))
                 );
             }else{
                 negotiationClausesNew.add(
-                        addClause(clause,clause.getValue())
+                    addClause(clause,clause.getValue())
                 );
             }
         }
@@ -138,9 +142,9 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
     }
 
     //ADD VALUES A THE CLAUSES
-    private Clause addClause(Clause clause, String value){
+    private Clause addClause(Clause clause, String value) throws CantAddClauseNegotiationException{
 
-        Clause clauseNew = new CustomerBrokerNegotiationClauseImpl(
+        Clause newClause = new CustomerBrokerNegotiationClauseImpl(
                 clause.getClauseId(),
                 clause.getType(),
                 value,
@@ -149,18 +153,34 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
                 clause.getIndexOrder()
         );
 
-        return clauseNew;
+        return newClause;
 
     }
 
-    //RETURN REQUEST THE CRYPTO ADDRESS
-    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerPurchaseNegotiation purchaseNegotiation){
+    //RETURN PURCHASE REQUEST THE CRYPTO ADDRESS
+    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerPurchaseNegotiation negotiation) throws CantGetRequestCryptoAddressException{
 
         CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
-                Actors.CBP_CRYPTO_BROKER,
+            Actors.CBP_CRYPTO_BROKER,
+            Actors.CBP_CRYPTO_CUSTOMER,
+            negotiation.getBrokerPublicKey(),
+            negotiation.getCustomerPublicKey(),
+            CryptoCurrency.BITCOIN,
+            BlockchainNetworkType.TEST
+        );
+
+        return request;
+
+    }
+
+    //RETURN SALE REQUEST THE CRYPTO ADDRESS
+    private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerSaleNegotiation negotiation) throws CantGetRequestCryptoAddressException{
+
+        CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
                 Actors.CBP_CRYPTO_CUSTOMER,
-                purchaseNegotiation.getBrokerPublicKey(),
-                purchaseNegotiation.getCustomerPublicKey(),
+                Actors.CBP_CRYPTO_BROKER,
+                negotiation.getCustomerPublicKey(),
+                negotiation.getBrokerPublicKey(),
                 CryptoCurrency.BITCOIN,
                 BlockchainNetworkType.TEST
         );
@@ -170,12 +190,12 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
     }
 
     //GENERATE AND REGISTER THE NEW CRYPTO ADDRESS OF THE ACTOR
-    private String cryptoAdreessActor(CustomerBrokerCloseCryptoAddressRequest request) {
+    private String cryptoAdreessActor(CustomerBrokerCloseCryptoAddressRequest request) throws CantGenerateCryptoAddressException{
 
-        CryptoVaultSelector cryptoVaultSelector     = new CryptoVaultSelector(this.cryptoVaultManager);
-        WalletManagerSelector walletManagerSelector   = new WalletManagerSelector(this.walletManagerManager);
+        CryptoVaultSelector     cryptoVaultSelector     = new CryptoVaultSelector(this.cryptoVaultManager);
+        WalletManagerSelector   walletManagerSelector   = new WalletManagerSelector(this.walletManagerManager);
         String                  adreess                 = null;
-        CryptoAddress cryptoAdreess;
+        CryptoAddress           cryptoAdreess;
 
         try {
 
@@ -185,9 +205,8 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
                     walletManagerSelector
             );
 
-            cryptoAdreess = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
-
-            adreess = cryptoAdreess.getAddress();
+            cryptoAdreess   = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
+            adreess         = cryptoAdreess.getAddress();
 
         } catch (CantCryptoAddressesNewException e){
 
@@ -198,10 +217,10 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
     }
 
     //CHECK IF IS CRYPTO CURRENCY
-    private boolean isCryptoCurrency(Collection<Clause> negotiationClauses){
+    private boolean isCryptoCurrency(Collection<Clause> negotiationClauses, ClauseType paymentMethod) throws CantDetermineCryptoCurrency{
 
         for(Clause clause : negotiationClauses){
-            if(clause.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD)){
+            if(clause.getType().equals(paymentMethod)){
                 if (clause.getValue().equals(CurrencyType.CRYPTO_MONEY)){
                     return true;
                 }
