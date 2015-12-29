@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -39,6 +40,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
@@ -75,6 +77,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionManagerImpl;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -118,6 +121,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION,       plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
@@ -125,31 +131,34 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     private Database dataBase;
 
     /*Connections arrived*/
-    private AtomicBoolean connectionArrived;
+    private AtomicBoolean                                                   connectionArrived;
 
     /*Represent DAO Database Transmission*/
-    private NegotiationTransmissionNetworkServiceDatabaseDao databaseDao;
+    private NegotiationTransmissionNetworkServiceDatabaseDao                databaseDao;
 
     /*Represent DAO Database Connections*/
-    private NegotiationTransmissionNetworkServiceConnectionsDatabaseDao databaseConnectionsDao;
+    private NegotiationTransmissionNetworkServiceConnectionsDatabaseDao     databaseConnectionsDao;
 
     /*Represent the listeners*/
-    private List<FermatEventListener> listenersAdded;
+    private List<FermatEventListener>                                       listenersAdded;
 
     /*Represent the remoteNetworkServicesRegisteredList*/
-    private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
+    private List<PlatformComponentProfile>                                  remoteNetworkServicesRegisteredList;
 
     /*Represent the cryptoPaymentRequestNetworkServiceConnectionManager*/
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    private CommunicationNetworkServiceConnectionManager                    communicationNetworkServiceConnectionManager;
 
     /*Represent CommunicationRegistrationProcessNetworkServiceAgent*/
-    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
+    private CommunicationRegistrationProcessNetworkServiceAgent             communicationRegistrationProcessNetworkServiceAgent;
 
     //Represent the negotiationTransmissionNetworkServiceDeveloperDatabaseFactory
-    private NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
+    private NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory   negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
 
     //Represent the Negotation Transmission agent
-    private NegotiationTransmissionAgent negotiationTransmissionAgent;
+    private NegotiationTransmissionAgent                                    negotiationTransmissionAgent;
+
+    //Represent the Negotiation Transmission Manager
+    private NegotiationTransmissionManagerImpl                              negotiationTransmissionManagerImpl;
 
     //Represent the newLoggingLevel
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
@@ -170,6 +179,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*IMPLEMENTATION Service*/
     @Override
     public void start() throws CantStartPluginException{
+
+        logManager.log(NetworkServiceNegotiationTransmissionPluginRoot.getLogLevelByClass(this.getClass().getName()), "NetworkServiceNegotiationTransmissionPluginRoot - Starting", "NetworkServiceNegotiationTransmissionPluginRoot - Starting", "NetworkServiceNegotiationTransmissionPluginRoot - Starting");
 
         //Validate required resources
         validateInjectedResources();
@@ -199,6 +210,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             databaseDao = new NegotiationTransmissionNetworkServiceDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
             databaseConnectionsDao = new NegotiationTransmissionNetworkServiceConnectionsDatabaseDao(pluginDatabaseSystem, pluginId);
 
+            //Initialize Manager
+            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(databaseDao);
+
             //List Network Service Register
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
@@ -218,7 +232,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
@@ -254,6 +268,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         register = Boolean.FALSE;
         this.serviceStatus = ServiceStatus.STOPPED;
 
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return negotiationTransmissionManagerImpl;
     }
     /*END IMPLEMENTATION Service*/
 
