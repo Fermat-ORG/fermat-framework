@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.Agent;
@@ -253,9 +253,24 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I will check I don't get nulls in the parameters
          */
-        if (txHash == null || blockHash == null)
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "TxHash or blocHash parameters can't be null", null);
+        if (txHash == null )
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "TxHash parameters can't be null", null);
 
+        /**
+         * I will get the transaction from our own database if we have it.
+         */
+        Sha256Hash transactionSha256Hash = Sha256Hash.wrap(txHash);
+        Transaction storedTransaction = wallet.getTransaction(transactionSha256Hash);
+
+        if (storedTransaction != null)
+            return getCryptoTransactionFromBitcoinTransaction(storedTransaction);
+
+
+        /**
+         * I don't have it locally, so I will request it to a peer.
+         */
+        if (blockHash == null )
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
         try{
             /**
              * I get the hash of the block
