@@ -19,10 +19,8 @@ public class CryptoVaultSelector {
     private CryptoVaultManager cryptoVaultManager;
     private AssetVaultManager assetVaultManager;
 
-    public CryptoVaultSelector(final CryptoVaultManager cryptoVaultManager,
-                               final AssetVaultManager  assetVaultManager ) {
+    public CryptoVaultSelector(final CryptoVaultManager cryptoVaultManager) {
         this.cryptoVaultManager = cryptoVaultManager;
-        this.assetVaultManager = assetVaultManager;
     }
 
     public final PlatformCryptoVault getVault(final VaultType vaultType, final CryptoCurrency cryptoCurrency) throws CantIdentifyVaultException {

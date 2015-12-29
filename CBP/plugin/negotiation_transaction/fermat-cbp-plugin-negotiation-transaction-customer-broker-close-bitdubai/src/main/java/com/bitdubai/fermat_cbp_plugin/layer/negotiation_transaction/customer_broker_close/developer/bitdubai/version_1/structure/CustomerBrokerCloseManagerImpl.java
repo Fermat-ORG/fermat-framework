@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
@@ -15,6 +17,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantCloseSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,10 +42,25 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
     /*Represent the Negotiation Sale*/
     private CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager;
 
+    /*Represent Address Book Manager*/
+    private CryptoAddressBookManager                                cryptoAddressBookManager;
+
+    /*Represent Vault Manager*/
+    private CryptoVaultManager                                      cryptoVaultManager;
+
+    /*Represent Wallet Manager*/
+    private WalletManagerManager                                    walletManagerManager;
+
     public CustomerBrokerCloseManagerImpl(
-            CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao
+            CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
+            CryptoAddressBookManager                                cryptoAddressBookManager,
+            CryptoVaultManager                                      cryptoVaultManager,
+            WalletManagerManager                                    walletManagerManager
     ){
-        this.customerBrokerCloseNegotiationTransactionDatabaseDao = customerBrokerCloseNegotiationTransactionDatabaseDao;
+        this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
+        this.cryptoAddressBookManager                               = cryptoAddressBookManager;
+        this.cryptoVaultManager                                     = cryptoVaultManager;
+        this.walletManagerManager                                   = walletManagerManager;
     }
 
     @Override
@@ -53,7 +71,10 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
 
             customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
                     customerBrokerPurchaseNegotiationManager,
-                    customerBrokerCloseNegotiationTransactionDatabaseDao
+                    customerBrokerCloseNegotiationTransactionDatabaseDao,
+                    cryptoAddressBookManager,
+                    cryptoVaultManager,
+                    walletManagerManager
             );
             customerBrokerClosePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
@@ -73,7 +94,10 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
 
             customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
                     customerBrokerSaleNegotiationManager,
-                    customerBrokerCloseNegotiationTransactionDatabaseDao
+                    customerBrokerCloseNegotiationTransactionDatabaseDao,
+                    cryptoAddressBookManager,
+                    cryptoVaultManager,
+                    walletManagerManager
             );
             customerBrokerCloseSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 

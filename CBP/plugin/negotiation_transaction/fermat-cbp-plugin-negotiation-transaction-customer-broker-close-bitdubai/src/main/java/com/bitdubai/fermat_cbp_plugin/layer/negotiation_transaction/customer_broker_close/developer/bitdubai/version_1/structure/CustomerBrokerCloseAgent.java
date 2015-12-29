@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
@@ -49,6 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -96,6 +99,15 @@ public class CustomerBrokerCloseAgent  implements
     /*Represent the Monitor Agent*/
     private MonitorAgentTransaction                     monitorAgentTransaction;
 
+    /*Represent Address Book Manager*/
+    private CryptoAddressBookManager                    cryptoAddressBookManager;
+
+    /*Represent Vault Manager*/
+    private CryptoVaultManager                          cryptoVaultManager;
+
+    /*Represent Wallet Manager*/
+    private WalletManagerManager                        walletManagerManager;
+
     public CustomerBrokerCloseAgent(
         PluginDatabaseSystem                        pluginDatabaseSystem,
         LogManager                                  logManager,
@@ -106,7 +118,10 @@ public class CustomerBrokerCloseAgent  implements
         CustomerBrokerPurchaseNegotiation           customerBrokerPurchaseNegotiation,
         CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation,
         CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager,
-        CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager
+        CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager,
+        CryptoAddressBookManager                    cryptoAddressBookManager,
+        CryptoVaultManager                          cryptoVaultManager,
+        WalletManagerManager                        walletManagerManager
     ){
         this.pluginDatabaseSystem                       = pluginDatabaseSystem;
         this.logManager                                 = logManager;
@@ -118,6 +133,9 @@ public class CustomerBrokerCloseAgent  implements
         this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
         this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
+        this.cryptoAddressBookManager                   = cryptoAddressBookManager;
+        this.cryptoVaultManager                         = cryptoVaultManager;
+        this.walletManagerManager                       = walletManagerManager;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -401,7 +419,10 @@ public class CustomerBrokerCloseAgent  implements
                                     purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
                                     customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
                                             customerBrokerPurchaseNegotiationManager,
-                                            customerBrokerCloseNegotiationTransactionDatabaseDao
+                                            customerBrokerCloseNegotiationTransactionDatabaseDao,
+                                            cryptoAddressBookManager,
+                                            cryptoVaultManager,
+                                            walletManagerManager
                                     );
                                     customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
                                     break;
@@ -410,7 +431,10 @@ public class CustomerBrokerCloseAgent  implements
                                     saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
                                     customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
                                             customerBrokerSaleNegotiationManager,
-                                            customerBrokerCloseNegotiationTransactionDatabaseDao
+                                            customerBrokerCloseNegotiationTransactionDatabaseDao,
+                                            cryptoAddressBookManager,
+                                            cryptoVaultManager,
+                                            walletManagerManager
                                     );
                                     customerBrokerCloseSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
                                     break;
@@ -430,11 +454,42 @@ public class CustomerBrokerCloseAgent  implements
                     for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                         negotiationTransmission = record.getInformation();
+                        negotiationXML          = negotiationTransmission.getNegotiationXML();
                         transmissionId          = negotiationTransmission.getTransmissionId();
                         transactionId           = negotiationTransmission.getTransactionId();
+                        negotiationType         = negotiationTransmission.getNegotiationType();
                         negotiationTransaction  = customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
 
                         if (negotiationTransaction.getStatusTransaction().equals(NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode())) {
+
+                            if (negotiationXML != null) {
+                                switch (negotiationType) {
+                                    case PURCHASE:
+                                        //UPDATE NEGOTIATION IF PAYMENT IS CRYPTO CURRENCY
+                                        purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                        customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
+                                                customerBrokerPurchaseNegotiationManager,
+                                                customerBrokerCloseNegotiationTransactionDatabaseDao,
+                                                cryptoAddressBookManager,
+                                                cryptoVaultManager,
+                                                walletManagerManager
+                                        );
+                                        customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseConfirm(purchaseNegotiation);
+                                        break;
+                                    case SALE:
+                                        //UPDATE NEGOTIATION IF MERCHANDISE IS CRYPTO CURRENCY
+                                        saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                        customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
+                                                customerBrokerSaleNegotiationManager,
+                                                customerBrokerCloseNegotiationTransactionDatabaseDao,
+                                                cryptoAddressBookManager,
+                                                cryptoVaultManager,
+                                                walletManagerManager
+                                        );
+                                        customerBrokerCloseSaleNegotiationTransaction.receiveSaleConfirm(saleNegotiation);
+                                        break;
+                                }
+                            }
 
                             //CONFIRM TRANSACTION
                             customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
