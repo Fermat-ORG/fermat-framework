@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +28,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -98,6 +101,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private boolean connectionDialogIsShow;
     private boolean onFocus;
     private Spinner spinner;
+    private FermatTextView txt_type;
 
 
     public static SendFormFragment newInstance() {
@@ -145,15 +149,60 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+        txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
         list.add("btc");
         list.add("bits");
         list.add("Satoshis");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String text = "";
+                switch (position){
+                    case 0:
+                        text = "[btc]";
+                        break;
+                    case 1:
+                        text = "[bits]";
+                        break;
+                    case 2:
+                        text = "[satoshis]";
+                        break;
+                }
+                AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
+                alphaAnimation.setDuration(300);
+                final String finalText = text;
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        txt_type.setText(finalText);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                txt_type.startAnimation(alphaAnimation);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     private void setUpActions(){
