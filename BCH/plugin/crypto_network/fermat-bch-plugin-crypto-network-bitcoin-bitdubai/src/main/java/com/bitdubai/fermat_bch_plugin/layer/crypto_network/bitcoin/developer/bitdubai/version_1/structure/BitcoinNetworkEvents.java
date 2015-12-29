@@ -158,7 +158,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     getOutgoingTransactionAddressFrom(tx),
                     getOutgoingTransactionValue(wallet,tx),
                     getTransactionOpReturn(tx),
-                    ProtocolStatus.TO_BE_NOTIFIED);
+                    ProtocolStatus.NO_ACTION_REQUIRED);
 
             /**
              * If the transaction is already under blocks, I will save it.
@@ -184,7 +184,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                         errorAddress,
                         0,
                         "",
-                        ProtocolStatus.TO_BE_NOTIFIED);
+                        ProtocolStatus.NO_ACTION_REQUIRED);
             } catch (CantExecuteDatabaseOperationException e1) {
                 e1.printStackTrace();
             }
@@ -600,7 +600,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 getOutgoingTransactionAddressFrom(tx),
                 getOutgoingTransactionValue(wallet, tx),
                 getTransactionOpReturn(tx),
-                ProtocolStatus.TO_BE_NOTIFIED);
+                ProtocolStatus.NO_ACTION_REQUIRED);
     }
 
 
