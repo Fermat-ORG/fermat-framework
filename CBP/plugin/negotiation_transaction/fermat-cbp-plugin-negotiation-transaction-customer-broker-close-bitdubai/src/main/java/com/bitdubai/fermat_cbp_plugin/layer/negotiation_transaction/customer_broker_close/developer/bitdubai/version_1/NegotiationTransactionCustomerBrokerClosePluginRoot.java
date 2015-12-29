@@ -62,28 +62,37 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers{
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.USER, addon = Addons.DEVICE_USER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.USER,                addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,        layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.LOG_MANAGER)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,        layer = Layers.SYSTEM,              addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM,     layer = Layers.NEGOTIATION,         plugin = Plugins.CUSTOMER_BROKER_PURCHASE)
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM,     layer = Layers.NEGOTIATION,         plugin = Plugins.CUSTOMER_BROKER_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM,     layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
+    private NegotiationTransmissionManager negotiationTransmissionManager;
+    
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS,                layer = Layers.CRYPTO_MODULE,       plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS,                layer = Layers.CRYPTO_VAULT,        plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,   layer = Layers.MIDDLEWARE,          plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletManagerManager;
 
     /*Represent the dataBase*/
@@ -100,21 +109,6 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
     /*Represent Agent*/
     private CustomerBrokerCloseAgent                                            customerBrokerCloseAgent;
-
-    /*Represent Network Service Negotiation Transmission*/
-    private NegotiationTransmissionManager                                      negotiationTransmissionManager;
-
-    /*Represent the Transaction Negotiation Purchase*/
-    private CustomerBrokerClosePurchaseNegotiationTransaction                   customerBrokerClosePurchaseNegotiationTransaction;
-
-    /*Represent the Transaction Negotiation Sale*/
-    private CustomerBrokerCloseSaleNegotiationTransaction                       customerBrokerCloseSaleNegotiationTransaction;
-
-    /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager                            customerBrokerPurchaseNegotiationManager;
-
-    /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager                                customerBrokerSaleNegotiationManager;
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiation                                   customerBrokerPurchaseNegotiation;
