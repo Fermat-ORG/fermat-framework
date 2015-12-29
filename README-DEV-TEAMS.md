@@ -86,7 +86,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 Please note that whenever we mention a full-time developer is equivalent to mention two part-time developers.
 
 <br>
-## Team Members
+## Teams presentations and members
 
 <br>
 ### Thunder Team:
