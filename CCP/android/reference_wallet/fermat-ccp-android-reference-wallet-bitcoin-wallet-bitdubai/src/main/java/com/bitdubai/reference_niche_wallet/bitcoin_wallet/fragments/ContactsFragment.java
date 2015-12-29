@@ -41,6 +41,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -144,6 +148,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     List<CryptoWalletWalletContact> walletContactRecords;
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow=false;
+    private SettingsManager<BitcoinWalletSettings> settingsManager;
 
     public static ContactsFragment newInstance() {
 
@@ -161,6 +166,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
         cryptoWalletManager = referenceWalletSession.getModuleManager();
+        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         } catch (CantGetCryptoWalletException e) {
@@ -188,7 +194,13 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 public void run() {
                     if(walletContactRecords.isEmpty()){
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
-                        setUpTutorial();
+                        try {
+                            setUpTutorial();
+                        } catch (CantGetSettingsException e) {
+                            e.printStackTrace();
+                        } catch (SettingsNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }else{
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
@@ -369,8 +381,8 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         refreshAdapter();
     }
 
-    private void setUpTutorial(){
-        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(),referenceWalletSession,null);
+    private void setUpTutorial() throws CantGetSettingsException, SettingsNotFoundException {
+        ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(),referenceWalletSession,null,settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isContactsHelpEnabled());
         contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
