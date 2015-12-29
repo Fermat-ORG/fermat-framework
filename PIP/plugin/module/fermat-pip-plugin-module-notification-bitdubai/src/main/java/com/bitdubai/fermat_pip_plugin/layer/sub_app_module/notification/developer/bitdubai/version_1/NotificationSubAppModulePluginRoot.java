@@ -211,7 +211,6 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             try{
                 actor = getActor(intraUserIdentityPublicKey,actorId,actorType);
             } catch (IntraUserNotFoundException e) {
-
                 e.printStackTrace();
             }
 
@@ -413,7 +412,12 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             case INTRA_USER:
 
                     //find actor connected with logget identity
-                return intraWalletUserActorManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorId);
+                try {
+                    return intraWalletUserActorManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorId);
+                }catch (Exception e){
+                    return null;
+                }
+
 
             default:
                 return null;

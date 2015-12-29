@@ -223,6 +223,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     CryptoCurrency.BITCOIN,
                                     BlockchainNetworkType.DEFAULT);
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
+                            onRefresh();
                         }
 
                     }catch (Exception e){
