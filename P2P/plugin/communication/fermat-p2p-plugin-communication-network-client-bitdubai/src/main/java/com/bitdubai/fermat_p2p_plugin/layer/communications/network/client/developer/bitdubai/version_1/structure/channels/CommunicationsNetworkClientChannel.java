@@ -72,9 +72,9 @@ public class CommunicationsNetworkClientChannel {
     }
 
     @OnMessage
-    public void onMessage(Package package, Session session){
+    public void onMessage(Package message, Session session){
         System.out.println("New package Received");
-        System.out.println("session: " + session.getId() + " package = " + package + "");
+        System.out.println("session: " + session.getId() + " package = " + message + "");
 
 
     }
