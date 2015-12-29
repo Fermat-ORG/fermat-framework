@@ -7,6 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -14,8 +17,26 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
@@ -45,10 +66,14 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -70,14 +95,41 @@ import java.util.UUID;
 public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWalletManager {
     private final WalletManagerManager walletManagerManager;
     private final com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private final BankMoneyWalletManager bankMoneyWalletManager;
+    private final CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    private final BankMoneyRestockManager bankMoneyRestockManager;
+    private final CashMoneyRestockManager cashMoneyRestockManager;
+    private final CryptoMoneyRestockManager cryptoMoneyRestockManager;
+    private final CashMoneyWalletManager cashMoneyWalletManager;
+    private final BankMoneyDestockManager bankMoneyDestockManager;
+    private final CashMoneyDestockManager cashMoneyDestockManager;
+    private final CryptoMoneyDestockManager cryptoMoneyDestockManager;
     /*
     *Constructor with Parameters
     */
     public CryptoBrokerWalletModuleCryptoBrokerWalletManager(WalletManagerManager walletManagerManager,
-                                                             com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager)
+                                                             com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                             BankMoneyWalletManager bankMoneyWalletManager,
+                                                             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+                                                             BankMoneyRestockManager bankMoneyRestockManager,
+                                                             CashMoneyRestockManager  cashMoneyRestockManager,
+                                                             CryptoMoneyRestockManager cryptoMoneyRestockManager,
+                                                             CashMoneyWalletManager cashMoneyWalletManager,
+                                                             BankMoneyDestockManager bankMoneyDestockManager,
+                                                             CashMoneyDestockManager cashMoneyDestockManager,
+                                                             CryptoMoneyDestockManager cryptoMoneyDestockManager)
     {
-        this.walletManagerManager      = walletManagerManager;
-        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
+        this.walletManagerManager                 = walletManagerManager;
+        this.cryptoBrokerWalletManager            = cryptoBrokerWalletManager;
+        this.bankMoneyWalletManager               = bankMoneyWalletManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+        this.bankMoneyRestockManager              = bankMoneyRestockManager;
+        this.cashMoneyRestockManager              = cashMoneyRestockManager;
+        this.cryptoMoneyRestockManager            = cryptoMoneyRestockManager;
+        this.cashMoneyWalletManager               = cashMoneyWalletManager;
+        this.bankMoneyDestockManager              = bankMoneyDestockManager;
+        this.cashMoneyDestockManager              = cashMoneyDestockManager;
+        this.cryptoMoneyDestockManager            = cryptoMoneyDestockManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -224,12 +276,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
      * @return Collection<NegotiationLocations>
      */
     @Override
-    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) {
-        //TODO: Implementar
+    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException {
         Collection<NegotiationLocations> negotiationLocations = null;
         if (negotiationType.getCode() == NegotiationType.SALE.getCode())
         {
-
+            negotiationLocations = customerBrokerSaleNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
     }
@@ -297,29 +348,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public StockStatistics getStockStatistics(String stockCurrency) {
         return null;
-    }
-
-    @Override
-    public List<String> getBrokerLocations() {
-        // TODO esto viene de los settings de la negociacion que guarda Angel en su plugin Customer Broker Purchase Negotiation
-        if (BROKER_LOCATIONS.isEmpty()) {
-            BROKER_LOCATIONS.add(BROKER_LOCATION_1);
-            BROKER_LOCATIONS.add(BROKER_LOCATION_2);
-            BROKER_LOCATIONS.add(BROKER_LOCATION_3);
-        }
-
-        return BROKER_LOCATIONS;
-    }
-
-    @Override
-    public List<String> getBrokerBankAccounts() {
-        // TODO esto viene de los settings de la negociacion que guarda Angel en su plugin Customer Broker Purchase Negotiation
-        if (BROKER_BANK_ACCOUNTS.isEmpty()) {
-            BROKER_BANK_ACCOUNTS.add(BROKER_BANK_ACCOUNT_1);
-            BROKER_BANK_ACCOUNTS.add(BROKER_BANK_ACCOUNT_2);
-            BROKER_BANK_ACCOUNTS.add(BROKER_BANK_ACCOUNT_3);
-        }
-        return BROKER_BANK_ACCOUNTS;
     }
 
     @Override
@@ -584,11 +612,15 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread, String publicKeyWalletCryptoBrokerInstall) throws CantSaveCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
         cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().saveCryptoBrokerWalletSpreadSetting(cryptoBrokerWalletSettingSpread);
     }
 
     @Override
     public void saveWalletSettingAssociated(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting, String publicKeyWalletCryptoBrokerInstall) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantSaveCryptoBrokerWalletSettingException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
         cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().saveCryptoBrokerWalletAssociatedSetting(cryptoBrokerWalletAssociatedSetting);
     }
 
@@ -605,6 +637,163 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         }
         return isConfigured;
     }
+
+    /**
+     * @param location
+     * @param uri
+     * @throws CantCreateLocationSaleException
+     */
+    @Override
+    public void createNewLocation(String location, String uri) throws CantCreateLocationSaleException {
+        customerBrokerSaleNegotiationManager.createNewLocation(location, uri);
+    }
+
+    /**
+     * @param location
+     * @throws CantUpdateLocationSaleException
+     */
+    @Override
+    public void updateLocation(NegotiationLocations location) throws CantUpdateLocationSaleException {
+        customerBrokerSaleNegotiationManager.updateLocation(location);
+    }
+
+    /**
+     * @param location
+     * @throws CantDeleteLocationSaleException
+     */
+    @Override
+    public void deleteLocation(NegotiationLocations location) throws CantDeleteLocationSaleException {
+        customerBrokerSaleNegotiationManager.deleteLocation(location);
+    }
+
+    @Override
+    public List<BankAccountNumber> getAccounts(String walletPublicKey) throws CantLoadBankMoneyWalletException {
+        return bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).getAccounts();
+    }
+
+    /**
+     * Returns an object which allows getting and modifying (credit/debit) the Book Balance
+     *
+     * @param walletPublicKey
+     * @return A FiatCurrency object
+     */
+    @Override
+    public FiatCurrency getCashCurrency(String walletPublicKey) throws CantGetCashMoneyWalletCurrencyException, CantLoadCashMoneyWalletException {
+        return cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey).getCurrency();
+    }
+
+    /**
+     * Method that create the transaction Restock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param bankWalletPublicKey
+     * @param bankAccount
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateBankMoneyRestockException
+     */
+    @Override
+    public void createTransactionRestockBank(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyRestockException {
+        bankMoneyRestockManager.createTransactionRestock(publicKeyActor, fiatCurrency, cbpWalletPublicKey, bankWalletPublicKey, bankAccount, amount, memo, priceReference, originTransaction);
+    }
+
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param bankWalletPublicKey
+     * @param bankAccount
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateBankMoneyDestockException
+     */
+    @Override
+    public void createTransactionDestockBank(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyDestockException {
+        bankMoneyDestockManager.createTransactionDestock(publicKeyActor, fiatCurrency, cbpWalletPublicKey, bankWalletPublicKey, bankAccount, amount, memo, priceReference, originTransaction);
+    }
+
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param cshWalletPublicKey
+     * @param cashReference
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateCashMoneyRestockException
+     */
+    @Override
+    public void createTransactionRestockCash(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateCashMoneyRestockException {
+        cashMoneyRestockManager.createTransactionRestock(publicKeyActor, fiatCurrency, cbpWalletPublicKey, cshWalletPublicKey, cashReference, amount, memo, priceReference, originTransaction);
+    }
+
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param fiatCurrency
+     * @param cbpWalletPublicKey
+     * @param cshWalletPublicKey
+     * @param cashReference
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateCashMoneyDestockException
+     */
+    @Override
+    public void createTransactionDestockCash(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateCashMoneyDestockException {
+        cashMoneyDestockManager.createTransactionDestock(publicKeyActor, fiatCurrency, cbpWalletPublicKey, cshWalletPublicKey, cashReference, amount, memo, priceReference, originTransaction);
+    }
+
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param cryptoCurrency
+     * @param cbpWalletPublicKey
+     * @param cryWalletPublicKey
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateCashMoneyRestockException
+     */
+    @Override
+    public void createTransactionRestockCrypto     (String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateCryptoMoneyRestockException {
+        cryptoMoneyRestockManager.createTransactionRestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction);
+    }
+
+    /**
+     * Method that create the transaction Destock
+     *
+     * @param publicKeyActor
+     * @param cryptoCurrency
+     * @param cbpWalletPublicKey
+     * @param cryWalletPublicKey
+     * @param amount
+     * @param memo
+     * @param priceReference
+     * @param originTransaction
+     * @throws CantCreateCryptoMoneyDestockException
+     */
+    @Override
+    public void createTransactionDestockCrypto(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateCryptoMoneyDestockException {
+        cryptoMoneyDestockManager.createTransactionDestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction);
+    }
+
 
     private List<ContractBasicInformation> getContractHistoryTestData() {
         if (contractsHistory == null) {
