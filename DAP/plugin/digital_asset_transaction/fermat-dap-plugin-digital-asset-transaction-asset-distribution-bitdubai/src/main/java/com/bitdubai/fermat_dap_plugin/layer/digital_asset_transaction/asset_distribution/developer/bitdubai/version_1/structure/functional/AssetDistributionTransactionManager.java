@@ -43,6 +43,13 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
                                                AssetDistributionDao assetDistributionDao,
                                                AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                                ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+
+        this.digitalAssetDistributor = new DigitalAssetDistributor(assetVaultManager,
+                errorManager,
+                pluginId,
+                pluginFileSystem,
+                bitcoinNetworkManager);
+
         setAssetVaultManager(assetVaultManager);
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -53,11 +60,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
         setBitcoinManager(bitcoinNetworkManager);
         setActorAssetIssuerManager(actorAssetIssuerManager);
-        this.digitalAssetDistributor = new DigitalAssetDistributor(assetVaultManager,
-                errorManager,
-                pluginId,
-                pluginFileSystem,
-                bitcoinNetworkManager);
+
     }
 
     public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) throws CantSetObjectException {

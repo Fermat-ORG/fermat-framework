@@ -15,16 +15,37 @@ import java.util.UUID;
  */
 public interface CustomerBrokerNewManager {
 
-    //CREATE THE NEW PURCHASE NEGOTIATION TRANSACTION
+    /**
+     * Create an Customer Broker New  Negotiation Transaction for the customer
+     *
+     * @param customerBrokerPurchaseNegotiation the updated negotiation
+     * @throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException
+     */
     void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
-    //CREATE THE NEW SALE NEGOTIATION TRANSACTION
+    /**
+     * Create an Customer Broker New Negotiation Transaction for the broker
+     *
+     * @param customerBrokerSaleNegotiation the updated negotiation
+     * @throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException
+     */
     void createCustomerBrokerNewSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCreateCustomerBrokerNewSaleNegotiationTransactionException;
 
-    //GET THE NEW NEGOTIATION TRANSACTION FOR THE INDICATE ID
+    /**
+     * Get negotiation transaction Customer Broker New for the transactionId indicate
+     *
+     * @param transactionId the id negotiation transaction
+     * @return the Negotiation Transaction data
+     * @throws CantGetCustomerBrokerNewNegotiationTransactionException
+     */
     CustomerBrokerNew getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException;
 
-    //LIST THE NEW NEGOTIATION TRANSACTION
+    /**
+     * List negotiation transaction Customer Broker New
+     *
+     * @return the list Negotiation Transaction data
+     * @throws CantGetListCustomerBrokerNewNegotiationTransactionException
+     */
     List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerNewNegotiationTransactionException;
 
 }

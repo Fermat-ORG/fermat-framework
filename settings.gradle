@@ -9,6 +9,7 @@ apply from: 'BNK/settings.gradle'
 apply from: 'CBP/settings.gradle'
 apply from: 'CCM/settings.gradle'
 apply from: 'CCP/settings.gradle'
+apply from: 'CHT/settings.gradle'
 apply from: 'CSH/settings.gradle'
 apply from: 'CER/settings.gradle'
 apply from: 'DAP/settings.gradle'
@@ -17,14 +18,14 @@ apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
 
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-cht-plugin-middleware-chat', ':fermat-cht-network-service-chat', ':fermat-chat-plugin-network-service-chat', ':fermat-cht-plugin-network-service-chat', ':fermat-cht-plugin-sub-app-module-chat'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
 
 //include ':fermat_linux_core'
-
+//include ':manifest_generator'
 
 include ':fermat-cry-api'
 project(':fermat-cry-api').projectDir = new File('CRY/library/api/fermat-cry-api')
