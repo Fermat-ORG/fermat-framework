@@ -37,6 +37,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private FrameLayout container_john_doe;
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
+    private IntraUserSubAppSession intraUserSubAppSession;
 
     /**
      * Constructor using Session and Resources
@@ -44,15 +45,15 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationIntraUserCommunityDialog(final Activity                       activity     ,
-                                                final IntraUserSubAppSession         fermatSession,
-                                                final SubAppResourcesProviderManager resources    ,
-                                                final int                            type         ) {
+    public PresentationIntraUserCommunityDialog(final Activity activity,
+                                                final IntraUserSubAppSession fermatSession,
+                                                final SubAppResourcesProviderManager resources,
+                                                final int type) {
 
         super(activity, fermatSession, resources);
 
         this.activity = activity;
-        this.type     = type    ;
+        this.type = type;
     }
 
     @Override
@@ -100,7 +101,6 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
         SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = pref.edit();
         if (id == R.id.btn_left) {
-            ;
             if (dontShowAgainCheckBox.isChecked()) {
                 edit.putBoolean("isChecked", true);
                 edit.apply();
