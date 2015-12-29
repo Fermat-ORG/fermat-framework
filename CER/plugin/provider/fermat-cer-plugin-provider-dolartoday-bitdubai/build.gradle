@@ -14,13 +14,6 @@ configurations {
     deployerJars
 }
 
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'fermat-cer-plugin-provider-dolartoday-bitdubai',
-                   'Implementation-Version': version
-    }
-}
-
 repositories {
 	mavenCentral()
 }
