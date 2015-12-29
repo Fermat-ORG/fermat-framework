@@ -1,8 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/cbw_create_new_location_button"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/cbw_country_spinner"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:drawSelectorOnTop="true"
+                tools:listitem="@android:layout/simple_dropdown_item_1line"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/cbw_city_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="City"
+                android:textColor="@color/black"
+                android:textColorHint="#AAA"
+                android:textSize="16sp"
+                tools:text="Maracaibo"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/cbw_state_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:hint="State/Province"
+                android:textColorHint="#AAA"
+                android:textSize="16sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/cbw_zip_code_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="Zip/Postal Code"
+                android:textColorHint="#AAA"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/cbw_address_line_1_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="16dp"
+            android:hint="Address line 1"
+            android:textColorHint="#AAA"
+            android:textSize="16sp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/cbw_address_line_2_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Address line 2"
+            android:textColorHint="#AAA"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+        android:id="@+id/cbw_create_new_location_button"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#42ba70"
+        android:text="Create"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        />
+</RelativeLayout>
