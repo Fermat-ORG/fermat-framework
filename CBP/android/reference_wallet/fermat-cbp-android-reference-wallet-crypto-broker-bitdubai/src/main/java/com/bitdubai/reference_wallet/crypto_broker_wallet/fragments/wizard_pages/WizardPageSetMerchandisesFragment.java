@@ -29,6 +29,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.InstalledWalletTestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -40,7 +41,7 @@ import java.util.Map;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
+public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment implements WalletsAdapter.OnDeleteButtonClickedListener {
 
     // Constants
     private static final String TAG = "WizardPageSetMerchand";
@@ -55,6 +56,8 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
     private WalletsAdapter adapter;
+    private RecyclerView recyclerView;
+    private FermatTextView stockWalletsEmptyView;
 
 
     public static WizardPageSetMerchandisesFragment newInstance() {
@@ -91,14 +94,17 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
 
         final View layout = inflater.inflate(R.layout.cbw_wizard_step_set_merchandises, container, false);
 
-        adapter = new WalletsAdapter(getActivity());
-
-        final RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+        adapter = new WalletsAdapter(getActivity());
+        adapter.setDeleteButtonListener(this);
         recyclerView.setAdapter(adapter);
 
+        stockWalletsEmptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
+
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %", spreadValue));
+        spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
         final View cryptoButton = layout.findViewById(R.id.cbw_select_crypto_wallets);
         cryptoButton.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +143,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 spreadValue = progress;
-                spreadTextView.setText(String.format("%1$s %", spreadValue));
+                spreadTextView.setText(String.format("%1$s %%", spreadValue));
             }
 
             @Override
@@ -171,16 +177,19 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
                     filteredList.add(wallet);
             }
 
-            stockWallets = adapter.getDataSet();
-
             final SimpleListDialogFragment<InstalledWallet> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("Select a Wallet", filteredList);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
                 @Override
                 public void onItemSelected(InstalledWallet selectedItem) {
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
-                        updateStockWalletList(selectedItem);
-                        adapter.changeDataSet(stockWallets);
+
+                        if (!stockWallets.contains(selectedItem)) {
+                            switchToEmptyView();
+                            stockWallets.add(selectedItem);
+                            adapter.changeDataSet(stockWallets);
+                        }
+
                     } else {
                         showBankAccountsDialog(selectedItem);
                     }
@@ -211,11 +220,18 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
         accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
             @Override
             public void onItemSelected(String selectedAccount) {
+
                 FiatCurrency currency = FiatCurrency.US_DOLLAR; // TODO cambiar con lo de franklin
                 String account = "Esto es una cuenta"; // TODO cambiar con lo de franklin
                 bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
+                bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
 
-                updateStockWalletList(selectedWallet);
+                if (!stockWallets.contains(selectedWallet)) {
+                    switchToEmptyView();
+                    stockWallets.add(selectedWallet);
+                    adapter.changeDataSet(stockWallets);
+                }
+
                 adapter.changeDataSet(stockWallets);
             }
         });
@@ -224,8 +240,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
     }
 
     private void saveSettingAndGoNextStep() {
-
-        stockWallets = adapter.getDataSet();
 
         if (stockWallets.isEmpty()) {
             Toast.makeText(getActivity(), R.string.select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
@@ -283,14 +297,21 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment {
         }
     }
 
-    private void updateStockWalletList(InstalledWallet selectedWallet) {
-        for (InstalledWallet wallet : stockWallets) {
-            String walletPublicKey = wallet.getWalletPublicKey();
-            String selectedWalletPublicKey = selectedWallet.getWalletPublicKey();
+    @Override
+    public void deleteButtonClicked(InstalledWallet data, int position) {
+        stockWallets.remove(position);
+        adapter.changeDataSet(stockWallets);
 
-            if (!walletPublicKey.equals(selectedWalletPublicKey)) {
-                stockWallets.add(selectedWallet);
-            }
+        switchToEmptyView();
+    }
+
+    private void switchToEmptyView() {
+        if (stockWallets.isEmpty()) {
+            stockWalletsEmptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            stockWalletsEmptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 }
