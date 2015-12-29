@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantSendConfirmToCryptoBrokerException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T SEND CONFIRMATION FROM CRYPTO CUSTOMER TO CRYPTO BROKER";
+    public static final String DEFAULT_MESSAGE = "CBP-NETWORK SERVICE-NEGOTIATION TRANSMISSION: CAN'T SEND CONFIRMATION FROM CRYPTO CUSTOMER TO CRYPTO BROKER";
 
     /**
      * This is the constructor that every inherited FermatException must implement

@@ -96,7 +96,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         txt_body = (FermatTextView) findViewById(R.id.txt_body);
         footer_title = (FermatTextView) findViewById(R.id.footer_title);
         checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
-        checkbox_not_show.setChecked(checkButton);
+        checkbox_not_show.setChecked(!checkButton);
         switch (type){
             case TYPE_PRESENTATION:
                 image_view_left = (ImageView) findViewById(R.id.image_view_left);
@@ -184,6 +184,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     }
 
     private void saveSettings(){
+        if(type!=TYPE_PRESENTATION)
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
         if(checkbox_not_show.isChecked()){
             SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
@@ -222,6 +223,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     @Override
     public void onBackPressed() {
+        saveSettings();
         super.onBackPressed();
     }
 }

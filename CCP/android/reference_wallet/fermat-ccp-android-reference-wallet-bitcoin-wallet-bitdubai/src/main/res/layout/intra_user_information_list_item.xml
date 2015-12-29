@@ -45,12 +45,16 @@
         android:layout_toRightOf="@+id/image_container"
         tools:text="Mati was here" />
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_contact_new_added"
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id="@+id/checkbox_connection"
+        android:textColorHint="@color/black_overlay"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="25dp"
         android:layout_marginTop="7dp"
         />
+
+
 </RelativeLayout>

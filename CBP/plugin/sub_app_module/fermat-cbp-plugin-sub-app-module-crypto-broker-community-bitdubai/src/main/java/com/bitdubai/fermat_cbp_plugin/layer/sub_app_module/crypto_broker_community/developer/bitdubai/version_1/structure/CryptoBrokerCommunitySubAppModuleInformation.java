@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 
 import java.util.List;
@@ -31,6 +32,13 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.publicKey = actorConnection.getPublicKey();
         this.alias     = actorConnection.getAlias()    ;
         this.image     = actorConnection.getImage()    ;
+    }
+
+    public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerExposingData exposingData) {
+
+        this.publicKey = exposingData.getPublicKey();
+        this.alias     = exposingData.getAlias()    ;
+        this.image     = exposingData.getImage()    ;
     }
 
     @Override

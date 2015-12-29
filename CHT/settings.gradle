@@ -1,0 +1,28 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-cht-api'
+project(':fermat-cht-api').projectDir = new File('CHT/library/api/fermat-cht-api')
+
+include ':fermat-cht-core'
+project(':fermat-cht-core').projectDir = new File('CHT/library/core/fermat-cht-core')
+
+//ANDROID
+
+//PLUGINS
+
+//Middleware
+include ':fermat-cht-plugin-middleware-chat'
+project(':fermat-cht-plugin-middleware-chat').projectDir = new File('CHT/plugin/middleware/fermat-cht-plugin-middleware-chat')
+
+//Network Service
+include ':fermat-cht-plugin-network-service-chat'
+project(':fermat-cht-plugin-network-service-chat').projectDir = new File('CHT/plugin/network_service/fermat-cht-plugin-network-service-chat')
+
+//Network Service
+include ':fermat-cht-plugin-sub-app-module-chat'
+project(':fermat-cht-plugin-sub-app-module-chat').projectDir = new File('CHT/plugin/sub_app_module/fermat-cht-plugin-sub-app-module-chat')

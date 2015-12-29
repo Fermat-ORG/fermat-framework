@@ -30,6 +30,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddConnectionsAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.List;
  * Created by Matias Furszyfer
  */
 public class AddConnectionFragment extends FermatWalletListFragment<CryptoWalletIntraUserActor>
-        implements FermatListItemListeners<CryptoWalletIntraUserActor> {
+        implements FermatListItemListeners<CryptoWalletIntraUserActor>,AddConnectionCallback {
 
 
     private static final Integer MAX_USER_SHOW = 20;
@@ -49,6 +50,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
     private ReferenceWalletSession referenceWalletSession;
     private ImageView empty_screen;
+    private Menu menu;
+    private boolean isMenuVisible;
+    private int connectionPickCounter;
 
 
     public static AddConnectionFragment newInstance() {
@@ -65,6 +69,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             errorManager = referenceWalletSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            isMenuVisible=false;
+            connectionPickCounter = 0;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -145,7 +151,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AddConnectionsAdapter(getActivity(), intraUserInformationList);
+            adapter = new AddConnectionsAdapter(getActivity(), intraUserInformationList,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -162,8 +168,12 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        this.menu = menu;
+        if(isMenuVisible){
+            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
         //inflater.inflate(R.menu.home_menu, menu);
     }
 
@@ -177,7 +187,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 for(CryptoWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
                     try {
                         if (cryptoWalletIntraUserActor.isSelected()) {
-                            moduleManager.convertConnectionToContact(cryptoWalletIntraUserActor.getAlias(),
+                            moduleManager.convertConnectionToContact(
+                                    cryptoWalletIntraUserActor.getAlias(),
                                     Actors.INTRA_USER,
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
@@ -240,5 +251,22 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public void onLongItemClickListener(CryptoWalletIntraUserActor data, int position) {
 
+    }
+
+    @Override
+    public void addMenuEnabled() {
+        if(!isMenuVisible){
+            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            connectionPickCounter++;
+        }
+    }
+
+    @Override
+    public void addMenuDisabled() {
+        connectionPickCounter--;
+        if(connectionPickCounter==0){
+            menu.clear();
+        }
     }
 }

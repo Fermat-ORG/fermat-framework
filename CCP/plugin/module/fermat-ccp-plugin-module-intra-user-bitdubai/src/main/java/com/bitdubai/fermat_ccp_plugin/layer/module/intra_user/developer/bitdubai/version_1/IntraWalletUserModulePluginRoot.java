@@ -816,6 +816,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
+        try {
+            return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+        } catch (CantListIntraWalletUsersException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
