@@ -22,7 +22,7 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 * Disruptors
 * Fermat ORG Client
 * Fermat ORG Server
-* Nelson's Team
+* DBZ Team
 * Mordor
 * Franlkin's Team
 
@@ -33,10 +33,10 @@ In Fermat teams are organized in a hierarchical way. This helps in reviewing cha
 | Level 1 | Level 2 | Level 3 | Level 4 |
 |:----:|:----:|:----:|:----:|
 | Thunder | | | |
-| | Franklin's Team | | |
+| | Kabuto | | |
 | | Mordor | | |
 | Code Butchers | | | |
-| | Nelson's Team | | |
+| | DBZ Team | | |
 | Coin Diggers | | | |
 | | Disruptors | | |
 
@@ -161,6 +161,28 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
+<br/>
+### Kabuto Team:
+-----------------------------------
+Passionate about technologies, programming for us is part of our life and virtues, using as always ethical management best practices for writing our code.
+
+In the Crypto Broker Platform we are responsible for a large part of user level business transactions, wallet and module, while in the Chat Platform we are developing the back end.
+
+#### Team Members:
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+
+* **Jose Cardozo**<br/>
+---
+      Email:   josejcb89@gmail.com
+      Skype:   josejcb89
+      Github:  https://github.com/josejcb
+
+We are also ameteur philosophers, passionate about esoteric topics as video games.
 
 <br/>
 ### Code Butchers Team:
@@ -192,4 +214,46 @@ In each platform mentioned, we are involved in the development of Network Servic
 
 We love music and we do music, we love movies (fanatics), we are also ameteur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
+<br/>
+### DBZ Team:
+-----------------------------------
+We are a developer team with different experience level; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several Plugins, Reference Wallets and Sub Apps for the CBP Platform
 
+#### Team Members:
+
+* **Nelson Ramirez [Team Leader]**
+    ```
+    Email:   nelsonalfo@gmail.com
+    Skype:   nelalfo
+    Github:  https://github.com/nelsonalfo
+    ```
+    
+* **Angel Veloz**
+    ```
+    Skype:   vlzangel
+    Github:  https://github.com/vlzangel
+    ```
+
+* **Alejandro Bicelis**
+    ```
+    Skype:   seed_1987
+    Github:  https://github.com/abicelis
+    ```
+
+* **Guillermo Gutierrez**
+   ```
+    Email:   guillermo20@gmail.com
+    Skype:   guillermo20
+    Github:  https://github.com/guillermo20
+    ```
+
+* **Yordin Alayn**
+   ```
+    Email:   y.alayn@gmail.com
+    Skype:   y_alayn
+    Github:  https://github.com/yalayn
+    ```
+
+We can talk about any topic outside work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and the like! If you want to join our team you're more that welcome!
+
+<br/>

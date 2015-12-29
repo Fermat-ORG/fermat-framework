@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<fermat xmlns="http://bitdubai.com/fermat/schemas"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://bitdubai.com/fermat/schemas FermatManifest.xsd" >
+<fermat>
     <platforms>
         <platform code="COR" name="Core And Api" logo="COR_logo.png">
 
@@ -4362,7 +4360,7 @@
                     <android name="Cash Money"
                         description=""
                         difficulty="6"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4744,6 +4742,7 @@
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="vlzangel" scope="implementation" percentage="10"></author>
                             <author name="nelsonalfo" scope="implementation" percentage="40"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="50"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -4760,6 +4759,7 @@
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="vlzangel" scope="implementation" percentage="10"></author>
                             <author name="nelsonalfo" scope="implementation" percentage="40"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="50"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -4958,13 +4958,13 @@
                     <plugin	name="Customer Broker Sale"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="franklinmarcano1970" scope="implementation" percentage="50"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -4974,13 +4974,13 @@
                     <plugin	name="Customer Broker Purchase"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
                         </maintainers>
@@ -5043,7 +5043,7 @@
                     <plugin name="Broker Ack Offline Payment"
                         description=""
                         difficulty="8"
-                        code-level="development"
+                        code-level="qa"
                         >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5185,7 +5185,7 @@
                 <plugins>
                     <plugin name="Customer Broker New"
                         description=""
-                        difficulty="8"
+                        difficulty="6"
                         code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5199,7 +5199,7 @@
                     </plugin>
                     <plugin name="Customer Broker Update"
                         description=""
-                        difficulty="8"
+                        difficulty="6"
                         code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5213,12 +5213,12 @@
                     </plugin>
                     <plugin name="Customer Broker Close"
                         description=""
-                        difficulty="8"
-                        code-level="development">
+                        difficulty="6"
+                        code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="10"></author>
+                            <author name="yalayn" scope="implementation" percentage="100"></author>
                             <author name="vlzangel" scope="implementation" percentage="15"></author>
                         </authors>
                         <maintainers>
@@ -5240,7 +5240,7 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="yalayn" scope="implementation" percentage="10"></author>
-                            <author name="franklinmarcano1970" scope="implementation" percentage="15"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
                         </maintainers>

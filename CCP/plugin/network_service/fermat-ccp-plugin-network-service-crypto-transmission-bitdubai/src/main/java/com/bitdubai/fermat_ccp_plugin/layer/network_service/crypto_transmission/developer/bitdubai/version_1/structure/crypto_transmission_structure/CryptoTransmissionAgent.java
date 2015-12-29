@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantGetCryptoTransmissionMetadataException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -31,6 +33,14 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias Furszyfer on 2015.10.05..
@@ -116,7 +126,7 @@ public class CryptoTransmissionAgent {
      * Mapa con el publicKey del componentProfile al cual me quiero conectar
      *  y las veces que intenté conectarme para saltearlo si no está conectado
      */
-    Map<String,Integer> connectionsCounters;
+    Map<String,Timer> connectionsTimer;
 
     /**
      * Cola de espera, a la cual van pasando las conecciones que no se pudieron conectar para que se hagan con más tiempo y no saturen el server
@@ -665,6 +675,33 @@ public class CryptoTransmissionAgent {
         IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
         incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
         eventManager.raiseEvent(incomingCryptoMetadataReceive);
+    }
+
+    public void addToTimer(String connectionDestionation, final UUID metadataId) {
+        final ScheduledExecutorService scheduledExecutorService =
+                Executors.newScheduledThreadPool(2);
+        ScheduledFuture scheduledFuture =
+                scheduledExecutorService.schedule(new Callable() {
+                                                      public Object call() throws Exception {
+                                                          try {
+                                                              CryptoTransmissionMetadata cryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.getMetadata(metadataId);
+                                                              if (cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE ||
+                                                                      cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT ||
+                                                                      cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET) {
+                                                                  cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                                                                  cryptoTransmissionMetadata.setPendingToRead(true);
+                                                                  cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
+                                                              }
+                                                          }catch (Exception e){
+                                                              e.printStackTrace();
+                                                              scheduledExecutorService.shutdown();
+                                                          }
+                                                          scheduledExecutorService.shutdown();
+                                                          return null;
+                                                      }
+                                                  },
+                        1,
+                        TimeUnit.HOURS);
     }
 
 }
