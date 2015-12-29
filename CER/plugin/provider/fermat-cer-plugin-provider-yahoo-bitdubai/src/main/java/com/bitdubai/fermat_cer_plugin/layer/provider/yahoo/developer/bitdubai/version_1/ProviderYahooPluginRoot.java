@@ -114,13 +114,17 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
 
         supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR));
         supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.ARGENTINE_PESO, FiatCurrency.US_DOLLAR));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.ARGENTINE_PESO));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.EURO));
 
         try {
             dao = new YahooProviderDao(pluginDatabaseSystem, pluginId, errorManager);
             dao.initialize();
             dao.initializeProvider("Yahoo");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
@@ -237,7 +241,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeYahooProviderDatabaseException cantInitializeException) {
             FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "ProviderDolartodayPluginRoot", null);
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
