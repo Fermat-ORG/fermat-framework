@@ -164,7 +164,7 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
              */
             initializeDb();
 
-            URI uri = new URI(HarcodeConstants.WS_PROTOCOL + WsCommunicationsNetworkClientPluginRoot.SERVER_IP + ":" + HarcodeConstants.DEFAULT_PORT+"/websockets/client-channel");
+            URI uri = new URI(HarcodeConstants.WS_PROTOCOL + WsCommunicationsNetworkClientPluginRoot.SERVER_IP + ":" + HarcodeConstants.DEFAULT_PORT+"/client-channel");
             communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(uri,eventManager,locationManager, identity);
             communicationsNetworkClientConnection.start();
 
