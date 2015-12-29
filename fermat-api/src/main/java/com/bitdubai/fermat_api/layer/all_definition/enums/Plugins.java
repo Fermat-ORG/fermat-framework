@@ -175,6 +175,7 @@ public enum Plugins implements FermatPluginsEnum {
 
     //Init CER Plugins
     BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPD"  ),
+    BITDUBAI_CER_PROVIDER_YAHOO                 ("BCERPY"  ),
 
     // End CER Plugins
 
@@ -382,6 +383,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case "BCERPD":  return BITDUBAI_CER_PROVIDER_DOLARTODAY;
+            case "BCERPY":  return BITDUBAI_CER_PROVIDER_YAHOO;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION         ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW              ;
             case ("CBUP"):  return CUSTOMER_BROKER_UPDATE           ;
