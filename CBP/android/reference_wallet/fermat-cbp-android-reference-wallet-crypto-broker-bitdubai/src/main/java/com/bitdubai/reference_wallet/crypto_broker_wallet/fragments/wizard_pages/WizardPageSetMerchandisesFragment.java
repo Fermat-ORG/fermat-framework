@@ -29,7 +29,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.InstalledWalletTestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -57,7 +56,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
     private ErrorManager errorManager;
     private WalletsAdapter adapter;
     private RecyclerView recyclerView;
-    private FermatTextView stockWalletsEmptyView;
+    private FermatTextView emptyView;
 
 
     public static WizardPageSetMerchandisesFragment newInstance() {
@@ -101,7 +100,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
         adapter.setDeleteButtonListener(this);
         recyclerView.setAdapter(adapter);
 
-        stockWalletsEmptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
+        emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
@@ -307,10 +306,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
 
     private void switchToEmptyView() {
         if (stockWallets.isEmpty()) {
-            stockWalletsEmptyView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
-            stockWalletsEmptyView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
