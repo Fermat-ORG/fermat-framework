@@ -324,8 +324,9 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         List<String> data = new ArrayList<>();
         try {
             Collection<NegotiationLocations> locations = walletManager.getAllLocations(NegotiationType.PURCHASE);
-            for (NegotiationLocations location : locations)
-                data.add(location.getLocation());
+            if (locations != null)
+                for (NegotiationLocations location : locations)
+                    data.add(location.getLocation());
 
         } catch (FermatException ex) {
             Log.e("NegotiationDetailsAdapt", ex.getMessage(), ex);
