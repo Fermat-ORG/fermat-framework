@@ -43,7 +43,7 @@ public class FragmentsCommons {
                         //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
                         //imageView.setImageBitmap(bitmap);
                     } else
-                        Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                        Picasso.with(activity).load(R.drawable.ic_profile_male).into(imageView);
                 }
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
             }else{

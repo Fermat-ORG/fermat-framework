@@ -7,11 +7,13 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors;
 
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.MethodCallsHistory;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
@@ -111,6 +113,24 @@ public abstract class PackageProcessor {
     public JsonParser getJsonParser() {
         return jsonParser;
     }
+
+
+    /**
+     * Save the method call history
+     *
+     * @param parameters
+     * @param profileIdentityPublicKey
+     */
+    protected void methodCallsHistory(String parameters, String profileIdentityPublicKey) throws CantInsertRecordDataBaseException {
+
+        MethodCallsHistory methodCallsHistory = new MethodCallsHistory();
+        methodCallsHistory.setMethodName(getPackageType().toString());
+        methodCallsHistory.setParameters(parameters);
+        methodCallsHistory.setProfileIdentityPublicKey(profileIdentityPublicKey);
+
+        getDaoFactory().getMethodCallsHistoryDao().create(methodCallsHistory);
+    }
+
 
     /**
      * Method that call to process the message

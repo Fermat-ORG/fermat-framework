@@ -989,6 +989,11 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         }
     }
 
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
+
     private void launchNotificationTest(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;

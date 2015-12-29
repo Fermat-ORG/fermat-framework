@@ -671,6 +671,11 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
     }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/

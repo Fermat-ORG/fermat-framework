@@ -31,4 +31,6 @@ public class WizardPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return fragments.size();
     }
+
+
 }

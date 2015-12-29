@@ -55,7 +55,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 ### Fermat Network, Framework & APPs
 
 | # | Category | Description |
-|:-----:|:-----:|:-----|
+|:-----:|:-----:|:-----| 
 | 1 | Contributor | Casual contributor to the project. |
 | 2 | Part-Time Entry Level | New part-time developer on the project. |
 | 3 | Part-Time Veteran | Veteran part-time developer. Working part-time 6+ months. |
@@ -74,7 +74,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 ### Fermat ORG Site
 
 | # | Category | Description |
-|:-----:|:-----:|:-----|
+|:-----:|:-----:|:-----| 
 | 1 | ORG Entry Level | New developer on the project. |
 | 2 | ORG Veteran | Veteran developer. Working full time 3+ months or part-time 6+ months. |
 | 3 | ORG New Team Leader | Team Leader with less than 5 full-time members on the team. |
@@ -291,12 +291,12 @@ We are a developer team with different experience level; we give our best to del
 ---
       Skype:   vlzangel
       Github:  https://github.com/vlzangel
-
+   
 * **Alejandro Bicelis**
 ---
       Skype:   seed_1987
       Github:  https://github.com/abicelis
-
+    
 
 * **Guillermo Gutierrez**
 ---
@@ -325,8 +325,8 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
     Email:   miguelceledon@outlook.com
     Skype:   miguel-209
     Github:  https://github.com/miguelcldn
-
-
+    
+    
 * **Ricardo Delgado**<br/>
 ---
       Email:   ricardodelgado460@hotmail.com
@@ -342,31 +342,3 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
 We welcome everyone who would like to join us. JavaScript is a hard languages when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
 
 <br/>
-
-### Fermat ORG Sierra:
------------------------------------
-In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with a different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
-
-#### Team Members:
-
-* **Luis Fuenmayor [ORG New Team Leader - ORG Veteran]**<br/>
----
-    Email:   fuelusumar@gmail.com
-    Skype:   fuelusumar
-    Github:  https://github.com/fuelusumar
-
-* **German Mendoza**<br/>
----
-      Email:   german.mendoza.187@gmail.com
-      Skype:   german0296
-      Github:  https://github.com/kyxer
-
-* **Luis Campo**<br/>
----
-    Email:   campusprize@gmail.com
-    Skype:   campol
-    Github:  https://github.com/campol
-
-<br/>
-
-
