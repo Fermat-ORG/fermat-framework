@@ -1476,7 +1476,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setColor("#1189a5");
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Broker Wallet");
@@ -1530,35 +1529,35 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFooter.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
         runtimeActivity.setFooter(runtimeFooter);
 
-        //Wizard
-        Wizard runtimeWizard = new Wizard();
-
-        // step 1 - Set Identity
-        WizardPage runtimeWizardPage = new WizardPage();
-        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
-        runtimeWizard.addPage(runtimeWizardPage);
-
-        // step 2 - Set Merchandises
-        runtimeWizardPage = new WizardPage();
-        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey());
-        runtimeWizard.addPage(runtimeWizardPage);
-
-        // step 3 - Set Providers
-        runtimeWizardPage = new WizardPage();
-        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS.getKey());
-        runtimeWizard.addPage(runtimeWizardPage);
-
-        // step 4 - Set Locations
-        runtimeWizardPage = new WizardPage();
-        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS.getKey());
-        runtimeWizard.addPage(runtimeWizardPage);
-
-        // step 5 - Set Bank Accounts (If bank wallet has been set as Stock)
-        runtimeWizardPage = new WizardPage();
-        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getKey());
-        runtimeWizard.addPage(runtimeWizardPage);
-
-        runtimeActivity.addWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), runtimeWizard);
+//        //Wizard
+//        Wizard runtimeWizard = new Wizard();
+//
+//        // step 1 - Set Identity
+//        WizardPage runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
+//        runtimeWizard.addPage(runtimeWizardPage);
+//
+//        // step 2 - Set Merchandises
+//        runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey());
+//        runtimeWizard.addPage(runtimeWizardPage);
+//
+//        // step 3 - Set Providers
+//        runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS.getKey());
+//        runtimeWizard.addPage(runtimeWizardPage);
+//
+//        // step 4 - Set Locations
+//        runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS.getKey());
+//        runtimeWizard.addPage(runtimeWizardPage);
+//
+//        // step 5 - Set Bank Accounts (If bank wallet has been set as Stock)
+//        runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getKey());
+//        runtimeWizard.addPage(runtimeWizardPage);
+//
+//        runtimeActivity.addWizard(WizardTypes.CBP_WALLET_CRYPTO_BROKER_START_WIZARD.getKey(), runtimeWizard);
 
         // Activity: Open Negotiation details
         runtimeActivity = new Activity();
