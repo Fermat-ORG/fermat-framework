@@ -244,20 +244,22 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                         walletManager.getPaymentMethods(currencyToSell));
                 break;
             case BROKER_BANK_ACCOUNT:
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.broker_bank_account_title,
-                        R.string.selected_bank_account,
-                        step.getValue(),
-                        walletManager.getBrokerBankAccounts());
+                //TODO:Revisar Nelson
+//                viewHolder.bind(
+//                        stepNumber,
+//                        R.string.broker_bank_account_title,
+//                        R.string.selected_bank_account,
+//                        step.getValue(),
+//                        walletManager.getAccounts(""));
                 break;
             case BROKER_LOCATION:
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.broker_locations_title,
-                        R.string.selected_location,
-                        step.getValue(),
-                        walletManager.getBrokerLocations());
+                //TODO:Revisar Nelson
+//                viewHolder.bind(
+//                        stepNumber,
+//                        R.string.broker_locations_title,
+//                        R.string.selected_location,
+//                        step.getValue(),
+//                        walletManager.getBrokerLocations());
                 break;
             case CUSTOMER_BANK_ACCOUNT:
                 viewHolder.bind(
