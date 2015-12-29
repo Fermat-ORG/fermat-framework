@@ -7,9 +7,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Message;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageDecoder;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.MessageEncoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import javax.websocket.ClientEndpoint;
@@ -30,8 +30,8 @@ import javax.websocket.Session;
 
 @ClientEndpoint(
         configurator = ClientChannelConfigurator.class,
-        encoders = {MessageEncoder.class},
-        decoders = {MessageDecoder.class}
+        encoders = {PackageEncoder.class},
+        decoders = {PackageDecoder.class}
 )
 public class CommunicationsNetworkClientChannel {
 
@@ -72,9 +72,9 @@ public class CommunicationsNetworkClientChannel {
     }
 
     @OnMessage
-    public void onMessage(Message message, Session session){
-        System.out.println("New message Received");
-        System.out.println("session: " + session.getId() + " message = " + message + "");
+    public void onMessage(Package package, Session session){
+        System.out.println("New package Received");
+        System.out.println("session: " + session.getId() + " package = " + package + "");
 
 
     }

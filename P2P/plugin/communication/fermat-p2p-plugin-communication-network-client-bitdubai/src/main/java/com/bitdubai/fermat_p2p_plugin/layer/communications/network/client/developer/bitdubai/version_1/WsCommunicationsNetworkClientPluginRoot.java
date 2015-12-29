@@ -97,10 +97,12 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
      */
     private NetworkClientP2PDatabaseFactory networkClientP2PDatabaseFactory;
 
-    /*
-    * Represent the Device Location
+    /**
+     * Represent the SERVER_IP by default conexion to request nodes list
      */
-    private LocationManager locationManager;
+    public static final String SERVER_IP = HarcodeConstants.SERVER_IP_DEFAULT;
+
+    private CommunicationsNetworkClientConnection communicationsNetworkClientConnection;
 
     @Override
     public void setId(UUID pluginId) {
@@ -155,6 +157,9 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
              */
             initializeDb();
 
+            URI uri = new URI(HarcodeConstants.WS_PROTOCOL + WsCommunicationsNetworkClientPluginRoot.SERVER_IP + ":" + HarcodeConstants.DEFAULT_PORT);
+            communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(uri,eventManager,locationManager, identity);
+            communicationsNetworkClientConnection.start();
 
 
         }catch (Exception exception){
