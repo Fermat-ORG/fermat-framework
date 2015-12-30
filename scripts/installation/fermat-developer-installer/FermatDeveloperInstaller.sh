@@ -23,7 +23,7 @@ installationFolder=$HOME #you can modify the installation folder, as default I a
 #Please, select one platform accoding your Operative System
 platform="-linux-x64.tar.gz"
 #platform="-linux-i586.tar.gz"
-gradleVersion=2.9
+gradleVersion=2.10
 #If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
 #Genymotion 32Bits
 #genymotion="genymotion-2.5.2_x86.bin"

@@ -177,7 +177,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 for(CryptoWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
                     try {
                         if (cryptoWalletIntraUserActor.isSelected()) {
-                            moduleManager.convertConnectionToContact(cryptoWalletIntraUserActor.getAlias(),
+                            moduleManager.convertConnectionToContact(
+                                    cryptoWalletIntraUserActor.getAlias(),
                                     Actors.INTRA_USER,
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),

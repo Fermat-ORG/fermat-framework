@@ -19,12 +19,13 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     private ConnectionState connectionState;
 
 
-    public IntraUserModuleInformation(String name,String publicKey,byte[] profileImage, ConnectionState connectionState)
+    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState)
     {
         this.name = name;
         this.publicKey = publicKey;
-        //this.profileImage = (byte[] )profileImage.clone();
+        this.profileImage = (byte[] )profileImage.clone();
         this.connectionState = connectionState;
+        this.phrase = phrase;
     }
     /**
      * That method returns the public key of the represented Intra User
