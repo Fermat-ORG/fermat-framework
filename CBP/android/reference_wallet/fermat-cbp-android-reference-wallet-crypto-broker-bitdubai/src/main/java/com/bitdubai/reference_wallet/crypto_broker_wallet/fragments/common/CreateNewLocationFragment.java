@@ -12,17 +12,16 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class CreateNewLocationFragment extends AbstractFermatFragment {
-    public static final String NEW_LOCATION = "location";
 
     private Country[] countries;
     private Country selectedCountry;
@@ -84,7 +83,9 @@ public class CreateNewLocationFragment extends AbstractFermatFragment {
                     location.append(addressLineTwoEditText.getText().toString()).append(", ");
 
                 if (location.length() > 0) {
-                    appSession.setData(NEW_LOCATION, location);
+                    List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
+                    locations.add(location.toString());
+
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
 
                 } else {
