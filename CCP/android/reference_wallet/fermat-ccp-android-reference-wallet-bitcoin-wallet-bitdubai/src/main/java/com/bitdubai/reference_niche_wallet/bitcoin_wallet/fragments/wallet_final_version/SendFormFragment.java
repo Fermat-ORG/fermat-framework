@@ -152,8 +152,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("BTC");
         list.add("Bits");
+        list.add("BTC");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -165,10 +165,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 String text = "";
                 switch (position){
                     case 0:
-                        text = "[btc]";
+                        text = "[bits]";
                         break;
                     case 1:
-                        text = "[bits]";
+                        text = "[btc]";
                         break;
                     case 2:
                         text = "[satoshis]";

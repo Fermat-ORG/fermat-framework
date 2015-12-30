@@ -33,6 +33,11 @@ public class SpecialistSelector {
 
         try {
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoAddress);
+            /**
+             * If I don't have this address registered, then I will set unknown specialist.
+             */
+            if (cryptoAddressBookRecord == null)
+                return Specialist.UNKNOWN_SPECIALIST;
             switch (cryptoAddressBookRecord.getDeliveredToActorType()) {
                 case DEVICE_USER:
                     return Specialist.DEVICE_USER_SPECIALIST;
