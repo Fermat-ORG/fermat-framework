@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 /**
- * Created by miguel payarez on 29/12/15.
+ * Created by miguel payarez (miguel_payarez@hotmail.com) on 29/12/15.
  */
 public interface ChatManager {
     void NewChat (Integer Id_Chat,Integer Id_Objeto,String Local_Actor_Type,

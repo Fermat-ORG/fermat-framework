@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.layer.middleware.interfaces.module;
 import java.util.List;
 import java.sql.Date;
 /**
- * Created by miguel payarez on 29/12/15.
+ * Created by miguel payarez (miguel_payarez@hotmail.com)  on 29/12/15.
  */
 public interface ContactManager {
 

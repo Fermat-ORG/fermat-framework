@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces.network_connection;
 
 /**
- * Created by miguel payarez on 29/12/15.
+ * Created by miguel payarez (miguel_payarez@hotmail.com)  on 29/12/15.
  */
 
 import java.sql.Date;
