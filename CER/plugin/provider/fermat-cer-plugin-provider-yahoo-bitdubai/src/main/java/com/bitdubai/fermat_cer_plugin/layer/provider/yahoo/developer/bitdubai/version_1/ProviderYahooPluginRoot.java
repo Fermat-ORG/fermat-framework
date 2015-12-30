@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1;
 
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -20,8 +19,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
+import com.bitdubai.fermat_cer_api.all_definition.utils.HttpReader;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
@@ -31,11 +32,7 @@ import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantInitializeYahooProviderDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.CurrencyPairImpl;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.ExchangeRateImpl;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.HttpReader;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -52,10 +49,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 11/2/2015.
  */
-
-
 public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
-
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -82,30 +76,6 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
 
 
     /*
-     *  TESTING STUFFS
-     */
-    /*public void testGetCurrentIndex(){
-        System.out.println("PROVIDERYAHOO - testGetCurrentIndex CALLED");
-
-        FiatIndex index = null;
-        try{
-            index = getCurrentIndex(FiatCurrency.CANADIAN_DOLLAR);
-        } catch (CantGetIndexException e){
-            System.out.println("PROVIDERYAHOO - testGetCurrentIndex DAO EXCEPTION");
-        }
-        System.out.println("");
-        System.out.println("");
-        System.out.println("PROVIDERYAHOO - PROVIDER DESC: " + index.getProviderDescription());
-        System.out.println("PROVIDERYAHOO - CURRENCY: " + index.getCurrency().getCode());
-        System.out.println("PROVIDERYAHOO - REFERENCE CURRENCY: " + index.getReferenceCurrency().getCode());
-        System.out.println("PROVIDERYAHOO - TIMESTAMP: " + index.getTimestamp());
-        System.out.println("PROVIDERYAHOO - PURCHASE: " + index.getPurchasePrice());
-        System.out.println("PROVIDERYAHOO - SALE: " + index.getSalePrice());
-
-    }*/
-
-
-    /*
      * Service interface implementation
      */
     @Override
@@ -128,8 +98,6 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
-
-        //testGetCurrentIndex();
     }
 
 
@@ -202,17 +170,28 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
 
     @Override
     public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+        //TODO:
         return null;
     }
 
     @Override
-    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws CantGetExchangeRateException {
+    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+        //TODO:
         return null;
     }
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        return null;
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+        return dao.getQueriedExchangeRateHistory(currencyPair);
     }
 
 
@@ -239,12 +218,9 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeYahooProviderDatabaseException cantInitializeException) {
-            FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "ProviderDolartodayPluginRoot", null);
+        } catch (CantInitializeYahooProviderDatabaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
-
-
 }
