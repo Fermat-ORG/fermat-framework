@@ -140,9 +140,9 @@ The protocol itself issues tokens for miners and for development. In the last ca
 
 ### Token Usage
 
-End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoin by transfering fermats into a Bitcoin wallet. 
+End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoins by transfering fermats into a Bitcoin wallet. 
 
-Fermat tokes are necesary for users to pay for three things:
+Fermat tokens are necessary for users to pay for three things:
 
 #### Communication
 
@@ -391,7 +391,7 @@ We have proposed a system for developing and running peer-to-peer financial appl
 * How to maximize reusability by building with plug-ins
 * How to enable even non-developers to create and use their own wallets and financial applications. 
 
-We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "iilusion" of using a custom tailored financial application, while underneeth the skin a set of plug-ins are collaborating to provide end users the desired functionality and present it in the exact way they fell confortable with.
+We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "illusion" of using a custom tailored financial application, while underneeth the skin a set of plug-ins are collaborating to provide end users the desired functionality and present it in the exact way they feel comfortable with.
 
 As Fermat applications and wallets are a set of plug-ins, the more applications built, the more plug-ins are added to the system and more unique components are ready to be re-used. This produces a positive feedback loop on the development of Fermat applications.
 
