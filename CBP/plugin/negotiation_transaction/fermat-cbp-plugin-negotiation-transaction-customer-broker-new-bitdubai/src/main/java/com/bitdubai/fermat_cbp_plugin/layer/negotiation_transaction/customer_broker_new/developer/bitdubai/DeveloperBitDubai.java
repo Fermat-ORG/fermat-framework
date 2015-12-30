@@ -26,6 +26,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
             this.registerVersion(new NegotiationTransactionCustomerBrokerNewPluginRoot());
+            System.out.println("Negotiation Transaction New Iniciado");
         } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }
