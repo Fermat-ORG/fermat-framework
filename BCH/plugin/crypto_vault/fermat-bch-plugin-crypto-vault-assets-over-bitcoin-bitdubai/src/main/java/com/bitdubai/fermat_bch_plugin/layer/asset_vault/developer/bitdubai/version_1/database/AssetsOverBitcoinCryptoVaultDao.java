@@ -152,12 +152,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "There was an error loading into memory table " +
-                            AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME,
-                    "A database error.");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -209,13 +204,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "there was an error loading the " +
-                            AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME
-                            + " table into memory.",
-                    "Database issue");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -333,11 +322,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException (
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "there was an error loading into memory the table " + databaseTable.getTableName(),
-                    "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -381,7 +366,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error loading table to get current Generated Keys value.", "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         if (databaseTable.getRecords().size() == 0)
@@ -402,7 +387,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error loading table to get current Used Keys value.", "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         if (databaseTable.getRecords().size() == 0)
@@ -427,13 +412,9 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "Error loading into memory table " + databaseTable.getTableName() + " to set new key depth.",
-                    "Database issue");
-
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
+
         DatabaseTableRecord record = null;
         try{
             if (databaseTable.getRecords().size() == 0){
@@ -477,12 +458,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "Error loading into memory table " + databaseTable.getTableName() + " to set new network type.",
-                    "Database issue");
-
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
         DatabaseTableRecord record = null;
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
@@ -525,13 +501,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "Error loading into memory table " + databaseTable.getTableName() + " to set new network type.",
-                    "Database issue");
-
-        }
+            throwLoadToMemoryException(e, databaseTable.getTableName());}
 
         /**
          * I will add all the saved values into the list to return
@@ -616,7 +586,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         if (databaseTable.getRecords().size() == 0){
@@ -647,7 +617,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading into memory table " + databaseTable.getTableName(), null);
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -669,4 +639,32 @@ public class AssetsOverBitcoinCryptoVaultDao {
     }
 
 
+    /**
+     * searches for the public key and notifies if is exists.
+     * @param redeemPointPublicKey
+     * @return
+     */
+    public boolean isExistingRedeemPoint(String redeemPointPublicKey) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, redeemPointPublicKey, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        return !databaseTable.getRecords().isEmpty();
+    }
+
+    /**
+     * sets and thorws the error when we coundl't load a table into memory
+     * @param e
+     * @param tableName
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
+        String outputMessage = "There was an error loading into memory table " + tableName + ".";
+        throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
+    }
 }

@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
@@ -380,10 +381,10 @@ public class AssetCryptoVaultManager  {
             int currentUsedCount = getDao().getCurrentUsedKeys(account.getId());
             return currentGeneratedCount - currentUsedCount;
         } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
+            return 0;
         }
 
-        return 0;
+
     }
 
 
@@ -446,15 +447,37 @@ public class AssetCryptoVaultManager  {
 
     /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
-     * @param hierarchyAccount a Redeem Point account.
+     * @param redeemPointPublicKey a Redeem Point publicKey
      * @return the DeterministicKey that will be used by the redeem Points.
      * @throws CantGetExtendedPublicKeyException
      */
-    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
+    public ExtendedPublicKey getRedeemPointExtendedPublicKey(String redeemPointPublicKey) throws CantGetExtendedPublicKeyException {
+        if (redeemPointPublicKey == null)
+            throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, null, "RedeemPoint Public Key can't be null.", null);
+
+        /**
+         * I will verify that I didn't added this Redeempoint before by searching for this publicKey
+         */
+        if (isExistingRedeemPoint(redeemPointPublicKey))
+            throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, null, "the passed RedeemPoint has already been registered before", null);
+
+
+        /**
+         * I will create the new account
+         */
+        HierarchyAccount redeemPointAccount = null;
+        try {
+            redeemPointAccount = createNewRedeemPointAccount(redeemPointPublicKey);
+            this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().addVaultAccount(redeemPointAccount);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "There was an error creating and persisting the new account in database.", "database issue");
+        }
+
+
         /**
          * get the master account key
          */
-        DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(hierarchyAccount);
+        DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(redeemPointAccount);
 
         // Serialize the pub key.
         byte[] pubKeyBytes = accountMasterKey.getPubKey();
@@ -467,6 +490,51 @@ public class AssetCryptoVaultManager  {
         /**
          * return the extended public Key
          */
-        return watchPubKeyAccountZero;
+        return (ExtendedPublicKey) watchPubKeyAccountZero;
+    }
+
+    /**
+     * creates a new redeem point account by adding it to the database
+     * @param redeemPointPublicKey
+     * @return
+     */
+    private HierarchyAccount createNewRedeemPointAccount(String redeemPointPublicKey) throws CantExecuteDatabaseOperationException {
+
+        /**
+         * gets the next available ID that is free to be used.
+         */
+        int accountId = getNextAvailableAccountId();
+
+        /**
+         * creates the account and stores it.
+         */
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(accountId, redeemPointPublicKey, HierarchyAccountType.REDEEMPOINT_ACCOUNT);
+        getDao().addNewHierarchyAccount(hierarchyAccount);
+        return hierarchyAccount;
+    }
+
+    /**
+     * Finds out what is the next available ID that can be used for creating and hierarcht account
+     * @return
+     */
+    private int getNextAvailableAccountId() {
+        try {
+            return getDao().getNextAvailableHierarchyAccountId();
+        } catch (CantExecuteDatabaseOperationException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Searches the databases for this public key
+     * @param redeemPointPublicKey
+     * @return
+     */
+    private boolean isExistingRedeemPoint(String redeemPointPublicKey) {
+        try {
+            return getDao().isExistingRedeemPoint(redeemPointPublicKey);
+        } catch (CantExecuteDatabaseOperationException e) {
+            return false;
+        }
     }
 }

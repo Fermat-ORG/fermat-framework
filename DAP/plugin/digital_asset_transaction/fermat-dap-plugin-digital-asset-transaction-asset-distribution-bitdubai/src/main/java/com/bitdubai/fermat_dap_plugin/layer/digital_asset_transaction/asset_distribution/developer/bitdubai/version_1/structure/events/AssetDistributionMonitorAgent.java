@@ -69,7 +69,6 @@ import java.util.UUID;
  */
 public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
-    private final ActorAssetUserManager actorAssetUserManager;
     private Thread agentThread;
     private LogManager logManager;
     private ErrorManager errorManager;
@@ -85,7 +84,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                          ErrorManager errorManager,
                                          UUID pluginId,
                                          PluginFileSystem pluginFileSystem,
-                                         ActorAssetUserManager actorAssetUserManager,
                                          AssetVaultManager assetVaultManager,
                                          BitcoinNetworkManager bitcoinNetworkManager,
                                          LogManager logManager,
@@ -94,7 +92,6 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.actorAssetUserManager = actorAssetUserManager;
         this.logManager = logManager;
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
         this.assetTransmissionManager = assetTransmissionManager;
@@ -144,7 +141,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
 
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             monitorAgent.setErrorManager(this.errorManager);
-            monitorAgent.setAssetDistributionDao(new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault, actorAssetUserManager));
+            monitorAgent.setAssetDistributionDao(new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault));
             this.agentThread = new Thread(monitorAgent);
             this.agentThread.start();
         } catch (Exception exception) {
@@ -431,16 +428,15 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantCheckAssetDistributionProgressException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException {
             for (DeliverRecord record : assetDistributionDao.getDeliveringRecords()) {
                 if (new Date().after(record.getTimeOut())) {
+                    digitalAssetDistributionVault.updateIssuerWalletBalance(record.getDigitalAssetMetadata(), distributor.foundCryptoTransaction(record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, record.getActorAssetUserPublicKey(), true);
+                    assetTransmissionManager.sendTransactionNewStatusNotification(record.getDigitalAssetMetadata().getDigitalAsset().getIdentityAssetIssuer().getPublicKey(), PlatformComponentType.ACTOR_ASSET_ISSUER, record.getActorAssetUserPublicKey(), PlatformComponentType.ACTOR_ASSET_USER, record.getGenesisTransaction(), DistributionStatus.DELIVERING_CANCELLED);
                     assetDistributionDao.cancelDelivering(record.getTransactionId());
-                    digitalAssetDistributionVault.updateIssuerWalletBalance(record.getDigitalAssetMetadata(), distributor.foundCryptoTransaction(record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, record.getActorAssetUser().getActorPublicKey(), true);
-                    assetTransmissionManager.sendTransactionNewStatusNotification(record.getDigitalAssetMetadata().getDigitalAsset().getIdentityAssetIssuer().getPublicKey(), PlatformComponentType.ACTOR_ASSET_ISSUER, record.getActorAssetUser().getActorPublicKey(), PlatformComponentType.ACTOR_ASSET_USER, record.getGenesisTransaction(), DistributionStatus.DELIVERING_CANCELLED);
                 }
             }
         }
 
         private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
-            boolean isPending = assetDistributionDao.isPendingTransactions(cryptoStatus);
-            return isPending;
+            return assetDistributionDao.isPendingTransactions(cryptoStatus);
         }
 
         private void updateDistributionStatus(DistributionStatus distributionStatus, String genesisTransaction) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {

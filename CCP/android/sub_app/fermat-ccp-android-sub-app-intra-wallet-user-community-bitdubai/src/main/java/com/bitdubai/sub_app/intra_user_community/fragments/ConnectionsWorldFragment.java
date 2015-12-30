@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +44,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
+import com.bitdubai.sub_app.intra_user_community.common.views.Utils;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -165,10 +167,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-            swipeRefresh.setRefreshing(true);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            //dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
             if (pref.getBoolean("isChecked", true)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
@@ -241,6 +242,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {
+                    swipeRefresh.setRefreshing(true);
                     onRefresh();
                 }
             });
@@ -253,6 +255,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                     swipeRefresh.post(new Runnable() {
                         @Override
                         public void run() {
+                            swipeRefresh.setRefreshing(true);
                             onRefresh();
                         }
                     });
@@ -379,6 +382,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
 //        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
 //        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
 */
+        //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
+        // Get the notifications MenuItem and
+        // its LayerDrawable (layer-list)
+//        MenuItem item = menu.findItem(R.id.action_notifications);
+//        LayerDrawable icon = (LayerDrawable) item.getIcon();
+//
+//        // Update LayerDrawable's BadgeDrawable
+//        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
     }
 
     @Override
