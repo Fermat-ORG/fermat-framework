@@ -64,7 +64,6 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
         super(pluginId, pluginFileSystem);
         this.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
         this.errorManager = errorManager;
-        setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
         this.assetVaultManager = assetVaultManager;
     }
 
@@ -256,12 +255,18 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 DigitalAssetMetadata digitalAssetMetadata = entry.getKey();
                 ActorAssetUser actorAssetUser = entry.getValue();
                 try {
-                    assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), actorAssetUser.getActorPublicKey());
+
+                    if (assetDistributionDao.isDeliveringGenesisTransaction(digitalAssetMetadata.getGenesisTransaction())) {
+                        throw new TransactionAlreadyDeliveringException(null, context, "This genesis transaction is already being delivered, chill.");
+                    }
                     if (assetDistributionDao.isFirstTransaction(digitalAssetMetadata.getGenesisTransaction())) {
+                        System.out.println("ASSET DISTRIBUTION IS FIRST TRANSACTION");
                         persistDigitalAsset(digitalAssetMetadata, actorAssetUser);
                     } else {
+                        System.out.println("ASSET DISTRIBUTION IS NOT FIRST TRANSACTION");
                         assetDistributionDao.updateActorAssetUser(actorAssetUser, digitalAssetMetadata.getGenesisTransaction());
                     }
+                    assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), actorAssetUser.getActorPublicKey());
                 } catch (CantStartDeliveringException | TransactionAlreadyDeliveringException | CantPersistDigitalAssetException | CantCreateDigitalAssetFileException | CantCheckAssetDistributionProgressException | RecordsNotFoundException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
                     this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     throw new CantDistributeDigitalAssetsException(e, context, "Something bad happen.");

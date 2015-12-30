@@ -165,10 +165,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-            swipeRefresh.setRefreshing(true);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            //dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
             if (pref.getBoolean("isChecked", true)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
@@ -241,6 +240,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {
+                    swipeRefresh.setRefreshing(true);
                     onRefresh();
                 }
             });
@@ -253,6 +253,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                     swipeRefresh.post(new Runnable() {
                         @Override
                         public void run() {
+                            swipeRefresh.setRefreshing(true);
                             onRefresh();
                         }
                     });
