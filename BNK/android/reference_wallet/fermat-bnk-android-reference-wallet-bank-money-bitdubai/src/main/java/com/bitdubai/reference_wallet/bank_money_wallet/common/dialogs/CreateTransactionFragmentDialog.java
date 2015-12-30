@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -63,7 +64,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     AutoCompleteTextView memoText;
     Button applyBtn;
     Button cancelBtn;
-
+    String account;
 
     /**
      * Allow the zxing engine use the default argument for the margin variable
@@ -79,13 +80,14 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      */
 
 
-    public CreateTransactionFragmentDialog(Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources, TransactionType transactionType) {
+    public CreateTransactionFragmentDialog(Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources, TransactionType transactionType,String account) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
         this.bankMoneyWalletSession = bankMoneyWalletSession;
         this.transactionType = transactionType;
         this.resources = resources;
+        this.account=account;
     }
 
 
@@ -156,7 +158,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private void applyTransaction() {
         try {
 
-            String memo = memoText.getText().toString();
+            final String memo = memoText.getText().toString();
             String amount = amountText.getText().toString();
 
             if (amount.equals("")) {
@@ -200,9 +202,97 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
             if (transactionType == TransactionType.DEBIT) {
                 System.out.println("DIALOG = "+TransactionType.DEBIT.getCode());
+                BankTransactionParameters t = new BankTransactionParameters() {
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public String getPublicKeyPlugin() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getPublicKeyWallet() {
+                        return "testbankwallet";
+                    }
+
+                    @Override
+                    public String getPublicKeyActor() {
+                        return "pkeyActorRefWallet";
+                    }
+
+                    @Override
+                    public BigDecimal getAmount() {
+                        BigDecimal bAmount=new BigDecimal(amountText.getText().toString());
+                        return bAmount;
+                    }
+
+                    @Override
+                    public String getAccount() {
+                        return account;
+                    }
+
+                    @Override
+                    public FiatCurrency getCurrency() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getMemo() {
+                        return  memoText.getText().toString();
+                    }
+                };
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeWithdraw(t);
             }
             if (transactionType == TransactionType.CREDIT) {
-                System.out.println("DIALOG = "+TransactionType.DEBIT.getCode());
+                System.out.println("DIALOG = "+TransactionType.CREDIT.getCode());
+                BankTransactionParameters t = new BankTransactionParameters() {
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public String getPublicKeyPlugin() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getPublicKeyWallet() {
+                        return "testbankwallet";
+                    }
+
+                    @Override
+                    public String getPublicKeyActor() {
+                        return "pkeyActorRefWallet";
+                    }
+
+                    @Override
+                    public BigDecimal getAmount() {
+                        BigDecimal bAmount=new BigDecimal(amountText.getText().toString());
+                        return bAmount;
+                    }
+
+                    @Override
+                    public String getAccount() {
+                        return account;
+                    }
+
+                    @Override
+                    public FiatCurrency getCurrency() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getMemo() {
+                        return  memoText.getText().toString();
+                    }
+                };
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeDeposit(t);
             }
         } catch (Exception e) {
             bankMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

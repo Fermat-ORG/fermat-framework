@@ -92,7 +92,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     }
 
     private void launchCreateTransactionDialog(TransactionType transactionType){
-        dialog = new CreateTransactionFragmentDialog(getActivity(), (BankMoneyWalletSession) appSession, getResources(), transactionType);
+        dialog = new CreateTransactionFragmentDialog(getActivity(), (BankMoneyWalletSession) appSession, getResources(), transactionType,bankAccountNumber.getAccount());
         dialog.setOnDismissListener(this);
         dialog.show();
     }

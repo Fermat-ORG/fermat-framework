@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterCreditException;
@@ -55,8 +54,8 @@ public class DepositBankMoneyTransactionManager implements DepositManager {
     public BankTransaction makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException {
         depositBankMoneyTransactionDao.registerDepositTransaction(bankTransactionParameters);
         try{
-            bankMoneyWallet.getAvailableBalance().credit(bankMoneyTransactionRecord);
-            bankMoneyWallet.getBookBalance().credit(bankMoneyTransactionRecord);
+            bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), bankTransactionParameters.getAmount().floatValue(), FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
+            bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.CREDIT.getCode(), bankTransactionParameters.getAmount().floatValue(), FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
         }catch (CantRegisterCreditException e){
             throw new CantMakeDepositTransactionException(CantRegisterCreditException.DEFAULT_MESSAGE,e,null,null);
         }
