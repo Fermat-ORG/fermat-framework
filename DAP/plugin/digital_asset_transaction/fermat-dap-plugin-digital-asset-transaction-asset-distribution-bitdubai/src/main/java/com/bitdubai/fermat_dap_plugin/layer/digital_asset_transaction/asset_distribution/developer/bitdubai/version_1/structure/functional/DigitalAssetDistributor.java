@@ -4,9 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -22,6 +25,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
@@ -47,20 +51,21 @@ import java.util.UUID;
  */
 public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
-    ActorAssetIssuerManager actorAssetIssuerManager;
-    //AssetVaultManager assetVaultManager;
-    ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH = "digital-asset-distribution/";
+    ActorAssetIssuerManager actorAssetIssuerManager;
+    AssetVaultManager assetVaultManager;
+    ErrorManager errorManager;
     String digitalAssetFileStoragePath;
     //String digitalAssetMetadataFileStoragePath;
     AssetDistributionDao assetDistributionDao;
     DigitalAssetDistributionVault digitalAssetDistributionVault;
 
-    public DigitalAssetDistributor(ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) {
+    public DigitalAssetDistributor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) {
         super(pluginId, pluginFileSystem);
         this.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
         this.errorManager = errorManager;
         setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
+        this.assetVaultManager = assetVaultManager;
     }
 
     public void setAssetDistributionDao(AssetDistributionDao assetDistributionDao) throws CantSetObjectException {
@@ -154,7 +159,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             System.out.println("ASSET DISTRIBUTION set debit in asset issuer wallet:" + genesisTransaction);
-            digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletDebit(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE, actorAssetUser.getActorPublicKey(), false);
+            digitalAssetDistributionVault.updateIssuerWalletBalance(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE, actorAssetUser.getActorPublicKey(), false);
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");
             deliverToRemoteActor(digitalAssetMetadata, actorAssetUser);
         } catch (CantPersistDigitalAssetException exception) {
@@ -251,11 +256,13 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 DigitalAssetMetadata digitalAssetMetadata = entry.getKey();
                 ActorAssetUser actorAssetUser = entry.getValue();
                 try {
+                    assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), actorAssetUser.getActorPublicKey());
                     if (assetDistributionDao.isFirstTransaction(digitalAssetMetadata.getGenesisTransaction())) {
                         persistDigitalAsset(digitalAssetMetadata, actorAssetUser);
+                    } else {
+                        assetDistributionDao.updateActorAssetUser(actorAssetUser, digitalAssetMetadata.getGenesisTransaction());
                     }
-                    assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), actorAssetUser.getActorPublicKey());
-                } catch (CantStartDeliveringException | TransactionAlreadyDeliveringException | CantPersistDigitalAssetException | CantCreateDigitalAssetFileException | CantCheckAssetDistributionProgressException e) {
+                } catch (CantStartDeliveringException | TransactionAlreadyDeliveringException | CantPersistDigitalAssetException | CantCreateDigitalAssetFileException | CantCheckAssetDistributionProgressException | RecordsNotFoundException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
                     this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     throw new CantDistributeDigitalAssetsException(e, context, "Something bad happen.");
                 }

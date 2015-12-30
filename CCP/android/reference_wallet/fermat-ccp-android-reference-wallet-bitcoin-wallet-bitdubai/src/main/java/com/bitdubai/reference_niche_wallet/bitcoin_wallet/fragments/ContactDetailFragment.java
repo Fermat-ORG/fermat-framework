@@ -217,9 +217,9 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                             bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
                             image_view_profile.setImageBitmap(bitmapDrawable);
                     } else
-                        Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                        Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
                 }catch (Exception e){
-                    Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
                 }
             }
             if (edit_text_name != null)

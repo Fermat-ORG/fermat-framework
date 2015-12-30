@@ -98,7 +98,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
         recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
-        adapter = new WalletsAdapter(getActivity());
+        adapter = new WalletsAdapter(getActivity(), stockWallets);
         adapter.setDeleteButtonListener(this);
         recyclerView.setAdapter(adapter);
 
@@ -186,9 +186,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
 
                         if (!containWallet(selectedItem)) {
-                            switchToEmptyView();
                             stockWallets.add(selectedItem);
                             adapter.changeDataSet(stockWallets);
+                            showOrHideNoSelectedWalletsView();
                         }
 
                     } else {
@@ -229,12 +229,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
                     bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
 
                     if (!containWallet(selectedWallet)) {
-                        switchToEmptyView();
                         stockWallets.add(selectedWallet);
                         adapter.changeDataSet(stockWallets);
+                        showOrHideNoSelectedWalletsView();
                     }
-
-                    adapter.changeDataSet(stockWallets);
                 }
             });
 
@@ -318,10 +316,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
         stockWallets.remove(position);
         adapter.changeDataSet(stockWallets);
 
-        switchToEmptyView();
+        showOrHideNoSelectedWalletsView();
     }
 
-    private void switchToEmptyView() {
+    private void showOrHideNoSelectedWalletsView() {
         if (stockWallets.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);

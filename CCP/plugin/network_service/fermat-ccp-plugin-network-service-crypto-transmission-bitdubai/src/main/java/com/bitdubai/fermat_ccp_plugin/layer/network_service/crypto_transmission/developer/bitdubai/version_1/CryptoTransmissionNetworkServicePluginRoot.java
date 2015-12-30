@@ -66,6 +66,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseFactory;
@@ -336,6 +337,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        /**
+         *  Message sent
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -852,6 +862,17 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
     }
 
+
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+        Gson gson = new Gson();
+        CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(data.getContent(),CryptoTransmissionMetadata.class);
+        if(cryptoTransmissionMetadata.getCryptoTransmissionStates() == CryptoTransmissionStates.SENT){
+            cryptoTransmissionAgent.addToTimer(data.getReceiver(),data.getId());
+        }
+    }
+
     /**
      * Get the IdentityPublicKey
      *
@@ -1202,6 +1223,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         }
     }
+
+
 
     public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
         this.platformComponentProfilePluginRoot = platformComponentProfilePluginRoot;

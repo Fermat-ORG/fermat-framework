@@ -150,4 +150,9 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     public long getTimestamp(){
         return timestamp;
     }
+
+    @Override
+    public void setPendingToRead(boolean pending) {
+        this.pendigFlag = pending;
+    }
 }

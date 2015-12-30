@@ -1,5 +1,5 @@
 /*
- * @#RespondProfileCheckInMsj.java - 2015
+ * @#MsgRespond.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -9,14 +9,14 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.RespondProfileCheckInMsj</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 21/12/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 26/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RespondProfileCheckInMsj extends PackageContent {
+public class MsgRespond extends PackageContent {
 
     /**
      * Represent the status of the check in process
@@ -27,33 +27,24 @@ public class RespondProfileCheckInMsj extends PackageContent {
     }
 
     /**
-     * Represent the identityPublicKey of the profile
-     */
-    private String identityPublicKey;
-
-    /**
      * Represent the status
      */
     private STATUS status;
 
     /**
-     * Constructor with parameters
-     *
-     * @param identityPublicKey
-     * @param status
+     * Represent the details
      */
-    public RespondProfileCheckInMsj(String identityPublicKey, STATUS status) {
-        this.identityPublicKey = identityPublicKey;
-        this.status = status;
-    }
+    private String details;
 
     /**
-     * Gets the value of identityPublicKey and returns
+     * Constructor with parameters
      *
-     * @return identityPublicKey
+     * @param status
+     * @param details
      */
-    public String getIdentityPublicKey() {
-        return identityPublicKey;
+    public MsgRespond(STATUS status, String details){
+        this.status = status;
+        this.details = details;
     }
 
     /**
@@ -64,5 +55,4 @@ public class RespondProfileCheckInMsj extends PackageContent {
     public STATUS getStatus() {
         return status;
     }
-
 }

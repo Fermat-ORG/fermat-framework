@@ -107,7 +107,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 //                window.setStatusBarColor(Color.parseColor("#1d1d25"));
 //            }
             Drawable drawable = null;
-            //TODO uncomment
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
             else
@@ -196,7 +195,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public List<DigitalAsset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
-        //TODO load more assets
         if (moduleManager != null) {
             try {
                 digitalAssets = Data.getAllDigitalAssets(moduleManager);
@@ -205,7 +203,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            Wallets.DAP_ASSET_ISSUER_WALLET,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                             ex);
             }

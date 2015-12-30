@@ -8,6 +8,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.WalletViewHolder;
 
+import java.util.List;
+
 /**
  * Created by nelson on 28/12/15.
  */
@@ -17,6 +19,10 @@ public class WalletsAdapter extends FermatAdapter<InstalledWallet, WalletViewHol
 
     public WalletsAdapter(Context context) {
         super(context);
+    }
+
+    public WalletsAdapter(Context context, List<InstalledWallet> dataSet) {
+        super(context, dataSet);
     }
 
     @Override
@@ -33,12 +39,14 @@ public class WalletsAdapter extends FermatAdapter<InstalledWallet, WalletViewHol
     protected void bindHolder(WalletViewHolder holder, final InstalledWallet data, final int position) {
         holder.bind(data);
 
-        holder.getCloseButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteButtonListener.deleteButtonClicked(data, position);
-            }
-        });
+        if (deleteButtonListener != null) {
+            holder.getCloseButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteButtonListener.deleteButtonClicked(data, position);
+                }
+            });
+        }
     }
 
     public void setDeleteButtonListener(OnDeleteButtonClickedListener listener) {

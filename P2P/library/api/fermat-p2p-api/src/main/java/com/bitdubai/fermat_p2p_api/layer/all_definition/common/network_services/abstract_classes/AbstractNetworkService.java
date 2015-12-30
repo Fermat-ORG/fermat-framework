@@ -152,6 +152,17 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         return PLUGIN_IDS_FILE_NAME + "_" + pluginId;
     }
 
+
+    /**
+     * Handles the events handleNewMessages
+     * @param message
+     */
     public abstract void handleNewMessages(final FermatMessage message);
 
+    /**
+     * Handles the events handleNewSentMessageNotificationEvent
+     * @param data
+     */
+
+    public abstract void handleNewSentMessageNotificationEvent(FermatMessage data);
 }
