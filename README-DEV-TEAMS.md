@@ -130,7 +130,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 ### Coin Diggers Team:
 -----------------------------------
 <br>
-### <img src="https://cloud.githubusercontent.com/assets/13594347/11161999/6d16609a-8a60-11e5-8fa2-e4b9d2f6c080.jpg" width="600" height="300"/>
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/63e3087dc448c761d11a76d2625693fe8bcdd4b3/Logotype/FermatTeams/logo_coindiggers_team.jpg "Logo Coin Diggers Team")
 
 We are passionate geeks , always on the edge of technology and a little more. 
 With the only phrase "Keep moving forward" we just walk through Fermat.
