@@ -32,7 +32,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
     private View rootView;
     private Toolbar toolbar;
-    private View layout;
+    private View assetDetailRemainingLayout;
+    private View assetDetailAvailableLayout;
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
     private FermatTextView assetDetailExpDateText;
@@ -87,10 +88,17 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailRedeemText = (FermatTextView) rootView.findViewById(R.id.assetDetailRedeemText);
         assetDetailAppropriatedText = (FermatTextView) rootView.findViewById(R.id.assetDetailAppropriatedText);
 
-        layout = rootView.findViewById(R.id.assetDetailRemainingLayout);
-        layout.setOnClickListener(new View.OnClickListener() {
+        assetDetailRemainingLayout = rootView.findViewById(R.id.assetDetailRemainingLayout);
+        assetDetailRemainingLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
+            }
+        });
+
+        assetDetailAvailableLayout = rootView.findViewById(R.id.assetDetailAvailableLayout);
+        assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
             }
         });
     }

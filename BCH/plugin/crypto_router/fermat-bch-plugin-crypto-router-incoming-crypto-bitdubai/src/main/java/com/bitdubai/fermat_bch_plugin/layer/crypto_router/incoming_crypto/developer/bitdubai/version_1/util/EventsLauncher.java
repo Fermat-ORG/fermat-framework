@@ -170,9 +170,12 @@ public class EventsLauncher implements DealsWithEvents {
                         throw new CryptoStatusNotHandledException(message, null, context, possibleCause);
                 }
                 break;
-
-
-                    default:
+            case UNKNOWN_SPECIALIST:
+                /**
+                 * with an unknown specialist, there is nothing left to do.
+                 */
+                break;
+            default:
                 String message       = "I could not find the event for this specialist";
                 String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
                 String possibleCause = "Specialist not considered in switch statement";

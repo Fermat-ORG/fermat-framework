@@ -27,7 +27,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantP
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
@@ -47,7 +46,6 @@ import java.util.UUID;
  */
 public class AssetDistributionDao {
 
-    private final ActorAssetUserManager actorAssetUserManager;
     private final DigitalAssetDistributionVault digitalAssetDistributionVault;
     //VARIABLE DECLARATION
     private UUID pluginId;
@@ -58,11 +56,9 @@ public class AssetDistributionDao {
     //CONSTRUCTORS
     public AssetDistributionDao(PluginDatabaseSystem pluginDatabaseSystem,
                                 UUID pluginId,
-                                DigitalAssetDistributionVault digitalAssetDistributionVault,
-                                ActorAssetUserManager actorAssetUserManager) throws CantExecuteDatabaseOperationException {
+                                DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantExecuteDatabaseOperationException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.actorAssetUserManager = actorAssetUserManager;
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
         database = openDatabase();
     }
@@ -70,7 +66,7 @@ public class AssetDistributionDao {
     //PUBLIC METHODS
     public void startDelivering(String genesisTransaction,
                                 String assetPublicKey,
-                                String userPublicKey) throws CantStartDeliveringException, TransactionAlreadyDeliveringException {
+                                String userPublicKey) throws CantStartDeliveringException {
         String context = "Genesis Transaction: " + genesisTransaction + " - Asset Public Key: " + assetPublicKey + " - User Public Key: " + userPublicKey;
 
         String transactionId = UUID.randomUUID().toString();
@@ -78,10 +74,6 @@ public class AssetDistributionDao {
         long timeOut = startTime + AssetDistributionDigitalAssetTransactionPluginRoot.DELIVERING_TIMEOUT;
 
         try {
-            if (isDeliveringGenesisTransaction(genesisTransaction)) {
-                throw new TransactionAlreadyDeliveringException(null, context, "This genesis transaction is already being delivered, chill.");
-            }
-
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, transactionId);
@@ -92,7 +84,7 @@ public class AssetDistributionDao {
             record.setLongValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME, timeOut);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, DistributionStatus.DELIVERING.getCode());
             databaseTable.insertRecord(record);
-        } catch (CantInsertRecordException | CantCheckAssetDistributionProgressException exception) {
+        } catch (CantInsertRecordException exception) {
             throw new CantStartDeliveringException(exception, context, "Starting the delivering at distribution");
         }
     }
@@ -186,7 +178,7 @@ public class AssetDistributionDao {
 
             databaseTableRecord = databaseTableRecords.get(0);
 
-            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode());
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, status.getCode());
             databaseTable.updateRecord(databaseTableRecord);
         } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
             throw new CantCheckAssetDistributionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
@@ -278,7 +270,7 @@ public class AssetDistributionDao {
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME,
                 AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME
-        ).size() == 1;
+        ).isEmpty();
     }
 
     public boolean isDeliveringGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException {
@@ -561,7 +553,7 @@ public class AssetDistributionDao {
             DeliverRecord recordToReturn = new DeliverRecord();
             recordToReturn.setTransactionId(transactionId);
             recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME));
-            recordToReturn.setActorAssetUser(actorAssetUserManager.getActorByPublicKey(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME)));
+            recordToReturn.setActorAssetUserPublicKey(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME));
             recordToReturn.setDigitalAssetMetadata(digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME)));
             recordToReturn.setStartTime(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME)));
             recordToReturn.setTimeOut(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME)));

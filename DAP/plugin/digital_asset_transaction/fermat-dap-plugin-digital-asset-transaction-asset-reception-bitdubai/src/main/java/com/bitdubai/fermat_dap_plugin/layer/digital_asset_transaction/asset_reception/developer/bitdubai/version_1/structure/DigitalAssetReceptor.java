@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -9,9 +8,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
@@ -22,7 +20,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.Abstr
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -35,34 +32,23 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH="digital-asset-reception/";
     String digitalAssetFileStoragePath;
-    //String digitalAssetMetadataFileStoragePath;
     AssetReceptionDao assetReceptionDao;
-    DistributionStatus distributionStatus;
     BitcoinNetworkManager bitcoinNetworkManager;
 
     DigitalAssetReceptionVault digitalAssetReceptionVault;
-    //AssetVaultManager assetVaultManager;
 
-    public DigitalAssetReceptor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) throws CantExecuteDatabaseOperationException {
-        super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
+    public DigitalAssetReceptor(ErrorManager errorManager,
+                                UUID pluginId,
+                                PluginFileSystem pluginFileSystem,
+                                BitcoinNetworkManager bitcoinNetworkManager,
+                                DigitalAssetReceptionVault digitalAssetReceptionVault,
+                                AssetReceptionDao assetReceptionDao) throws CantExecuteDatabaseOperationException {
+        super(pluginId, pluginFileSystem);
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.setBitcoinCryptoNetworkManager(this.bitcoinNetworkManager);
-
         this.errorManager=errorManager;
-    }
-
-    public void setAssetReceptionDao(AssetReceptionDao assetReceptionDao)throws CantSetObjectException{
-        if(assetReceptionDao==null){
-            throw new CantSetObjectException("assetReceptionDao is null");
-        }
-        this.assetReceptionDao=assetReceptionDao;
-    }
-
-    public void setDigitalAssetReceptionVault(DigitalAssetReceptionVault digitalAssetReceptionVault) throws CantSetObjectException {
-        if(digitalAssetReceptionVault==null){
-            throw new CantSetObjectException("DigitalAssetReceptionVault is null");
-        }
-        this.digitalAssetReceptionVault=digitalAssetReceptionVault;
+        this.digitalAssetReceptionVault = digitalAssetReceptionVault;
+        this.assetReceptionDao = assetReceptionDao;
     }
 
     public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantReceiveDigitalAssetException {
