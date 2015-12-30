@@ -27,6 +27,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
+import com.bitdubai.fermat_cer_core.CERPlatform;
 import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
@@ -73,6 +74,7 @@ public final class FermatSystem {
 
         try {
 
+            fermatSystemContext.registerPlatform(new CERPlatform());
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
