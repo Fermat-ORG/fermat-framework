@@ -13,7 +13,7 @@
     android:paddingTop="8dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/transaction"
+        android:id="@+id/transaction_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -21,36 +21,25 @@
         android:singleLine="true"
         android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
-        tools:text="transaccion #2"/>
+        tools:text="transaccion type"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/transaction_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/transaction"
+        android:layout_below="@+id/transaction_type"
         android:layout_marginEnd="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
         android:singleLine="true"
         android:textColor="@color/text_color_bold"
         android:textSize="@dimen/text_size"
-        android:text="prueba alias"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/transaction_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/text_color_bold"
-        android:textSize="@dimen/text_size"
-        tools:text="transaction type"/>
+        android:text="250"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/transaction_currency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/transaction_type"
+        android:layout_below="@id/transaction_amount"
         android:layout_marginEnd="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
         android:singleLine="true"
@@ -62,7 +51,6 @@
             android:id="@+id/transaction_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/transaction_currency"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
