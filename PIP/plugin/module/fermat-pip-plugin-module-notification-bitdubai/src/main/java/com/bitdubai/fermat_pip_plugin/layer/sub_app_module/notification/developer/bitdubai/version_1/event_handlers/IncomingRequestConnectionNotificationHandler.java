@@ -34,8 +34,6 @@ public class IncomingRequestConnectionNotificationHandler implements FermatEvent
         //TODO: falta ver si le seteo la activity (enum de las activities) o/y si le setio la public Key de la wallet
 
 
-        System.out.println("PROBANDO EVENTO MATI, PARA NOTIFICACIONES");
-
         if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
 
             System.out.println("PROBANDO EVENTO MATI, PARA NOTIFICACIONES 2");

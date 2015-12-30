@@ -20,21 +20,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
@@ -44,7 +42,6 @@ import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The Class <code>com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.LogToolsFragment</code>
@@ -55,27 +52,15 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragment extends FermatFragment {
-
-    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS.getKey();
-
-    private Map<String, List<ClassHierarchyLevels>> pluginClasses;
-    //List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
-
-    /**
-     * SubApp session
-     */
+public class LogToolsFragment extends AbstractFermatFragment {
 
     private ErrorManager errorManager;
 
-    DeveloperSubAppSession developerSubAppSession;
+    private DeveloperSubAppSession developerSubAppSession;
 
-
-    private static final String ARG_POSITION = "position";
     View rootView;
 
     private LogTool logTool;
-
 
     private ArrayListLoggers lstLoggers;
 
@@ -91,8 +76,8 @@ public class LogToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.appSession !=null){
-            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
+        if (super.appSession != null) {
+            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
         }
 
 
@@ -110,14 +95,7 @@ public class LogToolsFragment extends FermatFragment {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-        pluginClasses = new HashMap<String, List<ClassHierarchyLevels>>();
-
-
-        /**
-         * I will load the list of classes that will be used in other fragments.
-         */
     }
-
 
     private void changeLogLevel(PluginVersionReference plugin, LogLevel logLevel, String resource) {
         try {
@@ -135,7 +113,6 @@ public class LogToolsFragment extends FermatFragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
@@ -148,33 +125,19 @@ public class LogToolsFragment extends FermatFragment {
             List<PluginVersionReference> plugins = logTool.getAvailablePluginList();
             List<AddonVersionReference> addons = logTool.getAvailableAddonList();
 
-            List<PluginVersionReference> list = new ArrayList<>();
 
             for (PluginVersionReference plugin : plugins) {
 
-                list.add(plugin); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
-                /**
-                 * I will get the list of the available classes on the plug in
-                 */
-                String level1 = "";
-                String level2 = "";
-                String toReplace = "";
-                List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
-                //esto es sacar con getClassesHierarchy
                 for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)) {
                     //loading de loggers class
-
-
                     Loggers log = new Loggers();
 
                     log.type = Loggers.TYPE_PLUGIN;
                     log.classHierarchyLevels = classes;
                     log.picture = "plugin";
                     log.pluginVersionReference = plugin;
-                    //log.logLevel=classes.
                     lstLoggers.add(log);
                 }
-
             }
             /**
              * TODO add addons
@@ -212,12 +175,6 @@ public class LogToolsFragment extends FermatFragment {
 
     }
 
-
-    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
-        this.developerSubAppSession = developerSubAppSession;
-    }
-
-
     public class AppListAdapter extends ArrayAdapter<Loggers> {
 
 
@@ -251,9 +208,9 @@ public class LogToolsFragment extends FermatFragment {
 
                         //set the next fragment and params
 
-                        developerSubAppSession.setData("list",lst);
+                        developerSubAppSession.setData("list", lst);
 
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(),R.id.logContainer, null);
+                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), R.id.logContainer, null);
 
 
                     }
@@ -262,7 +219,6 @@ public class LogToolsFragment extends FermatFragment {
                 holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        String loggerText = holder.companyTextView.getText().toString();
                         CustomDialogClass cdd = new CustomDialogClass(getActivity(), item, item.pluginVersionReference);
                         cdd.show();
                         return true;
@@ -328,7 +284,7 @@ public class LogToolsFragment extends FermatFragment {
                 "Not logging",
                 "Minimal logging",
                 "Moderate logging",
-                "Agressive logging"
+                "Aggressive logging"
         };
 
         List<String> lstEnum;
@@ -426,15 +382,6 @@ public class LogToolsFragment extends FermatFragment {
 
         @Override
         public void onClick(View v) {
-            int i = v.getId();
-            /*if (i == R.id.btn_yes) {
-                c.finish();
-
-            } else if (i == R.id.btn_no) {
-                dismiss();
-
-            } else {
-            }*/
             dismiss();
         }
 
@@ -462,7 +409,6 @@ public class LogToolsFragment extends FermatFragment {
                 ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
                 txtTitle.setTextColor(Color.WHITE);
                 txtTitle.setText(listEnumsToDisplay.get(position));
-                //txtTitle.setText(LogLevel.MINIMAL_LOGGING.toString());
 
                 setLogLevelImage();
                 if (imageId[position] != 0) {

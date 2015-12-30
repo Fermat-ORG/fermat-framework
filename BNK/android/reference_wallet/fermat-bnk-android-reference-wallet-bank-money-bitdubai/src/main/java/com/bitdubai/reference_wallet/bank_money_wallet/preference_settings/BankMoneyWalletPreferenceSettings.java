@@ -1,7 +1,9 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.preference_settings;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.PreferenceWalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.*;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
 import java.util.UUID;
@@ -52,15 +54,5 @@ public class BankMoneyWalletPreferenceSettings implements WalletSettings {
     @Override
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
 
-    }
-
-    @Override
-    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantSaveWalletSettings {
-
-    }
-
-    @Override
-    public String getPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings {
-        return null;
     }
 }

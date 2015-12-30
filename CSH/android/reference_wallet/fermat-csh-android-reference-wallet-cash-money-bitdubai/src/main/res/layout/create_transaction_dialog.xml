@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:background="#FFFFFF">
 
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/csh_ctd_title"
+    <LinearLayout
+        android:id="@+id/csh_ctd_title_layout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#12aca1"
-        android:text="@string/csh_ctd_title"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:paddingLeft="12dp"
-        android:textColor="#fff"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        app:typeface="ROBOTO_REGULAR" />
+        android:orientation="horizontal"
+        android:background="#12acff"
+        >
+
+        <!--<ImageView
+            android:id="@+id/csh_ctd_title_img"
+            android:layout_width="@dimen/csh_transaction_image_width_and_height"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@string/transaction_img"
+            tools:src="@drawable/csh_deposit"/>-->
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/csh_ctd_title"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:text="@string/csh_ctd_title"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            app:typeface="ROBOTO_REGULAR" />
+
+    </LinearLayout>
+
+
 
 
     <LinearLayout

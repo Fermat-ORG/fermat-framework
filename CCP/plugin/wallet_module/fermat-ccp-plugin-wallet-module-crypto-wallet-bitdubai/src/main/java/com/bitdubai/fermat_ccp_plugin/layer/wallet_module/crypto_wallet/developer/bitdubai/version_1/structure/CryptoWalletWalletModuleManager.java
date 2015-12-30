@@ -1095,29 +1095,21 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
         try {
 
-            List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new  ArrayList<CryptoWalletIntraUserIdentity>();
+            List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new ArrayList<CryptoWalletIntraUserIdentity>();
 
             for (IntraWalletUserIdentity intraWalletUser : this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
 
-                CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = new CryptoWalletWalletIntraUserIdentity(intraWalletUser.getPublicKey(),intraWalletUser.getAlias(),intraWalletUser.getProfileImage());
+                CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = new CryptoWalletWalletIntraUserIdentity(intraWalletUser.getPublicKey(), intraWalletUser.getAlias(), intraWalletUser.getImage());
 
                 cryptoWalletIntraUserIdentityList.add(cryptoWalletIntraUserIdentity);
             }
 
-            //TODO Harcoder
-            cryptoWalletIntraUserIdentityList.add(new CryptoWalletWalletIntraUserIdentity("afd0647a-87de-4c56-9bc9-be736e0c5059", "mati", new byte[0]));
-
-
             return cryptoWalletIntraUserIdentityList;
 
-        }
-        catch(CantListIntraWalletUsersException e)
-        {
-            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE,e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE,e,"","unknown error");
+        } catch (CantListIntraWalletUsersException e) {
+            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE, e, "", "");
+        } catch (Exception e) {
+            throw new CantListCryptoWalletIntraUserIdentityException(CantListIntraWalletUsersException.DEFAULT_MESSAGE, e, "", "unknown error");
         }
 
     }
@@ -1283,6 +1275,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
         intraWalletUserIdentityManager.createNewIntraWalletUser(name,phrase,image);
+    }
+
+
+    @Override
+    public void registerIdentities(){
+        intraWalletUserIdentityManager.registerIdentities();
     }
 
 

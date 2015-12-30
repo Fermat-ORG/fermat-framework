@@ -15,33 +15,37 @@ public enum FiatCurrency implements Currency {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    ARGENTINE_PESO("ARS", Country.ARGENTINA),
-    AUSTRALIAN_DOLLAR("AUD", Country.AUSTRALIA),
-    BRAZILIAN_REAL("BRL", Country.BRAZIL),
-    BRITISH_POUND("GBP", Country.GREAT_BRITAIN),
-    CANADIAN_DOLLAR("CAD", Country.CANADA),
-    CHILEAN_PESO("CLP", Country.CHILE),
-    CHINESE_YUAN("CNY", Country.CHINA),
-    COLOMBIAN_PESO("COP", Country.COLOMBIA),
-    EURO("EUR", Country.EUROZONE),
-    JAPANESE_YEN("JPY", Country.JAPAN),
-    MEXICAN_PESO("MXN", Country.MEXICO),
-    NEW_ZEALAND_DOLLAR("NZD", Country.NEW_ZEALAND),
-    SWISS_FRANC("CHF", Country.SWITZERLAND),
-    US_DOLLAR("USD", Country.UNITED_STATES_OF_AMERICA),
-    VENEZUELAN_BOLIVAR("VEF", Country.VENEZUELA),
+    ARGENTINE_PESO("ARS", "Argentine Peso", Country.ARGENTINA),
+    AUSTRALIAN_DOLLAR("AUD","Australian Dollar", Country.AUSTRALIA),
+    BRAZILIAN_REAL("BRL", "Brazilian Real", Country.BRAZIL),
+    BRITISH_POUND("GBP", "British Pound", Country.GREAT_BRITAIN),
+    CANADIAN_DOLLAR("CAD", "Canadian Dollar", Country.CANADA),
+    CHILEAN_PESO("CLP", "Chilean Peso", Country.CHILE),
+    CHINESE_YUAN("CNY", "Chinese Yuan", Country.CHINA),
+    COLOMBIAN_PESO("COP", "Colombian Peso", Country.COLOMBIA),
+    EURO("EUR", "Euro", Country.EUROZONE),
+    JAPANESE_YEN("JPY", "Japanese Yen", Country.JAPAN),
+    MEXICAN_PESO("MXN", "Mexican Peso", Country.MEXICO),
+    NEW_ZEALAND_DOLLAR("NZD", "New Zealand Dollar", Country.NEW_ZEALAND),
+    SWISS_FRANC("CHF", "Swiss Franc", Country.SWITZERLAND),
+    US_DOLLAR("USD", "US Dollar", Country.UNITED_STATES_OF_AMERICA),
+    VENEZUELAN_BOLIVAR("VEF", "Venezuelan Bolivar", Country.VENEZUELA),
     ;
 
     private final String code;
+    private final String friendlyName;
     private final Country country;
 
-    FiatCurrency(final String code, final Country country) {
+    FiatCurrency(final String code, final String friendlyName, final Country country) {
         this.code = code;
+        this.friendlyName = friendlyName;
         this.country = country;
+
     }
 
-    public Country getCountry() {
-        return this.country;
+    public Country getCountry() { return this.country; }
+    public String getFriendlyName() {
+        return this.friendlyName;
     }
 
     public static FiatCurrency getByCode(String code) throws InvalidParameterException {
@@ -68,6 +72,15 @@ public enum FiatCurrency implements Currency {
                 throw new InvalidParameterException(
                         "Code Received: " + code,
                         "The received code is not valid for the FiatCurrency enum");
+        }
+    }
+
+    public static boolean codeExists(String code) {
+        try {
+            getByCode(code);
+            return true;
+        } catch(InvalidParameterException e) {
+            return false;
         }
     }
 

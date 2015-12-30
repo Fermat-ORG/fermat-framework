@@ -14,13 +14,15 @@ public class Identity implements Actor {
     private String name;
     private Actors type;
     private byte[] image;
+    private String phrase;
 
 
-    public Identity(String publicKey, String name, Actors type, byte[] image) {
+    public Identity(String publicKey, String name, String phrase, Actors type, byte[] image) {
         this.publicKey = publicKey;
         this.name = name;
         this.type = type;
         this.image = image;
+        this.phrase = phrase;
     }
 
     @Override
@@ -31,6 +33,11 @@ public class Identity implements Actor {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getPhrase() {
+        return phrase;
     }
 
     @Override

@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:paddingBottom="10dp"
-                    android:text="To begin, choose an avatar below. You might change later it with any picture and your own alias."
+                    android:text="To begin, choose an avatar below. You might change it later with any picture and your own alias."
                     android:gravity="center"
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="16dp"
@@ -225,7 +225,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile_image_standard"
+                        android:src="@drawable/ic_profile_male"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
                         />
@@ -263,7 +263,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile_image_standard"
+                        android:src="@drawable/img_profile_female"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
                         />
@@ -278,7 +278,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_right"
-                    android:text="Be Jane ADoe"
+                    android:text="Be Jane Doe"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
                     />

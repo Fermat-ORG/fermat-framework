@@ -431,13 +431,12 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType,  String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentType platformComponentType         ,
                                                                          final NetworkServiceType    networkServiceType            ,
                                                                          final String                alias                         ,
-                                                                         final String                phrase                         ,
                                                                          final String                identityPublicKey             ,
                                                                          final Location              location                      ,
                                                                          final Double                distance                      ,
@@ -452,7 +451,6 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
                 platformComponentType,
                 networkServiceType,
                 alias,
-                phrase,
                 identityPublicKey,
                 location,
                 distance,
@@ -518,6 +516,11 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
     }
 
     public final void handleNewMessages(final FermatMessage fermatMessage) {
+
+    }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
 
     }
 

@@ -57,7 +57,8 @@ public class IncomingNotificationDao implements DAO {
                                                         final NotificationDescriptor descriptor          ,
                                                         final long                            timestamp           ,
                                                         final ActorProtocolState              protocolState       ,
-                                                        final boolean                         flagReaded          ) throws CantCreateNotificationException {
+                                                        final boolean                         flagReaded ,
+                                                        int sentCount) throws CantCreateNotificationException {
 
         try {
 
@@ -77,7 +78,8 @@ public class IncomingNotificationDao implements DAO {
                     destinationPublicKey,
                     timestamp           ,
                     protocolState       ,
-                    flagReaded
+                    flagReaded,
+                    0
 
             );
 
@@ -221,6 +223,8 @@ public class IncomingNotificationDao implements DAO {
         }
 
     }
+
+
 
 
     public void changeProtocolState(final UUID               requestId    ,
@@ -475,7 +479,8 @@ public class IncomingNotificationDao implements DAO {
                 destinationPublicKey           ,
                 timestamp   ,
                 actorProtocolState             ,
-                readed
+                readed,
+                0
 
         );
     }

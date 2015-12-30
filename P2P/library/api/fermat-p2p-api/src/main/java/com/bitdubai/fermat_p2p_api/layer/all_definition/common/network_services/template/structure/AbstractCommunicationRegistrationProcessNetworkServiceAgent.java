@@ -81,7 +81,6 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                 PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
                         networkServicePluginRoot.getIdentityPublicKey(),
                          networkServicePluginRoot.getAlias().toLowerCase(),
-                        "", //phrase
                          networkServicePluginRoot.getName(),
                          networkServicePluginRoot.getNetworkServiceType(),
                          networkServicePluginRoot.getPlatformComponentType(),

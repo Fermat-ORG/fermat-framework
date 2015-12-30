@@ -143,36 +143,6 @@
                 android:background="@drawable/round_corner_line_dialog"
                 />
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingBottom="10dp"
-                    android:text="To begin, choose an avatar below. You might change later it with any picture and your own alias."
-                    android:gravity="center"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingLeft="16dp"
-                    android:textColor="#1d1d26"
-                    android:paddingRight="30dp"/>
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
-                />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
@@ -210,7 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_dismiss"
-                android:text="Dismiss"
+                android:text="Close"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 />

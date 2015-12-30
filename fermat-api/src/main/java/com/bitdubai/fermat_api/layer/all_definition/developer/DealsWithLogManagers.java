@@ -5,13 +5,18 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
-import java.util.Map;
-
 /**
  * Created by ciencias on 6/25/15.
+ * Updated by Leon Acosta - (laion.cj91@gmail.com) on 23/12/2015.
+ *
+ * @author lnacosta
  */
 public interface DealsWithLogManagers {
 
-    void setLogManagers (Map<PluginVersionReference,Plugin> logManagersOnPlugins,Map<AddonVersionReference, Addon> logManagersOnAddons);
+    void addLogManager(PluginVersionReference  pluginVersionReference ,
+                       Plugin logManagerForDevelopers);
+
+    void addLogManager(AddonVersionReference   addonVersionReference  ,
+                       Addon logManagerForDevelopers);
 
 }

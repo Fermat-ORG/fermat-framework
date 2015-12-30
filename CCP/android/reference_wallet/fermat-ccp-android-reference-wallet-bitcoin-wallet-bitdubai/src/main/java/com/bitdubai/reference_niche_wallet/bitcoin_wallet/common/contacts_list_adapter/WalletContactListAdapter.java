@@ -45,6 +45,9 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
             vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.wallets_bitcoin_fragment_contacts_list_item, null);
         }
+        if(position>=1){
+            v.findViewById(R.id.separator_line).setVisibility(View.VISIBLE);
+        }
 
         WalletContact contact = getItem(position);
 
@@ -57,14 +60,14 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
                     if (contact.profileImage.length > 0) {
                         contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), contact.profileImage));
                     } else
-                     //   contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
-                    Picasso.with(getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contact_profile_image);
+                     //   contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.ic_profile_male));
+                    Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
                 } else
-                    Picasso.with(getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contact_profile_image);
-                    //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
+                    Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
+                    //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.ic_profile_male));
             }catch (Exception e){
-                Picasso.with(getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(contact_profile_image);
-                //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.profile_image_standard));
+                Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
+                //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.ic_profile_male));
             }
         }
         return v;

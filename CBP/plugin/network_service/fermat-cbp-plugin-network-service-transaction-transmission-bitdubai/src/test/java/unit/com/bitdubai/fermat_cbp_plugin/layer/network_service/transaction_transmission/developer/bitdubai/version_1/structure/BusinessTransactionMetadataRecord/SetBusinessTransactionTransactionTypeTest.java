@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.enums.BusinessTransactionTransactionType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 
 import org.junit.Test;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Created by root on 14/12/15.
+ * Created by Gabriel Araujo (gabe_512@hotmail.com) on 14/12/15.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SetBusinessTransactionTransactionTypeTest {

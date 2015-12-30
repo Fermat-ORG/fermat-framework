@@ -1,7 +1,10 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.View;
 
@@ -49,14 +52,14 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
                     roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), profileImage);
                     holder.getThumbnail().setImageDrawable(roundedBitmap);
                 } else {
-                    Picasso.with(context).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.getThumbnail());
+                    Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
                 }
             } else {
-                Picasso.with(context).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.getThumbnail());
-                //roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.profile_image_standard);
+                Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
+                //roundedBitmap = ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male);
             }
         }catch (Exception e){
-            Picasso.with(context).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.getThumbnail());
+            Picasso.with(context).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.getThumbnail());
         }
 
 
@@ -64,8 +67,24 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
         holder.getContainer_data().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                data.setSelected(!data.isSelected());
-                v.setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
+                boolean selected =  !data.isSelected();
+                data.setSelected(selected);
+                if(selected==true) {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.WHITE, Color.parseColor("#dcf6f7")).setDuration(1500);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    animator.start();
+                }else {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.parseColor("#dcf6f7"), Color.WHITE).setDuration(1500);
+                    animator.setEvaluator(new ArgbEvaluator());
+                    animator.start();
+                }
+//                TransitionDrawable transition = (TransitionDrawable) v.getBackground();
+//                if(selected==false){
+//                    transition.startTransition(300);
+//                }else{
+//                    transition.reverseTransition(300);
+//                }
+                //v.setBackground(context.getDrawable(R.drawable.add_connection_rounded_rectangle_shape));
             }
         });
         if(data.isSelected()){

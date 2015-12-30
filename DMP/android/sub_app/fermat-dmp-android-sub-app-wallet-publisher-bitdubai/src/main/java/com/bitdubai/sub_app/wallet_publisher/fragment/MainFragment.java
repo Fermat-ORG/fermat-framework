@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -92,7 +92,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     /**
      * (no-javadoc)
      *
-     * @see FermatFragment#onCreate(Bundle)
+     * @see AbstractFermatFragment#onCreate(Bundle)
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -204,7 +204,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 && project != null) {
             //Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
             /* Starting Wizard to Publish this Project */
-            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT.getKey(), appSession, appSettings, appResourcesProviderManager, project);
+            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT.getKey(), appSession, appResourcesProviderManager, project);
             return true;
         }
         Toast.makeText(getActivity(), "Starting wizard to publish...", Toast.LENGTH_SHORT).show();

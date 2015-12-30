@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
@@ -13,6 +13,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpd
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
 import java.util.List;
@@ -93,4 +95,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager {
      * @throws CantGetAssetUserGroupException
      */
     ActorAssetUserGroup getGroup(String groupId) throws CantGetAssetUserGroupException;
+
+    IdentityAssetUser getActiveAssetUserIdentity() throws CantGetIdentityAssetUserException;
+
 }

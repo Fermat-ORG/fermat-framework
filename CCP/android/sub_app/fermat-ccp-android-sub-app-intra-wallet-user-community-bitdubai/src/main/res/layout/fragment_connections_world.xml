@@ -12,11 +12,6 @@
         android:layout_height="1dp"
         android:background="#ffffff" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="UselessParent">
-
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
             android:layout_width="match_parent"
@@ -70,7 +65,6 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
 
 
 </LinearLayout>

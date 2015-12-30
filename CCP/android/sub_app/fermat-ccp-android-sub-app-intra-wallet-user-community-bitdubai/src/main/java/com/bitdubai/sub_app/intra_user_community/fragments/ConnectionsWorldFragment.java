@@ -7,11 +7,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +26,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -40,9 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -58,7 +58,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class ConnectionsWorldFragment extends FermatFragment implements SearchView.OnCloseListener,
+public class ConnectionsWorldFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
@@ -74,18 +74,14 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private static ErrorManager errorManager;
 
     protected final String TAG = "Recycler Base";
+    FermatWorker worker;
     private int offset = 0;
-
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
-
     private AppListAdapter adapter;
     private boolean isStartList = false;
 
-
-    private ProgressDialog mDialog;
-
-
+    //private ProgressDialog mDialog;
     // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
@@ -96,10 +92,12 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     private boolean isRefreshing = false;
     private View rootView;
     private IntraUserSubAppSession intraUserSubAppSession;
-
     private String searchName;
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private List<IntraUserInformation> dataSet = new ArrayList<>();
+
+    //ProgressDialog dialog;
 
     /**
      * Create a new instance of this fragment
@@ -117,6 +115,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             // setHasOptionsMenu(true);
             // setting up  module
+
             intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -136,6 +135,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
         }
     }
 
+
     /**
      * Fragment Class implementation.
      */
@@ -145,6 +145,16 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
+            rootView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        worker.shutdownNow();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
@@ -160,20 +170,35 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            onRefresh();
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            /**
+             * Code to show cache data
+             */
+            adapter.changeDataSet(dataSet);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            }, 1500);
             SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
             if (!pref.getBoolean("isChecked", false)) {
-                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null);
-                presentationIntraUserCommunityDialog.show();
+                if (moduleManager.getActiveIntraUserIdentity() != null) {
+                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                        presentationIntraUserCommunityDialog.show();
+                    }
+                } else {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    presentationIntraUserCommunityDialog.show();
+                }
             }
-
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-
-
         return rootView;
     }
 
@@ -193,27 +218,20 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity()));
 
-        /**
-         * Navigation view items
-         */
-        AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
+            if (swipeRefresh != null)
+                swipeRefresh.setRefreshing(true);
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait");
+            progressDialog.setMessage("Please wait...");
             progressDialog.setCancelable(false);
             progressDialog.show();
-            FermatWorker worker = new FermatWorker() {
+            worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
@@ -225,6 +243,7 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
+                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
@@ -241,17 +260,21 @@ public class ConnectionsWorldFragment extends FermatFragment implements SearchVi
                         }
                     } else
                         showEmpty(true, emptyView);
+
+
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     progressDialog.dismiss();
                     isRefreshing = false;
+                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                     ex.printStackTrace();
+
                 }
             });
             worker.execute();
@@ -401,9 +424,7 @@ Updates the count of notifications in the ActionBar.
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-
         try {
-
             dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
             offset = dataSet.size();
 
@@ -412,10 +433,8 @@ Updates the count of notifications in the ActionBar.
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return dataSet;
     }
-
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
@@ -457,6 +476,9 @@ Updates the count of notifications in the ActionBar.
             updateNotificationsBadge(count);
         }
     }
+
+
+
 
 }
 

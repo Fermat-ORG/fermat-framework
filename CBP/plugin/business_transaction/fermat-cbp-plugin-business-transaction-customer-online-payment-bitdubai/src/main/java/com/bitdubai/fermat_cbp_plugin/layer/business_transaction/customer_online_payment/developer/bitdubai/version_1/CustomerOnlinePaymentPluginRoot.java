@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_onlin
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -33,7 +34,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseFactory;
@@ -79,13 +80,13 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.OUTGOING_INTRA_ACTOR)
     OutgoingIntraActorManager outgoingIntraActorManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /**
@@ -166,7 +167,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                  * The database cannot be created. I can not handle this situation.
                  */
                 errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
                         UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -243,7 +244,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init monitor Agent
              */
-            CustomerOnlinePaymentMonitorAgent openContractMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
+            CustomerOnlinePaymentMonitorAgent customerOnlinePaymentMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -253,20 +254,35 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     outgoingIntraActorManager);
-            openContractMonitorAgent.start();
+            customerOnlinePaymentMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer online payment starting");
-        } catch (CantInitializeDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantStartServiceException e) {
-            e.printStackTrace();
-        } catch (CantSetObjectException e) {
-            e.printStackTrace();
-        } catch (CantStartAgentException e) {
-            e.printStackTrace();
+        } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Cannot initialize the plugin database factory");
+        } catch (CantInitializeDatabaseException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Cannot initialize the database plugin");
+        } catch (CantStartAgentException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Cannot initialize the plugin monitor agent");
+        } catch (CantStartServiceException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Cannot initialize the plugin recorder service");
+        } catch (CantSetObjectException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Online Payment Plugin",
+                    "Cannot set an argument in monitor agent constructor");
         }
     }
 

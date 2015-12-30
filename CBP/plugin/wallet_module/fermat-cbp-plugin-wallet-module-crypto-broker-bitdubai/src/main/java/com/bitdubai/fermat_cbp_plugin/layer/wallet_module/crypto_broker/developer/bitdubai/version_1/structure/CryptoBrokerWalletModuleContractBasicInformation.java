@@ -24,12 +24,14 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private String paymentCurrency;
     private long date;
     private ContractStatus status;
+    private String cancellationReason;
 
     public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
+        this.cancellationReason = "";
 
         amount = random.nextFloat() * 100;
         exchangeRateAmount = random.nextFloat();
@@ -63,8 +65,19 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    @Override
     public String getMerchandise() {
         return merchandise;
+    }
+
+    @Override
+    public UUID getNegotiationId() {
+        //TODO
+        return null;
     }
 
     @Override
@@ -90,5 +103,45 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     @Override
     public long getLastUpdate() {
         return date;
+    }
+
+    public void setCustomerAlias(String customerAlias) {
+        this.customerAlias = customerAlias;
+    }
+
+    public void setNegotiationId(UUID negotiationId) {
+        this.negotiationId = negotiationId;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public void setMerchandise(String merchandise) {
+        this.merchandise = merchandise;
+    }
+
+    public void setTypeOfPayment(String typeOfPayment) {
+        this.typeOfPayment = typeOfPayment;
+    }
+
+    public void setExchangeRateAmount(float exchangeRateAmount) {
+        this.exchangeRateAmount = exchangeRateAmount;
+    }
+
+    public void setPaymentCurrency(String paymentCurrency) {
+        this.paymentCurrency = paymentCurrency;
+    }
+
+    public void setLastUpdate(long date) {
+        this.date = date;
+    }
+
+    public void setStatus(ContractStatus status) {
+        this.status = status;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
     }
 }

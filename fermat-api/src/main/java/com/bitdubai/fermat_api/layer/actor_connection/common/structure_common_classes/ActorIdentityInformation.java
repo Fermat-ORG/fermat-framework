@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import org.apache.commons.lang.Validate;
 
 /**
- * The class <code>ActorIdentityInformation</code>
+ * The class <code>ActiveActorIdentityInformation</code>
  * represents an actor identity with all the basic information.
  *
  * An Actor Identity Information contains all the basic information of an actor identity.

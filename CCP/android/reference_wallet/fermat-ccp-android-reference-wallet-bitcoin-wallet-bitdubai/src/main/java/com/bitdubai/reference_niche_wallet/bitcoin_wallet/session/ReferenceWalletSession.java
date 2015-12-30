@@ -19,6 +19,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 
+import java.util.List;
+
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
@@ -32,11 +34,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     /**
      * Navigation Estructure
      */
-    /**
-     * Intra User Module
-     */
-    private IntraUserModuleManager intraUserModuleManager;
-
 
     /**
      *  Wallet Settings
@@ -67,11 +64,6 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     public ReferenceWalletSession() {
     }
 
-    public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager){//,EventManager eventManager){
-        super(installedWallet.getWalletPublicKey(),installedWallet,errorManager,cryptoWalletManager,walletResourcesProviderManager);
-        this.walletSettings=walletSettings;
-        this.intraUserModuleManager = intraUserModuleManager;
-    }
 
 
 
@@ -152,9 +144,9 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     }
 
     public CryptoWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
-        return getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+        List<CryptoWalletIntraUserIdentity> lst =getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser();
+        return (lst.isEmpty()) ? null : lst.get(0);
     }
-
 
     public String getCommunityConnection() {
         //return searchConnectionPublicKey(SubApps.CCP_INTRA_USER_COMMUNITY.getCode());

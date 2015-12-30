@@ -22,8 +22,8 @@
 installationFolder=$HOME #you can modify the installation folder, as default I am going to set the home user folder.
 #Please, select one platform accoding your Operative System
 platform="-linux-x64.tar.gz"
-#plafform="-linux-i586.tar.gz"
-gradleVersion=2.9
+#platform="-linux-i586.tar.gz"
+gradleVersion=2.10
 #If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
 #Genymotion 32Bits
 #genymotion="genymotion-2.5.2_x86.bin"
@@ -190,7 +190,11 @@ function installIDE(){
 }
 
 function installGenymotion(){
+<<<<<<< HEAD
     if[ ! $genymotion ]; then
+=======
+    if[ ! ${genymotion} ]; then
+>>>>>>> 6a1878ab6249c87b78a812aa756d5490e39b3a1f
         timestamp
         genymotionURL="http://files2.genymotion.com/genymotion/genymotion-2.5.2/"
         echo "Downloading Genymotion"
@@ -240,7 +244,7 @@ createEnvironmentVars
 installIDE
 
 #Get and install Genymotion (optional)
-installGenymotion
+#installGenymotion
 
 echo "Congratulations, your development enviroment is ready to configurate."
 echo "Bye!"

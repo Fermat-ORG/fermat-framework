@@ -24,14 +24,17 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
     private final ContractStatus status;
     private final Collection<ContractClause> clause;
 
+    private final Boolean nearExpirationDatetime;
+
     public CustomerBrokerContractSaleInformation(
             String contractID,
             String negotiationID,
             String publicKeyCustomer,
             String publicKeyBroker,
-            long dateTime,
+            Long dateTime,
             ContractStatus status,
-            Collection<ContractClause> clause
+            Collection<ContractClause> clause,
+            Boolean nearExpirationDatetime
     ){
         this.contractID = contractID;
         this.negotiationID = negotiationID;
@@ -40,6 +43,7 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
         this.dateTime = dateTime;
         this.status = status;
         this.clause = clause;
+        this.nearExpirationDatetime = nearExpirationDatetime;
     }
 
     @Override
@@ -63,7 +67,7 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
     }
 
     @Override
-    public long getDateTime() {
+    public Long getDateTime() {
         return this.dateTime;
     }
 
@@ -75,6 +79,11 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
     @Override
     public Collection<ContractClause> getContractClause() {
         return clause;
+    }
+
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        return this.nearExpirationDatetime;
     }
 
     @Override

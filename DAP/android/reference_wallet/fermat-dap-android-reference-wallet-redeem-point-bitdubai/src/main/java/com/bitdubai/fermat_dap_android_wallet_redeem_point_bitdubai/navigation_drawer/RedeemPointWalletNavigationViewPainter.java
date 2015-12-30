@@ -12,24 +12,30 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 
 /**
  * Created by frank on 12/9/15.
  */
 public class RedeemPointWalletNavigationViewPainter implements NavigationViewPainter {
-    private Activity activity;
-    private final RedeemPointIdentity redeemPointIdentity;
 
-    public RedeemPointWalletNavigationViewPainter(Activity activity, RedeemPointIdentity redeemPointIdentity) {
+    private Activity activity;
+    private final ActiveActorIdentityInformation redeemPointIdentity;
+
+    public RedeemPointWalletNavigationViewPainter(Activity activity, ActiveActorIdentityInformation redeemPointIdentity) {
         this.activity = activity;
         this.redeemPointIdentity = redeemPointIdentity;
     }
 
     @Override
-    public View addNavigationViewHeader() {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation redeemPointIdentity) {
+        try {
+            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, redeemPointIdentity);
+        } catch (CantGetIdentityRedeemPointException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -45,7 +51,7 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_wallet_asset_redeem_point_navigation_view_bottom, base, true);
+        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_redeem_point_wallet_bottom, base, true);
     }
 
     @Override
@@ -56,7 +62,7 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.color.fab_material_white);
+                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
         }catch (OutOfMemoryError error){
             error.printStackTrace();
         }
@@ -65,7 +71,7 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
 
     @Override
     public int addBodyBackgroundColor() {
-        return Color.WHITE;
+        return 0;
     }
 
     @Override
@@ -76,5 +82,10 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
     @Override
     public boolean hasBodyBackground() {
         return true;
+    }
+
+    @Override
+    public boolean hasClickListener() {
+        return false;
     }
 }

@@ -30,17 +30,18 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CustomerOnlinePaymentRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.*;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.exceptions.CantSendContractNewStatusNotificationException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.BusinessTransactionMetadata;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.BrokerAckOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants;
@@ -253,7 +254,6 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         pluginId,
                         database);
 
-                CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
                 String contractHash;
                 /**
                  * Check if pending incoming money events
@@ -268,9 +268,9 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                  * The status to verify is PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION, it represents that the payment is
                  * acknowledge by the broker.
                  */
-                List<CustomerOnlinePaymentRecord> pendingToSubmitNotificationList=
+                List<BusinessTransactionRecord> pendingToSubmitNotificationList=
                         brokerAckOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOnlinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+                for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotificationToCryptoCustomer(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
@@ -288,9 +288,9 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 /**
                  * Check pending notifications - Customer side
                  */
-                List<CustomerOnlinePaymentRecord> pendingToSubmitConfirmationList=
+                List<BusinessTransactionRecord> pendingToSubmitConfirmationList=
                         brokerAckOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(CustomerOnlinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+                for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
@@ -324,19 +324,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Unexpected result in database");
-            }  /*catch (CantSendBusinessTransactionHashException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
-            }
-            catch (CantSendContractNewStatusNotificationException e) {
-                throw new CantSendContractNewStatusNotificationException(
-                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
-            }*/ catch (IncomingOnlinePaymentException e) {
+            } catch (IncomingOnlinePaymentException e) {
                 //TODO: I need to discuss if I need to raise an event here, for now I going to report the error
                 errorManager.reportUnexpectedPluginException(
                         Plugins.BROKER_ACK_ONLINE_PAYMENT,
@@ -359,8 +347,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 IncomingOnlinePaymentException,
                 CantUpdateRecordException {
             String senderPublicKey;
-            IncomingMoneyEventWrapper incomingMoneyEventWrapper;
-            CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+            com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper incomingMoneyEventWrapper;
+            BusinessTransactionRecord businessTransactionRecord;
             long contractCryptoAmount;
             long incomingCryptoAmount;
             String contractHash;
@@ -371,43 +359,43 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             try{
                 incomingMoneyEventWrapper=brokerAckOnlinePaymentBusinessTransactionDao.getIncomingMoneyEventWrapper(
                         eventId);
-                senderPublicKey=incomingMoneyEventWrapper.senderPublicKey;
-                customerOnlinePaymentRecord=
+                senderPublicKey=incomingMoneyEventWrapper.getSenderPublicKey();
+                businessTransactionRecord =
                         brokerAckOnlinePaymentBusinessTransactionDao.
-                                getCustomerOnlinePaymentRecordByCustomerPublicKey(senderPublicKey);
-                if(customerOnlinePaymentRecord==null){
+                                getBusinessTransactionRecordByCustomerPublicKey(senderPublicKey);
+                if(businessTransactionRecord ==null){
                     //Case: the contract event is not processed or the incoming money is not link to a contract.
                     return;
                 }
-                contractHash=customerOnlinePaymentRecord.getContractHash();
-                incomingCryptoAmount=incomingMoneyEventWrapper.cryptoAmount;
-                contractCryptoAmount=customerOnlinePaymentRecord.getCryptoAmount();
+                contractHash= businessTransactionRecord.getContractHash();
+                incomingCryptoAmount=incomingMoneyEventWrapper.getCryptoAmount();
+                contractCryptoAmount= businessTransactionRecord.getCryptoAmount();
                 if(incomingCryptoAmount!=contractCryptoAmount){
                     throw new IncomingOnlinePaymentException("The incoming crypto amount received is "+incomingCryptoAmount+"\n" +
                             "The amount excepted in contract "+contractHash+"\n" +
                             "is "+contractCryptoAmount
                     );
                 }
-                receiverActorPublicKey=incomingMoneyEventWrapper.receiverPublicKey;
-                expectedActorPublicKey=customerOnlinePaymentRecord.getBrokerPublicKey();
+                receiverActorPublicKey=incomingMoneyEventWrapper.getReceiverPublicKey();
+                expectedActorPublicKey= businessTransactionRecord.getBrokerPublicKey();
                 if(!receiverActorPublicKey.equals(expectedActorPublicKey)){
                     throw new IncomingOnlinePaymentException("The actor public key that receive the money is "+receiverActorPublicKey+"\n" +
                             "The broker public key in contract "+contractHash+"\n" +
                             "is "+expectedActorPublicKey
                     );
                 }
-                incomingWalletPublicKey=incomingMoneyEventWrapper.walletPublicKey;
-                contractWalletPublicKey=customerOnlinePaymentRecord.getWalletPublicKey();
+                incomingWalletPublicKey=incomingMoneyEventWrapper.getWalletPublicKey();
+                contractWalletPublicKey= businessTransactionRecord.getExternalWalletPublicKey();
                 if(!incomingWalletPublicKey.equals(contractWalletPublicKey)){
                     throw new IncomingOnlinePaymentException("The wallet public key that receive the money is "+incomingWalletPublicKey+"\n" +
                             "The wallet public key in contract "+contractHash+"\n" +
                             "is "+contractWalletPublicKey
                     );
                 }
-                customerOnlinePaymentRecord.setContractTransactionStatus(
+                businessTransactionRecord.setContractTransactionStatus(
                         ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);
-                brokerAckOnlinePaymentBusinessTransactionDao.updateOnlinePaymentRecord(
-                        customerOnlinePaymentRecord);
+                brokerAckOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
+                        businessTransactionRecord);
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new IncomingOnlinePaymentException(
@@ -425,7 +413,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
-                CustomerOnlinePaymentRecord customerOnlinePaymentRecord;
+                BusinessTransactionRecord businessTransactionRecord;
                 if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
                     //This will happen in customer side
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
@@ -444,7 +432,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                                             contractHash);
                             brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                                     customerBrokerContractPurchase);
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.PENDING_MERCHANDISE);
                             raiseAckConfirmationEvent(contractHash);
@@ -462,12 +450,12 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         businessTransactionMetadata=record.getInformation();
                         contractHash=businessTransactionMetadata.getContractHash();
                         if(brokerAckOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            customerOnlinePaymentRecord=
+                            businessTransactionRecord =
                                     brokerAckOnlinePaymentBusinessTransactionDao.
-                                            getCustomerOnlinePaymentRecordByContractHash(contractHash);
-                            contractTransactionStatus=customerOnlinePaymentRecord.getContractTransactionStatus();
+                                            getBusinessTransactionRecordByContractHash(contractHash);
+                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
                             if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_ACK.getCode())){
-                                customerOnlinePaymentRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
+                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PENDING_MERCHANDISE);
@@ -488,20 +476,46 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
                 }
 
-            } catch (CantUpdateRecordException e) {
-                e.printStackTrace();
-            } catch (CantConfirmTransactionException e) {
-                e.printStackTrace();
-            } catch (CantupdateCustomerBrokerContractSaleException e) {
-                e.printStackTrace();
-            } catch (CantDeliverPendingTransactionsException e) {
-                e.printStackTrace();
-            } catch (CantInsertRecordException e) {
-                e.printStackTrace();
-            } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-                e.printStackTrace();
-            } catch (CantGetListCustomerBrokerContractSaleException e) {
-                e.printStackTrace();
+            } catch (CantUpdateRecordException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the database");
+            } catch (CantConfirmTransactionException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot confirm the transaction");
+            } catch (CantUpdateCustomerBrokerContractSaleException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the contract sale status");
+            } catch (CantDeliverPendingTransactionsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the pending transactions from transaction transmission plugin");
+            } catch (CantInsertRecordException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot insert a record in database");
+            } catch (CantGetListCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the purchase contract");
+            } catch (CantGetListCustomerBrokerContractSaleException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the sale contract");
+            } catch (CantUpdateCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the contract purchase status");
             }
 
 

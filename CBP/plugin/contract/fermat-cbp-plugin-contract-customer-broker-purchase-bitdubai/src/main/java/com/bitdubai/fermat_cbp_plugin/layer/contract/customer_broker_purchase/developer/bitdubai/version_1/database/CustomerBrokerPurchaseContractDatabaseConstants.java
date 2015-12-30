@@ -5,7 +5,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.d
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 29/11/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 23/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -21,8 +21,9 @@ public class CustomerBrokerPurchaseContractDatabaseConstants {
     static final String CONTRACTS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME = "negotiation_id";
     static final String CONTRACTS_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
     static final String CONTRACTS_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
-    static final String CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME = "data_time";
+    static final String CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME = "date_time";
     static final String CONTRACTS_PURCHASE_STATUS_COLUMN_NAME = "status";
+    static final String CONTRACTS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME = "near_expiration_date_time";
 
     static final String CONTRACTS_PURCHASE_FIRST_KEY_COLUMN = "contract_id";
 
@@ -47,9 +48,9 @@ public class CustomerBrokerPurchaseContractDatabaseConstants {
     static final String CLAUSE_STATUS_LOG_LOG_ID_COLUMN_NAME = "log_id";
     static final String CLAUSE_STATUS_LOG_CLAUSE_ID_COLUMN_NAME = "clause_id";
     static final String CLAUSE_STATUS_LOG_STATUS_COLUMN_NAME = "status";
-    static final String CLAUSE_STATUS_LOG_DATA_TIME_COLUMN_NAME = "data_time";
+    static final String CLAUSE_STATUS_LOG_DATE_TIME_COLUMN_NAME = "date_time";
     static final String CLAUSE_STATUS_LOG_CHANGE_BY_COLUMN_NAME = "change_by";
 
-    static final String CLAUSE_STATUS_LOG_FIRST_KEY_COLUMN = "clause_id";
+    static final String CLAUSE_STATUS_LOG_FIRST_KEY_COLUMN = "log_id";
 
 }

@@ -20,7 +20,6 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -36,10 +35,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIdentityAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetIdentityRedeemPointException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 
 import java.util.ArrayList;
@@ -170,10 +165,14 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
-                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getAssetRedeemPointIdentity());
+
+//                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
+
+                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this);
+
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), getWalletSessionManager().getWalletSession(wallet.getPublicKey()), null, getWalletResourcesProviderManager()));
+                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), getWalletSessionManager().getWalletSession(wallet.getPublicKey()), getWalletResourcesProviderManager()));
 //                    switch (page.getType()) {
 //                        case CWP_WALLET_FACTORY_CREATE_STEP_1:
 //                            fragments.add(new CreateWalletFragment());
@@ -195,14 +194,6 @@ public class WizardActivity extends FermatActivity
 //                    }
                 }
             } catch (FragmentNotFoundException e) {
-                e.printStackTrace();
-            } catch (CantGetActiveLoginIdentityException e) {
-                e.printStackTrace();
-            } catch (CantGetIdentityAssetIssuerException e) {
-                e.printStackTrace();
-            } catch (CantGetIdentityAssetUserException e) {
-                e.printStackTrace();
-            } catch (CantGetIdentityRedeemPointException e) {
                 e.printStackTrace();
             }
         }
@@ -354,6 +345,16 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
+    public void backScreen() {
+        doBack();
+    }
+
+    @Override
+    public void nextScreen() {
+        doNext();
+    }
+
+    @Override
     public void changeActivityBack(String appBackPublicKey, String activityCode) {
 
     }
@@ -380,7 +381,6 @@ public class WizardActivity extends FermatActivity
             //changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
         } else {
             Intent intent = new Intent(this, DesktopActivity.class);
-            if(developMode==true) intent.putExtra("flag",true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

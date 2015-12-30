@@ -89,6 +89,7 @@ public enum Activities {
     DAP_ASSET_EDITOR_ACTIVITY("DAEA"),
     DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL("DAIWAD"),
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
+    DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST("DWAIUDL"),
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
 
@@ -110,6 +111,12 @@ public enum Activities {
     CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS("CBPCBWCND"),
     CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS("CBPCBWOCD"),
     CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS("CBPCBWCCD"),
+    CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY("CBPCBWSI"),
+    CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES("CBPCBWSM"),
+    CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS("CBPCBWSE"),
+    CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS("CBPCBWSP"),
+    CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS("CBPCBWSL"),
+    CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT("CBPCBWSBA"),
 
     // Crypto Customer Wallet
     CBP_CRYPTO_CUSTOMER_WALLET_HOME("CBPCCWH"),
@@ -168,7 +175,7 @@ public enum Activities {
     BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
 
 
-    WPD_DESKTOP("WPD"), ;
+    WPD_DESKTOP("WPD"),;
 
     private String code;
 
@@ -331,6 +338,18 @@ public enum Activities {
                 return CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS;
             case "CBPCBWCCD":
                 return CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS;
+            case "CBPCBWSI":
+                return CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY;
+            case "CBPCBWSM":
+                return CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES;
+            case "CBPCBWSE":
+                return CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS;
+            case "CBPCBWSP":
+                return CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS;
+            case "CBPCBWSL":
+                return CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS;
+            case "CBPCBWSBA":
+                return CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT;
             case "CBPCCWH":
                 return CBP_CRYPTO_CUSTOMER_WALLET_HOME;
             case "CBPCCWCH":
@@ -423,6 +442,8 @@ public enum Activities {
                 return DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY;
             case "DAIWAD":
                 return DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL;
+            case "DWAIUDL":
+                return DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

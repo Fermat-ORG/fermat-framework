@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.MyAssetsActivityFragment;
@@ -15,16 +15,16 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
  * @author Francisco Vasquez on 15/09/15.
  * @version 1.0
  */
-public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<RedeemPointSession, RedeemPointSettings,WalletResourcesProviderManager, WalletRedeemPointFragmentsEnumType> {
+public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<RedeemPointSession,WalletResourcesProviderManager, WalletRedeemPointFragmentsEnumType> {
 
 
     @Override
-    public FermatWalletFragment getFermatFragment(WalletRedeemPointFragmentsEnumType fragment) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(WalletRedeemPointFragmentsEnumType fragment) throws FragmentNotFoundException {
         if (fragment == null) {
             throw createFragmentNotFoundException(null);
         }
 
-        FermatWalletFragment currentFragment = null;
+        AbstractFermatFragment currentFragment = null;
         try {
 
             switch (fragment) {

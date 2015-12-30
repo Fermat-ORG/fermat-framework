@@ -3,7 +3,9 @@ package com.bitdubai.sub_app.intra_user_identity.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -21,26 +23,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIntraUserIdentityFragment extends FermatFragment {
+public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private static final String TAG = "CreateBrokerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
@@ -53,19 +57,16 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-
+    IntraUserIdentitySubAppSession intraUserIdentitySubAppSession;
     private byte[] brokerImageByteArray;
-
     private IntraWalletUserIdentityManager moduleManager;
     private ErrorManager errorManager;
-
     private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
-
-    IntraUserIdentitySubAppSession intraUserIdentitySubAppSession ;
     private IntraWalletUserIdentity identitySelected;
-    private boolean isUpdate=false;
+    private boolean isUpdate = false;
+    private EditText mBrokerPhrase;
 
 
     public static CreateIntraUserIdentityFragment newInstance() {
@@ -97,22 +98,27 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         View rootLayout = inflater.inflate(R.layout.fragment_create_intra_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
-
+        SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+        if (!pref.getBoolean("isChecked", false)) {
+            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), null, null);
+            presentationIntraUserCommunityDialog.show();
+        }
         return rootLayout;
     }
 
 
-
     /**
      * Inicializa las vistas de este Fragment
+     *
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
 
-        createButton.setText((!isUpdate) ? "Create" : "Update" );
+        createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mBrokerName.requestFocus();
 
@@ -135,9 +141,9 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        if(!isUpdate){
-                            Toast.makeText(getActivity(),"Identity created",Toast.LENGTH_SHORT).show();
-                        }else {
+                        if (!isUpdate) {
+                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                        } else {
                             Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -163,35 +169,39 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
 
             if (identitySelected != null) {
                 loadIdentity();
-            } else{
-                identitySelected = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
-                if(identitySelected!=null) {
+            } else {
+                List<IntraWalletUserIdentity> lst = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                if(!lst.isEmpty()){
+                    identitySelected = lst.get(0);
+                }
+                if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
                     createButton.setText("Save changes");
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void loadIdentity(){
-        if (identitySelected.getProfileImage() != null) {
+        if (identitySelected.getImage() != null) {
             Bitmap bitmap = null;
-            if (identitySelected.getProfileImage().length > 0) {
-                bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
+            if (identitySelected.getImage().length > 0) {
+                bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-            }else{
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+            } else {
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100,100, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             brokerImageByteArray = toByteArray(bitmap);
             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
         mBrokerName.setText(identitySelected.getAlias());
+        mBrokerPhrase.setText(identitySelected.getPhrase());
     }
 
     @Override
@@ -262,16 +272,19 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
     private int createNewIdentity() {
 
         String brokerNameText = mBrokerName.getText().toString();
-        boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
+        String brokerPhraseText = mBrokerPhrase.getText().toString();
+
+        boolean dataIsValid = validateIdentityData(brokerNameText, brokerPhraseText, brokerImageByteArray);
 
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    if(!isUpdate)
-                    moduleManager.createNewIntraWalletUser(brokerNameText,"phrase", brokerImageByteArray);
-                    else moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(),brokerNameText,"phrase",brokerImageByteArray);
+                    if (!isUpdate)
+                        moduleManager.createNewIntraWalletUser(brokerNameText, brokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                    else
+                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, brokerPhraseText, brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
-                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 } catch (CantUpdateIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 }
@@ -281,6 +294,14 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         }
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
+    }
+
+    private byte[] convertImage(int resImage){
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     private void dispatchTakePictureIntent() {
@@ -299,8 +320,10 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
-    private boolean validateIdentityData(String brokerNameText, byte[] brokerImageBytes) {
+    private boolean validateIdentityData(String brokerNameText, String brokerPhraseText, byte[] brokerImageBytes) {
         if (brokerNameText.isEmpty())
+            return false;
+        if (brokerPhraseText.isEmpty())
             return false;
         if (brokerImageBytes == null)
             return true;

@@ -38,23 +38,26 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
 
         UUID   connectionId                  = record.getUUIDValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             );
         String linkedIdentityPublicKey       = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        String linkedIdentityActorTypeString = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME);
         String publicKey                     = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                );
-        String actorTypeString               = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACTOR_TYPE_COLUMN_NAME                );
         String alias                         = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME                     );
         String connectionStateString         = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          );
         long   creationTime                  = record.getLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             );
         long   updateTime                    = record.getLongValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               );
 
-        Actors          actorType       = Actors         .getByCode(actorTypeString      );
-        ConnectionState connectionState = ConnectionState.getByCode(connectionStateString);
+        ConnectionState connectionState         = ConnectionState.getByCode(connectionStateString        );
 
-        CryptoBrokerLinkedActorIdentity actorIdentity = new CryptoBrokerLinkedActorIdentity(linkedIdentityPublicKey);
+        Actors          linkedIdentityActorType = Actors         .getByCode(linkedIdentityActorTypeString);
+
+        CryptoBrokerLinkedActorIdentity actorIdentity = new CryptoBrokerLinkedActorIdentity(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType
+        );
 
         return new CryptoBrokerActorConnection(
                 connectionId   ,
                 actorIdentity  ,
                 publicKey      ,
-                actorType      ,
                 alias          ,
                 null           ,
                 connectionState,

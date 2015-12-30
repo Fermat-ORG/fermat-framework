@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -183,9 +183,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.onActivityCreated(savedInstanceState);
 
         try {
-            CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-        } catch (Exception e) {
+            CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);} catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
@@ -203,7 +201,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        appSession.setData("contract_data", data);
+        appSession.setData(CryptoCustomerWalletSession.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
@@ -217,7 +215,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         if (moduleManager != null) {
             try {
-                CryptoCustomerWallet wallet = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+                CryptoCustomerWalletManager wallet = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
                 data.addAll(wallet.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {

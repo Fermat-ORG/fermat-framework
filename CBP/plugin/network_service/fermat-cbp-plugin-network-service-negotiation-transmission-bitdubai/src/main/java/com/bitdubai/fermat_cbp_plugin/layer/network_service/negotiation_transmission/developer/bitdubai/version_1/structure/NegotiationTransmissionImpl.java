@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
-import com.bitdubai.fermat_cbp_api.layer.network_service.NegotiationTransmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 
 import java.util.UUID;
 
@@ -14,42 +14,48 @@ import java.util.UUID;
  */
 public class NegotiationTransmissionImpl implements NegotiationTransmission {
 
-    private final UUID transmissionId;
-    private final UUID transactionId;
-    private final UUID negotiationId;
-    private NegotiationTransactionType negotiationTansactionType;
-    private final String publicKeyActorSend;
-    private final PlatformComponentType actorSendType;
-    private final String publicKeyActorReceive;
-    private final PlatformComponentType actorReceiveType;
-    private NegotiationTransmissionType transmissionType;
-    private NegotiationTransmissionState transmissionState;
-    private final long timestamp;
-    private boolean pendingFlag;
+    private final   UUID                            transmissionId;
+    private final   UUID                            transactionId;
+    private final   UUID                            negotiationId;
+    private         NegotiationTransactionType      negotiationTransactionType;
+    private final   String                          publicKeyActorSend;
+    private final   PlatformComponentType           actorSendType;
+    private final   String                          publicKeyActorReceive;
+    private final   PlatformComponentType           actorReceiveType;
+    private         NegotiationTransmissionType     transmissionType;
+    private         NegotiationTransmissionState    transmissionState;
+    private final   NegotiationType                 negotiationType;
+    private final   String                          negotiationXML;
+    private final   long                            timestamp;
+    private         boolean                         pendingFlag;
 
     public NegotiationTransmissionImpl(
-            final UUID transmissionId,
-            final UUID transactionId,
-            final UUID negotiationId,
-            final NegotiationTransactionType negotiationTansactionType,
-            final String publicKeyActorSend,
-            final PlatformComponentType actorSendType,
-            final String publicKeyActorReceive,
-            final PlatformComponentType actorReceiveType,
-            final NegotiationTransmissionType transmissionType,
-            final NegotiationTransmissionState transmissionState,
+            final UUID                          transmissionId,
+            final UUID                          transactionId,
+            final UUID                          negotiationId,
+            final NegotiationTransactionType    negotiationTransactionType,
+            final String                        publicKeyActorSend,
+            final PlatformComponentType         actorSendType,
+            final String                        publicKeyActorReceive,
+            final PlatformComponentType         actorReceiveType,
+            final NegotiationTransmissionType   transmissionType,
+            final NegotiationTransmissionState  transmissionState,
+            final NegotiationType               negotiationType,
+            final String                        negotiationXML,
             final long timestamp
     ){
-        this.transmissionId = transmissionId;
-        this.transactionId = transactionId;
-        this.negotiationId = negotiationId;
-        this.negotiationTansactionType = negotiationTansactionType;
-        this.publicKeyActorSend = publicKeyActorSend;
-        this.actorSendType = actorSendType;
-        this.publicKeyActorReceive = publicKeyActorReceive;
-        this.actorReceiveType = actorReceiveType;
-        this.transmissionType = transmissionType;
-        this.transmissionState = transmissionState;
+        this.transmissionId             = transmissionId;
+        this.transactionId              = transactionId;
+        this.negotiationId              = negotiationId;
+        this.negotiationTransactionType = negotiationTransactionType;
+        this.publicKeyActorSend         = publicKeyActorSend;
+        this.actorSendType              = actorSendType;
+        this.publicKeyActorReceive      = publicKeyActorReceive;
+        this.actorReceiveType           = actorReceiveType;
+        this.transmissionType           = transmissionType;
+        this.transmissionState          = transmissionState;
+        this.negotiationType            = negotiationType;
+        this.negotiationXML             = negotiationXML;
         this.timestamp = timestamp;
         this.pendingFlag = false;
     }
@@ -64,7 +70,7 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     public UUID getNegotiationId(){ return negotiationId; }
 
     @Override
-    public NegotiationTransactionType getNegotiationTransactionType(){ return negotiationTansactionType; }
+    public NegotiationTransactionType getNegotiationTransactionType(){ return negotiationTransactionType; }
 
     @Override
     public String getPublicKeyActorSend(){ return publicKeyActorSend; }
@@ -85,6 +91,12 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     public NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
 
     @Override
+    public NegotiationType getNegotiationType(){ return negotiationType; }
+
+    @Override
+    public String getNegotiationXML(){ return negotiationXML;}
+
+    @Override
     public long getTimestamp(){ return timestamp; }
 
     @Override
@@ -94,10 +106,11 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     public void confirmRead() { this.pendingFlag=true; }
 
     @Override
-    public void setNegotiationTransactionType(NegotiationTransactionType type){ this.negotiationTansactionType = type;}
+    public void setNegotiationTransactionType(NegotiationTransactionType type){ this.negotiationTransactionType = type;}
 
     @Override
     public void setTransmissionType(NegotiationTransmissionType type){ this.transmissionType = type; }
+
     @Override
     public void setTransmissionState(NegotiationTransmissionState state){  this.transmissionState = state; }
 

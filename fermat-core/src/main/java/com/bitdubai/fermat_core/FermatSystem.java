@@ -1,20 +1,11 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetRuntimeManagerException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ErrorManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ResourcesManagerNotFoundException;
@@ -24,31 +15,24 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_bnk_core.BNKPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystem</code>
@@ -90,10 +74,10 @@ public final class FermatSystem {
         try {
 
             fermatSystemContext.registerPlatform(new BCHPlatform());
-            fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
-            fermatSystemContext.registerPlatform(new CSHPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
+            fermatSystemContext.registerPlatform(new CCPPlatform());
+            fermatSystemContext.registerPlatform(new CSHPlatform());
             fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
@@ -258,73 +242,6 @@ public final class FermatSystem {
         } catch (Exception e) {
 
             throw new CantGetErrorManagerException(e, addonVersionReference.toString3(), "Unhandled error.");
-        }
-    }
-
-    // TODO THINK ABOUT THIS.
-    @Deprecated
-    public final void startAllRegisteredPlatforms() throws CantStartAllRegisteredPlatformsException {
-
-        final Map<PluginVersionReference, Plugin> dealsWithDatabaseManagersPlugins = new ConcurrentHashMap<>();
-        final Map<PluginVersionReference, Plugin> dealsWithLogManagersPlugins = new ConcurrentHashMap<>();
-        final Map<AddonVersionReference, Addon> dealsWithDatabaseManagersAddons = new ConcurrentHashMap<>();
-        final Map<AddonVersionReference, Addon> dealsWithLogManagersAddons = new ConcurrentHashMap<>();
-
-        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
-
-        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
-
-
-        for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
-
-            try {
-
-                fermatAddonManager.startAddonAndReferences(addon.getValue());
-
-                if (addon.getValue() instanceof DatabaseManagerForDevelopers)
-                    dealsWithDatabaseManagersAddons.put(addon.getKey(), addon.getValue());
-
-                if (addon.getValue() instanceof LogManagerForDevelopers)
-                    dealsWithLogManagersAddons.put(addon.getKey(), addon.getValue());
-
-            } catch (final CantStartAddonException e) {
-                System.err.println(e.toString());
-                // throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting add-ons or plug-ins during the start of all platforms.");
-            } catch (Exception e) {
-                System.err.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Error.");
-            }
-        }
-
-        for(ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
-
-            try {
-
-                fermatPluginManager.startPluginAndReferences(plugin.getValue());
-
-                if (plugin.getValue() instanceof DatabaseManagerForDevelopers)
-                    dealsWithDatabaseManagersPlugins.put(plugin.getKey(), plugin.getValue());
-
-                if (plugin.getValue() instanceof LogManagerForDevelopers)
-                    dealsWithLogManagersPlugins.put(plugin.getKey(), plugin.getValue());
-
-            } catch (final CantStartPluginException e) {
-                System.out.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Error starting plug-ins during the start of all platforms.");
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                //throw new CantStartAllRegisteredPlatformsException(e, "", "Unhandled Error.");
-            }
-        }
-
-        try {
-            FermatManager developerModule = startAndGetPluginVersion(new PluginVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.SUB_APP_MODULE, Plugins.DEVELOPER, Developers.BITDUBAI, new Version()));
-
-            ((DealWithDatabaseManagers) developerModule).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
-            ((DealsWithLogManagers) developerModule).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
-        } catch (Exception e) {
-            System.out.println("************************* ERROR TRYING TO ASSIGN REFERENCES TO THE DEVELOPER SUB_APP_MODULE.");
-            System.out.println(e.toString());
         }
     }
 

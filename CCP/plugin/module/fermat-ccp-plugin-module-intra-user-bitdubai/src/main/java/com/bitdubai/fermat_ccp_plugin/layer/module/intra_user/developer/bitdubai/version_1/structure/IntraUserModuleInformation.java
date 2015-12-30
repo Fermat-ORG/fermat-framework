@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
 /**
@@ -15,13 +16,16 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     private String phrase;
     private String publicKey;
     private byte[] profileImage;
+    private ConnectionState connectionState;
 
 
-    public IntraUserModuleInformation(String name,String publicKey,byte[] profileImage)
+    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState)
     {
         this.name = name;
         this.publicKey = publicKey;
-        //this.profileImage = (byte[] )profileImage.clone();
+        this.profileImage = (byte[] )profileImage.clone();
+        this.connectionState = connectionState;
+        this.phrase = phrase;
     }
     /**
      * That method returns the public key of the represented Intra User
@@ -59,5 +63,15 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     @Override
     public byte[] getProfileImage() {
         return (profileImage!=null) ? (byte[] )this.profileImage.clone() : null;
+    }
+
+    /**
+     * That method returns the ConnectionState status
+     * @return ConnectionState object
+     */
+
+    @Override
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
     }
 }

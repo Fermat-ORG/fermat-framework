@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.fragments.CreateIdentityFragment;
@@ -13,11 +13,11 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSession, UserIdentitySubAppSettings, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
+public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSession, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
 
 
     @Override
-    public FermatFragment getFermatFragment(UserIdentityFragmentEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(UserIdentityFragmentEnumType fragments) throws FragmentNotFoundException {
 
         if (fragments.equals(UserIdentityFragmentEnumType.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT))
             return IdentityListFragment.newInstance();

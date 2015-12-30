@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
@@ -122,25 +123,31 @@ public class ActorConnectionEventActions {
 
         try {
 
-            final CryptoBrokerLinkedActorIdentity linkedIdentity = new CryptoBrokerLinkedActorIdentity(request.getDestinationPublicKey());
+            final CryptoBrokerLinkedActorIdentity linkedIdentity = new CryptoBrokerLinkedActorIdentity(
+                    request.getDestinationPublicKey(),
+                    Actors.CBP_CRYPTO_BROKER
+            );
             final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
-
+            final CryptoBrokerActorConnection actorConnection = new CryptoBrokerActorConnection(
+                    request.getRequestId()       ,
+                    linkedIdentity               ,
+                    request.getSenderPublicKey() ,
+                    request.getSenderAlias()     ,
+                    request.getSenderImage()     ,
+                    connectionState              ,
+                    request.getSentTime()        ,
+                    request.getSentTime()
+            );
 
             switch(request.getSenderActorType()) {
                 case CBP_CRYPTO_BROKER:
 
-                    final CryptoBrokerActorConnection actorConnection = new CryptoBrokerActorConnection(
-                            request.getRequestId()       ,
-                            linkedIdentity               ,
-                            request.getSenderPublicKey() ,
-                            request.getSenderActorType() ,
-                            request.getSenderAlias()     ,
-                            request.getSenderImage()     ,
-                            connectionState              ,
-                            request.getSentTime()        ,
-                            request.getSentTime()
-                    );
+                    dao.registerActorConnection(actorConnection);
+
+                    cryptoBrokerNetworkService.confirm(request.getRequestId());
+                    break;
+                case CBP_CRYPTO_CUSTOMER:
 
                     dao.registerActorConnection(actorConnection);
 

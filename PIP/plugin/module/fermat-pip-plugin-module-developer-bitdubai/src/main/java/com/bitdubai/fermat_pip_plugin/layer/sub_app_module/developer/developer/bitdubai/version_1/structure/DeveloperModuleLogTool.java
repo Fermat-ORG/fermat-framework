@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyAddonsException;
@@ -19,39 +18,44 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Created by ciencias on 6/25/15.
+ * Created by furszy on 6/25/15.
+ *
+ * @author lnacosta
+ * @author furszy
  */
 public class DeveloperModuleLogTool implements LogTool {
 
+    private final Map<PluginVersionReference, Plugin> LoggingLstPlugins;
+    private final Map<AddonVersionReference , Addon> LoggingLstAddons ;
 
-    private Map<PluginVersionReference,Plugin> LoggingLstPlugins;
-    private Map<AddonVersionReference,Addon> LoggingLstAddons;
+    public DeveloperModuleLogTool(Map<PluginVersionReference, Plugin> loggingLstPlugins,
+                                  Map<AddonVersionReference , Addon> loggingLstAddons ) {
 
-    public DeveloperModuleLogTool(Map<PluginVersionReference, Plugin> LoggingLstPlugins, Map<AddonVersionReference, Addon> LoggingLstAddons) {
-        this.LoggingLstPlugins = LoggingLstPlugins;
-        this.LoggingLstAddons = LoggingLstAddons;
+        this.LoggingLstPlugins = loggingLstPlugins;
+        this.LoggingLstAddons  = loggingLstAddons ;
     }
 
     @Override
     public List<PluginVersionReference> getAvailablePluginList() {
-        List<PluginVersionReference> lstPlugins=new ArrayList<>();
-        for(Map.Entry<PluginVersionReference, Plugin> entry : LoggingLstPlugins.entrySet()) {
-            PluginVersionReference key = entry.getKey();
-            lstPlugins.add(key);
-        }
+
+        List<PluginVersionReference> lstPlugins = new ArrayList<>();
+
+        for(Map.Entry<PluginVersionReference, Plugin> entry : LoggingLstPlugins.entrySet())
+            lstPlugins.add(entry.getKey());
+
         return lstPlugins;
     }
 
     @Override
     public List<AddonVersionReference> getAvailableAddonList() {
-        List<AddonVersionReference> lstAddons=new ArrayList<>();
-        for(Map.Entry<AddonVersionReference, Addon> entry : LoggingLstAddons.entrySet()) {
-            AddonVersionReference key = entry.getKey();
-            lstAddons.add(key);
-        }
+
+        List<AddonVersionReference> lstAddons = new ArrayList<>();
+
+        for(Map.Entry<AddonVersionReference, Addon> entry : LoggingLstAddons.entrySet())
+            lstAddons.add(entry.getKey());
+
         return lstAddons;
     }
-
 
     /**
      * I get from the plugin the list of classes with their full paths.
@@ -140,20 +144,17 @@ public class DeveloperModuleLogTool implements LogTool {
 
     }
 
-
     /*
         Created by matias, used in fragment to get loglevels
      */
     @Override
     public List<ClassHierarchyLevels> getClassesHierarchyAddons(AddonVersionReference addon) throws CantGetClasessHierarchyAddonsException {
-        try
-        {
+
+        try {
             /**
              * I get the class full patch from the plug in.
              */
-            List<String> classes = ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).getClassesFullPath();
-            //List<Class<?>> javaClasses = ClassFinder.find(((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).getClass().getPackage().getName());
-
+            List<String> classes = ((LogManagerForDevelopers) this.LoggingLstAddons.get(addon)).getClassesFullPath();
 
             /**
              * I need to know the minimun number of packages on the plug in.
@@ -215,9 +216,7 @@ public class DeveloperModuleLogTool implements LogTool {
              * I return the object
              */
             return returnedClasses;
-        }
-        catch(Exception e)
-        {
+        } catch(Exception e) {
             throw new CantGetClasessHierarchyAddonsException(CantGetClasessHierarchyAddonsException.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths","");
 
         }
@@ -230,7 +229,7 @@ public class DeveloperModuleLogTool implements LogTool {
      */
     @Override
     public void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass) {
-        ((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
+        ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
     }
 
 }

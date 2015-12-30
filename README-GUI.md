@@ -1,3 +1,5 @@
+<!-- all links tested by laderuner -->
+
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 <br><br>
@@ -97,7 +99,7 @@ public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumTyp
 public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactory<IntraUserIdentitySubAppSession, IntraUserIdentityPreferenceSettings, IntraUserIdentityFragmentsEnumType> {
 
    @Override
-   public FermatFragment getFermatFragment(IntraUserIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
+   public AbstractFermatFragment getFermatFragment(IntraUserIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
 
        if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT))
            return IntraUserIdentityListFragment.newInstance();
@@ -408,9 +410,9 @@ Es posible agregar un *Navigation Drawer* (o Side Menu) que te permita dirigirte
 
 ### Android api
 #### API Organitation
-#### FermatFragment Class
+#### AbstractFermatFragment Class
 
-En tu proyecto GUI debes crear los fragmentos que defines en la estructura de navegacion, creando clases que hereden de `FermatFragment` y colocandolas dentro de la carpeta `fragments` de tu proyecto. `FermatFragment` tiene referencias a la `Session` de tu Wallet o SubApp, asi como a los `Settings` y al `ProviderManager`. Existen varias subclases en `fermat-api` que extienden `FermatFragment` y facilitan ciertos trabajos, como es el caso de manejar listas y cosas mas especializadas como listas desplegables, wirzards, etc:
+En tu proyecto GUI debes crear los fragmentos que defines en la estructura de navegacion, creando clases que hereden de `AbstractFermatFragment` y colocandolas dentro de la carpeta `fragments` de tu proyecto. `AbstractFermatFragment` tiene referencias a la `Session` de tu Wallet o SubApp, asi como a los `Settings` y al `ProviderManager`. Existen varias subclases en `fermat-api` que extienden `AbstractFermatFragment` y facilitan ciertos trabajos, como es el caso de manejar listas y cosas mas especializadas como listas desplegables, wirzards, etc:
 
 - `FermatExpandableListFragment`
 - `FermatListFragment`
@@ -420,10 +422,10 @@ En tu proyecto GUI debes crear los fragmentos que defines en la estructura de na
 
 Para mas informacion sobre estos u otros fragmentos por favor revisa el proyecto `fermat-api`. 
 
-Aqui tenemos un ejemplo de un fragmento basico extendiendo de `FermatFragment` donde obtiene referencia a a la `Session` de la app a la que pertenece, su `Module` y su `Error Manager`:
+Aqui tenemos un ejemplo de un fragmento basico extendiendo de `AbstractFermatFragment` donde obtiene referencia a a la `Session` de la app a la que pertenece, su `Module` y su `Error Manager`:
 
 ```java
-public class SettingsActivityFragment extends FermatFragment {
+public class SettingsActivityFragment extends AbstractFermatFragment {
 
     // Constants
     private static final String TAG = "SettingsActivityFragment";

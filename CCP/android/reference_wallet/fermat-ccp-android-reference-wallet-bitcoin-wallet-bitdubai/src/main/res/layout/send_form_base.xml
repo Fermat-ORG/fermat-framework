@@ -46,7 +46,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:id="@+id/profile_Image"
-                        tools:src="@drawable/profile_image_standard"
+                        tools:src="@drawable/ic_profile_male"
                         android:layout_marginLeft="12dp"/>
 
                     <FrameLayout
@@ -186,11 +186,13 @@
                         android:background="@null"
                         />
 
-                    <ImageView
-                        android:layout_width="match_parent"
+                    <Spinner
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_action_add_to_queue_grey"
-                        android:layout_weight="1"/>
+                        android:id="@+id/spinner"
+                        >
+
+                    </Spinner>
 
                 </LinearLayout>
 

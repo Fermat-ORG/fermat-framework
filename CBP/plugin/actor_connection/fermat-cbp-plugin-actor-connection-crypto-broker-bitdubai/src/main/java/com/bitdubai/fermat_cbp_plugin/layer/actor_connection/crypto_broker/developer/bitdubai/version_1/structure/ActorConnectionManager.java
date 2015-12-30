@@ -73,7 +73,10 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
         try {
 
             final UUID newConnectionId = UUID.randomUUID();
-            final CryptoBrokerLinkedActorIdentity linkedIdentity = new CryptoBrokerLinkedActorIdentity(actorSending.getPublicKey());
+            final CryptoBrokerLinkedActorIdentity linkedIdentity = new CryptoBrokerLinkedActorIdentity(
+                    actorSending.getPublicKey(),
+                    actorSending.getActorType()
+            );
             final ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
             final long currentTime = System.currentTimeMillis();
 
@@ -81,7 +84,6 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                     newConnectionId              ,
                     linkedIdentity               ,
                     actorReceiving.getPublicKey(),
-                    actorReceiving.getActorType(),
                     actorReceiving.getAlias()    ,
                     actorReceiving.getImage()    ,
                     connectionState              ,

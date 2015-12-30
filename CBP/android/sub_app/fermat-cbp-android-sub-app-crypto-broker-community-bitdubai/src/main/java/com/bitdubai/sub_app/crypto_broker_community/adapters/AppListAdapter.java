@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.holders.AppWorldHolder;
 import com.squareup.picasso.Picasso;
@@ -19,14 +19,14 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorldHolder> {
+public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformation, AppWorldHolder> {
 
 
     public AppListAdapter(Context context) {
         super(context);
     }
 
-    public AppListAdapter(Context context, List<IntraUserInformation> dataSet) {
+    public AppListAdapter(Context context, List<CryptoBrokerCommunityInformation> dataSet) {
         super(context, dataSet);
     }
 
@@ -41,9 +41,9 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
     }
 
     @Override
-    protected void bindHolder(AppWorldHolder holder, IntraUserInformation data, int position) {
-        holder.name.setText(data.getName());
-        byte[] profileImage = data.getProfileImage();
+    protected void bindHolder(AppWorldHolder holder, CryptoBrokerCommunityInformation data, int position) {
+        holder.name.setText(data.getAlias());
+        byte[] profileImage = data.getImage();
         if (profileImage != null) {
             if(profileImage.length>0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);

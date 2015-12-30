@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -57,7 +57,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends FermatFragment implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -414,7 +414,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     new Version(1,0,0));
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
-            item.setIconResource(R.drawable.fermat);
+            item.setIconResource(R.drawable.bank_wallet_xxhdpi);
             item.setPosition(6);
             lstItemsWithIcon.add(item);
 
@@ -430,7 +430,7 @@ public class DesktopFragment extends FermatFragment implements SearchView.OnClos
                     new Version(1,0,0));
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
-            item.setIconResource(R.drawable.wallet_2);
+            item.setIconResource(R.drawable.cash_wallet_xxhdpi);
             item.setPosition(7);
             lstItemsWithIcon.add(item);
 

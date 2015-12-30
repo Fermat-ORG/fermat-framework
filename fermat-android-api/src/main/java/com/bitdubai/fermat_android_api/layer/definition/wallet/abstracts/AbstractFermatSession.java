@@ -2,7 +2,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -58,6 +58,8 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     public Object getData(String key){
         return data.get(key);
     }
+
+
 
     /**
      *

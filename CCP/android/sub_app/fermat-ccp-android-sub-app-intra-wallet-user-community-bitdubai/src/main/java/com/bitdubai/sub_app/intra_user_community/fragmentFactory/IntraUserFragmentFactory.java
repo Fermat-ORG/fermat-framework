@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
@@ -18,12 +18,12 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * Modify by Jose Manuel De Sousa Dos Santos on 08/12/2015.
  */
 
-public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSession, IntraUserPreferenceSettings,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
+public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSession,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
 
 
     @Override
-    public FermatFragment getFermatFragment(IntraUserFragmentsEnumType fragments) throws FragmentNotFoundException {
-        FermatFragment currentFragment = null;
+    public AbstractFermatFragment getFermatFragment(IntraUserFragmentsEnumType fragments) throws FragmentNotFoundException {
+        AbstractFermatFragment currentFragment = null;
 
         switch (fragments) {
             case CWP_WALLET_STORE_ALL_FRAGMENT:

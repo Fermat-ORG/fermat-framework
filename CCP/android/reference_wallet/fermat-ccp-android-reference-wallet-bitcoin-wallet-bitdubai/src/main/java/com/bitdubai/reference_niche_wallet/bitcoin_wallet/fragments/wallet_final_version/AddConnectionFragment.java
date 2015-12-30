@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -47,6 +48,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private ErrorManager errorManager;
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
     private ReferenceWalletSession referenceWalletSession;
+    private ImageView empty_screen;
 
 
     public static AddConnectionFragment newInstance() {
@@ -71,16 +73,13 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
         try {
-
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
-
+            empty_screen = (ImageView) layout.findViewById(R.id.empty_screen);
             setUpScreen();
-
-        } catch (Exception e)
-        {
+            onRefresh();
+        } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -127,6 +126,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 intraUserInformationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(intraUserInformationList);
+                if(intraUserInformationList.isEmpty()){
+                    empty_screen.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
@@ -159,9 +161,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
         super.onCreateOptionsMenu(menu, inflater);
-
         menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
@@ -177,7 +177,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                 for(CryptoWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
                     try {
                         if (cryptoWalletIntraUserActor.isSelected()) {
-                            moduleManager.convertConnectionToContact(cryptoWalletIntraUserActor.getAlias(),
+                            moduleManager.convertConnectionToContact(
+                                    cryptoWalletIntraUserActor.getAlias(),
                                     Actors.INTRA_USER,
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
@@ -186,8 +187,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     ,appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     BlockchainNetworkType.DEFAULT);
+                            Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(getActivity(),"User connection successfully",Toast.LENGTH_SHORT).show();
+
                     }catch (Exception e){
                         Toast.makeText(getActivity(),"Please try again later",Toast.LENGTH_SHORT).show();
                         errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

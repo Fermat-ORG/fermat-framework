@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.devel
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.ListsForStatusSale;
@@ -49,8 +49,13 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
     }
 
     @Override
-    public void updateStatusCustomerBrokerSaleContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractSaleException {
+    public void updateStatusCustomerBrokerSaleContractStatus(String contractId, ContractStatus status) throws CantUpdateCustomerBrokerContractSaleException {
         this.customerBrokerContractSaleDao.updateStatusCustomerBrokerSaleContract(contractId, status);
+    }
+
+    @Override
+    public void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractSaleException {
+        this.customerBrokerContractSaleDao.updateNegotiationNearExpirationDatetime(contractId, status);
     }
 
 }

@@ -192,7 +192,7 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
             List<IdentityAssetUser> identityAssetUsers = getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (identityAssetUsers.size() > 0) {
                 for (IdentityAssetUser identityAssetUser : identityAssetUsers) {
-                    actorAssetUserManager.createActorAssetUserFactory(identityAssetUser.getPublicKey(), identityAssetUser.getAlias(), identityAssetUser.getProfileImage());
+                    actorAssetUserManager.createActorAssetUserFactory(identityAssetUser.getPublicKey(), identityAssetUser.getAlias(), identityAssetUser.getImage());
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {

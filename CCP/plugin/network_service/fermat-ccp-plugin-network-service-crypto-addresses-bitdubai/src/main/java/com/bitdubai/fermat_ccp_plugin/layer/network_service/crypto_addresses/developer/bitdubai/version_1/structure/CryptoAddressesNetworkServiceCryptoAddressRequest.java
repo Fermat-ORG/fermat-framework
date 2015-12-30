@@ -37,6 +37,8 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
     private final RequestAction               action                     ;
     private final CryptoAddressDealers        cryptoAddressDealer        ;
     private final BlockchainNetworkType       blockchainNetworkType      ;
+    private final int                          sentNumber;
+    private final long                          sentDate;
 
     public CryptoAddressesNetworkServiceCryptoAddressRequest(final UUID                  requestId                  ,
                                                              final String                walletPublicKey            ,
@@ -50,7 +52,9 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
                                                              final RequestType           type                       ,
                                                              final RequestAction         action                     ,
                                                              final CryptoAddressDealers  cryptoAddressDealer        ,
-                                                             final BlockchainNetworkType blockchainNetworkType      ) {
+                                                             final BlockchainNetworkType blockchainNetworkType     ,
+                                                             final int sentNumber,
+                                                             final long sentDate) {
 
         this.requestId                   = requestId                  ;
         this.walletPublicKey             = walletPublicKey            ;
@@ -65,6 +69,8 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
         this.action                      = action                     ;
         this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
+        this.sentNumber = sentNumber;
+        this.sentDate  = sentDate;
     }
 
     public UUID getRequestId() {
@@ -113,6 +119,14 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
 
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
+    }
+
+    public int getSentNumber() {
+        return sentNumber;
+    }
+
+    public long getSentDate() {
+        return sentDate;
     }
 
     @Override

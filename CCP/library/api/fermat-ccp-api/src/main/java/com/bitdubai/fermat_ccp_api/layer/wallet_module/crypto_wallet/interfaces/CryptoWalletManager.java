@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 
 /**
@@ -10,7 +13,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 10/06/15.
  * @version 1.0
  */
-public interface CryptoWalletManager extends ModuleManager {
+public interface CryptoWalletManager extends ModuleManager<BitcoinWalletSettings, ActiveActorIdentityInformation> {
 
     CryptoWallet getCryptoWallet() throws CantGetCryptoWalletException;
 

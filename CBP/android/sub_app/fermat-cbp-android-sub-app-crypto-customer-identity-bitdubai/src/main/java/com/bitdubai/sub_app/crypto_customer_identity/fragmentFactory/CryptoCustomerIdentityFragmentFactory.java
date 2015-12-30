@@ -1,8 +1,7 @@
 package com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -17,11 +16,11 @@ import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.Cryp
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory<CryptoCustomerIdentitySubAppSession, CryptoCustomerIdentityPreferenceSettings, SubAppResourcesProviderManager, CryptoCustomerIdentityFragmentsEnumType> {
+public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory<CryptoCustomerIdentitySubAppSession, SubAppResourcesProviderManager, CryptoCustomerIdentityFragmentsEnumType> {
 
 
     @Override
-    public FermatFragment getFermatFragment(CryptoCustomerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(CryptoCustomerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
 
         if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT)
             return CryptoCustomerIdentityListFragment.newInstance();

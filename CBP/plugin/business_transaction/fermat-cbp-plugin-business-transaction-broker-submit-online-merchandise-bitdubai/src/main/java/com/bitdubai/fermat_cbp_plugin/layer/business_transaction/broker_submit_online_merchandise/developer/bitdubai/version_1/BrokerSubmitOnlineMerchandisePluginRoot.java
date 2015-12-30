@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
@@ -25,16 +26,28 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.TransactionTransmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.event_handler.BrokerSubmitOnlineMerchandiseRecorderService;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -72,14 +85,17 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.OUTGOING_INTRA_ACTOR)
     OutgoingIntraActorManager outgoingIntraActorManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CRYPTO_MONEY_DESTOCK)
+    CryptoMoneyDestockManager cryptoMoneyDeStockManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
-    //TODO: Need reference to contract plugin
-    //private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
      * Represents the plugin manager.
@@ -89,7 +105,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
     /**
      * Represents the plugin BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory
      */
-    //BrokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+    BrokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
 
     /**
      * Represents the database
@@ -114,60 +130,60 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
      *
      * @throws CantInitializeDatabaseException
      */
-//    private void initializeDb() throws CantInitializeDatabaseException {
-//
-//        try {
-//            /*
-//             * Open new database connection
-//             */
-//            this.database = this.pluginDatabaseSystem.openDatabase(
-//                    pluginId,
-//                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
-//
-//        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-//
-//            /*
-//             * The database exists but cannot be open. I can not handle this situation.
-//             */
-//            errorManager.reportUnexpectedPluginException(
-//                    Plugins.CUSTOMER_ONLINE_PAYMENT,
-//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-//                    cantOpenDatabaseException);
-//            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-//
-//        } catch (DatabaseNotFoundException e) {
-//
-//            /*
-//             * The database no exist may be the first time the plugin is running on this device,
-//             * We need to create the new database
-//             */
-//            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory customerOnlinePaymentBusinessTransactionDatabaseFactory =
-//                    new BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
-//
-//            try {
-//
-//                /*
-//                 * We create the new database
-//                 */
-//                this.database = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(
-//                        pluginId,
-//                        BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
-//
-//            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-//
-//                /*
-//                 * The database cannot be created. I can not handle this situation.
-//                 */
-//                errorManager.reportUnexpectedPluginException(
-//                        Plugins.OPEN_CONTRACT,
-//                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-//                        cantOpenDatabaseException);
-//                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-//
-//            }
-//        }
-//
-//    }
+    private void initializeDb() throws CantInitializeDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.database = this.pluginDatabaseSystem.openDatabase(
+                    pluginId,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantOpenDatabaseException);
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory brokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory =
+                    new BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.database = brokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(
+                        pluginId,
+                        BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        cantOpenDatabaseException);
+                throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
@@ -198,47 +214,47 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             /**
              * Initialize database
              */
-            //initializeDb();
+            initializeDb();
 
             /*
              * Initialize Developer Database Factory
              */
-            /*customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory = new
+            brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory = new
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
                     pluginId);
-            customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();*/
+            brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             /**
              * Initialize Dao
              */
-            /*BrokerSubmitOnlineMerchandiseBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
+            BrokerSubmitOnlineMerchandiseBusinessTransactionDao brokerSubmitOnlineMerchandiseBusinessTransactionDao=
                     new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);*/
+                            database);
 
             /**
              * Init the plugin manager
              */
-        //TODO: this instance is Temporal
-            this.brokerSubmitOnlineMerchandiseTransactionManager=new BrokerSubmitOnlineMerchandiseTransactionManager();
-            /*this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
-                    this.customerBrokerContractPurchaseManager,
-                    customerOnlinePaymentBusinessTransactionDao,
-                    this.transactionTransmissionManager,
-                    this.customerBrokerPurchaseNegotiationManager);*/
+            this.brokerSubmitOnlineMerchandiseTransactionManager=new BrokerSubmitOnlineMerchandiseTransactionManager(
+                    brokerSubmitOnlineMerchandiseBusinessTransactionDao,
+                    this.customerBrokerContractSaleManager,
+                    this.customerBrokerSaleNegotiationManager,
+                    errorManager
+                    );
 
             /**
              * Init event recorder service.
              */
-            /*CustomerOnlinePaymentRecorderService customerOnlinePaymentRecorderService=new CustomerOnlinePaymentRecorderService(
-                    customerOnlinePaymentBusinessTransactionDao,
+            BrokerSubmitOnlineMerchandiseRecorderService brokerSubmitOnlineMerchandiseRecorderService=
+                    new BrokerSubmitOnlineMerchandiseRecorderService(
+                    brokerSubmitOnlineMerchandiseBusinessTransactionDao,
                     eventManager);
-            customerOnlinePaymentRecorderService.start();*/
+            brokerSubmitOnlineMerchandiseRecorderService.start();
 
             /**
              * Init monitor Agent
              */
-            /*CustomerOnlinePaymentMonitorAgent openContractMonitorAgent=new CustomerOnlinePaymentMonitorAgent(
+            BrokerSubmitOnlineMerchandiseMonitorAgent brokerSubmitOnlineMerchandiseMonitorAgent=new BrokerSubmitOnlineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -247,18 +263,37 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
-                    outgoingIntraActorManager);
-            openContractMonitorAgent.start();*/
+                    outgoingIntraActorManager,
+                    cryptoMoneyDeStockManager);
+            brokerSubmitOnlineMerchandiseMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("Broker submit online merchandise starting");
-        } catch (Exception exception) {
-            //TODO: handle correctly this method exceptions
+            //System.out.println("Broker submit online merchandise starting");
+        } catch (CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
-                    CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
-                    null,
-                    null);
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the plugin database factory");
+        } catch (CantInitializeDatabaseException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the database plugin");
+        } catch (CantStartAgentException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the plugin monitor agent");
+        } catch (CantStartServiceException exception) {
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot initialize the plugin recorder service");
+        } catch (CantSetObjectException exception){
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Broker Submit Offline Merchandise Plugin",
+                    "Cannot set an object in Monitor Agent constructor");
         }
     }
 
@@ -301,16 +336,16 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;//customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 }

@@ -12,9 +12,9 @@
         android:id="@+id/cbw_row_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="horizontal"
         tools:background="@color/cbw_navigation_view_menu_item_overlay">
 
         <ImageView
@@ -26,6 +26,7 @@
             android:paddingRight="14dp"
             android:scaleType="centerCrop"
             android:src="@drawable/btn_drawer_home_normal"
+            android:visibility="gone"
             tools:ignore="contentDescription"
             />
 
@@ -33,14 +34,14 @@
             android:id="@+id/textView_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:paddingBottom="14dip"
             android:paddingLeft="8dip"
             android:paddingRight="8dip"
             android:paddingTop="14dip"
             android:textColor="#ffffff"
             android:textSize="16sp"
-            tools:text="Home"
-            >
+            tools:text="Home">
         </TextView>
     </LinearLayout>
 
