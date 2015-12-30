@@ -225,7 +225,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile_image_standard"
+                        android:src="@drawable/ic_profile_male"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
                         />
@@ -263,7 +263,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/profile_standard_female"
+                        android:src="@drawable/img_profile_female"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
                         />

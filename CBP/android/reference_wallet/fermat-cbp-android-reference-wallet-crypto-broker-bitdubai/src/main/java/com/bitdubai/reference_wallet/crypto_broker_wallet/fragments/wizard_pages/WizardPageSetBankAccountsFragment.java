@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,6 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
 
-
     public static WizardPageSetBankAccountsFragment newInstance() {
         return new WizardPageSetBankAccountsFragment();
     }
@@ -44,18 +44,19 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
 
         View layout = inflater.inflate(R.layout.cbw_wizard_step_set_bank_accounts, container, false);
 
@@ -69,5 +70,4 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
 
         return layout;
     }
-
 }

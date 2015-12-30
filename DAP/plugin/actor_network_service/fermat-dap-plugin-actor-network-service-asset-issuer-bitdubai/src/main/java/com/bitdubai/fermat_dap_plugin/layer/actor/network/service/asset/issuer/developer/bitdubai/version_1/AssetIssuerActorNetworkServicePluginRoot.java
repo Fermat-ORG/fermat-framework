@@ -586,6 +586,11 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     }
 
     @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+
+    }
+
+    @Override
     public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
         switch (dapMessage.getMessageType()) {
             case ASSET_APPROPRIATION:

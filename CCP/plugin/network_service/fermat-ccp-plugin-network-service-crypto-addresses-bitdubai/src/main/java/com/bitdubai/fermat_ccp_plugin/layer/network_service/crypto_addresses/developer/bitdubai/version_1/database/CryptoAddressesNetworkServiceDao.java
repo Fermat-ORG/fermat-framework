@@ -109,7 +109,8 @@ public final class CryptoAddressesNetworkServiceDao {
                                              RequestAction         requestAction              ,
                                              CryptoAddressDealers  dealer                     ,
                                              BlockchainNetworkType blockchainNetworkType      ,
-                                             int                    sentNumber) throws CantCreateRequestException {
+                                             int                    sentNumber,
+                                             long sentDate) throws CantCreateRequestException {
 
         try {
 
@@ -127,7 +128,8 @@ public final class CryptoAddressesNetworkServiceDao {
                     requestAction              ,
                     dealer                     ,
                     blockchainNetworkType,
-                    sentNumber
+                    sentNumber,
+                    sentDate
             );
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
@@ -651,7 +653,10 @@ public final class CryptoAddressesNetworkServiceDao {
         record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME                        , addressExchangeRequest.getAction()                     .getCode());
         record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_DEALER_COLUMN_NAME, addressExchangeRequest.getCryptoAddressDealer().getCode());
         record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, addressExchangeRequest.getBlockchainNetworkType().getCode());
-        record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME                  , addressExchangeRequest.getSentNumber());
+        record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, addressExchangeRequest.getSentNumber());
+        record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, addressExchangeRequest.getSentNumber());
+        record.setIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME, addressExchangeRequest.getSentNumber());
+        record.setLongValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TIMESTAMP_COLUMN_NAME                  , addressExchangeRequest.getSentDate());
 
         if (addressExchangeRequest.getCryptoAddress() != null)
             record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME, addressExchangeRequest.getCryptoAddress().getAddress());
@@ -676,6 +681,7 @@ public final class CryptoAddressesNetworkServiceDao {
         String blockchainNetworkTypeString  = record.getStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
 
         int sentNumber                      = record.getIntegerValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_SENT_NUMBER_COLUMN_NAME);
+        long sentDate                     = record.getLongValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TIMESTAMP_COLUMN_NAME);
 
         Actors                identityTypeRequesting = Actors               .getByCode(identityTypeRequestingString);
         Actors                identityTypeAccepting  = Actors               .getByCode(identityTypeRespondingString);
@@ -702,7 +708,8 @@ public final class CryptoAddressesNetworkServiceDao {
                 action                     ,
                 dealer                     ,
                 blockchainNetworkType,
-                sentNumber
+                sentNumber,
+                sentDate
         );
     }
 }

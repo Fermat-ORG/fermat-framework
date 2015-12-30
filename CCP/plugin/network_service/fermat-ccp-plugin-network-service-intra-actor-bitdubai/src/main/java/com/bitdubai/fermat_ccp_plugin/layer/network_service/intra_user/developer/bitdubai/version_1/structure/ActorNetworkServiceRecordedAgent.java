@@ -119,7 +119,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                 // function to process and send the rigth message to the counterparts.
                 processSend();
 
-                processSendAgain();
             }
 
             //Sleep for a time
@@ -174,46 +173,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         }
     }
 
-    //Send again message in wait state
-
-    private void processSendAgain() {
-        try {
-
-            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getOutgoingNotificationDao().listRequestsByProtocolStateAndType(
-                    ActorProtocolState.WAITING_RESPONSE
-            );
-
-
-            for (ActorNetworkServiceRecord cpr : lstActorRecord) {
-                switch (cpr.getNotificationDescriptor()) {
-
-                    case ASKFORACCEPTANCE:
-                    case ACCEPTED:
-                    case DISCONNECTED:
-                    case RECEIVED:
-                    case DENIED:
-                        sendMessageToActor(
-                                cpr
-                        );
-
-                        System.out.print("-----------------------\n" +
-                                "TRATANDO DE ENVIAR EL  MENSAJE A OTRO INTRA USER NUEVAMENTE!!!!! -----------------------\n" +
-                                "-----------------------\n DESDE: " + cpr.getActorSenderAlias());
-
-
-                        //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getOutgoingNotificationDao());
-                        break;
-
-                }
-
-            }
-//        } catch (CantExecuteDatabaseOperationException e) {
-//            e.printStackTrace();
-//        }
-        } catch (CantListIntraWalletUsersException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void receiveCycle() {
 

@@ -27,6 +27,7 @@ public class MethodCallsHistory extends AbstractBaseEntity implements Serializab
 	public MethodCallsHistory() {
         super();
         this.uuid = UUID.randomUUID();
+        this.createTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
     public Timestamp getCreateTimestamp() {
