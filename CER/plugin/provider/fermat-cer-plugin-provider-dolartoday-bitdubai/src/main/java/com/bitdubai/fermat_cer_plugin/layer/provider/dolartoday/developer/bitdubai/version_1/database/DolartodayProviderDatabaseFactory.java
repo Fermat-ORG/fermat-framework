@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolartodayProviderDatabaseFactory</code>
+ *  The Class  <code>com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
@@ -22,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DolartodayProviderDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class DolarTodayProviderDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -35,7 +35,7 @@ public class DolartodayProviderDatabaseFactory implements DealsWithPluginDatabas
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public DolartodayProviderDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public DolarTodayProviderDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -70,18 +70,33 @@ public class DolartodayProviderDatabaseFactory implements DealsWithPluginDatabas
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
+             * Create Provider Info table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, DolarTodayProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
+
+            table.addColumn(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+            table.addIndex(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }           /**
              * Create Query History table.
              */
-            table = databaseFactory.newTableFactory(ownerId, DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
 
-            table.addColumn(DolartodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(DolartodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
-            table.addColumn(DolartodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
-            table.addColumn(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
+            table.addColumn(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
+            table.addColumn(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
-            table.addIndex(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FIRST_KEY_COLUMN);
+            table.addIndex(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

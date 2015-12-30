@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDollarTodayProviderDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolartodayProviderDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class DolarTodayProviderDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -53,7 +53,7 @@ public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPlu
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public DollarTodayProviderDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public DolarTodayProviderDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -61,9 +61,9 @@ public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPlu
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeDollarTodayProviderDatabaseException
+     * @throws CantInitializeDolarTodayProviderDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeDollarTodayProviderDatabaseException {
+    public void initializeDatabase() throws CantInitializeDolarTodayProviderDatabaseException {
         try {
 
              /*
@@ -76,7 +76,7 @@ public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPlu
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeDollarTodayProviderDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeDolarTodayProviderDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -84,18 +84,18 @@ public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPlu
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            DolartodayProviderDatabaseFactory dolarTodayProviderDatabaseFactory = new DolartodayProviderDatabaseFactory(pluginDatabaseSystem);
+            DolarTodayProviderDatabaseFactory dolartodayProviderDatabaseFactory = new DolarTodayProviderDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = dolarTodayProviderDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = dolartodayProviderDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeDollarTodayProviderDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeDolarTodayProviderDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -115,20 +115,33 @@ public class DollarTodayProviderDeveloperDatabaseFactory implements DealsWithPlu
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
+         * Table Provider Info columns.
+         */
+        List<String> providerInfoColumns = new ArrayList<String>();
+
+        providerInfoColumns.add(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME);
+        providerInfoColumns.add(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME);
+        /**
+         * Table Provider Info addition.
+         */
+        DeveloperDatabaseTable providerInfoTable = developerObjectFactory.getNewDeveloperDatabaseTable(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME, providerInfoColumns);
+        tables.add(providerInfoTable);
+
+        /**
          * Table Query History columns.
          */
         List<String> queryHistoryColumns = new ArrayList<String>();
 
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
-        queryHistoryColumns.add(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+        queryHistoryColumns.add(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
+        queryHistoryColumns.add(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
+        queryHistoryColumns.add(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
+        queryHistoryColumns.add(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
+        queryHistoryColumns.add(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
+        queryHistoryColumns.add(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Query History addition.
          */
-        DeveloperDatabaseTable queryHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, queryHistoryColumns);
+        DeveloperDatabaseTable queryHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, queryHistoryColumns);
         tables.add(queryHistoryTable);
 
 
