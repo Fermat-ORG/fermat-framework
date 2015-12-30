@@ -354,6 +354,14 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
     /**
+     * This method load the list CryptoBrokerWalletProviderSetting
+     * @param
+     * @return List<CryptoBrokerWalletAssociatedSetting>
+     * @exception CantGetCryptoBrokerWalletSettingException
+     */
+    List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+    /**
      * Returns a list of exchange rates of a given date, for a specific currencyPair
      *
      * @return a list of exchangeRate objects

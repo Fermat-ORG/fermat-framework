@@ -873,6 +873,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * This method load the list CryptoBrokerWalletProviderSetting
+     *
+     * @return List<CryptoBrokerWalletAssociatedSetting>
+     * @throws CantGetCryptoBrokerWalletSettingException
+     */
+    @Override
+    public List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
+        return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings();
+    }
+
+    /**
      * Returns a list of exchange rates of a given date, for a specific currencyPair
      *
      * @param providerId
