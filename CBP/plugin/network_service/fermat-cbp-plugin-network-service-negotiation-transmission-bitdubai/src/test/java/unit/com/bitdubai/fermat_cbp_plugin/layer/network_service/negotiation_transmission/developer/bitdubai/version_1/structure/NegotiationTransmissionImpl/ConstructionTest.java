@@ -1,14 +1,12 @@
-package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissioAgent;
+package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
@@ -18,7 +16,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -42,15 +39,14 @@ public class ConstructionTest {
     @Mock
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION,       plugin = Plugins.WS_CLOUD_CLIENT)
-    @Mock
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
-
     @Mock
     private NegotiationTransmissionNetworkServiceDatabaseDao databaseDao;
 
     @Mock
     private NegotiationTransmissionNetworkServiceConnectionsDatabaseDao databaseConnectionsDao;
+
+    @Mock
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     @Mock
     private NetworkServiceNegotiationTransmissionPluginRoot pluginRoot;
