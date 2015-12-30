@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -16,10 +16,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantCreateExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantInitializeProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDollarTodayProviderDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.ExchangeRateImpl;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantInitializeYahooProviderDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.ExchangeRateImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -31,7 +33,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/7/2015.
  */
-public class DollarTodayProviderDao {
+public class YahooProviderDao {
 
 
     private final ErrorManager errorManager;
@@ -40,44 +42,52 @@ public class DollarTodayProviderDao {
 
     private Database database;
 
-    public DollarTodayProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
+    public YahooProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
     }
 
 
-    public void initialize() throws CantInitializeDollarTodayProviderDatabaseException {
+    public void initialize() throws CantInitializeYahooProviderDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
         } catch (DatabaseNotFoundException e) {
-            DolartodayProviderDatabaseFactory databaseFactory = new DolartodayProviderDatabaseFactory(pluginDatabaseSystem);
+            YahooProviderDatabaseFactory databaseFactory = new YahooProviderDatabaseFactory(pluginDatabaseSystem);
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeDollarTodayProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+                throw new CantInitializeYahooProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
             }
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeDollarTodayProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+            throw new CantInitializeYahooProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeDollarTodayProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+            throw new CantInitializeYahooProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+        }
+    }
+
+    public void initializeProvider(String providerName) throws CantInitializeProviderInfoException {
+        //Try to get info, if there's no info, populate.
+        try{
+            this.getProviderInfo();
+        }catch (CantGetProviderInfoException e){
+            this.populateProviderInfo(providerName);
         }
     }
 
 
-
     public void saveExchangeRate(ExchangeRate exchangeRate) throws CantSaveExchangeRateException {
 
-        DatabaseTable table = this.database.getTable(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
         DatabaseTableRecord newRecord = table.getEmptyRecord();
         constructRecordFromExchangeRate(newRecord, exchangeRate);
         try {
             table.insertRecord(newRecord);
         }catch (CantInsertRecordException e) {
-            throw new CantSaveExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Cant save new record in table");
+            throw new CantSaveExchangeRateException(e.getMessage(), e, "Yahoo provider plugin", "Cant save new record in table");
         }
     }
 
@@ -110,18 +120,58 @@ public class DollarTodayProviderDao {
 
 
 
+    /* PROVIDER INFO GETTERS */
+    public String getProviderName() throws CantGetProviderInfoException {
+        DatabaseTableRecord record = this.getProviderInfo();
+        return record.getStringValue(YahooProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME);
+    }
+
+    public UUID getProviderId() throws CantGetProviderInfoException {
+        DatabaseTableRecord record = this.getProviderInfo();
+        return record.getUUIDValue(YahooProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME);
+    }
+
+    private DatabaseTableRecord getProviderInfo() throws CantGetProviderInfoException {
+        List<DatabaseTableRecord> records;
+        DatabaseTable table = this.database.getTable(YahooProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
+
+        try{
+            table.loadToMemory();
+            records = table.getRecords();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetProviderInfoException(CantGetProviderInfoException.DEFAULT_MESSAGE);
+        }
+
+        if (records.size() != 1)
+            throw new CantGetProviderInfoException("Inconsistent number of fetched records (" + records.size() + "), should be 1.");
+
+        return records.get(0);
+    }
+    private void populateProviderInfo(String providerName) throws CantInitializeProviderInfoException {
+        DatabaseTable table = this.database.getTable(YahooProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
+        DatabaseTableRecord newRecord = table.getEmptyRecord();
+
+        newRecord.setUUIDValue(YahooProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME, UUID.randomUUID());
+        newRecord.setStringValue(YahooProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME, providerName);
+
+        try {
+            table.insertRecord(newRecord);
+        }catch (CantInsertRecordException e) {
+            throw new CantInitializeProviderInfoException(e.getMessage());
+        }
+    }
 
 
 
     /* INTERNAL HELPER FUNCTIONS */
     private DatabaseTableFilter getEmptyHoldTableFilter() {
-        return this.database.getTable(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME).getEmptyTableFilter();
+        return this.database.getTable(YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME).getEmptyTableFilter();
     }
 
 
 
     private List<DatabaseTableRecord> getRecordsByFilter(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        DatabaseTable table = this.database.getTable(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
 
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
@@ -133,25 +183,25 @@ public class DollarTodayProviderDao {
 
     private void constructRecordFromExchangeRate(DatabaseTableRecord newRecord, ExchangeRate exchangeRate) {
 
-        newRecord.setUUIDValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, UUID.randomUUID());
-        newRecord.setStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, exchangeRate.getFromCurrency().getCode());
-        newRecord.setStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, exchangeRate.getToCurrency().getCode());
-        newRecord.setDoubleValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, exchangeRate.getSalePrice());
-        newRecord.setDoubleValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, exchangeRate.getPurchasePrice());
-        newRecord.setLongValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
+        newRecord.setUUIDValue(YahooProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, UUID.randomUUID());
+        newRecord.setStringValue(YahooProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, exchangeRate.getFromCurrency().getCode());
+        newRecord.setStringValue(YahooProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, exchangeRate.getToCurrency().getCode());
+        newRecord.setDoubleValue(YahooProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, exchangeRate.getSalePrice());
+        newRecord.setDoubleValue(YahooProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, exchangeRate.getPurchasePrice());
+        newRecord.setLongValue(YahooProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
 
     }
 
     private ExchangeRate constructExchangeRateFromRecord(DatabaseTableRecord record) throws CantCreateExchangeRateException {
 
-        UUID id = record.getUUIDValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
-        double salePrice = record.getDoubleValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
-        double purchasePrice = record.getDoubleValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
-        long timestamp = record.getLongValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+        UUID id = record.getUUIDValue(YahooProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
+        double salePrice = record.getDoubleValue(YahooProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
+        double purchasePrice = record.getDoubleValue(YahooProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
+        long timestamp = record.getLongValue(YahooProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
 
         Currency fromCurrency;
         try {
-            String fromCurrencyStr = record.getStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
+            String fromCurrencyStr = record.getStringValue(YahooProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
 
             if(FiatCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
@@ -160,13 +210,13 @@ public class DollarTodayProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Invalid From Currency value stored in table"
-                    + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Yahoo provider plugin", "Invalid From Currency value stored in table"
+                    + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
         try {
-            String toCurrencyStr = record.getStringValue(DolartodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
+            String toCurrencyStr = record.getStringValue(YahooProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
 
             if(FiatCurrency.codeExists(toCurrencyStr))
                 toCurrency = FiatCurrency.getByCode(toCurrencyStr);
@@ -175,8 +225,8 @@ public class DollarTodayProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Invalid To Currency value stored in table"
-                    + DolartodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "Yahoo provider plugin", "Invalid To Currency value stored in table"
+                    + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);
