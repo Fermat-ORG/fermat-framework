@@ -107,8 +107,10 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
             if (!records.isEmpty())
                 return buildCryptoAddressBookRecord(records.get(0));
             else
-                throw new CryptoAddressBookRecordNotFoundException(CryptoAddressBookRecordNotFoundException.DEFAULT_MESSAGE, null, "", "There's no record with that crypto address.");
-
+            /**
+             * if record is empty, then I'm returning null
+             */
+                return null;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException exception) {
