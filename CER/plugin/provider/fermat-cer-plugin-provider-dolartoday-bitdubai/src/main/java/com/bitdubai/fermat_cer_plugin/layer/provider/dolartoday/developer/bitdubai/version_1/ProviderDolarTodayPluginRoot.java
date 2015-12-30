@@ -178,7 +178,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"DolarToday CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
-        if(currencyPair.getFrom() == FiatCurrency.US_DOLLAR)
+        if(currencyPair.getTo() == FiatCurrency.US_DOLLAR)
         {
             purchasePrice = 1 / purchasePrice;
             salePrice = 1 / salePrice;
