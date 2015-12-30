@@ -155,7 +155,8 @@
 
         <RelativeLayout
             android:layout_width="360dp"
-            android:layout_height="75dp">
+            android:layout_height="75dp"
+            android:id="@+id/assetDetailAvailableLayout">
 
             <LinearLayout
                 android:orientation="vertical"
