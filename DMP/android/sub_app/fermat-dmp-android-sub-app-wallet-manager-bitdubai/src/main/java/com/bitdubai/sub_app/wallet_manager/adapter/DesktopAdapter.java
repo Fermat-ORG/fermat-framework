@@ -90,6 +90,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
                             icon.setDrawableByLayerId(R.id.ic_icon, context.getDrawable(data.getIconResource()));
                         }
                         if (position == 0) {
+                            if(DEKSTOP==fragmentWhoUseThisAdapter)
                             Utils.setBadgeCount(context, icon, 2, icon.getId(1));
                         }
                     }else {
