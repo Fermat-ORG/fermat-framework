@@ -130,10 +130,10 @@
         <RelativeLayout
             android:id="@+id/deliverAssetsButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:layout_below="@id/selectUsersButton"
-            android:layout_marginTop="75dp">
+            android:layout_height="30dp"
+            android:layout_marginTop="80dp"
+            android:layout_below="@+id/selectUsersButton"
+            android:layout_centerHorizontal="true">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
