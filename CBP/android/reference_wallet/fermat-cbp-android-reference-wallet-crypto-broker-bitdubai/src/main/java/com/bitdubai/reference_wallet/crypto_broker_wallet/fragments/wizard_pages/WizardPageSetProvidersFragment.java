@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,6 @@ import java.util.Map;
  */
 public class WizardPageSetProvidersFragment extends AbstractFermatFragment {
 
-    // Constants
     private static final String TAG = "WizardPageSetProviders";
 
     // Fermat Managers
@@ -44,6 +44,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment {
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)

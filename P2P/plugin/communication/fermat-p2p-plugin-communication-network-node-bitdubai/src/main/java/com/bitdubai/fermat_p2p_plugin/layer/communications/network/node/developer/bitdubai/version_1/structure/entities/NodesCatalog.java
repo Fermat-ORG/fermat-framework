@@ -18,13 +18,13 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	private String ip;
 
-	private double lastLatitude;
+	private Double lastLatitude;
 
 	private Timestamp lastConnectionTimestamp;
 
 	private Integer lateNotificationsCounter;
 
-	private double lastLongitude;
+	private Double lastLongitude;
 
 	private String name;
 
@@ -62,11 +62,11 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.ip = ip;
 	}
 
-	public double getLastLatitude() {
+	public Double getLastLatitude() {
 		return this.lastLatitude;
 	}
 
-	public void setLastLatitude(double lastLatitude) {
+	public void setLastLatitude(Double lastLatitude) {
 		this.lastLatitude = lastLatitude;
 	}
 
@@ -86,11 +86,11 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.lateNotificationsCounter = lateNotificationsCounter;
 	}
 
-	public double getLastLongitude() {
+	public Double getLastLongitude() {
 		return this.lastLongitude;
 	}
 
-	public void setLastLongitude(double lastLongitude) {
+	public void setLastLongitude(Double lastLongitude) {
 		this.lastLongitude = lastLongitude;
 	}
 

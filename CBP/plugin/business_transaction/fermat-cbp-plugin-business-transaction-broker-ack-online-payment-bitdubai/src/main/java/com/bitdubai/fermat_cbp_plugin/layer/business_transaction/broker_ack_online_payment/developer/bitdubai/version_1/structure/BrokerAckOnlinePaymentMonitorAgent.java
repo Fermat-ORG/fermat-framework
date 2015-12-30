@@ -32,10 +32,11 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.*;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
@@ -253,7 +254,6 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         pluginId,
                         database);
 
-                BusinessTransactionRecord businessTransactionRecord;
                 String contractHash;
                 /**
                  * Check if pending incoming money events
@@ -324,19 +324,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Unexpected result in database");
-            }  /*catch (CantSendBusinessTransactionHashException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
-            }
-            catch (CantSendContractNewStatusNotificationException e) {
-                throw new CantSendContractNewStatusNotificationException(
-                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
-            }*/ catch (IncomingOnlinePaymentException e) {
+            } catch (IncomingOnlinePaymentException e) {
                 //TODO: I need to discuss if I need to raise an event here, for now I going to report the error
                 errorManager.reportUnexpectedPluginException(
                         Plugins.BROKER_ACK_ONLINE_PAYMENT,
@@ -444,7 +432,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                                             contractHash);
                             brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                                     customerBrokerContractPurchase);
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.PENDING_MERCHANDISE);
                             raiseAckConfirmationEvent(contractHash);
@@ -488,20 +476,46 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
                 }
 
-            } catch (CantUpdateRecordException e) {
-                e.printStackTrace();
-            } catch (CantConfirmTransactionException e) {
-                e.printStackTrace();
-            } catch (CantupdateCustomerBrokerContractSaleException e) {
-                e.printStackTrace();
-            } catch (CantDeliverPendingTransactionsException e) {
-                e.printStackTrace();
-            } catch (CantInsertRecordException e) {
-                e.printStackTrace();
-            } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-                e.printStackTrace();
-            } catch (CantGetListCustomerBrokerContractSaleException e) {
-                e.printStackTrace();
+            } catch (CantUpdateRecordException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the database");
+            } catch (CantConfirmTransactionException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot confirm the transaction");
+            } catch (CantUpdateCustomerBrokerContractSaleException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the contract sale status");
+            } catch (CantDeliverPendingTransactionsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the pending transactions from transaction transmission plugin");
+            } catch (CantInsertRecordException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot insert a record in database");
+            } catch (CantGetListCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the purchase contract");
+            } catch (CantGetListCustomerBrokerContractSaleException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the sale contract");
+            } catch (CantUpdateCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the contract purchase status");
             }
 
 

@@ -1,28 +1,28 @@
 image::https://raw.githubusercontent.com/bitDubai/media-kit/master/Coins/SHP.jpg[FermatSHP]
-== Chapter 15: Fermat Shoping Platform: 
+== Chapter 15: Fermat Shopping Platform: 
 
 This platform is designed to allow the interaction between the actors of traditional consumer market of products and services. +
 
 
 The new identities introduced are:
 [horizontal]
-Shop :: to identify shop owners who accept cryptocurrency in payment of their products 
-Brand :: for brands who accept cryptocurrency in their retailers network
-Retail :: for retailers of brands that accept cryptocurrency
+Shop :: to identify shop owners who accept crypto currency in payment of their products
+Brand :: for brands that accept crypto currency in their retailers network
+Retail :: for brands retailers that accept crypto currency
 
 
 === New components
-Some of the new components added to the framework by this platform are those to offer the following functionalities:
+Some of the new components added to the framework by this platform are those that offer the following functionalities:
 
-* Purchase Transmission (purchase of products payed with crypto currency)
+* Purchase Transmission (purchase of products paid with crypto currency)
 * Purchase and Sale transactions 
 * Wallets: Shop Wallet, Brand Wallet and Retail Wallet
 
 === Shop Wallet 
-This wallet includes the specific new functionalities:
+This wallet includes these specific new functionalities:
 
-* to receive payments in crypto currency
-* to connect a purchase bill of the shop with a crypto request to cover the fiat currency amount billed
+* To receive payments in crypto currency
+* To connect a purchase bill of the shop with a crypto request to cover the fiat currency amount billed
 
 === Brand Wallet 
 
@@ -90,4 +90,5 @@ link:book-chapter-19.asciidoc[Digital Assets Platform]
 link:book-chapter-16.asciidoc[Next Chapter]
 
 link:book-chapter-14.asciidoc[Previous Chapter]
+
 

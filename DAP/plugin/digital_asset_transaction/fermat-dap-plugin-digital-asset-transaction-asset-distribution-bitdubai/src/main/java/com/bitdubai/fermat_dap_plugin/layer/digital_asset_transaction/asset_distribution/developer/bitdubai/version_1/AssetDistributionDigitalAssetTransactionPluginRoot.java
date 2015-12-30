@@ -69,54 +69,35 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
         LogManagerForDevelopers {
 
     public static long DELIVERING_TIMEOUT = 3 /*MINUTES!!*/ * 60 * 1000;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
-    ActorAssetIssuerManager actorAssetIssuerManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
-    AssetIssuerWalletManager assetIssuerWalletManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
-    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
-
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
-    BitcoinNetworkManager bitcoinNetworkManager;
-
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
-    AssetVaultManager assetVaultManager;
-
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
-    private ActorAssetUserManager actorAssetUserManager;
-
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
-
-    public AssetDistributionDigitalAssetTransactionPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    ActorAssetIssuerManager actorAssetIssuerManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
+    AssetIssuerWalletManager assetIssuerWalletManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
+    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+    BitcoinNetworkManager bitcoinNetworkManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
+    AssetVaultManager assetVaultManager;
     DigitalAssetDistributionVault digitalAssetDistributionVault;
     AssetDistributionTransactionManager assetDistributionTransactionManager;
     AssetDistributionMonitorAgent assetDistributionMonitorAgent;
     Database assetDistributionDatabase;
-
-    private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
-        AssetDistributionDatabaseFactory databaseFactory = new AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
-        assetDistributionDatabase = databaseFactory.createDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    private ActorAssetUserManager actorAssetUserManager;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
+    public AssetDistributionDigitalAssetTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     public static LogLevel getLogLevelByClass(String className) {
@@ -135,6 +116,11 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
         }
     }
 
+    private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
+        AssetDistributionDatabaseFactory databaseFactory = new AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
+        assetDistributionDatabase = databaseFactory.createDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         try {
@@ -151,6 +137,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
             this.digitalAssetDistributionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
             this.digitalAssetDistributionVault.setErrorManager(this.errorManager);
             this.digitalAssetDistributionVault.setActorAssetIssuerManager(this.actorAssetIssuerManager);
+            this.digitalAssetDistributionVault.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
             AssetDistributionDao assetDistributionDao = new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault, actorAssetUserManager);
             this.assetDistributionTransactionManager = new AssetDistributionTransactionManager(
                     this.assetVaultManager,
@@ -158,7 +145,11 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     this.pluginId,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
-                    this.bitcoinNetworkManager);
+                    this.bitcoinNetworkManager,
+                    digitalAssetDistributionVault,
+                    assetDistributionDao,
+                    assetTransmissionNetworkServiceManager,
+                    actorAssetIssuerManager);
             this.assetDistributionTransactionManager.setAssetVaultManager(assetVaultManager);
             this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(this.digitalAssetDistributionVault);
             this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);
@@ -206,13 +197,13 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     this.pluginId,
                     pluginFileSystem,
                     actorAssetUserManager,
-                    assetVaultManager);
-            this.assetDistributionMonitorAgent.setLogManager(this.logManager);
-            this.assetDistributionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
-            this.assetDistributionMonitorAgent.setDigitalAssetDistributionVault(this.digitalAssetDistributionVault);
-            this.assetDistributionMonitorAgent.setAssetTransmissionManager(this.assetTransmissionNetworkServiceManager);
-            this.assetDistributionMonitorAgent.start();
+                    assetVaultManager,
+                    bitcoinNetworkManager,
+                    logManager,
+                    digitalAssetDistributionVault,
+                    assetTransmissionNetworkServiceManager);
         }
+        this.assetDistributionMonitorAgent.start();
     }
 
     @Override

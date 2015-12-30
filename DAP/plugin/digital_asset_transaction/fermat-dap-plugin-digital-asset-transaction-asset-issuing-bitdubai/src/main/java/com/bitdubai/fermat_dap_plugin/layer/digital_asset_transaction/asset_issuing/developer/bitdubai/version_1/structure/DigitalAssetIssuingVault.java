@@ -62,6 +62,12 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
              * Added by Rodrigo. This might not be the right place to do this.
              */
             digitalAssetMetadataToDeliver.setGenesisBlock(genesisTransaction.getBlockHash());
+
+            /**
+             * Saving the Digital Asset metadata on disk because we might have a not null genesis block
+             */
+            this.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadataToDeliver, internalId);
+
             if(!isDigitalAssetMetadataHashValid(digitalAssetMetadataToDeliver,genesisTransaction)){
                 throw new CantDeliverDigitalAssetToAssetWalletException("The Digital Asset Metadata Hash is not valid:\n" +
                         "Hash: "+digitalAssetMetadataToDeliver.getDigitalAssetHash()+"\n"+
@@ -90,6 +96,8 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantGetAssetIssuerActorsException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Actor Asset Issuer");
+        } catch (CantCreateDigitalAssetFileException e) {
+            throw new CantDeliverDigitalAssetToAssetWalletException(e, "Delivering DigitalAssetMetadata to Asset Wallet", "saving to disk the digital asset metadata");
         }
     }
 

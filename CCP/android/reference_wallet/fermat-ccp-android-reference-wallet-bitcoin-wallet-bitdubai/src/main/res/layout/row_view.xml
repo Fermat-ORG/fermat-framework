@@ -28,7 +28,7 @@
             android:layout_height="40dp"
             android:layout_weight="0.6"
             android:id="@+id/imageView_contact"
-            tools:src="@drawable/profile_image_standard"/>
+            tools:src="@drawable/ic_profile_male"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/row_title"

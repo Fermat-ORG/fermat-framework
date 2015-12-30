@@ -14,6 +14,10 @@ public class CheckedActorsHistory extends AbstractBaseEntity implements Serializ
 
     private static final long serialVersionUID = 1L;
 
+    public static final String CHECK_TYPE_IN  = "IN";
+
+    public static final String CHECK_TYPE_OUT = "OUT";
+
 	private UUID uuid;
 
 	private String identityPublicKey;
