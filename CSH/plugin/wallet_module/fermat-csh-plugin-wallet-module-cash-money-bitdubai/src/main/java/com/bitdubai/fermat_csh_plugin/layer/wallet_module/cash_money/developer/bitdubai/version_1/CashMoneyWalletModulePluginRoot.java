@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -17,6 +18,11 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
@@ -40,6 +46,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTr
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashWalletBalancesImpl;
+import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -47,12 +54,15 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/8/2015.
  */
 
 public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements LogManagerForDevelopers, CashMoneyWalletModuleManager {
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -71,7 +81,114 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     private CashMoneyWalletManager cashMoneyWalletManager;
 
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+
+    //@NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
+    //private CurrencyExchangeProviderFilterManager providerFilter;
+
+    @Override
+    public void start() throws CantStartPluginException {
+        super.start();
+
+        System.out.println(" "); System.out.println(" ");
+        System.out.println("CASHMONEYWALLETMODULE - PluginRoot 2 START");
+        System.out.println(" ");
+
+        try{
+
+
+            /*System.out.println("---Listing Providers---");
+            for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet())
+                System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+            System.out.println(" "); System.out.println(" ");
+
+
+            System.out.println("---Listing Providers for USD/VEF---");
+            CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
+            for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet())
+                System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+            System.out.println(" "); System.out.println(" ");
+
+            System.out.println("---Listing Providers for EUR/USD---");
+            CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
+            for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
+                System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+            System.out.println(" "); System.out.println(" ");
+*/
+            /*System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY NAME: " + dolarToday.getProviderName());
+            System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY ID: " + dolarToday.getProviderId());
+
+            System.out.println("CASHMONEYWALLETMODULE - YAHOO NAME: " + yahoo.getProviderName());
+            System.out.println("CASHMONEYWALLETMODULE - YAHOO ID: " + yahoo.getProviderId());
+
+
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        ExchangeRate first = dolarToday.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+                        ExchangeRate second = yahoo.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+
+                        System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY price: " + first.getPurchasePrice());
+                        System.out.println("CASHMONEYWALLETMODULE - YAHOO price: " + second.getPurchasePrice());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();*/
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+   /* @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY)
+    private CurrencyExchangeRateProviderManager dolarToday;
+
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_YAHOO)
+    private CurrencyExchangeRateProviderManager yahoo;
+
+    @Override
+         public void start() throws CantStartPluginException {
+        super.start();
+        System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
+
+
+        try{
+            System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY NAME: " + dolarToday.getProviderName());
+            System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY ID: " + dolarToday.getProviderId());
+
+            System.out.println("CASHMONEYWALLETMODULE - YAHOO NAME: " + yahoo.getProviderName());
+            System.out.println("CASHMONEYWALLETMODULE - YAHOO ID: " + yahoo.getProviderId());
+
+
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        ExchangeRate first = dolarToday.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+                        ExchangeRate second = yahoo.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+
+                        System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY price: " + first.getPurchasePrice());
+                        System.out.println("CASHMONEYWALLETMODULE - YAHOO price: " + second.getPurchasePrice());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }*/
+
 
     /*
      * PluginRoot Constructor
@@ -196,4 +313,5 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
     }
+
 }

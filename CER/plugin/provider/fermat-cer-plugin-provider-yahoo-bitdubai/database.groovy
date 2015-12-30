@@ -1,6 +1,6 @@
 String developerName = "Alejandro Bicelis"
 String developerMail = "abicelis@gmail.com"
-String pluginName = "DolarToday"
+String pluginName = "Yahoo"
 String layerName = "Provider"
 String packageRoot = "com.bitdubai.fermat_cer_plugin"
 String jdkVersion = "1.7"

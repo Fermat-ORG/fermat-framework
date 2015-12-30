@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1;
+package com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1;
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -20,21 +20,22 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDao;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.CurrencyPairImpl;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.ExchangeRateImpl;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.HttpReader;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDao;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantInitializeYahooProviderDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.ExchangeRateImpl;
+import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.HttpReader;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -53,7 +54,7 @@ import java.util.UUID;
  */
 
 
-public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
+public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
 
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -68,14 +69,14 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    DolarTodayProviderDao dao;
+    YahooProviderDao dao;
     List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
 
 
     /*
      * PluginRoot Constructor
      */
-    public ProviderDolarTodayPluginRoot() {
+    public ProviderYahooPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -84,22 +85,22 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
      *  TESTING STUFFS
      */
     /*public void testGetCurrentIndex(){
-        System.out.println("PROVIDERDOLARTODAY - testGetCurrentIndex CALLED");
+        System.out.println("PROVIDERYAHOO - testGetCurrentIndex CALLED");
 
         FiatIndex index = null;
         try{
             index = getCurrentIndex(FiatCurrency.CANADIAN_DOLLAR);
         } catch (CantGetIndexException e){
-            System.out.println("PROVIDERDOLARTODAY - testGetCurrentIndex DAO EXCEPTION");
+            System.out.println("PROVIDERYAHOO - testGetCurrentIndex DAO EXCEPTION");
         }
         System.out.println("");
         System.out.println("");
-        System.out.println("PROVIDERDOLARTODAY - PROVIDER DESC: " + index.getProviderDescription());
-        System.out.println("PROVIDERDOLARTODAY - CURRENCY: " + index.getCurrency().getCode());
-        System.out.println("PROVIDERDOLARTODAY - REFERENCE CURRENCY: " + index.getReferenceCurrency().getCode());
-        System.out.println("PROVIDERDOLARTODAY - TIMESTAMP: " + index.getTimestamp());
-        System.out.println("PROVIDERDOLARTODAY - PURCHASE: " + index.getPurchasePrice());
-        System.out.println("PROVIDERDOLARTODAY - SALE: " + index.getSalePrice());
+        System.out.println("PROVIDERYAHOO - PROVIDER DESC: " + index.getProviderDescription());
+        System.out.println("PROVIDERYAHOO - CURRENCY: " + index.getCurrency().getCode());
+        System.out.println("PROVIDERYAHOO - REFERENCE CURRENCY: " + index.getReferenceCurrency().getCode());
+        System.out.println("PROVIDERYAHOO - TIMESTAMP: " + index.getTimestamp());
+        System.out.println("PROVIDERYAHOO - PURCHASE: " + index.getPurchasePrice());
+        System.out.println("PROVIDERYAHOO - SALE: " + index.getSalePrice());
 
     }*/
 
@@ -109,17 +110,21 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
      */
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("PROVIDERDOLARTODAY - PluginRoot START");
+        System.out.println("PROVIDERYAHOO - PluginRoot START");
 
         supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR));
         supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.ARGENTINE_PESO, FiatCurrency.US_DOLLAR));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.ARGENTINE_PESO));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR));
+        supportedCurrencyPairs.add(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.EURO));
 
         try {
-            dao = new DolarTodayProviderDao(pluginDatabaseSystem, pluginId, errorManager);
+            dao = new YahooProviderDao(pluginDatabaseSystem, pluginId, errorManager);
             dao.initialize();
-            dao.initializeProvider("DolarToday");
+            dao.initializeProvider("Yahoo");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
@@ -164,23 +169,25 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
+        String url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22" +
+                currencyPair.getFrom().getCode() + currencyPair.getTo().getCode() +
+                "%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
         double purchasePrice = 0;
         double salePrice = 0;
+        String aux;
+
         try{
-            JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
-            //System.out.println("String JSON:" + json.toString());
+            JSONObject json = new JSONObject(HttpReader.getHTTPContent(url));
 
-            purchasePrice = (double) json.getJSONObject("USD").get("transferencia");
-            salePrice = (double) json.getJSONObject("USD").get("transferencia");
+            aux = json.getJSONObject("query").getJSONObject("results").getJSONObject("rate").get("Ask").toString();
+            salePrice =  Double.valueOf(aux);
+
+            aux = json.getJSONObject("query").getJSONObject("results").getJSONObject("rate").get("Bid").toString();
+            purchasePrice =  Double.valueOf(aux);
+
         }catch (JSONException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"DolarToday CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
-        }
-
-        if(currencyPair.getTo() == FiatCurrency.US_DOLLAR)
-        {
-            purchasePrice = 1 / purchasePrice;
-            salePrice = 1 / salePrice;
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Yahoo CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
 
@@ -188,7 +195,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         try {
             dao.saveExchangeRate(exchangeRate);
         }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -215,26 +222,26 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        DolarTodayProviderDeveloperDatabaseFactory factory = new DolarTodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        YahooProviderDeveloperDatabaseFactory factory = new YahooProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return factory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        DolarTodayProviderDeveloperDatabaseFactory factory = new DolarTodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        YahooProviderDeveloperDatabaseFactory factory = new YahooProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return factory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        DolarTodayProviderDeveloperDatabaseFactory factory = new DolarTodayProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        YahooProviderDeveloperDatabaseFactory factory = new YahooProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         List<DeveloperDatabaseTableRecord> tableRecordList = null;
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeDolarTodayProviderDatabaseException cantInitializeException) {
+        } catch (CantInitializeYahooProviderDatabaseException cantInitializeException) {
             FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "ProviderDolartodayPluginRoot", null);
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
