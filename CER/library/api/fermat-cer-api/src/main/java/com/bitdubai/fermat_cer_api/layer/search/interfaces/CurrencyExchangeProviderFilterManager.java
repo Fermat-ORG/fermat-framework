@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cer_api.layer.search.interfaces;
 
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/26/2015.
  */
-public interface ProviderFilterManager {
+public interface CurrencyExchangeProviderFilterManager {
 
 
     /**
@@ -19,14 +20,14 @@ public interface ProviderFilterManager {
      *
      * @return a map containing both the ProviderID and the ProviderName for each registered provider
      */
-    Map<UUID, String> getProviderNames() throws CantGetProviderException;
+    Map<UUID, String> getProviderNames() throws CantGetProviderInfoException;
 
     /**
      * Returns a list of Providers able to obtain the ExchangeRate of the given CurrencyPair
      *
      * @return a map containing both the ProviderID and the ProviderName for each applicable provider
      */
-    Map<UUID, String> getProviderNamesListFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderException;
+    Map<UUID, String> getProviderNamesListFromCurrencyPair(CurrencyPair currencyPair) throws CantGetProviderInfoException;
 
     /**
      * Returns a reference to the requested provider, by its name
@@ -40,7 +41,7 @@ public interface ProviderFilterManager {
      *
      * @return a Collection of provider reference pairs
      * */
-    Collection<CurrencyExchangeRateProviderManager> getAllProviderReferences() throws CantGetProviderException;
+    //Collection<CurrencyExchangeRateProviderManager> getAllProviderReferences() throws CantGetProviderException;
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
