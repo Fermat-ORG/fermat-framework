@@ -809,9 +809,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         }
     }
 
+    private SettingsManager<FermatSettings> settingsManager;
+
     @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
