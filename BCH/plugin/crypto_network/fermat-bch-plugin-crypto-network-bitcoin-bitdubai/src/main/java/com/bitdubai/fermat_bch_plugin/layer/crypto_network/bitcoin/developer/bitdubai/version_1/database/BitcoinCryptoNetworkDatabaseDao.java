@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
@@ -265,32 +266,41 @@ public class BitcoinCryptoNetworkDatabaseDao {
     }
 
     /**
-     * Gets the current CryptoStatus for the specified Transaction id
-     * @param transactionId
-     * @return
-     * @throws CantExecuteDatabaseOperationException
+     * gets the current Crypto Status for the specified Transaction ID
+     * @param txHash the Bitcoin transaction hash
+     * @return the last crypto status
+     * @throws CantGetTransactionCryptoStatusException
      */
-    public CryptoStatus getTransactionCryptoStatus(UUID transactionId) throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
+    public CryptoStatus getTransactionCryptoStatus(String txHash) throws CantExecuteDatabaseOperationException{
+        DatabaseTable cryptoTransactionsTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
 
-        databaseTable.addUUIDFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
-
+        cryptoTransactionsTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         try {
-            databaseTable.loadToMemory();
+            cryptoTransactionsTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throwLoadToMemoryException(e, databaseTable.getTableName());
+            throwLoadToMemoryException(e, cryptoTransactionsTable.getTableName());
         }
 
-        if (databaseTable.getRecords().size() != 1)
+        List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();
+        if (databaseTableRecordList.isEmpty()) {
             return null;
-        else{
-            try {
-                CryptoStatus cryptoStatus = CryptoStatus.getByCode(databaseTable.getRecords().get(0).getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME));
-                return cryptoStatus;
-            } catch (InvalidParameterException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Invalid parameter stored in database.", "database issue");
+        } else {
+            CryptoStatus lastCryptoStatus = null;
+            for (DatabaseTableRecord record : databaseTableRecordList) {
+                CryptoStatus cryptoStatus = null;
+                try {
+                    cryptoStatus = CryptoStatus.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME));
+                } catch (InvalidParameterException e) {
+                    throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "the stored CryptoStatus is not valid.", null);
+                }
+                if (lastCryptoStatus == null)
+                    lastCryptoStatus = cryptoStatus;
+                else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())
+                    lastCryptoStatus = cryptoStatus;
             }
+            return lastCryptoStatus;
         }
+
     }
 
     /**

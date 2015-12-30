@@ -184,6 +184,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     }
 
     private void saveSettings(){
+        if(type!=TYPE_PRESENTATION)
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
         if(checkbox_not_show.isChecked()){
             SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
