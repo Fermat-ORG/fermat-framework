@@ -170,6 +170,8 @@ public class IntraActorNetworkServiceDao {
 
 
             for (DatabaseTableRecord record : records) {
+
+
                 table.deleteRecord(record);
             }
 
@@ -248,7 +250,6 @@ public class IntraActorNetworkServiceDao {
         try
         {
             String intraUserAlias              = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME);
-            //String intraUserProfileImage       = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME);
             String intraUserPublicKey          = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME);
             String intraUserPhrase             = record.getStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME);
 
