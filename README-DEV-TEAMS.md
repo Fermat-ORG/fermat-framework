@@ -218,6 +218,12 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Email:   miguel_payarez@hotmail.com
     Skype:   payarez
     Github:  https://github.com/lostwood
+
+* **Juan Sulbaran**<br/>
+---
+    Email:   sulbaranja@gmail.com
+    Skype:   juanaso15
+    Github:  -----
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
