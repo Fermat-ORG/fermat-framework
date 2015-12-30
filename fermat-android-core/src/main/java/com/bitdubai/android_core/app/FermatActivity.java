@@ -1707,7 +1707,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     case INCOMING_CONNECTION:
                         //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
-                    case INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION:
+                    case INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case MONEY_REQUEST:
@@ -1777,7 +1777,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     case INCOMING_CONNECTION:
                         //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
-                    case INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION:
+                    case INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case MONEY_REQUEST:
@@ -1788,6 +1788,15 @@ public abstract class FermatActivity extends AppCompatActivity
                         break;
                     case OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION:
                         launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case RECEIVE_REQUEST_PAYMENT_NOTIFICATION:
+                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case DENIED_REQUEST_PAYMENT_NOTIFICATION:
+                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+
+
                     default:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
