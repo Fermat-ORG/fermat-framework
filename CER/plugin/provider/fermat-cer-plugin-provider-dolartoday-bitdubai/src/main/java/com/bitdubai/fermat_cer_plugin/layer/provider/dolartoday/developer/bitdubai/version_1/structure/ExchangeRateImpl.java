@@ -4,6 +4,8 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdu
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
+import java.util.UUID;
+
 /**
  * Created by Alejandro Bicelis on 12/7/2015.
  */
@@ -16,6 +18,7 @@ public class ExchangeRateImpl implements ExchangeRate {
     long timestamp;
 
     public ExchangeRateImpl(Currency fromCurrency, Currency toCurrency, double salePrice, double purchasePrice, long timestamp) {
+
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.salePrice = salePrice;

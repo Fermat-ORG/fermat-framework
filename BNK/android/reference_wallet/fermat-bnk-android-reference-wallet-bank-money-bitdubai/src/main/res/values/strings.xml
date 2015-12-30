@@ -6,4 +6,13 @@
     <string name="home_header">Account List: </string>
     <string name="no_accounts">there are no accounts in this wallet</string>
     <string name="no_transactions">there are no transactions in this account</string>
+    
+    <string name="bnk_ctd_title">transaction title</string>
+    <string name="bnk_ctd_amount_tag" translatable="false">Enter amount</string>
+    <string name="bnk_ctd_amount_hint" translatable="false">Amount</string>
+    <string name="bnk_ctd_memo_tag" translatable="false">Enter memo</string>
+    <string name="bnk_ctd_memo_hint" translatable="false">Memo</string>
+
+    <string name="bw_withdrawal_transaction_text" translatable="false">Withdrawal</string>
+    <string name="bw_deposit_transaction_text" translatable="false">Deposit</string>
 </resources>
