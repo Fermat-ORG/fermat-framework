@@ -41,27 +41,26 @@
 
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:id="@+id/txt_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_horizontal"
-                    android:paddingLeft="5dp"
-                    android:paddingStart="5dp"
+                    android:id="@+id/txt_title"
                     android:text="Welcome!"
-                    android:textColor="#0072bb"
+                    android:paddingLeft="5dp"
+                    android:layout_weight="1"
                     android:textSize="20sp"
+                    android:textColor="#00a99d"
                     app:typeface="CAVIAR_DREAMS_BOLD"
+                    android:gravity="left"
+                    android:layout_gravity="center"
 
-                    tools:ignore="HardcodedText,RtlSymmetry" />
+                    />
 
                 <ImageView
-                    android:layout_width="0dp"
+                    android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:paddingBottom="2dp"
+                    android:layout_weight="0.4"
                     android:src="@drawable/bitcoin_wallet_2"
-                    tools:ignore="ContentDescription" />
+                    android:paddingBottom="2dp"/>
 
             </LinearLayout>
 
@@ -70,19 +69,23 @@
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog" />
+                android:background="@drawable/round_corner_line_dialog"
+                android:layout_marginBottom="12dp"
+                />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="85dp">
-
+                android:layout_height="110dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:src="@drawable/banner_bitcoin_wallet"
-                    tools:ignore="ContentDescription" />
+                    android:src="@drawable/identity_banner"/>
             </RelativeLayout>
+
 
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -96,7 +99,7 @@
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
                 android:paddingTop="7sp"
-                android:text="This app will allow you to find other users of crypto wallets within the Fermat Network. The main features of this APP are:"
+                android:text="This app will allow you to create your identity in the Fermat network. The main features of this app are:"
                 android:textColor="#1d1d26"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
@@ -127,7 +130,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="* Browse users around you.\n* Search for users anywhere.\n* See other users's profiles.\n* Send connection requests.\n* Accept or decline connection requests received."
+                    android:text="* Manage your identity.\n* Set your own phrase and share it with all fermat users"
                     android:textColor="#1d1d26"
                     android:textSize="14sp"
                     tools:ignore="HardcodedText" />
@@ -150,34 +153,7 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:background="@drawable/round_corner_line_dialog" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dp">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="30dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="30dp"
-                    android:paddingStart="16dp"
-                    android:text="You need to establish connections in order to add them as contacts in your wallets"
-                    android:textColor="#1d1d26"
-                    android:textSize="14sp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
