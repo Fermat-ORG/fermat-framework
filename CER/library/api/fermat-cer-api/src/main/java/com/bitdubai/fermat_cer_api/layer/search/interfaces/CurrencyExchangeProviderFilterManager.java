@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cer_api.layer.search.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
@@ -12,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/26/2015.
  */
-public interface CurrencyExchangeProviderFilterManager {
+public interface CurrencyExchangeProviderFilterManager extends FermatManager {
 
 
     /**
