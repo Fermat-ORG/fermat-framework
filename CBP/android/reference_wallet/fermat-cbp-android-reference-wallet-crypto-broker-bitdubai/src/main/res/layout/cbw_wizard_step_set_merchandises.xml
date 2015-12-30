@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/cbw_wizard_title_container"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:background="@color/cbw_wizard_color"
         android:orientation="vertical"
         android:padding="16dp">
@@ -19,7 +19,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
             android:text="Choose Stock Merchandises"
             android:textAllCaps="true"
             android:textColor="@color/white"
@@ -44,7 +43,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cbw_wizard_title_container"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -97,12 +100,30 @@
                 android:textSize="14sp"/>
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/cbw_selected_stock_wallets_recycler_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="8dp"
-            tools:listitem="@layout/cbw_wizard_recycler_view_item"/>
+            android:layout_height="150dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cbw_selected_stock_wallets_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:listitem="@layout/cbw_wizard_recycler_view_item"
+                tools:visibility="visible"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_selected_stock_wallets_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="No Selected Wallets"
+                android:textColor="#888"
+                android:textSize="16sp"
+                android:visibility="visible"
+                tools:visibility="gone"/>
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -115,6 +136,28 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingStart="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/cbw_automatic_restock"
+                android:textColor="@color/black"
+                android:textSize="14sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
+                android:id="@+id/cbw_automatic_restock_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
