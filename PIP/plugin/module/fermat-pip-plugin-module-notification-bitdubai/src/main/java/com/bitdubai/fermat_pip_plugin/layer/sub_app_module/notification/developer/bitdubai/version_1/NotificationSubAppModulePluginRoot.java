@@ -67,14 +67,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     private ExtraUserManager extraUserManager;
 
     // TODO MAKE USE OF THE ERROR MANAGER
-    // TODO MAKE USE OF THE ERROR MANAGER
-    // TODO MAKE USE OF THE ERROR MANAGER
-    // TODO MAKE USE OF THE ERROR MANAGER
-    // TODO MAKE USE OF THE ERROR MANAGER
-    // TODO MAKE USE OF THE ERROR MANAGER
-    // TODO MAKE USE OF THE ERROR MANAGER
-    // TODO MAKE USE OF THE ERROR MANAGER
-    //  JAJA, I LOVE YOU MEN
+
 
     public NotificationSubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -148,6 +141,20 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         outgoingIntraUserRollbackTransactionNotificationEventListener.setEventHandler(outgoingRollbackNotificationHandler);
         eventManager.addListener(outgoingIntraUserRollbackTransactionNotificationEventListener);
         listenersAdded.add(outgoingIntraUserRollbackTransactionNotificationEventListener);
+
+        //receive new payment request
+        FermatEventListener receivePyamentRequestNotificationEventListener = eventManager.getNewListener(EventType.RECEIVE_PAYMENT_REQUEST_NOTIFICATION);
+        FermatEventHandler receivePyamentRequestNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.ReceivePaymentRequestNotificationHandler(this);
+        receivePyamentRequestNotificationEventListener.setEventHandler(receivePyamentRequestNotificationHandler);
+        eventManager.addListener(receivePyamentRequestNotificationEventListener);
+        listenersAdded.add(receivePyamentRequestNotificationEventListener);
+
+        //denied payment request
+        FermatEventListener deniedPaymentRequestNotificationEventListener = eventManager.getNewListener(EventType.DENIED_PAYMENT_REQUEST_NOTIFICATION);
+        FermatEventHandler deniedPaymentRequestNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.DeniedPaymentRequestNotificationHandler(this);
+        receivePyamentRequestNotificationEventListener.setEventHandler(deniedPaymentRequestNotificationHandler);
+        eventManager.addListener(deniedPaymentRequestNotificationEventListener);
+        listenersAdded.add(deniedPaymentRequestNotificationEventListener);
 
 
     }
@@ -316,7 +323,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
         try {
             com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(source, actorId, actorName, actorType, profileImage);
-            notification.setNotificationType(NotificationType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION.getCode());
+            notification.setNotificationType(NotificationType.INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION.getCode());
             poolNotification.add(notification);
 
             notificationListener.notificate(notification);
@@ -337,6 +344,52 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             notification.setTextTitle("Sent Transaction reversed");
             notification.setTextBody("Sending " + WalletUtils.formatBalanceString(amount)  + " BTC could not be completed.");
             notification.setNotificationType(NotificationType.OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION.getCode());
+
+            poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // notify observers
+        notifyNotificationArrived();
+    }
+
+    @Override
+    public void addReceiveRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount )
+
+    {
+        try {
+            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+
+            notification.setAlertTitle(getSourceString(source));
+            notification.setTextTitle("");
+            notification.setTextBody("A Payment Request was received for" + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
+            notification.setNotificationType(NotificationType.RECEIVE_REQUEST_PAYMENT_NOTIFICATION.getCode());
+
+            poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // notify observers
+        notifyNotificationArrived();
+    }
+
+    @Override
+    public void addDeniedRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount )
+
+    {
+        try {
+            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+
+            notification.setAlertTitle(getSourceString(source));
+            notification.setTextTitle("");
+            notification.setTextBody("Your Payment Request for" + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + " was denied.");
+            notification.setNotificationType(NotificationType.DENIED_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);
 
