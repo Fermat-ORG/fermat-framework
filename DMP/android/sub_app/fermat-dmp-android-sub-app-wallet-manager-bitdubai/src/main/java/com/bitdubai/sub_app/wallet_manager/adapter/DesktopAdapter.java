@@ -87,9 +87,11 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
                     // Update LayerDrawable's BadgeDrawable
                     if(data.getIconResource()!=-1) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            icon.setDrawableByLayerId(R.id.ic_icon,context.getDrawable(data.getIconResource()));
+                            icon.setDrawableByLayerId(R.id.ic_icon, context.getDrawable(data.getIconResource()));
                         }
-                        Utils.setBadgeCount(context, icon, 2, icon.getId(1));
+                        if (position == 0) {
+                            Utils.setBadgeCount(context, icon, 2, icon.getId(1));
+                        }
                     }else {
                         holder.thumbnail.setVisibility(View.GONE);
                         icon.getDrawable(0).setVisible(false,true);
