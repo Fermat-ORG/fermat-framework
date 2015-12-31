@@ -225,5 +225,38 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         return Platforms.CRYPTO_CURRENCY_PLATFORM;
     }
 
+    /**
+     * Generates a new Bitcoin Transaction with needed inputs and outputs.
+     * Also signs and pass to the Crypto Network the transaction generated.
+     * @param walletPublicKey
+     * @param fermatTrId
+     * @param addressTo
+     * @param satoshis
+     * @return
+     * @throws InsufficientCryptoFundsException
+     * @throws InvalidSendToAddressException
+     * @throws CryptoTransactionAlreadySentException
+     */
+    @Override
+    public String generateTransaction(String walletPublicKey, UUID fermatTrId, CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CryptoTransactionAlreadySentException {
+        return generateTransaction(walletPublicKey, fermatTrId, addressTo, satoshis, null);
+    }
 
+    /**
+     * Generates a new Bitcoin Transaction with needed inputs and outputs.
+     * Also signs and pass to the Crypto Network the transaction generated.
+     * @param walletPublicKey
+     * @param fermatTrId
+     * @param addressTo
+     * @param satoshis
+     * @return
+     * @throws InsufficientCryptoFundsException
+     * @throws InvalidSendToAddressException
+     * @throws CryptoTransactionAlreadySentException
+     */
+    @Override
+    public String generateTransaction(String walletPublicKey, UUID fermatTrId, CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CryptoTransactionAlreadySentException {
+        //todo implement
+        return null;
+    }
 }
