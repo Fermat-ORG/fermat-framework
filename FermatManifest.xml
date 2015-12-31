@@ -2985,14 +2985,6 @@
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Suppliers" description="" difficulty="4" code-level="concept">
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                        </authors>
-                        <maintainers> </maintainers>
-                        <certifications> </certifications>
-                    </plugin>
                 </plugins>
             </layer>
             <layer name="Actor" language="java">
@@ -3358,6 +3350,7 @@
                         <authors>
                             <author name="lnacosta" scope="architecture" percentage="100"></author>
                             <author name="lnacosta" scope="design" percentage="100"></author>
+                            <author name="lnacosta" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -3366,6 +3359,7 @@
                         <authors>
                             <author name="lnacosta" scope="architecture" percentage="100"></author>
                             <author name="lnacosta" scope="design" percentage="100"></author>
+                            <author name="lnacosta" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -3999,18 +3993,65 @@
         <super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
             <layer name="Provider" language="java">
                 <plugins>
-                    <plugin name="SurBitcoin" description="" difficulty="10" code-level="concept">
+                    <plugin name="Dolar Today" description="" difficulty="5" code-level="development">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Coinbase" description="" difficulty="10" code-level="concept">
+                    <plugin name="El Cronista" description="" difficulty="5" code-level="development">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="European Central Bank" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="La Nacion" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Yahoo!" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="SurBitcoin" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Coinbase" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
