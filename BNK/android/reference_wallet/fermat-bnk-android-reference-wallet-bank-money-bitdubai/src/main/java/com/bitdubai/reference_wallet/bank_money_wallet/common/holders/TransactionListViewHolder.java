@@ -6,6 +6,10 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by memo on 28/12/15.
  */
@@ -21,7 +25,6 @@ public class TransactionListViewHolder extends FermatViewHolder {
     public TransactionListViewHolder(View itemView) {
         super(itemView);
         this.itemView = itemView;
-        transaction = (FermatTextView) itemView.findViewById(R.id.transaction);
         transactionAmount = (FermatTextView) itemView.findViewById(R.id.transaction_amount);
         currency = (FermatTextView) itemView.findViewById(R.id.transaction_currency);
         transactionType = (FermatTextView) itemView.findViewById(R.id.transaction_type);
@@ -30,10 +33,15 @@ public class TransactionListViewHolder extends FermatViewHolder {
 
     public void bind(BankMoneyTransactionRecord itemInfo){
         itemView.setBackgroundColor(335);
-        transaction.setText(itemInfo.getBankTransactionId().toString());
         transactionAmount.setText(String.valueOf(itemInfo.getAmount()));
         currency.setText(itemInfo.getCurrencyType().getCode());
-        transactionType.setText(itemInfo.getCurrencyType().getCode());
-        transactionTimestamp.setText(String.valueOf(itemInfo.getTimestamp()));
+        transactionType.setText(itemInfo.getTransactionType().getCode());
+        transactionTimestamp.setText(String.valueOf(convertTime(itemInfo.getTimestamp())));
+    }
+
+    public String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+        return format.format(date);
     }
 }

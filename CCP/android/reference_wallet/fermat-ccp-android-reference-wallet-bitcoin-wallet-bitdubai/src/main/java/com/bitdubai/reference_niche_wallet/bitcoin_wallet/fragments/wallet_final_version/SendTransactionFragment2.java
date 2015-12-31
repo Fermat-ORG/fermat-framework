@@ -153,7 +153,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             handlerTimer.postDelayed(new Runnable(){
                 public void run() {
                     if(bitcoinWalletSettingsTemp.isPresentationHelpEnabled()){
-                        Toast.makeText(getActivity(),"holas true",Toast.LENGTH_SHORT).show();
                         setUpPresentation(false);
                     }
 //                    Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_SCREEN_ENABLED);

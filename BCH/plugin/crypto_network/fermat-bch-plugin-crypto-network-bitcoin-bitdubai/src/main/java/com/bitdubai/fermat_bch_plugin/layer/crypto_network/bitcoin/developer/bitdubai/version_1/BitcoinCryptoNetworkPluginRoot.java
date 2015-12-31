@@ -239,14 +239,14 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
-     * Gets the current Crypto Status for the specified internal Fermat transaction id
-     * @param transactionId the internal fermat transaction id
-     * @return
+     * gets the current Crypto Status for the specified Transaction ID
+     * @param txHash the Bitcoin transaction hash
+     * @return the last crypto status
      * @throws CantGetTransactionCryptoStatusException
      */
     @Override
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException {
-        return bitcoinCryptoNetworkManager.getCryptoStatus(transactionId);
+    public CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException {
+        return bitcoinCryptoNetworkManager.getCryptoStatus(txHash);
     }
 
     /**
