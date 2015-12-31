@@ -96,7 +96,7 @@ public class CommunicationsNetworkClientConnection extends Thread{
 
         ClientProfile clientProfile = new ClientProfile();
         clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
-        clientProfile.setDeviceType("I dont know");
+        clientProfile.setDeviceType("");
 
         try {
             if(locationManager.getLocation() != null){
