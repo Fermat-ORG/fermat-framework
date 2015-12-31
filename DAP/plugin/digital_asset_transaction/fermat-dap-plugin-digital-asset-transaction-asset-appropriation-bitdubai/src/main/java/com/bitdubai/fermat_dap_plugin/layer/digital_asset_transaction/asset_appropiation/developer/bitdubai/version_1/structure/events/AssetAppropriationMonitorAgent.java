@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -225,7 +226,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                 dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
                                 continue;
                             }
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, record.genesisTransaction());
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
                             AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
                             AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
@@ -241,7 +242,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
 
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
                         for (AssetAppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, record.genesisTransaction());
+                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_BLOCKCHAIN);
                             AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
                             AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
