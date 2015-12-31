@@ -232,9 +232,14 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                 public void run() {
                     try {
 
-                        System.out.println("---Listing ALL CER Providers---");
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet())
+                        System.out.println("---Listing ALL CER Providers and their supported currencies---");
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
                             System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+
+                            for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
+                                System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+
+                        }
                         System.out.println(" ");
 
 
