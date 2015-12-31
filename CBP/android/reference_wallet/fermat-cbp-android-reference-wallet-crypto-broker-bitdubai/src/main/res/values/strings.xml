@@ -84,5 +84,11 @@
     <string name="select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
     <string name="cbw_automatic_restock">Automatic Restock</string>
     <string name="cbw_no_selected_wallets">No Selected Wallets</string>
+    <string name="cbw_city">City</string>
+    <string name="cbw_state_province">State/Province</string>
+    <string name="cbw_zip_postal_code">Zip/Postal Code</string>
+    <string name="cbw_address_line_1">Address line 1</string>
+    <string name="cbw_address_line_2">Address line 2</string>
+    <string name="cbw_create">Create</string>
 
 </resources>
