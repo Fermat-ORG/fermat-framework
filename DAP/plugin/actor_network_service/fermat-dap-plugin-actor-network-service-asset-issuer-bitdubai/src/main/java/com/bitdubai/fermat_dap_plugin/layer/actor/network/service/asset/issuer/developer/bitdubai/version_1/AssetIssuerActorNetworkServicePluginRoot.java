@@ -1208,6 +1208,8 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
          * Listen and handle New Message Receive Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        if (communicationNetworkServiceConnectionManager == null)
+            initializeCommunicationNetworkServiceConnectionManager();
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(communicationNetworkServiceConnectionManager, eventManager));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
