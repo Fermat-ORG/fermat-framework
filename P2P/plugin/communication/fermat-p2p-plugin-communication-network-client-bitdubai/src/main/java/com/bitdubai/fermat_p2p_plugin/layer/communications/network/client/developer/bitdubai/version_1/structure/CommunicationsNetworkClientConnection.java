@@ -7,13 +7,21 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ProfileCheckInMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import java.net.URI;
 import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.CommunicationsNetworkClientConnection</code>
@@ -37,6 +45,11 @@ public class CommunicationsNetworkClientConnection extends Thread{
      */
     private boolean isConnected;
 
+    /**
+     * Represent the serverIdentity
+     */
+    private String serverIdentity;
+
     public CommunicationsNetworkClientConnection(URI uri, EventManager eventManager, LocationManager locationManager,ECCKeyPair clientIdentity){
         this.uri = uri;
         this.eventManager = eventManager;
@@ -45,6 +58,10 @@ public class CommunicationsNetworkClientConnection extends Thread{
         this.isConnected = Boolean.FALSE;
 
 
+    }
+
+    public String getServerIdentity() {
+        return serverIdentity;
     }
 
     @Override
@@ -58,6 +75,8 @@ public class CommunicationsNetworkClientConnection extends Thread{
             //validate if is connected
             if(session.isOpen()){
                 this.isConnected = Boolean.TRUE;
+                serverIdentity = (String) session.getUserProperties().get("");
+                setCheckInClientRequestProcessor();
             }
 
         }catch (Exception e){
@@ -71,6 +90,30 @@ public class CommunicationsNetworkClientConnection extends Thread{
 
     public boolean isConnected() {
         return isConnected;
+    }
+
+    private void setCheckInClientRequestProcessor(){
+
+        ClientProfile clientProfile = new ClientProfile();
+        clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
+        clientProfile.setDeviceType("I dont know");
+
+        try {
+            if(locationManager.getLocation() != null){
+              clientProfile.setLocation(locationManager.getLocation());
+            }
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
+        }
+
+        ProfileCheckInMsgRequest profileCheckInMsgRequest = new ProfileCheckInMsgRequest(clientProfile);
+        profileCheckInMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+            session.getBasicRemote().sendObject(Package.createInstance(profileCheckInMsgRequest, NetworkServiceType.UNDEFINED, PackageType.CHECK_IN_CLIENT_REQUEST, clientIdentity.getPrivateKey(), serverIdentity));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
