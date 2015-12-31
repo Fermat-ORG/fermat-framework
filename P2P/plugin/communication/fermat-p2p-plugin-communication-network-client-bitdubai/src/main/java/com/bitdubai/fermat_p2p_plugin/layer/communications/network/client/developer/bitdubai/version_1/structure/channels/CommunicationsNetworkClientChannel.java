@@ -8,8 +8,11 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ProfileCheckInMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import javax.websocket.ClientEndpoint;
@@ -18,6 +21,8 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType.CHECK_IN_CLIENT_RESPOND;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.CommunicationsNetworkClientChannel</code>
@@ -68,14 +73,44 @@ public class CommunicationsNetworkClientChannel {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" CommunicationsNetworkClientChannel - Starting method onOpen");
 
-
     }
 
     @OnMessage
-    public void onMessage(Package message, Session session){
+    public void onMessage(Package packageReceived, Session session){
         System.out.println("New package Received");
-        System.out.println("session: " + session.getId() + " package = " + message + "");
+        System.out.println("session: " + session.getId() + " package = " + packageReceived + "");
 
+        if(packageReceived != null){
+
+            switch (packageReceived.getPackageType()){
+
+                case CHECK_IN_CLIENT_RESPOND:
+
+                        ProfileCheckInMsjRespond respondProfileCheckInMsj = (ProfileCheckInMsjRespond) packageReceived.getContent();
+
+                        if(respondProfileCheckInMsj.getStatus() == ProfileCheckInMsjRespond.STATUS.SUCCESS){
+                             //raise event
+
+                        }else{
+                             //there is some wrong
+                        }
+
+                        break;
+
+                case CHECK_IN_NETWORK_SERVICE_RESPOND:
+
+
+
+                        break;
+                default:
+
+
+                        break;
+
+
+            }
+
+        }
 
     }
 
