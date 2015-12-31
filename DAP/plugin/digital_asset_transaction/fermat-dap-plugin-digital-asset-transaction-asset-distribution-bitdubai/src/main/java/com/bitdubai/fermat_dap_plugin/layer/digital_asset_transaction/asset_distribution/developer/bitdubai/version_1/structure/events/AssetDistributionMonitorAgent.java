@@ -267,11 +267,13 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 String transactionInternalId = this.assetDistributionDao.getTransactionIdByGenesisTransaction(record.getGenesisTransaction());
                 switch (bitcoinNetworkManager.getCryptoStatus(record.getGenesisTransactionSent())) {
                     case ON_BLOCKCHAIN:
+                    case IRREVERSIBLE: {
                         CryptoTransaction transactionOnBlockChain = getCryptoTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN, record.getGenesisTransactionSent());
                         digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, transactionInternalId, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, record.getActorAssetUserPublicKey());
                         digitalAssetDistributionVault.getIssuerWallet().assetDistributed(record.getDigitalAssetMetadata().getDigitalAsset().getPublicKey(), record.getActorAssetUserPublicKey());
                         assetDistributionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         break;
+                    }
                     case REVERSED_ON_BLOCKCHAIN:
                         assetDistributionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         break;
