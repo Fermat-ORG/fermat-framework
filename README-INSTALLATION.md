@@ -17,7 +17,7 @@ RAM = 8 Gb
 ## Part I: Setting up the Environment
 
 <br>
-### Working on Linux - PLEASE READ THIS FIRST- 
+### 1.- Working on Linux - PLEASE READ THIS FIRST- 
 
 It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution). 
 To use Ubuntu, you will need:
@@ -26,7 +26,7 @@ To use Ubuntu, you will need:
 * c) A free DVD to create the UBUNTU installation disk.
 
 <br>
-### Tools Overview
+### 2.- Tools Overview
 
 You will need the following tools in order to develop in Fermat
 
@@ -40,7 +40,10 @@ You will need the following tools in order to develop in Fermat
 Although there are many ways to configure these tools, we suggest to follow the recommended configuration that has been tested by our team, by means of the automatic installationscript or following the manual installation steps.
 
 
-### Automatic installation
+### 3.- Installation
+You can try first the Automatic installation, but if you prefer to do it manually, go directly to the following section [Manual Installation] (https://github.com/bitDubai/fermat/blob/master/README-INSTALLATION.md#Manual)
+
+#### A.- Automatic Installation
 
 * You can install all the needed software automatically using the following script: (please use "right-clic" and "save as.." and save it in your _$HOME_ folder ) 
 [FermatDeveloperInstaller.sh] (https://raw.githubusercontent.com/bitDubai/fermat/master/scripts/installation/fermat-developer-installer/FermatDeveloperInstaller.sh).
@@ -61,15 +64,17 @@ cd $HOME
 ./FermatDeveloperInstaller.sh
 ```
 
-It takes some time to download all the software, please, be patient.
+It takes some time to download all the software, please, be patient. As long as the script is running, the procedure is ok. 
+When the scripts finishes, then follow with <<Cloning Repository>>
 
 
 <br>
-### Manual installation (if automatic installation did no work properly)
+[[Manual]]
+#### B.- Manual installation (if automatic installation did no work properly)
 
-In case the script goes wrong or does not do its intended job, you can go with the manual set up of the environment.
+In case the script goes wrong or does not fullfill its intended job, you can follow next steps to manually set up of the environment.
 
-#### Installing Git
+##### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you will find in any Distro of Linux.
 
@@ -81,7 +86,7 @@ sudo apt-get install git
 ```
 
 <br>
-#### Installing the JDK 7
+##### Installing the JDK 7
 
 You can get a running OpenJDK in most distros, but it's advised that we use the oficial Oracle JVM when coding in Fermat.
 
@@ -99,7 +104,7 @@ sudo mv jdk* /opt/java
 ```
 
 <br>
-#### Installing Gradle
+##### Installing Gradle
 
 We can also install Gradle using the `apt` service, although the version might be out of date, we recommend that you download the one available in [gradle.org](http://gradle.org/)
 
@@ -111,7 +116,7 @@ sudo mv gradle-2.10/ /opt/gradle
 ```
 
 <br>
-#### Installing Android SDK Tools
+##### Installing Android SDK Tools
 
 We can obtain the Android SDK Tools directly from [this link](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
 
@@ -123,7 +128,7 @@ sudo mv android-sdk-linux/ /opt/android-sdk
 ```
 
 <br>
-#### Setting Up The Environment Variables
+##### Setting Up The Environment Variables
 
 We recommend that you configure your environment to recognize the tools you've downloaded and placed inside **/opt** as a part of the *bash profile*.
 
@@ -143,7 +148,7 @@ IMPORTANT: For these changes to be in effect you should log out of your current 
 TIP: You can verify that these variables are proper by using the command `env`
 
 <br>
-#### Downloading the Android SDKs and Build Tools
+##### Downloading the Android SDKs and Build Tools
 
 Before you're able to compile Fermat properly, you need to download the SDKs and build tools that Gradle will use to build Fermat.
 
@@ -184,7 +189,9 @@ sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
 
 This will enable 64-bit linux distros to run 32-bit applications like adb and aapt (Android tools). More information found here: [Android Issue 82711](https://code.google.com/p/android/issues/detail?id=82711)
 
-### Cloning Repository
+### 4.- Cloning Repository
+
+After finishing setting up the environment ( automatically or manually), you need to proceed with generating a copy of Fermat repository to work with.
 
 #### Create your fork.
 
@@ -194,20 +201,6 @@ To fork you must press button “Fork” in the top-right corner of the url, and
 
 You have your Fork created!
 https://github.com/$YOUR_USER/fermat
-
-##### Create a local branch pointing to the original project.
-* Create a new local branch, pointing to the original project:
-```shell
-git remote add newbranch https://github.com/bitDubai/fermat
-git remote -v
-```
-* The console must return you something like this:
-```shell
-origin https://github.com/lnacosta/fermat (fetch)
-origin https://github.com/lnacosta/fermat (push)
-newbranch https://github.com/bitDubai/fermat (fetch)
-newbranch https://github.com/bitDubai/fermat (push)
-```
 
 #### Update your fork to the last release.
 
@@ -227,6 +220,20 @@ git remote -v
 ```shell
 origin https://github.com/$YOUR_USER/fermat (fetch)
 origin https://github.com/$YOUR_USER/fermat (push)
+```
+
+##### Create a local branch pointing to the original project.
+* Create a new local branch, pointing to the original project:
+```shell
+git remote add newbranch https://github.com/bitDubai/fermat
+git remote -v
+```
+* The console must return you something like this:
+```shell
+origin https://github.com/lnacosta/fermat (fetch)
+origin https://github.com/lnacosta/fermat (push)
+newbranch https://github.com/bitDubai/fermat (fetch)
+newbranch https://github.com/bitDubai/fermat (push)
 ```
 
 * Follow section: **“Create a local branch pointing to the original project”.**
@@ -330,12 +337,74 @@ You have to go to your fork and then with the commits do the pull request.
 
 <br>
 ### Compiling
-
+Para abrir el proyecto debemos iniciar el IDE que en este caso puede ser Android Studio o IntelliJ IDEA (cualquiera que se haya elegido para trabajar).
 <br>
+Al iniciar el IDE se mostrará el formulario de bienvenida y se listarán diferentes opciones entre ellas la  de “Open an existing Android Studio Project” o simplemente “Open” depende del IDE que hayan seleccionado para trabajar.
+<br>
+Seleccionamos esta última opción nombrada para abrir el proyecto y nos dirigimos al directorio donde fue clonado el mismo.
+<br>
+#### Nota.
+_Al clonar el proyecto se creará un directorio llamado “fermat” y es este el que debe ser seleccionado para abrir el proyecto. 
+Se recomienda utilizar el IDE Android Studio debido a que presenta mayor estabilidad y cuenta con más documentación de ayuda._
+<br>
+<br>
+Al Abrir el proyecto comienza un proceso de carga normal del IDE que puede demorar unos cuantos minutos al principio y más si es abierto por primera vez. Esto es normal y solo hay que dejar que este proceso continue hasta que final.
+Una vez abierto el proyecto procedemos a compilarlo. 
+<br>
+Para compilar nos dirigimos a “build” en la barra de herramientas y hacemos click en “Make Project” o simplemente recurrimos a la combinación de teclas Ctrl + F9 para Compilar el proyecto. Este proceso durará varios minutos probablemente. 
+<br>
+Para verificar el avance de la compilación y las tareas que se están ejecutando podemos abrir el Gradle Console que nos mostrará el avance, y una vez que finalice la compilación mostrará si fue exitosa o no con la siguiente leyenda:
+<br>
+* “BUILD SUCCESSFUL” en caso de ser exitosa. 
+* “BUILD FAILED” en caso de que haya fallado. 
+<br>
+
 ### Running
-
+Antes de correr la aplicación se requiere, ya sea de un dispositivo físico (que soporte la aplicación), o un dispositivo creado a través de la máquina virtual.
 <br>
+Dentro del IDE  viene por defecto una aplicación conocida como “Android Virtual Device Manager” o “AVD Manager” que permite crear máquinas virtuales para ejecutar la aplicación en caso de no contar con un dispositivo  físico.
+<br>
+#### Nota:
+_Al ejecutar el proyecto a través de un dispositivo móvil físico el rendimiento de procesamiento será mayor que al usar “AVD Manager” el cual demandará mayor consumo de recursos. 
+También se permite utilizar otras aplicaciones equivalentes al “AVD Manager” como “Genymotion” o similares, para crear máquinas virtuales._ 
+<br>
+<br>
+Para correr la aplicación simplemente debemos dirigimos al item “Run” del menú y luego hacer click en el “Run” o presionando Mayus + F10.
+<br>
+Es probable que al correr el proyecto comience a compilar. Esto es por defecto así, pero si queremos evitar que compile al correr debemos dirigirnos  al item “Run” del menú y luego al item “Edit Configurations” y se abrirá una ventana que nos permitirá configurar las diferentes maneras de ejecutar el proyecto.
+<br>
+En el item “Android Aplication” encontraremos la aplicación con el nombre “fermat-android-core”. Al hacer click sobre ella se mostrarán las diferentes opciones para configurar y correr la aplicación. 
+<br>
+En el item “Before Launch” debemos eliminar de la lista el item “Make”. De esta forma el proyecto se podrá ejecutar sin necesidad de compilar antes.
+<br>
+<br>
+#### Nota
+_Es necesario  compilar siempre la aplicación antes de correr. Muchas veces la tarea de compilar y correr la aplicación se hace por separado. Por eso mismo se ha explicado la manera de hacer las dos tareas de forma separada._
+<br>
+<br>
+Al correr la aplicación se mostrará una ventana llamada “Choose Device” que dentro de la misma se listarán, principalmente, dos opciones: 
+<br>
+* “Choose a running device”: Dentro de esta opción se podrá seleccionar los dispositivo físicos conectados al equipo para correr la aplicación.
+* “Launch emulator”:  Dentro de esta opción se listan las máquinas virtuales para correr la aplicación.
+<br>
+
+Cualquiera sean las opciones elegidas probablemente la ejecución demore varios minutos y más si es la primera vez que se ejecuta, ya que requiere de la instalación de la misma. 
+<br>
+<br>
+
 ### Debbuging
+
+Para iniciar la aplicación en modo Debugging, en el item “Run” del menú hacemos click en “Debug” o presionamos Alt+Ctrl+F9. De esta manera la aplicación se coloca en modo debug.                                                                  Al igual que cuando se corre la aplicación nos mostrará la ventana “Choose Device”, seleccionamos la opción conveniente y la aplicación se ejecutara en modo  Debugging.
+<br>
+<br>
+De esta manera podremos acceder a varios recursos que el IDE proporciona para realizar esta tarea:
+* Ver el system log.
+* Set breakpoints en el código.
+* Examinar variables y Evaluar expresiones en el run time.
+* Ejecute las herramientas de depuración desde el SDK de Android.
+
+Y otras funcionalidades.
+
 
 <br>
 ### Developer Sub App

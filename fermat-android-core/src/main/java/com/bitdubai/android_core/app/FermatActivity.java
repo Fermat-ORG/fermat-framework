@@ -344,8 +344,9 @@ public abstract class FermatActivity extends AppCompatActivity
         // rendering UI components
         try {
 
+            ModuleManager moduleManager = null;
             if(appConnections!=null) {
-                ModuleManager moduleManager = getModuleManager(appConnections.getPluginVersionReference());
+                moduleManager = getModuleManager(appConnections.getPluginVersionReference());
                 appConnections.setActiveIdentity(moduleManager.getSelectedActorIdentity());
             }
             TabStrip tabs = activity.getTabStrip();
@@ -364,6 +365,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
+            if(moduleManager!=null) sideMenu.setNotifications(moduleManager.getMenuNotifications());
             paintSideMenu(activity, sideMenu,appConnections);
 
             if(appConnections!=null) {
