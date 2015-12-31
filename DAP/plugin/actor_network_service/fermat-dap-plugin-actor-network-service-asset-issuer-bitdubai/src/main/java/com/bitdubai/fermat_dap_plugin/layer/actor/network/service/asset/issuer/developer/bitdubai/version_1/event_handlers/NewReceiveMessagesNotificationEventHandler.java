@@ -22,6 +22,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.lang.reflect.Type;
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler</code>
  * <p/>
@@ -60,7 +62,8 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
         Gson gson = new Gson();
         String messageContent = fermatMessageReceive.getContent();
         try {
-            DAPMessage message = gson.fromJson(messageContent, DAPMessage.class);
+            DAPMessage message = new DAPMessage();
+            message = gson.fromJson(messageContent, DAPMessage.class);
 
             System.out.println("ACTOR NETWORK SERVICE ASSET ISSUER - SE LANZARA EVENTO PARA REQUEST PUBLIC KEY EXTENDED");
 
