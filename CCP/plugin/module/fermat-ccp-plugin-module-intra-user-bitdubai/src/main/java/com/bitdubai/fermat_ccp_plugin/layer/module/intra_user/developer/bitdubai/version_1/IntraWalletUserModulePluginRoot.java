@@ -852,7 +852,6 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
         }
-        notifications[2] = 3;
         return notifications;
     }
 }
