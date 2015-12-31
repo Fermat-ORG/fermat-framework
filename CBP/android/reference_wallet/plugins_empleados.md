@@ -12,6 +12,7 @@ Notas:
   - Memo va a ser un campo tipo String (texto libre) de `NegotiationInformation` no va a ser una clausula
   - Cancel Reason va a ser un campo tipo String (texto libre) de `NegotiationInformation` no va a ser una clausula
 - Propcurar atomicidad en metodos que guardan settings en los diferentes plugins 
+- Es necesario actualizar `NegotiationBankAccount` para cambiar `UUID getBankAccountId();`por `String getWalletPublicKey();`
 
 ### Crypto Broker Reference Wallet
 
@@ -41,7 +42,7 @@ Metodos
   - `void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues)`
   - `List<String> getPaymentMethods(String currencyToSell);`
   - `Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)`
-  - [implementar] metodo que devuelva lista de `NegotiationBankAccount` registrados como setting
+  - [implementar] `Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency)`
   - [implementar] `FiatIndex getMarketRate(Currency merchandise, Currency fiatCurrency, CurrencyType currencyType)`
     - FiatIdex propio de la wallet
   - [implementar] `CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);`
@@ -184,8 +185,8 @@ Plugin y Flujos
 #### Wizard Providers (implementar metodos del module)
 Metodos
   - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
-  - [implementar] `CryptoBrokerWalletAssociatedSetting newEmptyCryptoBrokerWalletProviderSetting()`
-  - [implementar] `void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting)`
+  - [implementar] `CryptoBrokerWalletProviderSetting newEmptyCryptoBrokerWalletProviderSetting()`
+  - [implementar] `void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting setting)`
 
 Plugins y flujos
   - **Obtener Pares de Monedas** >> Enums `FiatCurrency` y `CryptoCurrency` que implementan `Currency`
@@ -232,6 +233,21 @@ Plugins y flujos:
   - **(A) Hacer Restock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock` dendiendo de la wallet devuelta
   - **(A) Hacer Destock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock`
 
+#### Setting Merchandises
+Metodos
+  - [implementar] `List<CryptoBrokerWalletAssociatedSetting> getAssociatedWallets(string cbpWalletPublicKey)`
+  - `void createTransactionRestockBank(...)`
+  - `void createTransactionDestockBank(...)`
+  - `void createTransactionRestockCash(...)`
+  - `void createTransactionDestockCash(...)`
+  - `void createTransactionRestockCrypto(...)`
+  - `void createTransactionDestockCrypto(...)`
+
+Pluguins y Flujos:
+  - Lista de wallets asociadas como stock >> `Crypto Broker Wallet`
+  - Restock >> `Bank Money Restock` o `Cash Money Restock` o `Crypto Money Restock` segun la plataforma de la wallet asociada
+  - Destock >> `Bank Money Destock` o `Cash Money Destock` o `Crypto Money Destock` segun la plataforma de la wallet asociada
+
 #### Settings Locations
 Metodos
   - `Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)`
@@ -247,7 +263,8 @@ Plugins y Flujos
 
 #### Settings Bank Accounts
 Metodos:
-  - [implementar] metodo que devuelva lista de `NegotiationBankAccount` registrados como setting
+  - [implementar] `List<FiatCurrency> getBankAccountCurrencies()`
+    - Plugin dueño: [implementar angel] `CustomerBrokerSaleNegotiationManager#getBankAccountCurrencies()`
   - [implementar] `List<Object> getEarningWallets();`
     - Esto depende del plugin MatchingEarnings
   - `List<BankAccountNumber> getAccounts(String walletPublicKey);`
@@ -275,18 +292,43 @@ Plugins yFlujos:
 
 -----------------------------------------------
 
+---
 
 ### Crypto Customer Reference Wallet
 
 #### Home Open Negotiations Tab [I]
+Metodos:
+  - `Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset)` 
+  - `Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset)`
+
+Plugins y Flujos
   - **(A) Esperando por Broker** >> `Customer Broker Purchase Negotiation`
   - **(A) Esperando por Customer** >> `Customer Broker Purchase Negotiation`
 
 #### Home Open Contracts Tab [I]
+Metodos:
+  - `Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset)`
+  - `Collection<ContractBasicInformation> getContractsWaitingForCustomer(int max, int offset)`
+
+Plugins y Flujos:
   - **(A) Esperando por Broker** >> `Customer Broker Purchase Contract`
   - **(A) Esperando por Customer** >> `Customer Broker Purchase Contract`
 
 #### Negotiation Details
+Metodos
+  - `List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);`
+  - `boolean isNothingLeftToConfirm(List<NegotiationStep> steps);`
+  - `CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> steps);`
+  - `void modifyNegotiationStepValues(NegotiationStep step, NegotiationStepStatus status, String... newValues)`
+  - `List<String> getPaymentMethods(String currencyToSell);`
+  - `Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)`
+  - [implementar] `Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency)`
+    - esto va a estar en los settings del module
+  - [implementar] `FiatIndex getMarketRate(Currency merchandise, Currency fiatCurrency, CurrencyType currencyType)`
+    - FiatIdex propio de la wallet
+  - [implementar] `CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);`
+
+Plugins y Flujos
   - **(A) Agregar notas** >> `Customer Broker Purchase Negotiation` 
     - Se registra en el campo MEMO
   - **(A) Locacion del broker** >> `Customer Broker Purchase Negotiation` 
@@ -377,29 +419,71 @@ Plugins yFlujos:
   - **(A) Metodo para filtrar contratos por estado** >> `Customer Broker Purchase Contract`
 
 #### Wizard Identity
+Metodos
+  - `boolean associateIdentity(String customerPublicKey);`
+  - `List<CryptoCustomerIdentity> getListOfIdentities();`
+
+Plugins y flujos
   - **(A) Lista de Identidades** >> `Crypto Customer Identity`
   - **(A) Asociar Wallet con Identidad** >> `Crypto Customer Actor`
 
 #### Wizard Merchandises
+Metodos
+  - `List<InstalledWallet> getInstallWallets()`
+  - `void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey)`
+
+Plugins y Flujos
   - **(A) Wallets Disponibles para plataforma seleccionada** >> `WPD Wallet Manager`
     - Solo se van a mostrar wallets de tipo Crypto
   - **(?) Asociar Wallet** >> Settings de `Crypto Customer Wallet Module`
     - Se debe guardar en el setting la plataforma y el public_key de la wallet
 
-#### Wizard Currencies of Interest
-  - **(A) Lista de Currencies que soporta Fermat** >> Enums `CryptoCurrency` y `FiatCurrency`
-  - **(A) Agregar Currency** >> Settings de `Crypto Customer Wallet Module`
+#### Wizard Providers
+Metodos
+  - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
+  - [implementar] `CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerrWalletProviderSetting()`
+  - [implementar] `void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting settting)`
+
+Plugins y flujos
+  - **Obtener Pares de Monedas** >> Enums `FiatCurrency` y `CryptoCurrency` que implementan `Currency`
+  - **(A) Lista de Proveedores** >> la implementacion de la super capa CER
+    - Los puedo mostrar todos sin importar que wallets he asociado. 
+    - Deberia existir una interface o plugin que me perimta listarlos y obtener referencias a ellos
+  - **(A) Asociar proveedores con la wallet** >> Settings de `Crypto Customer Module`
+    - va a ser un setting con multiples valores
+    - UUID del plugin, nombre descripyivo (esto es temporal, hasta que se confirme que va a ser asi)
 
 #### Wizard Locations
+Metodos:
+  - `void createNewLocation(String location, String uri)`
+    - uri es opcional, puede ser null 
+    - Plugin dueño: `CustomerBrokerPurchaseNegotiationManager#createNewLocation(String location, String uri)`
+
+Plugins y Flujos
   - **(A) Agregar Locaciones** >> Settings de `Customer Broker Purchase Negotiation`
+    - El setting va a ser un String con el texto de la ubicacion
+    - URI que devuelve googlemaps para el texto ingresado como locacion. Esto va a ser un campo opcional
+    - Es un setting con multiples registros
 
 #### Wizard Bank Accounts
+Metodos
+  - [implementar] `NegotiationBankAccountImpl newEmptyNegotiationBankAccount();`
+  - [implementar] `void createNewBankAccount(NegotiationBankAccount bankAccount);`
+    - El metodo esta tambien en Customer Broker Sale Negotiation
+    - Plugin dueño: `CustomerBrokerPurchaseNegotiationManager#createNewBankAccount(NegotiationBankAccount bankAccount)`
+
+Plugins y Flujos
   - **(A) Agregar cuentas bancarias** >>Settings de `Customer Broker Purchase Negotiation`
 
-#### Settings
-No usa plugins, es solo Android
+#### Setting Providers
+Metodos
+  - [implementar] `List<CryptoCustomerWalletProviderSetting> getAssociatedProviders(String walletPublicKey)`
+  - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
+  - [implementar] `CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerrWalletProviderSetting()`
+  - [implementar] `void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting settting)`
+  - [implementar] `void deleteCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting settting)`
 
-#### Setting Currencies of Interest
+Plugins y Flujos
   - **(A) Lista de Currencies configuradas** >> Settings de `Crypto Customer Wallet Module`
   - **(A) Lista de Currencies que soporta Fermat** >> Enums `CryptoCurrency` y `FiatCurrency`
   - **(A) Agregar Currency** >> Settings de `Crypto Customer Wallet Module`
@@ -407,11 +491,32 @@ No usa plugins, es solo Android
   - **(A) Eliminar Currency** >> Settings de `Crypto Customer Wallet Module`
 
 #### Setting Locations
-  - **(A) Agregar Locaciones** >> Settings de `Customer Broker Purchase Negotiation`
-  - **(A) Modificar Locaciones** >> Settings de `Customer Broker Purchase Negotiation`
-  - **(A) Eliminar Locaciones** >> Settings de `Customer Broker Purchase Negotiation`
+ Metodos
+  - `Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType)`
+  - `void createNewLocation(String location, String uri);`
+  - `void updateLocation(NegotiationLocations location);`
+  - `void deleteLocation(NegotiationLocations location);`
+
+Plugins y Flujos
+  - **(A) Lista de Locaciones actuales** >> `Customer Broker Sale Negotiation`
+  - **(A) Agregar Locaciones** >> metodo save en `Customer Broker Sale Negotiation`
+  - **(A) Modificar Locaciones** >> metodo save en `Customer Broker Sale Negotiation`
+  - **(A) Eliminar Locaciones** >> metodo delete en `Customer Broker Sale Negotiation`
 
 #### Setting Bank Accounts
+Metodos
+  - [implementar] `List<FiatCurrency> getBankAccountCurrencies()`
+    - Plugin dueño: [implementar angel] `CustomerBrokerPurchaseNegotiationManager#getBankAccountCurrencies()`
+  - `List<BankAccountNumber> getAccounts(String walletPublicKey);`
+  - [implementar] `NegotiationBankAccountImpl newEmptyNegotiationBankAccount();`
+  - [implementar] `void createNewBankAccountSetting(NegotiationBankAccount bankAccount);`
+    - Plugin dueño `CustomerBrokerPurchaseNegotiationManager#createNewBankAccount(NegotiationBankAccount bankAccount);`
+  - [implementar] `void deleteBankAccounSettingt(NegotiationBankAccount bankAccount);`
+    - Plugin dueño: `CustomerBrokerPurchaseNegotiationManager#createDeleteBankAccount(NegotiationBankAccount bankAccount);`
+    - [implementar] `void updateBankAccountSetting(NegotiationBankAccount bankAccount);`
+    - Plugin dueño: `CustomerBrokerPurchaseNegotiationManager#updateBankAccount(NegotiationBankAccount bankAccount);`
+
+Plugins y Flujos
   - **(A) Lista de Currencies configuradas** >> Settings de `Customer Broker Purchase Negotiation`
   - **(?) Agregar cuentas bancarias** >>Settings de `Customer Broker Purchase Negotiation`
   - **(A) Modificar cuentas bancarias** >> Settings de `Customer Broker Purchase Negotiation`

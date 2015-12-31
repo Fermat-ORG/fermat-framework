@@ -199,119 +199,82 @@ public class CustomerBrokerContractPurchaseDao {
                     History
                  */
 
-                    SortedMap listHistory  = new TreeMap(reverseOrder());
+                String Query = "SELECT * FROM " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        ContractStatus.COMPLETED.getCode() +
+                        "' OR " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        ContractStatus.CANCELLED.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME +
+                        "' DESC";
 
-                    ContractPurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, ContractStatus.COMPLETED.getCode(), DatabaseFilterType.EQUAL);
-                    ContractPurchaseTable.loadToMemory();
-                    Collection<DatabaseTableRecord> r1 = ContractPurchaseTable.getRecords();
-                    ContractPurchaseTable.clearAllFilters();
+                Collection<DatabaseTableRecord> res_1 = ContractPurchaseTable.customQuery(Query, true);
 
-                    for (DatabaseTableRecord record : r1) {
-                        listHistory.put(
-                            record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME),
-                            constructCustomerBrokerPurchaseContractFromRecord(record)
-                        );
-                    }
+                Collection<CustomerBrokerContractPurchase> historyContracts = new ArrayList<>();
+                for (DatabaseTableRecord record : res_1) {
+                    historyContracts.add(constructCustomerBrokerPurchaseContractFromRecord(record));
+                }
 
-                    ContractPurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, ContractStatus.CANCELLED.getCode(), DatabaseFilterType.EQUAL);
-                    ContractPurchaseTable.loadToMemory();
-                    Collection<DatabaseTableRecord> r2 = ContractPurchaseTable.getRecords();
-                    ContractPurchaseTable.clearAllFilters();
-
-                    for (DatabaseTableRecord record : r2) {
-                        listHistory.put(
-                            record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME),
-                            constructCustomerBrokerPurchaseContractFromRecord(record)
-                        );
-                    }
-
-                    Collection<CustomerBrokerContractPurchase> historyContracts = new ArrayList<>();
-
-                    Iterator iterator = listHistory.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        Object key = iterator.next();
-                        historyContracts.add((CustomerBrokerContractPurchase) listHistory.get(key));
-                    }
-
-                    Purchases.setHistoryContracts(historyContracts);
+                Purchases.setHistoryContracts(historyContracts);
 
                 /*
                     Waiting for Broker
                  */
-                    SortedMap listWaitingForBroker  = new TreeMap(reverseOrder());
 
-                    ContractPurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, ContractStatus.PAYMENT_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
-                    ContractPurchaseTable.loadToMemory();
-                    Collection<DatabaseTableRecord> r3 = ContractPurchaseTable.getRecords();
-                    ContractPurchaseTable.clearAllFilters();
+                Query = "SELECT * FROM " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        ContractStatus.PAYMENT_SUBMIT.getCode() +
+                        "' OR " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        ContractStatus.PENDING_MERCHANDISE.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME +
+                        "' DESC";
 
-                    for (DatabaseTableRecord record : r3) {
-                        listWaitingForBroker.put(
-                             record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME),
-                             constructCustomerBrokerPurchaseContractFromRecord(record)
-                        );
-                    }
+                Collection<DatabaseTableRecord> res_2 = ContractPurchaseTable.customQuery(Query, true);
 
-                    ContractPurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, ContractStatus.PENDING_MERCHANDISE.getCode(), DatabaseFilterType.EQUAL);
-                    ContractPurchaseTable.loadToMemory();
-                    Collection<DatabaseTableRecord> r4 = ContractPurchaseTable.getRecords();
-                    ContractPurchaseTable.clearAllFilters();
+                Collection<CustomerBrokerContractPurchase> waitingForBroker = new ArrayList<>();
+                for (DatabaseTableRecord record : res_2) {
+                    waitingForBroker.add(constructCustomerBrokerPurchaseContractFromRecord(record));
+                }
 
-                    for (DatabaseTableRecord record : r4) {
-                        listWaitingForBroker.put(
-                             record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME),
-                             constructCustomerBrokerPurchaseContractFromRecord(record)
-                        );
-                    }
-
-                    Collection<CustomerBrokerContractPurchase> waitingForBroker = new ArrayList<>();
-
-                    iterator = listWaitingForBroker.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        Object key = iterator.next();
-                        waitingForBroker.add((CustomerBrokerContractPurchase) listWaitingForBroker.get(key));
-                    }
-
-                    Purchases.setContractsWaitingForBroker(waitingForBroker);
+                Purchases.setContractsWaitingForBroker(waitingForBroker);
 
                 /*
                     Waiting for Broker
                  */
-                    SortedMap listWaitingForCustomer  = new TreeMap(reverseOrder());
 
-                    ContractPurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, ContractStatus.MERCHANDISE_SUBMIT.getCode(), DatabaseFilterType.EQUAL);
-                    ContractPurchaseTable.loadToMemory();
-                    Collection<DatabaseTableRecord> r5 = ContractPurchaseTable.getRecords();
-                    ContractPurchaseTable.clearAllFilters();
+                Query = "SELECT * FROM " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        ContractStatus.MERCHANDISE_SUBMIT.getCode() +
+                        "' OR " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        ContractStatus.PENDING_PAYMENT.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME +
+                        "' DESC";
 
-                    for (DatabaseTableRecord record : r5) {
-                        listWaitingForCustomer.put(
-                                record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME),
-                                constructCustomerBrokerPurchaseContractFromRecord(record)
-                        );
-                    }
+                Collection<DatabaseTableRecord> res_3 = ContractPurchaseTable.customQuery(Query, true);
 
-                    ContractPurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, ContractStatus.PENDING_PAYMENT.getCode(), DatabaseFilterType.EQUAL);
-                    ContractPurchaseTable.loadToMemory();
-                    Collection<DatabaseTableRecord> r6 = ContractPurchaseTable.getRecords();
-                    ContractPurchaseTable.clearAllFilters();
+                Collection<CustomerBrokerContractPurchase> waitingForCustomer = new ArrayList<>();
+                for (DatabaseTableRecord record : res_3) {
+                    waitingForCustomer.add(constructCustomerBrokerPurchaseContractFromRecord(record));
+                }
 
-                    for (DatabaseTableRecord record : r6) {
-                        listWaitingForCustomer.put(
-                                record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME),
-                                constructCustomerBrokerPurchaseContractFromRecord(record)
-                        );
-                    }
-
-                    Collection<CustomerBrokerContractPurchase> waitingForCustomer = new ArrayList<>();
-
-                    iterator = listWaitingForCustomer.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        Object key = iterator.next();
-                        waitingForCustomer.add((CustomerBrokerContractPurchase) listWaitingForCustomer.get(key));
-                    }
-
-                    Purchases.setContractsWaitingForCustomer(waitingForCustomer);
+                Purchases.setContractsWaitingForCustomer(waitingForCustomer);
 
                 return Purchases;
 

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolartodayProviderDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
@@ -10,7 +10,17 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdu
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DolartodayProviderDatabaseConstants {
+public class DolarTodayProviderDatabaseConstants {
+
+    /**
+     * Provider Info database table definition.
+     */
+    static final String PROVIDER_INFO_TABLE_NAME = "provider_info";
+
+    static final String PROVIDER_INFO_ID_COLUMN_NAME = "id";
+    static final String PROVIDER_INFO_NAME_COLUMN_NAME = "name";
+
+    static final String PROVIDER_INFO_FIRST_KEY_COLUMN = "id";
 
     /**
      * Query History database table definition.

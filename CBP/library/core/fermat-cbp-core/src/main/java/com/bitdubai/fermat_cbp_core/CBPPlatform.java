@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_core;
 
+import com.bitdubai.fermat_cbp_core.layer.actor.ActorLayer;
 import com.bitdubai.fermat_cbp_core.layer.contract.ContractLayer;
 import com.bitdubai.fermat_cbp_core.layer.negotiation.NegotiationLayer;
 import com.bitdubai.fermat_cbp_core.layer.user_level_business_transaction.UserLevelBusinessTransactionLayer;
@@ -42,6 +43,9 @@ public class CBPPlatform extends AbstractPlatform {
             registerLayer(new ContractLayer());
             registerLayer(new IdentityLayer());
             registerLayer(new NegotiationLayer());
+
+            registerLayer(new ActorLayer());
+
             registerLayer(new NegotiationTransactionLayer());
             registerLayer(new NetworkServiceLayer());
             registerLayer(new StockTransactionsLayer());
@@ -50,6 +54,7 @@ public class CBPPlatform extends AbstractPlatform {
             registerLayer(new WalletLayer());
             registerLayer(new WalletModuleLayer());
             registerLayer(new WorldLayer());
+
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(

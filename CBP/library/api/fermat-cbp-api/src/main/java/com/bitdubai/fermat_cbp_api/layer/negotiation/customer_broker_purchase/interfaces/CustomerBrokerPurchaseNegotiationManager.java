@@ -176,4 +176,11 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
      * @throws CantGetListBankAccountsPurchaseException
      */
     Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException;
+
+    /**
+     *
+     * @return Collection<FiatCurrency> with the currencies available in the Bank Wallet
+     * @throws CantGetListBankAccountsPurchaseException
+     */
+    Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException;
 }
