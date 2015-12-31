@@ -83,7 +83,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         adapter = new LocationsAdapter(getActivity(), locationList);
         adapter.setDeleteButtonListener(this);
 
-        recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_stock_wallets_recycler_view);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_locations_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
@@ -105,6 +105,8 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
             }
         });
 
+        showOrHideRecyclerView();
+
         return layout;
     }
 
@@ -113,7 +115,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         locationList.remove(position);
         adapter.changeDataSet(locationList);
 
-        showOrHideNoSelectedWalletsView();
+        showOrHideRecyclerView();
     }
 
     private void saveSettingAndGoNextStep() {
@@ -137,7 +139,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
     }
 
-    private void showOrHideNoSelectedWalletsView() {
+    private void showOrHideRecyclerView() {
         if (locationList.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
