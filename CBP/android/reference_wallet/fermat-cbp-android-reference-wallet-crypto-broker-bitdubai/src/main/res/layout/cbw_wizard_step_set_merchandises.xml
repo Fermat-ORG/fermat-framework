@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -19,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Choose Stock Merchandises"
+            android:text="@string/cbw_wizard_stock_merchandise_title"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -31,7 +32,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="You must select a Wallet that work as Merchandise and the spread applied to them"
+            android:text="@string/cbw_wizard_stock_merchandise_description"
             android:textColor="@color/white"
             android:textSize="14sp"
             />
@@ -41,7 +42,6 @@
         android:id="@+id/cbw_selected_stock_wallets_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cbw_wizard_title_container"
         android:orientation="vertical"
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"
@@ -52,7 +52,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select a Stock Merchandise"
+            android:text="@string/cbw_select_stock_merchandise"
             android:textColor="@color/cbw_wizard_color"/>
 
         <View
@@ -64,16 +64,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="8dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/cbw_select_crypto_wallets"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
-                android:layout_margin="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:background="@color/cbw_wizard_color"
-                android:text="Crypto"
+                android:text="@string/cbw_crypto"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
 
@@ -81,10 +83,11 @@
                 android:id="@+id/cbw_select_cash_wallets"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
-                android:layout_margin="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:background="@color/cbw_wizard_color"
-                android:text="Cash"
+                android:text="@string/cbw_cash"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
 
@@ -92,23 +95,22 @@
                 android:id="@+id/cbw_select_bank_wallets"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
-                android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:background="@color/cbw_wizard_color"
-                android:text="Bank"
+                android:text="@string/cbw_bank"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp">
+            android:layout_height="140dp"
+            android:layout_marginTop="8dp">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cbw_selected_stock_wallets_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
                 android:visibility="gone"
                 tools:listitem="@layout/cbw_wizard_recycler_view_item"
                 tools:visibility="visible"/>
@@ -118,10 +120,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="No Selected Wallets"
+                android:text="@string/cbw_no_selected_wallets"
                 android:textColor="#888"
                 android:textSize="16sp"
                 android:visibility="visible"
+                android:background="@color/light_grey"
                 tools:visibility="gone"/>
         </FrameLayout>
 
@@ -129,8 +132,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cbw_selected_stock_wallets_container"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"
@@ -140,9 +143,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:orientation="horizontal">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -155,8 +158,8 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
                 android:id="@+id/cbw_automatic_restock_check_box"
                 android:layout_width="wrap_content"
-                android:foregroundTint="@color/black"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/cbw_wizard_color"/>
 
 
         </LinearLayout>
@@ -177,8 +180,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
+            android:layout_marginTop="8dp"
+            android:paddingBottom="8dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_spread_value_text"
@@ -202,14 +205,12 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/cbw_next_step_button"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@color/cbw_wizard_color"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
@@ -218,19 +219,20 @@
         android:paddingTop="8dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="4"
+            android:gravity="center"
             android:text="@string/cbw_next_step"
             android:textColor="@color/white"/>
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:src="@drawable/arrow_right_selected"
             tools:ignore="contentDescription"/>
-    </RelativeLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

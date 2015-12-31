@@ -119,6 +119,11 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     }
 
     private void saveSettingAndGoNextStep() {
+        if (locationList.isEmpty()) {
+            Toast.makeText(getActivity(), R.string.cbw_add_location_warning_msg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             for (String location : locationList) {
                 walletManager.createNewLocation(location, appSession.getAppPublicKey());
