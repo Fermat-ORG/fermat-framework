@@ -80,8 +80,9 @@
     <string name="cbw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>
     <string name="cbw_welcome">Welcome</string>
     <string name="cbw_next_step">Next Step</string>
-    <string name="select_identity_warning_msg">Need to Select an Identity</string>
-    <string name="select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
+    <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
+    <string name="cbw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
+    <string name="cbw_add_location_warning_msg">Need to Select at least ONE Location</string>
     <string name="cbw_automatic_restock">Automatic Restock</string>
     <string name="cbw_no_selected_wallets">No Selected Wallets</string>
     <string name="cbw_city">City</string>

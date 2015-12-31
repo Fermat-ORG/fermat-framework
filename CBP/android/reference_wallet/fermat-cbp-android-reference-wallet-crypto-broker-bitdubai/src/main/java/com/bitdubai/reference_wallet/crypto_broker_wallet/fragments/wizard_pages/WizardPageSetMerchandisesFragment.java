@@ -31,7 +31,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.SingleDeletableItemViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -257,7 +256,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     private void saveSettingAndGoNextStep() {
 
         if (stockWallets.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -265,7 +264,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
             CryptoBrokerWalletSettingSpread walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
             walletSetting.setId(null);
             walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
-            walletSetting.setSpread((float) spreadValue / 100.0f);
+            walletSetting.setSpread(spreadValue);
             walletSetting.setRestockAutomatic(automaticRestock);
             walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
