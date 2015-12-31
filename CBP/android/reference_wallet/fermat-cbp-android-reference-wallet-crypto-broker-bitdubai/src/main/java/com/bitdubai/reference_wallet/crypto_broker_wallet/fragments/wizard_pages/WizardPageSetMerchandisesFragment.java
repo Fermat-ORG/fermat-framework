@@ -1,5 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -314,11 +316,25 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     }
 
     @Override
-    public void deleteButtonClicked(InstalledWallet data, int position) {
-        stockWallets.remove(position);
-        adapter.changeDataSet(stockWallets);
+    public void deleteButtonClicked(InstalledWallet data, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        showOrHideNoSelectedWalletsView();
+        builder.setTitle(R.string.cbw_delete_wallet_dialog_title).setMessage(R.string.cbw_delete_wallet_dialog_msg);
+        builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                stockWallets.remove(position);
+                adapter.changeDataSet(stockWallets);
+                showOrHideNoSelectedWalletsView();
+            }
+        });
+        builder.setNegativeButton(R.string.cbw_cancel_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.show();
     }
 
     private void showOrHideNoSelectedWalletsView() {
