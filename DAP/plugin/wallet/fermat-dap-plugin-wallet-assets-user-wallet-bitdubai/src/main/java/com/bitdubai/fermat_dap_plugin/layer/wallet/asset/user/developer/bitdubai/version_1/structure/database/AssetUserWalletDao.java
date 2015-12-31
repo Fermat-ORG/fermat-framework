@@ -178,7 +178,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
     */
     public void addDebit(final AssetUserWalletTransactionRecord assetUserWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
-            if (isTransactionInTable(assetUserWalletTransactionRecord.getIdTransaction(), TransactionType.CREDIT, balanceType))
+            if (isTransactionInTable(assetUserWalletTransactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
                 throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetUserWalletTransactionRecord.getAmount() : 0L;
