@@ -49,21 +49,20 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
     String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException;
 
     /**
-     * Gets the amount of unused keys that are available from the passed account.
-     * @param  account the hierarchy account to get the keys from
+     * Gets the amount of unused keys that are available from the master account.
+
      * @return
      */
-    int getAvailableKeyCount(HierarchyAccount account);
+    int getAvailableKeyCount();
 
 
     /**
-     * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
+     * Derives the specified amount of keys in the master account. Only some plugins can execute this method.
      * @param plugin the plugin invoking this call. Might not have permissions to create new keys.
-     * @param account the account to derive keys from.
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */
-    void deriveKeys(Plugins plugin, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException;
+    void deriveKeys(Plugins plugin, int keysToDerive) throws CantDeriveNewKeysException;
 
     /**
      * * Creates a new hierarchy Account in the vault.
