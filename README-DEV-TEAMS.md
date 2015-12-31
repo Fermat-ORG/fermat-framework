@@ -61,15 +61,16 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 3 | Part-Time Veteran | Veteran part-time developer. Working part-time 6+ months. |
 | 4 | Entry Level | New developer on the project. |
 | 5 | Veteran | Veteran developer. Working full time 3+ months. |
-| 6 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
-| 7 | Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 8 | New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 9 | Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 10 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
-| 11 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
-| 12 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
-| 13 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
-| 14 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
+| 6 | Team Leader Candidate | Developers that are ready to became a Team Leader once their current project is finished. |
+| 7 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 9 | New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 10 | Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 11 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 12 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
+| 13 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
+| 14 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
+| 15 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
 
 ### Fermat ORG Site
 
