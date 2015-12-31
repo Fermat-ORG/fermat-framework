@@ -18,6 +18,7 @@ public class DeliverRecord {
     private Date startTime;
     private Date timeOut;
     private DistributionStatus state;
+    private String genesisTransactionSent;
 
     //CONSTRUCTORS
 
@@ -25,16 +26,16 @@ public class DeliverRecord {
     public DeliverRecord() {
     }
 
-    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, String actorPublicKey, Date startTime, Date timeOut, DistributionStatus state) {
+    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, String actorAssetUser, Date startTime, Date timeOut, DistributionStatus state, String genesisTransactionSent) {
         this.transactionId = transactionId;
         this.genesisTransaction = genesisTransaction;
         this.digitalAssetMetadata = digitalAssetMetadata;
-        this.actorAssetUser = actorPublicKey;
+        this.actorAssetUser = actorAssetUser;
         this.startTime = startTime;
         this.timeOut = timeOut;
         this.state = state;
+        this.genesisTransactionSent = genesisTransactionSent;
     }
-
 
     //PUBLIC METHODS
 
@@ -138,6 +139,14 @@ public class DeliverRecord {
 
     public void setState(DistributionStatus state) {
         this.state = state;
+    }
+
+    public String getGenesisTransactionSent() {
+        return genesisTransactionSent;
+    }
+
+    public void setGenesisTransactionSent(String genesisTransactionSent) {
+        this.genesisTransactionSent = genesisTransactionSent;
     }
 
     //INNER CLASSES
