@@ -30,7 +30,7 @@ import java.util.UUID;
 public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     ErrorManager errorManager;
-    final String LOCAL_STORAGE_PATH="digital-asset-reception/";
+    final String LOCAL_STORAGE_PATH = "digital-asset-reception/";
     String digitalAssetFileStoragePath;
     AssetReceptionDao assetReceptionDao;
     BitcoinNetworkManager bitcoinNetworkManager;
@@ -46,19 +46,29 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
         super(pluginId, pluginFileSystem);
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.setBitcoinCryptoNetworkManager(this.bitcoinNetworkManager);
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
         this.digitalAssetReceptionVault = digitalAssetReceptionVault;
         this.assetReceptionDao = assetReceptionDao;
     }
 
     public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantReceiveDigitalAssetException {
-        try{
+        try {
             persistDigitalAsset(digitalAssetMetadata, senderId);
-            DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
-            String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
-            DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
+            verifyAsset(digitalAssetMetadata);
+        } catch (CantPersistDigitalAssetException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot persist Digital Asset Metadata");
+        } catch (CantCreateDigitalAssetFileException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot create Digital Asset Metadata file in local storage");
+        }
+    }
+
+    public void verifyAsset(DigitalAssetMetadata digitalAssetMetadata) throws CantReceiveDigitalAssetException {
+        try {
+            DigitalAsset digitalAsset = digitalAssetMetadata.getDigitalAsset();
+            String genesisTransaction = digitalAssetMetadata.getGenesisTransaction();
+            DigitalAssetContract digitalAssetContract = digitalAsset.getContract();
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_CONTRACT, genesisTransaction);
-            if(!isValidContract(digitalAssetContract)){
+            if (!isValidContract(digitalAssetContract)) {
                 System.out.println("ASSET RECEPTION The contract is not valid");
                 this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.REJECTED_BY_CONTRACT, genesisTransaction);
                 return;
@@ -67,7 +77,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             }
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CONTRACT_CHECKED, genesisTransaction);
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_HASH, genesisTransaction);
-            if(!isDigitalAssetHashValid(digitalAssetMetadata)){
+            if (!isDigitalAssetHashValid(digitalAssetMetadata)) {
                 System.out.println("ASSET RECEPTION The DAM Hash is not valid");
                 this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.REJECTED_BY_HASH, genesisTransaction);
                 return;
@@ -75,20 +85,9 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             }
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.HASH_CHECKED, genesisTransaction);
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, genesisTransaction);
-        } catch (CantPersistDigitalAssetException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot persist Digital Asset Metadata");
-        } catch (CantCreateDigitalAssetFileException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot create Digital Asset Metadata file in local storage");
-        } catch (CantExecuteQueryException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "There is a error executing a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Unexpected result in databse");
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot get the genesis transaction from crypto network");
-        } catch (DAPException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Unexpected DAP exception");
+        } catch (Exception e) {
+            throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Unexpected exception while verifying the asset");
         }
-
     }
 
     public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
@@ -103,35 +102,35 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     /**
      * This method check if the DigitalAssetMetadata remains with no modifications
-     * */
+     */
     public void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws CantReceiveDigitalAssetException {
-        try{
-            String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
+        try {
+            String genesisTransactionFromDigitalAssetMetadata = digitalAssetMetadata.getGenesisTransaction();
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_HASH, genesisTransactionFromDigitalAssetMetadata);
-            String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
+            String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
             List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getCryptoTransaction(digitalAssetMetadata.getGenesisTransaction());
-            if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
-                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
+            if (cryptoTransactionList == null || cryptoTransactionList.isEmpty()) {
+                throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
             }
-            this.cryptoTransaction=cryptoTransactionList.get(0);
-            String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
-            if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
+            this.cryptoTransaction = cryptoTransactionList.get(0);
+            String op_ReturnFromAssetVault = cryptoTransaction.getOp_Return();
+            if (!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)) {
                 throw new CantReceiveDigitalAssetException("Cannot receive Digital Asset because the " +
                         "Hash was modified:\n" +
-                        "Op_return:"+op_ReturnFromAssetVault+"\n" +
-                        "digitalAssetMetadata:"+digitalAssetMetadata);
+                        "Op_return:" + op_ReturnFromAssetVault + "\n" +
+                        "digitalAssetMetadata:" + digitalAssetMetadata);
             }
         } catch (CantGetCryptoTransactionException exception) {
             throw new CantReceiveDigitalAssetException(exception,
-                    "Receiving the Digital Asset \n"+digitalAssetMetadata,
+                    "Receiving the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
         } catch (CantExecuteQueryException exception) {
             throw new CantReceiveDigitalAssetException(exception,
-                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot execute a database operation");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantReceiveDigitalAssetException(exception,
-                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Unexpected result in database");
         }
     }
@@ -144,19 +143,19 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     @Override
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        UUID receptionId=UUID.randomUUID();
+        UUID receptionId = UUID.randomUUID();
         try {
             this.assetReceptionDao.persistReceptionId(digitalAssetMetadata.getGenesisTransaction(), receptionId);
             this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, receptionId.toString());
         } catch (CantPersistsTransactionUUIDException exception) {
-            throw new CantCreateDigitalAssetFileException(exception,"Persisting Receiving digital asset metadata","Cannot persists internal id in database");
+            throw new CantCreateDigitalAssetFileException(exception, "Persisting Receiving digital asset metadata", "Cannot persists internal id in database");
         }
 
     }
 
     @Override
     public void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata) {
-        this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetMetadata.getDigitalAssetHash();
+        this.digitalAssetFileStoragePath = this.LOCAL_STORAGE_PATH + "/" + digitalAssetMetadata.getDigitalAssetHash();
         this.digitalAssetReceptionVault.setDigitalAssetLocalFilePath(this.digitalAssetFileStoragePath);
     }
 
