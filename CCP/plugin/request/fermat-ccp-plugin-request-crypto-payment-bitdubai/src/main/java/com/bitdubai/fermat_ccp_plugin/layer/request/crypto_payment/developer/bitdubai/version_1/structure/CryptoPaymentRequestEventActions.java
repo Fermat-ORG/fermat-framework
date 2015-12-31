@@ -334,7 +334,7 @@ public class CryptoPaymentRequestEventActions {
             cryptoPaymentRequestManager.confirmRequest(requestId);
 
             CryptoPayment record = cryptoPaymentRequestDao.getRequestById(requestId);
-            launchDeniedNotification(record);
+
 
         } catch(CantChangeCryptoPaymentRequestStateException |
                 CryptoPaymentRequestNotFoundException        e) {
