@@ -831,6 +831,8 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         } catch (CantListIntraWalletUsersException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e){
+            return null;
         }
     }
 }
