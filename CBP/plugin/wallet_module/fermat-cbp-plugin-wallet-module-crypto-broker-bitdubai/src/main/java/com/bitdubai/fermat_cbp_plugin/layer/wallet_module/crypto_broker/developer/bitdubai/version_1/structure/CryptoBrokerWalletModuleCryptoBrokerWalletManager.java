@@ -113,6 +113,7 @@ import java.util.UUID;
  * @author Nelson Ramirez
  * @version 1.0
  * @since 05/11/15
+ * Modified by Franklin Marcano 23/12/15
  */
 public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWalletManager {
     private final WalletManagerManager walletManagerManager;
