@@ -29,6 +29,7 @@ import com.bitdubai.reference_wallet.cash_money_wallet.common.adapters.Transacti
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     FermatTextView bookTextView;
     FermatTextView availableTextView;
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;
+    com.getbase.floatingactionbutton.FloatingActionButton fabWithdraw;
     CreateTransactionFragmentDialog dialog;
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
@@ -92,7 +94,9 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.textView_book_amount);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.textView_available_amount);
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.fab_multiple_actions);
+        this.fabWithdraw = (com.getbase.floatingactionbutton.FloatingActionButton) layout.findViewById(R.id.fab_withdraw);
         updateWalletBalances();
+        handleWidhtrawalFabVisibilityAccordingToBalance();
 
         //configureToolbar();
         getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_summary_top_background_color));
@@ -244,6 +248,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         fab.collapse();
         getWalletBalances();
         updateWalletBalances();
+        handleWidhtrawalFabVisibilityAccordingToBalance();
+
         onRefresh();
     }
 
@@ -302,6 +308,15 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         bookTextView.invalidate();
         availableTextView.invalidate();
+    }
+
+    private void handleWidhtrawalFabVisibilityAccordingToBalance()
+    {
+        if(this.walletBalances.getAvailableBalance().compareTo(new BigDecimal(0)) == 0 && this.walletBalances.getBookBalance().compareTo(new BigDecimal(0)) == 0)
+            fabWithdraw.setVisibility(View.INVISIBLE);
+        else
+            fabWithdraw.setVisibility(View.VISIBLE);
+
     }
 
     @Override

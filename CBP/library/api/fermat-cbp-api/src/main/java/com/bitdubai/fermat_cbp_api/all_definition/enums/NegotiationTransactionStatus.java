@@ -10,6 +10,7 @@ public enum NegotiationTransactionStatus implements FermatEnum {
     PENDING_CONFIRMATION    ("PEC"),
     PENDING_RESPONSE        ("PER"),
     PENDING_SUBMIT          ("PES"),
+    PENDING_SUBMIT_CONFIRM  ("PSC"),
     SENDING_NEGOTIATION     ("SDN"),
     CONFIRM_NEGOTIATION     ("CFN"),
     REJECTED_NEGOTIATION    ("REN")
@@ -31,6 +32,7 @@ public enum NegotiationTransactionStatus implements FermatEnum {
             case "PEC": return NegotiationTransactionStatus.PENDING_CONFIRMATION;
             case "PER": return NegotiationTransactionStatus.PENDING_RESPONSE;
             case "PES": return NegotiationTransactionStatus.PENDING_SUBMIT;
+            case "PSC": return NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM;
             case "SDN": return NegotiationTransactionStatus.SENDING_NEGOTIATION;
             case "CFN": return NegotiationTransactionStatus.CONFIRM_NEGOTIATION;
             case "REN": return NegotiationTransactionStatus.REJECTED_NEGOTIATION;

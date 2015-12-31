@@ -20,4 +20,5 @@ public class CantSendNegotiationToCryptoBrokerException extends FermatException 
     public CantSendNegotiationToCryptoBrokerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
 }
