@@ -79,7 +79,8 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     public void onClick(View view) {
         StringBuilder location = new StringBuilder();
 
-        location.append(selectedCountry.getCountry());
+        if (selectedCountry != null)
+            location.append(selectedCountry.getCountry()).append(", ");
 
         if (cityTextView.getText().toString().length() > 0)
             location.append(cityTextView.getText().toString()).append(", ");
