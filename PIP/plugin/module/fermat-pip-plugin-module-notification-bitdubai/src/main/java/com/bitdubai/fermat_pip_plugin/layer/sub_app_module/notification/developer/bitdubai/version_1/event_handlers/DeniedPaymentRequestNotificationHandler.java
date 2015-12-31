@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeniedPaymentRequestNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivePaymentRequestNotificationEvent;
 
 /**
@@ -22,12 +23,12 @@ public class DeniedPaymentRequestNotificationHandler implements FermatEventHandl
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        ReceivePaymentRequestNotificationEvent receivePaymentRequestNotificationEvent =(ReceivePaymentRequestNotificationEvent) fermatEvent;
+         DeniedPaymentRequestNotificationEvent deniedPaymentRequestNotificationEvent =(DeniedPaymentRequestNotificationEvent) fermatEvent;
 
 
         if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
 
-            notificationManager.addDeniedRequestPaymentNotification(receivePaymentRequestNotificationEvent.getSource(), receivePaymentRequestNotificationEvent.getCryptoCurrency(),receivePaymentRequestNotificationEvent.getAmount());
+            notificationManager.addDeniedRequestPaymentNotification(deniedPaymentRequestNotificationEvent.getSource(), deniedPaymentRequestNotificationEvent.getCryptoCurrency(),deniedPaymentRequestNotificationEvent.getAmount());
         }
 
 

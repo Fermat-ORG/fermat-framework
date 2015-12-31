@@ -41,6 +41,21 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
     String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
 
     /**
+     * Generates a new Bitcoin Transaction with needed inputs and outputs.
+     * Also signs and pass to the Crypto Network the transaction generated.
+     * @param walletPublicKey
+     * @param fermatTrId
+     * @param addressTo
+     * @param satoshis
+     * @return
+     * @throws InsufficientCryptoFundsException
+     * @throws InvalidSendToAddressException
+     * @throws CryptoTransactionAlreadySentException
+     */
+    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException;
+    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException;
+
+    /**
      * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
      * and we must have enought funds to send this money. It allows including an Op_return output value.
      * @param walletPublicKey
