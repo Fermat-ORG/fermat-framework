@@ -92,6 +92,13 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                 doDistribute(digitalAsset.getAssetPublicKey());
             }
         });
+
+        selectUsersButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+//                appSession.setData("asset_data", data);
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS, appSession.getAppPublicKey());
+            }
+        });
     }
 
     private void doDistribute(final String assetPublicKey) {

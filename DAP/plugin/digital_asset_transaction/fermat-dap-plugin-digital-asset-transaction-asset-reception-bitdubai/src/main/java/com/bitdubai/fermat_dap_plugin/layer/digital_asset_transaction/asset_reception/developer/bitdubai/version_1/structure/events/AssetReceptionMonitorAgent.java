@@ -56,7 +56,6 @@ import java.util.UUID;
  */
 public class AssetReceptionMonitorAgent implements Agent {
 
-    private MonitorAgent monitorAgent;
     private Thread agentThread;
     private LogManager logManager;
     private ErrorManager errorManager;
@@ -91,9 +90,9 @@ public class AssetReceptionMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         try {
-            monitorAgent = new MonitorAgent();
-            this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-            this.monitorAgent.setErrorManager(this.errorManager);
+            MonitorAgent monitorAgent = new MonitorAgent();
+            monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            monitorAgent.setErrorManager(this.errorManager);
             this.agentThread = new Thread(monitorAgent);
             this.agentThread.start();
         } catch (Exception e) {
@@ -176,10 +175,11 @@ public class AssetReceptionMonitorAgent implements Agent {
                                 case META_DATA_TRANSMIT:
                                     if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
                                         System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
-                                        break;
+                                        digitalAssetReceptor.verifyAsset(digitalAssetMetadataReceived);
+                                    } else {
+                                        System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
+                                        digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
                                     }
-                                    System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
-                                    digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
                                     break;
                                 case TRANSACTION_STATUS_UPDATE:
                                     assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CANCELLED, genesisTransaction);
@@ -289,9 +289,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             }
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
-
                         }
-                        assetReceptionDao.updateEventStatus(eventId);
                     }
                 }
                 if (eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER.getCode())) {
@@ -315,7 +313,6 @@ public class AssetReceptionMonitorAgent implements Agent {
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
                         }
-                        assetReceptionDao.updateEventStatus(eventId);
                     }
                 }
                 if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)) {
@@ -324,6 +321,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                 if (eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)) {
                     //TODO: to handle
                 }
+                assetReceptionDao.updateEventStatus(eventId);
             }
         }
 
