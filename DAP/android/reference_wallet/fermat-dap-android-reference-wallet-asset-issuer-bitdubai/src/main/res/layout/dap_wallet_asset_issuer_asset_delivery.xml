@@ -127,18 +127,28 @@
 
         </RelativeLayout>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:text="Deliver Assets"
-            android:layout_below="@id/selectUsersButton"
-            android:layout_marginTop="75dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+        <RelativeLayout
             android:id="@+id/deliverAssetsButton"
-            android:textSize="18sp"
-            android:textColor="#00aeef"
-            android:background="@drawable/bg_delivery_button"/>
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="80dp"
+            android:layout_below="@+id/selectUsersButton"
+            android:layout_centerHorizontal="true">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Deliver Assets"
+                android:textSize="18sp"
+                android:textColor="#00aeef"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_delivery_button"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
