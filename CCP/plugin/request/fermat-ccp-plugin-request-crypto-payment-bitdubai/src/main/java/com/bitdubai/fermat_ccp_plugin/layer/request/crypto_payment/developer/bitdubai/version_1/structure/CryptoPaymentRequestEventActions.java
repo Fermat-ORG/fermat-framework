@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformDenialException;
@@ -13,6 +15,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaym
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPayment;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.database.CryptoPaymentRequestDao;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteCryptoPaymentRequestPendingEventActionsException;
@@ -23,6 +26,11 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestRefusedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestEventActionsException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeniedPaymentRequestNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivePaymentRequestNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -43,18 +51,21 @@ public class CryptoPaymentRequestEventActions {
     private final PluginDatabaseSystem        pluginDatabaseSystem       ;
     private final UUID                        pluginId                   ;
     private final WalletManagerManager        walletManagerManager       ;
+    private final   EventManager eventManager;
 
     private CryptoPaymentRequestDao cryptoPaymentRequestDao;
 
     public CryptoPaymentRequestEventActions(final CryptoPaymentRequestManager cryptoPaymentRequestManager,
                                             final PluginDatabaseSystem        pluginDatabaseSystem       ,
                                             final UUID                        pluginId                   ,
-                                            final WalletManagerManager        walletManagerManager       ) {
+                                            final WalletManagerManager        walletManagerManager       ,
+                                            final   EventManager eventManager) {
 
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
         this.pluginDatabaseSystem        = pluginDatabaseSystem       ;
         this.pluginId                    = pluginId                   ;
         this.walletManagerManager        = walletManagerManager       ;
+        this.eventManager                = eventManager               ;
     }
 
     public void initialize() throws CantInitializeCryptoPaymentRequestEventActionsException {
@@ -194,6 +205,10 @@ public class CryptoPaymentRequestEventActions {
 
             cryptoPaymentRequestManager.confirmRequest(requestId);
 
+            CryptoPayment record = cryptoPaymentRequestDao.getRequestById(requestId);
+
+            launchDeniedNotification(record);
+
         } catch(CantChangeCryptoPaymentRequestStateException |
                 CryptoPaymentRequestNotFoundException        e) {
 
@@ -225,6 +240,8 @@ public class CryptoPaymentRequestEventActions {
                 cryptoPaymentRequestDao.getRequestById(cryptoPaymentRequest.getRequestId());
 
                 cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
+
+                launchRequestNotification(cryptoPaymentRequest);
 
             } catch (CantGetCryptoPaymentRequestException e) {
 
@@ -270,6 +287,8 @@ public class CryptoPaymentRequestEventActions {
                     );
 
                     cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
+
+                    this.launchRequestNotification(cryptoPaymentRequest);
                 } catch(DefaultWalletNotFoundException z) {
 
                     cryptoPaymentRequestManager.informDenial(cryptoPaymentRequest.getRequestId());
@@ -314,6 +333,9 @@ public class CryptoPaymentRequestEventActions {
 
             cryptoPaymentRequestManager.confirmRequest(requestId);
 
+            CryptoPayment record = cryptoPaymentRequestDao.getRequestById(requestId);
+            launchDeniedNotification(record);
+
         } catch(CantChangeCryptoPaymentRequestStateException |
                 CryptoPaymentRequestNotFoundException        e) {
 
@@ -328,4 +350,30 @@ public class CryptoPaymentRequestEventActions {
         }
     }
 
+    private void launchRequestNotification(CryptoPaymentRequest cryptoPaymentRequest)
+    {
+        //send notification to device
+
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.RECEIVE_PAYMENT_REQUEST_NOTIFICATION);
+        ReceivePaymentRequestNotificationEvent receivePaymentRequestNotificationEvent = (ReceivePaymentRequestNotificationEvent) platformEvent;
+        receivePaymentRequestNotificationEvent.setSource(EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST);
+        receivePaymentRequestNotificationEvent.setAmount(cryptoPaymentRequest.getAmount());
+        receivePaymentRequestNotificationEvent.setCryptoCurrency(cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency());
+
+        eventManager.raiseEvent(platformEvent);
+    }
+
+
+    private void launchDeniedNotification(CryptoPayment cryptoPaymentRequest)
+    {
+        //send notification to device
+
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.DENIED_PAYMENT_REQUEST_NOTIFICATION);
+        DeniedPaymentRequestNotificationEvent incomingMoneyNotificationEvent = (DeniedPaymentRequestNotificationEvent) platformEvent;
+        incomingMoneyNotificationEvent.setSource(EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST);
+        incomingMoneyNotificationEvent.setAmount(cryptoPaymentRequest.getAmount());
+        incomingMoneyNotificationEvent.setCryptoCurrency(cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency());
+
+        eventManager.raiseEvent(platformEvent);
+    }
 }

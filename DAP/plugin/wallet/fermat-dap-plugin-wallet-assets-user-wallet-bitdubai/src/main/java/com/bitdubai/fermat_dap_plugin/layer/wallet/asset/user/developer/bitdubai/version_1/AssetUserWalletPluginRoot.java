@@ -67,7 +67,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     public AssetUserWalletPluginRoot() {
@@ -77,23 +77,27 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     private static final String WALLET_USER_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletUser = new HashMap<>();
     public static final String PATH_DIRECTORY = "asset-user-swap/";
+    private boolean existsWallet = false;
+    private AssetUserWallet assetUserWallet; //We will use this, I swear.
 
     @Override
     public void start() throws CantStartPluginException {
-        try{
-            loadWalletIssuerMap();
-            createAssetUserWallet("walletPublicKeyTest");
-            loadAssetUserWallet("walletPublicKeyTest");
+        try {
+            loadWalletUserMap();
+            if (!existsWallet) {
+                createAssetUserWallet("walletPublicKeyTest");
+            }
+            assetUserWallet = loadAssetUserWallet("walletPublicKeyTest");
             System.out.println("Star Plugin AssetWalletUser");
             this.serviceStatus = ServiceStatus.STARTED;
 
             //TODO testing code
             testInsert();
 
-        }catch(CantStartPluginException exception){
+        } catch (CantStartPluginException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
-        }catch(Exception exception){
+        } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
 
@@ -136,7 +140,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             assetUserWallet.initialize(internalAssetIssuerWalletId);
             return assetUserWallet;
 
-        }catch (CantInitializeAssetUserWalletException exception) {
+        } catch (CantInitializeAssetUserWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantLoadWalletException("I can't initialize wallet", exception, "", "");
         } catch (Exception exception) {
@@ -153,7 +157,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             UUID internalAssetIssuerWalletId = assetUserWallet.create(walletPublicKey);
 
             walletUser.put(walletPublicKey, internalAssetIssuerWalletId);
-        }catch (CantCreateWalletException exception) {
+        } catch (CantCreateWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateWalletException("Wallet Creation Failed", exception, "walletId: " + walletPublicKey, "");
         } catch (Exception exception) {
@@ -182,7 +186,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
         List<DeveloperDatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         UUID walletId = null;
         try {
-            loadWalletIssuerMap();
+            loadWalletUserMap();
             walletId = walletUser.get("walletPublicKeyTest");
             Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
             databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
@@ -204,7 +208,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
         return databaseTableRecords;
     }
 
-    private void loadWalletIssuerMap() throws CantStartPluginException {
+    private void loadWalletUserMap() throws CantStartPluginException {
         PluginTextFile walletIssuerFile = getWalletUserFile();
         String[] stringWalletIssuer = walletIssuerFile.getContent().split(";", -1);
 
@@ -212,6 +216,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             if (!stringWalletId.equals("")) {
                 String[] idPair = stringWalletId.split(",", -1);
                 walletUser.put(idPair[0], UUID.fromString(idPair[1]));
+                existsWallet = true;
             }
     }
 

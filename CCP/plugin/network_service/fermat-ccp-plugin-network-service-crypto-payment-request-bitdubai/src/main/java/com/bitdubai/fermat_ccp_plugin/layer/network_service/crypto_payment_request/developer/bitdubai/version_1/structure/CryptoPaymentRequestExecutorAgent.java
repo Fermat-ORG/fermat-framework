@@ -25,8 +25,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -137,7 +137,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {
-
+            status = AgentStatus.STOPPED;
             reportUnexpectedError(e);
         }
 
@@ -202,10 +202,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                         System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST.");
                         if (sendMessageToActor(
                                 buildJsonInformationMessage(cpr),
-                                cpr.getActorPublicKey(),
-                                cpr.getActorType(),
                                 cpr.getIdentityPublicKey(),
-                                cpr.getIdentityType()
+                                cpr.getIdentityType(),
+                                cpr.getActorPublicKey(),
+                                cpr.getActorType()
                         )) {
                             confirmRequest(cpr.getRequestId());
                             System.out.println("********** Crypto Payment Request NS -> Executor Agent -> Sending Refusal. PROCESSING_SEND -> CONFIRM REQUEST -> OK.");
@@ -256,7 +256,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
             Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
-
+            status = AgentStatus.STOPPED;
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {
 

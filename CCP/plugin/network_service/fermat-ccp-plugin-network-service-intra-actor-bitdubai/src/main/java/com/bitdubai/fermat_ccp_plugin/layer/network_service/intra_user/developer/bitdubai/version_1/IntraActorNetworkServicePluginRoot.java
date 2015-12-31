@@ -43,6 +43,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -52,6 +53,8 @@ import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
@@ -126,6 +129,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -512,11 +517,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication);
+            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
-            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication);
+            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication,this.pluginFileSystem, this.pluginId);
 
-            intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase);
+            intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
 
 
             actorsToRegisterCache = new ArrayList<>();
@@ -524,6 +529,21 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
             connectionArrived = new AtomicBoolean(false);
+
+            // change message state to process again first time
+            reprocessWaitingMessage();
+
+            //declare a schedule to process waiting request message
+            Timer timer = new Timer();
+
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // change message state to process again
+                    reprocessWaitingMessage();
+                }
+            }, 2*3600*1000);
+
 
             /*
              * Its all ok, set the new status
@@ -965,7 +985,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
                 {
-                    if(record.getSentCount() > 5 )
+                    if(record.getSentCount() > 10 )
                     {
                         record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
                         //update state and process again later
@@ -1567,31 +1587,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             if (register) {
                 final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
-                // Compressor with highest level of compression
-                Deflater compressor = new Deflater();
-                compressor.setLevel(Deflater.BEST_COMPRESSION);
-                // Give the compressor the data to compress
-                compressor.setInput(actor.getPhoto());
-                compressor.finish();
-                // Create an expandable byte array to hold the compressed data.
-                // It is not necessary that the compressed data will be smaller than
-                // the uncompressed data.
-                ByteArrayOutputStream bos = new ByteArrayOutputStream(actor.getPhoto().length);
-                // Compress the data
-                byte[] buf = new byte[1024];
-                while (!compressor.finished()) {
-                    int count = compressor.deflate(buf);
-                    bos.write(buf, 0, count);
-                }
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                }
+
 
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT));
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
 
@@ -1835,5 +1836,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
 
+    private void reprocessWaitingMessage()
+    {
+        try {
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndType(ActorProtocolState.WAITING_RESPONSE);
+            for(ActorNetworkServiceRecord record : lstActorRecord) {
+
+                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
+        e)
+        {
+            System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
 
 }

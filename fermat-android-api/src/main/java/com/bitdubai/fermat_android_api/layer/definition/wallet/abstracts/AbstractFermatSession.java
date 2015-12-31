@@ -59,6 +59,8 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
         return data.get(key);
     }
 
+
+
     /**
      *
      * @return

@@ -50,11 +50,11 @@ public class EncodeMsjContent {
     /**
      * Construct the content of the message fot the type <code>DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE</code>
      *
-     * @param transactionId
+     * @param genesisTransaction
      * @param newDistributionStatus
      * @return String message content
      */
-    public static String encodeMSjContentTransactionNewStatusNotification(String transactionId, DistributionStatus newDistributionStatus, PlatformComponentType senderType, PlatformComponentType receiverType){
+    public static String encodeMSjContentTransactionNewStatusNotification(String genesisTransaction, DistributionStatus newDistributionStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
 
         /*
          * Create the json object
@@ -62,7 +62,7 @@ public class EncodeMsjContent {
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.MSJ_CONTENT_TYPE, DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE.toString());
-        jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.GENESIS_TRANSACTION, transactionId);
+        jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.GENESIS_TRANSACTION, genesisTransaction);
         jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.NEW_DISTRIBUTION_STATUS, gson.toJson(newDistributionStatus));
         jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());

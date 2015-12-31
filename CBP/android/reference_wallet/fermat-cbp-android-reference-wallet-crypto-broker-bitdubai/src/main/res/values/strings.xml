@@ -81,5 +81,8 @@
     <string name="cbw_welcome">Welcome</string>
     <string name="cbw_next_step">Next Step</string>
     <string name="select_identity_warning_msg">Need to Select an Identity</string>
+    <string name="select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
+    <string name="cbw_automatic_restock">Automatic Restock</string>
+    <string name="cbw_no_selected_wallets">No Selected Wallets</string>
 
 </resources>

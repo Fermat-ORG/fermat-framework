@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -9,18 +8,17 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationMessage;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
@@ -32,6 +30,10 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+//<<<<<<< HEAD
+//=======
+//>>>>>>> 78d02bfd88d1c23d48396cb851829d86d9fbee61
 
 /**
  * Created by Yordin Alayn on 30.11.15.
@@ -187,15 +189,29 @@ public class NegotiationTransmissionAgent {
     /*END SERVICE*/
 
     /*PUBLIC*/
-    private void processMetadata() {
+    public void sendCycle(){
+        try {
+
+            if(networkServiceNegotiationTransmissionPluginRoot.isRegister()) {
+                // function to process and send metadata to remote
+                processSend();
+                //Discount from the the waiting list
+                discountWaitTime();
+            }
+            //Sleep for a time
+            Thread.sleep(SLEEP_TIME);
+
+        } catch (InterruptedException e) {
+            running = false;
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+        }
+    }
+
+    private void processSend() {
 
         try {
-            Map<String, Object> filters = new HashMap<>();
-//            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_ID_COLUMN_NAME, "23");
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
-
-            //Read all pending NegotiationTransmission from database
-            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
+            
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
                 String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
@@ -204,11 +220,19 @@ public class NegotiationTransmissionAgent {
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
                         if (wsCommunicationsCloudClientManager != null) {
                             if (platformComponentProfile != null) {
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorSend(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(negotiationTransmission.getPublicKeyActorReceive(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER);
+
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
+                                        negotiationTransmission.getPublicKeyActorSend(),
+                                        NetworkServiceType.UNDEFINED,
+                                        negotiationTransmission.getActorSendType());
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
+                                        negotiationTransmission.getPublicKeyActorReceive(),
+                                        NetworkServiceType.UNDEFINED,
+                                        negotiationTransmission.getActorReceiveType());
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
                                 // pass the negotiationTransmission to a pool waiting for the response of the other peer or server failure
                                 poolConnectionsWaitingForResponse.put(receiverPublicKey, negotiationTransmission);
+
                             }
                         }
                     }
@@ -216,20 +240,40 @@ public class NegotiationTransmissionAgent {
                     NetworkServiceLocal communicationNetworkServiceLocal = networkServiceNegotiationTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
                     if (communicationNetworkServiceLocal != null) {
                         try {
-                            negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
-                            System.out.print("-----------------------\n" +
-                                    "SENDING NEGOTIATION TRANSACTION RECORD -----------------------\n" +
-                                    "-----------------------\n To: " + receiverPublicKey);
 
-                            // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
+                            System.out.print("-----------------------\n SENDING NEGOTIATION TRANSACTION RECORD To:" + receiverPublicKey + "-----------------------\n");
+
                             Gson gson = new Gson();
-                            String jsonBusinessTransaction =gson.toJson(negotiationTransmission);
-                            // Envio el mensaje a la capa de comunicacion
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,jsonBusinessTransaction);
+
+                            NegotiationMessage negotiationMessage = new NegotiationMessage(
+                                    negotiationTransmission.getTransmissionId(),
+                                    negotiationTransmission.getTransactionId(),
+                                    negotiationTransmission.getNegotiationId(),
+                                    negotiationTransmission.getNegotiationTransactionType(),
+                                    negotiationTransmission.getPublicKeyActorSend(),
+                                    negotiationTransmission.getActorSendType(),
+                                    negotiationTransmission.getPublicKeyActorReceive(),
+                                    negotiationTransmission.getActorReceiveType(),
+                                    negotiationTransmission.getTransmissionType(),
+                                    negotiationTransmission.getTransmissionState(),
+                                    negotiationTransmission.getNegotiationType(),
+                                    negotiationTransmission.getNegotiationXML(),
+                                    negotiationTransmission.getTimestamp()
+                            );
+                            String jsonNegotiationTransaction =gson.toJson(negotiationMessage);
+
+                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransaction);
+
+                            if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION ){
+                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
+                            }else{
+                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
+                            }
+
                             databaseDao.changeState(negotiationTransmission);
-                            System.out.print("-----------------------\n" +
-                                    "NEGOTIATION TRANSACTION -----------------------\n" +
-                                    "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
+
+                            System.out.print("-----------------------\n NEGOTIATION TRANSACTION STATE: " + negotiationTransmission.getTransmissionState() + "\n-----------------------\n");
+
                         } catch (CantRegisterSendNegotiationTransmissionException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
@@ -264,122 +308,92 @@ public class NegotiationTransmissionAgent {
     public boolean isRunning(){
         return running;
     }
-
-    public void sendCycle(){
-        try {
-
-            if(networkServiceNegotiationTransmissionPluginRoot.isRegister()) {
-                // function to process and send metadata to remote
-                processMetadata();
-                //Discount from the the waiting list
-                discountWaitTime();
-            }
-            //Sleep for a time
-            toSend.sleep(SLEEP_TIME);
-
-        } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        }
-    }
     /*END PUBLIC*/
 
     /*PRIVATE*/
-    private void processReceive() {
-
+    private void receiveCycle(){
         try {
-            //communicationNetworkServiceConnectionManager.
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, "false");
+            // function to process metadata received
+            processReceive();
+            //Sleep for a time
+            Thread.sleep(RECEIVE_SLEEP_TIME);
 
-            //Read all pending CryptoTransmissionMetadata from database
-            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAll(filters);
-            for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList){
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(negotiationTransmission.getPublicKeyActorSend());
-                if(communicationNetworkServiceLocal!=null){
-                    System.out.print("-----------------------\n" +
-                            "RECEIVING NEGOTIATION TRANSACTION-----------------------\n" +
-                            "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
-                    // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
-                    // if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
-                    try {
-                        switch (negotiationTransmission.getTransmissionState()) {
-                            case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-
-                                System.out.println("Negotiation Transmission SEEN_BY_DESTINATION_NETWORK_SERVICE---to implement");
-                                break;
-
-                            case CONFIRM_RESPONSE:
-
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Negotiation Transmission CONFIRM_RESPONSE");
-                                launchNotification();
-                                this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
-                                break;
-
-                            case CONFIRM_NEGOTIATION:
-
-                                System.out.print(negotiationTransmission.getPublicKeyActorSend()+" Negotiation Transmission CONFIRM_NEGOTIATION");
-                                //this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getReceiverId());
-                                launchNotification();
-                                this.poolConnectionsWaitingForResponse.remove(negotiationTransmission.getPublicKeyActorReceive());
-                                break;
-
-                            // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
-                            case SENT:
-
-                                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SEEN_BY_OWN_NETWORK_SERVICE);
-                                negotiationTransmission.setTransmissionType(negotiationTransmission.getTransmissionType());
-                                databaseDao.updateRegisterSendNegotiatioTransmission(negotiationTransmission);
-
-                                System.out.print("-----------------------\n" +
-                                        "RECEIVING NEGOTIATION TRANSACTION -----------------------\n" +
-                                        "-----------------------\n STATE: " + negotiationTransmission.getPublicKeyActorSend());
-
-                                launchNotification();
-
-                                NegotiationMessage negotiationMessage = new NegotiationMessage(
-                                        negotiationTransmission.getTransmissionId(),
-                                        negotiationTransmission.getTransactionId(),
-                                        negotiationTransmission.getNegotiationId(),
-                                        negotiationTransmission.getNegotiationTransactionType(),
-                                        negotiationTransmission.getPublicKeyActorSend(),
-                                        negotiationTransmission.getActorSendType(),
-                                        negotiationTransmission.getPublicKeyActorReceive(),
-                                        negotiationTransmission.getActorReceiveType(),
-                                        negotiationTransmission.getTransmissionType(),
-                                        NegotiationTransmissionState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
-                                        negotiationTransmission.getTimestamp()
-                                );
-
-                                Gson gson = new Gson();
-                                String message = gson.toJson(negotiationMessage);
-
-                                // El destination soy yo porque me lo estan enviando
-                                // El sender es el otro y es a quien le voy a responder
-                                communicationNetworkServiceLocal.sendMessage(negotiationTransmission.getPublicKeyActorReceive(), negotiationTransmission.getPublicKeyActorSend(), message);
-                                System.out.print("-----------------------\n" +
-                                        "SENDING ANSWER -----------------------\n" +
-                                        "-----------------------\n STATE: " + negotiationTransmission.getTransmissionState());
-                                break;
-
-                            default:
-                                //TODO: handle with an exception
-                                break;
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } catch (com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException e) {
-            e.printStackTrace();
+        } catch (InterruptedException e) {
+            running = false;
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         }
     }
 
-    private void launchNotification(){
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_UPDATE);
-        IncomingNegotiationTransmissionUpdateEvent incomingNegotiationTransmissionUpdateEvent = (IncomingNegotiationTransmissionUpdateEvent) fermatEvent;
-        incomingNegotiationTransmissionUpdateEvent.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
-        eventManager.raiseEvent(incomingNegotiationTransmissionUpdateEvent);
+    private void processReceive() {
+
+        try {
+
+            List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
+            for(NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
+                switch (negotiationTransmission.getNegotiationTransactionType()){
+                    case CUSTOMER_BROKER_NEW:
+
+                        if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION){
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION NEW");
+
+                        }else{
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_NEW);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+
+                        }
+                        break;
+
+                    case CUSTOMER_BROKER_UPDATE:
+
+                        if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION){
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION UPDATE");
+
+                        }else{
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+
+                        }
+                        break;
+
+                    case CUSTOMER_BROKER_CLOSE:
+
+                        if(negotiationTransmission.getTransmissionType() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION){
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CLOSE");
+
+                        }else{
+
+                            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_CLOSE);
+                            eventToRaise.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
+                            eventManager.raiseEvent(eventToRaise);
+                            System.out.println("NEGOTIATION TRANSMISSION TRANSACTION CONFIRM");
+
+                        }
+                        break;
+                }
+            }
+        } catch (CantReadRecordDataBaseException e) {
+                e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void discountWaitTime(){
@@ -393,17 +407,5 @@ public class NegotiationTransmissionAgent {
             }
         }
     }
-
-    private void receiveCycle(){
-        try {
-            // function to process metadata received
-            processReceive();
-            //Sleep for a time
-            toSend.sleep(RECEIVE_SLEEP_TIME);
-
-        } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        }
-    }
-    /*PRIVATE*/
+    /*END PRIVATE*/
 }

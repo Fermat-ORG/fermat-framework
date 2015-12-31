@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -66,6 +67,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      *  UI components
      */
     FermatTextView dialogTitle;
+    LinearLayout dialogTitleLayout;
     EditText amountText;
     AutoCompleteTextView memoText;
     Button applyBtn;
@@ -110,6 +112,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             setContentView(R.layout.create_transaction_dialog);
 
 
+            dialogTitleLayout = (LinearLayout) findViewById(R.id.csh_ctd_title_layout);
             dialogTitle = (FermatTextView) findViewById(R.id.csh_ctd_title);
             //dialogTitleImg = (FermatTextView) findViewById(R.id.csh_ctd_title_img);
             amountText = (EditText) findViewById(R.id.csh_ctd_amount);
@@ -117,7 +120,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             applyBtn = (Button) findViewById(R.id.csh_ctd_apply_transaction_btn);
             cancelBtn = (Button) findViewById(R.id.csh_ctd_cancel_transaction_btn);
 
-
+            dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
             dialogTitle.setText(getTransactionTitleText());
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
@@ -201,10 +204,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 Toast.makeText(activity.getApplicationContext(), "Amount cannot be zero", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (memo.equals("")) {
-                Toast.makeText(activity.getApplicationContext(), "Memo cannot be empty", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
 
             if (transactionType == TransactionType.DEBIT) {
@@ -214,9 +213,11 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     //updateWalletBalances(view.getRootView());
 
                 } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Error on withdrawal!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+                    return;
                 } catch (CashMoneyWalletInsufficientFundsException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
             else if(transactionType == TransactionType.CREDIT) {
@@ -226,17 +227,17 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                     //updateWalletBalances(view.getRootView());
 
                 } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Error on deposit!", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
-            dismiss();
-
 
         } catch (Exception e) {
             cashMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "There was an error processing transaction!" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
         }
+        dismiss();
     }
 
 }

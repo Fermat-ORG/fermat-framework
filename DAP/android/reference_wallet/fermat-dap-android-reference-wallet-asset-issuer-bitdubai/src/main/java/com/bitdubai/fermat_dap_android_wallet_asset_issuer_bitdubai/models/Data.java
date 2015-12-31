@@ -1,11 +1,15 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -35,5 +39,40 @@ public class Data {
             digitalAssets.add(digitalAsset);
         }
         return digitalAssets;
+    }
+
+    public static List<UserDelivery> getUserDeliveryList(AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+        //TODO get from database
+        List<UserDelivery> users = new ArrayList<>();
+        UserDelivery userDelivery = new UserDelivery();
+        userDelivery.setUserName("Janet Williams");
+        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        userDelivery.setDeliveryStatus("Redeemed");
+        users.add(userDelivery);
+        userDelivery = new UserDelivery();
+        userDelivery.setUserName("Amanda Hood");
+        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        userDelivery.setDeliveryStatus("Appropriated");
+        users.add(userDelivery);
+        userDelivery = new UserDelivery();
+        userDelivery.setUserName("Tom Snow");
+        userDelivery.setDeliveryDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        userDelivery.setDeliveryStatus("Unused");
+        users.add(userDelivery);
+        return users;
+    }
+
+    public static List<User> getConnectedUsers(AssetIssuerWalletSupAppModuleManager moduleManager) throws CantGetAssetUserActorsException {
+        List<User> users = new ArrayList<>();
+        users.add(new User("Frank Contreras"));
+        users.add(new User("Victor Mars"));
+        users.add(new User("Nerio Indriago"));
+        users.add(new User("Rodrigo Acosta"));
+//        List<User> users = new ArrayList<>();
+//        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
+//        for (ActorAssetUser actorAssetUser:actorAssetUsers) {
+//            users.add(new User(actorAssetUser.getName()));
+//        }
+        return users;
     }
 }
