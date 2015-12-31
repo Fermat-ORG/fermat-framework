@@ -155,6 +155,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
                 android:id="@+id/cbw_automatic_restock_check_box"
                 android:layout_width="wrap_content"
+                android:foregroundTint="@color/black"
                 android:layout_height="wrap_content"/>
 
 

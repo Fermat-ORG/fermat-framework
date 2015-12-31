@@ -29,7 +29,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.SingleDeletableItemViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -42,7 +44,8 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment implements WalletsAdapter.OnDeleteButtonClickedListener {
+public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<InstalledWallet> {
 
     // Constants
     private static final String TAG = "WizardPageSetMerchand";
