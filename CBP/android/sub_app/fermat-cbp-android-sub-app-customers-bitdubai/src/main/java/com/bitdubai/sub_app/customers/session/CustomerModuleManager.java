@@ -19,4 +19,9 @@ public class CustomerModuleManager implements ModuleManager<FermatSettings,Activ
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
     }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
+    }
 }
