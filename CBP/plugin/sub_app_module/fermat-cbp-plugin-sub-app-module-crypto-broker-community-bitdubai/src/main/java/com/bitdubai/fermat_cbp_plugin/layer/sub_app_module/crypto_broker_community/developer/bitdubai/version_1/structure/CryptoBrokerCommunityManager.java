@@ -430,4 +430,14 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
         }
     }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
+    }
 }

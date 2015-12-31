@@ -8,6 +8,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
@@ -15,7 +16,6 @@ import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
-import com.bitdubai.sub_app.wallet_manager.commons.views.Utils;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 
@@ -91,7 +91,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
                         }
                         if (position == 0) {
                             if(DEKSTOP==fragmentWhoUseThisAdapter)
-                            Utils.setBadgeCount(context, icon, 2, icon.getId(1));
+                            BadgeDrawable.Utils.setBadgeCount(context, icon, 2, icon.getId(1));
                         }
                     }else {
                         holder.thumbnail.setVisibility(View.GONE);
