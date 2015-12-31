@@ -304,7 +304,7 @@ public class BitcoinCurrencyCryptoVaultManager {
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return)
+    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast)
             throws InsufficientCryptoFundsException,
             InvalidSendToAddressException,
             CouldNotSendMoneyException,
@@ -401,15 +401,24 @@ public class BitcoinCurrencyCryptoVaultManager {
             throw new InsufficientCryptoFundsException(InsufficientCryptoFundsException.DEFAULT_MESSAGE, e, output.toString(), null);
         }
 
-        try {
-            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, FermatTrId);
-        } catch (CantBroadcastTransactionException e) {
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
-        } catch (Exception e){
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
+        /**
+         * If we are brocasting the transaction right now, then I will send it to the crypto network
+         */
+        if (broadcast){
+            try {
+                bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, FermatTrId);
+            } catch (CantBroadcastTransactionException e) {
+                throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
+            } catch (Exception e){
+                throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
+            }
+        } else {
+            /**
+             * if we are not broadcasting this, then a transactional component will manually broadcast it later to the crypto network
+             */
+
         }
 
         return sendRequest.tx.getHashAsString();
     }
-
 }
