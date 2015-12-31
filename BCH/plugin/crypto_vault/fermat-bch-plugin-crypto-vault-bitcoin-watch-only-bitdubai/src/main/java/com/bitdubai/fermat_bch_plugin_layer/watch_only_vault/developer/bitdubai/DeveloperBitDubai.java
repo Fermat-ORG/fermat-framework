@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai;
+package com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -8,7 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.CryptoVaultBitcoinWatchOnlyPluginRoot;
+import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.CryptoVaultBitcoinWatchOnlyPluginRoot;
+
 
 /**
  * Created by rodrigo on 12/30/15.
