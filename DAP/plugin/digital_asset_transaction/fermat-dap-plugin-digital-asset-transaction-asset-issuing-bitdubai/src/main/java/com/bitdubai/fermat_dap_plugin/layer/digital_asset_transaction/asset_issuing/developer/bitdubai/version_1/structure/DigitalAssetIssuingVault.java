@@ -6,14 +6,16 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -32,10 +34,17 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
     //For testing I'm gonna use this type of privacy, change to PRIVATE in production release
     //private final FilePrivacy FILE_PRIVACY=FilePrivacy.PUBLIC;
 
-    public DigitalAssetIssuingVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
+    public DigitalAssetIssuingVault(UUID pluginId,
+                                    PluginFileSystem pluginFileSystem,
+                                    ErrorManager errorManager,
+                                    AssetIssuerWalletManager assetIssuerWalletManager,
+                                    ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         setErrorManager(errorManager);
+        setAssetIssuerWalletManager(assetIssuerWalletManager);
+        setActorAssetIssuerManager(actorAssetIssuerManager);
+
     }
 
     public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException{

@@ -780,6 +780,26 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    RECEIVE_PAYMENT_REQUEST_NOTIFICATION("RPRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReceivePaymentRequestNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivePaymentRequestNotificationEvent(this);
+        }
+    },
+
+    DENIED_PAYMENT_REQUEST_NOTIFICATION("DPRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.DeniedPaymentRequestNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeniedPaymentRequestNotificationEvent(this);
+        }
+    },
+
     RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);

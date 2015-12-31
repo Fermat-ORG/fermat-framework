@@ -320,14 +320,12 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         //If we cannot send the money at this moment then we'll keep trying.
                         reportUnexpectedException(e);
 
-                        //if I spend more than a day I canceled
+                        //if I spend more than five minutes I canceled
                         long sentDate = transaction.getTimestamp();
                         long currentTime = System.currentTimeMillis();
                         long dif = currentTime - sentDate;
 
-                        double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
-
-                        if((int) dias > 1)
+                        if(dif >= 180000)
                         {
                             dao.cancelTransaction(transaction);
                             roolback(transaction,true);
