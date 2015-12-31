@@ -17,23 +17,22 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private UUID    id                  = UUID.randomUUID();
+    private final UUID    id                  = UUID.randomUUID();
 
-    private String  actorPublicKey      = "18E14A7B6A307F426A94F8114701E7C8E774E7F9A47E2C2035DB29A206321725";
+    private final String  actorPublicKey      = "18E14A7B6A307F426A94F8114701E7C8E774E7F9A47E2C2035DB29A206321725";
 
-    private String  actorPublicKey2     = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B235";
+    private final String  actorPublicKey2     = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B235";
 
-    private String  ipkNetworkService   = "ipkNetworkService";
+    private final String  ipkNetworkService   = "ipkNetworkService";
 
-    private String  ipkNetworkService2  = "ipkNetworkService2";
+    private final String  ipkNetworkService2  = "ipkNetworkService2";
 
-    private String  lastConnection      = "301215";
+    private final String  lastConnection      = "301215";
 
     private NegotiationTransmissionConnectionRecord testObj1, testObj2;
 
     @Before
     public void setUp(){
-        System.out.print("\n*** UNNIT TESTS: NegotiationTransmissionConnectionRecord - ConstructionTest");
         testObj1 = new NegotiationTransmissionConnectionRecord(
                 id,
                 actorPublicKey,
