@@ -215,7 +215,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void eventMonitoring(AssetAppropriationDAO dao) throws Exception {
-            for (String eventId : dao.getPendingActorAssetUserEvents()) {
+            for (String eventId : dao.getPendingCryptoRouterEvents()) {
                 switch (dao.getEventTypeById(eventId)) {
                     //TODO CHANGE THESE EVENTS TO THE NEW ONES.
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER:
@@ -234,7 +234,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                             record.digitalAsset().getPublicKey(),
                                             Actors.DAP_ASSET_USER,
                                             record.addressTo().getAddress(),
-                                            Actors.EXTRA_USER);
+                                            Actors.INTRA_USER);
                                     balance.debit(walletRecord, BalanceType.AVAILABLE);
                                     dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
                                 }
@@ -254,7 +254,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                             record.digitalAsset().getPublicKey(),
                                             Actors.DAP_ASSET_USER,
                                             record.addressTo().getAddress(),
-                                            Actors.EXTRA_USER);
+                                            Actors.INTRA_USER);
                                     balance.debit(walletRecord, BalanceType.BOOK);
 
                                     sendMessageAssetAppropriated(record.digitalAsset());

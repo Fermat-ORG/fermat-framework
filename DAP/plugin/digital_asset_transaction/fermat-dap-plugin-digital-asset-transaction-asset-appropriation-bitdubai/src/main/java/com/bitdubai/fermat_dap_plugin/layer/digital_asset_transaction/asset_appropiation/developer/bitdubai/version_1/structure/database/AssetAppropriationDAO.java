@@ -265,26 +265,8 @@ public class AssetAppropriationDAO implements AutoCloseable {
         try {
             DatabaseTable eventsRecordedTable;
             eventsRecordedTable = database.getTable(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TABLE_NAME);
-
-            DatabaseTableFilter statusFilter = eventsRecordedTable.getEmptyTableFilter();
-            statusFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME);
-            statusFilter.setValue(EventStatus.PENDING.getCode());
-            statusFilter.setType(DatabaseFilterType.EQUAL);
-
-            DatabaseTableFilter sourceFilter = eventsRecordedTable.getEmptyTableFilter();
-            sourceFilter.setColumn(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
-            sourceFilter.setValue(eventSource.getCode());
-            sourceFilter.setType(DatabaseFilterType.EQUAL);
-
-            List<DatabaseTableFilter> filters = new ArrayList<>();
-            filters.add(statusFilter);
-            filters.add(sourceFilter);
-
-            eventsRecordedTable.setFilterGroup(
-                    eventsRecordedTable.getNewFilterGroup(filters,
-                            new ArrayList<DatabaseTableFilterGroup>(),
-                            DatabaseFilterOperator.AND));
-
+            eventsRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            eventsRecordedTable.addStringFilter(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             eventsRecordedTable.addFilterOrder(AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
             eventsRecordedTable.loadToMemory();
@@ -570,6 +552,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
      */
     public List<String> getPendingActorAssetUserEvents() throws CantLoadAssetAppropriationEventListException {
         return getPendingEventsBySource(EventSource.ACTOR_ASSET_USER);
+    }
+
+    public List<String> getPendingCryptoRouterEvents() throws CantLoadAssetAppropriationEventListException {
+        return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
     public EventType getEventTypeById(String id) throws CantLoadAssetAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
