@@ -395,7 +395,7 @@ public class AssetCryptoVaultManager  {
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */
-    public void deriveKeys(Plugins plugin, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
+    public void deriveKeys(Plugins plugin, int keysToDerive) throws CantDeriveNewKeysException{
         if (plugin == Plugins.ASSET_ISSUING){
             
         }
