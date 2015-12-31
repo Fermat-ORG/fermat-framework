@@ -171,6 +171,11 @@ public class AssetAppropriationDAO implements AutoCloseable {
         completeTransaction(AppropriationStatus.REVERTED_ON_CRYPTO_NETWORK, transactionId);
     }
 
+
+    public void updateStatusSendingMessage(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
+        updateStatus(AppropriationStatus.SENDING_MESSAGE, transactionId);
+    }
+
     public void completeAppropriationSuccessful(String transactionId) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         completeTransaction(AppropriationStatus.APPROPRIATION_SUCCESSFUL, transactionId);
     }
@@ -625,6 +630,7 @@ public class AssetAppropriationDAO implements AutoCloseable {
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.APPROPRIATION_STARTED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_OBTAINED));
         uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.CRYPTOADDRESS_REGISTERED));
+        uncompleted.addAll(getTransactionsForStatus(AppropriationStatus.SENDING_MESSAGE));
         return uncompleted;
     }
 
