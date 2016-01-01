@@ -78,11 +78,12 @@ Developers and team leaders in particular are classified by the deepness of the 
 |:-----:|:-----:|:-----| 
 | 1 | ORG Entry Level | New developer on the project. |
 | 2 | ORG Veteran | Veteran developer. Working full time 3+ months or part-time 6+ months. |
-| 3 | ORG New Team Leader | Team Leader with less than 5 full-time members on the team. |
-| 4 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 5 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 6 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 7 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 3 | ORG New Team Leader | Team Leader with 1 full-time member on the team. |
+| 4 | ORG Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 5 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 6 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 7 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 8 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
 
 Please note that whenever we mention a full-time developer is equivalent to mention two part-time developers.
 
