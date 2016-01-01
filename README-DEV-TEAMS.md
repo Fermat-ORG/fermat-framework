@@ -61,7 +61,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 3 | Part-Time Veteran | Veteran part-time developer. Working part-time 6+ months. |
 | 4 | Entry Level | New developer on the project. |
 | 5 | Veteran | Veteran developer. Working full time 3+ months. |
-| 6 | Team Leader Candidate | Developers that are ready to became a Team Leader once their current project is finished. |
+| 6 | Team Leader Candidate | Ready to became a Team Leader once their current project is finished. |
 | 7 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
 | 9 | New Parent Team Leader | Team Leader of a team with one sub-team. |
