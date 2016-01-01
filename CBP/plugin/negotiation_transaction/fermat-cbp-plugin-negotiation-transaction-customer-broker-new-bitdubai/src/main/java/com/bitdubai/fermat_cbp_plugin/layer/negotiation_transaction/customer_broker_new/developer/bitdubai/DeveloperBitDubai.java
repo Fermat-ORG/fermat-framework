@@ -15,7 +15,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 /**
  * Created by Yordin Alayn on 16.09.15.
  */
-
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor{
 
     public DeveloperBitDubai() {
@@ -26,7 +25,6 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
             this.registerVersion(new NegotiationTransactionCustomerBrokerNewPluginRoot());
-            System.out.println("Negotiation Transaction New Iniciado");
         } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }
@@ -34,7 +32,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
     @Override
     public int getAmountToPay() {
-        return 0;
+        return 100;
     }
 
     @Override
