@@ -5,11 +5,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 
 import org.bitcoinj.core.ECKey;
@@ -58,6 +61,22 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantBroadcastTransactionException
      */
     void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantBroadcastTransactionException;
+
+    /**
+     * Broadcast a well formed, commited and signed transaction into the network.
+     * @param txHash
+     * @throws CantBroadcastTransactionException
+     * @throws ErrorBroadcastingTransactionException
+     */
+    void broadcastTransaction (String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException;
+
+    /**
+     * Returns the broadcast Status for a specified transaction.
+     * @param txHash
+     * @return
+     * @throws CantGetBroadcastStatusException
+     */
+    BroadcastStatus getBroadcasStatus (String txHash) throws CantGetBroadcastStatusException;
 
     /**
      * Gets the UTXO provider from the CryptoNetwork on the specified Network
