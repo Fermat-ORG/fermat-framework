@@ -178,7 +178,7 @@ Plugins y flujos
   - **Spread** >> Settings de `Crypto Broker Wallet`
     - este es un setting de valor unico y es un numero entre 0 y 1 (es un porcentaje)
 
-#### Wizard Earning Merchandises [I] (terminar de definir metodos del Module y del plugin MatchigEngine)
+#### Wizard Earning Merchandises (terminar de definir metodos del Module y del plugin MatchigEngine) [I]
 Metodos
   - `List<InstalledWallet> getInstallWallets()`
   - [propuesto] `CryptoBrokerEarningWalletAssociatedSetting newEmptyCryptoBrokerEarningWalletAssociatedSetting()`
@@ -193,7 +193,7 @@ Plugin y Flujos
       - el public_key de la wallet que voy a asociar
       - la mercaderia que maneja esa wallet.
 
-#### Wizard Providers [I] (implementar metodos del module)
+#### Wizard Providers (implementar metodos del module) [I]
 Metodos
   - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
   - [implementar] `CryptoBrokerWalletProviderSetting newEmptyCryptoBrokerWalletProviderSetting()`
