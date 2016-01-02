@@ -545,16 +545,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * so I will manually add them.
          */
         if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE){
-            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-            cryptoTransactions.add(cryptoTransaction);
+            CryptoTransaction cryptoTransactionOnBlockChain = cryptoTransaction;
+            cryptoTransactionOnBlockChain.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+            cryptoTransactions.add(cryptoTransactionOnBlockChain);
 
-            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-            cryptoTransactions.add(cryptoTransaction);
+            CryptoTransaction cryptoTransactionOnCryptoNetwork = cryptoTransaction;
+            cryptoTransactionOnCryptoNetwork.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(cryptoTransactionOnCryptoNetwork);
         }
 
         if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN){
-            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-            cryptoTransactions.add(cryptoTransaction);
+            CryptoTransaction cryptoTransactionOnBlockChain = cryptoTransaction;
+            cryptoTransactionOnBlockChain.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(cryptoTransactionOnBlockChain);
         }
 
         return cryptoTransactions;
