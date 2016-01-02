@@ -1,6 +1,6 @@
 (A = Aprobado, ? = por determinar, I = implentado Android)
 
-Notas:
+### Notas:
 - Los contratos no se cancelan (por ahora) y para evitar que se mantenga siempre abierto, se ha de colocar un estado EXPIRADO para indicar que el contrato paso las fechas para su ejecucion y asi filtrarlo de la lista de contratos abierto
 - layer CER con inteligencia, al estipo de P2P (plugins de index ya no irian, porque al parecer ya no se usan)
 - Settings de locaciones, metodos de pago y cuentas bancarias (practicamente los datos que pueden ser seleccionables en una negociacion) en Plugin de Customer Broker Sale y Purchase Negotiation ya que ellso tienen la responsabildiad de llevar la informacion de las negociaciones
@@ -34,7 +34,7 @@ Plguins y Flujos:
   - **(A) Esperando por Broker** >> `Customer Broker Sale Contract`
   - **(A) Esperando por Customer** >> `Customer Broker Sale Contract`
 
-#### Negotiation Details
+#### Open Negotiation Details
 Metodos
   - `List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);`
   - `boolean isNothingLeftToConfirm(List<NegotiationStep> steps);`
@@ -81,7 +81,12 @@ Plugins y Flujos
     - se envia la informacion de la negociacion a `Customer Broker Update Negotiation Transmition` para que se encargue de actualizar la info en la wallet del customer
     - Se va a usar un campo CANCELED Reason (Texto libre) para indicar el porque de la cancelacion
 
-#### Contract Details (terminar de definir metodos del Module)
+#### Close Negotiation Details
+Metodos
+  - `List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);`
+  - `CustomerBrokerNegotiationInformation getNegotiationDetails(string walletPublicKey)`
+
+#### Open Contract Details (terminar de definir metodos del Module)
 Metodos
   - [implementar] `CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(final String ContractId)`
     - plugin dueño: `CustomerBrokerContractSaleManager#getCustomerBrokerContractSaleForContractId(final String ContractId)`
@@ -94,6 +99,11 @@ Puglis y Flujos
     - Se envia el contractID
   - **(A) Enviar Mercancia** >> `Broker Submit Offline Merchandise Business Transaction` o `Broker Submit Online Merchandise Business Transaction` dependiendo de la moneda a vender
     - Se envia el contractID
+
+#### Close Contract Details [I]
+Metodos
+  - `Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset)`
+    - Le paso el `ContractBasicInformation` seleccionado en la pantalla de Contract History
 
 #### Market Rates [I]
 Metodos
@@ -167,7 +177,7 @@ Plugins y flujos
   - **(A) Spread** >> Settings de `Crypto Broker Wallet`
     - este es un setting de valor unico y es un numero entre 0 y 1 (es un porcentaje)
 
-#### Wizard Earning Merchandises (terminar de definir metodos del Module y del plugin MatchigEngine)
+#### Wizard Earning Merchandises [I] (terminar de definir metodos del Module y del plugin MatchigEngine)
 Metodos
   - `List<InstalledWallet> getInstallWallets()`
   - [propuesto] `CryptoBrokerEarningWalletAssociatedSetting newEmptyCryptoBrokerEarningWalletAssociatedSetting()`
@@ -182,7 +192,7 @@ Plugin y Flujos
       - el public_key de la wallet que voy a asociar
       - la mercaderia que maneja esa wallet.
 
-#### Wizard Providers (implementar metodos del module)
+#### Wizard Providers [I] (implementar metodos del module)
 Metodos
   - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
   - [implementar] `CryptoBrokerWalletProviderSetting newEmptyCryptoBrokerWalletProviderSetting()`
@@ -197,7 +207,7 @@ Plugins y flujos
     - va a ser un setting con multiples valores
     - UUID del plugin, nombre descripyivo (esto es temporal, hasta que se confirme que va a ser asi)
 
-#### Wizard Locations
+#### Wizard Locations [I]
 Metodos:
   - `void createNewLocation(String location, String uri)`
     - uri es opcional, puede ser null 
@@ -226,14 +236,10 @@ Plugins y flujos:
     - Es un setting con multiples registros
   - **(A) Lista de cuentas bancarias** `Bank Money Wallet`
     - le paso la public_key de la wallet
-   
-#### Settings Merchandises
-  NOTA: por ahora la public_key de la cbp wallet a de proveermela el WPD Wallet Manager, esto para hacer restock o destock, porque es uno de los parametros que necesitan esos plugins
-  - **(A) Lista de Wallets asociadas** >> `Crypto Broker Wallet` (informacion registrada como setting)
-  - **(A) Hacer Restock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock` dendiendo de la wallet devuelta
-  - **(A) Hacer Destock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock`
 
-#### Setting Merchandises
+#### Settings Activity
+
+#### Settings Merchandises
 Metodos
   - [implementar] `List<CryptoBrokerWalletAssociatedSetting> getAssociatedWallets(string cbpWalletPublicKey)`
   - `void createTransactionRestockBank(...)`
@@ -244,9 +250,9 @@ Metodos
   - `void createTransactionDestockCrypto(...)`
 
 Pluguins y Flujos:
-  - Lista de wallets asociadas como stock >> `Crypto Broker Wallet`
-  - Restock >> `Bank Money Restock` o `Cash Money Restock` o `Crypto Money Restock` segun la plataforma de la wallet asociada
-  - Destock >> `Bank Money Destock` o `Cash Money Destock` o `Crypto Money Destock` segun la plataforma de la wallet asociada
+  - **(A) Lista de Wallets asociadas** >> `Crypto Broker Wallet` (informacion registrada como setting)
+  - **(A) Hacer Restock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock` dendiendo de la wallet devuelta
+  - **(A) Hacer Destock** >> `Crypto Money Restock` o `Bank Money Restock` o `Cash Money Restock`
 
 #### Settings Locations
 Metodos
@@ -287,12 +293,6 @@ Plugins yFlujos:
     - le paso la public_key de la wallet
 
 
-------------------------------------
-
-
------------------------------------------------
-
----
 
 ### Crypto Customer Reference Wallet
 
@@ -314,7 +314,7 @@ Plugins y Flujos:
   - **(A) Esperando por Broker** >> `Customer Broker Purchase Contract`
   - **(A) Esperando por Customer** >> `Customer Broker Purchase Contract`
 
-#### Negotiation Details
+#### Open Negotiation Details
 Metodos
   - `List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);`
   - `boolean isNothingLeftToConfirm(List<NegotiationStep> steps);`
@@ -365,7 +365,9 @@ Plugins y Flujos
     - se envia la informacion de la negociacion a `Customer Broker Update Negotiation Transmition` para que se encargue de actualizar la info en la wallet del broker
     - Se va a usar un campo CANCELED Reason (Texto libre) para indicar el porque de la cancelacion
 
-#### Contract Details
+#### Close Negotiation Details
+
+#### Open Contract Details
   - **Estado del contrato** >> `Customer Broker Purchase Contract`
     - este me devuelve un `ContractStatus` que me indica en que paso del contrato nos encontramos, y asi puedo tildar aquellos pasos que ya se procesaron, o sencillamente mostrar informacion resumida sobre el contrato en caso de que este haya sido completado o cancelado (este cancelado, hasta donde tengo entendido, se refiere a una negociacion que se cancela)
   - **(A) Datos ingresados** >> `Customer Broker Purchase Contract` usando `Customer Broker Purchase Negotiation` para obtener el detalle de la negociacion y terminar de armar la data a mostrar
@@ -374,7 +376,12 @@ Plugins y Flujos
   - **(A) Enviar Confirmacion de mercancia** >> `Customer Ack Offline Merchandise Business Transaction` o `Customer Ack Online Merchandise Transaction` dependiendo del tipo de mercancia
     - En el caso de `Customer Ack Online Merchandise Transaction` el module no lo ejecuta directamente
 
-#### Broker List
+#### Close Contract Details [I]
+Metodos
+  - `Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset)`
+    - Le paso el `ContractBasicInformation` seleccionado en la pantalla de Contract History
+
+#### Broker List [I]
   - **(A) Obtener lista de brokers** >> `Crypto Broker Actor Connection`
   - **(A) Obtener Mercancias que vende un broker** >> `Crypto Customer Module`y `Crypto Broker Actor`
     - Me recorro la lista de brokers que me da `Crypto Broker Actor Connection`
@@ -418,7 +425,7 @@ Plugins y Flujos
   - **(A) Lista de contratos cerrados y cancelados** >> `Customer Broker Purchase Contract`
   - **(A) Metodo para filtrar contratos por estado** >> `Customer Broker Purchase Contract`
 
-#### Wizard Identity
+#### Wizard Identity [I]
 Metodos
   - `boolean associateIdentity(String customerPublicKey);`
   - `List<CryptoCustomerIdentity> getListOfIdentities();`
@@ -427,7 +434,7 @@ Plugins y flujos
   - **(A) Lista de Identidades** >> `Crypto Customer Identity`
   - **(A) Asociar Wallet con Identidad** >> `Crypto Customer Actor`
 
-#### Wizard Merchandises
+#### Wizard Associate Bitcoin Wallet
 Metodos
   - `List<InstalledWallet> getInstallWallets()`
   - `void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey)`
@@ -438,7 +445,7 @@ Plugins y Flujos
   - **(?) Asociar Wallet** >> Settings de `Crypto Customer Wallet Module`
     - Se debe guardar en el setting la plataforma y el public_key de la wallet
 
-#### Wizard Providers
+#### Wizard Providers [I]
 Metodos
   - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
   - [implementar] `CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerrWalletProviderSetting()`
@@ -453,7 +460,7 @@ Plugins y flujos
     - va a ser un setting con multiples valores
     - UUID del plugin, nombre descripyivo (esto es temporal, hasta que se confirme que va a ser asi)
 
-#### Wizard Locations
+#### Wizard Locations [I]
 Metodos:
   - `void createNewLocation(String location, String uri)`
     - uri es opcional, puede ser null 
@@ -474,6 +481,8 @@ Metodos
 
 Plugins y Flujos
   - **(A) Agregar cuentas bancarias** >>Settings de `Customer Broker Purchase Negotiation`
+
+#### Settings Activity
 
 #### Setting Providers
 Metodos
