@@ -22,7 +22,7 @@ public class ConstructionTest {
     @Mock
     NegotiationTransmissionNetworkServiceDatabaseDao negotiationTransmissionNetworkServiceDatabaseDao;
 
-    private NegotiationTransmissionManagerImpl testObj1, testObj2;
+    private NegotiationTransmissionManagerImpl testObj1;
 
     @Before
     public void setUp(){

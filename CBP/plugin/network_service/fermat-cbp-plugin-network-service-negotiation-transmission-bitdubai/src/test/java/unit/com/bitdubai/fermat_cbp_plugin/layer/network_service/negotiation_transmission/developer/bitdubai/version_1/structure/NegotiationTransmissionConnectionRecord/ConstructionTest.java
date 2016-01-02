@@ -29,7 +29,7 @@ public class ConstructionTest {
 
     private final String  lastConnection      = "301215";
 
-    private NegotiationTransmissionConnectionRecord testObj1, testObj2;
+    private NegotiationTransmissionConnectionRecord testObj1;
 
     @Before
     public void setUp(){
@@ -45,44 +45,5 @@ public class ConstructionTest {
     public void Construction_ValidParameters_NewObjectCreated() {
         System.out.print("\n* Construction_ValidParameters_NewObjectCreated");
         assertThat(testObj1).isNotNull();
-    }
-
-    @Test
-    public void Equals_SameValues_True(){
-        System.out.print("\n* Equals_SameValues_True");
-        testObj2 = new NegotiationTransmissionConnectionRecord(
-                id,
-                actorPublicKey,
-                ipkNetworkService,
-                lastConnection
-        );
-        assertThat(testObj1).isEqualTo(testObj1);
-        assertThat(testObj1.hashCode()).isEqualTo(testObj1.hashCode());
-    }
-
-    @Test
-    public void Equals_DifferentActorPublicKey_False(){
-        System.out.print("\n* Equals_DifferentActorPublicKey_False");
-        testObj2 = new NegotiationTransmissionConnectionRecord(
-                id,
-                actorPublicKey2,
-                ipkNetworkService,
-                lastConnection
-        );
-        assertThat(testObj1).isNotEqualTo(testObj2);
-        assertThat(testObj1.hashCode()).isNotEqualTo(testObj2.hashCode());
-    }
-
-    @Test
-    public void Equals_DifferentIpkNetworkService_False(){
-        System.out.print("\n* Equals_DifferentIpkNetworkService_False");
-        testObj2 = new NegotiationTransmissionConnectionRecord(
-                id,
-                actorPublicKey,
-                ipkNetworkService2,
-                lastConnection
-        );
-        assertThat(testObj1).isNotEqualTo(testObj2);
-        assertThat(testObj1.hashCode()).isNotEqualTo(testObj2.hashCode());
     }
 }

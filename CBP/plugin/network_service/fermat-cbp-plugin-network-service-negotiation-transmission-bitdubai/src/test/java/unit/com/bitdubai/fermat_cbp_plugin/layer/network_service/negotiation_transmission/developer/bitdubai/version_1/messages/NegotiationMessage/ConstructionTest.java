@@ -1,11 +1,11 @@
-package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
+package unit.com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationMessage;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationMessage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,12 +18,12 @@ import java.util.UUID;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Created by Yordin Alayn on 30.12.2015.
+ * Created by Yordin Alayn on 01.01.16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private final   Date                            time                        = new Date();
+    private final Date time                        = new Date();
 
     private final   UUID                            transmissionId              = UUID.randomUUID();
 
@@ -53,11 +53,11 @@ public class ConstructionTest {
 
     private final   long                            timestamp                   = time.getTime();
 
-    private NegotiationTransmissionImpl             testObj1;
+    private NegotiationMessage testObj1;
 
     @Before
     public void setUp(){
-        testObj1 = new NegotiationTransmissionImpl(
+        testObj1 = new NegotiationMessage(
             transmissionId,
             transactionId,
             negotiationId,
@@ -79,4 +79,5 @@ public class ConstructionTest {
         System.out.print("\n* Construction_ValidParameters_NewObjectCreated");
         assertThat(testObj1).isNotNull();
     }
+
 }

@@ -56,12 +56,12 @@ public class ConstructionTest {
 
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
-    private NegotiationTransmissionAgent testMonitorAgent;
+    private NegotiationTransmissionAgent testObj1;
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated() {
         ECCKeyPair identity = new ECCKeyPair();
-        testMonitorAgent = new NegotiationTransmissionAgent(
+        testObj1 = new NegotiationTransmissionAgent(
                 pluginRoot,
                 databaseConnectionsDao,
                 databaseDao,
@@ -73,6 +73,6 @@ public class ConstructionTest {
                 identity,
                 eventManager
         );
-        assertThat(testMonitorAgent).isNotNull();
+        assertThat(testObj1).isNotNull();
     }
 }
