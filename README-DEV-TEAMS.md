@@ -295,24 +295,24 @@ We are a developer team with different experience level; we give our best to del
     Skype:   nelalfo
     Github:  https://github.com/nelsonalfo
 
-* **Angel Veloz**
+* **Angel Veloz [Veteran]**
 ---
       Skype:   vlzangel
       Github:  https://github.com/vlzangel
    
-* **Alejandro Bicelis**
+* **Alejandro Bicelis [Veteran]**
 ---
       Skype:   seed_1987
       Github:  https://github.com/abicelis
     
 
-* **Guillermo Gutierrez**
+* **Guillermo Gutierrez [Entry Level]**
 ---
       Email:   guillermo20@gmail.com
       Skype:   guillermo20
       Github:  https://github.com/guillermo20
 
-* **Yordin Alayn**
+* **Yordin Alayn [Veteran]**
 ---
       Email:   y.alayn@gmail.com
       Skype:   y_alayn
