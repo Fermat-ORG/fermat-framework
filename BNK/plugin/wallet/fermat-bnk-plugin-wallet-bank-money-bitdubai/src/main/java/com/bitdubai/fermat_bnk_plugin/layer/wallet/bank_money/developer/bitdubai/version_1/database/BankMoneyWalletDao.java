@@ -115,6 +115,34 @@ public class BankMoneyWalletDao {
         }
     }
 
+    public void updateBalance(String account, float amount, BalanceType balanceType){
+        try{
+            float bookBalance=0;
+            float availableBalance=0;
+            DatabaseTableRecord record;
+            DatabaseTable table;
+            List<DatabaseTableRecord>records;
+            table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
+            table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, account, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            records = table.getRecords();
+            record = records.get(0);
+            bookBalance = record.getFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME);
+            availableBalance = record.getFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME);
+            if(BalanceType.BOOK == balanceType){
+                bookBalance = bookBalance + amount;
+            }
+            if(BalanceType.AVAILABLE == balanceType){
+                availableBalance = availableBalance + amount;
+            }
+            record.setFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME,bookBalance);
+            record.setFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME,availableBalance);
+            table.updateRecord(record);
+        }catch (Exception e){
+
+        }
+    }
+
     public void addDebit(BankMoneyTransactionRecord bankMoneyTransactionRecord, BalanceType balanceType) throws CantAddDebitException {
         try {
             double availableAmount;
@@ -127,13 +155,14 @@ public class BankMoneyWalletDao {
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-availableAmount));
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
-
+                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(),bankMoneyTransactionRecord.getAmount()*(-1),BalanceType.AVAILABLE);
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-bookAmount));
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
+                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(),bankMoneyTransactionRecord.getAmount()*(-1),BalanceType.BOOK);
             }
         } catch (CantAddBankMoneyException e) {
             throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE, e, "Cant Add Debit Exception", "Cant Add Bank Money Exception");
@@ -152,13 +181,14 @@ public class BankMoneyWalletDao {
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + availableAmount);
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
-
+                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(),bankMoneyTransactionRecord.getAmount(),BalanceType.AVAILABLE);
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + bookAmount);
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
+                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(),bankMoneyTransactionRecord.getAmount(),BalanceType.AVAILABLE);
             }
         } catch (CantAddBankMoneyException e) {
             throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE, e, "Cant Add Credit Exception", "Cant Add Bank Money Exception");
