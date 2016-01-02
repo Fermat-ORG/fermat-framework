@@ -25,7 +25,6 @@
                 android:layout_height="48dp"
                 android:scaleType="centerCrop"
                 android:textSize="13sp"
-                android:src="@drawable/ic_icon_notifications"
                 android:layout_gravity="center_horizontal"
                 />
 
