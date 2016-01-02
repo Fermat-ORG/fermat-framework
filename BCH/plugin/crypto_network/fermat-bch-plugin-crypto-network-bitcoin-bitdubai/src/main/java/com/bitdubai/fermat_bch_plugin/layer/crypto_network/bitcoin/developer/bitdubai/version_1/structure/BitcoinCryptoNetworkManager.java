@@ -702,6 +702,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @throws CantGetBroadcastStatusException
      */
     public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
-        return getDao().getBroadcastStatus(txHash);
+        try {
+            return getDao().getBroadcastStatus(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetBroadcastStatusException (CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
+        }
     }
 }

@@ -246,7 +246,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         validateTransactionExistsinDatabase(txHash);
 
         //todo implement
-
+        //broadcast transaction and update BroadcastStatus BROADCASTING y luego BROADCASTED. Aumentando la cantidad de retries.
+        //if error, updates new broadcast status WITH_ERROR
 
 
 
