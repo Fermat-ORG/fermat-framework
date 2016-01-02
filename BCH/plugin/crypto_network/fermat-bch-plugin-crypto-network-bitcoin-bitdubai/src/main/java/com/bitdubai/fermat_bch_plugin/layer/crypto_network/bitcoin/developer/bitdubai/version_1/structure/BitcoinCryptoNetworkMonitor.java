@@ -242,10 +242,44 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
         Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+        validateTransactionExistsInWallet(sha256Hash);
+        validateTransactionExistsinDatabase(txHash);
+
+        //todo implement
+
+
+
+
+
+    }
+
+    /**
+     * Will search this transaction in the database and make sure it exists.
+     * @param txHash
+     * @throws CantBroadcastTransactionException
+     */
+    private void validateTransactionExistsinDatabase(String txHash) throws CantBroadcastTransactionException{
+        try {
+            if (!getDao().transactionExistsInBroadcast(txHash)){
+                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction " + txHash + " is not stored in the database.", "CryptoNetwork");
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * if I couldn't validate it, because the database thrown an error, I will continue assuming that exists.
+             */
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * validates the passed transaction exists in the Wallet
+     * @param sha256Hash
+     */
+    private void validateTransactionExistsInWallet(Sha256Hash sha256Hash) throws CantBroadcastTransactionException {
         Transaction transaction = wallet.getTransaction(sha256Hash);
 
         if (transaction == null){
-            StringBuilder output = new StringBuilder("The transaction " + txHash);
+            StringBuilder output = new StringBuilder("The transaction " + sha256Hash.toString());
             output.append(" is not stored in the CryptoNetwork.");
             output.append(System.lineSeparator());
             output.append("Stored transactions are:");

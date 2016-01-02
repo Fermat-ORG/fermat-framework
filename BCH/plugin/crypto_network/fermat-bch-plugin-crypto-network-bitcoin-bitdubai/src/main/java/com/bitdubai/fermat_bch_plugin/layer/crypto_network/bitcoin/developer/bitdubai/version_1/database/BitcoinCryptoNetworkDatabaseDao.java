@@ -1091,4 +1091,21 @@ public class BitcoinCryptoNetworkDatabaseDao {
             }
         }
     }
+
+    /**
+     * Verifies the passed Transaction exists in the Broadcast table
+     * @param txHash
+     * @return
+     */
+    public boolean transactionExistsInBroadcast(String txHash) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        return !databaseTable.getRecords().isEmpty();
+    }
 }
