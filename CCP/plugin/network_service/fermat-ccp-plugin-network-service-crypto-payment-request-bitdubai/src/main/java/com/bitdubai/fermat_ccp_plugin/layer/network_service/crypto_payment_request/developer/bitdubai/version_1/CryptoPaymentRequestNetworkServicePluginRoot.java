@@ -203,7 +203,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     action,
                     protocolState,
                     networkType,
-                    referenceWallet
+                    referenceWallet,
+                    0
             );
 
             System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT - OK.");
@@ -499,7 +500,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -822,6 +823,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 "--------------------------------------------------------");
         cryptoPaymentRequestExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
+        //I check my time trying to send the message
+        //checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+
     }
 
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
@@ -950,7 +954,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     action,
                     protocolState,
                     requestMessage.getNetworkType(),
-                    requestMessage.getReferenceWallet()
+                    requestMessage.getReferenceWallet(),
+                    0
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {
@@ -1009,5 +1014,79 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             return new ArrayList<>();
         }
     }
+
+
+
+  /*  private void checkFailedDeliveryTime(String destinationPublicKey)
+    {
+        try{
+
+            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByActorPublicKey(destinationPublicKey);
+
+            //if I try to send more than 5 times I put it on hold
+            for (CryptoPaymentRequest record : cryptoAddressRequestList) {
+
+
+                if(!record.getProtocolState().getCode().equals(RequestProtocolState.WAITING_RESPONSE.getCode()))
+                {
+                    if(record.getSentNumber() > 10)
+                    {
+                        //update state and process again later
+                        cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.WAITING_RESPONSE);
+                    }
+                    else
+                    {
+                        cryptoPaymentRequestNetworkServiceDao.changeSentNumber(record.getRequestId(),record.getSentNumber() + 1);
+                    }
+                }
+                else
+                {
+                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
+
+                    long sentDate = record.getStartTimeStamp();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
+
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                    if((int) dias > 3)
+                    {
+                        //notify the user does not exist to intra user actor plugin
+
+                        cryptoPaymentRequestNetworkServiceDao.delete(record.getRequestId());
+                    }
+
+                }
+
+            }
+
+
+        }
+        catch(Exception e)
+        {
+            System.out.print("EXCEPCION VERIFICANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void reprocessWaitingMessage()
+    {
+        try {
+
+            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
+
+            for(CryptoPaymentRequest record : cryptoAddressRequestList) {
+
+                cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
+        {
+            System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }*/
 
 }

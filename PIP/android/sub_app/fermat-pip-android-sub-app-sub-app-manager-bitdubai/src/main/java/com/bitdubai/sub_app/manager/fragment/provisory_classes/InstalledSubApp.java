@@ -162,4 +162,9 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     public void setPosition(int position) {
         this.position = position;
     }
+
+    @Override
+    public int getNotifications() {
+        return 0;
+    }
 }

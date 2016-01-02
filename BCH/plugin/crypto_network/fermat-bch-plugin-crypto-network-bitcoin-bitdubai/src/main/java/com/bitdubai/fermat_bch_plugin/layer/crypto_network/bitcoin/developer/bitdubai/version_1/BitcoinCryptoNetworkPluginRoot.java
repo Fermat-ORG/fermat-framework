@@ -271,6 +271,8 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
         //todo implement
+        //todo puto hacelo
+        bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
     }
 
     /**

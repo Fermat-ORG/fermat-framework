@@ -381,6 +381,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
+    public void broadcastTransaction(String txHash) {
+        //TODO haceme
+    }
+
 
     /**
      * Gets the UTXO provider from the CryptoNetwork on the specified Network
@@ -645,4 +649,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         //todo get the correct address and update the database
 
     }
+
+
 }
