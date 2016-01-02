@@ -16,6 +16,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantB
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
@@ -384,6 +386,17 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
 
     /**
+     * Broadcast a well formed, commited and signed transaction into the specified network
+     * @param txHash
+     * @throws CantBroadcastTransactionException
+     * @throws ErrorBroadcastingTransactionException
+     */
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
+        runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
+    }
+
+
+    /**
      * Gets the UTXO provider from the CryptoNetwork on the specified Network
      * @param blockchainNetworkType
      * @return
@@ -613,7 +626,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * For example, If i don't have all adressTo or From, or coin values of zero.
      * @throws CantFixTransactionInconsistenciesException
      */
-    public void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
+    private void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
         List<TransactionProtocolData> transactions = null;
 
         try {
@@ -666,5 +679,15 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
 
+    }
+
+
+    /**
+     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     * @param transaction
+     * @throws CantStoreBitcoinTransactionException
+     */
+    public void storeBitcoinTransaction(Transaction transaction) throws CantStoreBitcoinTransactionException {
+        //todo implement
     }
 }

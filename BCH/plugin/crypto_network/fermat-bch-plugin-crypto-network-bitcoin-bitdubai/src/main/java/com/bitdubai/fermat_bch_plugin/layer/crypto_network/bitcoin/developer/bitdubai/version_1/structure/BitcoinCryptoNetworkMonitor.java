@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 
@@ -220,6 +221,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, exception, "There was an unexpected issue while broadcasting a transaction.", null);
         }
 
+    }
+
+    /**
+     * Broadcast a well formed, commited and signed transaction into the specified network
+     * @param txHash
+     * @throws CantBroadcastTransactionException
+     * @throws ErrorBroadcastingTransactionException
+     */
+    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
+        //todo implement
     }
 
     /**
