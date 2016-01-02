@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -82,7 +83,7 @@ public final class AssetVerification {
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
     }
 
-    public static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetCryptoTransactionException {
+    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetCryptoTransactionException {
         List<CryptoTransaction> cryptoTransactionList =
                 bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
         for (CryptoTransaction cryptoTransaction : cryptoTransactionList) {
@@ -91,6 +92,46 @@ public final class AssetVerification {
             }
         }
         throw new DAPException("The genesis transaction doesn't exists in the crypto network");
+    }
+
+    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
+        /**
+         * I will get the genesis transaction from the CryptoNetwork
+         */
+        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+        if (transactionListFromCryptoNetwork.size() == 0) {
+            /**
+             * If I didn't get it, I will get the child of the genesis Transaction
+             */
+            transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
+        }
+
+        if (transactionListFromCryptoNetwork == null) {
+            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + genesisTransaction + " is null");
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
+                    "Getting the cryptoStatus from CryptoNetwork",
+                    "The crypto status from genesis transaction " + genesisTransaction + " return null");
+        }
+        if (transactionListFromCryptoNetwork.isEmpty()) {
+            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + genesisTransaction + " is empty");
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
+                    "Getting the cryptoStatus from CryptoNetwork",
+                    "The genesis transaction " + genesisTransaction + " cannot be found in crypto network");
+        }
+        System.out.println("ASSET TRANSACTION I found " + transactionListFromCryptoNetwork.size() + " in Crypto network from genesis transaction:\n" + genesisTransaction);
+
+        System.out.println("ASSET TRANSACTION Now, I'm looking for this crypto status " + cryptoStatus);
+        for (CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork) {
+            System.out.println("ASSET TRANSACTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
+            if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
+                System.out.println("ASSET TRANSACTION I found it!");
+                cryptoTransaction.setTransactionHash(genesisTransaction);
+                return cryptoTransaction;
+            }
+        }
+        throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
+                "Getting the cryptoStatus from bitcoinnetwork",
+                "The genesis transaction " + genesisTransaction + " cannot be found in " + cryptoStatus.getCode());
     }
 
 
