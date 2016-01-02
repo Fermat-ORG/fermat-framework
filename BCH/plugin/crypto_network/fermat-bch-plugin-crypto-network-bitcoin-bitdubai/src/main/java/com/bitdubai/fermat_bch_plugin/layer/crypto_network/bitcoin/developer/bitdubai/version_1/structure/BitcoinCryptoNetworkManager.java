@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -545,22 +546,40 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * so I will manually add them.
          */
         if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE){
-            CryptoTransaction cryptoTransactionOnBlockChain = cryptoTransaction;
-            cryptoTransactionOnBlockChain.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-            cryptoTransactions.add(cryptoTransactionOnBlockChain);
+            CryptoTransaction onBlockChain = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_BLOCKCHAIN);
+            cryptoTransactions.add(onBlockChain);
 
-            CryptoTransaction cryptoTransactionOnCryptoNetwork = cryptoTransaction;
-            cryptoTransactionOnCryptoNetwork.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-            cryptoTransactions.add(cryptoTransactionOnCryptoNetwork);
+            CryptoTransaction onCryptoNetwork = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(onCryptoNetwork);
         }
 
         if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN){
-            CryptoTransaction cryptoTransactionOnBlockChain = cryptoTransaction;
-            cryptoTransactionOnBlockChain.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-            cryptoTransactions.add(cryptoTransactionOnBlockChain);
+            CryptoTransaction onCryptoNetwork = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(onCryptoNetwork);
         }
 
         return cryptoTransactions;
+    }
+
+    /**
+     * instantiates a new cryptoTransaction with a new CryptoStatus
+     * @param cryptoTransaction
+     * @param cryptoStatus
+     * @return
+     */
+    private CryptoTransaction duplicateCryptoTransaction(CryptoTransaction cryptoTransaction, CryptoStatus cryptoStatus) {
+        CryptoTransaction newCryptoTransaction = new CryptoTransaction();
+
+        newCryptoTransaction.setTransactionHash(cryptoTransaction.getTransactionHash());
+        newCryptoTransaction.setBlockHash(cryptoTransaction.getBlockHash());
+        newCryptoTransaction.setOp_Return(cryptoTransaction.getOp_Return());
+        newCryptoTransaction.setAddressTo(cryptoTransaction.getAddressTo());
+        newCryptoTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
+        newCryptoTransaction.setCryptoAmount(cryptoTransaction.getCryptoAmount());
+        newCryptoTransaction.setCryptoStatus(cryptoStatus);
+        newCryptoTransaction.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
+
+        return newCryptoTransaction;
     }
 
     /**
