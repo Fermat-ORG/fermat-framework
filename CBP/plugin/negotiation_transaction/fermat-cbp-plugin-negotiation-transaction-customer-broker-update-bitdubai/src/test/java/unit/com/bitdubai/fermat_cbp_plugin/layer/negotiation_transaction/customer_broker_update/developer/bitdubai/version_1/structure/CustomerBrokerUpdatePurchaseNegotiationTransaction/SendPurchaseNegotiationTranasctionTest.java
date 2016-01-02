@@ -1,11 +1,11 @@
-package unit.com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewPurchaseNegotiationTransaction;
+package unit.com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure.CustomerBrokerUpdatePurchaseNegotiationTransaction;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewPurchaseNegotiationTransaction;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure.CustomerBrokerUpdatePurchaseNegotiationTransaction;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +29,8 @@ public class SendPurchaseNegotiationTranasctionTest {
     @Test
     public void sendPurchaseNegotiationTranasction() throws Exception{
 
-        CustomerBrokerNewPurchaseNegotiationTransaction customerBrokerNewPurchaseNegotiationTransaction = mock(CustomerBrokerNewPurchaseNegotiationTransaction.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(customerBrokerNewPurchaseNegotiationTransaction).sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+        CustomerBrokerUpdatePurchaseNegotiationTransaction customerBrokerUpdatePurchaseNegotiationTransaction = mock(CustomerBrokerUpdatePurchaseNegotiationTransaction.class, Mockito.RETURNS_DEEP_STUBS);
+        doCallRealMethod().when(customerBrokerUpdatePurchaseNegotiationTransaction).sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
     }
 }
