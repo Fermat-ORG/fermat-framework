@@ -1,14 +1,19 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
@@ -27,6 +32,7 @@ import org.bitcoinj.store.MemoryBlockStore;
 import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -46,6 +52,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     BlockChain blockChain;
     BitcoinNetworkEvents events;
     final NetworkParameters NETWORK_PARAMETERS;
+    BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao;
+
 
 
 
@@ -53,7 +61,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Platform variables
      */
     PluginDatabaseSystem pluginDatabaseSystem;
-    UUID plugId;
+    UUID pluginId;
 
     /**
      * Constructor
@@ -65,7 +73,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          */
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.wallet = wallet;
-        this.plugId = pluginId;
+        this.pluginId = pluginId;
         this.walletFileName = walletFilename;
 
         /**
@@ -127,7 +135,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * add the events
              */
-            events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId, this.walletFileName);
+            events = new BitcoinNetworkEvents(pluginDatabaseSystem, pluginId, this.walletFileName);
             peerGroup.addEventListener(events);
             this.wallet.addEventListener(events);
             blockChain.addListener(events);
@@ -230,7 +238,25 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @throws ErrorBroadcastingTransactionException
      */
     public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
-        //todo implement
+        /**
+         * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
+         */
+        Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
+        Transaction transaction = wallet.getTransaction(sha256Hash);
+
+        if (transaction == null){
+            StringBuilder output = new StringBuilder("The transaction " + txHash);
+            output.append(" is not stored in the CryptoNetwork.");
+            output.append(System.lineSeparator());
+            output.append("Stored transactions are:");
+            output.append(System.lineSeparator());
+            for (Transaction storedTransaction : wallet.getTransactions(true)){
+                output.append(storedTransaction.getHashAsString());
+                output.append(System.lineSeparator());
+            }
+
+            throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
     }
 
     /**
@@ -335,5 +361,54 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was a problem trying to get the block from the Peer.", null);
         }
+    }
+
+    /**
+     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     * @param tx
+     * @param transactionId
+     * @throws CantStoreBitcoinTransactionException
+     */
+    public void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
+        BlockchainNetworkType blockchainNetworkType = BitcoinNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
+
+        try {
+            /**
+             * I store it in the database
+             */
+            getDao().storeBitcoinTransaction(blockchainNetworkType, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
+            /**
+             * I store it in the wallet.
+             */
+            WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.PENDING, tx);
+            wallet.addWalletTransaction(walletTransaction);
+            wallet.saveToFile(walletFileName);
+
+
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
+        } catch (Exception e) {
+            /**
+             * If there was an error, then I will make sure that the transaction is not left stored at the database.
+             */
+            try {
+                getDao().deleteStoredBitcoinTransaction(tx.getHashAsString());
+            } catch (CantExecuteDatabaseOperationException e1) {
+                /**
+                 * I will ignore this error
+                 */
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * returns and instance of the database dao class
+     * @return
+     */
+    private BitcoinCryptoNetworkDatabaseDao getDao() {
+        if (bitcoinCryptoNetworkDatabaseDao == null)
+            bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
+        return bitcoinCryptoNetworkDatabaseDao;
     }
 }

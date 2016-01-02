@@ -195,6 +195,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
 
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXECUTION_NUMBER_COLUMN_NAME);
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK);
+        broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TRANSACTION_ID);
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH);
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_COUNT);
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_BROADCAST_IP);

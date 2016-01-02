@@ -75,6 +75,7 @@ class BitcoinCryptoNetworkDatabaseConstants {
 
     static final String BROADCAST_EXECUTION_NUMBER_COLUMN_NAME = "execution_number";
     static final String BROADCAST_NETWORK = "network";
+    static final String BROADCAST_TRANSACTION_ID = "tx_id";
     static final String BROADCAST_TX_HASH = "hash";
     static final String BROADCAST_PEER_COUNT = "peer_count";
     static final String BROADCAST_PEER_BROADCAST_IP = "peer_ip";

@@ -27,8 +27,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
@@ -40,6 +42,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -996,5 +999,96 @@ public class BitcoinCryptoNetworkDatabaseDao {
         List<TransactionProtocolData> transactionProtocolDataList = getTransactionProtocolData(TransactionTypes.INCOMING, null);
         transactionProtocolDataList.addAll(getTransactionProtocolData(TransactionTypes.OUTGOING, null));
         return transactionProtocolDataList;
+    }
+
+    /**
+     * stores a new Transaction in the database to be broadcasted later.
+     * @param blockchainNetworkType
+     * @param txHash
+     * @param transactionId
+     * @param peerCount
+     * @param peerIp
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String txHash, UUID transactionId, int peerCount, String peerIp) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+
+        /**
+         * I will verify that I don't have this transaction already stored, if so I will thrown an error
+         */
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (!databaseTable.getRecords().isEmpty()){
+            StringBuilder output = new StringBuilder("Transaction already stored in Broadcast Table.");
+            output.append(System.lineSeparator());
+            output.append("The transaction " + txHash + " is already stored.");
+            throw new CantExecuteDatabaseOperationException("Inconsistent data detected.",null, output.toString(), null);
+        }
+
+        /**
+         * If everything is ok, then I will save this transaction in the table
+         */
+        DatabaseTableRecord record = databaseTable.getEmptyRecord();
+        record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXECUTION_NUMBER_COLUMN_NAME, getBroadcastTableExecutionNumber());
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK, blockchainNetworkType.getCode());
+        record.setUUIDValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TRANSACTION_ID, transactionId);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash);
+        record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_COUNT, peerCount);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_BROADCAST_IP, peerIp);
+
+        BroadcastStatus broadcastStatus = new BroadcastStatus(0, Status.IDLE);//this is a new transaction, so no retries
+        record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, broadcastStatus.getRetriesCount());
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, broadcastStatus.getStatus().getCode());
+
+        try {
+            databaseTable.insertRecord(record);
+        } catch (CantInsertRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "There was an error inserting a new Transaction in Broadcast Table" , "database issue");
+        }
+    }
+
+    /**
+     * Gets the next execution number available for the Broadcast Table
+     * @return
+     */
+    private Integer getBroadcastTableExecutionNumber() {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            return 1;
+        }
+
+        int currentExecutionNumber = databaseTable.getRecords().size();
+
+        return currentExecutionNumber + 1;
+    }
+
+    /**
+     * Will detele a previously stored transaction in the database, probably to rollback it.
+     * @param txHash
+     */
+    public void deleteStoredBitcoinTransaction(String txHash) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (!databaseTable.getRecords().isEmpty()){
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            try {
+                databaseTable.deleteRecord(record);
+            } catch (CantDeleteRecordException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error deleting a record from Broadcast table", "database issue");
+            }
+        }
     }
 }

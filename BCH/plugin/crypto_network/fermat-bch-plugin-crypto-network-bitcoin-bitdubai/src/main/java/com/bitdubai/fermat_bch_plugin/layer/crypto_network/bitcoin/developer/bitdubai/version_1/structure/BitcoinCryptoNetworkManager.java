@@ -684,10 +684,12 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
 
     /**
      * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
-     * @param transaction
+     * @param blockchainNetworkType
+     * @param tx
+     * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public void storeBitcoinTransaction(Transaction transaction) throws CantStoreBitcoinTransactionException {
-        //todo implement
+    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
+        runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId);
     }
 }
