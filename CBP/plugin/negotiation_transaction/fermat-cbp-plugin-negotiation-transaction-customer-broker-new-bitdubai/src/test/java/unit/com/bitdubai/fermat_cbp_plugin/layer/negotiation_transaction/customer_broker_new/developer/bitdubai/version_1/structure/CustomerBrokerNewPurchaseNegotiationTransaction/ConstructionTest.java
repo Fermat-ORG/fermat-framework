@@ -1,13 +1,12 @@
-package unit.com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
+package unit.com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewPurchaseNegotiationTransaction;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewPurchaseNegotiationTransaction;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,21 +26,16 @@ public class ConstructionTest {
     @Mock
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.CUSTOMER_BROKER_SALE)
-    @Mock
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
-
     @Mock
     private CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
 
-    private CustomerBrokerNewManagerImpl testObj1;
+    private CustomerBrokerNewPurchaseNegotiationTransaction testObj1;
 
     @Before
     public void setUp(){
-        testObj1 = new CustomerBrokerNewManagerImpl(
-            customerBrokerNewNegotiationTransactionDatabaseDao,
+        testObj1 = new CustomerBrokerNewPurchaseNegotiationTransaction(
             customerBrokerPurchaseNegotiationManager,
-            customerBrokerSaleNegotiationManager
+            customerBrokerNewNegotiationTransactionDatabaseDao
         );
     }
 
