@@ -51,6 +51,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
+import javax.xml.crypto.Data;
 
 /**
  * Created by rodrigo on 10/9/15.
@@ -1107,5 +1108,44 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         return !databaseTable.getRecords().isEmpty();
+    }
+
+
+    /**
+     * Gets the current Broadcast Status for the given Transactin
+     * @param txHash
+     * @return
+     */
+    public BroadcastStatus getBroadcastStatus(String txHash) throws CantExecuteDatabaseOperationException {
+        /**
+         * make sure it exsists.
+         */
+        if (!transactionExistsInBroadcast(txHash)){
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "the given transaction " + txHash + " does not exists.", null);
+        }
+
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+
+        /**
+         * Forms the Broadcast Status and return it.
+         */
+        BroadcastStatus broadcastStatus = new BroadcastStatus();
+        broadcastStatus.setRetriesCount(record.getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT));
+        try {
+            broadcastStatus.setStatus(Status.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS)));
+        } catch (InvalidParameterException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "The stored Broadcast Status is not valid.", null);
+        }
+
+        return broadcastStatus;
     }
 }

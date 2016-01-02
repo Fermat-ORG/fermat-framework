@@ -272,8 +272,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
-        //todo implement
-        return null;
+        return bitcoinCryptoNetworkManager.getBroadcastStatus(txHash);
     }
 
 
