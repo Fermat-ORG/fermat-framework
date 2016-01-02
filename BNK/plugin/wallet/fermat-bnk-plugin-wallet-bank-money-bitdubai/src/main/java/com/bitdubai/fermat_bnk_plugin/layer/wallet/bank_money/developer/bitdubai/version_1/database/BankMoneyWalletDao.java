@@ -124,14 +124,15 @@ public class BankMoneyWalletDao {
 
             if (balanceType == BalanceType.AVAILABLE) {
                 availableAmount = bankMoneyTransactionRecord.getAmount();
+                runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-availableAmount));
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
+                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-bookAmount));
-                ;
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
             }
         } catch (CantAddBankMoneyException e) {
@@ -148,14 +149,15 @@ public class BankMoneyWalletDao {
 
             if (balanceType == BalanceType.AVAILABLE) {
                 availableAmount = bankMoneyTransactionRecord.getAmount();
+                runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + availableAmount);
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
 
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
+                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + bookAmount);
-                ;
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
             }
         } catch (CantAddBankMoneyException e) {
@@ -207,7 +209,7 @@ public class BankMoneyWalletDao {
 
     public long getAvailableBalance(String accountNumber) {
         long availableBalance = 0;
-        for (DatabaseTableRecord record : getBankMoneyTransactionList(accountNumber)) {
+        for (DatabaseTableRecord record : getBankMoneyTransactionList(accountNumber,BalanceType.AVAILABLE)) {
             availableBalance = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
             availableBalance += availableBalance;
         }
@@ -216,7 +218,7 @@ public class BankMoneyWalletDao {
 
     public long getBookBalance(String accountNumber) {
         long bookBalance = 0;
-        for (DatabaseTableRecord record : getBankMoneyTransactionList(accountNumber)) {
+        for (DatabaseTableRecord record : getBankMoneyTransactionList(accountNumber,BalanceType.BOOK)) {
             bookBalance = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
             bookBalance += bookBalance;
         }
@@ -236,12 +238,13 @@ public class BankMoneyWalletDao {
         return heldFunds;
     }
 
-    private List<DatabaseTableRecord> getBankMoneyTransactionList(String accountNumber) {
+    private List<DatabaseTableRecord> getBankMoneyTransactionList(String accountNumber,BalanceType balanceType) {
         DatabaseTable totalBalancesTable = null;
         try {
 
             totalBalancesTable = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
             totalBalancesTable.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, accountNumber, DatabaseFilterType.EQUAL);
+            totalBalancesTable.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME,balanceType.getCode(),DatabaseFilterType.EQUAL);
             totalBalancesTable.loadToMemory();
 
         } catch (CantLoadTableToMemoryException e) {
