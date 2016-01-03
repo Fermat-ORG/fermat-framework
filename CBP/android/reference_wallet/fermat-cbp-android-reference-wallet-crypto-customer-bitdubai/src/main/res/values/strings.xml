@@ -88,4 +88,7 @@
     <string name="ccw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
     <string name="ccw_wizard_stock_merchandise_description">You must select a Wallet that work as Merchandise and the spread applied to them</string>
     <string name="ccw_select_stock_merchandise">Select a Stock Merchandise</string>
+    <string name="ccw_bank_name">Bank Name</string>
+    <string name="ccw_account_number">Account Number</string>
+    <string name="ccw_account_alias">Account Alias</string>
 </resources>
