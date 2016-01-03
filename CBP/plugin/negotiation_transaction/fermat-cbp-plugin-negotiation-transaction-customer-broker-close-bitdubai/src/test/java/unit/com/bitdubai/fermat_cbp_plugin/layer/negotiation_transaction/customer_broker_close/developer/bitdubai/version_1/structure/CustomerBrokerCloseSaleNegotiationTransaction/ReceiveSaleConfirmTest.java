@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
  * Created by Yordin Alayn on 02.01.16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ReceiveCancelSaleNegotiationTranasctionTest {
+public class ReceiveSaleConfirmTest {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.CUSTOMER_BROKER_SALE)
     @Mock
