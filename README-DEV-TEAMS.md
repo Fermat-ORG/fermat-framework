@@ -256,17 +256,23 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 
 #### Team Members:
 
-* **Franklin Marcano [Team Leader - New Team Leader]**<br/>
+* **Franklin Marcano [Team Leader - Team Leader]**<br/>
 ---
     Email:   franklinmarcano1970@gmail.com
     Skype:   franklginmarcano1970
     Github:  https://github.com/franklinmarcano1970
 
-* **Jose Cardozo**<br/>
+* **Jose Cardozo [Developer - Veteran Developer]**<br/>
 ---
       Email:   josejcb89@gmail.com
       Skype:   josejcb89
       Github:  https://github.com/josejcb
+
+* **Jose Vilchez [Developer - New Developer]**<br/>
+---
+      Email:   josvilchezalmera@gmail.com
+      Skype:   josvilchezalmera
+      Github:  https://github.com/  
 
 We are also ameteur philosophers, passionate about esoteric topics as video games.
 
