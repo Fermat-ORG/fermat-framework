@@ -60,7 +60,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 2 | New Part-Time Developer | New part-time developer on the project. |
 | 3 | Part-Time Veteran Developer | Working part-time 6+ months OR high performant. |
 | 4 | New Developer | New full-time developer on the project. |
-| 5 | Veteran Developer | (Working full time 3+ months OR high performant) AND highly commited. |
+| 5 | Veteran Developer | (Working full time 3+ months OR high performant) AND highly engaged. |
 | 6 | New Team Leader | Team Leader with 1 full-time member on the team. |
 | 7 | Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
@@ -104,6 +104,7 @@ Developers and team leaders in particular are classified by the deepness of the 
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
     c. Succeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
+9. Team leader can remove a member from their teams with a reasonable cause (lack of engagement, performance, etc.)
 
 <br>
 ## Teams presentations and members
