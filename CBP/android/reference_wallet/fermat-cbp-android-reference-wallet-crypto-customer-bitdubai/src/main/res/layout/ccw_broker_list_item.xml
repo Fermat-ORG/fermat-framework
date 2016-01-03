@@ -60,9 +60,9 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:text="EXCHANGE RATE"
-            android:background="#78a9ff"
+            android:background="#dfdfdf"
             android:layout_below="@+id/ccw_broker_image"
-            android:textColor="@color/withe"
+            android:textColor="@color/black"
             android:paddingStart="6dp"
             android:paddingLeft="6dp"
             android:paddingEnd="6dp"
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/ccw_exchange_rate_text"
-            android:background="#78a9ff"/>
+            android:background="#dfdfdf"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ccw_broker_exchange_rates"
@@ -83,6 +83,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/ccw_divider"
-            android:background="#78a9ff"/>
+            android:background="#dfdfdf"
+            tools:listitem="@layout/ccw_broker_list_item_exchange_rate_subitem"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

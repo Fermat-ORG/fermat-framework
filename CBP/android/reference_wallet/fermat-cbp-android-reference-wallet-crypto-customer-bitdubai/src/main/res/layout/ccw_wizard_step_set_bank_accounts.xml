@@ -122,7 +122,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/arrow_right_selected"
+            android:src="@drawable/ccw_arrow_right_selected"
             tools:ignore="contentDescription"
             android:visibility="gone"/>
     </LinearLayout>

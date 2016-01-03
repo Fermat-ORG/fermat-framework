@@ -184,7 +184,7 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/arrow_right_selected"
+            android:src="@drawable/ccw_arrow_right_selected"
             tools:ignore="contentDescription"/>
     </LinearLayout>
 
