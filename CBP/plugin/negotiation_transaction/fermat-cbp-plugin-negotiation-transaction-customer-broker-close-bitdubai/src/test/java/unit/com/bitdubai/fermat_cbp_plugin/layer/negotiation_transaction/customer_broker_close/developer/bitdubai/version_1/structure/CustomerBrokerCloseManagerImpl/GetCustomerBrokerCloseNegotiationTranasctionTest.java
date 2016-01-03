@@ -1,7 +1,8 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,11 +26,11 @@ public class GetCustomerBrokerCloseNegotiationTranasctionTest {
     @Test
     public void getCustomerBrokerNewNegotiationTranasction() throws Exception{
 
-        CustomerBrokerNew customerBrokerNew = null;
+        CustomerBrokerClose customerBrokerClose = null;
 
-        CustomerBrokerNewManagerImpl customerBrokerNewManagerImpl = mock(CustomerBrokerNewManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        when(customerBrokerNewManagerImpl.getCustomerBrokerNewNegotiationTranasction(transactionId)).thenReturn(customerBrokerNew).thenCallRealMethod();
-        assertThat(customerBrokerNewManagerImpl.getCustomerBrokerNewNegotiationTranasction(transactionId)).isNotNull();
+        CustomerBrokerCloseManagerImpl customerBrokerCloseManagerImpl = mock(CustomerBrokerCloseManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
+        when(customerBrokerCloseManagerImpl.getCustomerBrokerCloseNegotiationTranasction(transactionId)).thenReturn(customerBrokerClose).thenCallRealMethod();
+        assertThat(customerBrokerCloseManagerImpl.getCustomerBrokerCloseNegotiationTranasction(transactionId)).isNotNull();
 
     }
 }

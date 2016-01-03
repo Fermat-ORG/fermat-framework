@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,10 +27,10 @@ public class CreateCustomerBrokerCloseSaleNegotiationTranasctionTest {
     private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
 
     @Test
-    public void createCustomerBrokerNewSaleNegotiationTranasction() throws Exception{
+    public void createCustomerBrokerCloseSaleNegotiationTranasction() throws Exception{
 
-        CustomerBrokerNewManagerImpl customerBrokerNewManagerImpl = mock(CustomerBrokerNewManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(customerBrokerNewManagerImpl).createCustomerBrokerNewSaleNegotiationTranasction(customerBrokerSaleNegotiation);
+        CustomerBrokerCloseManagerImpl customerBrokerCloseManagerImpl = mock(CustomerBrokerCloseManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
+        doCallRealMethod().when(customerBrokerCloseManagerImpl).createCustomerBrokerCloseSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
     }
 }
