@@ -280,7 +280,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          /**
           * will update this transaction status to broadcasting.
           */
-         getDao().setBroadcastStatus(Status.BROADCASTING, txHash);
+         try {
+             getDao().setBroadcastStatus(Status.BROADCASTING, txHash);
+         } catch (CantExecuteDatabaseOperationException e) {
+             e.printStackTrace();
+         }
 
          Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
@@ -292,12 +296,20 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         Futures.addCallback(future, new FutureCallback<Transaction>() {
             @Override
             public void onSuccess(Transaction result) {
-                getDao().setBroadcastStatus(Status.BROADCASTED, txHash);
+                try {
+                    getDao().setBroadcastStatus(Status.BROADCASTED, txHash);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                try {
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
