@@ -81,4 +81,26 @@ public class BankingWalletModuleImpl implements BankingWallet {
     public void makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException{
         withdrawManager.makeWithdraw(bankTransactionParameters);
     }
+
+    @Override
+    public float getBookBalance(String account) {
+        float balance =0;
+        try {
+            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBookBalance().getBalance(account);
+        }catch (Exception e){
+            System.out.println("execption "+e.getMessage());
+        }
+        return balance;
+    }
+
+    @Override
+    public float getAvailableBalance(String account) {
+        float balance =0;
+        try {
+            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getAvailableBalance().getBalance(account);
+        }catch (Exception e){
+            System.out.println("exception "+e.getMessage());
+        }
+        return balance;
+    }
 }
