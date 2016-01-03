@@ -846,6 +846,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
 
+                    System.out.println("----------------------------\n" +
+                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
 
                     //NOTIFICATION LAUNCH
@@ -880,8 +885,18 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
                     if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
                         // close connection, sender is the destination
+                        System.out.println("----------------------------\n" +
+                                "INTRA ACTOR NETWORK SERVICE" +
+                                "THE CONNECTION BECAUSE THE ACTOR PROTOCOL STATE" +
+                                "WAS CHANGE TO DONE" + actorNetworkServiceRecord
+                                + "\n-------------------------------------------------");
+
                         communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
                         actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
+                        System.out.println("----------------------------\n" +
+                                "INTRA ACTOR NETWORK SERVICE" +
+                                "THE CONNECTION WAS CLOSE AND THE AWAITING POOL CLEARED." + actorNetworkServiceRecord
+                                + "\n-------------------------------------------------");
 
                     }
 
@@ -945,7 +960,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
         actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
 
-        changeActor(actorNetworkServiceRecord);
+        actorNetworkServiceRecord = changeActor(actorNetworkServiceRecord);
 
 
         communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
@@ -957,11 +972,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
+    private ActorNetworkServiceRecord changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
         // change actor
         String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
         actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
         actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
+        return actorNetworkServiceRecord;
     }
 
     private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
@@ -1413,7 +1429,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
         } catch (Exception e) {
-            throw new ErrorAcceptIntraUserException("ERROR ACCEPTED CONNECTION TO INTRAUSER", e, "", "Generic Exception");
+            throw new ErrorAcceptIntraUserException("ERROR INTRA ACTOR NS WHEN ACCEPTING CONNECTION TO INTRAUSER", e, "", "Generic Exception");
         }
     }
 
