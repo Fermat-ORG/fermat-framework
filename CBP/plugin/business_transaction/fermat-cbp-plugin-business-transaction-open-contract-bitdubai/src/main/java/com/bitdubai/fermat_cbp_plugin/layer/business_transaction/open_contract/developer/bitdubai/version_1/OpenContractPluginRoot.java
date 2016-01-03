@@ -284,7 +284,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             //launchNotificationTest();
             //This method is only for testing
             //openPurchaseContractTest();
-            openSaleContractTest();
+            //openSaleContractTest();
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
