@@ -98,7 +98,7 @@ The following rules apply:
 5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
 6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
 7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
-8. When a full team has a child sub-team leaded by one of the current members:
+8. When a full team has a child sub-team leaded by one of the current members:<br>
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
     c. Succeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
