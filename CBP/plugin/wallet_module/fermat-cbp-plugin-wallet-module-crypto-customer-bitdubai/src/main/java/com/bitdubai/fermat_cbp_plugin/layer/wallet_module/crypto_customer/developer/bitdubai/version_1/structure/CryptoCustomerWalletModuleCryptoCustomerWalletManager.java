@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
@@ -64,15 +65,18 @@ import java.util.UUID;
 public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements CryptoCustomerWalletManager {
     private final WalletManagerManager walletManagerManager;
     private final CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private final UUID pluginId;
 
     /*
     *Constructor with Parameters
     */
     public CryptoCustomerWalletModuleCryptoCustomerWalletManager(WalletManagerManager walletManagerManager,
-                                                                 CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager)
+                                                                 CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+                                                                 UUID pluginId)
     {
         this.walletManagerManager                     = walletManagerManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.pluginId                                 = pluginId;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -348,7 +352,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException {
-
+        String toXml = XMLParser.parseObject(setting);
     }
 
     /**
@@ -370,7 +374,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException {
-
+        String toXml = XMLParser.parseObject(setting);
     }
 
     @Override
