@@ -58,7 +58,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 |:-----:|:-----:|:-----| 
 | 1 | Contributor | Casual contributor to the project. |
 | 2 | New Part-Time Developer | New part-time developer on the project. |
-| 3 | Part-Time Veteran Developer | Veteran part-time developer. Working part-time 6+ months or high performant. |
+| 3 | Part-Time Veteran Developer | Working part-time 6+ months or high performant. |
 | 4 | New Developer | New full-time developer on the project. |
 | 5 | Veteran Developer | Veteran full-time developer. Working full time 3+ months or high performant. |
 | 6 | New Team Leader | Team Leader with 1 full-time member on the team. |
@@ -88,7 +88,16 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 7 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
 | 8 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
 
-Please note that whenever we mention a full-time developer is equivalent to mention two part-time developers.
+
+The following rules apply:
+
+1. Standard team size is of 5 full-time members.
+2. One full-time member can be replaced by 2 part-time members.
+3. Developers can go up the category lists and they can also go down in certain circunstances.
+4. Going up or down a categorý is decided by the developers's team leader or parent team leader.
+5. To move up one category all the conditions of previous categories need to have been met.
+6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+
 
 <br>
 ## Teams presentations and members
