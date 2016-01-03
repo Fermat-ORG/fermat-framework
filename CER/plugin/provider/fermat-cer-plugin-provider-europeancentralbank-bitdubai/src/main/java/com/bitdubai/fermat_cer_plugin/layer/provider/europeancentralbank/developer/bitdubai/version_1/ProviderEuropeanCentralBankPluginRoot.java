@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1;
+package com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -30,9 +30,9 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDao;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantInitializeYahooProviderDatabaseException;
+import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.database.EuropeanCentralBankProviderDao;
+import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.database.EuropeanCentralBankProviderDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.exceptions.CantInitializeEuropeanCentralBankProviderDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -49,7 +49,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 11/2/2015.
  */
-public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
+public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -63,14 +63,14 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    YahooProviderDao dao;
+    EuropeanCentralBankProviderDao dao;
     List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
 
 
     /*
      * PluginRoot Constructor
      */
-    public ProviderYahooPluginRoot() {
+    public ProviderEuropeanCentralBankPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -80,9 +80,10 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
      */
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("PROVIDERYAHOO - PluginRoot START");
+        System.out.println("PROVIDEREUROPEAN_CENTRAL_BANK - PluginRoot START");
 
-        //Yahoo Provider supports all FiatCurrencies
+        //EuropeanCentralBank Provider supports all FiatCurrencies
+        //TODO: WRONG!!! No soporta VEF, no soporta otras monedas. CHECK THIS!!!!!!!!!!!!!!!!!!!!!
         for(FiatCurrency i : FiatCurrency.values()){
             for(FiatCurrency j : FiatCurrency.values()){
                 if(!i.equals(j))
@@ -91,11 +92,11 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         }
 
         try {
-            dao = new YahooProviderDao(pluginDatabaseSystem, pluginId, errorManager);
+            dao = new EuropeanCentralBankProviderDao(pluginDatabaseSystem, pluginId, errorManager);
             dao.initialize();
-            dao.initializeProvider("Yahoo");
+            dao.initializeProvider("EuropeanCentralBank");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
@@ -138,33 +139,26 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
-        String url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22" +
-                currencyPair.getFrom().getCode() + currencyPair.getTo().getCode() +
-                "%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
-        double purchasePrice = 0;
-        double salePrice = 0;
+        String url = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode();
+        double price = 0;
         String aux;
 
         try{
             JSONObject json = new JSONObject(HttpReader.getHTTPContent(url));
 
-            aux = json.getJSONObject("query").getJSONObject("results").getJSONObject("rate").get("Ask").toString();
-            salePrice =  Double.valueOf(aux);
-
-            aux = json.getJSONObject("query").getJSONObject("results").getJSONObject("rate").get("Bid").toString();
-            purchasePrice =  Double.valueOf(aux);
+            aux = json.getJSONObject("rates").get(currencyPair.getTo().getCode()).toString();
+            price = Double.valueOf(aux);
 
         }catch (JSONException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Yahoo CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"EuropeanCentralBank CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
 
-        ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
+        ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
         try {
             dao.saveExchangeRate(exchangeRate);
         }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -202,25 +196,25 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        YahooProviderDeveloperDatabaseFactory factory = new YahooProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        EuropeanCentralBankProviderDeveloperDatabaseFactory factory = new EuropeanCentralBankProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return factory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        YahooProviderDeveloperDatabaseFactory factory = new YahooProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        EuropeanCentralBankProviderDeveloperDatabaseFactory factory = new EuropeanCentralBankProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return factory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        YahooProviderDeveloperDatabaseFactory factory = new YahooProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        EuropeanCentralBankProviderDeveloperDatabaseFactory factory = new EuropeanCentralBankProviderDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         List<DeveloperDatabaseTableRecord> tableRecordList = null;
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeYahooProviderDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantInitializeEuropeanCentralBankProviderDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

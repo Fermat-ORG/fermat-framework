@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1;
 
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -30,11 +29,10 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.CurrencyPairImpl;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.ExchangeRateImpl;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure.HttpReader;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
+import com.bitdubai.fermat_cer_api.all_definition.utils.HttpReader;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -51,10 +49,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 11/2/2015.
  */
-
-
 public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
-
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -81,30 +76,6 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
 
 
     /*
-     *  TESTING STUFFS
-     */
-    /*public void testGetCurrentIndex(){
-        System.out.println("PROVIDERDOLARTODAY - testGetCurrentIndex CALLED");
-
-        FiatIndex index = null;
-        try{
-            index = getCurrentIndex(FiatCurrency.CANADIAN_DOLLAR);
-        } catch (CantGetIndexException e){
-            System.out.println("PROVIDERDOLARTODAY - testGetCurrentIndex DAO EXCEPTION");
-        }
-        System.out.println("");
-        System.out.println("");
-        System.out.println("PROVIDERDOLARTODAY - PROVIDER DESC: " + index.getProviderDescription());
-        System.out.println("PROVIDERDOLARTODAY - CURRENCY: " + index.getCurrency().getCode());
-        System.out.println("PROVIDERDOLARTODAY - REFERENCE CURRENCY: " + index.getReferenceCurrency().getCode());
-        System.out.println("PROVIDERDOLARTODAY - TIMESTAMP: " + index.getTimestamp());
-        System.out.println("PROVIDERDOLARTODAY - PURCHASE: " + index.getPurchasePrice());
-        System.out.println("PROVIDERDOLARTODAY - SALE: " + index.getSalePrice());
-
-    }*/
-
-
-    /*
      * Service interface implementation
      */
     @Override
@@ -123,8 +94,6 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
-
-        //testGetCurrentIndex();
     }
 
 
@@ -195,19 +164,18 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
 
     @Override
     public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        return null;
+        throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
     @Override
-    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws CantGetExchangeRateException {
-        return null;
+    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+        throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        return null;
+        return dao.getQueriedExchangeRateHistory(currencyPair);
     }
-
 
 
     /*
@@ -232,12 +200,9 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeDolarTodayProviderDatabaseException cantInitializeException) {
-            FermatException e = new CantDeliverDatabaseException("Database cannot be initialized", cantInitializeException, "ProviderDolartodayPluginRoot", null);
+        } catch (CantInitializeDolarTodayProviderDatabaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
-
-
 }
