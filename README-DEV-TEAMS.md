@@ -104,7 +104,7 @@ Developers and team leaders in particular are classified by the deepness of the 
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
     c. Succeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
-9. Team leader can remove a member from their teams with a reasonable cause (lack of engagement, performance, etc.)
+9. Team leaders can remove a member from their teams with a reasonable cause (lack of engagement, performance, etc.)
 
 <br>
 ## Teams presentations and members
