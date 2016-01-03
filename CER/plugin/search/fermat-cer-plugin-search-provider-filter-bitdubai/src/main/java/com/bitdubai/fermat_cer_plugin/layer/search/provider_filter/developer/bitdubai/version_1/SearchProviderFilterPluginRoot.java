@@ -58,6 +58,15 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY)
     private CurrencyExchangeRateProviderManager dolarTodayProvider;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA)
+    private CurrencyExchangeRateProviderManager elCronistaProvider;
+
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK)
+    private CurrencyExchangeRateProviderManager europeanCentralBankProvider;
+
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_LANACION)
+    private CurrencyExchangeRateProviderManager laNacionProvider;
+
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_YAHOO)
     private CurrencyExchangeRateProviderManager yahooProvider;
 
@@ -83,6 +92,9 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
         providerMap = new HashMap<>();
         try {
             providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
+            providerMap.put(elCronistaProvider.getProviderId(), elCronistaProvider);
+            providerMap.put(europeanCentralBankProvider.getProviderId(), europeanCentralBankProvider);
+            providerMap.put(laNacionProvider.getProviderId(), laNacionProvider);
             providerMap.put(yahooProvider.getProviderId(), yahooProvider);
             // ... add the rest
         } catch (Exception e) {

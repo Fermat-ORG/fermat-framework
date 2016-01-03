@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 /**
  * Created by jorge on 30-10-2015.
  */
+
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
@@ -30,7 +31,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
     @Override
     public int getAmountToPay() {
-        return 0;
+        return 100;
     }
 
     @Override

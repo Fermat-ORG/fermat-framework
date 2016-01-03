@@ -80,114 +80,20 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY)
     private CashMoneyWalletManager cashMoneyWalletManager;
 
-
-
-    //@NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
-    //private CurrencyExchangeProviderFilterManager providerFilter;
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
+    private CurrencyExchangeProviderFilterManager providerFilter;
 
     @Override
     public void start() throws CantStartPluginException {
         super.start();
 
-        System.out.println(" "); System.out.println(" ");
-        System.out.println("CASHMONEYWALLETMODULE - PluginRoot 2 START");
-        System.out.println(" ");
-
-        try{
-
-
-            /*System.out.println("---Listing Providers---");
-            for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet())
-                System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-            System.out.println(" "); System.out.println(" ");
-
-
-            System.out.println("---Listing Providers for USD/VEF---");
-            CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
-            for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet())
-                System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-            System.out.println(" "); System.out.println(" ");
-
-            System.out.println("---Listing Providers for EUR/USD---");
-            CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
-            for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
-                System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-            System.out.println(" "); System.out.println(" ");
-*/
-            /*System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY NAME: " + dolarToday.getProviderName());
-            System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY ID: " + dolarToday.getProviderId());
-
-            System.out.println("CASHMONEYWALLETMODULE - YAHOO NAME: " + yahoo.getProviderName());
-            System.out.println("CASHMONEYWALLETMODULE - YAHOO ID: " + yahoo.getProviderId());
-
-
-            Thread thread = new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        ExchangeRate first = dolarToday.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
-                        ExchangeRate second = yahoo.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
-
-                        System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY price: " + first.getPurchasePrice());
-                        System.out.println("CASHMONEYWALLETMODULE - YAHOO price: " + second.getPurchasePrice());
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            thread.start();*/
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-   /* @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY)
-    private CurrencyExchangeRateProviderManager dolarToday;
-
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITDUBAI_CER_PROVIDER_YAHOO)
-    private CurrencyExchangeRateProviderManager yahoo;
-
-    @Override
-         public void start() throws CantStartPluginException {
-        super.start();
         System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
 
-
-        try{
-            System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY NAME: " + dolarToday.getProviderName());
-            System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY ID: " + dolarToday.getProviderId());
-
-            System.out.println("CASHMONEYWALLETMODULE - YAHOO NAME: " + yahoo.getProviderName());
-            System.out.println("CASHMONEYWALLETMODULE - YAHOO ID: " + yahoo.getProviderId());
+        //testCERPlatform();
+    }
 
 
-            Thread thread = new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        ExchangeRate first = dolarToday.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
-                        ExchangeRate second = yahoo.getCurrentExchangeRate(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
 
-                        System.out.println("CASHMONEYWALLETMODULE - DOLARTODAY price: " + first.getPurchasePrice());
-                        System.out.println("CASHMONEYWALLETMODULE - YAHOO price: " + second.getPurchasePrice());
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            thread.start();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }*/
 
 
     /*
@@ -312,6 +218,63 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
+    }
+
+
+
+
+    /*CER TEST METHODS*/
+    private void testCERPlatform(){
+        System.out.println("CASHMONEYWALLETMODULE - TESTCERPLATFORM START");
+
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+
+                        System.out.println("---Listing ALL CER Providers and their supported currencies---");
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+
+                            for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
+                                System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+
+                        }
+                        System.out.println(" ");
+
+
+                        System.out.println("---Listing CER Providers for MXN/USD---");
+                        CurrencyPair mxnUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.MEXICAN_PESO, FiatCurrency.US_DOLLAR);
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(mxnUsdCurrencyPair).entrySet())
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+                        System.out.println(" ");
+
+
+                        System.out.println("---Listing CER Providers for EUR/USD---");
+                        CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+                        System.out.println(" ");
+
+
+                        System.out.println("---Listing Providers and Current ExchangeRate for USD/VEF---");
+                        CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet()) {
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+
+                            CurrencyExchangeRateProviderManager manager = providerFilter.getProviderReference(provider.getKey());
+                            ExchangeRate rate = manager.getCurrentExchangeRate(usdVefCurrencyPair);
+                            System.out.println("Also got Exchange rate! -  Purchase:" + rate.getPurchasePrice() + " Sale: " + rate.getSalePrice());
+                        }
+                        System.out.println(" ");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
     }
 
 }
