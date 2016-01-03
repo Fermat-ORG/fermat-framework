@@ -57,10 +57,10 @@ Developers and team leaders in particular are classified by the deepness of the 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
 | 1 | Contributor | Casual contributor to the project. |
-| 2 | Part-Time Entry Level | New part-time developer on the project. |
-| 3 | Part-Time Veteran | Veteran part-time developer. Working part-time 6+ months or high performant. |
-| 4 | Entry Level | New full-time developer on the project. |
-| 5 | Veteran | Veteran full-time developer. Working full time 3+ months or high performant. |
+| 2 | New Part-Time Developer | New part-time developer on the project. |
+| 3 | Part-Time Veteran Developer | Veteran part-time developer. Working part-time 6+ months or high performant. |
+| 4 | New Developer | New full-time developer on the project. |
+| 5 | Veteran Developer | Veteran full-time developer. Working full time 3+ months or high performant. |
 | 6 | New Team Leader | Team Leader with 1 full-time member on the team. |
 | 7 | Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
@@ -289,30 +289,30 @@ We are a developer team with different experience level; we give our best to del
 
 #### Team Members:
 
-* **Nelson Ramirez [Team Leader - Full Team Leader]**<br/>
+* **Nelson Ramirez [Full Team Leader]**<br/>
 ---
     Email:   nelsonalfo@gmail.com
     Skype:   nelalfo
     Github:  https://github.com/nelsonalfo
 
-* **Angel Veloz [Veteran]**
+* **Angel Veloz [Veteran Developer]**
 ---
       Skype:   vlzangel
       Github:  https://github.com/vlzangel
    
-* **Alejandro Bicelis [Veteran]**
+* **Alejandro Bicelis [Veteran Developer]**
 ---
       Skype:   seed_1987
       Github:  https://github.com/abicelis
     
 
-* **Guillermo Gutierrez [Entry Level]**
+* **Guillermo Gutierrez [New Developer]**
 ---
       Email:   guillermo20@gmail.com
       Skype:   guillermo20
       Github:  https://github.com/guillermo20
 
-* **Yordin Alayn [Veteran]**
+* **Yordin Alayn [Veteran Developer]**
 ---
       Email:   y.alayn@gmail.com
       Skype:   y_alayn
