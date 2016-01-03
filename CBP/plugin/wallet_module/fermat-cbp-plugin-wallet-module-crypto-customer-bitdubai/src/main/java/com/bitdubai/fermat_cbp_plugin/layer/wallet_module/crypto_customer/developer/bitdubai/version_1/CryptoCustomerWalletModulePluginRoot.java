@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -50,6 +52,9 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM   , layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletManagerManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
+    CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
     private CryptoCustomerWalletModuleCryptoCustomerWalletManager walletManager;
 
     public CryptoCustomerWalletModulePluginRoot() {
@@ -66,7 +71,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     public CryptoCustomerWalletManager getCryptoCustomerWallet(String walletPublicKey) throws CantGetCryptoCustomerWalletException {
         try {
             if (walletManager == null)
-                walletManager = new CryptoCustomerWalletModuleCryptoCustomerWalletManager(walletManagerManager);
+                walletManager = new CryptoCustomerWalletModuleCryptoCustomerWalletManager(walletManagerManager,
+                        customerBrokerPurchaseNegotiationManager);
             return walletManager;
 
         } catch (Exception e) {
