@@ -14,32 +14,27 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Wallet
 /**
  * Created by nelson on 28/12/15.
  */
-public class WalletViewHolder extends FermatViewHolder {
+public class WalletViewHolder extends SingleDeletableItemViewHolder<InstalledWallet> {
     private FermatTextView title;
     private FermatTextView subTitle;
-    private ImageView closeButton;
 
 
-    /**
-     * Constructor
-     *
-     * @param itemView
-     */
     public WalletViewHolder(View itemView) {
         super(itemView);
 
         title = (FermatTextView) itemView.findViewById(R.id.cbw_title);
         subTitle = (FermatTextView) itemView.findViewById(R.id.cbw_sub_title);
-        closeButton = (ImageView) itemView.findViewById(R.id.cbw_close_img_button);
     }
 
+    @Override
     public void bind(InstalledWallet data) {
         subTitle.setText(data.getWalletName());
         title.setText(getPlatformTitle(data.getPlatform()));
     }
 
-    public ImageView getCloseButton(){
-        return closeButton;
+    @Override
+    public int getCloseButtonResource() {
+        return R.id.cbw_close_img_button;
     }
 
     private String getPlatformTitle(Platforms platform) {

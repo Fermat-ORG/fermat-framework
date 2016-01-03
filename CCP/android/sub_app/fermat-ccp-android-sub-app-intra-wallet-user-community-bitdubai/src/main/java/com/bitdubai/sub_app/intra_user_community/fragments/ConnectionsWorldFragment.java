@@ -1,8 +1,8 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -43,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
+import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -96,8 +97,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
-
-    //ProgressDialog dialog;
 
     /**
      * Create a new instance of this fragment
@@ -163,43 +162,103 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
             recyclerView.setAdapter(adapter);
             adapter.setFermatListEventListener(this);
-
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
+            swipeRefresh.setRefreshing(true);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            /**
-             * Code to show cache data
-             */
-            adapter.changeDataSet(dataSet);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    onRefresh();
-                }
-            }, 1500);
-            SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-            if (!pref.getBoolean("isChecked", false)) {
+            SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
+            if (pref.getBoolean("isChecked", true)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
                     if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
-                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                                intraUserSubAppSession,
+                                null,
+                                moduleManager,
+                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
                         presentationIntraUserCommunityDialog.show();
+                        presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                showCriptoUsersCache();
+                            }
+                        });
+                    } else {
+                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                                intraUserSubAppSession,
+                                null,
+                                moduleManager,
+                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                        presentationIntraUserCommunityDialog.show();
+                        presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                                if (isBackPressed != null) {
+                                    if (isBackPressed) {
+                                        getActivity().finish();
+                                    }
+                                } else
+                                    showCriptoUsersCache();
+                            }
+                        });
                     }
                 } else {
-                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
                     presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                            if (isBackPressed != null) {
+                                if (isBackPressed) {
+                                    getActivity().onBackPressed();
+                                }
+                            } else
+                                showCriptoUsersCache();
+                        }
+                    });
                 }
+            } else {
+                showCriptoUsersCache();
             }
-
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
+    }
+
+    private void showCriptoUsersCache() {
+        if (dataSet.isEmpty()) {
+            showEmpty(true, emptyView);
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
+        } else {
+            adapter.changeDataSet(dataSet);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefresh.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                        }
+                    });
+                }
+            }, 1500);
+        }
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -227,10 +286,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             isRefreshing = true;
             if (swipeRefresh != null)
                 swipeRefresh.setRefreshing(true);
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -243,32 +298,28 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
-                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
-                        progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
+
                             } else {
                                 showEmpty(false, emptyView);
                             }
                         }
-                    } else
+                    } else {
                         showEmpty(true, emptyView);
-
-
+                    }
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
                     isRefreshing = false;
-                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
@@ -438,19 +489,15 @@ Updates the count of notifications in the ActionBar.
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-
-        appSession.setData(INTRA_USER_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
-
-        /*ConnectDialog connectDialog = null;
         try {
-            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
-            connectDialog.show();
+            if (moduleManager.getActiveIntraUserIdentity() != null) {
+                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
+                    appSession.setData(INTRA_USER_SELECTED, data);
+                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+            }
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
-        }*/
-
+        }
     }
 
     @Override
@@ -476,8 +523,6 @@ Updates the count of notifications in the ActionBar.
             updateNotificationsBadge(count);
         }
     }
-
-
 
 
 }

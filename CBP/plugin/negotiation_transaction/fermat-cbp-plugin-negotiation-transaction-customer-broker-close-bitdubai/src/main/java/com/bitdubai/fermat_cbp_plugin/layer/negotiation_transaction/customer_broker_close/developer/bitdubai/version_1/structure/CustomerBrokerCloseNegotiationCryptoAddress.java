@@ -31,7 +31,7 @@ import java.util.Collection;
 /**
  * Created by Yordin Alayn on 28.12.15.
  */
-public class CustomerBrokerCloseNegotiationCryptoAddress {
+public class    CustomerBrokerCloseNegotiationCryptoAddress {
 
     /*Represent Address Book Manager*/
     private CryptoAddressBookManager    cryptoAddressBookManager;

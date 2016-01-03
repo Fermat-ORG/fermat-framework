@@ -55,4 +55,5 @@
     <color name="activity_background">#222</color>
 
     <color name="cbw_wizard_color">#254478</color>
+    <color name="light_grey">#EEE</color>
 </resources>

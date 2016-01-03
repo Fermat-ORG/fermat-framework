@@ -18,7 +18,6 @@ public class ConfirmMessage extends NegotiationTransmissionMessage {
         final PlatformComponentType actorReceiveType
     ){
         super(NegotiationTransmissionType.TRANSMISSION_CONFIRM);
-
         this.transmissionId = transmissionId;
         this.actorReceiveType    = actorReceiveType   ;
     }
