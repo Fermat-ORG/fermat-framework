@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -17,14 +17,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantCreateExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantInitializeProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
-import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
+import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.exceptions.CantInitializeEuropeanCentralBankProviderDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/7/2015.
  */
-public class DolarTodayProviderDao {
+public class EuropeanCentralBankProviderDao {
 
 
     private final ErrorManager errorManager;
@@ -46,30 +46,30 @@ public class DolarTodayProviderDao {
 
     private Database database;
 
-    public DolarTodayProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
+    public EuropeanCentralBankProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
     }
 
 
-    public void initialize() throws CantInitializeDolarTodayProviderDatabaseException {
+    public void initialize() throws CantInitializeEuropeanCentralBankProviderDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
         } catch (DatabaseNotFoundException e) {
-            DolarTodayProviderDatabaseFactory databaseFactory = new DolarTodayProviderDatabaseFactory(pluginDatabaseSystem);
+            EuropeanCentralBankProviderDatabaseFactory databaseFactory = new EuropeanCentralBankProviderDatabaseFactory(pluginDatabaseSystem);
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeDolarTodayProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
             }
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeDolarTodayProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeDolarTodayProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeEuropeanCentralBankProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         }
     }
 
@@ -85,13 +85,13 @@ public class DolarTodayProviderDao {
 
     public void saveExchangeRate(ExchangeRate exchangeRate) throws CantSaveExchangeRateException {
 
-        DatabaseTable table = this.database.getTable(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
         DatabaseTableRecord newRecord = table.getEmptyRecord();
         constructRecordFromExchangeRate(newRecord, exchangeRate);
         try {
             table.insertRecord(newRecord);
         }catch (CantInsertRecordException e) {
-            throw new CantSaveExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Cant save new record in table");
+            throw new CantSaveExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Cant save new record in table");
         }
     }
 
@@ -99,10 +99,10 @@ public class DolarTodayProviderDao {
     {
         List<ExchangeRate> exchangeRateList = new ArrayList<>();
 
-        DatabaseTable table = this.database.getTable(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
 
-        table.addStringFilter(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
-        table.addStringFilter(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
 
         try {
             table.loadToMemory();
@@ -128,17 +128,17 @@ public class DolarTodayProviderDao {
     /* PROVIDER INFO GETTERS */
     public String getProviderName() throws CantGetProviderInfoException {
         DatabaseTableRecord record = this.getProviderInfo();
-        return record.getStringValue(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME);
+        return record.getStringValue(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME);
     }
 
     public UUID getProviderId() throws CantGetProviderInfoException {
         DatabaseTableRecord record = this.getProviderInfo();
-        return record.getUUIDValue(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME);
+        return record.getUUIDValue(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME);
     }
 
     private DatabaseTableRecord getProviderInfo() throws CantGetProviderInfoException {
         List<DatabaseTableRecord> records;
-        DatabaseTable table = this.database.getTable(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
 
         try{
             table.loadToMemory();
@@ -153,11 +153,11 @@ public class DolarTodayProviderDao {
         return records.get(0);
     }
     private void populateProviderInfo(String providerName) throws CantInitializeProviderInfoException {
-        DatabaseTable table = this.database.getTable(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
         DatabaseTableRecord newRecord = table.getEmptyRecord();
 
-        newRecord.setUUIDValue(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME, UUID.randomUUID());
-        newRecord.setStringValue(DolarTodayProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME, providerName);
+        newRecord.setUUIDValue(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME, UUID.randomUUID());
+        newRecord.setStringValue(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME, providerName);
 
         try {
             table.insertRecord(newRecord);
@@ -170,13 +170,13 @@ public class DolarTodayProviderDao {
 
     /* INTERNAL HELPER FUNCTIONS */
     private DatabaseTableFilter getEmptyTableFilter() {
-        return this.database.getTable(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME).getEmptyTableFilter();
+        return this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME).getEmptyTableFilter();
     }
 
 
 
     private List<DatabaseTableRecord> getRecordsByFilter(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
-        DatabaseTable table = this.database.getTable(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
 
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
@@ -188,25 +188,25 @@ public class DolarTodayProviderDao {
 
     private void constructRecordFromExchangeRate(DatabaseTableRecord newRecord, ExchangeRate exchangeRate) {
 
-        newRecord.setUUIDValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, UUID.randomUUID());
-        newRecord.setStringValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, exchangeRate.getFromCurrency().getCode());
-        newRecord.setStringValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, exchangeRate.getToCurrency().getCode());
-        newRecord.setDoubleValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, exchangeRate.getSalePrice());
-        newRecord.setDoubleValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, exchangeRate.getPurchasePrice());
-        newRecord.setLongValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
+        newRecord.setUUIDValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, UUID.randomUUID());
+        newRecord.setStringValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, exchangeRate.getFromCurrency().getCode());
+        newRecord.setStringValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, exchangeRate.getToCurrency().getCode());
+        newRecord.setDoubleValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, exchangeRate.getSalePrice());
+        newRecord.setDoubleValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, exchangeRate.getPurchasePrice());
+        newRecord.setLongValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
 
     }
 
     private ExchangeRate constructExchangeRateFromRecord(DatabaseTableRecord record) throws CantCreateExchangeRateException {
 
-        UUID id = record.getUUIDValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
-        double salePrice = record.getDoubleValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
-        double purchasePrice = record.getDoubleValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
-        long timestamp = record.getLongValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+        UUID id = record.getUUIDValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
+        double salePrice = record.getDoubleValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
+        double purchasePrice = record.getDoubleValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
+        long timestamp = record.getLongValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
 
         Currency fromCurrency;
         try {
-            String fromCurrencyStr = record.getStringValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
+        String fromCurrencyStr = record.getStringValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
 
             if(FiatCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
@@ -215,13 +215,13 @@ public class DolarTodayProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Invalid From Currency value stored in table"
-                    + DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid From Currency value stored in table"
+                    + EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         Currency toCurrency;
         try {
-            String toCurrencyStr = record.getStringValue(DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
+            String toCurrencyStr = record.getStringValue(EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
 
             if(FiatCurrency.codeExists(toCurrencyStr))
                 toCurrency = FiatCurrency.getByCode(toCurrencyStr);
@@ -230,8 +230,8 @@ public class DolarTodayProviderDao {
             else throw new InvalidParameterException();
 
         } catch (InvalidParameterException e) {
-            throw new CantCreateExchangeRateException(e.getMessage(), e, "Dolartoday provider plugin", "Invalid To Currency value stored in table"
-                    + DolarTodayProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "EuropeanCentralBank provider plugin", "Invalid To Currency value stored in table"
+                    + EuropeanCentralBankProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
         }
 
         return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);

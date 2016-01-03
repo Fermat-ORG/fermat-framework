@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cer_api.all_definition.utils;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -17,13 +17,19 @@ public class CurrencyPairImpl implements CurrencyPair {
     }
 
     @Override
-    public Currency getFrom() { return fromCurrency; }
+    public Currency getFrom() {
+        return fromCurrency;
+    }
 
     @Override
-    public Currency getTo() { return toCurrency; }
+    public Currency getTo() {
+        return toCurrency;
+    }
 
     @Override
-    public int hashCode() { return fromCurrency.hashCode() ^ toCurrency.hashCode(); }
+    public int hashCode() {
+        return fromCurrency.hashCode() ^ toCurrency.hashCode();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -31,5 +37,10 @@ public class CurrencyPairImpl implements CurrencyPair {
         CurrencyPair pairo = (CurrencyPair) o;
         return this.fromCurrency.equals(pairo.getFrom()) &&
                 this.toCurrency.equals(pairo.getTo());
+    }
+
+    @Override
+    public String toString() {
+        return this.getFrom().getCode() + this.getTo().getCode();
     }
 }

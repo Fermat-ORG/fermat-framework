@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -15,17 +16,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantCreateExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantInitializeProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantInitializeYahooProviderDatabaseException;
-import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.structure.ExchangeRateImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -57,14 +61,14 @@ public class YahooProviderDao {
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeYahooProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
             }
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeYahooProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeYahooProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         }
     }
@@ -91,29 +95,30 @@ public class YahooProviderDao {
         }
     }
 
-    /*public List<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws CantGetFiatIndexException
+    public List<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws CantGetExchangeRateException
     {
-        List<FiatIndex> fiatIndexList = new ArrayList<>();
+        List<ExchangeRate> exchangeRateList = new ArrayList<>();
 
-        DatabaseTableFilter filter = getEmptyHoldTableFilter();
-        filter.setColumn(FiatIndexWorldDatabaseConstants.FIAT_INDEX_CURRENCY_COLUMN_NAME);
-        filter.setValue(fiatCurrency.getCode());
-        filter.setType(DatabaseFilterType.EQUAL);
+        DatabaseTable table = this.database.getTable(YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
 
+        table.addStringFilter(YahooProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(YahooProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
 
         try {
-            for (DatabaseTableRecord record : getRecordsByFilter(filter)) {
-                FiatIndex fiatIndex = constructExchangeRateFromRecord(record);
-                fiatIndexList.add(fiatIndex);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                ExchangeRate exchangeRate = constructExchangeRateFromRecord(record);
+                exchangeRateList.add(exchangeRate);
             }
-        } catch (CantCreateFiatIndexException e) {
-            throw new CantGetFiatIndexException(CantGetFiatIndexException.DEFAULT_MESSAGE, e, "Failed to get Queried Fiat Index History list. Filter: " + filter.toString(), "");
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetFiatIndexException(CantGetFiatIndexException.DEFAULT_MESSAGE, e, "Failed to get Queried Fiat Index History list. Filter: " + filter.toString(), "");
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
+        }catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
         }
 
-        return fiatIndexList;
-    }*/
+        return exchangeRateList;
+    }
 
 
 
@@ -164,7 +169,7 @@ public class YahooProviderDao {
 
 
     /* INTERNAL HELPER FUNCTIONS */
-    private DatabaseTableFilter getEmptyHoldTableFilter() {
+    private DatabaseTableFilter getEmptyTableFilter() {
         return this.database.getTable(YahooProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME).getEmptyTableFilter();
     }
 
@@ -201,7 +206,7 @@ public class YahooProviderDao {
 
         Currency fromCurrency;
         try {
-            String fromCurrencyStr = record.getStringValue(YahooProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
+        String fromCurrencyStr = record.getStringValue(YahooProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
 
             if(FiatCurrency.codeExists(fromCurrencyStr))
                 fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
