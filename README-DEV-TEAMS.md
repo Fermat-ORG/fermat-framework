@@ -60,7 +60,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 2 | New Part-Time Developer | New part-time developer on the project. |
 | 3 | Part-Time Veteran Developer | Working part-time 6+ months OR high performant. |
 | 4 | New Developer | New full-time developer on the project. |
-| 5 | Veteran Developer | Working full time 3+ months OR high performant. |
+| 5 | Veteran Developer | (Working full time 3+ months OR high performant) AND highly commited. |
 | 6 | New Team Leader | Team Leader with 1 full-time member on the team. |
 | 7 | Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
