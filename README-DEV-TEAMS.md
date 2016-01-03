@@ -101,7 +101,9 @@ The following rules apply:
 8. When a full team has a child sub-team leaded by one of the current members:
 
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.
+    
     b. Failing to do so, will move him down the next month to _Team Leader_.
+    
     c. Succeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.
 
 
