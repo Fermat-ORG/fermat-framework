@@ -101,7 +101,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
             List<String> locations = (List<String>) appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
             locations.add(location.toString());
 
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
 
         } else {
             Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();

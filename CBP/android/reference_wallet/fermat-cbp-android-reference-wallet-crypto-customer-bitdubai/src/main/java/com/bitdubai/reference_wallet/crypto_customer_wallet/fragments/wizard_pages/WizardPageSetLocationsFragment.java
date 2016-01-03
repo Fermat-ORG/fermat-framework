@@ -1,5 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,7 +71,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
@@ -93,7 +95,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD, appSession.getAppPublicKey());
             }
         });
 
@@ -111,11 +113,23 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     }
 
     @Override
-    public void deleteButtonClicked(String data, int position) {
-        locationList.remove(position);
-        adapter.changeDataSet(locationList);
+    public void deleteButtonClicked(String data, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        showOrHideRecyclerView();
+        builder.setTitle(R.string.ccw_delete_location_dialog_title).setMessage(R.string.ccw_delete_location_dialog_msg);
+        builder.setPositiveButton(R.string.ccw_delete_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                locationList.remove(position);
+                adapter.changeDataSet(locationList);
+                showOrHideRecyclerView();
+            }
+        });
+        builder.setNegativeButton(R.string.ccw_cancel_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
     }
 
     private void saveSettingAndGoNextStep() {
@@ -135,12 +149,12 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
 //
 //            Log.e(TAG, ex.getMessage(), ex);
 //            if (errorManager != null) {
-//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
 //                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 //            }
 //        }
 
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
     }
 
     private void showOrHideRecyclerView() {
