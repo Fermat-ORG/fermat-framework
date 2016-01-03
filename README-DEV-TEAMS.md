@@ -314,7 +314,7 @@ We are a developer team with different experience level; we give our best to del
     Skype:   nelalfo
     Github:  https://github.com/nelsonalfo
 
-* **Angel Veloz [Veteran Developer]**
+* **Angel Veloz [New Developer]**
 ---
       Skype:   vlzangel
       Github:  https://github.com/vlzangel
@@ -331,7 +331,7 @@ We are a developer team with different experience level; we give our best to del
       Skype:   guillermo20
       Github:  https://github.com/guillermo20
 
-* **Yordin Alayn [Veteran Developer]**
+* **Yordin Alayn [New Developer]**
 ---
       Email:   y.alayn@gmail.com
       Skype:   y_alayn
