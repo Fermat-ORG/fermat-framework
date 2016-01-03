@@ -363,6 +363,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     public void saveCryptoBrokerWalletSpreadSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread) throws CantSaveCryptoBrokerWalletSettingException {
         DatabaseTransaction transaction = database.newTransaction();
 
+        //TODO:Solo para Testing y prueba luego eliminar
+        cryptoBrokerWalletSettingSpread.setId(UUID.randomUUID());
+
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME);
         try {
             DatabaseTableRecord Record = getCryptoBrokerWalletSpreadSettingRecord(cryptoBrokerWalletSettingSpread);
@@ -407,6 +410,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     public void saveCryptoBrokerWalletAssociatedSetting(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantSaveCryptoBrokerWalletSettingException {
         DatabaseTransaction transaction = database.newTransaction();
 
+        //TODO:Solo para Testing y prueba luego eliminar
+        cryptoBrokerWalletAssociatedSetting.setId(UUID.randomUUID());
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME);
         try {
             DatabaseTableRecord Record = getCryptoBrokerWalletAssociatedSettingRecord(cryptoBrokerWalletAssociatedSetting);
@@ -451,6 +456,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
     public void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting) throws CantSaveCryptoBrokerWalletSettingException {
         DatabaseTransaction transaction = database.newTransaction();
+
+        //TODO:Solo para Testing y prueba luego eliminar
+        cryptoBrokerWalletProviderSetting.setId(UUID.randomUUID());
 
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_TABLE_NAME);
         try {

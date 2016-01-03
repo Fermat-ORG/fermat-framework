@@ -144,9 +144,10 @@
                     android:layout_marginLeft="16dp"
                     android:paddingTop="12dp"/>
 
-                    <TextView
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/txt_type"
                         android:text="[bits]"
                         android:textColor="#12aca1"
                         android:textSize="12sp"
@@ -190,6 +191,7 @@
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:id="@+id/spinner"
+                        android:background="#fff"
                         >
 
                     </Spinner>

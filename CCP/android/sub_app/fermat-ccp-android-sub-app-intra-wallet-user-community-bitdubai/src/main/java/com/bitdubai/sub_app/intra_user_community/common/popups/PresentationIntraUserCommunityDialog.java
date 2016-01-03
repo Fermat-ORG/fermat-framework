@@ -3,6 +3,8 @@ package com.bitdubai.sub_app.intra_user_community.common.popups;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -14,9 +16,14 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * @author Jose manuel de Sousa
@@ -37,6 +44,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private FrameLayout container_john_doe;
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
+    private IntraUserSubAppSession intraUserSubAppSession;
+    private IntraUserModuleManager moduleManager;
 
     /**
      * Constructor using Session and Resources
@@ -44,15 +53,18 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationIntraUserCommunityDialog(final Activity                       activity     ,
-                                                final IntraUserSubAppSession         fermatSession,
-                                                final SubAppResourcesProviderManager resources    ,
-                                                final int                            type         ) {
+    public PresentationIntraUserCommunityDialog(final Activity activity,
+                                                final IntraUserSubAppSession fermatSession,
+                                                final SubAppResourcesProviderManager resources,
+                                                final IntraUserModuleManager moduleManager,
+                                                final int type) {
 
         super(activity, fermatSession, resources);
 
         this.activity = activity;
-        this.type     = type    ;
+        this.type = type;
+        this.moduleManager = moduleManager;
+        this.intraUserSubAppSession = fermatSession;
     }
 
     @Override
@@ -97,41 +109,49 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        SharedPreferences pref = getContext().getSharedPreferences("don't show dialog more", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = pref.edit();
+        SharedPreferences pref = getContext().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit;
         if (id == R.id.btn_left) {
-            ;
-            if (dontShowAgainCheckBox.isChecked()) {
-                edit.putBoolean("isChecked", true);
-                edit.apply();
+            try {
+                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male));
+                if (dontShowAgainCheckBox.isChecked()) {
+                    pref.edit().putBoolean("isChecked", false).apply();
+                }
                 dismiss();
-            } else {
-                edit.putBoolean("isChecked", false);
-                edit.apply();
-                dismiss();
+                Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+            } catch (CouldNotCreateIntraUserException e) {
+                e.printStackTrace();
             }
-            Toast.makeText(getActivity(), "Create an identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.btn_right) {
-            if (dontShowAgainCheckBox.isChecked()) {
-                edit.putBoolean("isChecked", true);
-                edit.apply();
+            try {
+                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                if (dontShowAgainCheckBox.isChecked()) {
+                    pref.edit().putBoolean("isChecked", false).apply();
+                }
                 dismiss();
-            } else {
-                edit.putBoolean("isChecked", false);
-                edit.apply();
-                dismiss();
+                Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+            } catch (CouldNotCreateIntraUserException e) {
+                e.printStackTrace();
             }
-            Toast.makeText(getActivity(), "Create an identity first", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.start_community) {
             if (dontShowAgainCheckBox.isChecked()) {
-                edit.putBoolean("isChecked", true);
-                edit.apply();
-                dismiss();
-            } else {
-                edit.putBoolean("isChecked", false);
-                edit.apply();
-                dismiss();
+                pref.edit().putBoolean("isChecked", false).apply();
             }
+            dismiss();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        intraUserSubAppSession.setData(Constants.PRESENTATION_DIALOG_DISMISS, Boolean.TRUE);
+    }
+
+    private byte[] convertImage(int resImage) {
+        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 }
