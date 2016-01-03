@@ -64,13 +64,16 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 6 | New Team Leader | Team Leader with 1 full-time member on the team. |
 | 7 | Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 9 | New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 10 | Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 11 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
-| 12 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
-| 13 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
-| 14 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
-| 15 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
+| 9 | Awarded Team Leader | Team Leader awarded a bounty for finishing a project on time. |
+| 10 | New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 11 | Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 12 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 13 | Awarded Parent Team Leader | Team Leader with at least 1 awarded sub-team. |
+| 14 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
+| 15 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
+| 16 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
+| 17 | Awarded Grand Parent Team Leader | Grand Parent Team Leader with 1 awarded grand children. |
+| 18 | Core Developer | Won Programming Competition or one of their grand children had a child. |
 
 ### Fermat ORG Site
 
