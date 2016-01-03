@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
@@ -99,7 +98,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
                 }else if (!networkService.isRegister()){
 
                     try {
-                        sleep(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                        sleep(SLEEP_TIME);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         active = Boolean.FALSE;
@@ -112,7 +111,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
             }catch (Exception e){
                 try {
                     e.printStackTrace();
-                    sleep(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                    sleep(MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                     active = Boolean.FALSE;
