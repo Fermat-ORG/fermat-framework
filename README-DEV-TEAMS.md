@@ -73,7 +73,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 | 15 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
 | 16 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
 | 17 | Awarded Grand Parent Team Leader | Grand Parent Team Leader with 1 awarded grand children. |
-| 18 | Core Developer | Won Programming Competition AND one of their grand children had a child. |
+| 18 | Core Developer | Won Programming Competition AND a grand children had a child. |
 
 ### Fermat ORG Site
 
