@@ -178,10 +178,36 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             peerGroup.setDownloadTxDependencies(true);
             peerGroup.start();
             peerGroup.startBlockChainDownload(null);
+
+            /**
+             * I will broadcast any transaction that might be in broadcasting status.
+             * I might have this if the process was interrupted while broadcasting.
+             */
+            resumeBroadcastOfPendingTransactions();
+
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Will get all transactions hashes in Broadcasting status to resume them.
+     */
+    private void resumeBroadcastOfPendingTransactions() {
+        try {
+            for (String txHash : getDao().getBroadcastTransactionsByStatus(Status.BROADCASTING)){
+                try {
+                    this.broadcastTransaction(txHash);
+                } catch (CantBroadcastTransactionException e) {
+                    /**
+                     * if there was an error, I will mark the transaction as WITH_ERROR
+                     */
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                }
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
 
     }
 

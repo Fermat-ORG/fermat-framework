@@ -1151,10 +1151,80 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
     /**
      * Sets the passed broadcast status to the specified transaction hash
-     * @param broadcasting
+     * @param status
      * @param txHash
      */
-    public void setBroadcastStatus(Status broadcasting, String txHash) {
-        //todo implement
+    public void setBroadcastStatus(Status status, String txHash) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * I can't have anything different than a single record as a result.
+         */
+        if (databaseTable.getRecords().size() != 1)
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "the amount of data returned by the query is not correct.", null);
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+
+        /**
+         * I will get the current amount of retries.
+         */
+        int retriesAmount;
+        if (record.getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT) == null)
+            retriesAmount = 0;
+        else
+            retriesAmount = record.getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT);
+
+        /**
+         * if the passed Status is Broadcasting or With_Error, then I will increase the retry count and update the status
+         */
+        BroadcastStatus broadcastStatus = new BroadcastStatus();
+        broadcastStatus.setStatus(status);
+        if (status == Status.BROADCASTING || status == Status.WITH_ERROR)
+            broadcastStatus.setRetriesCount(retriesAmount+1);
+        else
+            broadcastStatus.setRetriesCount(retriesAmount);
+
+        /**
+         * I will set the new values and execute
+         */
+
+        record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, broadcastStatus.getRetriesCount());
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, broadcastStatus.getStatus().getCode());
+
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Unable to update record in Broadcast table.", "database issue");
+        }
+    }
+
+    /**
+     * Will get all the Transaction hash of broadcasting table for the specified status
+     * @param status
+     * @return
+     */
+    public List<String> getBroadcastTransactionsByStatus(Status status) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, status.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<String> txHashes = new ArrayList<>();
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            txHashes.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH));
+        }
+
+        return txHashes;
     }
 }
