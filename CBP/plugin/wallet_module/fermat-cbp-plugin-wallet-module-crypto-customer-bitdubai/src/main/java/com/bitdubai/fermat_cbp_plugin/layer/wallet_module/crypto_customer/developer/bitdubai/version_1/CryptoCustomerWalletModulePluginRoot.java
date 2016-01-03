@@ -67,12 +67,14 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
 
+
     @Override
     public CryptoCustomerWalletManager getCryptoCustomerWallet(String walletPublicKey) throws CantGetCryptoCustomerWalletException {
         try {
             if (walletManager == null)
                 walletManager = new CryptoCustomerWalletModuleCryptoCustomerWalletManager(walletManagerManager,
-                        customerBrokerPurchaseNegotiationManager);
+                        customerBrokerPurchaseNegotiationManager,
+                        pluginId);
             return walletManager;
 
         } catch (Exception e) {
