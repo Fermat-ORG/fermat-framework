@@ -79,17 +79,19 @@ Developers and team leaders in particular are classified by the deepness of the 
 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
-| 1 | ORG Entry Level | New developer on the project. |
-| 2 | ORG Veteran | Veteran developer. Working full time 3+ months or part-time 6+ months or high performant. |
+| 1 | ORG New Developer | New developer on the project. |
+| 2 | ORG Veteran Developer| Working full time 3+ months OR part-time 6+ months OR high performant. |
 | 3 | ORG New Team Leader | Team Leader with 1 full-time member on the team. |
 | 4 | ORG Team Leader | Team Leader with less than 5 full-time members on the team. |
 | 5 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 6 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 7 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 8 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 6 | ORG Awarded Team Leader | Team Leader with 5 full-time members on the team. |
+| 7 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 8 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 9 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 10 | ORG Awarded Parent Team Leader | Team Leader with 5 sub-teams. |
 
 
-The following rules apply:
+### The following rules apply:
 
 1. Standard team size is of 5 full-time members.
 2. One full-time member can be replaced by 2 part-time members.
