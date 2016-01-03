@@ -178,10 +178,36 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             peerGroup.setDownloadTxDependencies(true);
             peerGroup.start();
             peerGroup.startBlockChainDownload(null);
+
+            /**
+             * I will broadcast any transaction that might be in broadcasting status.
+             * I might have this if the process was interrupted while broadcasting.
+             */
+            resumeBroadcastOfPendingTransactions();
+
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Will get all transactions hashes in Broadcasting status to resume them.
+     */
+    private void resumeBroadcastOfPendingTransactions() {
+        try {
+            for (String txHash : getDao().getBroadcastTransactionsByStatus(Status.BROADCASTING)){
+                try {
+                    this.broadcastTransaction(txHash);
+                } catch (CantBroadcastTransactionException e) {
+                    /**
+                     * if there was an error, I will mark the transaction as WITH_ERROR
+                     */
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                }
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -254,7 +280,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          /**
           * will update this transaction status to broadcasting.
           */
-         getDao().setBroadcastStatus(Status.BROADCASTING, txHash);
+         try {
+             getDao().setBroadcastStatus(Status.BROADCASTING, txHash);
+         } catch (CantExecuteDatabaseOperationException e) {
+             e.printStackTrace();
+         }
 
          Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
@@ -266,12 +296,20 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         Futures.addCallback(future, new FutureCallback<Transaction>() {
             @Override
             public void onSuccess(Transaction result) {
-                getDao().setBroadcastStatus(Status.BROADCASTED, txHash);
+                try {
+                    getDao().setBroadcastStatus(Status.BROADCASTED, txHash);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                try {
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
