@@ -26,8 +26,6 @@ public class NetworkBroadcastWorker implements Runnable {
             bitcoinNetworkManager.broadcastTransaction(transactionHash);
         } catch (CantBroadcastTransactionException e) {
             e.printStackTrace();
-        } catch (ErrorBroadcastingTransactionException e) {
-            e.printStackTrace();
         }
     }
 }

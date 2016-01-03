@@ -398,18 +398,17 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()) {
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
-//                transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
-                String assetMetadataInnerXML = XMLParser.parseObject(assetUserWalletTransactionRecord.getDigitalAssetMetadata());
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.setContent(assetMetadataInnerXML);
-                //TODO commented for testing
-                pluginTextFile.persistToMedia();
             } else {
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
 
+            String assetMetadataInnerXML = XMLParser.parseObject(assetUserWalletTransactionRecord.getDigitalAssetMetadata());
+            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(assetMetadataInnerXML);
+            pluginTextFile.persistToMedia();
+
             database.executeTransaction(transaction);
-            database.closeDatabase();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -420,7 +419,7 @@ public class AssetUserWalletDao implements DealsWithPluginFileSystem {
     private DatabaseTableRecord getBalancesByAssetRecord(String assetPublicKey) throws CantGetBalanceRecordException {
         try {
             DatabaseTable balancesTable = getBalancesTable();
-            balancesTable.getNewFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.EQUAL, assetPublicKey);
+            balancesTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             balancesTable.loadToMemory();
             return balancesTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException exception) {
