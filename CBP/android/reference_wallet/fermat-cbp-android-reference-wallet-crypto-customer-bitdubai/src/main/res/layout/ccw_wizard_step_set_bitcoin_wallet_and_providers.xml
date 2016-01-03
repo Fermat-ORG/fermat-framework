@@ -42,7 +42,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -60,8 +63,7 @@
             android:id="@+id/bitcoin_wallets_spinner"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:backgroundTint="@color/black"
             android:drawSelectorOnTop="true"
             tools:listitem="@layout/ccw_spinner_item"/>

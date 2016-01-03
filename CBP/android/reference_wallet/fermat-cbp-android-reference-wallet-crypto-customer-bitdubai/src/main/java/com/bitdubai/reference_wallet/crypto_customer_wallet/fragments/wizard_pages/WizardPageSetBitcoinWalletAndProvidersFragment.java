@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfo
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
@@ -52,6 +54,8 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private List<Currency> currencies;
     private Currency currencyFrom;
     private Currency currencyTo;
+    private List<InstalledWallet> bitcoinWallets;
+    private InstalledWallet selectedBitcoinWallet;
 
     // UI
     private RecyclerView recyclerView;
@@ -73,6 +77,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
         selectedProviders = new ArrayList<>();
         currencies = getCurrenciesList();
+        bitcoinWallets = getBitcoinWallets();
 
         try {
             CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
@@ -82,7 +87,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
@@ -113,6 +118,13 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         currencyToSpinner.setOnItemSelectedListener(this);
         currencyToSpinner.setAdapter(adapter);
 
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.ccw_spinner_item, getFormattedBitcoinWallets(bitcoinWallets));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        final Spinner bitCoinWalletsSpinner = (Spinner) layout.findViewById(R.id.bitcoin_wallets_spinner);
+        bitCoinWalletsSpinner.setOnItemSelectedListener(this);
+        bitCoinWalletsSpinner.setAdapter(adapter);
+
         final View selectProvidersButton = layout.findViewById(R.id.ccw_select_providers_button);
         selectProvidersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +151,9 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
         } else if (view.getId() == R.id.currency_to_spinner) {
             currencyTo = currencies.get(position);
+
+        } else if (view.getId() == R.id.bitcoin_wallets_spinner) {
+            selectedBitcoinWallet = bitcoinWallets.get(position);
         }
     }
 
@@ -192,11 +207,11 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 //        } catch (FermatException ex) {
 //            Log.e(TAG, ex.getMessage(), ex);
 //            if (errorManager != null)
-//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
 //                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 //        }
 
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
     }
 
     @Override
@@ -246,7 +261,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         } catch (CantGetProviderInfoException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
@@ -269,6 +284,30 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         ArrayList<String> data = new ArrayList<>();
         for (Currency currency : currencies) {
             data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
+        }
+
+        return data;
+    }
+
+    private List<InstalledWallet> getBitcoinWallets() {
+        ArrayList<InstalledWallet> data = new ArrayList<>();
+
+        // TODO llenar con el metodo de franklin
+        List<InstalledWallet> installedWallets = new ArrayList<>();
+
+        for (InstalledWallet wallet : installedWallets) {
+            if (wallet.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM))
+                if (wallet.getCryptoCurrency().equals(CryptoCurrency.BITCOIN))
+                    data.add(wallet);
+        }
+
+        return data;
+    }
+
+    private List<String> getFormattedBitcoinWallets(List<InstalledWallet> bitcoinWallets) {
+        ArrayList<String> data = new ArrayList<>();
+        for (InstalledWallet wallet : bitcoinWallets) {
+            data.add(wallet.getWalletName());
         }
 
         return data;
