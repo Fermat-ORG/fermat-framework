@@ -97,6 +97,7 @@ The following rules apply:
 4. Going up or down a categorý is decided by the developers's team leader or parent team leader.
 5. To move up one category all the conditions of previous categories need to have been met.
 6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
 
 
 <br>
