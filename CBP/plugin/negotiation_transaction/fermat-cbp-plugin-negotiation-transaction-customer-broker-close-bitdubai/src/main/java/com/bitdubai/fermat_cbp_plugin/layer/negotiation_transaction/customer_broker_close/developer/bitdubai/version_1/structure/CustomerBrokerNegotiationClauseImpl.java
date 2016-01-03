@@ -14,8 +14,8 @@ public class CustomerBrokerNegotiationClauseImpl implements Clause{
     private final   UUID            clauseId;
     private final   ClauseType      type;
     private final   String          value;
-    private final   String          proposedBy;
     private         ClauseStatus    status;
+    private final   String          proposedBy;
     private short indexOrder;
 
     public CustomerBrokerNegotiationClauseImpl(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
