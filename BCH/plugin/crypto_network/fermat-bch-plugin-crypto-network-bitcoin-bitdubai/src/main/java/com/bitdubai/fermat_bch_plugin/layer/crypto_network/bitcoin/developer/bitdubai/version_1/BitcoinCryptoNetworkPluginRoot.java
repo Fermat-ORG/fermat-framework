@@ -27,6 +27,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
@@ -252,26 +253,13 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         return bitcoinCryptoNetworkManager.getCryptoStatus(txHash);
     }
 
-    /**
-     * Will check and fix any inconsistency that may be in out transaction table.
-     * For example, If i don't have all adressTo or From, or coin values of zero.
-     * @throws CantFixTransactionInconsistenciesException
-     */
-    @Override
-    public void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
-        bitcoinCryptoNetworkManager.fixTransactionInconsistencies();
-    }
-
-    /**
+     /**
      * Broadcast a well formed, commited and signed transaction into the network.
      * @param txHash
      * @throws CantBroadcastTransactionException
-     * @throws ErrorBroadcastingTransactionException
      */
     @Override
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
-        //todo implement
-        //todo puto hacelo
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
         bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
     }
 
@@ -282,8 +270,20 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantGetBroadcastStatusException
      */
     @Override
-    public BroadcastStatus getBroadcasStatus(String txHash) throws CantGetBroadcastStatusException {
-        //todo implement
-        return null;
+    public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
+        return bitcoinCryptoNetworkManager.getBroadcastStatus(txHash);
+    }
+
+
+    /**
+     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     * @param blockchainNetworkType
+     * @param tx
+     * @param transactionId
+     * @throws CantStoreBitcoinTransactionException
+     */
+    @Override
+    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
+        bitcoinCryptoNetworkManager.storeBitcoinTransaction(blockchainNetworkType, tx, transactionId);
     }
 }

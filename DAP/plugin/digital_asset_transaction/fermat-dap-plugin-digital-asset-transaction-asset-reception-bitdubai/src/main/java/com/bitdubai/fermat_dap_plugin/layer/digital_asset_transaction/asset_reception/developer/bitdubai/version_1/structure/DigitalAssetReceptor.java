@@ -85,6 +85,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             }
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.HASH_CHECKED, genesisTransaction);
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, genesisTransaction);
+
         } catch (Exception e) {
             throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Unexpected exception while verifying the asset");
         }

@@ -9,7 +9,8 @@ public enum Status {
     BROADCASTED("BTED"),
     BROADCASTING("BING"),
     CANCELLED("CNL"),
-    IDLE("IDLE");
+    IDLE("IDLE"),
+    WITH_ERROR("ERROR");
 
 
     private String code;
@@ -33,6 +34,8 @@ public enum Status {
                 return CANCELLED;
             case "IDLE":
                 return IDLE;
+            case "ERROR":
+                return WITH_ERROR;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the Broadcasting Status enum.");
         }

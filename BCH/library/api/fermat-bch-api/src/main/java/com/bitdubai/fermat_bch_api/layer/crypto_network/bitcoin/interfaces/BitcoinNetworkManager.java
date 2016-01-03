@@ -12,6 +12,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 
@@ -66,9 +67,8 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * Broadcast a well formed, commited and signed transaction into the network.
      * @param txHash
      * @throws CantBroadcastTransactionException
-     * @throws ErrorBroadcastingTransactionException
      */
-    void broadcastTransaction (String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException;
+    void broadcastTransaction (String txHash) throws CantBroadcastTransactionException;
 
     /**
      * Returns the broadcast Status for a specified transaction.
@@ -76,7 +76,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @return
      * @throws CantGetBroadcastStatusException
      */
-    BroadcastStatus getBroadcasStatus (String txHash) throws CantGetBroadcastStatusException;
+    BroadcastStatus getBroadcastStatus (String txHash) throws CantGetBroadcastStatusException;
 
     /**
      * Gets the UTXO provider from the CryptoNetwork on the specified Network
@@ -144,11 +144,13 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException;
 
-    /**
-     * Will check and fix any inconsistency that may be in out transaction table.
-     * For example, If i don't have all adressTo or From, or coin values of zero.
-     * @throws CantFixTransactionInconsistenciesException
-     */
-    void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException;
 
+    /**
+     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     * @param blockchainNetworkType
+     * @param tx
+     * @param transactionId
+     * @throws CantStoreBitcoinTransactionException
+     */
+    void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException;
 }

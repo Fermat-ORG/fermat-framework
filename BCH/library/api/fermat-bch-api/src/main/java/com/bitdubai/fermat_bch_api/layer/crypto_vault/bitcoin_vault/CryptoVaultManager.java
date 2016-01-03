@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
@@ -52,8 +53,8 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws InvalidSendToAddressException
      * @throws CryptoTransactionAlreadySentException
      */
-    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException;
-    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException;
+    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException;
+    String generateTransaction (String walletPublicKey, UUID fermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException,  CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException;
 
     /**
      * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
