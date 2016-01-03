@@ -22,6 +22,12 @@ project(':fermat-cer-plugin-search-provider-filter-bitdubai').projectDir = new F
 //PROVIDERS
 include ':fermat-cer-plugin-provider-dolartoday-bitdubai'
 project(':fermat-cer-plugin-provider-dolartoday-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-dolartoday-bitdubai')
+include ':fermat-cer-plugin-provider-elcronista-bitdubai'
+project(':fermat-cer-plugin-provider-elcronista-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-elcronista-bitdubai')
+include ':fermat-cer-plugin-provider-europeancentralbank-bitdubai'
+project(':fermat-cer-plugin-provider-europeancentralbank-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-europeancentralbank-bitdubai')
+include ':fermat-cer-plugin-provider-lanacion-bitdubai'
+project(':fermat-cer-plugin-provider-lanacion-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-lanacion-bitdubai')
 include ':fermat-cer-plugin-provider-yahoo-bitdubai'
 project(':fermat-cer-plugin-provider-yahoo-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-yahoo-bitdubai')
 
