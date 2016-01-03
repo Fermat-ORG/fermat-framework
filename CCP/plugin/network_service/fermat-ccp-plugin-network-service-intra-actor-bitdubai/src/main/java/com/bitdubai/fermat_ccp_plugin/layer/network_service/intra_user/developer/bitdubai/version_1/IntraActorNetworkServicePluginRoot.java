@@ -1584,31 +1584,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             if (register) {
                 final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
-                // Compressor with highest level of compression
-                Deflater compressor = new Deflater();
-                compressor.setLevel(Deflater.BEST_COMPRESSION);
-                // Give the compressor the data to compress
-                compressor.setInput(actor.getPhoto());
-                compressor.finish();
-                // Create an expandable byte array to hold the compressed data.
-                // It is not necessary that the compressed data will be smaller than
-                // the uncompressed data.
-                ByteArrayOutputStream bos = new ByteArrayOutputStream(actor.getPhoto().length);
-                // Compress the data
-                byte[] buf = new byte[1024];
-                while (!compressor.finished()) {
-                    int count = compressor.deflate(buf);
-                    bos.write(buf, 0, count);
-                }
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                }
+
 
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT));
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
 

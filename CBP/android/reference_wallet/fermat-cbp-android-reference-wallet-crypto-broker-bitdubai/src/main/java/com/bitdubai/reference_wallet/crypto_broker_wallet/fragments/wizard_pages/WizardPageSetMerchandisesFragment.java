@@ -1,5 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +31,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
@@ -42,7 +45,8 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment implements WalletsAdapter.OnDeleteButtonClickedListener {
+public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<InstalledWallet> {
 
     // Constants
     private static final String TAG = "WizardPageSetMerchand";
@@ -254,7 +258,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
     private void saveSettingAndGoNextStep() {
 
         if (stockWallets.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -262,7 +266,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
             CryptoBrokerWalletSettingSpread walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
             walletSetting.setId(null);
             walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
-            walletSetting.setSpread((float) spreadValue / 100.0f);
+            walletSetting.setSpread(spreadValue);
             walletSetting.setRestockAutomatic(automaticRestock);
             walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
@@ -312,11 +316,25 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment im
     }
 
     @Override
-    public void deleteButtonClicked(InstalledWallet data, int position) {
-        stockWallets.remove(position);
-        adapter.changeDataSet(stockWallets);
+    public void deleteButtonClicked(InstalledWallet data, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        showOrHideNoSelectedWalletsView();
+        builder.setTitle(R.string.cbw_delete_wallet_dialog_title).setMessage(R.string.cbw_delete_wallet_dialog_msg);
+        builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                stockWallets.remove(position);
+                adapter.changeDataSet(stockWallets);
+                showOrHideNoSelectedWalletsView();
+            }
+        });
+        builder.setNegativeButton(R.string.cbw_cancel_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.show();
     }
 
     private void showOrHideNoSelectedWalletsView() {

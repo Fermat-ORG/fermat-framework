@@ -119,11 +119,11 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
 
     /**
      * gets the current Crypto Status for the specified Transaction ID
-     * @param transactionId the internal fermat transaction id
-     * @return the current crypto status
+     * @param txHash the Bitcoin transaction hash
+     * @return the last crypto status
      * @throws CantGetTransactionCryptoStatusException
      */
-    CryptoStatus getCryptoStatus(UUID transactionId) throws CantGetTransactionCryptoStatusException;
+    CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException;
 
     /**
      * Will check and fix any inconsistency that may be in out transaction table.
