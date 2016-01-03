@@ -141,12 +141,35 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                transactionList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(transactionList);
+                showOrHideNoTransactionsView(transactionList.isEmpty());
+            }
+        }
+    }
 
+    private void showOrHideNoTransactionsView(boolean show) {
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+            //noTransactionsView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            //noTransactionsView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onErrorOccurred(Exception ex) {
-
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            //TODO: show error, toast?
+        }
     }
 
     @Override
@@ -179,6 +202,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
         fab.collapse();
+        updateBalance();
         onRefresh();
     }
 
