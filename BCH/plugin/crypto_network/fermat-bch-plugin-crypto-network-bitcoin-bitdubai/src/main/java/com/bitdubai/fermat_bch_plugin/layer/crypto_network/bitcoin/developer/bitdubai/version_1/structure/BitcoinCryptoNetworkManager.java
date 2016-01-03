@@ -391,9 +391,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param txHash
      * @throws CantBroadcastTransactionException
-     * @throws ErrorBroadcastingTransactionException
      */
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
         runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
     }
 

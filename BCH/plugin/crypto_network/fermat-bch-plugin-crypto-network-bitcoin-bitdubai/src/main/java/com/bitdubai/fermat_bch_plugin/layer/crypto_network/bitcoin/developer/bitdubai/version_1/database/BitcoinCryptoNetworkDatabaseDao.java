@@ -1148,4 +1148,13 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         return broadcastStatus;
     }
+
+    /**
+     * Sets the passed broadcast status to the specified transaction hash
+     * @param broadcasting
+     * @param txHash
+     */
+    public void setBroadcastStatus(Status broadcasting, String txHash) {
+        //todo implement
+    }
 }

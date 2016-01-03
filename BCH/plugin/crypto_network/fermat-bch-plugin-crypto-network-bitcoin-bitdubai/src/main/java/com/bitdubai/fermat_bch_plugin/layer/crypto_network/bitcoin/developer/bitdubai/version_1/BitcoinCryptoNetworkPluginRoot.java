@@ -257,10 +257,9 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * Broadcast a well formed, commited and signed transaction into the network.
      * @param txHash
      * @throws CantBroadcastTransactionException
-     * @throws ErrorBroadcastingTransactionException
      */
     @Override
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
         bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
     }
 

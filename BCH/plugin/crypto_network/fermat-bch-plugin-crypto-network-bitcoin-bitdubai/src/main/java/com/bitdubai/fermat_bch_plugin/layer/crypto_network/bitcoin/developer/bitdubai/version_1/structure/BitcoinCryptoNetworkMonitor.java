@@ -11,9 +11,14 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
@@ -36,6 +41,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -235,24 +241,43 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Broadcast a well formed, commited and signed transaction into the specified network
      * @param txHash
      * @throws CantBroadcastTransactionException
-     * @throws ErrorBroadcastingTransactionException
      */
-    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException, ErrorBroadcastingTransactionException {
+    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException
+     {
         /**
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
         Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
-        validateTransactionExistsInWallet(sha256Hash);
-        validateTransactionExistsinDatabase(txHash);
+         validateTransactionExistsInWallet(sha256Hash);
+         validateTransactionExistsinDatabase(txHash);
 
-        //todo implement
-        //broadcast transaction and update BroadcastStatus BROADCASTING y luego BROADCASTED. Aumentando la cantidad de retries.
-        //if error, updates new broadcast status WITH_ERROR
+         /**
+          * will update this transaction status to broadcasting.
+          */
+         getDao().setBroadcastStatus(Status.BROADCASTING, txHash);
 
+         Transaction transaction = wallet.getTransaction(sha256Hash);
+         TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
+         ListenableFuture<Transaction> future = transactionBroadcast.future();
 
+        /**
+         * I add the future that will get the broadcast result into a call back to respond to it.
+         */
+        Futures.addCallback(future, new FutureCallback<Transaction>() {
+            @Override
+            public void onSuccess(Transaction result) {
+                getDao().setBroadcastStatus(Status.BROADCASTED, txHash);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+            }
+        });
 
 
     }
+
 
     /**
      * Will search this transaction in the database and make sure it exists.
