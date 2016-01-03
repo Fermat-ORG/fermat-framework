@@ -55,7 +55,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="@color/white"
+        android:background="@color/ccw_wizard_color"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
@@ -69,7 +69,7 @@
             android:layout_weight="4"
             android:gravity="center"
             android:text="@string/ccw_next_step"
-            android:textColor="#0e738b"/>
+            android:textColor="@color/white"/>
 
         <ImageView
             android:layout_width="0dp"

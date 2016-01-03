@@ -1779,8 +1779,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         Tab runtimeTab;
 
         final String publicKey = "crypto_customer_wallet";
-        final String statusBarColor = "#990c75";
-        final String titleBarColor = "#990c75";
+        final String statusBarColor = "#492781";
+        final String titleBarColor = "#492781";
         final String titleBarLabelColor = "#ffffff";
         final int titleBarLabelSize = 16;
 
