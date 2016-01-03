@@ -18,7 +18,9 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
@@ -61,13 +63,16 @@ import java.util.UUID;
  */
 public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements CryptoCustomerWalletManager {
     private final WalletManagerManager walletManagerManager;
+    private final CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /*
     *Constructor with Parameters
     */
-    public CryptoCustomerWalletModuleCryptoCustomerWalletManager(WalletManagerManager walletManagerManager)
+    public CryptoCustomerWalletModuleCryptoCustomerWalletManager(WalletManagerManager walletManagerManager,
+                                                                 CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager)
     {
-        this.walletManagerManager = walletManagerManager;
+        this.walletManagerManager                     = walletManagerManager;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -190,12 +195,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      * @return Collection<NegotiationLocations>
      */
     @Override
-    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) {
+    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsPurchaseException {
         //TODO: Implementar
         Collection<NegotiationLocations> negotiationLocations = null;
         if (negotiationType.getCode() == NegotiationType.PURCHASE.getCode())
         {
-
+            negotiationLocations = customerBrokerPurchaseNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
     }
@@ -286,12 +291,27 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      */
     @Override
     public void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException {
-
+        customerBrokerPurchaseNegotiationManager.createNewLocation(location, uri);
     }
 
     @Override
-    public NegotiationBankAccount newEmptyNegotiationBankAccount() throws CantCreateBankAccountPurchaseException {
-        return null;
+    public NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException {
+        return new NegotiationBankAccount() {
+            @Override
+            public UUID getBankAccountId() {
+                return UUID.randomUUID();
+            }
+
+            @Override
+            public String getBankAccount() {
+                return bankAccount;
+            }
+
+            @Override
+            public FiatCurrency getCurrencyType() {
+                return currencyType;
+            }
+        };
     }
 
     /**
@@ -300,7 +320,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      */
     @Override
     public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException {
-
+        customerBrokerPurchaseNegotiationManager.createNewBankAccount(bankAccount);
     }
 
     /**
@@ -309,7 +329,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      */
     @Override
     public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException {
-
+        customerBrokerPurchaseNegotiationManager.updateBankAccount(bankAccount);
     }
 
     /**
@@ -318,12 +338,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      */
     @Override
     public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
-
+        customerBrokerPurchaseNegotiationManager.deleteBankAccount(bankAccount);
     }
 
     @Override
     public CryptoCustomerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException {
-        return null;
+        return new CryptoCustomerWalletAssociatedSettingImpl();
     }
 
     @Override
@@ -345,7 +365,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException {
-        return null;
+        return new CryptoCustomerWalletProviderSettingImpl();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
@@ -97,7 +98,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      */
     void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException;
 
-    NegotiationBankAccount newEmptyNegotiationBankAccount() throws CantCreateBankAccountPurchaseException;
+    NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException;
 
     /**
      *
