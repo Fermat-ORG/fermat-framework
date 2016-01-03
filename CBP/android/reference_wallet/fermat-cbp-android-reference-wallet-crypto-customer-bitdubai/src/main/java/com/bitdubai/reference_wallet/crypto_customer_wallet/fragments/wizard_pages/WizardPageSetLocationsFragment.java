@@ -130,6 +130,8 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
             public void onClick(DialogInterface dialogInterface, int i) {
             }
         });
+
+        builder.show();
     }
 
     private void saveSettingAndGoNextStep() {
