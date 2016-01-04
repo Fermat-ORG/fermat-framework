@@ -2,8 +2,9 @@
     <string name="app_name">Cash Wallet</string>
 
     <!-- Home balances -->
-    <string name="available_balance_text">Available Balance:</string>
-    <string name="book_balance_text">Book Balance:</string>
+    <string name="csh_home_titlebar_title">Cash</string>
+    <string name="csh_home_titlebar_title_2">Wallet</string>
+
 
     <!-- Home transactions -->
     <string name="no_transactions">There are no transactions</string>
@@ -14,7 +15,7 @@
     <string name="deposit_transaction_text" translatable="false">Deposit</string>
 
 
-
+    <!-- Transaction Dialogs -->
     <string name="csh_ctd_title" translatable="false">transact_title_here</string>
     <string name="csh_ctd_amount_tag" translatable="false">Enter amount</string>
     <string name="csh_ctd_amount_hint" translatable="false">Amount</string>
