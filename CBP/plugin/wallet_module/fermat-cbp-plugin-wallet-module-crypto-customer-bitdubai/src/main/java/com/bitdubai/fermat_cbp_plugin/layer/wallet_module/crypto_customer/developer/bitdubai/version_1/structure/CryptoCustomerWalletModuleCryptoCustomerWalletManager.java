@@ -8,6 +8,13 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
@@ -63,20 +70,25 @@ import java.util.UUID;
  * Modified by Franklin Marcano 30/12/15
  */
 public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements CryptoCustomerWalletManager {
+    public static final String PATH_DIRECTORY = "cbpwallet/setting";
+
     private final WalletManagerManager walletManagerManager;
     private final CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
     private final UUID pluginId;
+    private final PluginFileSystem pluginFileSystem    ;
 
     /*
     *Constructor with Parameters
     */
     public CryptoCustomerWalletModuleCryptoCustomerWalletManager(WalletManagerManager walletManagerManager,
                                                                  CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
-                                                                 UUID pluginId)
+                                                                 UUID pluginId,
+                                                                 PluginFileSystem pluginFileSystem)
     {
         this.walletManagerManager                     = walletManagerManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
         this.pluginId                                 = pluginId;
+        this.pluginFileSystem                         = pluginFileSystem;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -351,8 +363,13 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException {
+    public void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantCreateFileException, CantPersistFileException {
+        String settingFilename = customerWalletpublicKey;
+        PluginTextFile pluginTextFile = null;//pluginFileSystem.createTextFile(pluginId, PATH_DIRECTORY, customerWalletpublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         String toXml = XMLParser.parseObject(setting);
+        pluginTextFile = pluginFileSystem.createTextFile(pluginId, PATH_DIRECTORY, settingFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        pluginTextFile.setContent(toXml);
+        pluginTextFile.persistToMedia();
     }
 
     /**
@@ -373,8 +390,13 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException {
+    public void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException {
+        String settingFilename = customerWalletpublicKey;
+        PluginTextFile pluginTextFile;//pluginFileSystem.createTextFile(pluginId, PATH_DIRECTORY, customerWalletpublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         String toXml = XMLParser.parseObject(setting);
+        pluginTextFile = pluginFileSystem.createTextFile(pluginId, PATH_DIRECTORY, settingFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        pluginTextFile.setContent(toXml);
+        pluginTextFile.persistToMedia();
     }
 
     @Override
