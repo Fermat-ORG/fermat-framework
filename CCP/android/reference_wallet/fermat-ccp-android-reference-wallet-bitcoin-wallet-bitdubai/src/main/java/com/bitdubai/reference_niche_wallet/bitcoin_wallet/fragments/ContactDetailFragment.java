@@ -104,6 +104,9 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             referenceWalletSession = (ReferenceWalletSession) appSession;
             setHasOptionsMenu(true);
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
+            if(cryptoWalletWalletContact==null){
+                onBack(null);
+            }
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             cryptoWalletManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();

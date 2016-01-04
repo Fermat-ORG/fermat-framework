@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 
@@ -58,12 +61,18 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
-            getView().setOnKeyListener(this);
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to WizardConfiguration");
         }
     }
 
+    @Override
+    public void onResume() {
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(this);
+        super.onResume();
+    }
 
     /**
      * Start a configuration Wizard
