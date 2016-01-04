@@ -306,6 +306,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         return objectses;
     }
 
+    @Override
+    public void onControlledActivityBack(String activityCodeBack) {
+        //TODO: implement in the super class
+    }
+
 
     /**
      * Method that loads the UI

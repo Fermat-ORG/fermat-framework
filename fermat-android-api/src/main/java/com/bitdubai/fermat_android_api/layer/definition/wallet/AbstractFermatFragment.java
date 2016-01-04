@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 
@@ -28,7 +30,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment{
+public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment implements View.OnKeyListener {
 
     /**
      * FLAGS
@@ -47,6 +49,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      */
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
+    private String changeBackActivity;
 
 
     @Override
@@ -55,6 +58,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
+            getView().setOnKeyListener(this);
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to WizardConfiguration");
         }
@@ -213,8 +217,20 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         System.gc();
     }
 
+    protected final void onBack(String activityCodeBack){
+        getFermatScreenSwapper().onControlledActivityBack(activityCodeBack);
+    }
 
+    protected final void setChangeBackActivity(String backActivity){
+        this.changeBackActivity = backActivity;
+    }
 
-
-
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if( keyCode == KeyEvent.KEYCODE_BACK ){
+                onBack(changeBackActivity);
+                return true;
+            }
+            return false;
+    }
 }
