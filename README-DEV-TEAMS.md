@@ -221,26 +221,26 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 #### Team Members:
 
 
-* **Manuel Perez [Team Leader - New Team Leader]**<br/>
+* **Manuel Perez [Team Leader - Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
     Github:  https://github.com/darkestpriest
     
     
-* **Gabriel Araujo**<br/>
+* **Gabriel Araujo [New Developer]**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
       Github:  https://github.com/GaboHub
 
-* **Miguel Payarez**<br/>
+* **Miguel Payarez [New Part-Time Developer]**<br/>
 ---
     Email:   miguel_payarez@hotmail.com
     Skype:   payarez
     Github:  https://github.com/lostwood
 
-* **Juan Sulbaran**<br/>
+* **Juan Sulbaran [New Part-Time Developer]**<br/>
 ---
     Email:   sulbaranja@gmail.com
     Skype:   juanaso15
