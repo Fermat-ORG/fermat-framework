@@ -679,9 +679,8 @@ public class CryptoTransmissionAgent {
     public void addToTimer(String connectionDestionation, final UUID metadataId) {
         final ScheduledExecutorService scheduledExecutorService =
                 Executors.newScheduledThreadPool(2);
-        ScheduledFuture scheduledFuture =
-                scheduledExecutorService.schedule(new Callable() {
-                                                      public Object call() throws Exception {
+                scheduledExecutorService.schedule(new Runnable() {
+                                                      public void run() {
                                                           try {
                                                               CryptoTransmissionMetadata cryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.getMetadata(metadataId);
                                                               if (cryptoTransmissionMetadata.getCryptoTransmissionStates() != CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE ||
@@ -696,11 +695,11 @@ public class CryptoTransmissionAgent {
                                                               scheduledExecutorService.shutdown();
                                                           }
                                                           scheduledExecutorService.shutdown();
-                                                          return null;
                                                       }
                                                   },
                         1,
                         TimeUnit.HOURS);
+
     }
 
 }

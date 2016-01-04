@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -8,13 +9,15 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
@@ -42,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
@@ -381,6 +385,15 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         runningAgents.get(blockchainNetworkType).broadcastTransaction(tx, transactionId);
     }
 
+    /**
+     * Broadcast a well formed, commited and signed transaction into the specified network
+     * @param txHash
+     * @throws CantBroadcastTransactionException
+     */
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException {
+        runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
+    }
+
 
     /**
      * Gets the UTXO provider from the CryptoNetwork on the specified Network
@@ -545,19 +558,40 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
          * so I will manually add them.
          */
         if (cryptoTransaction.getCryptoStatus() == CryptoStatus.IRREVERSIBLE){
-            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
-            cryptoTransactions.add(cryptoTransaction);
+            CryptoTransaction onBlockChain = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_BLOCKCHAIN);
+            cryptoTransactions.add(onBlockChain);
 
-            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-            cryptoTransactions.add(cryptoTransaction);
+            CryptoTransaction onCryptoNetwork = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(onCryptoNetwork);
         }
 
         if (cryptoTransaction.getCryptoStatus() == CryptoStatus.ON_BLOCKCHAIN){
-            cryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
-            cryptoTransactions.add(cryptoTransaction);
+            CryptoTransaction onCryptoNetwork = duplicateCryptoTransaction(cryptoTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+            cryptoTransactions.add(onCryptoNetwork);
         }
 
         return cryptoTransactions;
+    }
+
+    /**
+     * instantiates a new cryptoTransaction with a new CryptoStatus
+     * @param cryptoTransaction
+     * @param cryptoStatus
+     * @return
+     */
+    private CryptoTransaction duplicateCryptoTransaction(CryptoTransaction cryptoTransaction, CryptoStatus cryptoStatus) {
+        CryptoTransaction newCryptoTransaction = new CryptoTransaction();
+
+        newCryptoTransaction.setTransactionHash(cryptoTransaction.getTransactionHash());
+        newCryptoTransaction.setBlockHash(cryptoTransaction.getBlockHash());
+        newCryptoTransaction.setOp_Return(cryptoTransaction.getOp_Return());
+        newCryptoTransaction.setAddressTo(cryptoTransaction.getAddressTo());
+        newCryptoTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
+        newCryptoTransaction.setCryptoAmount(cryptoTransaction.getCryptoAmount());
+        newCryptoTransaction.setCryptoStatus(cryptoStatus);
+        newCryptoTransaction.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
+
+        return newCryptoTransaction;
     }
 
     /**
@@ -591,7 +625,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * For example, If i don't have all adressTo or From, or coin values of zero.
      * @throws CantFixTransactionInconsistenciesException
      */
-    public void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
+    private void fixTransactionInconsistencies() throws CantFixTransactionInconsistenciesException {
         List<TransactionProtocolData> transactions = null;
 
         try {
@@ -613,7 +647,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
             if (transactionProtocolData.getCryptoTransaction().getCryptoAmount() == 0)
                 fixCryptoAmountInconsistency(transactionProtocolData);
         }
-
     }
 
     /**
@@ -644,5 +677,30 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
         Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
 
+    }
+
+    /**
+     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     * @param blockchainNetworkType
+     * @param tx
+     * @param transactionId
+     * @throws CantStoreBitcoinTransactionException
+     */
+    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
+        runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId);
+    }
+
+    /**
+     * Returns the broadcast Status for a specified transaction.
+     * @param txHash
+     * @return
+     * @throws CantGetBroadcastStatusException
+     */
+    public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
+        try {
+            return getDao().getBroadcastStatus(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetBroadcastStatusException (CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
+        }
     }
 }
