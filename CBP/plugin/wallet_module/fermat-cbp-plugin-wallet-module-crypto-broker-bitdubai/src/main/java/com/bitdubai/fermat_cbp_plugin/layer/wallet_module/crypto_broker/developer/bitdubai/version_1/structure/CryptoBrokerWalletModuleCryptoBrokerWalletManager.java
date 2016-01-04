@@ -113,6 +113,7 @@ import java.util.UUID;
  * @author Nelson Ramirez
  * @version 1.0
  * @since 05/11/15
+ * Modified by Franklin Marcano 23/12/15
  */
 public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWalletManager {
     private final WalletManagerManager walletManagerManager;
@@ -870,6 +871,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
         return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletProviderSettings();
+    }
+
+    /**
+     * This method load the list CryptoBrokerWalletProviderSetting
+     *
+     * @return List<CryptoBrokerWalletAssociatedSetting>
+     * @throws CantGetCryptoBrokerWalletSettingException
+     */
+    @Override
+    public List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
+        return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings();
     }
 
     /**
