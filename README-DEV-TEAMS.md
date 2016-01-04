@@ -95,7 +95,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 
 1. Standard team size is of 5 full-time members.
 2. One full-time member can be replaced by 2 part-time members.
-3. Developers can go up the category list and they can also go down in certain circunstances.
+3. Developers can go up the category list and they can also go down in certain circumstances.
 4. Going up or down a categorý is decided by the developers's team leader or parent team leader according to these rules.
 5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
 6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
@@ -103,7 +103,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 8. When a full team has a child sub-team leaded by one of the current members:<br>
     a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
     b. Failing to do so, will move him down the next month to _Team Leader_.<br>
-    c. Succeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
+    c. Succeeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
 9. Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
 
 <br>
