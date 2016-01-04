@@ -13,6 +13,8 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.data
  */
 public class ChatNetworkServiceDatabaseConstants {
 
+    public static final String DATA_BASE_NAME = "chat_network_service";
+
     /**
      * incoming messages database table definition.
      */
