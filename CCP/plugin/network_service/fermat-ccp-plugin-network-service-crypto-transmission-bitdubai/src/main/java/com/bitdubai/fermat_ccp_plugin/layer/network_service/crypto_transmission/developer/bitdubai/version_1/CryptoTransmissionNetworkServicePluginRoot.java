@@ -1333,10 +1333,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             }
 
 
-        } catch (CantUpdateRecordDataBaseException e) {
-            System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
-            e.printStackTrace();
-        } catch (CantReadRecordDataBaseException e) {
+        } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
             System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
