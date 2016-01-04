@@ -4,15 +4,24 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
@@ -29,27 +38,51 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Merchan
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletProviderSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantSaveCryptoCustomerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by nelson on 11/11/15.
+ * Modified by Franklin Marcano 30/12/15
  */
 public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements CryptoCustomerWalletManager {
+    private final WalletManagerManager walletManagerManager;
+    private final CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private final UUID pluginId;
+
+    /*
+    *Constructor with Parameters
+    */
+    public CryptoCustomerWalletModuleCryptoCustomerWalletManager(WalletManagerManager walletManagerManager,
+                                                                 CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+                                                                 UUID pluginId)
+    {
+        this.walletManagerManager                     = walletManagerManager;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.pluginId                                 = pluginId;
+    }
+
     private List<ContractBasicInformation> contractsHistory;
     private List<ContractBasicInformation> openContracts;
     private List<CustomerBrokerNegotiationInformation> openNegotiations;
     private List<BrokerIdentityBusinessInfo> connectedBrokers;
-
-
-    public CryptoCustomerWalletModuleCryptoCustomerWalletManager() {
-    }
 
     @Override
     public CustomerBrokerNegotiationInformation addClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause) {
@@ -166,12 +199,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      * @return Collection<NegotiationLocations>
      */
     @Override
-    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) {
+    public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsPurchaseException {
         //TODO: Implementar
         Collection<NegotiationLocations> negotiationLocations = null;
         if (negotiationType.getCode() == NegotiationType.PURCHASE.getCode())
         {
-
+            negotiationLocations = customerBrokerPurchaseNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
     }
@@ -238,6 +271,115 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException {
         return false;
+    }
+
+    /**
+     * This method list all wallet installed in device, start the transaction
+     */
+    @Override
+    public List<InstalledWallet> getInstallWallets() throws CantListWalletsException {
+        return walletManagerManager.getInstalledWallets();
+    }
+
+    @Override
+    public CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data) {
+        CustomerBrokerNegotiationInformation customerBrokerNegotiationInformation = data;
+        customerBrokerNegotiationInformation.setMemo(memo);
+        return customerBrokerNegotiationInformation;
+    }
+
+    /**
+     * @param location
+     * @param uri
+     * @throws CantCreateLocationPurchaseException
+     */
+    @Override
+    public void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException {
+        customerBrokerPurchaseNegotiationManager.createNewLocation(location, uri);
+    }
+
+    @Override
+    public NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException {
+        return new NegotiationBankAccount() {
+            @Override
+            public UUID getBankAccountId() {
+                return UUID.randomUUID();
+            }
+
+            @Override
+            public String getBankAccount() {
+                return bankAccount;
+            }
+
+            @Override
+            public FiatCurrency getCurrencyType() {
+                return currencyType;
+            }
+        };
+    }
+
+    /**
+     * @param bankAccount
+     * @throws CantCreateBankAccountPurchaseException
+     */
+    @Override
+    public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException {
+        customerBrokerPurchaseNegotiationManager.createNewBankAccount(bankAccount);
+    }
+
+    /**
+     * @param bankAccount
+     * @throws CantUpdateBankAccountPurchaseException
+     */
+    @Override
+    public void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException {
+        customerBrokerPurchaseNegotiationManager.updateBankAccount(bankAccount);
+    }
+
+    /**
+     * @param bankAccount
+     * @throws CantDeleteBankAccountPurchaseException
+     */
+    @Override
+    public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException {
+        customerBrokerPurchaseNegotiationManager.deleteBankAccount(bankAccount);
+    }
+
+    @Override
+    public CryptoCustomerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException {
+        return new CryptoCustomerWalletAssociatedSettingImpl();
+    }
+
+    @Override
+    public void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException {
+        String toXml = XMLParser.parseObject(setting);
+    }
+
+    /**
+     * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
+     *
+     * @param currencyFrom
+     * @param currencyTo
+     * @return a Map of name/provider reference pairs
+     */
+    @Override
+    public Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException {
+        return null;
+    }
+
+    @Override
+    public CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException {
+        return new CryptoCustomerWalletProviderSettingImpl();
+    }
+
+    @Override
+    public void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException {
+        String toXml = XMLParser.parseObject(setting);
+    }
+
+    @Override
+    public List<CryptoCustomerWalletProviderSetting> getAssociatedProviders(String walletPublicKey) {
+        return null;
     }
 
 
