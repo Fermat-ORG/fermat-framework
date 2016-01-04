@@ -5,6 +5,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.Error
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by mati on 2016.01.02..
  */
@@ -13,11 +16,13 @@ public class NetworkBroadcastWorker implements Runnable {
     String transactionHash;
     BitcoinNetworkManager bitcoinNetworkManager;
     CryptoVaultManager cryptoVaultManager;
+    NetworkExecutorPool networkExecutorPool;
 
-    public NetworkBroadcastWorker(String transactionHash, BitcoinNetworkManager bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager) {
+    public NetworkBroadcastWorker(String transactionHash, BitcoinNetworkManager bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager,NetworkExecutorPool networkExecutorPool) {
         this.transactionHash = transactionHash;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.cryptoVaultManager = cryptoVaultManager;
+        this.networkExecutorPool = networkExecutorPool;
     }
 
     @Override
@@ -26,6 +31,24 @@ public class NetworkBroadcastWorker implements Runnable {
             bitcoinNetworkManager.broadcastTransaction(transactionHash);
         } catch (CantBroadcastTransactionException e) {
             e.printStackTrace();
+            networkExecutorPool.rejectedBroadcastExecution(transactionHash);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            networkExecutorPool.rejectedBroadcastExecution(transactionHash);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            networkExecutorPool.rejectedBroadcastExecution(transactionHash);
         }
     }
+
+    public String getTransactionHash() {
+        return transactionHash;
+    }
+
+//    @Override
+//    public Object call() throws Exception {
+//        bitcoinNetworkManager.broadcastTransaction(transactionHash);
+//        return null;
+//    }
+
 }

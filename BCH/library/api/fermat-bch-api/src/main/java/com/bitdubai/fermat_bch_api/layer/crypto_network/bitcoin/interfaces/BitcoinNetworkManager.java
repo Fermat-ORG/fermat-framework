@@ -22,6 +22,7 @@ import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by rodrigo on 9/30/15.
@@ -68,7 +69,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    void broadcastTransaction (String txHash) throws CantBroadcastTransactionException;
+    void broadcastTransaction (String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException;
 
     /**
      * Returns the broadcast Status for a specified transaction.

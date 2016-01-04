@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
@@ -389,7 +390,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException {
         runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
     }
 
