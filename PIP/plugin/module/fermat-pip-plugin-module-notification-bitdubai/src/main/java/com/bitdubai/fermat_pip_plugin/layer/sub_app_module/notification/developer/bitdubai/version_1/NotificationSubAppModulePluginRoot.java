@@ -422,6 +422,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         switch (eventSource) {
             case INCOMING_EXTRA_USER:
                 return "Received money";
+            case INCOMING_INTRA_USER:
+                return "Received money";
             case OUTGOING_INTRA_USER:
                 return "Transaction canceled";
             default:
@@ -431,7 +433,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     private String makeString(EventSource eventSource){
         switch (eventSource){
-
+            case INCOMING_INTRA_USER:
+                return " send ";
             case INCOMING_EXTRA_USER:
                 return " send ";
             default:
