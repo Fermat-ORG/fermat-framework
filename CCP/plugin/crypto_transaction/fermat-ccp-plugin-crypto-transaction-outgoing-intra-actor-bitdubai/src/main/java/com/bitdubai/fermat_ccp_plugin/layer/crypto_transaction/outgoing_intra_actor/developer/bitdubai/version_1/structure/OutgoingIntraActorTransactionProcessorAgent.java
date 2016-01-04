@@ -34,6 +34,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantSetTranactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentFundsException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorWalletNotSupportedException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.NetworkBroadcastWorker;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.NetworkExecutorPool;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.RejectBroadcastHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.RejectedBroadcastExecutionHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -46,6 +50,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -65,6 +76,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     private Thread agentThread;
     private TransactionProcessorAgent transactionProcessorAgent;
+    private NetworkExecutorPool executorPool;
+
 
     public OutgoingIntraActorTransactionProcessorAgent(final ErrorManager errorManager,
                                                        final CryptoVaultManager cryptoVaultManager,
@@ -90,17 +103,21 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
         this.eventManager = eventManager;
 
-    }
+
+        RejectedBroadcastExecutionHandler rejectedBroadcastExecutionHandler = new RejectedBroadcastExecutionHandler(executorPool);
+        ThreadFactory threadFactory = Executors.defaultThreadFactory();
+        executorPool = new NetworkExecutorPool(2, 4, 2, TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(2), threadFactory, rejectedBroadcastExecutionHandler);
+
+}
 
 
     public void start() {
         this.transactionProcessorAgent = new TransactionProcessorAgent();
-        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager);
+        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager,executorPool);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
         this.transactionProcessorAgent.initialize(this.errorManager, this.outgoingIntraActorDao, this.bitcoinWalletManager, this.cryptoVaultManager, this.transactionHandlerFactory, this.cryptoTransmissionNetworkServiceManager, eventManager);
         this.agentThread = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
-
         this.status = AgentStatus.STARTED;
         System.out.println("CryptoTransmissionAgent - started ");
     }
@@ -110,8 +127,11 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
     }
 
     public void stop() {
-        if (isRunning())
+        if (isRunning()) {
             this.transactionProcessorAgent.stop();
+        }
+        if(!executorPool.isShutdown())
+            executorPool.shutdownNow();
     }
 
 
@@ -126,6 +146,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager cryptoTransmissionManager;
         private EventManager eventManager;
+        private NetworkExecutorPool executorPool;
 
 
         private static final int SLEEP_TIME = 5000;
@@ -140,12 +161,14 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                  CryptoVaultManager cryptoVaultManager,
                                  BitcoinNetworkManager bitcoinNetworkManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
-                                 CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager) {
+                                 CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager,
+                                 NetworkExecutorPool executorPool) {
             this.dao = dao;
             this.errorManager = errorManager;
             this.cryptoVaultManager = cryptoVaultManager;
             this.bitcoinNetworkManager = bitcoinNetworkManager;
             this.bitcoinWalletManager = bitcoinWalletManager;
+            this.executorPool = executorPool;
         }
 
         private void initialize(ErrorManager errorManager,
@@ -255,10 +278,18 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                 for (OutgoingIntraActorTransactionWrapper transaction : transactionList) {
                     try {
                         String hash;
-                        if (transaction.getOp_Return() == null)
-                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount());
-                        else
-                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
+
+                        hash = (transaction.getOp_Return() == null) ?
+                                this.cryptoVaultManager.generateTransaction(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount())
+                                :
+                                this.cryptoVaultManager.generateTransaction(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
+
+//                        if (transaction.getOp_Return() == null)
+//                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount());
+//                        else
+//                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
+
+
 
                         System.out.print("-------------- sendBitcoins to cryptoVaultManager");
                         dao.setTransactionHash(transaction, hash);
@@ -316,7 +347,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     } catch (CryptoTransactionAlreadySentException e) {
                         reportUnexpectedException(e);
                         // TODO: Verify what to do when the transaction has already been sent.
-                    } catch (CouldNotSendMoneyException | CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
+                    } catch ( CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
                         //If we cannot send the money at this moment then we'll keep trying.
                         reportUnexpectedException(e);
 
@@ -335,6 +366,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                 }
 
 
+
+
+
             /*
              * Now we proceed to apply the transactions sent to the bitcoin network to the wallet book
              * balance. We need to check the state of the transaction to the crypto vault before
@@ -342,9 +376,19 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
              */
                 transactionList = dao.getSentToCryptoVaultTransactions();
 
+                /**
+                 * Now we proceed to send the transaction hash to the vault to send it(in future will be the transaction to the crypto network)
+                 */
+            //TODO: Esto lo voy a hacer cuando rodrigo aplique sus cambios
+//                for (OutgoingIntraActorTransactionWrapper transaction : transactionList){
+//                    ExecutorService executorService = Executors.newFixedThreadPool(6);
+//                    executorService.
+//                }
 
                 for (OutgoingIntraActorTransactionWrapper transaction : transactionList) {
                     try {
+                        NetworkBroadcastWorker networkBroadcastWorker = new NetworkBroadcastWorker(transaction.getTransactionHash(),bitcoinNetworkManager,cryptoVaultManager,executorPool);
+                        executorPool.execute(networkBroadcastWorker);
                         //TODO: ver que pasa si el crypto status está en null
                         CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
                         this.transactionHandlerFactory.getHandler(transaction.getReferenceWallet()).handleTransaction(transaction, cryptoStatus);

@@ -46,7 +46,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 
 
 <br>
-## Part II: Expanding Fermat Functionality
+## Part II: Expanding Fermat Functionality ( currently in redaction process..)
 
 <br>
 ### Expanding the Master Plan

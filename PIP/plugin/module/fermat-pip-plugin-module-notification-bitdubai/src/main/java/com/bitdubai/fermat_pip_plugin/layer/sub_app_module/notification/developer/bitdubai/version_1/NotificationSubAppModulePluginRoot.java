@@ -152,7 +152,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         //denied payment request
         FermatEventListener deniedPaymentRequestNotificationEventListener = eventManager.getNewListener(EventType.DENIED_PAYMENT_REQUEST_NOTIFICATION);
         FermatEventHandler deniedPaymentRequestNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.DeniedPaymentRequestNotificationHandler(this);
-        receivePyamentRequestNotificationEventListener.setEventHandler(deniedPaymentRequestNotificationHandler);
+        deniedPaymentRequestNotificationEventListener.setEventHandler(deniedPaymentRequestNotificationHandler);
         eventManager.addListener(deniedPaymentRequestNotificationEventListener);
         listenersAdded.add(deniedPaymentRequestNotificationEventListener);
 
@@ -195,20 +195,16 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(eventSource, intraUserIdentityPublicKey,walletPublicKey, amount, cryptoCurrency, actorId, actorType);
             notification.setNotificationType(NotificationType.INCOMING_MONEY.getCode());
             poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
         }
-//            Notification notification = new Notification();
-//            notification.setAlertTitle("Sos capo pibe");
-//            notification.setTextTitle("Ganaste un premio");
-//            notification.setTextBody("5000 btc");
-//            poolNotification.add(notification);
+
         // notify observers
         notifyNotificationArrived();
 
-//        } catch (CantCreateNotification cantCreateNotification) {
-//            cantCreateNotification.printStackTrace();
-//        }
+
     }
 
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource,String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) throws CantCreateNotification {
@@ -365,7 +361,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("A Payment Request was received for" + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
+            notification.setTextBody("A Payment Request was received for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
             notification.setNotificationType(NotificationType.RECEIVE_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);
@@ -388,7 +384,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("Your Payment Request for" + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + " was denied.");
+            notification.setTextBody("Your Payment Request for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + " was denied.");
             notification.setNotificationType(NotificationType.DENIED_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);

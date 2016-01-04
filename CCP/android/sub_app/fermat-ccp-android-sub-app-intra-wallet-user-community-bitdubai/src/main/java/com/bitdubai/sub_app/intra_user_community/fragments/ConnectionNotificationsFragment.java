@@ -207,7 +207,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
-            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
+
+            //moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(), data.getName(), data.getPublicKey(), data.getProfileImage());
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -226,7 +227,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
             });
             notificationAcceptDialog.show();
 
-        } catch (CantAcceptRequestException | CantGetActiveLoginIdentityException e) {
+        } catch ( CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
     }

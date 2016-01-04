@@ -183,7 +183,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
-
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey,10,offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {

@@ -4,7 +4,7 @@
 
 ## Introduction
 
-All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only types of teams. We also have teams of graphic designers, 3d artists, video producers, copy writers, etc.
+All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only types of teams. We also have teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
 
 At this file you will find a list of Fermat developers teams. Feel free to contact their team leaders if you want to join them.
 
@@ -86,7 +86,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 Please note that whenever we mention a full-time developer is equivalent to mention two part-time developers.
 
 <br>
-## Team Members
+## Teams presentations and members
 
 <br>
 ### Thunder Team:
@@ -104,8 +104,8 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
-
-
+    
+    
 * Nerio Enrique Indriago Ortega <br/>
 ---
       Email:   nerioindriago@gmail.com
@@ -130,9 +130,9 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 ### Coin Diggers Team:
 -----------------------------------
 <br>
-### <img src="https://cloud.githubusercontent.com/assets/13594347/11161999/6d16609a-8a60-11e5-8fa2-e4b9d2f6c080.jpg" width="600" height="300"/>
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/63e3087dc448c761d11a76d2625693fe8bcdd4b3/Logotype/FermatTeams/logo_coindiggers_team.jpg "Logo Coin Diggers Team")
 
-We are passionate geeks , always on the edge of technology and a little more.
+We are passionate geeks , always on the edge of technology and a little more. 
 With the only phrase "Keep moving forward" we just walk through Fermat.
 We are in charge of Android-core,Fermat-Core, Android framework development and platforms like CCP, CCM among others.
 
@@ -144,8 +144,8 @@ We are in charge of Android-core,Fermat-Core, Android framework development and 
     Email:   matiasfurszyfer@gmail.com
     Skype:   matias.furszyfer
     Github:  https://github.com/furszy
-
-
+    
+    
 *  Natalia Cortez <br/>
 ---
       Email:   nattyco@gmail.com
@@ -205,8 +205,8 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
     Github:  https://github.com/darkestpriest
-
-
+    
+    
 * **Gabriel Araujo**<br/>
 ---
       Email:   gabe_512@hotmail.com
@@ -219,6 +219,12 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Skype:   payarez
     Github:  https://github.com/lostwood
 
+* **Juan Sulbaran**<br/>
+---
+    Email:   sulbaranja@gmail.com
+    Skype:   juanaso15
+    Github:  -----
+    
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
@@ -264,8 +270,8 @@ In each platform mentioned, we are involved in the development of Network Servic
     Email:   laion.cj91@gmail.com
     Skype:   leon.acosta
     Github:  https://github.com/lnacosta
-
-
+    
+    
 * **Patricio Gesualdi**<br/>
 ---
       Email:   pmgesualdi@hotmail.com
@@ -342,3 +348,30 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
 We welcome everyone who would like to join us. JavaScript is a hard languages when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
 
 <br/>
+
+### Fermat ORG Sierra:
+-----------------------------------
+In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with a different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
+
+#### Team Members:
+
+* **Luis Fuenmayor [ORG New Team Leader - ORG Veteran]**<br/>
+---
+    Email:   fuelusumar@gmail.com
+    Skype:   fuelusumar
+    Github:  https://github.com/fuelusumar
+    
+* **German Mendoza**<br/>
+---
+      Email:   german.mendoza.187@gmail.com
+      Skype:   german0296
+      Github:  https://github.com/kyxer
+
+* **Luis Campo**<br/>
+---
+    Email:   campusprize@gmail.com
+    Skype:   campol
+    Github:  https://github.com/campol
+
+<br/>
+

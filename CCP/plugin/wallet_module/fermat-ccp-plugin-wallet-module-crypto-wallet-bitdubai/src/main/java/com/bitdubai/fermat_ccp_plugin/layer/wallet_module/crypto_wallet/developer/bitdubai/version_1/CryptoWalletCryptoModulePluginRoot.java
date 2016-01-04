@@ -30,6 +30,10 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -100,6 +104,8 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
+
+    private String appPublicKey;
 
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -225,5 +231,23 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+        this.appPublicKey = publicKey;
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        int[] notifications = new int[4];
+        try {
+            notifications[2] = cryptoPaymentManager.getCryptoPaymentRegistry().listCryptoPaymentRequestsByTypeAndState(appPublicKey, CryptoPaymentState.PENDING_RESPONSE, CryptoPaymentType.RECEIVED,99,0).size();
+        } catch (CantListCryptoPaymentRequestsException e) {
+            e.printStackTrace();
+        } catch (CantGetCryptoPaymentRegistryException e) {
+            e.printStackTrace();
+        }
+        return notifications;
     }
 }
