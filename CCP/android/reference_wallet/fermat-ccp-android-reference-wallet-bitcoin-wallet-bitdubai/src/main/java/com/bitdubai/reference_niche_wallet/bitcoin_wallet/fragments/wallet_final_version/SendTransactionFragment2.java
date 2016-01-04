@@ -469,7 +469,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 book_offset = lstCryptoWalletTransactionsBook.size();
 
 
-                for (CryptoWalletTransaction cryptoWalletTransaction : list) {
+                for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
                      lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
                     long total = 0;
