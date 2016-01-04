@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -58,6 +58,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     BlockChain blockChain;
     BitcoinNetworkEvents events;
     final NetworkParameters NETWORK_PARAMETERS;
+    final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
     BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao;
 
 
@@ -86,6 +87,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * I get the network parameter from the passed wallet.
          */
         NETWORK_PARAMETERS = wallet.getNetworkParameters();
+        BLOCKCHAIN_NETWORKTYPE = BitcoinNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
     }
 
 
@@ -183,7 +185,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * I will broadcast any transaction that might be in broadcasting status.
              * I might have this if the process was interrupted while broadcasting.
              */
-            resumeBroadcastOfPendingTransactions();
+            resumeBroadcastOfPendingTransactions(BLOCKCHAIN_NETWORKTYPE);
 
         } catch (Exception e){
             e.printStackTrace();
@@ -193,9 +195,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     /**
      * Will get all transactions hashes in Broadcasting status to resume them.
      */
-    private void resumeBroadcastOfPendingTransactions() {
+    private void resumeBroadcastOfPendingTransactions(BlockchainNetworkType blockchainNetworkType) {
         try {
-            for (String txHash : getDao().getBroadcastTransactionsByStatus(Status.BROADCASTING)){
+            for (String txHash : getDao().getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
                 try {
                     this.broadcastTransaction(txHash);
                 } catch (CantBroadcastTransactionException e) {
@@ -468,13 +470,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @throws CantStoreBitcoinTransactionException
      */
     public void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
-        BlockchainNetworkType blockchainNetworkType = BitcoinNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
-
         try {
             /**
              * I store it in the database
              */
-            getDao().storeBitcoinTransaction(blockchainNetworkType, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
+            getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
             /**
              * I store it in the wallet.
              */

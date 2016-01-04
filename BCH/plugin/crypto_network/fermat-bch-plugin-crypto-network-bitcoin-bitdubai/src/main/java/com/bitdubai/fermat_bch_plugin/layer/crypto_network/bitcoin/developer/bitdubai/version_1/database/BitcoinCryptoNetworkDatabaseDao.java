@@ -1210,8 +1210,10 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param status
      * @return
      */
-    public List<String> getBroadcastTransactionsByStatus(Status status) throws CantExecuteDatabaseOperationException {
+    public List<String> getBroadcastTransactionsByStatus(BlockchainNetworkType blockchainNetworkType, Status status) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, status.getCode(), DatabaseFilterType.EQUAL);
 
         try {
