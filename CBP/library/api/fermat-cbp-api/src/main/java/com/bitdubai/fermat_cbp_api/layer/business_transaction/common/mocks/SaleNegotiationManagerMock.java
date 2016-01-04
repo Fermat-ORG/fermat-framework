@@ -151,7 +151,7 @@ public class SaleNegotiationManagerMock implements CustomerBrokerSaleNegotiation
     }
 
     @Override
-    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException {
+    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException{
         return null;
     }
 }

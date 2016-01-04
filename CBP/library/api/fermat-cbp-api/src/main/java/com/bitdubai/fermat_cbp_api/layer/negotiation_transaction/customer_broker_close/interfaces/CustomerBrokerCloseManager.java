@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
@@ -19,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 23.11.15.
  */
-public interface CustomerBrokerCloseManager {
+public interface CustomerBrokerCloseManager extends FermatManager {
 
     /**
      * Create an Customer Broker Close  Negotiation Transaction for the customer
