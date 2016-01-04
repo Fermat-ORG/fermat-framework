@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -64,20 +65,25 @@ public class TransactionsViewHolder extends FermatViewHolder {
 
             depositItemsVisible();
             depositAmount.setText(getTransactionAmountText(itemInfo.getTransactionType(), itemInfo.getAmount()));
-            depositDate.setText(DateFormat.format("dd MMM yyyy h:mm:ss aa", (itemInfo.getTimestamp() * 1000)));
+            depositDate.setText(getPrettyTime(itemInfo.getTimestamp()));
             depositMemo.setText(itemInfo.getMemo());
         }
         else {
 
             withdrawalItemsVisible();
             withdrawalAmount.setText(getTransactionAmountText(itemInfo.getTransactionType(), itemInfo.getAmount()));
-            withdrawalDate.setText(DateFormat.format("dd MMM yyyy h:mm:ss aa", (itemInfo.getTimestamp() * 1000)));
+            withdrawalDate.setText(getPrettyTime(itemInfo.getTimestamp()));
             withdrawalMemo.setText(itemInfo.getMemo());
         }
 
     }
 
     /* HELPER FUNCTIONS */
+    private String getPrettyTime(long timestamp)
+    {
+        return DateUtils.getRelativeTimeSpanString(timestamp * 1000).toString();
+        //return DateFormat.format("dd MMM yyyy h:mm:ss aa", (timestamp * 1000)).toString();
+    }
     private Bitmap getImgBitmap(TransactionType transactionType) {
         if(transactionType == TransactionType.DEBIT)
             return BitmapFactory.decodeResource(res, R.drawable.csh_withdrawal);

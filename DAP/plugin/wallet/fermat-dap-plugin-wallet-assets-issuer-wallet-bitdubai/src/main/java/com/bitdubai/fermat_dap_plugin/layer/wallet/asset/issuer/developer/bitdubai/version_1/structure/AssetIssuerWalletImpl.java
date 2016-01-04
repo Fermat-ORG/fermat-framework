@@ -107,10 +107,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-            assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetIssuerWalletDao.setPlugin(pluginId);
-//            test();
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, walletId);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -241,9 +238,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
         try {
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-            assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetIssuerWalletDao.setPlugin(pluginId);
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId);
             return assetIssuerWalletDao.listsTransactionsByAssetsAll(balanceType, transactionType, assetPublicKey);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -257,9 +252,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException {
         try {
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-            assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetIssuerWalletDao.setPlugin(pluginId);
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId);
             return assetIssuerWalletDao.listsTransactionsByAssets(balanceType, transactionType, max, offset, assetPublicKey);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -273,9 +266,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey, BalanceType balanceType, int max, int offset) throws CantGetTransactionsException {
         try {
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-            assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetIssuerWalletDao.setPlugin(pluginId);
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId);
             return assetIssuerWalletDao.getTransactionsByActor(actorPublicKey, balanceType, max, offset);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -289,9 +280,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public List<AssetIssuerWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType, TransactionType transactionType, int max, int offset) throws CantGetTransactionsException {
         try {
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-            assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetIssuerWalletDao.setPlugin(pluginId);
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId);
             return assetIssuerWalletDao.getTransactionsByTransactionType(transactionType, max, offset);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -305,9 +294,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public void setTransactionDescription(UUID transactionID, String description) throws CantFindTransactionException, CantStoreMemoException {
         try {
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-            assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
-            assetIssuerWalletDao.setPlugin(pluginId);
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, transactionID);
             assetIssuerWalletDao.updateMemoField(transactionID, description);
         } catch (CantStoreMemoException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
@@ -325,7 +312,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     @Override
     public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException {
-        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
+        assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId);
         List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
         assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
         return assetIssuerWalletTransactions;

@@ -22,6 +22,9 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -88,6 +91,9 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
     private AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
+    private AssetVaultManager assetVaultManager;
 
     private AssetIssuerActorDao assetIssuerActorDao;
 
@@ -282,13 +288,32 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         System.out.println("*****Actor Asset Redeem Point Solicita*****");
         System.out.println("Actor Asset Redeem Point name: " + dapActorSender.getName());
         System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
-        //TODO GENERACION DE PUBLICK KEY SOLICITADA.
 
-        //TODO ENVIO DE PUBLICK KEY EXTENDED GENERADA PARA A.N.S Redeem Point
-        AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage();
+        /**
+         * I will request a new ExtendedPublicKey from the Asset Vault.
+         * The asset vault will create a new extendedPublic Key for this redeem point.
+         */
+        ExtendedPublicKey extendedPublicKey = null;
+        try {
+            extendedPublicKey = assetVaultManager.getRedeemPointExtendedPublicKey(dapActorSender.getActorPublicKey());
+        } catch (CantGetExtendedPublicKeyException e) {
+            /**
+             * if there was an error and we coulnd't get the ExtendedPublicKey, then we will send a null public Key
+             * and this will be handle by the Redeem Point.
+             * We might need to find a better way to handle this.
+             */
+            e.printStackTrace();
+        }
 
-        //todo Rodrigo obtener Extended Public Key de Asset Vault y meter dentro de AssetExtendedPublickKeyContentMessage
+        /**
+         * I will create a new Message with the extended public Key.
+         */
+        AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey);
 
+
+        /**
+         * and send it using the redeem point network service.
+         */
         try {
             DAPMessage dapMessageSend = new DAPMessage(
                     DAPMessageType.EXTENDED_PUBLIC_KEY,

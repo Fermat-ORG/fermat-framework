@@ -57,33 +57,54 @@ Developers and team leaders in particular are classified by the deepness of the 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
 | 1 | Contributor | Casual contributor to the project. |
-| 2 | Part-Time Entry Level | New part-time developer on the project. |
-| 3 | Part-Time Veteran | Veteran part-time developer. Working part-time 6+ months. |
-| 4 | Entry Level | New developer on the project. |
-| 5 | Veteran | Veteran developer. Working full time 3+ months. |
-| 6 | New Team Leader | Team Leader with less than 5 full-time members on the team. |
-| 7 | Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 8 | New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 9 | Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 10 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
-| 11 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
-| 12 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
-| 13 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
-| 14 | Core Developer | Won Programming Competition or one of thier grand children had a child. |
+| 2 | New Part-Time Developer | New part-time developer on the project. |
+| 3 | Part-Time Veteran Developer | Working part-time 6+ months OR high performant. |
+| 4 | New Developer | New full-time developer on the project. |
+| 5 | Veteran Developer | (Working full time 3+ months OR high performant) AND highly engaged. |
+| 6 | New Team Leader | Team Leader with 1 full-time member on the team. |
+| 7 | Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 9 | Awarded Team Leader | Team Leader awarded a bounty for finishing a project on time. |
+| 10 | New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 11 | Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 12 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 13 | Awarded Parent Team Leader | Team Leader with at least 1 awarded sub-team. |
+| 14 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
+| 15 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
+| 16 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
+| 17 | Awarded Grand Parent Team Leader | Grand Parent Team Leader with 1 awarded grand children. |
+| 18 | Core Developer | Won Programming Competition AND a grand children had a child. |
 
 ### Fermat ORG Site
 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
-| 1 | ORG Entry Level | New developer on the project. |
-| 2 | ORG Veteran | Veteran developer. Working full time 3+ months or part-time 6+ months. |
-| 3 | ORG New Team Leader | Team Leader with less than 5 full-time members on the team. |
-| 4 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
-| 5 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
-| 6 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
-| 7 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 1 | ORG New Developer | New developer on the project. |
+| 2 | ORG Veteran Developer| Working full time 3+ months OR part-time 6+ months OR high performant. |
+| 3 | ORG New Team Leader | Team Leader with 1 full-time member on the team. |
+| 4 | ORG Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 5 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 6 | ORG Awarded Team Leader | Team Leader with 5 full-time members on the team. |
+| 7 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 8 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 9 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 10 | ORG Awarded Parent Team Leader | Team Leader with 5 sub-teams. |
 
-Please note that whenever we mention a full-time developer is equivalent to mention two part-time developers.
+
+### The following rules apply:
+
+1. Standard team size is of 5 full-time members.
+2. One full-time member can be replaced by 2 part-time members.
+3. Developers can go up the category list and they can also go down in certain circumstances.
+4. Going up or down a categorý is decided by the developers's team leader or parent team leader according to these rules.
+5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
+6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
+8. When a full team has a child sub-team leaded by one of the current members:<br>
+    a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
+    b. Failing to do so, will move him down the next month to _Team Leader_.<br>
+    c. Succeeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
+9. Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
 
 <br>
 ## Teams presentations and members
@@ -200,26 +221,26 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 #### Team Members:
 
 
-* **Manuel Perez [Team Leader - New Team Leader]**<br/>
+* **Manuel Perez [Team Leader - Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
     Github:  https://github.com/darkestpriest
     
     
-* **Gabriel Araujo**<br/>
+* **Gabriel Araujo [New Developer]**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
       Github:  https://github.com/GaboHub
 
-* **Miguel Payarez**<br/>
+* **Miguel Payarez [New Part-Time Developer]**<br/>
 ---
     Email:   miguel_payarez@hotmail.com
     Skype:   payarez
     Github:  https://github.com/lostwood
 
-* **Juan Sulbaran**<br/>
+* **Juan Sulbaran [New Part-Time Developer]**<br/>
 ---
     Email:   sulbaranja@gmail.com
     Skype:   juanaso15
@@ -236,17 +257,23 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 
 #### Team Members:
 
-* **Franklin Marcano [Team Leader - New Team Leader]**<br/>
+* **Franklin Marcano [Team Leader - Team Leader]**<br/>
 ---
     Email:   franklinmarcano1970@gmail.com
     Skype:   franklginmarcano1970
     Github:  https://github.com/franklinmarcano1970
 
-* **Jose Cardozo**<br/>
+* **Jose Cardozo [Developer - Veteran Developer]**<br/>
 ---
       Email:   josejcb89@gmail.com
       Skype:   josejcb89
       Github:  https://github.com/josejcb
+
+* **Jose Vilchez [Developer - New Developer]**<br/>
+---
+      Email:   josvilchezalmera@gmail.com
+      Skype:   josvilchezalmera
+      Github:  https://github.com/  
 
 We are also ameteur philosophers, passionate about esoteric topics as video games.
 
@@ -287,30 +314,30 @@ We are a developer team with different experience level; we give our best to del
 
 #### Team Members:
 
-* **Nelson Ramirez [Team Leader - Full Team Leader]**<br/>
+* **Nelson Ramirez [Full Team Leader]**<br/>
 ---
     Email:   nelsonalfo@gmail.com
     Skype:   nelalfo
     Github:  https://github.com/nelsonalfo
 
-* **Angel Veloz**
+* **Angel Veloz [New Developer]**
 ---
       Skype:   vlzangel
       Github:  https://github.com/vlzangel
    
-* **Alejandro Bicelis**
+* **Alejandro Bicelis [Veteran Developer]**
 ---
       Skype:   seed_1987
       Github:  https://github.com/abicelis
     
 
-* **Guillermo Gutierrez**
+* **Guillermo Gutierrez [New Developer]**
 ---
       Email:   guillermo20@gmail.com
       Skype:   guillermo20
       Github:  https://github.com/guillermo20
 
-* **Yordin Alayn**
+* **Yordin Alayn [New Developer]**
 ---
       Email:   y.alayn@gmail.com
       Skype:   y_alayn

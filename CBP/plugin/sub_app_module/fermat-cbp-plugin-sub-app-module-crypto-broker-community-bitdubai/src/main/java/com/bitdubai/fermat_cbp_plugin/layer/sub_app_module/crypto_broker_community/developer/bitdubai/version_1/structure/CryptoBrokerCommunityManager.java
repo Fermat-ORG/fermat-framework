@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -120,7 +122,13 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public CryptoBrokerCommunitySearch searchCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
+    public CryptoBrokerCommunitySearch searchNewCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
+
+        return new CryptoBrokerCommunitySubAppModuleCommunitySearch(cryptoBrokerActorNetworkServiceManager);
+    }
+
+    @Override
+    public CryptoBrokerCommunitySearch searchConnectedCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
         return null;
     }
 
@@ -399,9 +407,37 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
 
         try {
+
             return getSettingsManager().loadAndGetSettings(null).getLastSelectedIdentity();
-        }catch (Exception e) {
-            throw new CantGetSelectedActorIdentityException(e, "", "Unhandled Error.");
+
+        } catch (final SettingsNotFoundException settingsNotFoundException) {
+
+            try {
+
+                getSettingsManager().persistSettings(null, new CryptoBrokerCommunitySettings());
+
+                return this.settingsManager.loadAndGetSettings(null).getLastSelectedIdentity();
+
+            }catch (final CantPersistSettingsException exception) {
+
+                throw new CantGetSelectedActorIdentityException(exception, "", "Error trying to persist the settings.");
+            } catch (final Exception exception) {
+
+                throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
+            }
+        } catch (final Exception exception) {
+
+            throw new CantGetSelectedActorIdentityException(exception, "", "Unhandled Error.");
         }
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }

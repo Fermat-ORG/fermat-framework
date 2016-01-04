@@ -173,6 +173,11 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_CSH_WALLET_CASH_MONEY              ("BCSHWCM"  ),
     // End CSH Plugins
 
+    //Init CER Plugins
+    BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPD"  ),
+
+    // End CER Plugins
+
     // Init new Plugins
 
     ASSET_APPROPRIATION         ("ASAP"),
@@ -267,6 +272,7 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_OFFLINE_PAYMENT            ("COFP"),
     BROKER_ACK_OFFLINE_PAYMENT          ("BAFP"),
     BROKER_ACK_ONLINE_PAYMENT           ("BAOP"),
+    CUSTOMER_ACK_OFFLINE_MERCHANDISE    ("CAFM"),
     CUSTOMER_ACK_ONLINE_MERCHANDISE     ("CAOM"),
     BROKER_SUBMIT_ONLINE_MERCHANDISE    ("BSOM"),
     BROKER_SUBMIT_OFFLINE_MERCHANDISE   ("BSFM"),
@@ -373,8 +379,9 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
             case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
-            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE ;
-            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY   ;
+            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
+            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
+            case "BCERPD":  return BITDUBAI_CER_PROVIDER_DOLARTODAY;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION         ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW              ;
             case ("CBUP"):  return CUSTOMER_BROKER_UPDATE           ;
