@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,7 +43,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
-import com.bitdubai.sub_app.intra_user_community.common.views.Utils;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -169,7 +167,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            //dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
             if (pref.getBoolean("isChecked", true)) {
                 if (moduleManager.getActiveIntraUserIdentity() != null) {
@@ -252,13 +250,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    swipeRefresh.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefresh.setRefreshing(true);
-                            onRefresh();
-                        }
-                    });
+                    onRefresh();
                 }
             }, 1500);
         }
@@ -287,8 +279,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            if (swipeRefresh != null)
-                swipeRefresh.setRefreshing(true);
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
