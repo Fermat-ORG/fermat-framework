@@ -1210,8 +1210,10 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param status
      * @return
      */
-    public List<String> getBroadcastTransactionsByStatus(Status status) throws CantExecuteDatabaseOperationException {
+    public List<String> getBroadcastTransactionsByStatus(BlockchainNetworkType blockchainNetworkType, Status status) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, status.getCode(), DatabaseFilterType.EQUAL);
 
         try {
@@ -1226,5 +1228,31 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         return txHashes;
+    }
+
+    /**
+     * Gets the Transaction Id for the specified transaction passed
+     * @param blockchainNetworkType
+     * @param txHash
+     * @return
+     */
+    public UUID getBroadcastedTransactionId(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (databaseTable.getRecords().size() != 1)
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "Unexpected result returned from query.", null);
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+
+        return record.getUUIDValue(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME);
     }
 }
