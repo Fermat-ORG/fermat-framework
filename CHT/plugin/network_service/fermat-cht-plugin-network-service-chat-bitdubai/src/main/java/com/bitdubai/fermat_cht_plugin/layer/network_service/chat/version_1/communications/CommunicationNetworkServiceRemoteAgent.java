@@ -1,17 +1,21 @@
-package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure;
+/*
+ * @#TemplateNetworkServiceRemoteAgent.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
+package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.communications;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.IncomingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
@@ -19,8 +23,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -29,7 +33,7 @@ import java.util.Map;
 import java.util.Observable;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceRemoteAgent</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent</code>
  * is the service toRead that maintaining the communication channel, read and wait for new message.
  *
  * This class extend of the <code>java.util.Observable</code> class,  its used on the software design pattern called: The observer pattern,
@@ -38,57 +42,86 @@ import java.util.Observable;
  * <p/>
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 13/06/15.
- * Modified by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public final class CommunicationNetworkServiceRemoteAgent extends Observable {
+public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkService> extends Observable {
 
-    // Represent the sleep time for the read or send (2000 milliseconds)
+    /*
+     * Represent the sleep time for the read or send (2000 milliseconds)
+     */
     private static final long SLEEP_TIME = 2000;
 
-    private final ECCKeyPair eccKeyPair;
-    private final CommunicationsVPNConnection communicationsVPNConnection;
-    private final ErrorManager                errorManager               ;
-    private final EventManager                eventManager               ;
-    private final IncomingMessageDao incomingMessageDao         ;
-    private final OutgoingMessageDao outgoingMessageDao         ;
-    private final EventSource                 eventSource                ;
-    private final PluginVersionReference      pluginVersionReference     ;
+    /**
+     * Represent the communicationsVPNConnection
+     */
+    private CommunicationsVPNConnection communicationsVPNConnection;
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+
+    /**
+     * Represent the incomingMessageDao
+     */
+    private IncomingMessageDao incomingMessageDao;
+
+    /**
+     * Represent the outgoingMessageDao
+     */
+    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Represent is the tread is running
      */
     private Boolean running;
 
-    //Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
-    private final Thread toReceive;
-    //Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
-    private final Thread toSend;
+    /**
+     * Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
+     */
+    private Thread toReceive;
 
     /**
-     * Constructor with parameters.
+     * Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
      */
-    public CommunicationNetworkServiceRemoteAgent(final ECCKeyPair eccKeyPair,
-                                                  final CommunicationsVPNConnection communicationsVPNConnection,
-                                                  final ErrorManager errorManager,
-                                                  final EventManager eventManager,
-                                                  final IncomingMessageDao incomingMessageDao,
-                                                  final OutgoingMessageDao outgoingMessageDao,
-                                                  final EventSource eventSource,
-                                                  final PluginVersionReference pluginVersionReference) {
+    private Thread toSend;
+
+    /**
+     * Represent the eccKeyPair
+     */
+    private ECCKeyPair eccKeyPair;
+
+    /**
+     *  Network service plugin root instance
+     */
+    private NS networkServicePluginRoot;
+
+    /**
+     * Constructor with parameters
+     *
+     * @param eccKeyPair from the plugin root
+     * @param errorManager  instance
+     * @param incomingMessageDao instance
+     * @param outgoingMessageDao instance
+     */
+    public CommunicationNetworkServiceRemoteAgent(NS networkServicePluginRoot,ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
-        this.eccKeyPair                  = eccKeyPair                 ;
-        this.errorManager                = errorManager               ;
-        this.eventManager                = eventManager               ;
-        this.running                     = Boolean.FALSE              ;
-        this.incomingMessageDao          = incomingMessageDao         ;
-        this.outgoingMessageDao          = outgoingMessageDao         ;
-        this.communicationsVPNConnection = communicationsVPNConnection;
-        this.eventSource                 = eventSource                ;
-        this.pluginVersionReference      = pluginVersionReference     ;
+        this.eccKeyPair                          = eccKeyPair;
+        this.errorManager                        = errorManager;
+        this.eventManager                        = eventManager;
+        this.running                             = Boolean.FALSE;
+        this.incomingMessageDao                  = incomingMessageDao;
+        this.outgoingMessageDao                  = outgoingMessageDao;
+        this.communicationsVPNConnection         = communicationsVPNConnection;
+        this.networkServicePluginRoot = networkServicePluginRoot;
 
 
         //Create a thread to receive the messages
@@ -124,13 +157,11 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         //Start the Threads
         toReceive.start();
         toSend.start();
+
+        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
+
     }
-    /**
-     * Check if it is running
-     */
-     public boolean isRunning(){
-         return this.running;
-     }
+
     /**
      * Pause the internal threads
      */
@@ -153,7 +184,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         //Stop the Threads
         toReceive.interrupt();
         toSend.interrupt();
-        this.running = false;
+
         //Disconnect from the service
         communicationsVPNConnection.close();
     }
@@ -222,18 +253,16 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             }
 
-            if(!toReceive.isInterrupted()){
+            if(toReceive.isInterrupted() == Boolean.FALSE) {
                 //Sleep for a time
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
-
         } catch (InterruptedException e) {
-            this.running=false;
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
 
     }
@@ -292,31 +321,26 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                              * Put the message on a event and fire new event
                              */
                             FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            fermatEvent.setSource(eventSource);
+                            fermatEvent.setSource(networkServicePluginRoot.getEventSource());
                             ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
                         }
                     }
 
-                } catch(CantUpdateRecordDataBaseException |
-                        CantReadRecordDataBaseException           e) {
-
-                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } catch (Exception e){
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
                 }
 
 
-            if(!toSend.isInterrupted()){
+            if(toSend.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
-                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                toSend.sleep(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
-            this.running=false;
             toSend.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
         }
-
     }
-
 }
