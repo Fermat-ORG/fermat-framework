@@ -17,6 +17,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((BankMoneyWalletModuleManager) appSession).getModuleManager();
+            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
@@ -105,7 +106,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         try {
-            selectedCurrency = FiatCurrency.getByCode(fiatCurrencies.get(pos));
+            selectedCurrency = FiatCurrency.getByCode(fiatCurrencies.get(position));
 
         } catch(InvalidParameterException e) { }
 
