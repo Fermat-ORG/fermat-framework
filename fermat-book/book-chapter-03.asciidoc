@@ -10,7 +10,7 @@ After initialization, this platform monitors the way the system is behaving as a
 Fermat core :: 
 Initializes all system-wide Plug-ins and starts a specific *core component* for each platform/superlayer running on Fermat, which in return initializes the platform/superlayer's specific set of Plug-ins.
 Android core :: 
-Initializes android's components that connect Fermat to the android user's environment.
+Initializes android's components that connect Fermat to the android user's environment.:
 NOTE: Android is a *special case* because of some programming restrictions that only allow initialization from components written in android's language. Therefore the initialization sequence in this case, begins in the component *android core* which is the first one to become active and after that, it sets Fermat CORE to run.
 Platform specific core ::
 There's a *core component* for each of the existent platforms in Fermat, which creates the _Plug-in identity_ and initializes all platform/superlayer's specific Plug-ins: +
