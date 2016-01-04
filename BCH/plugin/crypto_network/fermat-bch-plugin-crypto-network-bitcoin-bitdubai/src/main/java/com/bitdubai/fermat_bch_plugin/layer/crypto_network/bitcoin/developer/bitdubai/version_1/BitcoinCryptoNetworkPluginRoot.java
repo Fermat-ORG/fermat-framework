@@ -44,6 +44,7 @@ import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by rodrigo on 9/23/15.
@@ -259,7 +260,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException {
         bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
     }
 

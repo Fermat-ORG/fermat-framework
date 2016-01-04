@@ -6,9 +6,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class RejectedBroadcastExecutionHandler implements RejectedExecutionHandler {
 
 
+    private final RejectBroadcastHandler rejectBroadcastHandler;
+
+    public RejectedBroadcastExecutionHandler(RejectBroadcastHandler rejectBroadcastHandler) {
+        this.rejectBroadcastHandler = rejectBroadcastHandler;
+    }
+
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        System.out.println(r.toString() + " is rejected");
+        rejectBroadcastHandler.rejectedBroadcastExecution(r,executor);
     }
 }
  
