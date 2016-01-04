@@ -19,6 +19,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeRequestProtocolStateException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -89,6 +90,8 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -484,6 +487,21 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
+            // change message state to process again first time
+            reprocessWaitingMessage();
+
+            //declare a schedule to process waiting request message
+            Timer timer = new Timer();
+
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // change message state to process retry later
+                    reprocessWaitingMessage();
+                }
+            }, 2 * 3600 * 1000);
+
+
             /*
              * Its all ok, set the new status
             */
@@ -824,7 +842,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         cryptoPaymentRequestExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
         //I check my time trying to send the message
-        //checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
 
     }
 
@@ -1016,8 +1034,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
-
-  /*  private void checkFailedDeliveryTime(String destinationPublicKey)
+    private void checkFailedDeliveryTime(String destinationPublicKey)
     {
         try{
 
@@ -1075,18 +1092,18 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     {
         try {
 
-            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
+            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(RequestProtocolState.WAITING_RESPONSE);
 
             for(CryptoPaymentRequest record : cryptoAddressRequestList) {
 
                 cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
             }
         }
-        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
+        catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
         {
             System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
-    }*/
+    }
 
 }
