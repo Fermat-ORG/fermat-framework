@@ -88,21 +88,25 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        //inflater.inflate(R.menu.cbw_contract_history_menu, menu);
+        inflater.inflate(R.menu.bw_menu_home, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_account) {
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT,appSession.getAppPublicKey());
+        }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
-    @Override
-    protected boolean hasMenu() {
-        return false;
-    }
 
     @Override
     public FermatAdapter getAdapter() {
@@ -146,14 +150,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected boolean recyclerHasFixedSize() {
         return true;
     }
-
-    /*
-    @Override
-    public void onItemClickListener(BankAccountNumber data, int position) {
-        walletSession.setData("account data", data);
-        changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, walletSession.getAppPublicKey());
-    }
-    */
+    
 
     @Override
     public void onLongItemClickListener(BankAccountNumber data, int position) {

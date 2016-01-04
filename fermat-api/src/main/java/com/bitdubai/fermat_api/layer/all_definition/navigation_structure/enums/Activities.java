@@ -133,6 +133,7 @@ public enum Activities {
     // Bank Money Wallet
     BNK_BANK_MONEY_WALLET_HOME("BNKBMWH"),
     BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS("BNKBMWAD"),
+    BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
 
     // Cas Money Wallet
     CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
@@ -447,6 +448,8 @@ public enum Activities {
                 return DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL;
             case "DWAIUDL":
                 return DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST;
+            case "BNKBMWAA":
+                return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
