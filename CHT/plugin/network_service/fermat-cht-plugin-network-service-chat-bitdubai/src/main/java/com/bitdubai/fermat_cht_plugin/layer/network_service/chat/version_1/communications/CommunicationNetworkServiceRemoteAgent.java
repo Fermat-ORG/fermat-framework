@@ -335,7 +335,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
             if(toSend.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
-                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                toSend.sleep(SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
