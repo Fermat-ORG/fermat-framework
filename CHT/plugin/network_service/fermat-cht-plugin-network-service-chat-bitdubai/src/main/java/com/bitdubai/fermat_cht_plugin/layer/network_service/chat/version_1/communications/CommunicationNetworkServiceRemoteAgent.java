@@ -258,6 +258,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                 toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
         } catch (InterruptedException e) {
+            running = false;
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
@@ -338,6 +339,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
             }
 
         } catch (InterruptedException e) {
+            running = false;
             toSend.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
