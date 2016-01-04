@@ -200,6 +200,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 receive_button.setTypeface(typeface);
                 send_button.setTypeface(typeface);
             }
+            if(cryptoWalletWalletContact!=null)
             if(cryptoWalletWalletContact.getActorType().equals(Actors.INTRA_USER)){
                 linear_layout_extra_user_receive.setVisibility(View.GONE);
             }
