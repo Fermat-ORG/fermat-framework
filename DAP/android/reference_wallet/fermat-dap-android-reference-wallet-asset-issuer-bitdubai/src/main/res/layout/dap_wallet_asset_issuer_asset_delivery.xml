@@ -111,6 +111,7 @@
             android:background="#5A555C">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/selectedUsersText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Select users"
