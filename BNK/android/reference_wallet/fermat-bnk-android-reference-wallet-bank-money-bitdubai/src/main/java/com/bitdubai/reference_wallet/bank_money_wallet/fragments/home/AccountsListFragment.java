@@ -150,7 +150,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected boolean recyclerHasFixedSize() {
         return true;
     }
-    
+
 
     @Override
     public void onLongItemClickListener(BankAccountNumber data, int position) {
