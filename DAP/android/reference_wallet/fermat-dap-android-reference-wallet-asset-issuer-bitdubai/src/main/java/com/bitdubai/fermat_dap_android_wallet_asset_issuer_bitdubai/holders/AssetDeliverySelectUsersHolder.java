@@ -44,6 +44,11 @@ public class AssetDeliverySelectUsersHolder extends FermatViewHolder {
 
     public void bind(final User user) {
         nameText.setText(user.getName());
+        if (user.isSelected()) {
+            selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
+        } else {
+            selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
+        }
 
         selectUserButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

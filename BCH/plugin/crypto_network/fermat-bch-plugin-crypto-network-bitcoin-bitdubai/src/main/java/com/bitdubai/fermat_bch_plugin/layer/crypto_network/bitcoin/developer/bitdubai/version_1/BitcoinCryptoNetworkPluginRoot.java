@@ -260,7 +260,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException {
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
         bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
     }
 
