@@ -82,9 +82,6 @@ public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiatio
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                "200"));
-        clauses.add(new ClauseMock(UUID.randomUUID(),
-                ClauseType.CUSTOMER_CURRENCY,
                 CurrencyType.CASH_ON_HAND_MONEY.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
