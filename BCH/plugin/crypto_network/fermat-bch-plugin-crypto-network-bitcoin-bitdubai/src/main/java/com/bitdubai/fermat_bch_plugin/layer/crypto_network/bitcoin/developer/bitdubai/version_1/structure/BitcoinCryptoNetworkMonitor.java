@@ -288,7 +288,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              e.printStackTrace();
          }
 
-         Transaction transaction = wallet.getTransaction(sha256Hash);
+         final Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
          ListenableFuture<Transaction> future = transactionBroadcast.future();
 
@@ -300,7 +300,19 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             public void onSuccess(Transaction result) {
                 try {
                     getDao().setBroadcastStatus(Status.BROADCASTED, txHash);
+                    /**
+                     * Store this outgoing transaction in the table
+                     */
+                    UUID transactionId = getDao().getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, txHash);
+                    storeOutgoingTransaction(wallet, transaction, transactionId);
+
+                    /**
+                     * saves the wallet again.
+                     */
+                    wallet.saveToFile(walletFileName);
                 } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
