@@ -65,6 +65,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     Button applyBtn;
     Button cancelBtn;
     String account;
+    FiatCurrency fiatCurrency;
 
     /**
      * Allow the zxing engine use the default argument for the margin variable
@@ -80,7 +81,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      */
 
 
-    public CreateTransactionFragmentDialog(Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources, TransactionType transactionType,String account) {
+    public CreateTransactionFragmentDialog(Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources, TransactionType transactionType,String account,FiatCurrency fiatCurrency) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -88,6 +89,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
         this.transactionType = transactionType;
         this.resources = resources;
         this.account=account;
+        this.fiatCurrency =fiatCurrency;
     }
 
 
@@ -171,35 +173,6 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 return;
             }
 
-
-            /*if (transactionType == TransactionType.DEBIT) {
-                CashWithdrawalTransactionParameters t = new CashWithdrawalTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
-                try {
-                    bankMoneyWalletSession.getModuleManager().createCashWithdrawalTransaction(t);
-                    //updateWalletBalances(view.getRootView());
-
-                } catch (CantCreateWithdrawalTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
-                    return;
-                } catch (CashMoneyWalletInsufficientFundsException e) {
-                    Toast.makeText(activity.getApplicationContext(), "Insufficient funds, please try a lower value", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-            else if(transactionType == TransactionType.CREDIT) {
-                CashDepositTransactionParameters t = new CashDepositTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo);
-                try {
-                    bankMoneyWalletSession.getModuleManager().createCashDepositTransaction(t);
-                    //updateWalletBalances(view.getRootView());
-
-                } catch (CantCreateDepositTransactionException e) {
-                    Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }*/
-
-            //TODO: solicitar al module que haga las transacciones.
-
             if (transactionType == TransactionType.DEBIT) {
                 System.out.println("DIALOG = "+TransactionType.DEBIT.getCode());
                 BankTransactionParameters t = new BankTransactionParameters() {
@@ -237,7 +210,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public FiatCurrency getCurrency() {
-                        return null;
+                        return fiatCurrency;
                     }
 
                     @Override
@@ -284,7 +257,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public FiatCurrency getCurrency() {
-                        return null;
+                        return fiatCurrency;
                     }
 
                     @Override

@@ -21,6 +21,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
     private FermatTextView currency;
     private FermatTextView transactionType;
     private FermatTextView transactionTimestamp;
+    private FermatTextView memo;
 
     public TransactionListViewHolder(View itemView) {
         super(itemView);
@@ -29,6 +30,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
         currency = (FermatTextView) itemView.findViewById(R.id.transaction_currency);
         transactionType = (FermatTextView) itemView.findViewById(R.id.transaction_type);
         transactionTimestamp = (FermatTextView) itemView.findViewById(R.id.transaction_timestamp);
+        memo = (FermatTextView) itemView.findViewById(R.id.memo);
     }
 
     public void bind(BankMoneyTransactionRecord itemInfo){
@@ -37,6 +39,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
         currency.setText(itemInfo.getCurrencyType().getCode());
         transactionType.setText(itemInfo.getTransactionType().getCode());
         transactionTimestamp.setText(String.valueOf(convertTime(itemInfo.getTimestamp())));
+        memo.setText(itemInfo.getMemo());
     }
 
     public String convertTime(long time){

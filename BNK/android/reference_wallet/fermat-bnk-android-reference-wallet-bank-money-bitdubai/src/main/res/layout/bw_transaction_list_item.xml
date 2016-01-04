@@ -58,4 +58,16 @@
             android:textSize="@dimen/text_size"
             tools:text="03 Feb 2015"/>
 
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/memo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@color/text_color_bold"
+        android:textSize="@dimen/text_size"
+        tools:text="memo"/>
+
 </RelativeLayout>
