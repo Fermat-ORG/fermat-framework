@@ -124,7 +124,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 if (dontShowAgainCheckBox.isChecked()) {
                     pref.edit().putBoolean("isChecked", false).apply();
                 }
-                saveSettings();
+           //     saveSettings();
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
@@ -136,7 +136,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 if (dontShowAgainCheckBox.isChecked()) {
                     pref.edit().putBoolean("isChecked", false).apply();
                 }
-                saveSettings();
+            //    saveSettings();
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
@@ -146,28 +146,28 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
             if (dontShowAgainCheckBox.isChecked()) {
                 pref.edit().putBoolean("isChecked", false).apply();
             }
-            saveSettings();
+         //   saveSettings();
             dismiss();
         }
     }
 
-    private void saveSettings(){
-        if(type!=TYPE_PRESENTATION)
-                if(dontShowAgainCheckBox.isChecked()){
-                    SettingsManager<BitcoinWalletSettings> settingsManager = moduleManager.getSettingsManager();
-                    try {
-                        BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                        bitcoinWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                        settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
-                    } catch (CantGetSettingsException e) {
-                        e.printStackTrace();
-                    } catch (SettingsNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (CantPersistSettingsException e) {
-                        e.printStackTrace();
-                    }
-                }
-    }
+//    private void saveSettings(){
+//        if(type!=TYPE_PRESENTATION)
+//                if(dontShowAgainCheckBox.isChecked()){
+//                    SettingsManager<BitcoinWalletSettings> settingsManager = moduleManager.getSettingsManager();
+//                    try {
+//                        BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+//                        bitcoinWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+//                        settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+//                    } catch (CantGetSettingsException e) {
+//                        e.printStackTrace();
+//                    } catch (SettingsNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (CantPersistSettingsException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//    }
 
     @Override
     public void onBackPressed() {
