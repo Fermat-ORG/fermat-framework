@@ -1276,7 +1276,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                     if(record.getSentCount() > 10)
                     {
                         //update state and process again later
-                        cryptoTransmissionMetadataDAO.changeState(record.getRequestId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                        cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.WAITING_RESPONSE);
                     }
                     else
                     {
@@ -1309,7 +1309,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         }
         catch(Exception e)
         {
-            System.out.print("EXCEPCION VERIFICANDO WAIT MESSAGE");
+            System.out.print("CRYPTO TRANSMISSION EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
 
@@ -1329,12 +1329,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
             for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
 
-                cryptoTransmissionMetadataDAO.changeState(record.getRequestId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
             }
 
 
         } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
-            System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }

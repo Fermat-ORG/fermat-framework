@@ -1462,7 +1462,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
+        /*    ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToDisconnectPublicKey);
 
@@ -1471,8 +1471,30 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
-
             outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+            */
+
+            //make message to actor
+            UUID newNotificationID = UUID.randomUUID();
+            NotificationDescriptor notificationDescriptor = NotificationDescriptor.DISCONNECTED;
+            long currentTime = System.currentTimeMillis();
+            ActorProtocolState protocolState = ActorProtocolState.PROCESSING_SEND;
+
+            outgoingNotificationDao.createNotification(
+                    newNotificationID,
+                    intraUserLoggedInPublicKey,
+                    Actors.INTRA_USER,
+                    intraUserToDisconnectPublicKey,
+                    "",
+                    new byte[0],
+                    Actors.INTRA_USER,
+                    notificationDescriptor,
+                    currentTime,
+                    protocolState,
+                    false, 1
+            );
+
+
 
 
         } catch (Exception e) {

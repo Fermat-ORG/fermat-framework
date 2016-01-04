@@ -133,7 +133,7 @@ public class CryptoTransmissionMetadataDAO {
             PendingRequestNotFoundException {
 
         if (transmissionId == null)
-            throw new CantGetCryptoTransmissionMetadataException("",null, "requestId, can not be null","");
+            throw new CantGetCryptoTransmissionMetadataException("",null, "TransmissionID, can not be null","");
 
         try {
 
@@ -149,7 +149,7 @@ public class CryptoTransmissionMetadataDAO {
             if (!records.isEmpty())
                 return buildCryptoTransmissionRecord(records.get(0));
             else
-                throw new PendingRequestNotFoundException(null, "RequestID: "+transmissionId, "Can not find an address exchange request with the given request id.");
+                throw new PendingRequestNotFoundException(null, "TransmissionID: "+transmissionId, "Can not find a transmission metadata with the given transmission id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {

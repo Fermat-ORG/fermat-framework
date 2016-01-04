@@ -341,7 +341,7 @@ public class IncomingNotificationDao implements DAO {
 
 
         if (senderPublicKey == null)
-            throw new CantUpdateRecordDataBaseException("requestId null "   , null);
+            throw new CantUpdateRecordDataBaseException("senderPublicKey null "   , null);
 
         if (notificationDescriptor == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
@@ -366,7 +366,7 @@ public class IncomingNotificationDao implements DAO {
 
                 return buildActorNetworkServiceRecord(record);
             } else {
-                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a connection request with the given id.");
+                throw new RequestNotFoundException("senderPublicKey: "+senderPublicKey, "Cannot find a connection request with the given id.");
             }
 
         } catch (CantLoadTableToMemoryException e) {
