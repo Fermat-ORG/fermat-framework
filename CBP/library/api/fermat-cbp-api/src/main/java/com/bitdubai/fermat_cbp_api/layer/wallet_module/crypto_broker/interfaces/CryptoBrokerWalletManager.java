@@ -383,11 +383,11 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
-     *
-     * @return a Map of name/provider reference pairs
+     * @param currencyFrom
+     * @param currencyTo
+     * @return a Collection of provider reference pairs
      * */
-    Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException;
-
+    Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException;
     /**
      * This method save the instance CryptoBrokerWalletProviderSetting
      * @param cryptoBrokerWalletProviderSetting

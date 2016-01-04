@@ -83,11 +83,13 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
@@ -128,6 +130,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CashMoneyDestockManager cashMoneyDestockManager;
     private final CryptoMoneyDestockManager cryptoMoneyDestockManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    private final CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager;
     /*
     *Constructor with Parameters
     */
@@ -142,7 +145,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              BankMoneyDestockManager bankMoneyDestockManager,
                                                              CashMoneyDestockManager cashMoneyDestockManager,
                                                              CryptoMoneyDestockManager cryptoMoneyDestockManager,
-                                                             CustomerBrokerContractSaleManager customerBrokerContractSaleManager)
+                                                             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+                                                             CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager)
     {
         this.walletManagerManager                 = walletManagerManager;
         this.cryptoBrokerWalletManager            = cryptoBrokerWalletManager;
@@ -156,6 +160,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.cashMoneyDestockManager              = cashMoneyDestockManager;
         this.cryptoMoneyDestockManager            = cryptoMoneyDestockManager;
         this.customerBrokerContractSaleManager    = customerBrokerContractSaleManager;
+        this.currencyExchangeProviderFilterManager= currencyExchangeProviderFilterManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -926,13 +931,24 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
      *
      * @param currencyFrom
      * @param currencyTo
-     * @return a Map of name/provider reference pairs
+     * @return a Collection of provider reference pairs
      */
     @Override
-    public Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException {
-        //TODO: Implementar cuando el layer CER este listo
-        return null;
+    public Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(final Currency currencyFrom, final Currency currencyTo) throws CantGetProviderException {
+        CurrencyPair currencyPair = new CurrencyPair() {
+            @Override
+            public Currency getFrom() {
+                return currencyFrom;
+            }
+
+            @Override
+            public Currency getTo() {
+                return currencyTo;
+            }
+        };
+        return currencyExchangeProviderFilterManager.getProviderReferencesFromCurrencyPair(currencyPair);
     }
+
 
     /**
      * This method save the instance CryptoBrokerWalletProviderSetting
