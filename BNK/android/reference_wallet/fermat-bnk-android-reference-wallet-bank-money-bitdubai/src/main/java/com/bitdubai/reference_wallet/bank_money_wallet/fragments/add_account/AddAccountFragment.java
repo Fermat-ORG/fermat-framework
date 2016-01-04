@@ -40,6 +40,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     Spinner currencySpinner;
     FiatCurrency selectedCurrency;
     EditText accountNumberText;
+    EditText accountAliasText;
 
     public AddAccountFragment() {
     }
@@ -76,6 +77,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         cancelButton = (Button) layout.findViewById(R.id.bnk_add_account_cancel_btn);
         cancelButton.setOnClickListener(this);
         accountNumberText = (EditText) layout.findViewById(R.id.account_number);
+        accountAliasText = (EditText) layout.findViewById(R.id.account_alias);
         currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
         currencySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinnerAdapter.notifyDataSetChanged();
@@ -99,7 +101,8 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
 
     public void createAccount(){
         String account = accountNumberText.getText().toString();
-        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVING,"My Account"+ new Random().nextInt(100),account,selectedCurrency);
+        String alias = accountAliasText.getText().toString();
+        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVING,alias,account,selectedCurrency);
         Toast.makeText(getActivity().getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
     }
 
