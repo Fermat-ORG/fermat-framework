@@ -196,7 +196,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
     }
 
     @Override
