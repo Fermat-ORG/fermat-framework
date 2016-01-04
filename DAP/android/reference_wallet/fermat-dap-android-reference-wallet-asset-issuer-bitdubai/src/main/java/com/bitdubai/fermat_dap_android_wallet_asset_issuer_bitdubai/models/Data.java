@@ -63,16 +63,16 @@ public class Data {
     }
 
     public static List<User> getConnectedUsers(AssetIssuerWalletSupAppModuleManager moduleManager) throws CantGetAssetUserActorsException {
-        List<User> users = new ArrayList<>();
-        users.add(new User("Frank Contreras"));
-        users.add(new User("Victor Mars"));
-        users.add(new User("Nerio Indriago"));
-        users.add(new User("Rodrigo Acosta"));
 //        List<User> users = new ArrayList<>();
-//        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
-//        for (ActorAssetUser actorAssetUser:actorAssetUsers) {
-//            users.add(new User(actorAssetUser.getName()));
-//        }
+//        users.add(new User("Frank Contreras"));
+//        users.add(new User("Victor Mars"));
+//        users.add(new User("Nerio Indriago"));
+//        users.add(new User("Rodrigo Acosta"));
+        List<User> users = new ArrayList<>();
+        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
+        for (ActorAssetUser actorAssetUser:actorAssetUsers) {
+            users.add(new User(actorAssetUser.getName(), actorAssetUser));
+        }
         return users;
     }
 }
