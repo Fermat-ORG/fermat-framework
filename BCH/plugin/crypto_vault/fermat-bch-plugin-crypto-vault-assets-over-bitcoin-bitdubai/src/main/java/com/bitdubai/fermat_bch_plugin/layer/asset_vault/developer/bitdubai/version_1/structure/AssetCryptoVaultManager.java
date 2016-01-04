@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
@@ -44,6 +45,7 @@ import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.AssetCryptoVaultManager</code>
@@ -254,9 +256,19 @@ public class AssetCryptoVaultManager  {
         }
 
         try {
-            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            /**
+             * Once I formed the transaction, I will store it and ask the CryptoNEtwork to broadcast it.
+             */
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
+        } catch (CantStoreBitcoinTransactionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         } catch (CantBroadcastTransactionException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Cant broadcast the outgoing transaction", "CryptoNetwork issue.");
+            e.printStackTrace();
         }
 
         return sendRequest.tx.getHashAsString();

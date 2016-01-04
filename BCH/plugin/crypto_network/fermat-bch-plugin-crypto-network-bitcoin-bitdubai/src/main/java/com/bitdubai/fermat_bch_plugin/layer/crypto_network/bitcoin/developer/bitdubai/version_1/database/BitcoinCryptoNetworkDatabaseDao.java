@@ -318,7 +318,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();
         if (databaseTableRecordList.isEmpty()) {
-            return null;
+            return CryptoStatus.PENDING_SUBMIT;
         } else {
             CryptoStatus lastCryptoStatus = null;
             for (DatabaseTableRecord record : databaseTableRecordList) {
