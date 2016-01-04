@@ -204,7 +204,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     /**
                      * if there was an error, I will mark the transaction as WITH_ERROR
                      */
-                    getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txHash);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -282,11 +282,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          validateTransactionExistsInWallet(sha256Hash);
          validateTransactionExistsinDatabase(txHash);
 
+        final int connectedPeers = peerGroup.getConnectedPeers().size();
+
          /**
           * will update this transaction status to broadcasting.
           */
          try {
-             getDao().setBroadcastStatus(Status.BROADCASTING, txHash);
+             getDao().setBroadcastStatus(Status.BROADCASTING, connectedPeers, null, txHash);
          } catch (CantExecuteDatabaseOperationException e) {
              e.printStackTrace();
          }
@@ -302,7 +304,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             @Override
             public void onSuccess(Transaction result) {
                 try {
-                    getDao().setBroadcastStatus(Status.BROADCASTED, txHash);
+                    getDao().setBroadcastStatus(Status.BROADCASTED, connectedPeers, null, txHash);
                     /**
                      * Store this outgoing transaction in the table
                      */
@@ -323,7 +325,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             @Override
             public void onFailure(Throwable t) {
                 try {
-                    getDao().setBroadcastStatus(Status.WITH_ERROR, txHash);
+                    getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 }
