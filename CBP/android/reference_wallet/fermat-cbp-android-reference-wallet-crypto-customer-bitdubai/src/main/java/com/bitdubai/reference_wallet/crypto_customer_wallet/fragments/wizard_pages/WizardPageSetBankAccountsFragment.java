@@ -47,8 +47,8 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment
     private ErrorManager errorManager;
 
 
-    public static WizardPageSetLocationsFragment newInstance() {
-        return new WizardPageSetLocationsFragment();
+    public static WizardPageSetBankAccountsFragment newInstance() {
+        return new WizardPageSetBankAccountsFragment();
     }
 
     @Override
