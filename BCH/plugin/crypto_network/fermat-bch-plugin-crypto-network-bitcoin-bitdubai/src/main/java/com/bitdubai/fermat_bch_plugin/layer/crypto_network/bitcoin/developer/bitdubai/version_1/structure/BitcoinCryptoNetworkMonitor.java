@@ -205,10 +205,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                      * if there was an error, I will mark the transaction as WITH_ERROR
                      */
                     getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txHash);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
                 }
             }
         } catch (CantExecuteDatabaseOperationException e) {
@@ -274,7 +270,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException {
+    public void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
         /**
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
