@@ -78,10 +78,10 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (view.getId() == R.id.ccw_fiat_currencies_spinner) {
+        if (parent.getId() == R.id.ccw_fiat_currencies_spinner) {
             selectedCurrency = currencies[position];
 
-        } else if (view.getId() == R.id.ccw_fiat_currencies_spinner) {
+        } else if (parent.getId() == R.id.ccw_account_types_spinner) {
             selectedAccountType = accountTypes[position];
         }
     }

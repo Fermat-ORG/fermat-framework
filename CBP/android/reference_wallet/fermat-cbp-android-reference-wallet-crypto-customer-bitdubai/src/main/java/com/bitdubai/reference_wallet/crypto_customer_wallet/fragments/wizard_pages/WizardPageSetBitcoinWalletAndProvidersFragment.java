@@ -146,13 +146,13 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (view.getId() == R.id.currency_from_spinner) {
+        if (parent.getId() == R.id.currency_from_spinner) {
             currencyFrom = currencies.get(position);
 
-        } else if (view.getId() == R.id.currency_to_spinner) {
+        } else if (parent.getId() == R.id.currency_to_spinner) {
             currencyTo = currencies.get(position);
 
-        } else if (view.getId() == R.id.bitcoin_wallets_spinner) {
+        } else if (parent.getId() == R.id.bitcoin_wallets_spinner) {
             selectedBitcoinWallet = bitcoinWallets.get(position);
         }
     }
