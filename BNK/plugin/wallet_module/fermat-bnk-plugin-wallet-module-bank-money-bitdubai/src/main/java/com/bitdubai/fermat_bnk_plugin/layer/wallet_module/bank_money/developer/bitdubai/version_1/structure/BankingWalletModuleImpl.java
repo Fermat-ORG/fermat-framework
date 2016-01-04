@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exceptions.CantMakeWithdrawTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
@@ -67,5 +70,37 @@ public class BankingWalletModuleImpl implements BankingWallet {
         }
 
         return transactionRecords;
+    }
+
+    @Override
+    public void makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException {
+        depositManager.makeDeposit(bankTransactionParameters);
+    }
+
+    @Override
+    public void makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException{
+        withdrawManager.makeWithdraw(bankTransactionParameters);
+    }
+
+    @Override
+    public float getBookBalance(String account) {
+        float balance =0;
+        try {
+            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBookBalance().getBalance(account);
+        }catch (Exception e){
+            System.out.println("execption "+e.getMessage());
+        }
+        return balance;
+    }
+
+    @Override
+    public float getAvailableBalance(String account) {
+        float balance =0;
+        try {
+            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getAvailableBalance().getBalance(account);
+        }catch (Exception e){
+            System.out.println("exception "+e.getMessage());
+        }
+        return balance;
     }
 }
