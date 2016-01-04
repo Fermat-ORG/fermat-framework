@@ -1045,7 +1045,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         BroadcastStatus broadcastStatus = new BroadcastStatus(0, Status.IDLE);//this is a new transaction, so no retries
         record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, broadcastStatus.getRetriesCount());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, broadcastStatus.getStatus().getCode());
-
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME, getCurrentDateTime());
 
         try {
             databaseTable.insertRecord(record);
@@ -1224,6 +1224,11 @@ public class BitcoinCryptoNetworkDatabaseDao {
             String xmlException = XMLParser.parseObject(broadcastStatus.getLastException());
             record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION, xmlException);
         }
+
+        /**
+         * sets the last update column data
+         */
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME, getCurrentDateTime());
 
         /**
          * finally, update the record.
