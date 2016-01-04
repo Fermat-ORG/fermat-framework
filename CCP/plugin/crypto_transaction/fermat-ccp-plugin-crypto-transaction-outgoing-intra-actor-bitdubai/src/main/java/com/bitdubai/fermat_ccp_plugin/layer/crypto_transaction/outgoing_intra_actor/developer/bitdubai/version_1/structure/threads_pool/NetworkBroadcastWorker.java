@@ -32,12 +32,6 @@ public class NetworkBroadcastWorker implements Runnable {
         } catch (CantBroadcastTransactionException e) {
             e.printStackTrace();
             networkExecutorPool.rejectedBroadcastExecution(transactionHash);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            networkExecutorPool.rejectedBroadcastExecution(transactionHash);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            networkExecutorPool.rejectedBroadcastExecution(transactionHash);
         }
     }
 

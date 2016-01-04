@@ -200,6 +200,8 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
             try {
                 users = Data.getConnectedUsers(moduleManager);
 
+                appSession.setData("users", users);
+
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)

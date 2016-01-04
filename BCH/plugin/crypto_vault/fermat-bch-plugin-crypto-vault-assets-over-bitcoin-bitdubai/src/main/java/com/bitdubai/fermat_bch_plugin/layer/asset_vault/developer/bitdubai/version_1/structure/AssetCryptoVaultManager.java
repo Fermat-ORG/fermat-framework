@@ -263,10 +263,6 @@ public class AssetCryptoVaultManager  {
             bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
         } catch (CantStoreBitcoinTransactionException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (CantBroadcastTransactionException e) {
             e.printStackTrace();
         }
@@ -403,7 +399,6 @@ public class AssetCryptoVaultManager  {
     /**
      * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
      * @param plugin the pluginId invoking this call. Might not have permissions to create new keys.
-     * @param account the account to derive keys from.
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */

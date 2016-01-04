@@ -167,6 +167,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_BROADCAST_IP, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, DatabaseDataType.INTEGER, 5, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION, DatabaseDataType.STRING, 300, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
 
 
