@@ -258,6 +258,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                 toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
         } catch (InterruptedException e) {
+            running = false;
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
@@ -334,10 +335,11 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
             if(toSend.isInterrupted() == Boolean.FALSE){
                 //Sleep for a time
-                toSend.sleep(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
+            running = false;
             toSend.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
             return;
