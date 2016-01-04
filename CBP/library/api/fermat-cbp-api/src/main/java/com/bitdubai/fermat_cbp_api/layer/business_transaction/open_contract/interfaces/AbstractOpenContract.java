@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -54,10 +55,11 @@ public abstract class AbstractOpenContract {
         //Contract clauses
         Collection<ContractClause> contractClauses=new ArrayList<>();
         ContractClause contractClause;
-
+        ClauseType clauseType;
         for(Clause clause : negotiationClauses){
             clauseValue=clause.getValue();
-            switch (clause.getType()){
+            clauseType=clause.getType();
+            switch (clauseType){
 
                 case BROKER_CURRENCY:
                     merchandiseCurrency=CurrencyType.getByCode(clauseValue);
@@ -115,6 +117,7 @@ public abstract class AbstractOpenContract {
         contractRecord.setDayTime(dayTime);
         //New fields
         contractRecord.setNearExpirationDatetime(nearExpirationDatetime);
+        contractRecord.setContractClauses(contractClauses);
         return contractRecord;
     }
 
@@ -140,10 +143,12 @@ public abstract class AbstractOpenContract {
         //Contract clauses
         Collection<ContractClause> contractClauses=new ArrayList<>();
         ContractClause contractClause;
+        ClauseType clauseType;
 
         for(Clause clause : negotiationClauses){
             clauseValue=clause.getValue();
-            switch (clause.getType()){
+            clauseType=clause.getType();
+            switch (clauseType){
 
                 case BROKER_CURRENCY:
                     merchandiseCurrency=CurrencyType.getByCode(clauseValue);
@@ -207,7 +212,7 @@ public abstract class AbstractOpenContract {
         Integer executionOrder=616;
         UUID clauseId=UUID.randomUUID();
         contractClause.setClauseId(clauseId);
-        ContractClauseType contractClauseType=ContractClauseType.getByCode(clauseValue);
+        ContractClauseType contractClauseType =ContractClauseType.getByCode(clauseValue);
         contractClause.setType(contractClauseType);
         contractClause.setExecutionOrder(executionOrder);
         contractClause.setStatus(ContractClauseStatus.PENDING);
