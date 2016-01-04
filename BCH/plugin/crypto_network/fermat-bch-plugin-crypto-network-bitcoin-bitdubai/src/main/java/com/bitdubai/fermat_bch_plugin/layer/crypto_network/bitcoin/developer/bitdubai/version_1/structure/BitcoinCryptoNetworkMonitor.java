@@ -329,9 +329,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             }
         });
-        // Rodri, esto lo puse para que bloquee el hilo haber si lanza la excepcion cuando vuelve
-        future.get();
-
     }
 
 
