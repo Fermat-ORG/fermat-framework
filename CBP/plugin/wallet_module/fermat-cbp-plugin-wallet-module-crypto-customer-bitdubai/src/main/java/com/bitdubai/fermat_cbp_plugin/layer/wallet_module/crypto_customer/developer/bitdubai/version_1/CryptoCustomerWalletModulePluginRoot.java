@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -42,6 +43,9 @@ import java.util.regex.Pattern;
 public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin implements
         LogManagerForDevelopers,
         CryptoCustomerWalletModuleManager {
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem ;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -74,7 +78,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
             if (walletManager == null)
                 walletManager = new CryptoCustomerWalletModuleCryptoCustomerWalletManager(walletManagerManager,
                         customerBrokerPurchaseNegotiationManager,
-                        pluginId);
+                        pluginId,
+                        pluginFileSystem);
             return walletManager;
 
         } catch (Exception e) {
