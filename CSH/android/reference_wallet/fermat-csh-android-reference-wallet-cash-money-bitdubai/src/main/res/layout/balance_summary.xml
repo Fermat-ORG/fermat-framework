@@ -10,61 +10,216 @@
         android:background="@color/black_overlay">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@color/csh_summary_top_background_color">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="@color/csh_home_titlebar_background"
+            >
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_available"
-                android:layout_width="match_parent"
+                android:id="@+id/titleBar_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/available_balance_text"
-                android:textSize="@dimen/csh_largest_text_size"
-                android:gravity="left"
-                android:paddingLeft="@dimen/csh_balance_left_margin"
-                android:paddingTop="@dimen/csh_activity_vertical_margin"
-                android:textColor="@color/csh_summary_top_balance_text_color"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_available_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0"
+                android:paddingRight="@dimen/csh_titlebar_intertitle_padding"
+                android:layout_weight="1"
+                android:gravity="center_vertical|right"
+                android:text="@string/csh_home_titlebar_title"
+                android:textStyle="bold"
                 android:textSize="@dimen/csh_large_text_size"
-                android:gravity="left"
-                android:paddingLeft="@dimen/csh_balance_left_margin"
-                android:textColor="@color/csh_summary_top_balance_amount_text_color"/>
+                android:textColor="@color/csh_text_white"
+                android:layout_marginTop="@dimen/csh_home_titlebar_margin_top"
+                android:layout_marginBottom="@dimen/csh_home_titlebar_margin_bottom"
+                />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_book"
-                android:layout_width="match_parent"
+                android:id="@+id/titleBar_title_2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/book_balance_text"
-                android:textSize="@dimen/csh_regular_text_size"
-                android:gravity="left"
-                android:paddingLeft="@dimen/csh_balance_left_margin"
-                android:paddingTop="@dimen/csh_activity_vertical_margin"
-                android:textColor="@color/csh_summary_top_balance_text_color"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/textView_book_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="@dimen/csh_regular_text_size"
-                android:gravity="left"
-                android:paddingLeft="@dimen/csh_balance_left_margin"
-                android:paddingBottom="@dimen/csh_activity_vertical_margin"
-
-                android:textColor="@color/csh_summary_top_balance_amount_text_color"/>
-
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/csh_home_titlebar_title_2"
+                android:textSize="@dimen/csh_large_text_size"
+                android:textColor="@color/csh_text_white"
+                android:layout_marginTop="@dimen/csh_home_titlebar_margin_top"
+                android:layout_marginBottom="@dimen/csh_home_titlebar_margin_bottom"
+                />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:src="@drawable/csh_bg_home_balance"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Balance"
+                        android:textSize="@dimen/csh_large_text_size"
+                        android:gravity="left"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="@dimen/csh_activity_horizontal_margin"
+                        android:textColor="@color/csh_text_white"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+
+                        <RelativeLayout
+                            android:layout_width="0dip"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="0.8"
+                            android:background="@color/csh_home_summary_available_tint"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/csh_activity_horizontal_margin"
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                                        android:id="@+id/textView_available"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Available"
+                                        android:textStyle="bold"
+                                        android:textSize="@dimen/csh_small_text_size"
+                                        android:paddingTop="@dimen/csh_activity_vertical_margin"
+                                        android:textColor="@color/csh_text_lightblue"
+                                        />
+                                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                                        android:id="@+id/textView_available_currency"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="USD"
+                                        android:textSize="@dimen/csh_small_text_size"
+                                        android:paddingTop="4dp"
+                                        android:paddingBottom="@dimen/csh_activity_vertical_margin"
+                                        android:textColor="@color/csh_text_lightblue"
+                                        />
+                                </LinearLayout>
+
+
+                                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                                    android:id="@+id/textView_available_amount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="12.928.324.34"
+                                    android:textSize="@dimen/csh_largest_text_size"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="25dp"
+                                    android:textColor="@color/csh_text_white"
+                                    />
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="0dip"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="0.2"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+
+                        <RelativeLayout
+                            android:layout_width="0dip"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="0.6"
+                            android:background="@color/csh_home_summary_book_tint"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/csh_activity_horizontal_margin"
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                                        android:id="@+id/textView_book"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Book"
+                                        android:textStyle="bold"
+                                        android:textSize="@dimen/csh_small_text_size"
+                                        android:paddingTop="@dimen/csh_activity_vertical_margin"
+                                        android:textColor="@color/csh_text_white"
+                                        />
+                                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                                        android:id="@+id/textView_book_currency"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="USD"
+                                        android:textSize="@dimen/csh_small_text_size"
+                                        android:paddingTop="4dp"
+                                        android:paddingBottom="@dimen/csh_activity_vertical_margin"
+                                        android:textColor="@color/csh_text_white"
+                                        />
+                                </LinearLayout>
+
+
+                                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                                    android:id="@+id/textView_book_amount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="12.928.324.34"
+                                    android:textSize="@dimen/csh_large_text_size"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="46dp"
+                                    android:textColor="@color/csh_text_lightblue"
+                                    />
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="0dip"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="0.4"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:background="@color/csh_transactions_background_color">
+            android:background="@color/white">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/transactions_swipe_refresh"
