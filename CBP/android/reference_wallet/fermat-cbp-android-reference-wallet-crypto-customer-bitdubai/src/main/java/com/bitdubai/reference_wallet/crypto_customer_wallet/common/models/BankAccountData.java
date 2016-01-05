@@ -57,4 +57,11 @@ public class BankAccountData implements BankAccountNumber {
                 account != null && !account.isEmpty() &&
                 alias != null && !alias.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return "Bank: " + bankName +
+                "\nAccount Type: " + accountType.getCode() +
+                "\nNumber: " + account;
+    }
 }
