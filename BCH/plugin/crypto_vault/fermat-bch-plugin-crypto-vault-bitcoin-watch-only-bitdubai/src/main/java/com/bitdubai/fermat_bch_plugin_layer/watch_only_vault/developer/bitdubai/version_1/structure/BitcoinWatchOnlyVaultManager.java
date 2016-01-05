@@ -21,6 +21,7 @@ import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.bitcoinj.crypto.DeterministicKey;
+import org.bitcoinj.crypto.HDKeyDerivation;
 
 import java.util.UUID;
 
@@ -102,6 +103,7 @@ public class BitcoinWatchOnlyVaultManager {
         DeterministicKey masterPublicKey = getMasterPublicKey(watchOnlyVaultExtendedPublicKey);
 
 
+
     }
 
     /**
@@ -110,9 +112,13 @@ public class BitcoinWatchOnlyVaultManager {
      * @return
      */
     private DeterministicKey getMasterPublicKey(WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey) {
-        // Deserialize the pub key.
-        //final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
-        return null;
+        byte[] pubKeyBytes, chainCode;
+
+        pubKeyBytes = watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getPubKeyBytes();
+        chainCode = watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getChainCode();
+
+        final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
+        return watchPubKeyAccountZero;
     }
 
     /**
