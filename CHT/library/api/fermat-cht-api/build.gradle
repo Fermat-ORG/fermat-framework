@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 dependencies {
-    compile project(':fermat-cht-api')
+    //compile project(':fermat-cht-api')
     compile project(':fermat-api')
     compile project(':fermat-p2p-api')
     compile project(':fermat-pip-api')
