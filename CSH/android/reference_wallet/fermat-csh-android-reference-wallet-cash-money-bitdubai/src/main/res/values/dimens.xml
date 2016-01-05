@@ -4,19 +4,26 @@
     <dimen name="csh_activity_horizontal_margin">16dp</dimen>
     <dimen name="csh_activity_vertical_margin">8dp</dimen>
 
+    <dimen name="csh_titlebar_intertitle_padding">10dp</dimen>
+
+
 
     <!-- Text Sizes -->
     <dimen name="csh_largest_text_size">24sp</dimen>
     <dimen name="csh_large_text_size">20sp</dimen>
+    <dimen name="csh_regular_plus_text_size">16sp</dimen>
     <dimen name="csh_regular_text_size">14sp</dimen>
     <dimen name="csh_small_text_size">12sp</dimen>
     <dimen name="csh_smallest_text_size">10sp</dimen>
 
 
     <!-- Home -->
-    <dimen name="csh_home_titlebar_intertitle_padding">10dp</dimen>
     <dimen name="csh_home_titlebar_margin_top">20dp</dimen>
     <dimen name="csh_home_titlebar_margin_bottom">15dp</dimen>
+
+    <!-- Setup -->
+    <dimen name="csh_setup_titlebar_margin_top">40dp</dimen>
+    <dimen name="csh_setup_titlebar_margin_bottom">10dp</dimen>
 
 
     <!-- Transactions -->
