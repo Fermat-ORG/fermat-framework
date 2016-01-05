@@ -161,4 +161,9 @@ public interface CommunicationsClientConnection {
      */
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile);
 
+    /*
+    * Close the main connection
+     */
+    public void closeMainConnection();
+
 }

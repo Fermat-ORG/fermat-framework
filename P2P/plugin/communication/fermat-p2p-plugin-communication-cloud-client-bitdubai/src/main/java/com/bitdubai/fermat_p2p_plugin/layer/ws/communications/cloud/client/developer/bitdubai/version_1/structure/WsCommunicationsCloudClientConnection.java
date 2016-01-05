@@ -336,16 +336,16 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceApplicant.getNetworkServiceType().toString());
-                jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM     , discoveryQueryParameters.toJson());
+                jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
                  /*
                  * Construct a fermat packet whit the filters
                  */
                 FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                            gson.toJson(jsonObject),                                           //Message Content
-                                                                                                                            FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
-                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                        wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                        gson.toJson(jsonObject),                                           //Message Content
+                        FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
+                        wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
                 /*
                  * Send the encode packet to the server
@@ -669,6 +669,18 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile) {
         return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
+    }
+
+    @Override
+    public void closeMainConnection() {
+
+        if(isConnected()){
+            if(wsCommunicationVPNClientManagerAgent.isRunning()){
+                wsCommunicationVPNClientManagerAgent.closeAllVpnConnections();
+            }
+            wsCommunicationsCloudClientChannel.getConnection().close();
+        }
+
     }
 
     /**
