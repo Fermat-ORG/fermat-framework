@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
@@ -124,7 +125,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 if (dontShowAgainCheckBox.isChecked()) {
                     pref.edit().putBoolean("isChecked", false).apply();
                 }
-           //     saveSettings();
+                saveSettings();
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
@@ -136,7 +137,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 if (dontShowAgainCheckBox.isChecked()) {
                     pref.edit().putBoolean("isChecked", false).apply();
                 }
-            //    saveSettings();
+                saveSettings();
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
@@ -146,28 +147,28 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
             if (dontShowAgainCheckBox.isChecked()) {
                 pref.edit().putBoolean("isChecked", false).apply();
             }
-         //   saveSettings();
+            saveSettings();
             dismiss();
         }
     }
 
-//    private void saveSettings(){
-//        if(type!=TYPE_PRESENTATION)
-//                if(dontShowAgainCheckBox.isChecked()){
-//                    SettingsManager<BitcoinWalletSettings> settingsManager = moduleManager.getSettingsManager();
-//                    try {
-//                        BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-//                        bitcoinWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-//                        settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
-//                    } catch (CantGetSettingsException e) {
-//                        e.printStackTrace();
-//                    } catch (SettingsNotFoundException e) {
-//                        e.printStackTrace();
-//                    } catch (CantPersistSettingsException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//    }
+    private void saveSettings(){
+        if(type!=TYPE_PRESENTATION)
+                if(dontShowAgainCheckBox.isChecked()){
+                    SettingsManager<IntraUserWalletSettings> settingsManager = moduleManager.getSettingsManager();
+                    try {
+                        IntraUserWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                        bitcoinWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+                        settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+                    } catch (CantGetSettingsException e) {
+                        e.printStackTrace();
+                    } catch (SettingsNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (CantPersistSettingsException e) {
+                        e.printStackTrace();
+                    }
+                }
+    }
 
     @Override
     public void onBackPressed() {
