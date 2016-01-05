@@ -9,45 +9,50 @@ import java.util.UUID;
  */
 public class CryptoCustomerWalletProviderSettingImpl implements CryptoCustomerWalletProviderSetting {
 
+    UUID   id;
+    String customerPublicKey;
+    UUID   plugin;
+    String description;
+
     public CryptoCustomerWalletProviderSettingImpl(){};
 
     @Override
     public UUID getId() {
-        return null;
+        return id;
     }
 
     @Override
     public void setId(UUID id) {
-
+        this.id = id;
     }
 
     @Override
-    public String getBrokerPublicKey() {
-        return null;
+    public String getCustomerPublicKey() {
+        return customerPublicKey;
     }
 
     @Override
-    public void setBrokerPublicKey(String brokerPublicKey) {
-
+    public void setCustomerPublicKey(String customerPublicKeyPublicKey) {
+        this.customerPublicKey = customerPublicKeyPublicKey;
     }
 
     @Override
     public UUID getPlugin() {
-        return null;
+        return plugin;
     }
 
     @Override
     public void setPlugin(UUID plugin) {
-
+        this.plugin = plugin;
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public void setDescription(String description) {
-
+        this.description = description;
     }
 }

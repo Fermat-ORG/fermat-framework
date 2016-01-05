@@ -13,7 +13,7 @@ import java.util.UUID;
 public class CryptoCustomerWalletAssociatedSettingImpl implements CryptoCustomerWalletAssociatedSetting {
 
     UUID         id;
-    String       brokerPublicKey;
+    String       customerPublicKey;
     Platforms    platforms;
     String       walletPublicKey;
     FermatEnum   merchandise;
@@ -33,13 +33,13 @@ public class CryptoCustomerWalletAssociatedSettingImpl implements CryptoCustomer
     }
 
     @Override
-    public String getBrokerPublicKey() {
-        return brokerPublicKey;
+    public String getCustomerPublicKey() {
+        return customerPublicKey;
     }
 
     @Override
-    public void setBrokerPublicKey(String brokerPublicKey) {
-        this.brokerPublicKey = brokerPublicKey;
+    public void setCustomerPublicKey(String customerPublicKey) {
+        this.customerPublicKey = customerPublicKey;
     }
 
     @Override

@@ -9,11 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -22,6 +25,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
@@ -139,21 +143,22 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment
 
     private void saveSettingAndGoNextStep() {
 
-        // TODO utilizar los metodos que franklin a de implementar
-//        try {
-//            for (String location : bankAccountList) {
-//                walletManager.createNewLocation(location, appSession.getAppPublicKey());
-//            }
-//
-//        } catch (FermatException ex) {
-//            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-//
-//            Log.e(TAG, ex.getMessage(), ex);
-//            if (errorManager != null) {
-//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-//                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-//            }
-//        }
+        try {
+            for (BankAccountNumber bankAccount : bankAccountList) {
+                BankAccountData bankAccountData = (BankAccountData) bankAccount;
+                NegotiationBankAccount negotiationBankAccount = walletManager.newEmptyNegotiationBankAccount(
+                        bankAccountData.toString(), bankAccount.getCurrencyType());
+
+                walletManager.createNewBankAccount(negotiationBankAccount);
+            }
+
+        } catch (FermatException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            }
+        }
 
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
     }
