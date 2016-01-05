@@ -206,11 +206,25 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         System.out.println(" WsCommunicationVPNClient -  code   = " + code + " reason = " + reason + " remote = " + remote);
         isActive = Boolean.FALSE;
 
-        try {
-            wsCommunicationVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
-        }catch (Exception e){
-            e.printStackTrace();
+        switch (code) {
+
+            case 1006:
+
+                break;
+
+            default:
+
+                    try {
+                        wsCommunicationVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                break;
         }
+
+
+
 
     }
 

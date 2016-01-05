@@ -205,8 +205,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     }
 
     /**
-     * Notify when cloud client component es registered,
-     * this event is raise to show the message in a popup of the UI
+     * Notify when a vpn connection close
      */
     public void riseVpnConnectionCloseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
@@ -218,6 +217,21 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         event.setRemoteParticipant(remoteParticipant);
         eventManager.raiseEvent(platformEvent);
         System.out.println("WsCommunicationVPNClientManagerAgent - Raised Event = P2pEventType.VPN_CONNECTION_CLOSE");
+    }
+
+    /**
+     * Notify when a vpn connection loose
+     */
+    public void riseVpnConnectionLooseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+        System.out.println("WsCommunicationVPNClientManagerAgent - riseVpnConnectionCloseNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_LOOSE);
+        VPNConnectionCloseNotificationEvent event =  (VPNConnectionCloseNotificationEvent) platformEvent;
+        event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+        event.setNetworkServiceApplicant(networkServiceApplicant);
+        event.setRemoteParticipant(remoteParticipant);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("WsCommunicationVPNClientManagerAgent - Raised Event = P2pEventType.VPN_CONNECTION_LOOSE");
     }
 
     /**
