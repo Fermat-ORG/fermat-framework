@@ -113,18 +113,17 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     public List<CryptoCustomerIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoCustomerIdentity> data = new ArrayList<>();
 
-        // TODO
-//        try {
-//            data.addAll(walletManager.getListOfIdentities());
-//
-//        } catch (CantGetCryptoBrokerIdentityListException ex) {
-//
-//            Log.e(TAG, ex.getMessage(), ex);
-//            if (errorManager != null) {
-//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-//                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
-//            }
-//        }
+        try {
+            data.addAll(walletManager.getListOfIdentities());
+
+        } catch (FermatException ex) {
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            }
+        }
 
         return data;
     }

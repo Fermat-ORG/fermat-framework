@@ -191,8 +191,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
         if (selectedProviders.isEmpty()) {
             Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
-            // TODO descomentar cuando pueda agregar un proveedor en la lista
-            // return;
+            return;
         }
 
         try {
