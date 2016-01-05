@@ -118,7 +118,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
         assetDetailAvailableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
         assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity()+"");
-        assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin());
+        assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         assetDetailRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
         assetDetailAvailableText2.setText(digitalAsset.getAvailableBalanceQuantity()+"");
         assetDetailRedeemText.setText(1+"");
