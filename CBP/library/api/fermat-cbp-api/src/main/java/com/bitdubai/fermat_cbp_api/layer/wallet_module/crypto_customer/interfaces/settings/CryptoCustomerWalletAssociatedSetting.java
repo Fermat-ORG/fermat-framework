@@ -14,8 +14,8 @@ public interface CryptoCustomerWalletAssociatedSetting {
     UUID getId();
     void setId(UUID id);
 
-    String getBrokerPublicKey();
-    void   setBrokerPublicKey(String brokerPublicKey);
+    String getCustomerPublicKey();
+    void   setCustomerPublicKey(String customerPublicKey);
 
     Platforms getPlatform();
     void setPlatform(Platforms platform);
