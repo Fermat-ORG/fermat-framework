@@ -157,6 +157,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 if(dontShowAgainCheckBox.isChecked()){
                     SettingsManager<IntraUserWalletSettings> settingsManager = moduleManager.getSettingsManager();
                     try {
+
                         IntraUserWalletSettings intraUserWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
                         intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserWalletSettings);
