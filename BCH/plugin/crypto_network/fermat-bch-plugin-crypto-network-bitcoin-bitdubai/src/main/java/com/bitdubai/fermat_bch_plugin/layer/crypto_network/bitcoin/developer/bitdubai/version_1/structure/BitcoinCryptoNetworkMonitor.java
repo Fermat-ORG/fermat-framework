@@ -291,14 +291,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
          final Transaction transaction = wallet.getTransaction(sha256Hash);
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
-         ListenableFuture<Transaction> future = transactionBroadcast.future();
 
+
+         ListenableFuture<Transaction> future = transactionBroadcast.future();
         /**
          * I add the future that will get the broadcast result into a call back to respond to it.
          */
         Futures.addCallback(future, new FutureCallback<Transaction>() {
             @Override
             public void onSuccess(Transaction result) {
+
                 try {
                     getDao().setBroadcastStatus(Status.BROADCASTED, connectedPeers, null, txHash);
                     /**
@@ -327,6 +329,31 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             }
         });
+
+        /**
+         * Will set the time out for this broadcast attempt.
+         */
+        try {
+            future.get(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            try {
+                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
+        } catch (ExecutionException e) {
+            try {
+                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
+        } catch (TimeoutException e) {
+            try {
+                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
 

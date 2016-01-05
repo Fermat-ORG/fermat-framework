@@ -462,27 +462,36 @@ public class AssetCryptoVaultManager  {
         if (redeemPointPublicKey == null)
             throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, null, "RedeemPoint Public Key can't be null.", null);
 
-        /**
-         * I will verify that I didn't added this Redeempoint before by searching for this publicKey
-         */
-        if (isExistingRedeemPoint(redeemPointPublicKey))
-            throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, null, "the passed RedeemPoint has already been registered before", null);
-
 
         /**
-         * I will create the new account
+         * if I don't have an account with this publicKey, then I will create it.
          */
         HierarchyAccount redeemPointAccount = null;
-        try {
-            redeemPointAccount = createNewRedeemPointAccount(redeemPointPublicKey);
-            this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().addVaultAccount(redeemPointAccount);
-        } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "There was an error creating and persisting the new account in database.", "database issue");
+        if (!isExistingRedeemPoint(redeemPointPublicKey)){
+            /**
+             * I will create the new account
+             */
+
+            try {
+                redeemPointAccount = createNewRedeemPointAccount(redeemPointPublicKey);
+                this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().addVaultAccount(redeemPointAccount);
+            } catch (CantExecuteDatabaseOperationException e) {
+                throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "There was an error creating and persisting the new account in database.", "database issue");
+            }
+        } else{
+            /**
+             * will load the existing account
+             */
+            try {
+                redeemPointAccount = getDao().getHierarchyAccount(redeemPointPublicKey);
+            } catch (CantExecuteDatabaseOperationException e) {
+                throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "Error getting existing Hierarchy Account", "database issue");
+            }
         }
 
 
         /**
-         * get the master account key
+         * get the master account key for the specified account.
          */
         DeterministicKey accountMasterKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getAddressKeyFromAccount(redeemPointAccount);
 
@@ -497,7 +506,8 @@ public class AssetCryptoVaultManager  {
         /**
          * return the extended public Key
          */
-        return (ExtendedPublicKey) watchPubKeyAccountZero;
+        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(watchPubKeyAccountZero,watchPubKeyAccountZero);
+        return extendedPublicKey;
     }
 
     /**

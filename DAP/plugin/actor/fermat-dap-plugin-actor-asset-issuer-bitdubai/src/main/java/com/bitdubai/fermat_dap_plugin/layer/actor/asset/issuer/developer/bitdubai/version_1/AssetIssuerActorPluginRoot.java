@@ -311,25 +311,27 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         /**
          * I will create a new Message with the extended public Key.
          */
-        AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey);
+        if (extendedPublicKey != null){
+            AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey);
 
+            /**
+             * and send it using the redeem point network service.
+             */
+            try {
+                DAPMessage dapMessageSend = new DAPMessage(
+                        DAPMessageType.EXTENDED_PUBLIC_KEY,
+                        assetExtendedPublickKeyContentMessage,
+                        issuer,
+                        redeemPoint);
 
-        /**
-         * and send it using the redeem point network service.
-         */
-        try {
-            DAPMessage dapMessageSend = new DAPMessage(
-                    DAPMessageType.EXTENDED_PUBLIC_KEY,
-                    assetExtendedPublickKeyContentMessage,
-                    issuer,
-                    redeemPoint);
-
-            assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessageSend);
-        } catch (CantSetObjectException e) {
-            e.printStackTrace();
-        } catch (CantSendMessageException e) {
-            e.printStackTrace();
+                assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessageSend);
+            } catch (CantSetObjectException e) {
+                e.printStackTrace();
+            } catch (CantSendMessageException e) {
+                e.printStackTrace();
+            }
         }
+
 //        try {
 //            this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(
 //                    actorAssetIssuer.getActorPublicKey(),
