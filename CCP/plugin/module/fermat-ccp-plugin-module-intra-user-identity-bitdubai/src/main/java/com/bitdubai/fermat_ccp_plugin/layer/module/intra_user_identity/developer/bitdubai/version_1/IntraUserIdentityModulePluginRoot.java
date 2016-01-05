@@ -20,6 +20,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantDeleteIntraUserIdentityException;
@@ -29,10 +34,12 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.C
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.utils.IntraUserIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,13 +68,18 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
     private PluginFileSystem pluginFileSystem;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER)
-    private IntraUserManager intraUserNertwokServiceManager;
+    private IntraUserManager intraUserNertworkServiceManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.INTRA_WALLET_USER)
+
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.USER           , addon = Addons.DEVICE_USER        )
+    private DeviceUserManager deviceUserManager;
+
 
 
     private IntraUserIdentitySettings intraUserSettings = new IntraUserIdentitySettings();
@@ -152,36 +164,90 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
     }
 
 
-
-
     @Override
     public List<IntraUserModuleIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraUsersIdentityException {
-        return null;
+        try {
+
+            List<IntraUserModuleIdentity> intraUserModuleIdentityList = new ArrayList<>();
+
+            List<IntraWalletUserIdentity> intraWalletUserIdentityList = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+
+            return intraUserModuleIdentityList;
+        } catch (CantListIntraWalletUsersException e) {
+            throw new CantListIntraUsersIdentityException("",e,"","");
+        }
     }
 
     @Override
     public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws CantCreateNewIntraUserIdentityException {
-        return null;
+        try {
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage);
+
+            return new IntraUserIdentityModule( alias,  phrase,intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
+
+        } catch (CantCreateNewIntraWalletUserException e) {
+            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+        }
+        catch (Exception e) {
+            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+        }
     }
 
     @Override
     public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserIdentityException {
-        return null;
+        try {
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage);
+
+            return new IntraUserIdentityModule( alias, "",intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
+
+        } catch (CantCreateNewIntraWalletUserException e) {
+            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+        }
+        catch (Exception e) {
+            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+        }
     }
 
     @Override
     public boolean hasIntraUserIdentity() throws CantGetIntraUserIdentityException {
-        return false;
+        try {
+            return intraWalletUserIdentityManager.hasIntraUserIdentity();
+
+        } catch (CantListIntraWalletUsersException e) {
+            throw new CantGetIntraUserIdentityException("",e,"","");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraUserIdentityException("",e,"","");
+        }
+
     }
 
     @Override
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage) throws CantUpdateIntraUserIdentityException {
 
+        try
+        {
+            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias,  phrase, profileImage);
+
+        } catch (CantUpdateIdentityException e) {
+            throw new CantUpdateIntraUserIdentityException("",e,"","");
+        }
+        catch (Exception e) {
+            throw new CantUpdateIntraUserIdentityException("",e,"","");
+        }
     }
 
     @Override
     public void deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIntraUserIdentityException {
-
+        try
+        {
+            intraWalletUserIdentityManager.deleteIntraUserIdentity(identityPublicKey);
+        } catch (CantDeleteIdentityException e) {
+            throw new CantDeleteIntraUserIdentityException("",e,"","");
+        }
+        catch (Exception e) {
+            throw new CantDeleteIntraUserIdentityException("",e,"","");
+        }
     }
 
     @Override
