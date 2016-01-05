@@ -370,18 +370,18 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return cryptoBrokerIdentities;//getListOfIdentitiesTestData();
     }
 
-    private List<CryptoBrokerIdentity> getListOfIdentitiesTestData() {
-        if (listOfIdentities == null) {
-            listOfIdentities = new ArrayList<CryptoBrokerIdentity>();
-
-            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("Nelson Ramirez"));
-            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("leonacosta"));
-            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("nelsonalfo"));
-            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("Andres Lopez"));
-        }
-
-        return listOfIdentities;
-    }
+//    private List<CryptoBrokerIdentity> getListOfIdentitiesTestData() {
+//        if (listOfIdentities == null) {
+//            listOfIdentities = new ArrayList<CryptoBrokerIdentity>();
+//
+//            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("Nelson Ramirez"));
+//            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("leonacosta"));
+//            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("nelsonalfo"));
+//            listOfIdentities.add(new CryptoBrokerWalletModuleCryptoBrokerIdentity("Andres Lopez"));
+//        }
+//
+//        return listOfIdentities;
+//    }
 
     @Override
     public StockStatistics getStockStatistics(String stockCurrency) {
