@@ -1045,6 +1045,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         BroadcastStatus broadcastStatus = new BroadcastStatus(0, Status.IDLE);//this is a new transaction, so no retries
         record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, broadcastStatus.getRetriesCount());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, broadcastStatus.getStatus().getCode());
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME, getCurrentDateTime());
 
         try {
             databaseTable.insertRecord(record);
@@ -1146,15 +1147,29 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "The stored Broadcast Status is not valid.", null);
         }
 
+        /**
+         * I will get the stored exception, if any.
+         */
+        String xmlException = record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION);
+        if (!xmlException.isEmpty()){
+            Exception broadcastException = null;
+            broadcastException = (Exception) XMLParser.parseXML(xmlException, Exception.class);
+            broadcastStatus.setLastException(broadcastException);
+        }
+
+        broadcastStatus.setConnectedPeers(record.getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_COUNT));
         return broadcastStatus;
     }
 
     /**
      * Sets the passed broadcast status to the specified transaction hash
      * @param status
+     * @param connectedPeers
+     * @param lastException
      * @param txHash
+     * @throws CantExecuteDatabaseOperationException
      */
-    public void setBroadcastStatus(Status status, String txHash) throws CantExecuteDatabaseOperationException {
+    public void setBroadcastStatus(Status status, int connectedPeers, Exception lastException, String txHash) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
 
@@ -1191,13 +1206,33 @@ public class BitcoinCryptoNetworkDatabaseDao {
         else
             broadcastStatus.setRetriesCount(retriesAmount);
 
+        broadcastStatus.setConnectedPeers(connectedPeers);
+        broadcastStatus.setLastException(lastException);
+
         /**
          * I will set the new values and execute
          */
 
         record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, broadcastStatus.getRetriesCount());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, broadcastStatus.getStatus().getCode());
+        record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_COUNT, broadcastStatus.getConnectedPeers());
 
+        /**
+         * I will set the exception column if any.
+         */
+        if (broadcastStatus.getLastException() != null){
+            String xmlException = XMLParser.parseObject(broadcastStatus.getLastException());
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION, xmlException);
+        }
+
+        /**
+         * sets the last update column data
+         */
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME, getCurrentDateTime());
+
+        /**
+         * finally, update the record.
+         */
         try {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {

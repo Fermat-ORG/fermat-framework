@@ -390,7 +390,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException {
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException{
         runningAgents.get(BlockchainNetworkType.DEFAULT).broadcastTransaction(txHash);
     }
 
