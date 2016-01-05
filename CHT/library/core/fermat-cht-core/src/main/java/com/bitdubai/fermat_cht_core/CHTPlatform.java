@@ -23,7 +23,7 @@ public class CHTPlatform extends AbstractPlatform {
         try {
 
             registerLayer(new NetworkServiceLayer());
-            System.out.println("CHT NETWORK SERVICE REGISTERED");
+            //System.out.println("CHT NETWORK SERVICE REGISTERED");
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(
