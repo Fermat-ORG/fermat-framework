@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 # Dev Teams
 
@@ -113,7 +113,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 ### Thunder Team:
 -----------------------------------
 <br>
-### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/c538d5f1256c25d5e8c3ebdd19dd154d6c8a54e1/Logotype/FermatTeams/logo_thunder_team.jpg "Thunder Team Logo"")
+### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/Thunder%20Team/HQ_1920x1080.jpg "Thunder Team Logo"")
 
 More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and deailing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
 
@@ -151,7 +151,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 ### Coin Diggers Team:
 -----------------------------------
 <br>
-### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/63e3087dc448c761d11a76d2625693fe8bcdd4b3/Logotype/FermatTeams/logo_coindiggers_team.jpg "Logo Coin Diggers Team")
+### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/CoinDiggers%20Team/HQ_1920x1080.jpg "Logo Coin Diggers Team")
 
 We are passionate geeks , always on the edge of technology and a little more. 
 With the only phrase "Keep moving forward" we just walk through Fermat.
