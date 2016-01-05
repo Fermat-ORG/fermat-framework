@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -50,7 +49,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * TODO THIS PLUG-IN DOES........
  * The Class <code>CryptoCustomerActorPluginRoot</code>
  * Implements the CryptoCustomerActorManager interface with all his methods.
  * <p/>
@@ -65,16 +63,16 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     private CryptoCustomerActorDatabaseDao databaseDao;
@@ -84,9 +82,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
     public static final String ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME = "actorCryptoCustomerProfileImage";
     public static final String ACTOR_CRYPTO_CUSTOMER_PRIVATE_KEYS_DIRECTORY_NAME = "actorCryptoCustomerPrivateKeys";
 
-    public CryptoCustomerActorPluginRoot(){
-        super(new PluginVersionReference(new Version()));
-    }
+    public CryptoCustomerActorPluginRoot(){ super(new PluginVersionReference(new Version())); }
 
     /*IMPLEMENTATION service*/
     @Override
@@ -108,9 +104,6 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
 
         logManager.log(CryptoCustomerActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Creating Crypto Customer...", null, null);
 
-        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
-        // TODO MAKE USE OF THE ERROR MANAGER.
-
         ECCKeyPair keyPair = new ECCKeyPair();
         String actorPublicKey = keyPair.getPublicKey();
         String actorPrivateKey = keyPair.getPrivateKey();
@@ -125,10 +118,10 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             actor = databaseDao.createRegisterCryptoCustomerActor(actorLoggedInPublicKey, actorPublicKey, actorPrivateKey, actorName, actorPhoto, ConnectionState.CONNECTED);
 
         } catch (CantRegisterCryptoCustomerActorException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T CREATE NEW CRYPTO CUSTOMER ACTOR", "");
         }
         logManager.log(CryptoCustomerActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Crypto Customer Created Successfully", null, null);
@@ -140,8 +133,6 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
     public CryptoCustomerActor getCryptoCustomerActor(String actorLoggedInPublicKey, String actorPublicKey) throws CantGetCryptoCustomerActorException {
         logManager.log(CryptoCustomerActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Trying to get an specific crypto customer...", null, null);
 
-        // TODO PLEASE CHECK THE OTHER ACTORS, THINK THIS IS WRONG. LET'S THINK TOGETHER.
-        // TODO MAKE USE OF THE ERROR MANAGER.
         CryptoCustomerActor actor = null;
 
         try {
@@ -151,10 +142,10 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
                 throw new CantGetCryptoCustomerActorException("", null, ".","Intra User not found");
 
         } catch (CantRegisterCryptoCustomerActorException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_CUSTOMER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoCustomerActorException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET CRYPTO CUSTOMER ACTOR", "");
         }
 
@@ -162,7 +153,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
     }
     /*END IMPLEMENTATION CryptoCustomerActorManager*/
 
-    /*IMPLEMENTATION LogManagerForDevelopers,*/
+    /*IMPLEMENTATION DatabaseManagerForDevelopers,*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         return new CryptoCustomerActorDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
@@ -182,9 +173,9 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             return new ArrayList<>();
         }
     }
-    /*END IMPLEMENTATION LogManagerForDevelopers,*/
+    /*END IMPLEMENTATION DatabaseManagerForDevelopers,*/
 
-    /*IMPLEMENTATION DatabaseManagerForDevelopers*/
+    /*IMPLEMENTATION LogManagerForDevelopers*/
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
@@ -218,7 +209,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             return DEFAULT_LOG_LEVEL;
         }
     }
-    /*END IMPLEMENTATION DatabaseManagerForDevelopers*/
+    /*END IMPLEMENTATION LogManagerForDevelopers*/
 
     /*PRIVATE METHOD*/
     private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
@@ -257,4 +248,5 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             throw  new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ",FermatException.wrapException(e),"", "");
         }
     }
+    /*END PRIVATE METHOD*/
 }

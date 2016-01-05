@@ -187,9 +187,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
 
         private void doTheMainTask(){
             try {
-                CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
+                CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
                 //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
-                CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKey").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0);
+                if (!cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().isEmpty()) {
+                    CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0);
+                }
                 //Se verifica el cierre de la negociacion
                 for (CustomerBrokerSaleNegotiation records : customerBrokerSaleNegotiationManager.getNegotiationsByStatus(NegotiationStatus.CLOSED))
                 {

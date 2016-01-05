@@ -58,16 +58,16 @@ public class CryptoCustomerWalletNavigationViewAdapter extends FermatAdapter<Men
     private void bindMenuItem(NavigationItemMenuViewHolder holder, int position) {
         switch (position) {
             case 0:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_home);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_home);
                 break;
             case 1:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_contract_history);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_contract_history);
                 break;
             case 2:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_broker_list);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_broker_list);
                 break;
             case 3:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_settings);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_settings);
                 break;
         }
     }
@@ -76,16 +76,16 @@ public class CryptoCustomerWalletNavigationViewAdapter extends FermatAdapter<Men
         holder.getRowContainer().setBackgroundResource(R.color.ccw_navigation_view_menu_item_overlay);
         switch (position) {
             case 0:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_home_selected);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_home_selected);
                 break;
             case 1:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_contract_history_selected);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_contract_history_selected);
                 break;
             case 2:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_broker_list_selected);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_broker_list_selected);
                 break;
             case 3:
-                holder.getIcon().setImageResource(R.drawable.cbw_btn_drawer_settings_selected);
+                holder.getIcon().setImageResource(R.drawable.ccw_btn_drawer_settings_selected);
                 break;
         }
     }

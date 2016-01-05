@@ -45,9 +45,13 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
     private CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager;
 
     public CustomerBrokerUpdateManagerImpl(
-        CustomerBrokerUpdateNegotiationTransactionDatabaseDao customerBrokerUpdateNegotiationTransactionDatabaseDao
+        CustomerBrokerUpdateNegotiationTransactionDatabaseDao   customerBrokerUpdateNegotiationTransactionDatabaseDao,
+        CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
+        CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager
     ){
-        this.customerBrokerUpdateNegotiationTransactionDatabaseDao = customerBrokerUpdateNegotiationTransactionDatabaseDao;
+        this.customerBrokerUpdateNegotiationTransactionDatabaseDao  = customerBrokerUpdateNegotiationTransactionDatabaseDao;
+        this.customerBrokerPurchaseNegotiationManager               = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager                   = customerBrokerSaleNegotiationManager;
     }
 
     //UPDATE THE PURCHASE NEGOTIATION TRANSACTION

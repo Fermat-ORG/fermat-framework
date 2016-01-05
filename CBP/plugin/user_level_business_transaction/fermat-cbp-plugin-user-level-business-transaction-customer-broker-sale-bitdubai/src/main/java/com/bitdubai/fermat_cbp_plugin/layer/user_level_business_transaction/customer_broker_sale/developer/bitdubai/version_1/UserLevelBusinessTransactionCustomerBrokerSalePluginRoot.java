@@ -139,9 +139,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
     public void start() throws CantStartPluginException {
         try {
             customerBrokerSaleManager = new UserLevelBusinessTransactionCustomerBrokerSaleManager();
-            //startMonitorAgent();
+            startMonitorAgent();
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.print("***** Init Customer Broker Sale *****");
+            System.out.print("***** Init User Level Bussines Customer Broker Sale *****");
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
