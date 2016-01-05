@@ -10,8 +10,8 @@ public interface CryptoCustomerWalletProviderSetting {
     UUID getId();
     void setId(UUID id);
 
-    String getBrokerPublicKey();
-    void   setBrokerPublicKey(String brokerPublicKey);
+    String getCustomerPublicKey();
+    void   setCustomerPublicKey(String customerPublicKey);
 
     UUID getPlugin();
     void setPlugin(UUID plugin);

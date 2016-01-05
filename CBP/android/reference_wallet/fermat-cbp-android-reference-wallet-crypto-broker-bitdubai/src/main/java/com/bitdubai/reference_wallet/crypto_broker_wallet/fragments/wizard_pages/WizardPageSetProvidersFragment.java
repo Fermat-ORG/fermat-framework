@@ -37,6 +37,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.Simpl
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -156,9 +157,9 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         try {
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
 
-            Map<String, CurrencyExchangeRateProviderManager> providersMap = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
-            if (providersMap != null)
-                providers.addAll(providersMap.values());
+            Collection<CurrencyExchangeRateProviderManager> providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+            if (providerManagers != null)
+                providers.addAll(providerManagers);
 
 
             final SimpleListDialogFragment<CurrencyExchangeRateProviderManager> dialogFragment = new SimpleListDialogFragment<>();
