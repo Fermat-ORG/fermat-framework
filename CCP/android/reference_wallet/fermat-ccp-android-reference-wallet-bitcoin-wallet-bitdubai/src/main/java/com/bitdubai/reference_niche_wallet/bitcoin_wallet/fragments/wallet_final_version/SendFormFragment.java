@@ -383,8 +383,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                 im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             }
-            if (cryptoWalletWalletContact != null)
+            if (cryptoWalletWalletContact != null) {
                 sendCrypto();
+            }
             else
                 Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
         }
@@ -431,7 +432,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
                         );
                         Toast.makeText(getActivity(),"Sending...",Toast.LENGTH_SHORT).show();
-
+                        onBack(null);
                     } catch (InsufficientFundsException e) {
                         Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                     } catch (CantSendCryptoException e) {

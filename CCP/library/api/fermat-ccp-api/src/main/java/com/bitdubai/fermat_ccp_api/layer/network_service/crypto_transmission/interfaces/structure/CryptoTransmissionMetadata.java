@@ -40,6 +40,8 @@ public interface CryptoTransmissionMetadata {
 
     public long getTimestamp();
 
+    int getSentCount();
+
 
     void setPendingToRead(boolean pending);
 }

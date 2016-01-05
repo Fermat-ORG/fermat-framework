@@ -391,7 +391,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         executorPool.execute(networkBroadcastWorker);
                         //TODO: ver que pasa si el crypto status está en null
                         CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
-                        this.transactionHandlerFactory.getHandler(transaction.getReferenceWallet()).handleTransaction(transaction, cryptoStatus);
+                        if(cryptoStatus!=null) {
+                            this.transactionHandlerFactory.getHandler(transaction.getReferenceWallet()).handleTransaction(transaction, cryptoStatus);
+                        }
                     } catch (CantGetTransactionCryptoStatusException | OutgoingIntraActorCantFindHandlerException | OutgoingIntraActorCantHandleTransactionException e) {
                         reportUnexpectedException(e);
                     }
