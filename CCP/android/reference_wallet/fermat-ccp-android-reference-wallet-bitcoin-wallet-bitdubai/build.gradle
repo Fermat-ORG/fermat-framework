@@ -6,6 +6,7 @@ android {
         abortOnError false
     }
 
+    useLibrary 'org.apache.http.legacy'
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
 
@@ -50,6 +51,7 @@ dependencies {
     //compile 'com.google.guava:guava:r05'
     //compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.google.android:android:4.1.1.4'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
 
 
 
