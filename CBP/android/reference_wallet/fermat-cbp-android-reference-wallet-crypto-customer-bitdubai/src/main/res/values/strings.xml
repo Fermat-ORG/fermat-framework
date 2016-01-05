@@ -49,6 +49,7 @@
     <string name="ccw_next_step">Next Step</string>
     <string name="ccw_select_identity_warning_msg">Need to Select an Identity</string>
     <string name="ccw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
+    <string name="ccw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
     <string name="ccw_add_location_warning_msg">Need to Add at least ONE Location</string>
     <string name="ccw_automatic_restock">Automatic Restock</string>
     <string name="ccw_no_selected_wallets">No Selected Wallets</string>

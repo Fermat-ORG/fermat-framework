@@ -140,21 +140,20 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
             return;
         }
 
-        // TODO utilizar los metodos que franklin a de implementar
-//        try {
-//            for (String location : locationList) {
-//                walletManager.createNewLocation(location, appSession.getAppPublicKey());
-//            }
-//
-//        } catch (FermatException ex) {
-//            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-//
-//            Log.e(TAG, ex.getMessage(), ex);
-//            if (errorManager != null) {
-//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-//                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-//            }
-//        }
+        try {
+            for (String location : locationList) {
+                walletManager.createNewLocation(location, appSession.getAppPublicKey());
+            }
+
+        } catch (FermatException ex) {
+            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            }
+        }
 
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
     }
