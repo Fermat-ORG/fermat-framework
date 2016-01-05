@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationPaymentCurrency;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
@@ -529,6 +530,30 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 Collection<NegotiationBankAccount> resultados = new ArrayList<>();
                 for (DatabaseTableRecord record : records) {
                     resultados.add(constructBankSaleFromRecord(record));
+                }
+                return resultados;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListBankAccountsSaleException(CantGetListBankAccountsSaleException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListBankAccountsSaleException(CantGetListBankAccountsSaleException.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException {
+
+            DatabaseTable PurchaseBanksTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME);
+
+            String Query = "SELECT DISTINCT " +
+                    CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME +
+                    " FROM " +
+                    CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME;
+
+            Collection<DatabaseTableRecord> records = null;
+            try {
+                records = PurchaseBanksTable.customQuery(Query, true);
+                Collection<FiatCurrency> resultados = new ArrayList<>();
+                for (DatabaseTableRecord record : records) {
+                    resultados.add(FiatCurrency.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME)));
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {

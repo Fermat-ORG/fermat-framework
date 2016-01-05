@@ -46,10 +46,10 @@ public class BankMoneyWalletBalanceImpl implements BankMoneyWalletBalance{
     @Override
     public void credit(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterCreditException {
         try {
-            System.out.println("BNK credit ="+ bankMoneyTransactionRecord.getBankAccountNumber());
+            System.out.println("BNK credit ="+ bankMoneyTransactionRecord.getBankAccountNumber() + " balanceType = "+balanceType.getCode());
             bankMoneyWalletDao.addCredit(bankMoneyTransactionRecord, balanceType);
         }catch (CantAddCreditException e){
-            throw new CantRegisterCreditException(CantAddDebitException.DEFAULT_MESSAGE,e,"couldn't Credit from account",null);
+            throw new CantRegisterCreditException(CantAddCreditException.DEFAULT_MESSAGE,e,"couldn't Credit from account",null);
         }
     }
 
