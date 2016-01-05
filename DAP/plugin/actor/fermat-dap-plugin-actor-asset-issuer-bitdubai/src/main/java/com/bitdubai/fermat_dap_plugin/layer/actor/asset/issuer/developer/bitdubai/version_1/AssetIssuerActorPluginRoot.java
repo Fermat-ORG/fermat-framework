@@ -299,6 +299,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         ExtendedPublicKey extendedPublicKey = null;
         try {
             extendedPublicKey = assetVaultManager.getRedeemPointExtendedPublicKey(redeemPoint.getActorPublicKey());
+
         } catch (CantGetExtendedPublicKeyException e) {
             /**
              * if there was an error and we coulnd't get the ExtendedPublicKey, then we will send a null public Key
