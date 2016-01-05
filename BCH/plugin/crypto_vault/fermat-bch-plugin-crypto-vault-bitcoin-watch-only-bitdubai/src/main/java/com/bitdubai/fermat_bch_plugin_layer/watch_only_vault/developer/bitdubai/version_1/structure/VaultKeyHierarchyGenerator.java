@@ -158,29 +158,11 @@ class VaultKeyHierarchyGenerator implements Runnable{
                     "Error trying to load the Hierarchy Accounts from the database.", "database issue");
         }
 
-
-        /**
-         * If there are no accounts in the database, these means is the first time the plugin runs, so I will create
-         * the account 0 that will be used by the asset vault.
-         */
-        if (hierarchyAccounts.size() == 0){
-            com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount accountZero = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
-            hierarchyAccounts.add(accountZero);
-
-            /**
-             * And I will also try to add this to the database so I can load it the next time.
-             */
-                try {
-                    getDao().addNewHierarchyAccount(accountZero);
-                } catch (CantExecuteDatabaseOperationException e) {
-                    // I don't need to handle this error.
-                }
-        }
         return hierarchyAccounts;
     }
 
     /**
-     * Gets and instance of the AssetsOverBitcoinCryptoVaultDao class used to access database objects.
+     * Gets and instance of the BitcoinWatchOnlyCryptoVaultDao class used to access database objects.
      * @return
      * @throws CantInitializeBitcoinWatchOnlyCryptoVaultDatabaseException
      */
