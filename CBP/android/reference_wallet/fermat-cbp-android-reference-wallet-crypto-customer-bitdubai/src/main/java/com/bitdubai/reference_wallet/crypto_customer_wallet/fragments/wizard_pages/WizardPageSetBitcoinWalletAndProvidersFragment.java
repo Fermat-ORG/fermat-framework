@@ -212,7 +212,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             for (CurrencyExchangeRateProviderManager provider : selectedProviders) {
 
                 CryptoCustomerWalletProviderSetting setting = walletManager.newEmptyCryptoCustomerWalletProviderSetting();
-                setting.setBrokerPublicKey(appSession.getAppPublicKey()); // TODO cambiar setBrokerPublicKey() por setCustomerPublicKey() en el module
+                setting.setCustomerPublicKey(appSession.getAppPublicKey());
                 setting.setDescription(provider.getProviderName());
                 setting.setId(provider.getProviderId());
                 setting.setPlugin(provider.getProviderId());
