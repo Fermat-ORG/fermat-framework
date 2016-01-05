@@ -7,7 +7,8 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions;
 
 
-import com.bitdubai.fermat_api.FermatException;
+
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException</code> is
@@ -18,7 +19,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInsertRecordDataBaseException extends FermatException {
+public class CantInsertRecordDataBaseException extends CHTException {
 
     /**
      * Represent the default message
