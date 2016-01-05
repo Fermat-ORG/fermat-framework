@@ -312,7 +312,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
          * I will create a new Message with the extended public Key.
          */
         if (extendedPublicKey != null){
-            AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey);
+            AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
 
             /**
              * and send it using the redeem point network service.
