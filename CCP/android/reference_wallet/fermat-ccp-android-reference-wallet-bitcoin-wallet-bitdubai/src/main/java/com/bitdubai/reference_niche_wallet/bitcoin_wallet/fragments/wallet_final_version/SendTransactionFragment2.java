@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -251,6 +252,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    long before = 0;
+    long after = 0;
 
     private void setUpDonut(LayoutInflater inflater){
         final RelativeLayout container_header_balance = getToolbarHeader();
@@ -315,15 +318,37 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
 
         TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+        txt_type_balance.setOnTouchListener(new View.OnTouchListener() {
 
-        txt_type_balance.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-                changeBalanceType(txt_type_balance, txt_balance_amount);
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    before = System.currentTimeMillis();
+                    if(after-before<2000){
+                        changeBalanceType(txt_type_balance, txt_balance_amount);
+                    }else{
+                        Toast.makeText(getActivity(),"auch",Toast.LENGTH_SHORT).show();
+                    }
+                    System.out.println(System.currentTimeMillis());
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    after = System.currentTimeMillis();
+                    Toast.makeText(getActivity(),"auch",Toast.LENGTH_SHORT).show();
+                    System.out.println(System.currentTimeMillis());
+                } else if(event.getAction() == MotionEvent.ACTION_BUTTON_RELEASE){
+                    Toast.makeText(getActivity(),"ACTION_BUTTON_RELEASE",Toast.LENGTH_SHORT).show();
+                }
+                return false;
             }
         });
+
+//        txt_type_balance.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+//                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+//                changeBalanceType(txt_type_balance, txt_balance_amount);
+//            }
+//        });
 
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
@@ -469,7 +494,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 book_offset = lstCryptoWalletTransactionsBook.size();
 
 
-                for (CryptoWalletTransaction cryptoWalletTransaction : list) {
+                for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
                      lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
                     long total = 0;

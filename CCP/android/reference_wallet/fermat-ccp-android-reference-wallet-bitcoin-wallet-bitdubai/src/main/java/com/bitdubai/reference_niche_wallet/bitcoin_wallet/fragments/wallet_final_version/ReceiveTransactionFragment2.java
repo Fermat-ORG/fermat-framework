@@ -267,7 +267,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 book_offset = lstCryptoWalletTransactionsBook.size();
 
                 //get transactions from actor public key to send me btc
-                for (CryptoWalletTransaction cryptoWalletTransaction : list) {
+                for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
                     lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk,MAX_TRANSACTIONS, 0);
                     long total = 0;
