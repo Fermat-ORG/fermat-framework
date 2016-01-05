@@ -28,6 +28,6 @@ project(':fermat-cht-plugin-middleware-chat-bitdubai').projectDir = new File('CH
 include ':fermat-cht-plugin-network-service-chat-bitdubai'
 project(':fermat-cht-plugin-network-service-chat-bitdubai').projectDir = new File('CHT/plugin/network_service/fermat-cht-plugin-network-service-chat-bitdubai')
 
-//Network Service
+//Sub app module
 include ':fermat-cht-plugin-sub-app-module-chat-bitdubai'
 project(':fermat-cht-plugin-sub-app-module-chat-bitdubai').projectDir = new File('CHT/plugin/sub_app_module/fermat-cht-plugin-sub-app-module-chat-bitdubai')
