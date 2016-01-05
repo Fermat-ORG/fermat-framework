@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 # Dev Teams
 
@@ -79,7 +79,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 
 | # | Category | Description |
 |:-----:|:-----:|:-----| 
-| 1 | ORG New Developer | New developer on the project. |
+| 1 | ORG Developer | New developer on the project. |
 | 2 | ORG Veteran Developer| Working full time 3+ months OR part-time 6+ months OR high performant. |
 | 3 | ORG New Team Leader | Team Leader with 1 full-time member on the team. |
 | 4 | ORG Team Leader | Team Leader with less than 5 full-time members on the team. |
@@ -113,33 +113,33 @@ Developers and team leaders in particular are classified by the deepness of the 
 ### Thunder Team:
 -----------------------------------
 <br>
-### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/c538d5f1256c25d5e8c3ebdd19dd154d6c8a54e1/Logotype/FermatTeams/logo_thunder_team.jpg "Thunder Team Logo"")
+### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/Thunder%20Team/HQ_1920x1080.jpg "Thunder Team Logo"")
 
 More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and deailing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
 
 #### Thunder Team Members:
 
 
-* Rodrigo Acosta [Team Leader - Core Developer] <br/>
+* **Rodrigo Acosta [Core Developer]** <br/>
 ---
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
     
     
-* Nerio Enrique Indriago Ortega <br/>
+* **Nerio Enrique Indriago Ortega [Veteran Developer]**<br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* Victor Mars <br/>
+* **Victor Mars [Veteran Developer]** <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
-* Frank Contreras <br/>
+* **Frank Contreras [New Developer]** <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
@@ -151,7 +151,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 ### Coin Diggers Team:
 -----------------------------------
 <br>
-### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/63e3087dc448c761d11a76d2625693fe8bcdd4b3/Logotype/FermatTeams/logo_coindiggers_team.jpg "Logo Coin Diggers Team")
+### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/CoinDiggers%20Team/HQ_1920x1080.jpg "Logo Coin Diggers Team")
 
 We are passionate geeks , always on the edge of technology and a little more. 
 With the only phrase "Keep moving forward" we just walk through Fermat.
@@ -160,26 +160,26 @@ We are in charge of Android-core,Fermat-Core, Android framework development and 
 #### CoinDiggers Team Members:
 
 
-* Matias Furszyfer [Team Leader - Core Developer] <br/>
+* **Matias Furszyfer [Core Developer]** <br/>
 ---
     Email:   matiasfurszyfer@gmail.com
     Skype:   matias.furszyfer
     Github:  https://github.com/furszy
     
     
-*  Natalia Cortez <br/>
+* **Natalia Cortez [Veteran Developer]**<br/>
 ---
       Email:   nattyco@gmail.com
       Skype:   nattyco
       Github:  https://github.com/nattyco
 
-* Joaquin Carrasquero <br/>
+* **Joaquin Carrasquero [New Developer]** <br/>
 ---
       Email:   jc.juaco@gmail.com
       Skype:   j-u-a-c-o@hotmail.com
       Github:  https://github.com/Exilum
 
-* Jose Manuel de Sousa<br/>
+* **Jose Manuel de Sousa [New Developer]**<br/>
 ---
       Email:   -----
       Skype:   -----
@@ -197,13 +197,13 @@ Currently we are a small team dedicated to the development of a communications l
 
 #### Team Members:
 
-* **Roberto Requena [Team Leader - New Team Leader]**<br/>
+* **Roberto Requena [New Team Leader]**<br/>
 ---
     Email:   rart3001@gmail.com
     Skype:   Rart3001
     Github:  https://github.com/Rart3001
 
-* **Hendry Rodriguez**<br/>
+* **Hendry Rodriguez [New Developer]**<br/>
 ---
       Email:   elnegroevaristo@gmail.com
       Skype:   Hendry19901990
@@ -221,7 +221,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 #### Team Members:
 
 
-* **Manuel Perez [Team Leader - Team Leader]**<br/>
+* **Manuel Perez [Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
@@ -244,7 +244,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 ---
     Email:   sulbaranja@gmail.com
     Skype:   juanaso15
-    Github:  -----
+    Github:  https://github.com/Juanaso
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
@@ -257,19 +257,19 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 
 #### Team Members:
 
-* **Franklin Marcano [Team Leader - Team Leader]**<br/>
+* **Franklin Marcano [Team Leader]**<br/>
 ---
     Email:   franklinmarcano1970@gmail.com
     Skype:   franklginmarcano1970
     Github:  https://github.com/franklinmarcano1970
 
-* **Jose Cardozo [Developer - Veteran Developer]**<br/>
+* **Jose Cardozo [Veteran Developer]**<br/>
 ---
       Email:   josejcb89@gmail.com
       Skype:   josejcb89
       Github:  https://github.com/josejcb
 
-* **Jose Vilchez [Developer - New Developer]**<br/>
+* **Jose Vilchez [New Developer]**<br/>
 ---
       Email:   josvilchezalmera@gmail.com
       Skype:   josvilchezalmera
@@ -292,7 +292,7 @@ In each platform mentioned, we are involved in the development of Network Servic
 #### Team Members:
 
 
-* **León Acosta [Team Leader - Core Developer]**<br/>
+* **León Acosta [Core Developer]**<br/>
 ---
     Email:   laion.cj91@gmail.com
     Skype:   leon.acosta
@@ -353,7 +353,7 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
 
 #### Team Members:
 
-* **Miguel Celedon [ORG New Team Leader - ORG Veteran]**<br/>
+* **Miguel Celedon [ORG Team Leader]**<br/>
 ---
     Email:   miguelceledon@outlook.com
     Skype:   miguel-209
@@ -382,19 +382,19 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 
 #### Team Members:
 
-* **Luis Fuenmayor [ORG New Team Leader - ORG Veteran]**<br/>
+* **Luis Fuenmayor [ORG Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
     Skype:   fuelusumar
     Github:  https://github.com/fuelusumar
     
-* **German Mendoza**<br/>
+* **German Mendoza [ORG Veteran Developer]**<br/>
 ---
-      Email:   german.mendoza.187@gmail.com
-      Skype:   german0296
-      Github:  https://github.com/kyxer
+    Email:   german.mendoza.187@gmail.com
+    Skype:   german0296
+    Github:  https://github.com/kyxer
 
-* **Luis Campo**<br/>
+* **Luis Campo [ORG Developer]**<br/>
 ---
     Email:   campusprize@gmail.com
     Skype:   campol
