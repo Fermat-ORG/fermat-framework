@@ -116,6 +116,17 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.request_form_base, container, false);
+            rootView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        // DO WHAT YOU WANT ON BACK PRESSED
+                        onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                        return true;
+                    }
+                    return false;
+                }
+            });
             setUpUI();
             setUpActions();
             setUpUIData();
