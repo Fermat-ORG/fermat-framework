@@ -17,10 +17,10 @@
 
     <!-- Transaction Dialogs -->
     <string name="csh_ctd_title" translatable="false">transact_title_here</string>
-    <string name="csh_ctd_amount_tag" translatable="false">Enter amount</string>
-    <string name="csh_ctd_amount_hint" translatable="false">Amount</string>
-    <string name="csh_ctd_memo_tag" translatable="false">Enter memo</string>
-    <string name="csh_ctd_memo_hint" translatable="false">Memo</string>
+    <string name="csh_ctd_amount_tag" translatable="false">AMOUNT</string>
+    <string name="csh_ctd_amount_hint" translatable="false">Enter an amount</string>
+    <string name="csh_ctd_memo_tag" translatable="false">MEMO</string>
+    <string name="csh_ctd_memo_hint" translatable="false">Enter a memo</string>
 
 
 </resources>
