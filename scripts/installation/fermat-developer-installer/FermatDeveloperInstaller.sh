@@ -16,6 +16,7 @@
 #
 #Change log:
 #0.08 - Includes Genymotion support
+#0.16 - Includes Platform Autodetect (Proposed by Ramon Ramos @ramonramospaz)
 #
 #
 # Environment Variables
@@ -45,6 +46,17 @@ jdkFolder="jdk1.7.0_80"
 androidSDkTools="android-sdk_r24.4.1-linux.tgz"
 androidStudio="android-studio-ide-141.2456560-linux.zip"
 #functions
+#The present include some validations and autodect of the plataform
+function checkPlataform(){
+	echo "Selecting the right plataform"
+	detect_plataform=`uname -m`
+	if [ "$detect_plataform" = "x86_64" ]
+	then
+		platform="-linux-x64.tar.gz"
+	else
+		platform="-linux-i586.tar.gz"
+	fi
+}
 function checkInternetConnection(){
     echo -e "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
 
@@ -220,6 +232,9 @@ echo "In this script version I need internet connection, so, I need to check it:
 if ! checkInternetConnection; then
    exit 1000
 fi
+#Check Plataform
+checkPlataform
+
 #Installing Git
 installGit
 
