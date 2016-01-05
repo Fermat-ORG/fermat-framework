@@ -6239,5 +6239,74 @@
                 <step id="8" type="end" title="List Send Payment Request" description="The wallet's user go to Payment Request menu and list payment request send, and show this status." platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet"> </step>
             </steps>
         </process>
+        <process platform="COR" name="Test Process" description="This is a process intended to test the workflow drawing" previous="">
+			<steps>
+				<step id="0"
+					type="start"
+					title="Start step"
+					description="This is the first step"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					type="activity"
+					title="Next step"
+					description="This is the first step, this one has a bifurcation, which can be parallel process or an 'if'"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="2" type="direct call"></step>
+						<step id="3" type="direct call"></step>
+					</next>
+					</step>
+				<step id="2"
+					type="activity"
+					title="True state"
+					description="This step is executed if the sentence is true"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="4" type="direct call"></step>
+					</next>
+				</step>
+				<step id="3"
+					type="activity"
+					title="False state"
+					description="This step is executed if the sentence is false, it loops back"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="4"
+					type="end"
+					title="Out of loop"
+					description="This is out of the loop"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+					</next>
+				</step>
+			</steps>
+		</process>
     </processes>
 </fermat>
