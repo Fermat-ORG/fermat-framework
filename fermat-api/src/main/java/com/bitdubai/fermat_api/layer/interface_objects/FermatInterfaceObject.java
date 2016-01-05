@@ -22,4 +22,5 @@ public interface FermatInterfaceObject{
     void setPosition(int position);
 
 
+    int getNotifications();
 }

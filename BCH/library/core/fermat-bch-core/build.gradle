@@ -21,6 +21,7 @@ dependencies {
     compile project(':fermat-bch-plugin-crypto-router-incoming-crypto-bitdubai')
     compile project(':fermat-bch-plugin-crypto-module-crypto-address-book-bitdubai')
     compile project(':fermat-bch-plugin-crypto-vault-bitcoin-currency-bitdubai')
+    compile project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
 
     // TODO MOVE THE PROJECTS TO THEIR PLACE
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')

@@ -23,10 +23,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.RequestMessage;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -131,7 +130,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
             Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
-
+            status = AgentStatus.STOPPED;
             reportUnexpectedError(e);
         } catch(Exception e) {
 
@@ -224,7 +223,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
             Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
-
+            status = AgentStatus.STOPPED;
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {
 

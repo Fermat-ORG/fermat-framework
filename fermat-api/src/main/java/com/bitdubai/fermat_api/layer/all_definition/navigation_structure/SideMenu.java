@@ -81,4 +81,15 @@ public class SideMenu implements FermatSideMenu {
     public String getNavigationIconColor() {
         return navigationIconColor;
     }
+
+    public void setNotifications(int[] notifications) {
+        try {
+            if (notifications != null)
+                for (int i = 0; i < menuItems.size(); i++) {
+                    menuItems.get(i).setNotifications(notifications[i]);
+                }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

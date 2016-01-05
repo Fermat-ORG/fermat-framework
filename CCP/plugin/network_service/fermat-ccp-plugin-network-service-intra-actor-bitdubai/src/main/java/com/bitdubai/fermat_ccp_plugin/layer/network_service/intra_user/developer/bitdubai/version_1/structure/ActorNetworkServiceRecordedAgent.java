@@ -21,8 +21,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -122,10 +122,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            toSend.sleep(SEND_SLEEP_TIME);
+            Thread.sleep(SEND_SLEEP_TIME);
 
         } catch (InterruptedException e) {
-
+            status = AgentStatus.STOPPED;
             reportUnexpectedError(FermatException.wrapException(e));
         } /*catch(Exception e) {
 
@@ -185,10 +185,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
             //Sleep for a time
-            toReceive.sleep(RECEIVE_SLEEP_TIME);
+            Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
-
+            status = AgentStatus.STOPPED;
             reportUnexpectedError(FermatException.wrapException(e));
         } /*catch(Exception e) {
 

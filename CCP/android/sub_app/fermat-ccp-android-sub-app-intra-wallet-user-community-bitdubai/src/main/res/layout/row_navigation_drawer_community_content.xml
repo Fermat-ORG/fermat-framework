@@ -31,9 +31,17 @@
         android:paddingLeft="16dp"
         android:paddingTop="14dp"
         android:text="Home"
+        android:layout_weight="1"
         android:textColor="#ffffff"
         android:textSize="16sp"
         tools:ignore="HardcodedText" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:id="@+id/badge"
+        />
 
 </LinearLayout>
 

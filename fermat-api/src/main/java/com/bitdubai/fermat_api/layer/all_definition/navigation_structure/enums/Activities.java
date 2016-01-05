@@ -87,9 +87,13 @@ public enum Activities {
     // DAP
     DAP_SUB_APP_ASSET_FACTORY_MAIN("DSAAFM"),
     DAP_ASSET_EDITOR_ACTIVITY("DAEA"),
+
     DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL("DAIWAD"),
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
     DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST("DWAIUDL"),
+    DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY("DWAIADL"),
+    DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS("DWAIADSUG"),
+
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
 
@@ -444,6 +448,10 @@ public enum Activities {
                 return DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL;
             case "DWAIUDL":
                 return DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST;
+            case "DWAIADL":
+                return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY;
+            case "DWAIADSUG":
+                return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

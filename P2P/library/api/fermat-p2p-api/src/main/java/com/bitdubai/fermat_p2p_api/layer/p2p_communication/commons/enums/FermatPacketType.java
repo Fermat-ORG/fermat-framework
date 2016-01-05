@@ -105,7 +105,17 @@ public enum FermatPacketType {
     /**
      * This type is use whe an component send a message to another component and occur a failure
      */
-    FAILURE_MESSAGE_TRANSMIT ("FMSG_TRANS");
+    FAILURE_MESSAGE_TRANSMIT ("FMSG_TRANS"),
+
+    /**
+     * This type is use when the remote participant of the vpn is disconnected
+     */
+    VPN_REMOTE_PARTICIPANT_DISCONNECTED ("VRPD"),
+
+    /**
+     * This type is use when the remote participant of the vpn is reconnected
+     */
+    VPN_REMOTE_PARTICIPANT_RECONNECTED ("VRPR");
 
     /**
      * Represent the code
@@ -156,6 +166,8 @@ public enum FermatPacketType {
             case "FAIL_COMP_CONNECT_REQ"  : return FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST;
             case "MSG_TRANS"              : return FermatPacketType.MESSAGE_TRANSMIT;
             case "FMSG_TRANS"             : return  FermatPacketType.FAILURE_MESSAGE_TRANSMIT;
+            case "VRPD"                   : return  FermatPacketType.VPN_REMOTE_PARTICIPANT_DISCONNECTED;
+            case "VRPR"                   : return  FermatPacketType.VPN_REMOTE_PARTICIPANT_RECONNECTED;
 
             default: throw new IllegalArgumentException();
         }

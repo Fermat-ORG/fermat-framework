@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Fai
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
@@ -114,9 +116,21 @@ public enum P2pEventType implements FermatEventEnum {
         }
     },
 
+    CLIENT_CONNECTION_LOOSE("CCL"){
+        public FermatEvent getNewEvent() {
+            return new ClientConnectionLooseNotificationEvent(this);
+        }
+    },
+
     VPN_CONNECTION_CLOSE("VCC"){
         public FermatEvent getNewEvent() {
             return new VPNConnectionCloseNotificationEvent(this);
+        }
+    },
+
+    VPN_CONNECTION_LOOSE("VCL"){
+        public FermatEvent getNewEvent() {
+            return new VPNConnectionLooseNotificationEvent(this);
         }
     }
     ;

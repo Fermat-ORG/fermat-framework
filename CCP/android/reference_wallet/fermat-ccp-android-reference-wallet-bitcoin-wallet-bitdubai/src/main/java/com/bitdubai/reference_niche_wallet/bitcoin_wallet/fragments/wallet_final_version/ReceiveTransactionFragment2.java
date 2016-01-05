@@ -27,13 +27,16 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -56,6 +59,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstan
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.widget.Toast.makeText;
 
@@ -263,9 +267,102 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 book_offset = lstCryptoWalletTransactionsBook.size();
 
                 //get transactions from actor public key to send me btc
-                for (CryptoWalletTransaction cryptoWalletTransaction : list) {
+                for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<CryptoWalletTransaction> lst = new ArrayList<>();
                     lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk,MAX_TRANSACTIONS, 0);
+                    long total = 0;
+                    for(CryptoWalletTransaction cwt : lst){
+                        total+= cwt.getAmount();
+                    }
+
+                    final long finalTotal = total;
+                    lst.add(new CryptoWalletTransaction(){
+
+                        @Override
+                        public Actor getInvolvedActor() {
+                            return null;
+                        }
+
+                        @Override
+                        public UUID getContactId() {
+                            return null;
+                        }
+
+                        @Override
+                        public UUID getTransactionId() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getTransactionHash() {
+                            return null;
+                        }
+
+                        @Override
+                        public CryptoAddress getAddressFrom() {
+                            return null;
+                        }
+
+                        @Override
+                        public CryptoAddress getAddressTo() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getActorToPublicKey() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getActorFromPublicKey() {
+                            return null;
+                        }
+
+                        @Override
+                        public Actors getActorToType() {
+                            return null;
+                        }
+
+                        @Override
+                        public Actors getActorFromType() {
+                            return null;
+                        }
+
+                        @Override
+                        public BalanceType getBalanceType() {
+                            return null;
+                        }
+
+                        @Override
+                        public TransactionType getTransactionType() {
+                            return null;
+                        }
+
+                        @Override
+                        public long getTimestamp() {
+                            return 0;
+                        }
+
+                        @Override
+                        public long getAmount() {
+                            return finalTotal;
+                        }
+
+                        @Override
+                        public long getRunningBookBalance() {
+                            return 0;
+                        }
+
+                        @Override
+                        public long getRunningAvailableBalance() {
+                            return 0;
+                        }
+
+                        @Override
+                        public String getMemo() {
+                            return null;
+                        }
+                    });
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
                 }

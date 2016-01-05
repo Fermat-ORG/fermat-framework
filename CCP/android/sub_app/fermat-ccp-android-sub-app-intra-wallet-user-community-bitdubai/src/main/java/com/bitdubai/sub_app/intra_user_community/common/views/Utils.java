@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 
-import com.bitdubai.sub_app.intra_user_community.common.BadgeDrawable;
 import com.bitdubai.sub_app.intra_user_community.R;
 
 public class Utils {
