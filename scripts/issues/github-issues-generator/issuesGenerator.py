@@ -7,6 +7,8 @@
 #	sudo apt-get install python-pip
 #Now you need to install the github api python library:
 #	pip install pygithub3
+#In case you can't install pygithub3 with pip you can try with:
+#       sudo easy_install pygithub3
 #To run this script in the ubuntu shell, please, run this command:
 #	python $SCRIPT_PATH/issuesGenerator.py
 ######
