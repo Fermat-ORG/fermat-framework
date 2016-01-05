@@ -64,7 +64,7 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-        test();
+        //test();
     }
 
     @Override

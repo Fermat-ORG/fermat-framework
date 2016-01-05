@@ -201,6 +201,7 @@ public enum Fragments implements FermatFragments {
     //Bank Money Wallet
     BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST("BNKBMWAL"),
     BNK_BANK_MONEY_WALLET_ACCOUNT_DETAIL("BNKBMWAD"),
+    BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
 
     //Cash Money Wallet
     CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY("CSHCMWBS"),
