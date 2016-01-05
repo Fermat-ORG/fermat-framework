@@ -22,7 +22,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
@@ -48,14 +47,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
         this.pluginId               = pluginId;
         this.database               = database;
     }
-/*
-    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
-    }
 
-    Database database;
-*/
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException {
         try {
@@ -98,6 +90,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             record.setLongValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME, timestamp);
 
             table.insertRecord(record);
+            System.out.print("\n\n**** 4) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. DATABASE DAO. transactionId: " + transactionId + " ****\n");
 
         } catch (CantInsertRecordException e){
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException (e.getMessage(), e, "Customer Broker New Negotiation Transaction", "Cant create new Customer Broker New Negotiation Transaction, insert database problems.");
@@ -158,9 +151,10 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     //GET LIST NEW NEGOTIATION TRANSACTION
     public List<CustomerBrokerNew> getAllRegisterCustomerBrokerNewNegotiationTranasction() throws CantRegisterCustomerBrokerNewNegotiationTransactionException{
-        List<CustomerBrokerNew> getTransactions = null;
 
         try {
+            List<CustomerBrokerNew> getTransactions = new ArrayList<>();
+
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME);
             if (table == null) {
@@ -175,13 +169,13 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
                 getTransactions.add(getCustomerBrokerNewFromRecord(records));
             }
 
+            return getTransactions;
+
         } catch (CantLoadTableToMemoryException em) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
-
-        return getTransactions;
     }
 
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO SUBMIT

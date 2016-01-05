@@ -57,12 +57,12 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     public void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
 
+            System.out.print("\n\n**** 2) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. CUSTOMER BROKER NEW PURCHASE MANAGER IMPL. ****\n");
             customerBrokerNewPurchaseNegotiationTransaction = new CustomerBrokerNewPurchaseNegotiationTransaction(
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerNewNegotiationTransactionDatabaseDao
             );
             customerBrokerNewPurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
-
         } catch (CantNewPurchaseNegotiationTransactionException e){
             throw new CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException(e.getMessage(),e, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){

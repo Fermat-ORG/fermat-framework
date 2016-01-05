@@ -38,6 +38,8 @@ public class CustomerBrokerNewPurchaseNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
+
+            System.out.print("\n\n**** 3) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. CUSTOMER BROKER NEW PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
             //CREATE NEGOTIATION
             this.customerBrokerPurchaseNegotiationManager.createCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
