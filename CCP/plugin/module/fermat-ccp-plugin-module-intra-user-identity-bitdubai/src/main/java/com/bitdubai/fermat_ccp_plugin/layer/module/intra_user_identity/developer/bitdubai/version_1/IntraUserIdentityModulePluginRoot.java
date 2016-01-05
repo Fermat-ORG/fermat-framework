@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.develope
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -39,6 +41,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -95,12 +98,6 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
      * DealsWithLogger interface member variable
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    /**
-     * IntraUserModuleManager Interface implementation.
-     */
-
-
 
 
     @Override
@@ -163,6 +160,11 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
 
     }
 
+    /**
+     * IntraUserIdentityModuleManagerInterface implementation.
+     */
+
+
 
     @Override
     public List<IntraUserModuleIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraUsersIdentityException {
@@ -172,9 +174,18 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
 
             List<IntraWalletUserIdentity> intraWalletUserIdentityList = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
+            for (IntraWalletUserIdentity intraUser : intraWalletUserIdentityList) {
+
+                intraUserModuleIdentityList.add(new IntraUserIdentityModule(intraUser.getAlias(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getImage(),intraUser.getActorType()));
+            }
+
             return intraUserModuleIdentityList;
+
         } catch (CantListIntraWalletUsersException e) {
-            throw new CantListIntraUsersIdentityException("",e,"","");
+            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
+        }
+        catch (Exception e) {
+            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
         }
     }
 
@@ -186,10 +197,10 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
             return new IntraUserIdentityModule( alias,  phrase,intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
         } catch (CantCreateNewIntraWalletUserException e) {
-            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
         }
         catch (Exception e) {
-            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
         }
     }
 
@@ -201,10 +212,10 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
             return new IntraUserIdentityModule( alias, "",intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
         } catch (CantCreateNewIntraWalletUserException e) {
-            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
         }
         catch (Exception e) {
-            throw new CantCreateNewIntraUserIdentityException("",e,"","");
+            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
         }
     }
 
@@ -214,10 +225,10 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
             return intraWalletUserIdentityManager.hasIntraUserIdentity();
 
         } catch (CantListIntraWalletUsersException e) {
-            throw new CantGetIntraUserIdentityException("",e,"","");
+            throw new CantGetIntraUserIdentityException(CantGetIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
         }
         catch (Exception e) {
-            throw new CantGetIntraUserIdentityException("",e,"","");
+            throw new CantGetIntraUserIdentityException(CantGetIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
         }
 
     }
@@ -230,10 +241,10 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
             intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias,  phrase, profileImage);
 
         } catch (CantUpdateIdentityException e) {
-            throw new CantUpdateIntraUserIdentityException("",e,"","");
+            throw new CantUpdateIntraUserIdentityException(CantUpdateIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
         }
         catch (Exception e) {
-            throw new CantUpdateIntraUserIdentityException("",e,"","");
+            throw new CantUpdateIntraUserIdentityException(CantUpdateIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
         }
     }
 
@@ -243,17 +254,38 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
         {
             intraWalletUserIdentityManager.deleteIntraUserIdentity(identityPublicKey);
         } catch (CantDeleteIdentityException e) {
-            throw new CantDeleteIntraUserIdentityException("",e,"","");
+            throw new CantDeleteIntraUserIdentityException(CantDeleteIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
         }
         catch (Exception e) {
-            throw new CantDeleteIntraUserIdentityException("",e,"","");
+            throw new CantDeleteIntraUserIdentityException(CantDeleteIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
         }
     }
 
     @Override
     public void registerIdentities() {
 
+        try {
+            List<IntraWalletUserIdentity> lstIntraWalletUSer = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            List<Actor> lstActors = new ArrayList<Actor>();
+
+            for(IntraWalletUserIdentity user : lstIntraWalletUSer){
+                lstActors.add(intraUserNertworkServiceManager.contructIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(), Actors.INTRA_USER,user.getImage()));
+            }
+
+            intraUserNertworkServiceManager.registrateActors(lstActors);
+
+        } catch (CantListIntraWalletUsersException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
+
+    /**
+     * SettingsManager implementation.
+     * */
+
+
 
     @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
