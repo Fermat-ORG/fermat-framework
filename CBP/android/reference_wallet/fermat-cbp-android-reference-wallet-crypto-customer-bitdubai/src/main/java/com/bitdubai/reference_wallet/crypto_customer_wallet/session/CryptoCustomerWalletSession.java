@@ -14,6 +14,9 @@ public class CryptoCustomerWalletSession
 
     public static final String CONTRACT_DATA = "CONTRACT_DATA";
     public static final String NEGOTIATION_DATA = "NEGOTIATION_DATA";
+    public static final String CONFIGURED_DATA = "CONFIGURED_DATA";
+    public static final String LOCATION_LIST = "LOCATION_LIST";
+    public static final String BANK_ACCOUNT_LIST = "BANK_ACCOUNT_LIST";
 
 
     public CryptoCustomerWalletSession() {

@@ -53,11 +53,15 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
 
     public CustomerBrokerCloseManagerImpl(
             CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
+            CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager,
             CryptoAddressBookManager                                cryptoAddressBookManager,
             CryptoVaultManager                                      cryptoVaultManager,
             WalletManagerManager                                    walletManagerManager
     ){
         this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
+        this.customerBrokerPurchaseNegotiationManager               = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager                   = customerBrokerSaleNegotiationManager;
         this.cryptoAddressBookManager                               = cryptoAddressBookManager;
         this.cryptoVaultManager                                     = cryptoVaultManager;
         this.walletManagerManager                                   = walletManagerManager;

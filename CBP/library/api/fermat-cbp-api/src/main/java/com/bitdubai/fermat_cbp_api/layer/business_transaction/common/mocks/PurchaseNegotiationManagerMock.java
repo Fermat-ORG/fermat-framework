@@ -127,4 +127,9 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     public Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsPurchaseException {
         return null;
     }
+
+    @Override
+    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsPurchaseException{
+        return null;
+    }
 }

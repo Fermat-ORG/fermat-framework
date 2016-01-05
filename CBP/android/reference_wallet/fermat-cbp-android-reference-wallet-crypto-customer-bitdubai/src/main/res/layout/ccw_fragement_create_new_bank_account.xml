@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
+              android:paddingBottom="16dp"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:paddingTop="30dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawSelectorOnTop="true"
+                android:text="Currency"
+                android:textColor="@color/black"
+                android:textSize="12sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawSelectorOnTop="true"
+                android:text="Account Type"
+                android:textColor="@color/black"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/ccw_fiat_currencies_spinner"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/black"
+                android:drawSelectorOnTop="true"
+                tools:listitem="@layout/ccw_spinner_item"/>
+
+            <Spinner
+                android:id="@+id/ccw_account_types_spinner"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/black"
+                android:drawSelectorOnTop="true"
+                tools:listitem="@layout/ccw_spinner_item"/>
+
+        </LinearLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/ccw_bank_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/black"
+            android:hint="@string/ccw_bank_name"
+            android:textColor="@color/black"
+            android:textColorHint="#AAA"
+            android:textSize="16sp"
+            app:typeface="ROBOTO_REGULAR"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/ccw_account_number_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/black"
+            android:hint="@string/ccw_account_number"
+            android:textColor="@color/black"
+            android:textColorHint="#AAA"
+            android:textSize="16sp"
+            app:typeface="ROBOTO_REGULAR"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/ccw_account_alias_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/black"
+            android:hint="@string/ccw_account_alias"
+            android:textColor="@color/black"
+            android:textColorHint="#AAA"
+            android:textSize="16sp"
+            app:typeface="ROBOTO_REGULAR"/>
+
+    </LinearLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+        android:id="@+id/ccw_create_new_location_button"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#42ba70"
+        android:text="@string/ccw_create"
+        android:textAllCaps="true"
+        android:textColor="@color/white"/>
+</LinearLayout>

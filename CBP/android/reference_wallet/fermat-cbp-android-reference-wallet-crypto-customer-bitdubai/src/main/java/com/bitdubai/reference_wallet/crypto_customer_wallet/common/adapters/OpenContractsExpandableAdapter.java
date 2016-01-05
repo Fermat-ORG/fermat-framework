@@ -72,7 +72,7 @@ public class OpenContractsExpandableAdapter
             parentViewHolder.configureStyle(
                     R.color.ccw_waiting_for_broker_grouper_background,
                     R.color.ccw_waiting_for_broker_grouper_text,
-                    R.drawable.ic_home_tab_arrow_white_down
+                    R.drawable.ccw_ic_home_tab_arrow_white_down
             );
         }
     }
