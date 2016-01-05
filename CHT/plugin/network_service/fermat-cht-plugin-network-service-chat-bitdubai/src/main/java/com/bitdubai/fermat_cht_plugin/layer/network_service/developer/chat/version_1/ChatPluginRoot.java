@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1;
+package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -35,11 +35,11 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.database.ChatNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.database.ChatNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.database.ChatNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.ChatNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.ChatNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.ChatNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;

@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.database;
+package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *

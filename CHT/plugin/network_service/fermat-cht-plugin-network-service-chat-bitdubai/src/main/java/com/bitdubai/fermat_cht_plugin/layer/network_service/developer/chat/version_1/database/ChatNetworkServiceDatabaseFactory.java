@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.database;
+package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDatabaseFactory</code>
+ *  The Class  <code>com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.database.ChatNetworkServiceDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *

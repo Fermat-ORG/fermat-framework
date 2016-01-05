@@ -1,9 +1,10 @@
-package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.exceptions;
+package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions;
 
 
-import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
+
 /**
- * The Class <code>package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException</code>
+ * The Class <code>package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
  *
@@ -12,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeChatNetworkServiceDatabaseException extends FermatException {
+public class CantInitializeChatNetworkServiceDatabaseException extends CHTException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE CHAT NETWORK SERVICE DATABASE EXCEPTION";
 
