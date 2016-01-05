@@ -33,6 +33,8 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -96,7 +98,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
-
+    SettingsManager<IntraUserWalletSettings> settingsManager;
+    IntraUserWalletSettings intraUserWalletSettings = null;
     /**
      * Create a new instance of this fragment
      *
@@ -118,6 +121,19 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            settingsManager = intraUserSubAppSession.getModuleManager().getSettingsManager();
+
+            try {
+                intraUserWalletSettings = settingsManager.loadAndGetSettings(intraUserSubAppSession.getAppPublicKey());
+            }catch (Exception e){
+                intraUserWalletSettings = null;
+            }
+
+            if(intraUserWalletSettings == null){
+                intraUserWalletSettings = new IntraUserWalletSettings();
+                intraUserWalletSettings.setIsPresentationHelpEnabled(true);
+                settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(),intraUserWalletSettings);
+            }
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
             //get search name if
@@ -169,7 +185,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
-            if (pref.getBoolean("isChecked", true)) {
+            if (intraUserWalletSettings.isPresentationHelpEnabled()) {
                 showDialogHelp();
             } else {
                 showCriptoUsersCache();
