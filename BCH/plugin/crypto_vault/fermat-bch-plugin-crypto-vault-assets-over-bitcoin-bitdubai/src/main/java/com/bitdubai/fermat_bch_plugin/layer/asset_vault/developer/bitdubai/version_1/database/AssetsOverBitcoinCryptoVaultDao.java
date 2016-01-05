@@ -667,4 +667,40 @@ public class AssetsOverBitcoinCryptoVaultDao {
         String outputMessage = "There was an error loading into memory table " + tableName + ".";
         throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
     }
+
+    /**
+     * Will load an existing Hierarchy Account
+     * @param publicKey
+     * @return
+     */
+    public HierarchyAccount getHierarchyAccount(String publicKey) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (databaseTable.getRecords().size() != 1)
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "inconsistent data found in Key_Accounts table.", "more than one Hierarchy Account stored.");
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+
+
+        /**
+         * Gets the records and forms the HierarchyAccount class.
+         */
+        int id = record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
+        HierarchyAccountType hierarchyAccountType=null;
+        try {
+            hierarchyAccountType = HierarchyAccountType.getByCode(record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME));
+        } catch (InvalidParameterException e) {
+            hierarchyAccountType = HierarchyAccountType.REDEEMPOINT_ACCOUNT;
+        }
+
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(id, publicKey, hierarchyAccountType);
+        return hierarchyAccount;
+    }
 }

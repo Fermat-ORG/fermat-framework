@@ -201,6 +201,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_BROADCAST_IP);
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT);
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS);
+        broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION);
         broadcast_StatsColumns.add(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME);
         /**
          * Table EventAgent_Stats addition.

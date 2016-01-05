@@ -69,7 +69,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    void broadcastTransaction (String txHash) throws CantBroadcastTransactionException, ExecutionException, InterruptedException;
+    void broadcastTransaction (String txHash) throws CantBroadcastTransactionException;
 
     /**
      * Returns the broadcast Status for a specified transaction.
