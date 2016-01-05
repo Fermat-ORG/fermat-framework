@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,9 +8,11 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +37,12 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -44,13 +51,19 @@ import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -65,10 +78,24 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUti
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 
@@ -108,6 +135,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private AnimationManager animationManager;
     private FermatTextView txt_balance_amount_type;
     SettingsManager<BitcoinWalletSettings> settingsManager;
+    private int progress1=1;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -254,6 +282,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     long before = 0;
     long after = 0;
+    boolean pressed = false;
+    CircularProgressBar circularProgressBar;
+    Thread background;
 
     private void setUpDonut(LayoutInflater inflater){
         final RelativeLayout container_header_balance = getToolbarHeader();
@@ -296,16 +327,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         Thread thread = new Thread(runnable);
         thread.start();
 
-        View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
+        final View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
 
 //        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams()
 //        balance_header.setLayoutParams();
 
         container_header_balance.setVisibility(View.VISIBLE);
 
-        CircularProgressBar circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
+        circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-        circularProgressBar.setProgressValue(2);
+        circularProgressBar.setProgressValue(progress1);
         circularProgressBar.setProgressValue2(3);
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
@@ -316,6 +347,17 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //txt_type_balance.setTypeface(tf);
 
         //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
+        // handler for the background updating
+        final Handler progressHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                progress1++;
+                try {
+                    circularProgressBar.setProgressValue(progress1);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
 
         TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_balance_amount_type);
         txt_type_balance.setOnTouchListener(new View.OnTouchListener() {
@@ -323,21 +365,79 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    pressed = true;
                     before = System.currentTimeMillis();
-                    if(after-before<2000){
-                        changeBalanceType(txt_type_balance, txt_balance_amount);
-                    }else{
-                        Toast.makeText(getActivity(),"auch",Toast.LENGTH_SHORT).show();
+
+//                    progress1 += 10;
+//                    circularProgressBar.setProgressValue(progress1);
+//                    circularProgressBar.invalidate();
+                    //TODO fijatse que no se lancen mas de un hilo
+                    if (pressed){
+                        background = new Thread(new Runnable() {
+                            public void run() {
+                                try {
+                                    // enter the code to be run while displaying the progressbar.
+                                    //
+                                    // This example is just going to increment the progress bar:
+                                    // So keep running until the progress value reaches maximum value
+                                    while (circularProgressBar.getprogress1() <= 300) {
+                                        // wait 500ms between each update
+                                        Thread.sleep(300);
+                                       // System.out.println(circularProgressBar.getprogress1());
+                                        // active the update handler
+                                        progressHandler.sendMessage(progressHandler.obtainMessage());
+                                    }
+                                    pressed = false;
+                                } catch (java.lang.InterruptedException e) {
+                                    // if something fails do something smart
+                                }
+                            }
+                        });
+                        background.start();
                     }
-                    System.out.println(System.currentTimeMillis());
+
+
+//                    System.out.println(System.currentTimeMillis());
+                    return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    pressed = false;
+                    background.interrupt();
                     after = System.currentTimeMillis();
-                    Toast.makeText(getActivity(),"auch",Toast.LENGTH_SHORT).show();
-                    System.out.println(System.currentTimeMillis());
-                } else if(event.getAction() == MotionEvent.ACTION_BUTTON_RELEASE){
-                    Toast.makeText(getActivity(),"ACTION_BUTTON_RELEASE",Toast.LENGTH_SHORT).show();
+                    if (after - before < 2000) {
+                        changeBalanceType(txt_type_balance, txt_balance_amount);
+                        //System.out.println(System.currentTimeMillis());
+                        progress1 = 1;
+                        circularProgressBar.setProgressValue(progress1);
+                        return true;
+                    }else {
+                        //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
+                        String receivedAddress = "";
+
+                       // try{
+
+
+                            GET("",getActivity());
+
+//                        CryptoAddress cryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.BITCOIN);
+//                            CryptoWalletWalletContact cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
+//
+//                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
+//                            String url = "http://52.27.68.19:15400/mati/hello/?address="+myCryptoAddress;
+//                            String response = GET(url);
+//                            if(!response.equals("transaccion fallida")){
+//                                Toast.makeText(getActivity(),"Mati Bitcoins!!",Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (CantCreateWalletContactException e) {
+//                            e.printStackTrace();
+//                        } catch (ContactNameAlreadyExistsException e) {
+//                            e.printStackTrace();
+//                        } catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+
+                    }
                 }
-                return false;
+                    return false;
             }
         });
 
@@ -381,6 +481,170 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
 
         txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+
+    }
+    private String getWalletAddress(String actorPublicKey) {
+        String walletAddres="";
+        try {
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = moduleManager.requestAddressToKnownUser(
+                    referenceWalletSession.getIntraUserModuleManager().getPublicKey(),
+                    Actors.INTRA_USER,
+                    actorPublicKey,
+                    Actors.EXTRA_USER,
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    VaultType.CRYPTO_CURRENCY_VAULT,
+                    "BITV",
+                    appSession.getAppPublicKey(),
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+            );
+            walletAddres = cryptoAddress.getAddress();
+        } catch (CantRequestCryptoAddressException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        } catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+            e.printStackTrace();
+        }
+        return walletAddres;
+    }
+
+    public void GET(String url, final Context context){
+        final Handler mHandler = new Handler();
+        try {
+            if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey())<500000000L) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String receivedAddress = "";
+                        final HttpClient Client = new DefaultHttpClient();
+                        try {
+                            String SetServerString = "";
+
+                            // Create Request to server and get response
+
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/address/");
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+                            // Show response on activity
+
+                            receivedAddress = SetServerString;
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        final String finalReceivedAddress = receivedAddress;
+
+                        String response = "";
+                        try {
+
+
+                            String SetServerString = "";
+                            CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
+                            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+                            try {
+                                cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
+                            } catch (CantCreateWalletContactException e) {
+                                try {
+                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                                } catch (CantFindWalletContactException e1) {
+                                    e1.printStackTrace();
+                                } catch (WalletContactNotFoundException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantGetCryptoWalletException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } catch (ContactNameAlreadyExistsException e) {
+                                try {
+                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                                } catch (CantFindWalletContactException e1) {
+                                    e1.printStackTrace();
+                                } catch (WalletContactNotFoundException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantGetCryptoWalletException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+
+                            response = SetServerString;
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        final String finalResponse = response;
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (!finalResponse.equals("transaccion fallida")) {
+                                    Toast.makeText(context, "Mati Bitcoins!!", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
+                    }
+                });
+                thread.start();
+            }
+        } catch (CantGetBalanceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String GET(String url){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+            // receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // convert inputstream to string
+            if(inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
+    }
+    // convert inputstream to String
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
 
     }
 
