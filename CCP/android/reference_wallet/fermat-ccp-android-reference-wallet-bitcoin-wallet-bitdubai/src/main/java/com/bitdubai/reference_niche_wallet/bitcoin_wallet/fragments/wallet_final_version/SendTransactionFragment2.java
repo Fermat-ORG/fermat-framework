@@ -513,94 +513,100 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     public void GET(String url, final Context context){
         final Handler mHandler = new Handler();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String receivedAddress = "";
-                final HttpClient Client = new DefaultHttpClient();
-                try {
-                    String SetServerString = "";
-
-                    // Create Request to server and get response
-
-                    HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/address/");
-                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                    SetServerString = Client.execute(httpget, responseHandler);
-                    // Show response on activity
-
-                    receivedAddress = SetServerString;
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                final String finalReceivedAddress = receivedAddress;
-
-                String response = "";
-                try {
-
-
-                    String SetServerString = "";
-                    CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
-                    CryptoWalletWalletContact cryptoWalletWalletContact = null;
-                    try {
-                        cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
-                    }catch (CantCreateWalletContactException e) {
-                        try {
-                            cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins",appSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                        } catch (CantFindWalletContactException e1) {
-                            e1.printStackTrace();
-                        } catch (WalletContactNotFoundException e1) {
-                            e1.printStackTrace();
-                        } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-                            e1.printStackTrace();
-                        } catch (CantGetCryptoWalletException e1) {
-                            e1.printStackTrace();
-                        }
-                    } catch (ContactNameAlreadyExistsException e) {
-                        try {
-                            cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins",appSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                        } catch (CantFindWalletContactException e1) {
-                            e1.printStackTrace();
-                        } catch (WalletContactNotFoundException e1) {
-                            e1.printStackTrace();
-                        } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-                            e1.printStackTrace();
-                        } catch (CantGetCryptoWalletException e1) {
-                            e1.printStackTrace();
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                    String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-                    HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address="+myCryptoAddress);
-                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                    SetServerString = Client.execute(httpget, responseHandler);
-
-                    response = SetServerString;
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                final String finalResponse = response;
-                mHandler.post(new Runnable() {
+        try {
+            if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey())<500000000L) {
+                Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        String receivedAddress = "";
+                        final HttpClient Client = new DefaultHttpClient();
+                        try {
+                            String SetServerString = "";
 
-                        if(!finalResponse.equals("transaccion fallida")){
-                            Toast.makeText(context,"Mati Bitcoins!!",Toast.LENGTH_SHORT).show();
+                            // Create Request to server and get response
+
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/address/");
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+                            // Show response on activity
+
+                            receivedAddress = SetServerString;
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
 
+                        final String finalReceivedAddress = receivedAddress;
+
+                        String response = "";
+                        try {
+
+
+                            String SetServerString = "";
+                            CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
+                            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+                            try {
+                                cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
+                            } catch (CantCreateWalletContactException e) {
+                                try {
+                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                                } catch (CantFindWalletContactException e1) {
+                                    e1.printStackTrace();
+                                } catch (WalletContactNotFoundException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantGetCryptoWalletException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } catch (ContactNameAlreadyExistsException e) {
+                                try {
+                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                                } catch (CantFindWalletContactException e1) {
+                                    e1.printStackTrace();
+                                } catch (WalletContactNotFoundException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantListCryptoWalletIntraUserIdentityException e1) {
+                                    e1.printStackTrace();
+                                } catch (CantGetCryptoWalletException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+
+                            response = SetServerString;
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        final String finalResponse = response;
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (!finalResponse.equals("transaccion fallida")) {
+                                    Toast.makeText(context, "Mati Bitcoins!!", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
                     }
                 });
+                thread.start();
             }
-        });
-        thread.start();
+        } catch (CantGetBalanceException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String GET(String url){
