@@ -157,9 +157,10 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 if(dontShowAgainCheckBox.isChecked()){
                     SettingsManager<IntraUserWalletSettings> settingsManager = moduleManager.getSettingsManager();
                     try {
-                        IntraUserWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                        bitcoinWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                        settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+
+                        IntraUserWalletSettings intraUserWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                        intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+                        settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserWalletSettings);
                     } catch (CantGetSettingsException e) {
                         e.printStackTrace();
                     } catch (SettingsNotFoundException e) {
