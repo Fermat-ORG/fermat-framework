@@ -434,6 +434,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                        } catch (Exception e){
 //                            e.printStackTrace();
 //                        }
+                        progress1 = 1;
+                        circularProgressBar.setProgressValue(progress1);
                         return true;
 
                     }
