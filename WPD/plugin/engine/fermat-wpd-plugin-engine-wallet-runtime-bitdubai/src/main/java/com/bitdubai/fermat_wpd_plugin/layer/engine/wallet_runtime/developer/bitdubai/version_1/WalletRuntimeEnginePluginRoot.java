@@ -2344,9 +2344,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = "cash_wallet";
         //final String statusBarColor = "#21519E";
-        final String statusBarColor = "#1565c0";
-        final String titleBarLabelColor = "#FFFFFF";
-        final int titleBarLabelSize = 16;
+        final String statusBarColor = "#00b9ff";
+        //final String titleBarLabelColor = "#FFFFFF";
+        //final int titleBarLabelSize = 16;
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
@@ -2361,12 +2361,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(Activities.CSH_CASH_MONEY_WALLET_SETUP);
 
-        runtimeTitleBar = new TitleBar();
+        /*runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Cash Wallet Setup");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setTitleBar(runtimeTitleBar);*/
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -2384,12 +2384,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_HOME.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
-        runtimeTitleBar = new TitleBar();
+        /*runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Cash Wallet");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setTitleBar(runtimeTitleBar);*/
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
