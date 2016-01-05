@@ -120,26 +120,26 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
 #### Thunder Team Members:
 
 
-* Rodrigo Acosta [Team Leader - Core Developer] <br/>
+* **Rodrigo Acosta [Core Developer]** <br/>
 ---
     Email:   acosta_rodrigo@hotmail.com
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
     
     
-* Nerio Enrique Indriago Ortega <br/>
+* **Nerio Enrique Indriago Ortega [Veteran Developer]**<br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* Victor Mars <br/>
+* **Victor Mars [Veteran Developer]** <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
-* Frank Contreras <br/>
+* **Frank Contreras [New Developer]** <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
@@ -160,26 +160,26 @@ We are in charge of Android-core,Fermat-Core, Android framework development and 
 #### CoinDiggers Team Members:
 
 
-* Matias Furszyfer [Team Leader - Core Developer] <br/>
+* **Matias Furszyfer [Core Developer]** <br/>
 ---
     Email:   matiasfurszyfer@gmail.com
     Skype:   matias.furszyfer
     Github:  https://github.com/furszy
     
     
-*  Natalia Cortez <br/>
+* **Natalia Cortez [Veteran Developer]**<br/>
 ---
       Email:   nattyco@gmail.com
       Skype:   nattyco
       Github:  https://github.com/nattyco
 
-* Joaquin Carrasquero <br/>
+* **Joaquin Carrasquero [New Developer]** <br/>
 ---
       Email:   jc.juaco@gmail.com
       Skype:   j-u-a-c-o@hotmail.com
       Github:  https://github.com/Exilum
 
-* Jose Manuel de Sousa<br/>
+* **Jose Manuel de Sousa [New Developer]**<br/>
 ---
       Email:   -----
       Skype:   -----
@@ -197,13 +197,13 @@ Currently we are a small team dedicated to the development of a communications l
 
 #### Team Members:
 
-* **Roberto Requena [Team Leader - New Team Leader]**<br/>
+* **Roberto Requena [New Team Leader]**<br/>
 ---
     Email:   rart3001@gmail.com
     Skype:   Rart3001
     Github:  https://github.com/Rart3001
 
-* **Hendry Rodriguez**<br/>
+* **Hendry Rodriguez [New Developer]**<br/>
 ---
       Email:   elnegroevaristo@gmail.com
       Skype:   Hendry19901990
@@ -221,7 +221,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
 #### Team Members:
 
 
-* **Manuel Perez [Team Leader - Team Leader]**<br/>
+* **Manuel Perez [Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
@@ -257,19 +257,19 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 
 #### Team Members:
 
-* **Franklin Marcano [Team Leader - Team Leader]**<br/>
+* **Franklin Marcano [Team Leader]**<br/>
 ---
     Email:   franklinmarcano1970@gmail.com
     Skype:   franklginmarcano1970
     Github:  https://github.com/franklinmarcano1970
 
-* **Jose Cardozo [Developer - Veteran Developer]**<br/>
+* **Jose Cardozo [Veteran Developer]**<br/>
 ---
       Email:   josejcb89@gmail.com
       Skype:   josejcb89
       Github:  https://github.com/josejcb
 
-* **Jose Vilchez [Developer - New Developer]**<br/>
+* **Jose Vilchez [New Developer]**<br/>
 ---
       Email:   josvilchezalmera@gmail.com
       Skype:   josvilchezalmera
@@ -292,7 +292,7 @@ In each platform mentioned, we are involved in the development of Network Servic
 #### Team Members:
 
 
-* **León Acosta [Team Leader - Core Developer]**<br/>
+* **León Acosta [Core Developer]**<br/>
 ---
     Email:   laion.cj91@gmail.com
     Skype:   leon.acosta
@@ -353,7 +353,7 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
 
 #### Team Members:
 
-* **Miguel Celedon [ORG New Team Leader - ORG Veteran]**<br/>
+* **Miguel Celedon [ORG Team Leader]**<br/>
 ---
     Email:   miguelceledon@outlook.com
     Skype:   miguel-209
@@ -382,7 +382,7 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 
 #### Team Members:
 
-* **Luis Fuenmayor [ORG New Team Leader - ORG Veteran]**<br/>
+* **Luis Fuenmayor [ORG New Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
     Skype:   fuelusumar
