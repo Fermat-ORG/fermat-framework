@@ -390,9 +390,9 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
     
 * **German Mendoza [ORG Veteran Developer]**<br/>
 ---
-      Email:   german.mendoza.187@gmail.com
-      Skype:   german0296
-      Github:  https://github.com/kyxer
+    Email:   german.mendoza.187@gmail.com
+    Skype:   german0296
+    Github:  https://github.com/kyxer
 
 * **Luis Campo [ORG Developer]**<br/>
 ---
