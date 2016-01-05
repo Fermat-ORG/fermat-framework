@@ -435,24 +435,19 @@ Plugins y flujos
   - **(A) Lista de Identidades** >> `Crypto Customer Identity`
   - **(A) Asociar Wallet con Identidad** >> `Crypto Customer Actor`
 
-#### Wizard Associate Bitcoin Wallet
+#### Wizard Bitcoin Wallet y Providers [I]
 Metodos
   - `List<InstalledWallet> getInstallWallets()`
   - `void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey)`
-
-Plugins y Flujos
-  - **Wallets Disponibles para plataforma seleccionada** >> `WPD Wallet Manager`
-    - Solo se van a mostrar wallets de tipo Crypto
-  - ** Asociar Wallet** >> Settings de `Crypto Customer Wallet Module`
-    - Se debe guardar en el setting la plataforma y el public_key de la wallet
-
-#### Wizard Providers [I]
-Metodos
   - [implementar] `Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(CurrencyPair currencyPair)`
   - [implementar] `CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerrWalletProviderSetting()`
   - [implementar] `void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting settting)`
 
 Plugins y flujos
+  - **Wallets Disponibles para plataforma seleccionada** >> `WPD Wallet Manager`
+    - Solo se van a mostrar wallets de tipo Crypto
+  - ** Asociar Wallet** >> Settings de `Crypto Customer Wallet Module`
+    - Se debe guardar en el setting la plataforma y el public_key de la wallet
   - **Obtener Pares de Monedas** >> Enums `FiatCurrency` y `CryptoCurrency` que implementan `Currency`
   - **Lista de Proveedores** >> la implementacion de la super capa CER
     - Los puedo mostrar todos sin importar que wallets he asociado. 
