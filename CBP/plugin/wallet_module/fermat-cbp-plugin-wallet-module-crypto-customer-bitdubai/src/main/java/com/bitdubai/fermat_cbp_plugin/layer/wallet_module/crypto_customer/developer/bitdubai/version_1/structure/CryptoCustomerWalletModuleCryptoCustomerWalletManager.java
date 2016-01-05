@@ -222,7 +222,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public boolean associateIdentity(UUID customerId) {
+    public boolean associateIdentity(String customerId) {
         return false;
     }
 

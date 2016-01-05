@@ -46,7 +46,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @param customerId the Crypto Customer ID who is going to be associated with this wallet
      * @return true if the association was successful false otherwise
      */
-    boolean associateIdentity(UUID customerId);
+    boolean associateIdentity(String customerId);
 
     /**
      * @return a summary of the current market rate for the different currencies the customer is interested
