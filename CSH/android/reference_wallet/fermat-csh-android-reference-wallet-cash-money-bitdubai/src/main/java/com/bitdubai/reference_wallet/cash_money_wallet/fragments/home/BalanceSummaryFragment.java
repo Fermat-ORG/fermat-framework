@@ -57,6 +57,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     private View noTransactionsView;
     FermatTextView bookTextView;
     FermatTextView availableTextView;
+    FermatTextView availableCurrencyTextView;
+    FermatTextView bookCurrencyTextView;
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;
     com.getbase.floatingactionbutton.FloatingActionButton fabWithdraw;
     CreateTransactionFragmentDialog dialog;
@@ -93,13 +95,16 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.textView_book_amount);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.textView_available_amount);
+        this.bookCurrencyTextView = (FermatTextView) layout.findViewById(R.id.textView_available_currency);
+        this.availableCurrencyTextView = (FermatTextView) layout.findViewById(R.id.textView_book_currency);
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.fab_multiple_actions);
         this.fabWithdraw = (com.getbase.floatingactionbutton.FloatingActionButton) layout.findViewById(R.id.fab_withdraw);
         updateWalletBalances();
+        updateWalletCurrency();
         handleWidhtrawalFabVisibilityAccordingToBalance();
 
         //configureToolbar();
-        getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_summary_top_background_color));
+        //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_summary_top_background_color));
 
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.csh_divider_shape);
@@ -299,15 +304,20 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     private void updateWalletBalances() {
 
-
-        //bookTextView.setText(String.valueOf(decimalFormat.format(this.walletBalances.getBookBalance()) + " " + this.walletCurrency.getCode()));
-        //availableTextView.setText(String.valueOf(decimalFormat.format(this.walletBalances.getAvailableBalance()) + " " + this.walletCurrency.getCode()));
-
-        bookTextView.setText(String.valueOf(this.walletBalances.getBookBalance() + " " + this.walletCurrency.getCode()));
-        availableTextView.setText(String.valueOf(this.walletBalances.getAvailableBalance() + " " + this.walletCurrency.getCode()));
+        bookTextView.setText(String.valueOf(this.walletBalances.getBookBalance()));
+        availableTextView.setText(String.valueOf(this.walletBalances.getAvailableBalance()));
 
         bookTextView.invalidate();
         availableTextView.invalidate();
+    }
+
+    private void updateWalletCurrency() {
+
+        availableCurrencyTextView.setText(this.walletCurrency.getCode());
+        bookCurrencyTextView.setText(this.walletCurrency.getCode());
+
+        availableCurrencyTextView.invalidate();
+        bookCurrencyTextView.invalidate();
     }
 
     private void handleWidhtrawalFabVisibilityAccordingToBalance()
