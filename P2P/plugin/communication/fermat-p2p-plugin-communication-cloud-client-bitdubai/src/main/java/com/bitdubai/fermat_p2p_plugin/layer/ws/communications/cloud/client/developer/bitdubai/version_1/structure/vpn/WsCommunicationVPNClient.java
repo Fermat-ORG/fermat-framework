@@ -398,4 +398,12 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     public boolean isPongMessagePending() {
         return isPongMessagePending;
     }
+
+
+    /**
+     * Reconnect again
+     */
+    public void reconnect(){
+        connect();
+    }
 }

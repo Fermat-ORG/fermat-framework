@@ -86,6 +86,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
         jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.FALSE);
 
         /*
          * Add the att to the header
