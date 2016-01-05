@@ -31,7 +31,7 @@ public class BankingWalletModuleImpl implements BankingWallet {
     private final HoldManager holdManager;
     private final UnholdManager unholdManager;
 
-    private String publicKey = "testbankwallet";
+    private String publicKey = "banking_wallet";
 
     public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
