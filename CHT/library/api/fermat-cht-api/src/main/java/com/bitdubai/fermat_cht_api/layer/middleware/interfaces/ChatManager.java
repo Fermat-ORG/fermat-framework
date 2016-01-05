@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_api.layer.middleware.interfaces.module;
+package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import java.sql.Date;
 import java.util.List;
@@ -16,12 +16,8 @@ public interface ChatManager {
 
     List<Object> ChatDetails(Integer Id_Chat,Integer Id_Objeto);
 
-    List<Object> Recive_Message(Integer Id_Message,Integer Id_Chat,String Message,
-                         Integer Status,Boolean Type,Date Message_Date);
-
     List<Object> Send_Message(Integer Id_Message,Integer Id_Chat,String Message,
                          Integer Status,Boolean Type,Date Message_Date);
 
-    void ReadMessage(Integer Id_Message);
 
 }

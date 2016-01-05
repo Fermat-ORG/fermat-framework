@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_api.layer.middleware.interfaces.module;
+package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import java.util.List;
 import java.sql.Date;
