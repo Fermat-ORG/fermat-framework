@@ -382,19 +382,19 @@ In the Fermat ORG Sierra Team we look for the excellence in coding, following th
 
 #### Team Members:
 
-* **Luis Fuenmayor [ORG New Team Leader]**<br/>
+* **Luis Fuenmayor [ORG Team Leader]**<br/>
 ---
     Email:   fuelusumar@gmail.com
     Skype:   fuelusumar
     Github:  https://github.com/fuelusumar
     
-* **German Mendoza**<br/>
+* **German Mendoza [ORG Veteran Developer]**<br/>
 ---
       Email:   german.mendoza.187@gmail.com
       Skype:   german0296
       Github:  https://github.com/kyxer
 
-* **Luis Campo**<br/>
+* **Luis Campo [ORG Developer]**<br/>
 ---
     Email:   campusprize@gmail.com
     Skype:   campol
