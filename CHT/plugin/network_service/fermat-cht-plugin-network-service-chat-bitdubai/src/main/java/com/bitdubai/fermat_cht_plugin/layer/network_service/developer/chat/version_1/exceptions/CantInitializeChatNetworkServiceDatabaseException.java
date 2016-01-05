@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.exceptions;
+package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions;
 
 
 import com.bitdubai.fermat_api.FermatException;
 /**
- * The Class <code>package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException</code>
+ * The Class <code>package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
  *

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.version_1.communications;
+package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
