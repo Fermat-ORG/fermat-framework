@@ -27,8 +27,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.ClauseMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -53,9 +59,12 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -285,7 +294,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     private void customerBrokerNewPurchaseNegotiationTest() {
 
         try {
-            CustomerBrokerPurchaseNegotiation negotiationMock = new PurchaseNegotiationMock();
+            CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
             System.out.print("\n\n**** 1) MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. PLUGINROOT ****\n" +
                             "\n------------------------------- NEGOTIATION PURCHASE MOCK -------------------------------" +
                             "\n*CustomerPublicKey = " + negotiationMock.getCustomerPublicKey() +
@@ -312,15 +321,15 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
                 System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");
                 for (CustomerBrokerNew ListNegotiation : list) {
-                    
+
                     System.out.print("\n\n --- Negotiation Transaction Date" +
                         "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
                         "\n- TransactionId = " + ListNegotiation.getTransactionId() +
                         "\n- CustomerPublicKey = " + ListNegotiation.getPublicKeyCustomer() +
                         "\n- BrokerPublicKey = " + ListNegotiation.getPublicKeyBroker() +
                         "\n- NegotiationType = " + ListNegotiation.getNegotiationType().getCode() +
-                        "\n- StatusTransaction = " + ListNegotiation.getStatusTransaction().getCode() +
-                        "\n- NegotiationXML = " + ListNegotiation.getNegotiationXML()
+                        "\n- StatusTransaction = " + ListNegotiation.getStatusTransaction().getCode()
+//                        "\n- NegotiationXML = " + ListNegotiation.getNegotiationXML()
                     );
 
                     /*
@@ -361,6 +370,63 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. ERROR GET CUSTOMER BROKER PURCHASE NEGOTIATION NOT FOUNT. ****\n");
         }
 
+    }
+
+    private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest(){
+
+        Date time = new Date();
+        long timestamp = time.getTime();
+        UUID                negotiationId               = UUID.randomUUID();
+        String              publicKeyCustomer           = "publicKeyCustomer";
+        String              publicKeyBroker             = "publicKeyBroker";
+        long                startDataTime               = 0;
+        long                negotiationExpirationDate   = timestamp;
+        NegotiationStatus   statusNegotiation           = NegotiationStatus.SENT_TO_BROKER;
+        Collection<Clause>  clauses                     = getClausesTest();
+        Boolean             nearExpirationDatetime      = Boolean.FALSE;
+
+        return new PurchaseNegotiationMock(
+                negotiationId,
+                publicKeyCustomer,
+                publicKeyBroker,
+                startDataTime,
+                negotiationExpirationDate,
+                statusNegotiation,
+                clauses,
+                nearExpirationDatetime
+        );
+    }
+
+    private Collection<Clause> getClausesTest(){
+        Collection<Clause> clauses = new ArrayList<>();
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_CURRENCY,
+                CurrencyType.BANK_MONEY.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_CURRENCY_QUANTITY,
+                "1961"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_CURRENCY,
+                CurrencyType.BANK_MONEY.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_DATE_TIME_TO_DELIVER,
+                "1000"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_CURRENCY_QUANTITY,
+                "2000"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_CURRENCY,
+                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
+                "100"));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.CUSTOMER_PAYMENT_METHOD,
+                ContractClauseType.CASH_ON_HAND.getCode()));
+        clauses.add(new ClauseMock(UUID.randomUUID(),
+                ClauseType.BROKER_PAYMENT_METHOD,
+                ContractClauseType.BANK_TRANSFER.getCode()));
+        return clauses;
     }
     /*END PUBLIC METHOD*/
 
