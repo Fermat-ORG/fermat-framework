@@ -85,6 +85,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.StockStatistics;
+import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -896,19 +897,55 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
-     * Returns a list of exchange rates of a given date, for a specific currencyPair
+     * Returns an exchange rate of a given date, for a specific currencyPair
      *
-     * @param providerId
      * @param currencyFrom
      * @param currencyTo
      * @param timestamp
+     * @return an exchangeRate object
+     */
+    @Override
+    public ExchangeRate getExchangeRateFromDate(final Currency currencyFrom, final Currency currencyTo, long timestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
+        CurrencyPair currencyPair = new CurrencyPair() {
+            @Override
+            public Currency getFrom() {
+                return currencyFrom;
+            }
+
+            @Override
+            public Currency getTo() {
+                return currencyTo;
+            }
+        };
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getExchangeRateFromDate(currencyPair, timestamp);
+    }
+
+    /**
+     * Given a TimeUnit (Days,weeks,months) and a currencyPair, returns a list of max ExchangeRates, starting from the given offset
+     *
+     * @param currencyFrom
+     * @param currencyTo
+     * @param timeUnit
+     * @param max
+     * @param offset
      * @return a list of exchangeRate objects
      */
     @Override
-    public Collection<ExchangeRate> getExchangeRateListFromDate(UUID providerId, Currency currencyFrom, Currency currencyTo, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        //TODO: Implementar cuando el layer CER este listo
-        return null;
+    public Collection<ExchangeRate> getExchangeRatesFromPeriod(final Currency currencyFrom, final Currency currencyTo, TimeUnit timeUnit, int max, int offset, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
+        CurrencyPair currencyPair = new CurrencyPair() {
+            @Override
+            public Currency getFrom() {
+                return currencyFrom;
+            }
+
+            @Override
+            public Currency getTo() {
+                return currencyTo;
+            }
+        };
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getExchangeRatesFromPeriod(currencyPair, timeUnit, max, offset);
     }
+
 
     /**
      * This method load the list CryptoBrokerStockTransaction
