@@ -96,7 +96,7 @@ Developers and team leaders in particular are classified by the deepness of the 
 1. Standard team size is of 5 full-time members.
 2. One full-time member can be replaced by 2 part-time members.
 3. Developers can go up the category list and they can also go down in certain circumstances.
-4. Going up or down a categorý is decided by the developers's team leader or parent team leader according to these rules.
+4. Going up or down a category is decided by the developers's team leader or parent team leader according to these rules.
 5. To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
 6. To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
 7. When a criteria is met to go up a category, the developer will be moved up the following calendar month.
@@ -360,13 +360,13 @@ Developers of dev.fermat.org in the client-side. We are responsible to show to t
     Github:  https://github.com/miguelcldn
     
     
-* **Ricardo Delgado**<br/>
+* **Ricardo Delgado [ORG Veteran Developer]**<br/>
 ---
       Email:   ricardodelgado460@hotmail.com
       Skype:   ricardodelgado460
       Github:  https://github.com/ricardo460
 
-* **Emmanuel Colina**<br/>
+* **Emmanuel Colina [ORG Developer]**<br/>
 ---
     Email:   emmanuelcolina14@gmail.com
     Skype:   ecolina4
