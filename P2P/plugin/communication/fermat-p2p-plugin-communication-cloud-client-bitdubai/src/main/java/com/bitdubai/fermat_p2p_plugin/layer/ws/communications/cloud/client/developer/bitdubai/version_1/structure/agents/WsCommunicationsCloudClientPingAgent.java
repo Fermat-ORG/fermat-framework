@@ -54,7 +54,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
 
                 if (wsCommunicationsCloudClientChannel.getConnection().isOpen()){
 
-                    System.out.println(" WsCommunicationsCloudClientPingAgent - running");
+                    //System.out.println(" WsCommunicationsCloudClientPingAgent - running");
 
                     try {
 
@@ -87,7 +87,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
 
             } catch (InterruptedException e) {
                 running = false;
-                e.printStackTrace();
+                System.out.println(" WsCommunicationsCloudClientPingAgent - was stopped ");
             }
         }
 

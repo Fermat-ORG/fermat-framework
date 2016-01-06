@@ -123,7 +123,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void sendPingMessage(){
 
-        System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node (" + getConnection().getRemoteSocketAddress() + ")");
+        //System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node (" + getConnection().getRemoteSocketAddress() + ")");
         FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
         frame.setFin(true);
         getConnection().sendFrame(frame);
@@ -140,7 +140,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
         if (f.getOpcode() == Framedata.Opcode.PONG){
-            System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getLocalSocketAddress()+") connection is alive");
+            //System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getLocalSocketAddress()+") connection is alive");
             this.isPongMessagePending = Boolean.FALSE;
         }
     }

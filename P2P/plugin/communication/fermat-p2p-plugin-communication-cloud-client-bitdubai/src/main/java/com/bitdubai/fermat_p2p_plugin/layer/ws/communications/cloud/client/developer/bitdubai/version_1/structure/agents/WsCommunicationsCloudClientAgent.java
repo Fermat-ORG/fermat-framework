@@ -96,7 +96,7 @@ public class WsCommunicationsCloudClientAgent extends Thread {
                     }
 
                 }catch (Exception e){
-                    e.printStackTrace();
+                    System.out.println(" WsCommunicationsCloudClientAgent - was stopped ");
                     wsCommunicationsCloudClientChannel.getConnection().close();
                     interrupt();
                 }
@@ -109,7 +109,7 @@ public class WsCommunicationsCloudClientAgent extends Thread {
                 try {
                     sleep(new Long(10000).longValue());
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println(" WsCommunicationsCloudClientAgent - was stopped ");
                 }
 
             }
