@@ -7,6 +7,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedP
  */
 public class AssetExtendedPublickKeyContentMessage implements DAPContentMessage {
     ExtendedPublicKey extendedPublicKey;
+    String actorPublicKey;
 
     /**
      * Default constructor
@@ -18,8 +19,9 @@ public class AssetExtendedPublickKeyContentMessage implements DAPContentMessage 
      * overloaded constructor
      * @param extendedPublicKey
      */
-    public AssetExtendedPublickKeyContentMessage(ExtendedPublicKey extendedPublicKey) {
+    public AssetExtendedPublickKeyContentMessage(ExtendedPublicKey extendedPublicKey, String actorPublicKey) {
         this.extendedPublicKey = extendedPublicKey;
+        this.actorPublicKey = actorPublicKey;
     }
 
     /**
@@ -36,5 +38,21 @@ public class AssetExtendedPublickKeyContentMessage implements DAPContentMessage 
      */
     public void setExtendedPublicKey(ExtendedPublicKey extendedPublicKey) {
         this.extendedPublicKey = extendedPublicKey;
+    }
+
+    /**
+     * gets the actor public key
+     * @return
+     */
+    public String getActorPublicKey() {
+        return actorPublicKey;
+    }
+
+    /**
+     * sets the actor public key
+     * @param actorPublicKey
+     */
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
     }
 }
