@@ -89,7 +89,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
         System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
 
-        //testCERPlatform();
+        testCERPlatform();
     }
 
 
@@ -232,6 +232,9 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                 public void run() {
                     try {
 
+
+                        UUID bitcoinVzlaKey = null;
+
                         System.out.println("---Listing ALL CER Providers and their supported currencies---");
                         for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
                             System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
@@ -239,34 +242,48 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                             for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
                                 System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
 
+                            if(provider.getValue().toString().equals("BitcoinVenezuela"))
+                                bitcoinVzlaKey = provider.getKey();
                         }
                         System.out.println(" ");
 
 
-                        System.out.println("---Listing CER Providers for MXN/USD---");
-                        CurrencyPair mxnUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.MEXICAN_PESO, FiatCurrency.US_DOLLAR);
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(mxnUsdCurrencyPair).entrySet())
-                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-                        System.out.println(" ");
+                        System.out.println("---Getting all ExchangeRates from BitcoinVenezuela Provider");
+                        CurrencyExchangeRateProviderManager btcVzlaProvider = providerFilter.getProviderReference(bitcoinVzlaKey);
+                        for(CurrencyPair p : btcVzlaProvider.getSupportedCurrencyPairs()){
+                            System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+                            System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
 
-
-                        System.out.println("---Listing CER Providers for EUR/USD---");
-                        CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
-                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-                        System.out.println(" ");
-
-
-                        System.out.println("---Listing Providers and Current ExchangeRate for USD/VEF---");
-                        CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet()) {
-                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-
-                            CurrencyExchangeRateProviderManager manager = providerFilter.getProviderReference(provider.getKey());
-                            ExchangeRate rate = manager.getCurrentExchangeRate(usdVefCurrencyPair);
-                            System.out.println("Also got Exchange rate! -  Purchase:" + rate.getPurchasePrice() + " Sale: " + rate.getSalePrice());
                         }
-                        System.out.println(" ");
+
+
+
+
+//
+//                        System.out.println("---Listing CER Providers for MXN/USD---");
+//                        CurrencyPair mxnUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.MEXICAN_PESO, FiatCurrency.US_DOLLAR);
+//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(mxnUsdCurrencyPair).entrySet())
+//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+//                        System.out.println(" ");
+//
+//
+//                        System.out.println("---Listing CER Providers for EUR/USD---");
+//                        CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
+//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
+//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+//                        System.out.println(" ");
+//
+//
+//                        System.out.println("---Listing Providers and Current ExchangeRate for USD/VEF---");
+//                        CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
+//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet()) {
+//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+//
+//                            CurrencyExchangeRateProviderManager manager = providerFilter.getProviderReference(provider.getKey());
+//                            ExchangeRate rate = manager.getCurrentExchangeRate(usdVefCurrencyPair);
+//                            System.out.println("Also got Exchange rate! -  Purchase:" + rate.getPurchasePrice() + " Sale: " + rate.getSalePrice());
+//                        }
+//                        System.out.println(" ");
 
                     } catch (Exception e) {
                         e.printStackTrace();
