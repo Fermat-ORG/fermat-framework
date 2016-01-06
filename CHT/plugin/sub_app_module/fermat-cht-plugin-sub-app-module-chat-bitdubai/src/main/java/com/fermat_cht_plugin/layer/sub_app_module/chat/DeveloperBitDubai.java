@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.version_1.ChatSupAppModulePluginRoot;
 
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
@@ -18,9 +19,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            //this.registerVersion(new CustomerOfflinePaymentPluginRoot());
-            //TODO: to implement
-            System.out.println("Not implemented");
+            this.registerVersion(new ChatSupAppModulePluginRoot());
 
         } catch (Exception e) {
 
