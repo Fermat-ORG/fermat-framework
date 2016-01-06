@@ -1104,7 +1104,7 @@
         <platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png" dependsOn="WPD, BCH">
             <layer name="Reference Wallet">
                 <androids>
-                    <android name="Bitcoin Wallet" description="" difficulty="8" code-level="qa">
+                    <android name="Bitcoin Wallet" description="" difficulty="8" code-level="qa" screenshots="true">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -1114,9 +1114,6 @@
                             <maintainer name="furszy"></maintainer>
                         </maintainers>
                         <certifications> </certifications>
-                        <screenshots>
-                            <screenshot>wallet_teens_1.png</screenshot>
-                        </screenshots>
                     </android>
                     <android name="Bitcoin Loss Protected" description="" difficulty="8" code-level="development">
                         <authors>
