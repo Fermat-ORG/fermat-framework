@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -70,6 +71,11 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     private URI uri;
 
+    /**
+     * Represent the clientIdentity
+     */
+    private ECCKeyPair clientIdentity;
+
     /*
      * Hold the list of event listeners
      */
@@ -91,6 +97,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public WsCommunicationsCloudClientPluginRoot(){
         super(new PluginVersionReference(new Version()));
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
+        this.clientIdentity = new ECCKeyPair();
     }
 
     /**
@@ -148,7 +155,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
 
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager);
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
             /*
@@ -248,7 +255,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public void handleConnectionLoose(){
 
         System.out.println("WsCommunicationsCloudClientPluginRoot - handleConnectionLoose trying to reconnect");
-        wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager);
+        wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
         wsCommunicationsCloudClientConnection.initializeAndConnect();
     }
 

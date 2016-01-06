@@ -106,9 +106,12 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * @param headers
      * @param connectTimeout
      */
-    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager) {
+    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager, ECCKeyPair clientIdentity) {
         super(serverUri, draft, headers, connectTimeout);
-        this.clientIdentity = new ECCKeyPair();
+
+        System.out.println(" WsCommunicationsCloudClientChannel - clientIdentity = " + clientIdentity.getPrivateKey());
+
+        this.clientIdentity = clientIdentity;
         this.temporalIdentity = temporalIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
         this.wsCommunicationsCloudClientConnection = wsCommunicationsCloudClientConnection;
@@ -152,7 +155,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * @param draft
      * @return WsCommunicationsCloudClientChannel instance
      */
-    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection,EventManager eventManager){
+    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection,EventManager eventManager, ECCKeyPair clientIdentity){
 
         /*
          * Create a new temporal identity
@@ -180,7 +183,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         /*
          * Construct the instance with the required parameters
          */
-        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity, wsCommunicationsCloudClientConnection, eventManager);
+        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity, wsCommunicationsCloudClientConnection, eventManager, clientIdentity);
     }
 
     /**
@@ -496,7 +499,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void raiseClientConnectionLooseNotificationEvent() {
 
-        System.out.println("WsCommunicationsCloudClientChannel - raiseClientConnectionCloseNotificationEvent");
+        System.out.println("WsCommunicationsCloudClientChannel - raiseClientConnectionLooseNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.CLIENT_CONNECTION_LOOSE);
         platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         eventManager.raiseEvent(platformEvent);
