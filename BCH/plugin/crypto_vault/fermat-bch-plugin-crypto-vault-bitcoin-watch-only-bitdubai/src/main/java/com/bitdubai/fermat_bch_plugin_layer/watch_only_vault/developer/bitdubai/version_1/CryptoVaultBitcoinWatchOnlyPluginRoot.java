@@ -114,6 +114,7 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
         if (extendedPublicKey == null)
             throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, null, "Extended public Key received is null. Can't go on.", null);
 
+        bitcoinWatchOnlyVaultManager.initialize(extendedPublicKey);
     }
 
     /**
@@ -123,7 +124,7 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
      */
     @Override
     public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
-        return null;
+        return bitcoinWatchOnlyVaultManager.getCryptoAddress(blockchainNetworkType);
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -13,6 +15,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.database.BitcoinWatchOnlyCryptoVaultDao;
@@ -25,6 +28,8 @@ import org.bitcoinj.crypto.HDKeyDerivation;
 
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by rodrigo on 12/30/15.
  */
@@ -35,6 +40,7 @@ public class BitcoinWatchOnlyVaultManager {
     WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey;
     final String DIRECTORY_NAME = "WatchOnlyVault";
     BitcoinWatchOnlyCryptoVaultDao bitcoinWatchOnlyCryptoVaultDao;
+    VaultKeyHierarchyGenerator generator;
 
     /**
      * Platform variables
@@ -74,7 +80,7 @@ public class BitcoinWatchOnlyVaultManager {
                 /**
                  * and will generate the KeyHierarchy from this Extended Key.
                  */
-                VaultKeyHierarchyGenerator generator = new VaultKeyHierarchyGenerator(rootKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+                generator = new VaultKeyHierarchyGenerator(rootKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
                 /**
                  * the generation process will go in a new thread and will be completed once the keys are passed to the CryptoNetwork
                  */
@@ -244,5 +250,19 @@ public class BitcoinWatchOnlyVaultManager {
      */
     private String getFileContent(WatchOnlyVaultExtendedPublicKey extendedPublicKey) {
         return XMLParser.parseObject(extendedPublicKey);
+    }
+
+    /**
+     * Generates a Crypto Address for the specified Network.
+     * @param blockchainNetworkType DEFAULT if null value is passed.
+     * @return the newly generated crypto Address.
+     */
+    public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        /**
+         * I create the account manually instead of getting it from the database because this method always returns addresses
+         * from the asset vault account with Id 0.
+         */
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        return generator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 }
