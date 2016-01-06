@@ -113,6 +113,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment im
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: guardar el bank account seleccionado en el settings.
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
             }
         });

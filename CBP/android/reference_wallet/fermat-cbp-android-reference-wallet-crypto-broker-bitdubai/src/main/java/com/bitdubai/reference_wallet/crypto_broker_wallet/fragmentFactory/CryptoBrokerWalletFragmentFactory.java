@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -17,6 +16,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketR
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsMylocationsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetBankAccountsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetEarningsFragment;
@@ -76,6 +76,8 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return WizardPageSetBankAccountsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD:
                 return CreateNewLocationFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS:
+                return SettingsMylocationsFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }
