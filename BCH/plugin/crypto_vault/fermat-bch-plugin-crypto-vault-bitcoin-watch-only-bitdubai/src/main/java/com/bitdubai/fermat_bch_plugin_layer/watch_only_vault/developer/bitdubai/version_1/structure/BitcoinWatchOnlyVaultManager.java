@@ -71,7 +71,13 @@ public class BitcoinWatchOnlyVaultManager {
                  */
                 WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey = loadExtendedPublicKey(DIRECTORY_NAME, hierarchyAccount.getDescription());
                 DeterministicKey rootKey = getMasterPublicKey(watchOnlyVaultExtendedPublicKey);
+                /**
+                 * and will generate the KeyHierarchy from this Extended Key.
+                 */
                 VaultKeyHierarchyGenerator generator = new VaultKeyHierarchyGenerator(rootKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+                /**
+                 * the generation process will go in a new thread and will be completed once the keys are passed to the CryptoNetwork
+                 */
                 new Thread(generator).start();
             }
         } catch (CantExecuteDatabaseOperationException e) {
