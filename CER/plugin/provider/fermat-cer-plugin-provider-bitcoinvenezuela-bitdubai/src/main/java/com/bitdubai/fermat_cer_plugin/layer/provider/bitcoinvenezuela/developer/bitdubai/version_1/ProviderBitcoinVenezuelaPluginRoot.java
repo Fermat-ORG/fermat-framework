@@ -195,7 +195,54 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
 
     @Override
     public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
+
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+
+
+        //Determine cryptoCurrency base
+        String exchangeFrom, exchangeTo;
+        boolean invertExchange;
+
+        if(CryptoCurrency.codeExists(currencyPair.getFrom().getCode()))
+        {
+            exchangeFrom = currencyPair.getFrom().getCode();
+            exchangeTo = currencyPair.getTo().getCode();
+            invertExchange = false;
+        }
+        else
+        {
+            exchangeFrom = currencyPair.getTo().getCode();
+            exchangeTo = currencyPair.getFrom().getCode();
+            invertExchange = true;
+        }
+
+
+        String aux;
+        JSONObject json;
+        double price = 0;
+
+        try{
+            json =  new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=USDBTC"));
+            price = (double) json.getJSONObject(exchangeTo).get(exchangeFrom);
+
+        }catch (JSONException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"BitcoinVenezuela CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+        }
+
+        if(invertExchange)
+            price = 1 / price;
+
+
+        ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
+        try {
+            dao.saveExchangeRate(exchangeRate);
+        }catch (CantSaveExchangeRateException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return exchangeRate;
     }
 
     @Override
