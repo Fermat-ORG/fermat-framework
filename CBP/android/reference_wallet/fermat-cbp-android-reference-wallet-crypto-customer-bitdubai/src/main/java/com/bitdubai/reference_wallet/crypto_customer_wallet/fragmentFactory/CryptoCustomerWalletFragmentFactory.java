@@ -18,6 +18,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.Marke
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsMylocationsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetBankAccountsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetBitcoinWalletAndProvidersFragment;
@@ -72,7 +73,8 @@ public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<C
                 return CreateNewLocationFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD:
                 return CreateNewBankAccountFragment.newInstance();
-
+            case CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS:
+                return SettingsMylocationsFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }
