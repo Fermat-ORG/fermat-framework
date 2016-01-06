@@ -272,4 +272,29 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     public boolean isRunning() {
         return isRunning;
     }
+
+    public void closeAllVpnConnections(){
+
+        try {
+
+            if (!vpnClientActiveCache.isEmpty()) {
+
+                isRunning = Boolean.FALSE;
+
+                for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
+                    for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
+                        WsCommunicationVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
+                        wsCommunicationVPNClient.close();
+                        vpnClientActiveCache.get(networkServiceType).remove(remote);
+                    }
+                }
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 }
