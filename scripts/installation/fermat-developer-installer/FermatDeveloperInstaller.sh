@@ -188,8 +188,13 @@ function installIDE(){
     sudo mv android-studio /opt/android-studio
     
 }
+
 function installGenymotion(){
+<<<<<<< HEAD
+    if[ ! $genymotion ]; then
+=======
     if[ ! ${genymotion} ]; then
+>>>>>>> 6a1878ab6249c87b78a812aa756d5490e39b3a1f
         timestamp
         genymotionURL="http://files2.genymotion.com/genymotion/genymotion-2.5.2/"
         echo "Downloading Genymotion"
