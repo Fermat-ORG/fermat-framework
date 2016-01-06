@@ -488,7 +488,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
             // change message state to process again first time
-            reprocessWaitingMessage();
+            reprocessMessage();
 
             //declare a schedule to process waiting request message
             Timer timer = new Timer();
@@ -497,7 +497,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 @Override
                 public void run() {
                     // change message state to process retry later
-                    reprocessWaitingMessage();
+                    reprocessMessage();
                 }
             }, 2 * 3600 * 1000);
 
@@ -1121,22 +1121,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }
     }
 
-    private void reprocessWaitingMessage()
-    {
-        try {
 
-            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(RequestProtocolState.WAITING_RESPONSE);
-
-            for(CryptoPaymentRequest record : cryptoAddressRequestList) {
-
-                cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
-            }
-        }
-        catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
-        {
-            System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
-            e.printStackTrace();
-        }
-    }
 
 }
