@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -116,6 +118,16 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     private Map<Integer, Boolean> pendingPongMessageByConnection;
 
     /**
+     * Holds all Timer by client identity
+     */
+    private Map<String, Timer> timersByClientIdentity;
+
+    /**
+     * Holds all profile by client identity, to wait to reconnect
+     */
+    private Map<String, List<PlatformComponentProfile>> standByProfileByClientIdentity;
+
+    /**
      * Constructor with parameter
      * @param address
      */
@@ -132,6 +144,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         this.registeredNetworkServicesCache               = new ConcurrentHashMap<>();
         this.registeredOtherPlatformComponentProfileCache = new ConcurrentHashMap<>();
         this.pendingPongMessageByConnection               = new ConcurrentHashMap<>();
+        this.timersByClientIdentity                       = new ConcurrentHashMap<>();
+        this.standByProfileByClientIdentity               = new ConcurrentHashMap<>();
     }
 
     /**
@@ -254,7 +268,28 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 if (remote){
 
                     LOG.info("WsCommunicationCloudServer - waiting for client reconnect");
+                    final WebSocket connection = clientConnection;
+                    final String clientIdentity = clientIdentityByClientConnectionCache.get(connection.hashCode());
 
+                    if(clientIdentity != null && clientIdentity != ""){
+
+                        putReferencesToStandBy(connection);
+
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                                           @Override
+                                           public void run() {
+                                               LOG.info("WsCommunicationCloudServer - client not reconnect, proceed to clean references");
+                                               standByProfileByClientIdentity.remove(clientIdentity);
+                                           }
+                                       },
+                                9000
+                        );
+
+                        timersByClientIdentity.put(clientIdentity, timer);
+                    }else {
+                        cleanReferences(clientConnection);
+                    }
 
                 }
 
@@ -312,7 +347,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
             }
 
 
-        }else {
+        } else {
             LOG.info("Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
         }
 
@@ -425,12 +460,51 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
 
     /**
+     * Clean all reference from the registers cache into
+     * a standByCache to wait to reconnect
+     */
+    private void putReferencesToStandBy(WebSocket clientConnection){
+
+        try {
+
+            LOG.info(" putReferencesToStandBy = " + clientConnection.getRemoteSocketAddress());
+
+           /*
+             * Clean all the caches, remove data bind whit this connection and put
+             * on stand by, to wait to reconnect
+             */
+            Integer clientConnectionHashCode  = clientConnection.hashCode();
+            String clientIdentity = clientIdentityByClientConnectionCache.remove(clientConnectionHashCode);
+
+            List<PlatformComponentProfile> removeProfile = removeNetworkServiceRegisteredByClientIdentity(clientIdentity);
+            removeProfile.addAll(removeOtherPlatformComponentRegisteredByClientIdentity(clientIdentity));
+            pendingRegisterClientConnectionsCache.remove(clientIdentity);
+
+            LOG.info("number of profile put into standby = " + removeProfile.size());
+            standByProfileByClientIdentity.put(clientIdentity, removeProfile);
+
+            serverIdentityByClientCache.remove(clientConnectionHashCode);
+            registeredClientConnectionsCache.remove(clientIdentity);
+            clientIdentityByClientConnectionCache.remove(clientConnectionHashCode);
+            pendingPongMessageByConnection.remove(clientConnectionHashCode);
+            registeredCommunicationsCloudServerCache.remove(clientConnectionHashCode);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
      * This method unregister network service component profile
      * register
      */
-    private void removeNetworkServiceRegisteredByClientIdentity(final String clientIdentity){
+    private List<PlatformComponentProfile> removeNetworkServiceRegisteredByClientIdentity(final String clientIdentity){
 
         LOG.info("removeNetworkServiceRegisteredByClientIdentity ");
+
+        List<PlatformComponentProfile> removeProfile = new ArrayList<>();
 
         Iterator<NetworkServiceType> iteratorNetworkServiceType = registeredNetworkServicesCache.keySet().iterator();
 
@@ -447,6 +521,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
                 if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentity)){
                     LOG.info("removing =" + platformComponentProfileRegistered.getName());
+                    removeProfile.add(platformComponentProfileRegistered);
                     iterator.remove();
                 }
             }
@@ -466,6 +541,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
             }
         }
 
+        return removeProfile;
+
     }
 
 
@@ -473,10 +550,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      * This method unregister all platform component profile
      * register
      */
-    private void removeOtherPlatformComponentRegisteredByClientIdentity(final String clientIdentity){
+    private List<PlatformComponentProfile> removeOtherPlatformComponentRegisteredByClientIdentity(final String clientIdentity){
 
         LOG.info("removeOtherPlatformComponentRegisteredByClientIdentity ");
 
+        List<PlatformComponentProfile> removeProfile = new ArrayList<>();
         Iterator<PlatformComponentType> iteratorPlatformComponentType = registeredOtherPlatformComponentProfileCache.keySet().iterator();
         while (iteratorPlatformComponentType.hasNext()){
 
@@ -490,6 +568,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
                 if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentity)){
                     LOG.info("removing Other ="+platformComponentProfileRegistered.getName());
+                    removeProfile.add(platformComponentProfileRegistered);
                     iterator.remove();
                 }
             }
@@ -501,6 +580,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 registeredOtherPlatformComponentProfileCache.remove(platformComponentType);
             }
         }
+
+        return removeProfile;
 
     }
 

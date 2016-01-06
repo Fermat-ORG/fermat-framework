@@ -218,7 +218,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          */
         if (getWsCommunicationCloudServer().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
 
-            /* TODO: Do it in data base is better
+            /*
              * Add to the cache
              */
             getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
@@ -267,6 +267,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
 
 
         }else {
+
             throw new RuntimeException("Forbidden connection this if NOT in the PendingRegisterClientConnectionsCache");
         }
 

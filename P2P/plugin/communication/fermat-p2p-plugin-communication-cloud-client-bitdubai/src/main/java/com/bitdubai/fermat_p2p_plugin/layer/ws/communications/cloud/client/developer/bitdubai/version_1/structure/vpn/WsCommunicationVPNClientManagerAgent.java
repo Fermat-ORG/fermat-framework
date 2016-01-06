@@ -199,7 +199,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(" WsCommunicationVPNClientManagerAgent - was stopped");
         }
 
     }
