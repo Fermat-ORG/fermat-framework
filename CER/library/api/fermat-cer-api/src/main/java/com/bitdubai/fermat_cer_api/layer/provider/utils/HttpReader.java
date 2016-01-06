@@ -15,11 +15,10 @@ import java.nio.charset.Charset;
  */
 public class HttpReader {
 
-    /*
+    /**
      * This method accepts an URL and fetches its content, returning it in a string
-     */
-    public static String getHTTPContent(String url)
-    {
+     **/
+    public static String getHTTPContent(String url) {
         InputStream stream = null;
         BufferedReader reader;
         String content = "";
