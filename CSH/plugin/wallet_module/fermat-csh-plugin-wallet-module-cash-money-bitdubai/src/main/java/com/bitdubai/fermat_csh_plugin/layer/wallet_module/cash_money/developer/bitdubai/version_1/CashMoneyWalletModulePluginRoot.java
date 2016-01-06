@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -17,6 +18,10 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
@@ -40,6 +45,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTr
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashWalletBalancesImpl;
+import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -47,12 +53,15 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/8/2015.
  */
 
 public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements LogManagerForDevelopers, CashMoneyWalletModuleManager {
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -70,8 +79,21 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY)
     private CashMoneyWalletManager cashMoneyWalletManager;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
+    private CurrencyExchangeProviderFilterManager providerFilter;
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+    @Override
+    public void start() throws CantStartPluginException {
+        super.start();
+
+        System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
+
+        //testCERPlatform();
+    }
+
+
+
+
 
     /*
      * PluginRoot Constructor
@@ -206,4 +228,59 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     public int[] getMenuNotifications() {
         return new int[0];
     }
+
+    /*CER TEST METHODS*/
+    private void testCERPlatform(){
+        System.out.println("CASHMONEYWALLETMODULE - TESTCERPLATFORM START");
+
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+
+                        System.out.println("---Listing ALL CER Providers and their supported currencies---");
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+
+                            for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
+                                System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+
+                        }
+                        System.out.println(" ");
+
+
+                        System.out.println("---Listing CER Providers for MXN/USD---");
+                        CurrencyPair mxnUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.MEXICAN_PESO, FiatCurrency.US_DOLLAR);
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(mxnUsdCurrencyPair).entrySet())
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+                        System.out.println(" ");
+
+
+                        System.out.println("---Listing CER Providers for EUR/USD---");
+                        CurrencyPair eurUsdCurrencyPair = new CurrencyPairImpl(FiatCurrency.EURO, FiatCurrency.US_DOLLAR);
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(eurUsdCurrencyPair).entrySet())
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+                        System.out.println(" ");
+
+
+                        System.out.println("---Listing Providers and Current ExchangeRate for USD/VEF---");
+                        CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR);
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNamesListFromCurrencyPair(usdVefCurrencyPair).entrySet()) {
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+
+                            CurrencyExchangeRateProviderManager manager = providerFilter.getProviderReference(provider.getKey());
+                            ExchangeRate rate = manager.getCurrentExchangeRate(usdVefCurrencyPair);
+                            System.out.println("Also got Exchange rate! -  Purchase:" + rate.getPurchasePrice() + " Sale: " + rate.getSalePrice());
+                        }
+                        System.out.println(" ");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+    }
+
 }

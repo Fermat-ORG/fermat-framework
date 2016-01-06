@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 #Contributing Guide
 
@@ -20,9 +20,9 @@ We consider a _casual contribution_ a bug fix or any other change big or small d
 
 Whatever you may find that could make Fermat better is welcome and it will be considered. Follow these steps to find the best way for your case: 
 
-In fermat, every component (plug-in, add-on, library, etc) has an Author and a maintainer.
+In fermat, every component (plug-in, add-on, library, etc) has an author and a maintainer.
 
-1. Open www.fermat.org, go to the Architecture view and zoom in until you find the component you will suggest to change.
+1. Open http://dev.fermat.org , go to the Architecture view and zoom in until you find the component you will suggest to change.
 2. Click on that component to select it.
 3. You will find there a picture of the author. If he/she is not the current maintainer, you will also find the maintainers picture. 
 4. Click again their the picture to get more detailed info including their github username.

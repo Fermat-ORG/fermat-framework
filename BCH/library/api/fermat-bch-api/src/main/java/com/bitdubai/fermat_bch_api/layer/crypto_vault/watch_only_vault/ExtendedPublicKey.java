@@ -14,24 +14,26 @@ import java.math.BigInteger;
 /**
  * Created by rodrigo on 12/30/15.
  */
-public class ExtendedPublicKey extends DeterministicKey {
-    public ExtendedPublicKey(ImmutableList<ChildNumber> childNumberPath, byte[] chainCode, LazyECPoint publicAsPoint, BigInteger priv, DeterministicKey parent) {
-        super(childNumberPath, chainCode, publicAsPoint, priv, parent);
+public class ExtendedPublicKey {
+    String actorPublicKey;
+    byte[] pubKeyBytes;
+    byte[] chainCode;
+
+    public ExtendedPublicKey(String actorPublicKey, byte[] pubKeyBytes, byte[] chainCode) {
+        this.actorPublicKey = actorPublicKey;
+        this.pubKeyBytes = pubKeyBytes;
+        this.chainCode = chainCode;
     }
 
-    public ExtendedPublicKey(ImmutableList<ChildNumber> childNumberPath, byte[] chainCode, ECPoint publicAsPoint, BigInteger priv, DeterministicKey parent) {
-        super(childNumberPath, chainCode, publicAsPoint, priv, parent);
+    public String getActorPublicKey() {
+        return actorPublicKey;
     }
 
-    public ExtendedPublicKey(ImmutableList<ChildNumber> childNumberPath, byte[] chainCode, BigInteger priv, DeterministicKey parent) {
-        super(childNumberPath, chainCode, priv, parent);
+    public byte[] getPubKeyBytes() {
+        return pubKeyBytes;
     }
 
-    public ExtendedPublicKey(ImmutableList<ChildNumber> childNumberPath, byte[] chainCode, KeyCrypter crypter, LazyECPoint pub, EncryptedData priv, DeterministicKey parent) {
-        super(childNumberPath, chainCode, crypter, pub, priv, parent);
-    }
-
-    public ExtendedPublicKey(DeterministicKey keyToClone, DeterministicKey newParent) {
-        super(keyToClone, newParent);
+    public byte[] getChainCode() {
+        return chainCode;
     }
 }

@@ -59,7 +59,7 @@ public class CloseContractBusinessTransactionDeveloperDatabaseFactory implements
              /*
               * Close new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CloseContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
         } catch (CantOpenDatabaseException cantCloseDatabaseException) {
              /*
               * The database exists but cannot be open. I can not handle this situation.

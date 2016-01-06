@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 #--draft--
 
@@ -40,7 +40,7 @@ OS dependent GUI components are built on top of the multi-layered plug-in struct
 
 A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalogue.
 
-![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Slides/slide-core-concept.png "Core Concept")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Slides/slide-core-concept.png "Core Concept")
 
 <br> 
 ## The Fermat Network
@@ -96,7 +96,7 @@ Fermat generates its tokens, the _fermats_, with a predetermined algorithm that 
 
 These application tokens are native to the Fermat system and are necessary for access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the Plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
 
-![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/master/Coins/Fermat%20App%20Token/Fermat_App_Token.jpg "Fermat Application Token")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Tokens/Fermat%20App%20Token/PerspView/HQ_1920x1080.jpg "Fermat Application Token")
 
 ### Token Records
 

@@ -4,10 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoAssetVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WatchOnlyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVaultEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantIdentifyVaultException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 
@@ -24,12 +26,15 @@ public final class CryptoVaultSelector {
 
     private CryptoVaultManager cryptoVaultManager;
     private AssetVaultManager assetVaultManager;
+    private WatchOnlyVaultManager watchOnlyVaultManager;
 
 
     public CryptoVaultSelector(final CryptoVaultManager cryptoVaultManager,
-                               final AssetVaultManager  assetVaultManager ) {
+                               final AssetVaultManager  assetVaultManager,
+                               final WatchOnlyVaultManager watchOnlyVaultManager) {
         this.cryptoVaultManager = cryptoVaultManager;
         this.assetVaultManager = assetVaultManager;
+        this.watchOnlyVaultManager = watchOnlyVaultManager;
     }
 
     public final PlatformCryptoVault getVault(final VaultType      vaultType     ,
@@ -40,6 +45,7 @@ public final class CryptoVaultSelector {
 
                 case CRYPTO_ASSET_VAULT:    return getAssetVault(cryptoCurrency);
                 case CRYPTO_CURRENCY_VAULT: return getCryptoCurrencyVault(cryptoCurrency);
+                case WATCH_ONLY_VAULT:      return getWatchOnlyVault(cryptoCurrency);
 
                 default:
                     throw new CantIdentifyVaultException(
@@ -77,6 +83,19 @@ public final class CryptoVaultSelector {
         }
     }
 
+    public final PlatformCryptoVault getWatchOnlyVault(final CryptoCurrency cryptoCurrency) throws InvalidParameterException {
+
+        switch (WatchOnlyVault.getByCryptoCurrency(cryptoCurrency)) {
+
+            case WATCH_ONLY_VAULT : return watchOnlyVaultManager;
+
+            default:
+                throw new InvalidParameterException(
+                        "Unexpected cryptoCurrency: " + cryptoCurrency.toString() + " - " + cryptoCurrency.getCode()
+                );
+        }
+    }
+
     public final FermatVaultEnum getVaultEnum(final VaultType      vaultType     ,
                                               final CryptoCurrency cryptoCurrency) throws InvalidParameterException {
 
@@ -86,6 +105,8 @@ public final class CryptoVaultSelector {
                 return CryptoCurrencyVault.getByCryptoCurrency(cryptoCurrency);
             case CRYPTO_ASSET_VAULT:
                 return CryptoAssetVault.getByCryptoCurrency(cryptoCurrency);
+            case WATCH_ONLY_VAULT:
+                return WatchOnlyVault.getByCryptoCurrency(cryptoCurrency);
 
             default: throw new InvalidParameterException("VaultType: "+vaultType.toString()+ " - CryptoCurrency: "+ cryptoCurrency, "Vault not recognized.");
         }

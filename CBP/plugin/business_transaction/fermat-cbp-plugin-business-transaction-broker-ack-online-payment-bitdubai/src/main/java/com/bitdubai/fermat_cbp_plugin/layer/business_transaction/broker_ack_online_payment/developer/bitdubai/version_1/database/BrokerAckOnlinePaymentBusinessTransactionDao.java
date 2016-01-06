@@ -996,7 +996,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      */
     public void saveIncomingMoneyEvent(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
         try {
-            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTable databaseTable = getDatabaseIncomingMoneyTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
                     event);

@@ -227,7 +227,9 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             }
 
         } catch (InterruptedException e) {
-            running = false;
+
+            this.running=false;
+
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
@@ -309,7 +311,9 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             }
 
         } catch (InterruptedException e) {
-            running = false;
+
+            this.running=false;
+
             toSend.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         }

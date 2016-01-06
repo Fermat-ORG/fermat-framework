@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 
@@ -27,4 +28,6 @@ public interface FermatScreenSwapper {
     Object[] connectBetweenAppsData();
 
     void onControlledActivityBack(String activityCodeBack);
+
+    void setChangeBackActivity(Activities activityCodeBack);
 }
