@@ -135,6 +135,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                     connectRequest();
                     break;
                 case PENDING_LOCALLY_ACCEPTANCE:
+                    conectionAccept();
+                    break;
                 case PENDING_REMOTELY_ACCEPTANCE:
                     connectionSend();
                     break;
