@@ -408,8 +408,19 @@ Y otras funcionalidades.
 
 <br>
 ### Developer Sub App
+<br>
+Este componente esta dedicado a los desarrolladores y básicamente posee dos funcionalidades principales:
 
-**Explain what it is**
+* **Data Base Tools:** Permite ver las bases de datos que todos los plugins y sus respectivas tablas.
+A través de esta herramienta se puede verificar el comportamiento de los datos a la hora de desarrollar.
+
+* **Log Tools:** Cambia el nivel de ejecución de la aplicación a un nivel de Log de los Plugins. De esta manera el desarrollador podrá colocar la aplicación en modo depuración o cualquier otro tipo de Log que requiera para verificar el comportamiento de las clases, métodos, variable que este utilizando la aplicación.  
+<br>
+El objetivo de esta Sub App es facilitar el trabajo a los desarrolladores permitiendo acceder a las bases de datos, tablas de los plugins que se estén desarrollando como también verificar en el Log Tools el comportamiento del mismo desde el dispositivo movil.
+<br>
+La ventaja que principal de la Developer Sub App es permitir depurar sin necesidad de que el dispositivo este conectado a Android Studio u otro IDE y capturar posibles errores. 
+<br>
+También permite acceder a las base de datos de manera practica evitando utilizar Browser externos.
 
 #### How to enable your Plug-in on the Developer Sub App
 
