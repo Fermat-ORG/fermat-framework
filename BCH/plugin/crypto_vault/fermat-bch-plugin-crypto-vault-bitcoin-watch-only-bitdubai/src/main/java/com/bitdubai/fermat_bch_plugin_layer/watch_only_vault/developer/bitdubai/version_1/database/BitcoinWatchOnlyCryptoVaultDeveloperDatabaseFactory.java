@@ -104,7 +104,7 @@ public class BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory  implements Dea
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("AssetsOverBitcoin", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("WatchOnlyVault", this.pluginId.toString()));
         return databases;
     }
 
