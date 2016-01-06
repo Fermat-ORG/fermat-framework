@@ -14,11 +14,14 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.io.ByteArrayInputStream;
 
@@ -41,7 +44,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private FermatTextView assetDetailBookText;
     private FermatTextView assetDetailBtcText;
     private FermatTextView assetDetailRemainingText;
-    private FermatTextView assetDetailAvailableText2;
+    private FermatTextView assetDetailDelivered;
     private FermatTextView assetDetailRedeemText;
     private FermatTextView assetDetailAppropriatedText;
 
@@ -84,21 +87,21 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailBookText = (FermatTextView) rootView.findViewById(R.id.assetDetailBookText);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
         assetDetailRemainingText = (FermatTextView) rootView.findViewById(R.id.assetDetailRemainingText);
-        assetDetailAvailableText2 = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText2);
+        assetDetailDelivered = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText2);
         assetDetailRedeemText = (FermatTextView) rootView.findViewById(R.id.assetDetailRedeemText);
         assetDetailAppropriatedText = (FermatTextView) rootView.findViewById(R.id.assetDetailAppropriatedText);
 
         assetDetailRemainingLayout = rootView.findViewById(R.id.assetDetailRemainingLayout);
         assetDetailRemainingLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
             }
         });
 
         assetDetailAvailableLayout = rootView.findViewById(R.id.assetDetailAvailableLayout);
         assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
             }
         });
     }
@@ -120,9 +123,9 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailBookText.setText(digitalAsset.getBookBalanceQuantity()+"");
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         assetDetailRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
-        assetDetailAvailableText2.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        assetDetailDelivered.setText(1 + "");
         assetDetailRedeemText.setText(1+"");
-        assetDetailAppropriatedText.setText(2+"");
+        assetDetailAppropriatedText.setText(1+"");
     }
 
     private void configureToolbar() {
