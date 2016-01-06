@@ -285,6 +285,21 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     }
 
     public void handleNewReceiveMessageActorNotificationEvent(DAPMessage dapMessage) {
+        switch (dapMessage.getMessageType()) {
+            case EXTENDED_PUBLIC_KEY:
+                receiveNewRequestExtendedPublicKey(dapMessage);
+                break;
+            case ASSET_APPROPRIATION:
+                receiveNewAssetAppropriated(dapMessage);
+                break;
+        }
+    }
+
+    private void receiveNewAssetAppropriated(DAPMessage dapMessage) {
+
+    }
+
+    private void receiveNewRequestExtendedPublicKey(DAPMessage dapMessage) {
         DAPActor redeemPoint = dapMessage.getActorSender();
         DAPActor issuer = dapMessage.getActorReceiver();
 
@@ -311,7 +326,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         /**
          * I will create a new Message with the extended public Key.
          */
-        if (extendedPublicKey != null){
+        if (extendedPublicKey != null) {
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
 
             /**
@@ -331,16 +346,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                 e.printStackTrace();
             }
         }
-
-//        try {
-//            this.assetIssuerActorDao.updateAssetIssuerDAPConnectionState(
-//                    actorAssetIssuer.getActorPublicKey(),
-//                    actorAssetIssuer.getActorPublicKey(),
-//                    DAPConnectionState.REGISTERED_ONLINE);
-//        } catch (CantUpdateAssetIssuerException e) {
-//            e.printStackTrace();
-//        }
-        System.out.println("***************************************************************");
     }
 
     @Override
