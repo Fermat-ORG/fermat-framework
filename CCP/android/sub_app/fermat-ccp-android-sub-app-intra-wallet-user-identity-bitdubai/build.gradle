@@ -29,7 +29,6 @@ dependencies {
     dependencies {
         // Fermat
         compile project(':fermat-api')
-        compile project(':fermat-cbp-api')
         compile project(':fermat-android-api')
         compile fileTree(include: ['*.jar'], dir: 'libs')
 

@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.Date;
 
@@ -15,10 +14,11 @@ public class DeliverRecord {
     private String transactionId;
     private String genesisTransaction;
     private DigitalAssetMetadata digitalAssetMetadata;
-    private ActorAssetUser actorAssetUser;
+    private String actorAssetUser;
     private Date startTime;
     private Date timeOut;
     private DistributionStatus state;
+    private String genesisTransactionSent;
 
     //CONSTRUCTORS
 
@@ -26,7 +26,7 @@ public class DeliverRecord {
     public DeliverRecord() {
     }
 
-    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser, Date startTime, Date timeOut, DistributionStatus state) {
+    public DeliverRecord(String transactionId, String genesisTransaction, DigitalAssetMetadata digitalAssetMetadata, String actorAssetUser, Date startTime, Date timeOut, DistributionStatus state, String genesisTransactionSent) {
         this.transactionId = transactionId;
         this.genesisTransaction = genesisTransaction;
         this.digitalAssetMetadata = digitalAssetMetadata;
@@ -34,8 +34,8 @@ public class DeliverRecord {
         this.startTime = startTime;
         this.timeOut = timeOut;
         this.state = state;
+        this.genesisTransactionSent = genesisTransactionSent;
     }
-
 
     //PUBLIC METHODS
 
@@ -62,7 +62,7 @@ public class DeliverRecord {
         if (!getTransactionId().equals(that.getTransactionId())) return false;
         if (!getGenesisTransaction().equals(that.getGenesisTransaction())) return false;
         if (!getDigitalAssetMetadata().equals(that.getDigitalAssetMetadata())) return false;
-        if (!getActorAssetUser().equals(that.getActorAssetUser())) return false;
+        if (!getActorAssetUserPublicKey().equals(that.getActorAssetUserPublicKey())) return false;
         if (!getStartTime().equals(that.getStartTime())) return false;
         if (!getTimeOut().equals(that.getTimeOut())) return false;
         return getState() == that.getState();
@@ -74,7 +74,7 @@ public class DeliverRecord {
         int result = getTransactionId().hashCode();
         result = 31 * result + getGenesisTransaction().hashCode();
         result = 31 * result + getDigitalAssetMetadata().hashCode();
-        result = 31 * result + getActorAssetUser().hashCode();
+        result = 31 * result + getActorAssetUserPublicKey().hashCode();
         result = 31 * result + getStartTime().hashCode();
         result = 31 * result + getTimeOut().hashCode();
         result = 31 * result + getState().hashCode();
@@ -109,11 +109,11 @@ public class DeliverRecord {
         this.digitalAssetMetadata = digitalAssetMetadata;
     }
 
-    public ActorAssetUser getActorAssetUser() {
+    public String getActorAssetUserPublicKey() {
         return actorAssetUser;
     }
 
-    public void setActorAssetUser(ActorAssetUser actorAssetUser) {
+    public void setActorAssetUserPublicKey(String actorAssetUser) {
         this.actorAssetUser = actorAssetUser;
     }
 
@@ -139,6 +139,14 @@ public class DeliverRecord {
 
     public void setState(DistributionStatus state) {
         this.state = state;
+    }
+
+    public String getGenesisTransactionSent() {
+        return genesisTransactionSent;
+    }
+
+    public void setGenesisTransactionSent(String genesisTransactionSent) {
+        this.genesisTransactionSent = genesisTransactionSent;
     }
 
     //INNER CLASSES

@@ -199,13 +199,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
-
-    /**
-     * Method call when back button is pressed
-     */
-
-    @Override
-    public void onBackPressed() {
+    public void onControlledActivityBack(String ActivityBackCode){
         // get actual fragment on execute
 
         // Check if no view has focus:
@@ -231,13 +225,25 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
             changeWalletFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
         } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
-            changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
+            if(ActivityBackCode!=null){
+                changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
+            }else changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
         } else {
             Intent intent = new Intent(this, DesktopActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
+    }
+
+
+    /**
+     * Method call when back button is pressed
+     */
+
+    @Override
+    public void onBackPressed() {
+        onControlledActivityBack(null);
     }
 
 

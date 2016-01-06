@@ -126,9 +126,6 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
             loadAssetRedeemPointWallet("walletPublicKeyTest");
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.println("Star Plugin AssetWalletRedeemPoint");
-
-            //TODO testing code
-            testInsert();
         }catch(CantStartPluginException exception){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
@@ -136,33 +133,6 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-    }
-
-    private void testInsert() throws Exception {
-        DigitalAsset digitalAsset = new DigitalAsset();
-        digitalAsset.setPublicKey("digitalAssetPublicKey");
-        digitalAsset.setName("name");
-        digitalAsset.setDescription("description");
-
-        CryptoAddress cryptoAddress = new CryptoAddress();
-        cryptoAddress.setAddress("address");
-
-        CryptoTransaction cryptoTransaction = new CryptoTransaction();
-        cryptoTransaction.setAddressFrom(cryptoAddress);
-        cryptoTransaction.setAddressTo(cryptoAddress);
-        cryptoTransaction.setCryptoAmount(1);
-        cryptoTransaction.setTransactionHash("transactionHash");
-
-        AssetRedeemPointWalletTransactionRecord record = new AssetRedeemPointWalletTransactionRecordWrapper(
-                new DigitalAssetMetadata(digitalAsset), cryptoTransaction, "", ""
-        );
-
-        UUID internalAssetRedeemPointWalletId = walletRedeemPoint.get("walletPublicKeyTest");
-        Database database = pluginDatabaseSystem.openDatabase(pluginId, internalAssetRedeemPointWalletId.toString());
-        AssetRedeemPointWalletDao assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database);
-        assetRedeemPointWalletDao.setPluginFileSystem(pluginFileSystem);
-        assetRedeemPointWalletDao.setPlugin(pluginId);
-        assetRedeemPointWalletDao.addCredit(record, BalanceType.AVAILABLE);
     }
 
     @Override
