@@ -8,7 +8,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#828A95"
         android:scrollbarAlwaysDrawVerticalTrack="true">
 
         <ImageView
@@ -20,8 +19,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:background="#1affffff">
+            android:layout_height="120dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetDetailNameText"
@@ -188,7 +186,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Available"
+                    android:text="Delivered"
                     android:fontFamily="regular"
                     android:textSize="17sp"
                     android:textColor="#b3ffffff" />
