@@ -5,7 +5,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.*;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
 
@@ -31,32 +32,26 @@ public class AssetIssuerWallletBalanceImpl implements com.bitdubai.fermat_dap_ap
 
     @Override
     public long getBalance() throws CantCalculateBalanceException {
-        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-        assetIssuerWalletDao.setPlugin(plugin);
+        assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, plugin);
 
         return assetIssuerWalletDao.getAvailableBalance();
     }
 
     @Override
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalances() throws CantCalculateBalanceException {
-        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-        assetIssuerWalletDao.setPlugin(plugin);
-        assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
+        assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, plugin);
         return assetIssuerWalletDao.getBalanceByAssets();
     }
 
     @Override
     public void debit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException {
-        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-        assetIssuerWalletDao.setPlugin(plugin);
+        assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, plugin);
         assetIssuerWalletDao.addDebit(assetIssuerWalletTransactionRecord, balanceType);
     }
 
     @Override
     public void credit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, BalanceType balanceType) throws CantRegisterCreditException {
-        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
-        assetIssuerWalletDao.setPlugin(plugin);
-        assetIssuerWalletDao.setPluginFileSystem(pluginFileSystem);
+        assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, plugin);
         assetIssuerWalletDao.addCredit(assetIssuerWalletTransactionRecord, balanceType);
     }
 }

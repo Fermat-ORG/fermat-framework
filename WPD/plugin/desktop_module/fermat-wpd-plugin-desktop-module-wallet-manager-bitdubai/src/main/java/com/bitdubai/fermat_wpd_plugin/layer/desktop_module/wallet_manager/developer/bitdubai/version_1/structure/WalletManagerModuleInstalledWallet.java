@@ -37,6 +37,7 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     private Version version;
     private int iconResource;
     private int position;
+    private int notifications;
 
 
     public WalletManagerModuleInstalledWallet(WalletCategory walletCategory,WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
@@ -113,6 +114,15 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     @Override
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
+    }
+
+    @Override
+    public int getNotifications() {
+        return notifications;
     }
 
     /**

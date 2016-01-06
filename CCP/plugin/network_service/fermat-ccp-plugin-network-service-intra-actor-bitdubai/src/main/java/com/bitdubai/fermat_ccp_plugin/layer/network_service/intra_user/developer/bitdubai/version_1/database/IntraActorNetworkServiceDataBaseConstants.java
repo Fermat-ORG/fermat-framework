@@ -27,7 +27,6 @@ public final class IntraActorNetworkServiceDataBaseConstants {
     public static final String INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME              = "intra_user_phrase"      ;
     public static final String INTRA_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME             = "intra_user_country";
     public static final String INTRA_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME                = "intra_user_city";
-    public static final String INTRA_ACTOR_ONLINE_CACHE_PROFILE_IMAGE_COLUMN_NAME       = "intra_user_image"               ;
     public static final String INTRA_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME               = "cache_date"                ;
 
     public static final String INTRA_ACTOR_ONLINE_CACHE_FIRST_KEY_COLUMN                = "id"                            ;

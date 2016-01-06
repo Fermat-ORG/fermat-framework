@@ -59,8 +59,6 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
             if (failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getPlatformComponentType()  == networkService.getPlatformComponentType() &&
                     failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getNetworkServiceType() == networkService.getNetworkServiceType()){
 
-                System.out.println("FailureComponentConnectionRequestNotificationEventListener - handleEvent platformEvent ="+platformEvent.getEventType() );
-                System.out.println("-------TRANSMISSION FAILURE CONNECTION------");
                 /*
                  *  networkService make the job
                  */

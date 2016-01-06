@@ -575,6 +575,8 @@ public class IntraWalletUserActorDao {
             }
 
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, ConnectionState.PENDING_REMOTELY_ACCEPTANCE.getCode(), DatabaseFilterType.EQUAL);
+
             table.loadToMemory();
 
             return table.getRecords().size() > 0;

@@ -137,4 +137,14 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return identityAssetIssuerManager.getSelectedActorIdentity();
     }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
+    }
 }
