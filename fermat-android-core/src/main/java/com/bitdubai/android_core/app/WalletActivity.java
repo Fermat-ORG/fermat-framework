@@ -236,6 +236,11 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
+    @Override
+    public void setChangeBackActivity(Activities activityCodeBack) {
+        getWalletRuntimeManager().getLastWallet().getLastActivity().setBackActivity(activityCodeBack);
+    }
+
 
     /**
      * Method call when back button is pressed

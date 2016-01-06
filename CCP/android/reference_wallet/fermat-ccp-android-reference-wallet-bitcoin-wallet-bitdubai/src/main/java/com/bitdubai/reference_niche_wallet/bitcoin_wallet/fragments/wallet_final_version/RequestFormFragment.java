@@ -100,6 +100,7 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         referenceWalletSession = (ReferenceWalletSession) appSession;
+        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -116,17 +117,6 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.request_form_base, container, false);
-            rootView.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        // DO WHAT YOU WANT ON BACK PRESSED
-                        onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
-                        return true;
-                    }
-                    return false;
-                }
-            });
             setUpUI();
             setUpActions();
             setUpUIData();
@@ -308,7 +298,7 @@ public class RequestFormFragment extends AbstractFermatFragment implements View.
             contactName.setText(cryptoWalletWalletContact.getActorName());
         }else{
             isFragmentFromDetail = false;
-            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
             Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
     }
