@@ -1096,12 +1096,30 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }
         catch(Exception e)
         {
-            System.out.print("EXCEPCION VERIFICANDO WAIT MESSAGE");
+            System.out.print("REQUEST PAYMENT NS EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
 
     }
 
+
+    private void reprocessMessage()
+    {
+        try {
+
+            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listUncompletedRequest();
+
+            for(CryptoPaymentRequest record : cryptoAddressRequestList) {
+
+                cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
+        {
+            System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
 
     private void reprocessWaitingMessage()
     {
@@ -1116,7 +1134,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         }
         catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
         {
-            System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+            System.out.print("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
         }
     }
