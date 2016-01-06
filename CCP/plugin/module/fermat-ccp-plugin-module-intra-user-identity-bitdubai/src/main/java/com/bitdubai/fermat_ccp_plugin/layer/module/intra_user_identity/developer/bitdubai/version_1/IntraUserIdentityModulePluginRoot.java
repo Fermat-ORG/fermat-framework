@@ -2,7 +2,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.develope
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -21,7 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -35,14 +33,10 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.C
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule;
-import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.utils.IntraUserIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,23 +64,10 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER)
-    private IntraUserManager intraUserNertworkServiceManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.INTRA_WALLET_USER)
-
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.USER           , addon = Addons.DEVICE_USER        )
-    private DeviceUserManager deviceUserManager;
-
-
-
-    private IntraUserIdentitySettings intraUserSettings = new IntraUserIdentitySettings();
-    private String appPublicKey;
 
 
     public IntraUserIdentityModulePluginRoot() {
@@ -105,7 +86,7 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.IntraUserIdentityModulePluginRoot");
         returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.utils.IntraUserIdentitySettings");
+
 
         /**
          * I return the values.
@@ -240,6 +221,7 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
         {
             intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias,  phrase, profileImage);
 
+
         } catch (CantUpdateIdentityException e) {
             throw new CantUpdateIntraUserIdentityException(CantUpdateIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
         }
@@ -261,25 +243,7 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
         }
     }
 
-    @Override
-    public void registerIdentities() {
 
-        try {
-            List<IntraWalletUserIdentity> lstIntraWalletUSer = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
-            List<Actor> lstActors = new ArrayList<Actor>();
-
-            for(IntraWalletUserIdentity user : lstIntraWalletUSer){
-                lstActors.add(intraUserNertworkServiceManager.contructIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(), Actors.INTRA_USER,user.getImage()));
-            }
-
-            intraUserNertworkServiceManager.registrateActors(lstActors);
-
-        } catch (CantListIntraWalletUsersException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-    }
 
     /**
      * SettingsManager implementation.
@@ -287,9 +251,19 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
 
 
 
+    private SettingsManager<FermatSettings> settingsManager;
+
     @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
@@ -306,12 +280,4 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
     public int[] getMenuNotifications() {
         return new int[0];
     }
-
-
-    /**
-     * private methods
-     */
-
-
-    private SettingsManager<FermatSettings> settingsManager;
 }

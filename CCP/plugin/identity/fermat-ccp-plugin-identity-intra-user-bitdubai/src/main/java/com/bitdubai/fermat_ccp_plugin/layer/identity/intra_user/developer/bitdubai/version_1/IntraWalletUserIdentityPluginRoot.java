@@ -366,33 +366,5 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         }
     }
 
-    private SettingsManager<FermatSettings> settingsManager;
 
-    @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
-    }
-
-    @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
-    public int[] getMenuNotifications() {
-        return new int[0];
-    }
 }
