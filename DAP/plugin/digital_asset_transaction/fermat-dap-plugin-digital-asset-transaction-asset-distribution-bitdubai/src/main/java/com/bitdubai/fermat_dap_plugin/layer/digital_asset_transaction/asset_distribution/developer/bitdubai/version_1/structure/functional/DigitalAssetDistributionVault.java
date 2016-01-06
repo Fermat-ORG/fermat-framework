@@ -55,34 +55,6 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         this.errorManager = errorManager;
     }
 
-    public void updateIssuerWalletBalance(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, String actorToPublicKey, boolean credit) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
-        AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-        AssetIssuerWalletBalance assetIssuerWalletBalance = assetIssuerWallet.getBookBalance(balanceType);
-        ActorAssetIssuer actorAssetIssuer = this.actorAssetIssuerManager.getActorAssetIssuer();
-        String actorFromPublicKey;
-        if (actorAssetIssuer == null) {
-            System.out.println("ASSET DISTRIBUTION Actor Issuer is null");
-            actorFromPublicKey = "UNDEFINED";
-        } else {
-            actorFromPublicKey = actorAssetIssuer.getActorPublicKey();
-        }
-        System.out.println("ASSET DISTRIBUTION Actor Issuer public key:" + actorFromPublicKey);
-        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
-                digitalAssetMetadata,
-                genesisTransaction,
-                actorFromPublicKey,
-                actorToPublicKey
-        );
-        System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:" + assetIssuerWalletTransactionRecordWrapper.getDescription());
-        System.out.println("ASSET DISTRIBUTION Balance Type:" + balanceType);
-
-        if (credit) {
-            assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
-        } else {
-            assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
-        }
-    }
-
     public AssetIssuerWallet getIssuerWallet() throws CantLoadWalletException {
         return this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
     }

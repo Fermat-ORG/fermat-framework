@@ -45,6 +45,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
@@ -53,7 +54,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.JsonANSNamesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantGetIssuerNetworkServiceMessageListException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
@@ -97,7 +97,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
@@ -611,14 +610,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorIssuerDestination.getActorPublicKey());
 
             if (this.isRegister()) {
-                Gson gson = new Gson();
-                JsonObject packetContent = new JsonObject();
-                packetContent.addProperty(JsonANSNamesConstants.REDEEM_POINT, gson.toJson(actorRedeemPointSender));
-                packetContent.addProperty(JsonANSNamesConstants.ISSUER, gson.toJson(actorIssuerDestination));
-                packetContent.addProperty(JsonANSNamesConstants.PUBLICKEY_EXTENDED, gson.toJson(dapMessage));
+                Gson gson = DAPMessageGson.getGson();
 
-
-                String messageContentIntoJson = gson.toJson(packetContent);
+                String messageContentIntoJson = gson.toJson(dapMessage);
 
                 if (communicationNetworkServiceLocal != null) {
 
@@ -727,7 +721,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
 
             if (this.isRegister()) {
-                Gson gson = new Gson();
+                Gson gson = new DAPMessageGson().getGson();
 
                 String messageContentIntoJson = gson.toJson(dapMessage);
 
@@ -1126,11 +1120,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         List<DAPMessage> listToReturn = new ArrayList<>();
         try {
             for (FermatMessage message : getNewReceivedMessageList()) {
-                Gson gson = new Gson();
+                Gson gson = DAPMessageGson.getGson();
                 try {
                     DAPMessage dapMessage = gson.fromJson(message.getContent(), DAPMessage.class);
-                    listToReturn.add(dapMessage);
-                    markAsRead(message);
+                    if (dapMessage.getMessageType() == type) {
+                        listToReturn.add(dapMessage);
+                        markAsRead(message);
+                    }
                 } catch (JsonSyntaxException jsonException) {
                     //This is not a DAPMessage, that's not my business. Let's just continue.
                     continue; //This statement is unnecessary but I'll keep it so people can understand better.
@@ -1208,6 +1204,8 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
          * Listen and handle New Message Receive Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        if (communicationNetworkServiceConnectionManager == null)
+            initializeCommunicationNetworkServiceConnectionManager();
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(communicationNetworkServiceConnectionManager, eventManager));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +33,8 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -44,7 +45,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
-import com.bitdubai.sub_app.intra_user_community.common.views.Utils;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -59,7 +59,6 @@ import static android.widget.Toast.makeText;
  * Created by Matias Furszyfer on 15/09/15.
  * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
  */
-
 
 public class ConnectionsWorldFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
@@ -99,7 +98,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
-
+    SettingsManager<IntraUserWalletSettings> settingsManager;
+    IntraUserWalletSettings intraUserWalletSettings = null;
     /**
      * Create a new instance of this fragment
      *
@@ -121,6 +121,19 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            settingsManager = intraUserSubAppSession.getModuleManager().getSettingsManager();
+
+            try {
+                intraUserWalletSettings = settingsManager.loadAndGetSettings(intraUserSubAppSession.getAppPublicKey());
+            }catch (Exception e){
+                intraUserWalletSettings = null;
+            }
+
+            if(intraUserWalletSettings == null){
+                intraUserWalletSettings = new IntraUserWalletSettings();
+                intraUserWalletSettings.setIsPresentationHelpEnabled(true);
+                settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(),intraUserWalletSettings);
+            }
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
             //get search name if
@@ -146,6 +159,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
+            setHasOptionsMenu(true);
             rootView.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -169,43 +183,36 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            //dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
-            if (pref.getBoolean("isChecked", true)) {
-                if (moduleManager.getActiveIntraUserIdentity() != null) {
-                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
-                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
-                                intraUserSubAppSession,
-                                null,
-                                moduleManager,
-                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
-                        presentationIntraUserCommunityDialog.show();
-                        presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                showCriptoUsersCache();
-                            }
-                        });
-                    } else {
-                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
-                                intraUserSubAppSession,
-                                null,
-                                moduleManager,
-                                PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
-                        presentationIntraUserCommunityDialog.show();
-                        presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
-                                if (isBackPressed != null) {
-                                    if (isBackPressed) {
-                                        getActivity().finish();
-                                    }
-                                } else
-                                    showCriptoUsersCache();
-                            }
-                        });
-                    }
+            if (intraUserWalletSettings.isPresentationHelpEnabled()) {
+                showDialogHelp();
+            } else {
+                showCriptoUsersCache();
+            }
+        } catch (Exception ex) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        return rootView;
+    }
+
+    private void showDialogHelp() {
+        try {
+            if (moduleManager.getActiveIntraUserIdentity() != null) {
+                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            showCriptoUsersCache();
+                        }
+                    });
                 } else {
                     PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
                             intraUserSubAppSession,
@@ -219,7 +226,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                             Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
                             if (isBackPressed != null) {
                                 if (isBackPressed) {
-                                    getActivity().onBackPressed();
+                                    getActivity().finish();
                                 }
                             } else
                                 showCriptoUsersCache();
@@ -227,13 +234,28 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                     });
                 }
             } else {
-                showCriptoUsersCache();
+                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                        intraUserSubAppSession,
+                        null,
+                        moduleManager,
+                        PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                presentationIntraUserCommunityDialog.show();
+                presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                        if (isBackPressed != null) {
+                            if (isBackPressed) {
+                                getActivity().onBackPressed();
+                            }
+                        } else
+                            showCriptoUsersCache();
+                    }
+                });
             }
-        } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
         }
-        return rootView;
     }
 
     private void showCriptoUsersCache() {
@@ -252,13 +274,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    swipeRefresh.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefresh.setRefreshing(true);
-                            onRefresh();
-                        }
-                    });
+                    onRefresh();
                 }
             }, 1500);
         }
@@ -287,8 +303,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            if (swipeRefresh != null)
-                swipeRefresh.setRefreshing(true);
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -337,82 +351,17 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
         super.onCreateOptionsMenu(menu, inflater);
-
-       /* inflater.inflate(R.menu.intra_user_menu, menu);
-
-        //MenuItem menuItem = new SearchView(getActivity());
-        *//*try {
-            MenuItem searchItem = menu.findItem(R.id.action_search);
-            searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-            //MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-            //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            mSearchView = (SearchView) searchItem.getActionView();
-            mSearchView.setOnQueryTextListener(this);
-            mSearchView.setSubmitButtonEnabled(true);
-            mSearchView.setOnCloseListener(this);
-
-        }catch (Exception e){
-
-        }*//*
-//        MenuItem menuItem = menu.add(0, IntraUserCommunityConstants.IC_ACTION_SEARCH, 0, "send");
-//        menuItem.setIcon(R.drawable.ic_action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        menuItem.setActionProvider(new SearchView(getActivity()))
-
-
-        //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
-        // Get the notifications MenuItem and
-        // its LayerDrawable (layer-list)
-        MenuItem item = menu.findItem(R.id.action_notifications);
-        LayerDrawable icon = (LayerDrawable) item.getIcon();
-
-        // Update LayerDrawable's BadgeDrawable
-        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
-
-
-//        List<String> lst = new ArrayList<String>();
-//        lst.add("Matias");
-//        lst.add("Work");
-//        ArrayAdapter<String> itemsAdapter =
-//                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lst);
-//        MenuItem item = menu.findItem(R.id.spinner);
-//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-//
-//        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
-//        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-*/
-        //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
-        // Get the notifications MenuItem and
-        // its LayerDrawable (layer-list)
-//        MenuItem item = menu.findItem(R.id.action_notifications);
-//        LayerDrawable icon = (LayerDrawable) item.getIcon();
-//
-//        // Update LayerDrawable's BadgeDrawable
-//        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
+        inflater.inflate(R.menu.cripto_users_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
-
             int id = item.getItemId();
 
-            CharSequence itemTitle = item.getTitle();
-
-            // Esto podria ser un enum de item menu que correspondan a otro menu
-            if (itemTitle.equals("New Identity")) {
-                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), appSession.getAppPublicKey());
-
-            }
-//            if(id == R.id.action_connection_request){
-//                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
-//            }
-            if (item.getItemId() == R.id.action_notifications) {
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode(), appSession.getAppPublicKey());
-                return true;
-            }
-
+            if (id == R.id.action_help)
+                showDialogHelp();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -422,9 +371,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-Updates the count of notifications in the ActionBar.
- */
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
 

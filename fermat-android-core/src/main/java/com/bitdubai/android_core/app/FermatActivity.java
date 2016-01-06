@@ -365,7 +365,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
-            if(moduleManager!=null) sideMenu.setNotifications(moduleManager.getMenuNotifications());
+            if(moduleManager!=null && sideMenu!=null) sideMenu.setNotifications(moduleManager.getMenuNotifications());
             paintSideMenu(activity, sideMenu,appConnections);
 
             if(appConnections!=null) {

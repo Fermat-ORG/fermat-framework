@@ -846,6 +846,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
 
+                    System.out.println("----------------------------\n" +
+                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
 
                     //NOTIFICATION LAUNCH
@@ -876,12 +881,25 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 case RECEIVED:
 
                     //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
-
+                    System.out.println("----------------------------\n" +
+                            "INTRA ACTOR NETWORK SERVICE" +
+                            "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
                     if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
                         // close connection, sender is the destination
+                        System.out.println("----------------------------\n" +
+                                "INTRA ACTOR NETWORK SERVICE" +
+                                "THE CONNECTION BECAUSE THE ACTOR PROTOCOL STATE" +
+                                "WAS CHANGE TO DONE" + actorNetworkServiceRecord
+                                + "\n-------------------------------------------------");
+
                         communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
                         actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
+                        System.out.println("----------------------------\n" +
+                                "INTRA ACTOR NETWORK SERVICE" +
+                                "THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + actorNetworkServiceRecord
+                                + "\n-------------------------------------------------");
 
                     }
 
@@ -945,7 +963,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
         actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
 
-        changeActor(actorNetworkServiceRecord);
+        actorNetworkServiceRecord = changeActor(actorNetworkServiceRecord);
 
 
         communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
@@ -957,11 +975,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
+    private ActorNetworkServiceRecord changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
         // change actor
         String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
         actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
         actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
+        return actorNetworkServiceRecord;
     }
 
     private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
@@ -1173,6 +1192,33 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                System.out.println("----------------------------\n" +
+                        "CHANGING OUTGOING NOTIFICATIONS RECORDS " +
+                        "THAT HAVE THE PROTOCOL STATE SET TO SENT" +
+                        "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
+                        + "\n-------------------------------------------------");
+
+                try {
+
+                    List<ActorNetworkServiceRecord> lstActorRecord = getOutgoingNotificationDao().listRequestsByProtocolStateAndType(
+                            ActorProtocolState.SENT
+                    );
+
+
+                    for (ActorNetworkServiceRecord cpr : lstActorRecord) {
+                        getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.PROCESSING_SEND);
+
+                    }
+                } catch (CantListIntraWalletUsersException e) {
+                    e.printStackTrace();
+                } catch (CantUpdateRecordDataBaseException e) {
+                    e.printStackTrace();
+                } catch (CantUpdateRecordException e) {
+                    e.printStackTrace();
+                } catch (RequestNotFoundException e) {
+                    e.printStackTrace();
+                }
+
                 if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
@@ -1190,6 +1236,36 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+
+            System.out.println("----------------------------\n" +
+                    "CHANGING OUTGOING NOTIFICATIONS RECORDS " +
+                    "THAT HAVE THE PROTOCOL STATE SET TO SENT" +
+                    "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
+                    + "\n-------------------------------------------------");
+
+
+            try {
+
+                List<ActorNetworkServiceRecord> lstActorRecord = getOutgoingNotificationDao().listRequestsByProtocolStateAndType(
+                        ActorProtocolState.SENT
+                );
+
+
+                for (ActorNetworkServiceRecord cpr : lstActorRecord) {
+                  getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.PROCESSING_SEND);
+
+                }
+            } catch (CantListIntraWalletUsersException e) {
+                e.printStackTrace();
+            } catch (CantUpdateRecordDataBaseException e) {
+                e.printStackTrace();
+            } catch (CantUpdateRecordException e) {
+                e.printStackTrace();
+            } catch (RequestNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
             this.register = false;
             if(communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
@@ -1413,7 +1489,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
         } catch (Exception e) {
-            throw new ErrorAcceptIntraUserException("ERROR ACCEPTED CONNECTION TO INTRAUSER", e, "", "Generic Exception");
+            throw new ErrorAcceptIntraUserException("ERROR INTRA ACTOR NS WHEN ACCEPTING CONNECTION TO INTRAUSER", e, "", "Generic Exception");
         }
     }
 
@@ -1446,7 +1522,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
+        /*    ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToDisconnectPublicKey);
 
@@ -1455,8 +1531,30 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
-
             outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+            */
+
+            //make message to actor
+            UUID newNotificationID = UUID.randomUUID();
+            NotificationDescriptor notificationDescriptor = NotificationDescriptor.DISCONNECTED;
+            long currentTime = System.currentTimeMillis();
+            ActorProtocolState protocolState = ActorProtocolState.PROCESSING_SEND;
+
+            outgoingNotificationDao.createNotification(
+                    newNotificationID,
+                    intraUserLoggedInPublicKey,
+                    Actors.INTRA_USER,
+                    intraUserToDisconnectPublicKey,
+                    "",
+                    new byte[0],
+                    Actors.INTRA_USER,
+                    notificationDescriptor,
+                    currentTime,
+                    protocolState,
+                    false, 1
+            );
+
+
 
 
         } catch (Exception e) {

@@ -8,16 +8,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by franklin on 12/10/15.
@@ -104,24 +106,47 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
         private void doTheMainTask() throws CantSaveAssetFactoryException, CantExecuteDatabaseOperationException, CantPersistFileException, CantCreateFileException, CantGetAssetFactoryException {
             try {
                 List<AssetFactory> assetFactories = getAssetFactoryAll();
-
                 for (AssetFactory assetFactory : assetFactories) {
                     if (assetFactory.getState() != State.DRAFT) {
-                        IssuingStatus issuingStatus = assetIssuingManager.getIssuingStatus(assetFactory.getPublicKey());
-                        if (issuingStatus != IssuingStatus.ISSUING) {
-                            if (issuingStatus == IssuingStatus.ISSUED) {
-                                assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
-                            } else {
-                                //TODO, UPDATE THE STATUS WHEN ITS AN ERROR TO LET THE FINAL USER KNOWS WHAT HAPPENED.
-                            }
+                        IssuingStatus issuingStatus = assetIssuingManager.getIssuingStatus(assetFactory.getAssetPublicKey());
+                        switch (issuingStatus) {
+                            case ISSUING:
+                                break;
+                            case ISSUED:
+                                assetFactoryMiddlewareManager.removePendingFinalFactory(assetFactory.getAssetPublicKey());
+                                break;
+                            case INSUFFICIENT_FONDS:
+                                break;
+                            case UNEXPECTED_INTERRUPTION:
+                                assetFactoryMiddlewareManager.markAssetFactoryState(State.DRAFT, assetFactory.getAssetPublicKey());
+                                break;
+                            default:
+                                break;
                         }
-//
+                    }
+                    int assetsIssued = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getAssetPublicKey());
+                    if (assetsIssued >= 1) {
+                        if (assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL).isEmpty()) {
+                            assetFactory.setFactoryId(UUID.randomUUID().toString());
+                            assetFactory.setState(State.FINAL);
+                            assetFactory.setQuantity(assetsIssued);
+                            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
+                        } else {
+                            AssetFactory finalFactory = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL).get(0);
+                            List<AssetFactory> pendingFinal = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.PENDING_FINAL);
+                            List<AssetFactory> both = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.DRAFT);
+                            both.addAll(pendingFinal);
+                            AssetFactory notFinalFactory = both.get(0);
+                            assetFactoryMiddlewareManager.updateAssetFactoryQuantity(assetsIssued, finalFactory.getFactoryId());
+                            int missingAmount = notFinalFactory.getTotalQuantity() - assetsIssued;
+                            assetFactoryMiddlewareManager.updateAssetFactoryQuantity(missingAmount, notFinalFactory.getFactoryId());
+                        }
                     }
                 }
             } catch (CantSaveAssetFactoryException e) {
 
                 throw new CantSaveAssetFactoryException(e, "Cant Save Asset Factory", "Method: doTheMainTask");
-            } catch (CantExecuteDatabaseOperationException e) {
+            } catch (CantExecuteDatabaseOperationException | CantDeleteAsserFactoryException e) {
 
                 e.printStackTrace();
             } catch (CantPersistFileException e) {

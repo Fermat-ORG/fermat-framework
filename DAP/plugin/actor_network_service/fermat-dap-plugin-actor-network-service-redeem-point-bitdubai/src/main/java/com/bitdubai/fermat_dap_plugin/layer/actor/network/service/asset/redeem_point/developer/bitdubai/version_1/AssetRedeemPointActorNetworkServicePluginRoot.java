@@ -44,6 +44,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
@@ -51,7 +52,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.JsonANSNamesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantSendMessageException;
@@ -90,7 +90,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -444,27 +443,21 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     }
 
     @Override
-    public void sendMessage(DAPActor actorSender, DAPActor actorDestination, DAPMessage dapMessage) throws CantSendMessageException {
-//        if (actorSender instanceof ActorAssetIssuer) {
-        receivePublicKeyExtended(actorSender, actorDestination, dapMessage);
-//        }
+    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
+        receivePublicKeyExtended(dapMessage);
     }
 
-    private void receivePublicKeyExtended(DAPActor actorAssetIssuerSender, DAPActor actorRedeemPointDestination, DAPMessage dapMessage) {
+    private void receivePublicKeyExtended(DAPMessage dapMessage) {
+        DAPActor actorAssetIssuerSender = dapMessage.getActorSender();
+        DAPActor actorRedeemPointDestination = dapMessage.getActorReceiver();
         try {
 
             if (this.isRegister()) {
 
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorRedeemPointDestination.getActorPublicKey());
 
-                Gson gson = new Gson();
-                JsonObject packetContent = new JsonObject();
-                packetContent.addProperty(JsonANSNamesConstants.ISSUER, gson.toJson(actorAssetIssuerSender));
-                packetContent.addProperty(JsonANSNamesConstants.REDEEM_POINT, gson.toJson(actorRedeemPointDestination));
-                packetContent.addProperty(JsonANSNamesConstants.PUBLICKEY_EXTENDED, gson.toJson(dapMessage));
-
-
-                String messageContentIntoJson = gson.toJson(packetContent);
+                Gson gson = DAPMessageGson.getGson();
+                String messageContentIntoJson = gson.toJson(dapMessage);
 
                 if (communicationNetworkServiceLocal != null) {
 

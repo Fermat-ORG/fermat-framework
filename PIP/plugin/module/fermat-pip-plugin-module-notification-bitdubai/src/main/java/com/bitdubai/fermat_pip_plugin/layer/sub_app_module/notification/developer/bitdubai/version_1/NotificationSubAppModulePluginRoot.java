@@ -195,20 +195,16 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(eventSource, intraUserIdentityPublicKey,walletPublicKey, amount, cryptoCurrency, actorId, actorType);
             notification.setNotificationType(NotificationType.INCOMING_MONEY.getCode());
             poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
         }
-//            Notification notification = new Notification();
-//            notification.setAlertTitle("Sos capo pibe");
-//            notification.setTextTitle("Ganaste un premio");
-//            notification.setTextBody("5000 btc");
-//            poolNotification.add(notification);
+
         // notify observers
         notifyNotificationArrived();
 
-//        } catch (CantCreateNotification cantCreateNotification) {
-//            cantCreateNotification.printStackTrace();
-//        }
+
     }
 
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource,String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) throws CantCreateNotification {
@@ -426,6 +422,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         switch (eventSource) {
             case INCOMING_EXTRA_USER:
                 return "Received money";
+            case INCOMING_INTRA_USER:
+                return "Received money";
             case OUTGOING_INTRA_USER:
                 return "Transaction canceled";
             default:
@@ -435,7 +433,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     private String makeString(EventSource eventSource){
         switch (eventSource){
-
+            case INCOMING_INTRA_USER:
+                return " send ";
             case INCOMING_EXTRA_USER:
                 return " send ";
             default:

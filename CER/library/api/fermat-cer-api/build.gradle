@@ -14,13 +14,6 @@ configurations {
     deployerJars
 }
 
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'fermat-cer-api',
-                   'Implementation-Version': '1.0.0'
-    }
-}
-
 repositories {
     mavenCentral ()
 }
