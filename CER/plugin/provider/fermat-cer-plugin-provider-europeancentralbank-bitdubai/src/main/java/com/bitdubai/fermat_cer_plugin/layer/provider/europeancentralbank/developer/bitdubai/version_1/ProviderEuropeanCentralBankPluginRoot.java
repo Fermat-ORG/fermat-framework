@@ -98,13 +98,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         supported.add(FiatCurrency.SWISS_FRANC);
         supported.add(FiatCurrency.US_DOLLAR);
 
-        CurrencyPairHelper.permuteCurrencyList(supported);
-        for(FiatCurrency i : FiatCurrency.values()){
-            for(FiatCurrency j : FiatCurrency.values()){
-                if(!i.equals(j))
-                    supportedCurrencyPairs.add(new CurrencyPairImpl(i,j));
-            }
-        }
+        supportedCurrencyPairs = CurrencyPairHelper.permuteCurrencyList(supported);
 
         try {
             dao = new EuropeanCentralBankProviderDao(pluginDatabaseSystem, pluginId, errorManager);
