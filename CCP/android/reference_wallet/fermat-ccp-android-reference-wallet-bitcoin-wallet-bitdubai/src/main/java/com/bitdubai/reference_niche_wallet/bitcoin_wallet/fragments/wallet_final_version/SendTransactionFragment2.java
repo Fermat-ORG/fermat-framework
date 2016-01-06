@@ -434,6 +434,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //                        } catch (Exception e){
 //                            e.printStackTrace();
 //                        }
+                        progress1 = 1;
+                        circularProgressBar.setProgressValue(progress1);
                         return true;
 
                     }
@@ -552,29 +554,28 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             } catch (CantCreateWalletContactException e) {
                                 try {
                                     cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                                } catch (CantFindWalletContactException e1) {
-                                    e1.printStackTrace();
+                                } catch (CantFindWalletContactException e3) {
+
                                 } catch (WalletContactNotFoundException e1) {
-                                    e1.printStackTrace();
+
                                 } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-                                    e1.printStackTrace();
+
                                 } catch (CantGetCryptoWalletException e1) {
-                                    e1.printStackTrace();
                                 }
                             } catch (ContactNameAlreadyExistsException e) {
                                 try {
                                     cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                                 } catch (CantFindWalletContactException e1) {
-                                    e1.printStackTrace();
+
                                 } catch (WalletContactNotFoundException e1) {
-                                    e1.printStackTrace();
+
                                 } catch (CantListCryptoWalletIntraUserIdentityException e1) {
-                                    e1.printStackTrace();
+
                                 } catch (CantGetCryptoWalletException e1) {
-                                    e1.printStackTrace();
+
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+
                             }
 
                             String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
@@ -584,9 +585,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                             response = SetServerString;
                         } catch (ClientProtocolException e) {
-                            e.printStackTrace();
+
                         } catch (IOException e) {
-                            e.printStackTrace();
+
                         }
 
 
