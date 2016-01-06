@@ -2985,14 +2985,6 @@
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Suppliers" description="" difficulty="4" code-level="concept">
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                        </authors>
-                        <maintainers> </maintainers>
-                        <certifications> </certifications>
-                    </plugin>
                 </plugins>
             </layer>
             <layer name="Actor" language="java">
@@ -3358,6 +3350,7 @@
                         <authors>
                             <author name="lnacosta" scope="architecture" percentage="100"></author>
                             <author name="lnacosta" scope="design" percentage="100"></author>
+                            <author name="lnacosta" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -3366,6 +3359,7 @@
                         <authors>
                             <author name="lnacosta" scope="architecture" percentage="100"></author>
                             <author name="lnacosta" scope="design" percentage="100"></author>
+                            <author name="lnacosta" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -3999,18 +3993,65 @@
         <super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
             <layer name="Provider" language="java">
                 <plugins>
-                    <plugin name="SurBitcoin" description="" difficulty="10" code-level="concept">
+                    <plugin name="Dolar Today" description="" difficulty="5" code-level="development">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Coinbase" description="" difficulty="10" code-level="concept">
+                    <plugin name="El Cronista" description="" difficulty="5" code-level="development">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="European Central Bank" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="La Nacion" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Yahoo!" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="SurBitcoin" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Coinbase" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="10"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -6198,5 +6239,74 @@
                 <step id="8" type="end" title="List Send Payment Request" description="The wallet's user go to Payment Request menu and list payment request send, and show this status." platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet"> </step>
             </steps>
         </process>
+        <process platform="COR" name="Test Process" description="This is a process intended to test the workflow drawing" previous="">
+			<steps>
+				<step id="0"
+					type="start"
+					title="Start step"
+					description="This is the first step"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="1"
+					type="activity"
+					title="Next step"
+					description="This is the first step, this one has a bifurcation, which can be parallel process or an 'if'"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="2" type="direct call"></step>
+						<step id="3" type="direct call"></step>
+					</next>
+					</step>
+				<step id="2"
+					type="activity"
+					title="True state"
+					description="This step is executed if the sentence is true"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="4" type="direct call"></step>
+					</next>
+				</step>
+				<step id="3"
+					type="activity"
+					title="False state"
+					description="This step is executed if the sentence is false, it loops back"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+						<step id="1" type="direct call"></step>
+					</next>
+				</step>
+				<step id="4"
+					type="end"
+					title="Out of loop"
+					description="This is out of the loop"
+					platform=""
+					superlayer=""
+					component=""
+					layer=""
+					name="">
+					<next>
+					</next>
+				</step>
+			</steps>
+		</process>
     </processes>
 </fermat>

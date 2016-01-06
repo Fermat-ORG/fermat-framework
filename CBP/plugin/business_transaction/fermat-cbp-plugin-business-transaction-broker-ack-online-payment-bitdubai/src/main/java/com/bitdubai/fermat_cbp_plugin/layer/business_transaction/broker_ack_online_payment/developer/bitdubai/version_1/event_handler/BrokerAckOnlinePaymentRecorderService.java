@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -75,7 +76,10 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     public void incomingMoneyNotification(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
+        if(event.getActorType().getCode().equals(Actors.CBP_CRYPTO_BROKER.getCode())){
+            this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
+        }
+
         //LOG.info("CHECK THE DATABASE");
     }
 

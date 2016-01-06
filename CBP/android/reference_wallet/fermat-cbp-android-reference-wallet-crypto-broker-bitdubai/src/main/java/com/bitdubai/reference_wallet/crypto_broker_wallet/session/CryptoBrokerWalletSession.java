@@ -12,6 +12,7 @@ public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWa
     public static final String NEGOTIATION_DATA = "negotiation_data";
     public static final String CONTRACT_DATA = "contract_data";
     public static final String CONFIGURED_DATA = "configured_data";
+    public static final String LOCATION_LIST = "list_of_new_location";
 
     public CryptoBrokerWalletSession() {
     }
