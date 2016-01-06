@@ -36,9 +36,24 @@ public enum FermatPacketType {
     COMPONENT_REGISTRATION_REQUEST ("COMP_REG_REQ"),
 
     /**
+     * This type is use when only a update actor request
+     */
+    UPDATE_ACTOR_REQUEST ("UPD_ACT_REQ"),
+
+    /**
+     * This type is use when only a update actor complete
+     */
+    COMPLETE_UPDATE_ACTOR ("COMPL_UPD_ACT"),
+
+    /**
      * This type is use when a failure is detected on component registration request
      */
     FAILURE_COMPONENT_REGISTRATION_REQUEST ("FAIL_COMP_REG_REQ"),
+
+    /**
+     * This type is use when only a update actor request
+     */
+    FAILURE_UPDATE_ACTOR_REQUEST ("FAIL_UPD_ACT_REQ"),
 
     /**
      * This type is use when a component registration request is complete
@@ -152,8 +167,11 @@ public enum FermatPacketType {
             case "SRV_HS_RESP"            : return FermatPacketType.SERVER_HANDSHAKE_RESPOND;
             case "VPN_SRV_HS_RESP"        : return FermatPacketType.VPN_SERVER_HANDSHAKE_RESPOND;
             case "COMP_REG_REQ"           : return FermatPacketType.COMPONENT_REGISTRATION_REQUEST;
+            case "UPD_ACT_REQ"            : return FermatPacketType.UPDATE_ACTOR_REQUEST;
             case "FAIL_COMP_REG_REQ"      : return FermatPacketType.FAILURE_COMPONENT_REGISTRATION_REQUEST;
+            case "FAIL_UPD_ACT_REQ"       : return FermatPacketType.FAILURE_UPDATE_ACTOR_REQUEST;
             case "COMPL_COMP_REG"         : return FermatPacketType.COMPLETE_COMPONENT_REGISTRATION;
+            case "COMPL_UPD_ACT"          : return FermatPacketType.COMPLETE_UPDATE_ACTOR;
             case "REQ_LIST_COMP_REG"      : return FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED;
             case "REQ_LIST_NOT_AVA"       : return FermatPacketType.FAILURE_REQUESTED_LIST_NOT_AVAILABLE;
             case "COMP_DISC_REQ"          : return FermatPacketType.COMPONENT_DISCONNECT_REQUEST;
