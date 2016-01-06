@@ -316,7 +316,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     + "\n-------------------------------------------------");
             for (final CryptoAddressRequest request : list) {
 
-                if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_ASSET)) {
+                if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_WATCH_ONLY)) {
 
                     if (request.getAction().equals(RequestAction.ACCEPT))
                         this.handleCryptoAddressReceivedEvent(request);
