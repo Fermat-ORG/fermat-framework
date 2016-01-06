@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cer_api.all_definition.utils;
+package com.bitdubai.fermat_cer_api.layer.provider.utils;
 
 
 import java.io.BufferedReader;
