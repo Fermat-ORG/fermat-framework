@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -122,20 +123,17 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
             public void onClick(View view) {
                 try {
                     CryptoBrokerWalletManager walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-                    CustomerBrokerNegotiationInformation negotiationInformation = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
+                    CustomerBrokerNegotiationInformation info = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
 
-                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, negotiationInformation);
+                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, info);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
 
-                } catch (CantGetCryptoBrokerWalletException | CantGetNegotiationInformationException ex) {
+                } catch (FermatException ex) {
                     Log.e(TAG, CantGetCryptoBrokerWalletException.DEFAULT_MESSAGE, ex);
                     if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                     }
-
                 }
 
             }
