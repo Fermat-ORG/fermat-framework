@@ -152,9 +152,9 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
      */
 
     @Override
-    public void askIntraWalletUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException,RequestAlreadySendException {
+    public void askIntraWalletUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException,RequestAlreadySendException {
         try {
-            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE,intraUserPhrase);
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER CONNECTION", e, "", "");
         } catch (RequestAlreadySendException e) {
@@ -321,9 +321,9 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException {
+    public void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserPhrase, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE,intraUserPhrase);
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", e, "", "");
 
@@ -644,9 +644,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                 switch (notification.getNotificationDescriptor()) {
                     //ASKFORACCEPTANCE occurs when other user request you a connection
                     case ASKFORACCEPTANCE:
-                            this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
-                             //this.askIntraWalletUserForAccepombretance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
-                              break;
+                            this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(),notification.getActorSenderPhrase(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                          break;
                     case CANCEL:
                         this.cancelIntraWalletUser(intraUserToConnectPublicKey,intraUserSendingPublicKey);
                         break;

@@ -1404,6 +1404,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                                           final String intraUserSelectedName,
                                           final Actors senderType,
                                           final String intraUserToAddName,
+                                          final String intraUserToAddPhrase,
                                           final String intraUserToAddPublicKey,
                                           final Actors destinationType,
                                           final byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException {
@@ -1421,6 +1422,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     senderType,
                     intraUserToAddPublicKey,
                     intraUserSelectedName,
+                    intraUserToAddPhrase,
                     myProfileImage,
                     destinationType,
                     notificationDescriptor,
@@ -1495,18 +1497,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         try {
 
-        /*    ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
-
-            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToDisconnectPublicKey);
-
-            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
-
-            actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
-
-            actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
-            outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
-            */
-
             //make message to actor
             UUID newNotificationID = UUID.randomUUID();
             NotificationDescriptor notificationDescriptor = NotificationDescriptor.DISCONNECTED;
@@ -1518,6 +1508,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     intraUserLoggedInPublicKey,
                     Actors.INTRA_USER,
                     intraUserToDisconnectPublicKey,
+                    "",
                     "",
                     new byte[0],
                     Actors.INTRA_USER,

@@ -100,7 +100,7 @@ public class IntraWalletUserActorDao {
         }
     }
 
-    public void createNewIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState) throws CantAddPendingIntraWalletUserException,RequestAlreadySendException {
+    public void createNewIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState, String phrase) throws CantAddPendingIntraWalletUserException,RequestAlreadySendException {
 
         try {
 
@@ -130,6 +130,7 @@ public class IntraWalletUserActorDao {
                 record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
                 record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
                 record.setLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+                record.setStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
 
                 table.insertRecord(record);
 
@@ -294,12 +295,20 @@ public class IntraWalletUserActorDao {
             // 3) Get Intra Users Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
 
+                byte[] image;
+                try {
+                    image = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME));
+                } catch(FileNotFoundException e) {
+                    image = new  byte[0];
+                }
+
                 // Add records to list.
                 list.add(new com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserActor(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME),
                         record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
-                        null,//getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        image,
                         record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
+                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME)),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME)   ));
             }
 
             // Return the list values.
@@ -346,11 +355,19 @@ public class IntraWalletUserActorDao {
             // 3) Get Intra Users Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
 
+                byte[] image;
+                try {
+                    image = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME));
+                } catch(FileNotFoundException e) {
+                    image = new  byte[0];
+                }
+
                 intraWalletUserActor =  new com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserActor(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME),
                         record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
-                        null,
+                        image,
                         record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME)));
+                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME)),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME)   );
             }
 
             return intraWalletUserActor;
@@ -471,7 +488,8 @@ public class IntraWalletUserActorDao {
                         record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
                         image,
                         record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
+                        ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME)),
+                        record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME)        ));
             }
 
         } catch (CantLoadTableToMemoryException e) {
