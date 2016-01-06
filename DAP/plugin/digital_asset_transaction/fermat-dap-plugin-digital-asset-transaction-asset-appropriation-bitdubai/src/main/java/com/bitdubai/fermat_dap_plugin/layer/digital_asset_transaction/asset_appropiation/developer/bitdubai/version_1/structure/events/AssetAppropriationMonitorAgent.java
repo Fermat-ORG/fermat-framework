@@ -282,7 +282,6 @@ public class AssetAppropriationMonitorAgent implements Agent {
                         dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                         break;
                 }
-
             }
         }
 
