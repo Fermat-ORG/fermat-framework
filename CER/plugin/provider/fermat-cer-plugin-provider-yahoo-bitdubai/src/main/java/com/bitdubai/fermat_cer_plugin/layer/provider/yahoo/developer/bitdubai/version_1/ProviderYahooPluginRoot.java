@@ -22,7 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
-import com.bitdubai.fermat_cer_api.all_definition.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
@@ -83,12 +84,8 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         System.out.println("PROVIDERYAHOO - PluginRoot START");
 
         //Yahoo Provider supports all FiatCurrencies
-        for(FiatCurrency i : FiatCurrency.values()){
-            for(FiatCurrency j : FiatCurrency.values()){
-                if(!i.equals(j))
-                    supportedCurrencyPairs.add(new CurrencyPairImpl(i,j));
-            }
-        }
+        supportedCurrencyPairs = CurrencyPairHelper.permuteAllFiatCurrencies();
+
 
         try {
             dao = new YahooProviderDao(pluginDatabaseSystem, pluginId, errorManager);
