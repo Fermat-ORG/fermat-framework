@@ -38,6 +38,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdateManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
@@ -137,6 +139,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
     private final CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager;
     private final CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
+    private final CustomerBrokerUpdateManager customerBrokerUpdateManager;
     /*
     *Constructor with Parameters
     */
@@ -153,7 +156,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              CryptoMoneyDestockManager cryptoMoneyDestockManager,
                                                              CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
                                                              CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager,
-                                                             CryptoBrokerIdentityManager cryptoBrokerIdentityManager)
+                                                             CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
+                                                             CustomerBrokerUpdateManager customerBrokerUpdateManager)
     {
         this.walletManagerManager                 = walletManagerManager;
         this.cryptoBrokerWalletManager            = cryptoBrokerWalletManager;
@@ -169,6 +173,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.customerBrokerContractSaleManager    = customerBrokerContractSaleManager;
         this.currencyExchangeProviderFilterManager= currencyExchangeProviderFilterManager;
         this.cryptoBrokerIdentityManager          = cryptoBrokerIdentityManager;
+        this.customerBrokerUpdateManager          = customerBrokerUpdateManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -344,14 +349,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return negotiationLocations;
     }
 
-    @Override //TODO: Implementar falta wallet public key
+    @Override //TODO: Implementar falta walletPublicKey
     public boolean associateIdentity(String brokerPublicKey) {
         return false;
     }
 
-    @Override //CustomerBrokerUpdateManager Negotiation Transaction
-    public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException {
-        return null;
+    @Override //TODO: Implementar CustomerBrokerUpdateManager Negotiation Transaction
+    public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException, CantCancelNegotiationException {
+        CustomerBrokerSaleNegotiationImpl customerBrokerSaleNegotiation = new CustomerBrokerSaleNegotiationImpl(negotiation.getNegotiationId());
+        customerBrokerSaleNegotiation.setCancelReason(reason);
+        customerBrokerUpdateManager.cancelNegotiation(customerBrokerSaleNegotiation);
+        return negotiation;
     }
 
     @Override //TODO: Implementar CER provider seleccionado en la wallet
@@ -380,11 +388,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     public List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException {
         List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
         return cryptoBrokerIdentities;//getListOfIdentitiesTestData();
-    }
-
-    @Override //Eliminar
-    public StockStatistics getStockStatistics(String stockCurrency) {
-        return null;
     }
 
     @Override //TODO: Implementar

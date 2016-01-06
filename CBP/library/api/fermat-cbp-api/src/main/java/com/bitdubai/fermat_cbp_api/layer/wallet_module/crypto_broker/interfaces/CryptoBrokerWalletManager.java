@@ -88,15 +88,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      */
     List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException;
 
-    /**
-     * Get stock staticstics data about the given stock currency
-     *
-     * @param stockCurrency the stock currency
-     * @return stock statistics data
-     */
-    StockStatistics getStockStatistics(String stockCurrency);
-
-
     List<String> getPaymentMethods(String currencyToSell);
 
     List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);
