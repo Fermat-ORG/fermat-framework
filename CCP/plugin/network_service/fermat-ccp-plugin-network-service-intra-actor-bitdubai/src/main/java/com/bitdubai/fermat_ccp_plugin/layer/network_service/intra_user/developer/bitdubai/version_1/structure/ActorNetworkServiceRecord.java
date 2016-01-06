@@ -20,6 +20,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     private String actorSenderPublicKey;
     private String actorDestinationPublicKey;
     private String actorSenderAlias;
+    private String actorSenderPhrase;
     private byte[] actorSenderProfileImage;
     private NotificationDescriptor notificationDescriptor;
     private long sentDate;
@@ -27,7 +28,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     private boolean flagReadead;
     private int sentCount;
 
-    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount) {
+    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias,String actorSenderPhrase, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead, int sendCount) {
         this.id = id;
         this.actorSenderAlias = actorSenderAlias;
         this.actorSenderProfileImage = actorSenderProfileImage;
@@ -40,11 +41,17 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.actorProtocolState = actorProtocolState;
         this.flagReadead = flagReadead;
         this.sentCount = sendCount;
+        this.actorSenderPhrase = actorSenderPhrase;
     }
 
     @Override
     public String getActorSenderAlias() {
         return actorSenderAlias;
+    }
+
+    @Override
+    public String getActorSenderPhrase() {
+        return actorSenderPhrase;
     }
 
     @Override
@@ -147,6 +154,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
                 ", actorSenderPublicKey='" + actorSenderPublicKey + '\'' +
                 ", actorDestinationPublicKey='" + actorDestinationPublicKey + '\'' +
                 ", actorSenderAlias='" + actorSenderAlias + '\'' +
+                ", actorSenderPhrase='" + actorSenderPhrase + '\'' +
                 ", actorSenderProfileImage=" + Arrays.toString(actorSenderProfileImage) +
                 ", notificationDescriptor=" + notificationDescriptor +
                 ", sentDate=" + sentDate +

@@ -22,11 +22,12 @@ import java.util.UUID;
 public interface DAO {
 
 
-    public ActorNetworkServiceRecord createNotification(        UUID                        notificationId        ,
+    public ActorNetworkServiceRecord createNotification(UUID                        notificationId        ,
                                            String                      senderPublicKey,
-                                           Actors senderType     ,
+                                           Actors                      senderType     ,
                                            String                      destinationPublicKey   ,
                                            String                      senderAlias,
+                                           String                      senderPhrase,
                                            byte[]                      senderProfileImage,
                                            Actors                      destinationType        ,
                                            NotificationDescriptor descriptor      ,
