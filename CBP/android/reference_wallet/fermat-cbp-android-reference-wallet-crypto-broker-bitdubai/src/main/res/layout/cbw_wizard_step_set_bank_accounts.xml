@@ -73,7 +73,7 @@
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/cbw_selected_earning_wallets_recycler_view"
+                android:id="@+id/cbw_selected_bank_accounts_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
@@ -82,7 +82,7 @@
                 tools:visibility="visible"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_selected_earning_wallets_empty_view"
+                android:id="@+id/cbw_selected_bank_accounts_empty_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/light_grey"

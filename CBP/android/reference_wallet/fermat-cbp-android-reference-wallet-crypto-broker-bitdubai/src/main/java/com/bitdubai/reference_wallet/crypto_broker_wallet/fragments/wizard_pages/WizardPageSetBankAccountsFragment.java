@@ -1,7 +1,11 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +27,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.BankAccountsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -34,7 +41,7 @@ import java.util.Map;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
+public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber>{
 
     // Constants
     private static final String TAG = "WizardPageSetBank";
@@ -42,9 +49,14 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
+    private BankAccountsAdapter adapter;
+    private RecyclerView recyclerView;
+    private View emptyView;
 
 
     List<BankAccountNumber> accounts;
+    List<BankAccountNumber> viewAccounts;
+
 
 
     public static WizardPageSetBankAccountsFragment newInstance() {
@@ -56,6 +68,9 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         accounts = new ArrayList<>();
+        viewAccounts = new ArrayList<>();
+        //bankWallets = new ArrayList<>();
+
         try {
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
@@ -76,6 +91,15 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
 
         View layout = inflater.inflate(R.layout.cbw_wizard_step_set_bank_accounts, container, false);
 
+        recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_bank_accounts_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+
+        adapter = new BankAccountsAdapter(getActivity(), accounts);
+        adapter.setDeleteButtonListener(this);
+        recyclerView.setAdapter(adapter);
+
+        emptyView = layout.findViewById(R.id.cbw_selected_bank_accounts_empty_view);
         final View bankButton = layout.findViewById(R.id.cbw_select_bank_accounts);
 
         bankButton.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +119,31 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
 
         return layout;
     }
+
+    @Override
+    public void deleteButtonClicked(BankAccountNumber data, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(R.string.cbw_delete_wallet_dialog_title).setMessage(R.string.cbw_delete_wallet_dialog_msg);
+        builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                accounts.remove(position);
+                adapter.changeDataSet(accounts);
+                showOrHideRecyclerView();
+            }
+        });
+        builder.setNegativeButton(R.string.cbw_cancel_caps, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        builder.show();
+
+
+    }
+
 
     private void showWalletsDialog(final Platforms platform) {
         try {
@@ -132,25 +181,16 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
-            accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
+            viewAccounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
 
             SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
-            accountsDialog.configure("Select an Account", accounts);
+            accountsDialog.configure("Select an Account", viewAccounts);
             accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                 @Override
                 public void onItemSelected(BankAccountNumber selectedAccount) {
-
-                    FiatCurrency currency = selectedAccount.getCurrencyType();
-                    String account = selectedAccount.getAccount();
-
-                    /*bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
-                    bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
-
-                    if (!containWallet(selectedWallet)) {
-                        stockWallets.add(selectedWallet);
-                        adapter.changeDataSet(stockWallets);
-                        showOrHideNoSelectedWalletsView();
-                    }*/
+                    accounts.add(selectedAccount);
+                    adapter.changeDataSet(accounts);
+                    showOrHideRecyclerView();
                 }
             });
 
@@ -166,6 +206,15 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment {
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
             }
+        }
+    }
+    private void showOrHideRecyclerView() {
+        if (accounts.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 }

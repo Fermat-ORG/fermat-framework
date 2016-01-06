@@ -309,7 +309,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
                 "Banking wallet", // WALLET NAME
-                "reference_wallet", // PUBLIC KEY
+                "banking_wallet", // PUBLIC KEY
                 "BWBWB", //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
@@ -329,7 +329,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
                 "Cash wallet", // WALLET NAME
-                "reference_wallet", // PUBLIC KEY
+                "cash_wallet", // PUBLIC KEY
                 "BWBWBW", //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
