@@ -31,7 +31,7 @@
         android:id="@+id/empty_view"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="125dp"
