@@ -81,7 +81,7 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
                     addConnectionCallback.addMenuEnabled();
 
                 }else {
-                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.parseColor("#dcf6f7"), Color.WHITE).setDuration(1500);
+                    ObjectAnimator animator = ObjectAnimator.ofInt(v, "backgroundColor", Color.parseColor("#dcf6f7"), Color.TRANSPARENT).setDuration(1500);
                     animator.setEvaluator(new ArgbEvaluator());
                     animator.start();
                     holder.getCheckbox_connection().setChecked(false);
