@@ -230,7 +230,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                              continue;
                          }
 
-                        WebSocketImpl.DEBUG = true;
+                        WebSocketImpl.DEBUG = false;
                         InetSocketAddress inetSocketAddress = new InetSocketAddress(address, WsCommunicationCloudServer.DEFAULT_PORT);
                         wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentRegistrationRequestPacketProcessor());

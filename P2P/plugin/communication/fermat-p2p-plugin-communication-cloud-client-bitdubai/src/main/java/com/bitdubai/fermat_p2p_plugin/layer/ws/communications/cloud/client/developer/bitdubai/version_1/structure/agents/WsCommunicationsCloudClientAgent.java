@@ -103,8 +103,6 @@ public class WsCommunicationsCloudClientAgent extends Thread {
 
             }else {
 
-                System.out.println(" WsCommunicationsCloudClientAgent - sleep for = 10000");
-
                 /**
                  * Sleep for the next try connection
                  */

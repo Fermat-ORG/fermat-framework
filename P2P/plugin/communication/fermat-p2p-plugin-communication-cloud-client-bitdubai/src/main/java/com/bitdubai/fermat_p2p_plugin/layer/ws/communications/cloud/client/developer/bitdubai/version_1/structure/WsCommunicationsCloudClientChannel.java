@@ -29,6 +29,7 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ServerHandshake;
 
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -174,7 +175,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          */
         headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, jsonObject.toString());
 
-        System.out.println(" WsCommunicationsCloudClientChannel - headers = "+headers);
+        //System.out.println(" WsCommunicationsCloudClientChannel - headers = "+headers);
 
         /*
          * Construct the instance with the required parameters
@@ -191,8 +192,8 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
-        System.out.println(" WsCommunicationsCloudClientChannel - Server hand Shake Data = " + handShakeData);
-        System.out.println(" WsCommunicationsCloudClientChannel - Server getReadyState() = " + getReadyState());
+        System.out.println(" WsCommunicationsCloudClientChannel - ready state = "+getReadyState());
+
     }
 
     /**
@@ -271,18 +272,26 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
         System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason + " remote = " + remote);
 
-        /*
-         * Start the agent to try the reconnect
-         */
-        setIsRegister(Boolean.FALSE);
-        wsCommunicationsCloudClientAgent.setIsConnected(Boolean.FALSE);
-        wsCommunicationsCloudClientAgent.run();
-
         try {
-            raiseClientConnectionCloseNotificationEvent();
+            switch (code) {
+
+                case 1006:
+                        raiseClientConnectionLooseNotificationEvent();
+                        System.out.println(" WsCommunicationsCloudClientChannel - Connection loose");
+                    break;
+
+                default:
+                        raiseClientConnectionCloseNotificationEvent();
+                        setIsRegister(Boolean.FALSE);
+
+                    break;
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        getWsCommunicationsCloudClientConnection().stopWsCommunicationsCloudClientPingAgent();
 
     }
 
@@ -480,6 +489,18 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         eventManager.raiseEvent(platformEvent);
         System.out.println("WsCommunicationsCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_CLOSE");
+    }
+
+    /**
+     * Notify when cloud client is disconnected
+     */
+    public void raiseClientConnectionLooseNotificationEvent() {
+
+        System.out.println("WsCommunicationsCloudClientChannel - raiseClientConnectionCloseNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        platformEvent.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("WsCommunicationsCloudClientChannel - Raised Event = P2pEventType.CLIENT_CONNECTION_LOOSE");
     }
 
     /**

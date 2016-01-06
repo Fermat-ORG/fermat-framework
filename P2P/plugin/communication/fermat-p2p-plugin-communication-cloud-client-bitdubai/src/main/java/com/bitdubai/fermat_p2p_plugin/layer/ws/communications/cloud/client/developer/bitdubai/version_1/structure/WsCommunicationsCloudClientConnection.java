@@ -156,10 +156,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         /*
          * Start the agent to try the connect
          */
-        wsCommunicationsCloudClientAgent.start();
-
-
-        //wsCommunicationsCloudClientPingAgent.start();
+        wsCommunicationsCloudClientChannel.connect();
+        wsCommunicationsCloudClientPingAgent.start();
 
     }
 
@@ -343,10 +341,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                  * Construct a fermat packet whit the filters
                  */
                 FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                            gson.toJson(jsonObject),                                           //Message Content
-                                                                                                                            FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
-                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                        wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                        gson.toJson(jsonObject),                                           //Message Content
+                        FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
+                        wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
                 /*
                  * Send the encode packet to the server
@@ -725,8 +723,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
             String respond = responseEntity.getBody();
             System.out.println("responseEntity = " + respond);
 
-
-
             /*
              * if respond have the result list
              */
@@ -767,6 +763,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }
 
+    }
+
+    /**
+     * Stop the ping agent
+     */
+    protected void stopWsCommunicationsCloudClientPingAgent(){
+        wsCommunicationsCloudClientPingAgent.interrupt();
     }
 
 }

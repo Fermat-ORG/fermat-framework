@@ -247,7 +247,28 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("WsCommunicationCloudServer - Starting method onClose");
         LOG.info("WsCommunicationCloudServer - " + clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
-        cleanReferences(clientConnection);
+
+        switch (code){
+
+            case 1006:
+
+                if (remote){
+
+                    LOG.info("WsCommunicationCloudServer - waiting for client reconnect");
+
+
+                }
+
+                break;
+
+            default:
+
+                cleanReferences(clientConnection);
+                break;
+
+        }
+
+
     }
 
     /**

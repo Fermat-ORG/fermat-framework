@@ -531,6 +531,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
     }
 
+
     public void closeAllConnections(Exception ex){
 
         LOG.info("Starting method closeAllConnections(Exception)");
