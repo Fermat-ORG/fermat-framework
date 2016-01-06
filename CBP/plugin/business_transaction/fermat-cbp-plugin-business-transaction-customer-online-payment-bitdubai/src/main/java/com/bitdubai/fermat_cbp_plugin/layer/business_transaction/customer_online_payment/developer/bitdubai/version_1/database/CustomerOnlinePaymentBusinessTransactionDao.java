@@ -364,6 +364,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
             String value=records
                     .get(0)

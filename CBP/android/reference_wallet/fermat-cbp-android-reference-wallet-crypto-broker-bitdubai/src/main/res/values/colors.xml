@@ -54,6 +54,8 @@
     <color name="text_value_status_accepted">#0e0e0e</color>
     <color name="activity_background">#222</color>
 
+    <color name="cbw_setting_item_color">#dbdbdb</color>
+
     <color name="cbw_wizard_color">#254478</color>
     <color name="light_grey">#EEE</color>
 </resources>

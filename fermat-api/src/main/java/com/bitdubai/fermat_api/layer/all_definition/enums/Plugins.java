@@ -286,6 +286,10 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_BROKER_PURCHASE            ("CBPU"),
     CUSTOMER_BROKER_SALE                ("CBSA"),
 
+    //CHT
+
+    CHAT_NETWORK_SERVICE                ("CHTNS");
+
     // End  new Plugins
 
     ;
@@ -412,6 +416,7 @@ public enum Plugins implements FermatPluginsEnum {
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "CHTNS"     : return CHAT_NETWORK_SERVICE;
 
             default:
                 throw new InvalidParameterException(

@@ -103,16 +103,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private List<BrokerIdentityBusinessInfo> connectedBrokers;
 
     @Override
-    public CustomerBrokerNegotiationInformation addClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause) {
-        return null;
-    }
-
-    @Override
-    public CustomerBrokerNegotiationInformation changeClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause) {
-        return null;
-    }
-
-    @Override
     public Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException {
         try {
             List<ContractBasicInformation> contractsHistory = getContractHistoryTestData();
@@ -243,11 +233,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException {
-        return null;
-    }
-
-    @Override
-    public CustomerBrokerNegotiationInformation confirmNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotConfirmNegotiationException {
         return null;
     }
 

@@ -185,7 +185,11 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
+            //TODO: fix all the isContractHash methods.
             String value=records
                     .get(0)
                     .getStringValue(valueColumn);
