@@ -484,7 +484,6 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY;
             case "DWAIADSUG":
                 return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS;
-
             /* CHAT */
             case "CHTOCHLTF":
                 return CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT;
