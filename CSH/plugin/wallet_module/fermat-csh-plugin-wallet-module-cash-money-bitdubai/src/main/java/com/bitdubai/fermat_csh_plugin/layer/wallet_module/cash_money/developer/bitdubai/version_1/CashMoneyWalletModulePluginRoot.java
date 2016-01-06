@@ -50,6 +50,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,29 +240,35 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                     try {
 
 
-                        UUID bitcoinVzlaKey = null;
+//                        UUID bitcoinVzlaKey = null;
+//
+//                        System.out.println("---Listing ALL CER Providers and their supported currencies---");
+//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
+//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+//
+//                            for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
+//                                System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+//
+//                            if(provider.getValue().toString().equals("BitcoinVenezuela"))
+//                                bitcoinVzlaKey = provider.getKey();
+//                        }
+//                        System.out.println(" ");
+//
+//
+//                        System.out.println("---Getting all ExchangeRates from BitcoinVenezuela Provider");
+//                        CurrencyExchangeRateProviderManager btcVzlaProvider = providerFilter.getProviderReference(bitcoinVzlaKey);
+//                        for(CurrencyPair p : btcVzlaProvider.getSupportedCurrencyPairs()){
+//                            System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+//                            System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
+//
+//                        }
 
-                        System.out.println("---Listing ALL CER Providers and their supported currencies---");
-                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
-                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-
-                            for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
-                                System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
-
-                            if(provider.getValue().toString().equals("BitcoinVenezuela"))
-                                bitcoinVzlaKey = provider.getKey();
-                        }
-                        System.out.println(" ");
 
 
-                        System.out.println("---Getting all ExchangeRates from BitcoinVenezuela Provider");
-                        CurrencyExchangeRateProviderManager btcVzlaProvider = providerFilter.getProviderReference(bitcoinVzlaKey);
-                        for(CurrencyPair p : btcVzlaProvider.getSupportedCurrencyPairs()){
-                            System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
-                            System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
-
-                        }
-
+//                        System.out.println("---Listing CER Providers for USD/EUR using getProviderReferencesFromCurrencyPair()---");
+//                        Collection<CurrencyExchangeRateProviderManager> filteredManagers = providerFilter.getProviderReferencesFromCurrencyPair(new CurrencyPairImpl(FiatCurrency.US_DOLLAR, FiatCurrency.EURO));
+//                        for( CurrencyExchangeRateProviderManager p : filteredManagers)
+//                            System.out.println(" Found provider: " + p.getProviderName());
 
 
 

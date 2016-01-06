@@ -21,8 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_bch_api.layer.crypto_module.Crypto;
-import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -31,6 +29,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRat
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.database.BitcoinVenezuelaProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.database.BitcoinVenezuelaProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinVenezuelaProviderDatabaseException;
@@ -196,51 +195,56 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     @Override
     public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
+        ExchangeRate exchangeRate;
+
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
-
-
-        //Determine cryptoCurrency base
-        String exchangeFrom, exchangeTo;
-        boolean invertExchange;
-
-        if(CryptoCurrency.codeExists(currencyPair.getFrom().getCode()))
-        {
-            exchangeFrom = currencyPair.getFrom().getCode();
-            exchangeTo = currencyPair.getTo().getCode();
-            invertExchange = false;
-        }
-        else
-        {
-            exchangeFrom = currencyPair.getTo().getCode();
-            exchangeTo = currencyPair.getFrom().getCode();
-            invertExchange = true;
-        }
-
-
-        String aux;
-        JSONObject json;
-        double price = 0;
-
         try{
-            json =  new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=USDBTC"));
-            price = (double) json.getJSONObject(exchangeTo).get(exchangeFrom);
+            return dao.getExchangeRateFromDate(currencyPair, DateHelper.getDaysUTCTimestampFromTimestamp(timestamp));
+        }catch(CantGetExchangeRateException e) {
 
-        }catch (JSONException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"BitcoinVenezuela CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
-        }
+            //get api history, get ex rate del date pedido, enviar todo el api vergo al dao usando los timestamps del helper, dao debe salvar lo que falte.
+            String date = DateHelper.getDateStringFromTimestamp(timestamp);
 
-        if(invertExchange)
-            price = 1 / price;
+            //Determine cryptoCurrency base
+            String exchangeFrom, exchangeTo;
+            boolean invertExchange;
+
+            if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
+                exchangeFrom = currencyPair.getFrom().getCode();
+                exchangeTo = currencyPair.getTo().getCode();
+                invertExchange = false;
+            } else {
+                exchangeFrom = currencyPair.getTo().getCode();
+                exchangeTo = currencyPair.getFrom().getCode();
+                invertExchange = true;
+            }
 
 
-        ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
-        try {
-            dao.saveExchangeRate(exchangeRate);
-        }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            String aux;
+            JSONObject json;
+            double price = 0;
+
+            try {
+                json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=USDBTC"));
+                price = (double) json.getJSONObject(exchangeTo).get(exchangeFrom);
+
+            } catch (JSONException ex) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "BitcoinVenezuela CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
+            }
+
+            if (invertExchange)
+                price = 1 / price;
+
+
+            exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
+            try {
+                dao.saveExchangeRate(exchangeRate);
+            } catch (CantSaveExchangeRateException eex) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
         }
         return exchangeRate;
     }

@@ -29,9 +29,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -94,6 +98,27 @@ public class BitcoinVenezuelaProviderDao {
             throw new CantSaveExchangeRateException(e.getMessage(), e, "BitcoinVenezuela provider plugin", "Cant save new record in table");
         }
     }
+
+    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws CantGetExchangeRateException
+    {
+        DatabaseTable table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+
+        table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, String.valueOf(timestamp), DatabaseFilterType.EQUAL);
+
+        try {
+            table.loadToMemory();
+            DatabaseTableRecord record = table.getRecords().get(0);
+            return constructExchangeRateFromRecord(record);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get exchange rate for timestamp: " + timestamp, "Couldn't load table to memory");
+        }catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get exchange rate for timestamp: " + timestamp, "Couldn't create ExchangeRate object");
+        }
+    }
+
 
     public List<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws CantGetExchangeRateException
     {
