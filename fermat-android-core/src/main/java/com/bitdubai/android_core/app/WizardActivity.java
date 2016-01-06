@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardP
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -301,6 +302,12 @@ public class WizardActivity extends FermatActivity
         super.onDestroy();
         args = null;
         wizarType = null;
+    }
+
+    @Override
+    protected FermatStructure getAppInUse() {
+        //TODO: a implementar
+        return null;
     }
 
     @Override
