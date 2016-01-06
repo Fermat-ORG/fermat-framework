@@ -175,14 +175,14 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         return null;
     }
 
-//    @Override
-//    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-//        if(!isCurrencyPairSupported(currencyPair))
-//            throw new UnsupportedCurrencyPairException();
-//
-//        //TODO:
-//        return null;
-//    }
+    @Override
+    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+        if(!isCurrencyPairSupported(currencyPair))
+            throw new UnsupportedCurrencyPairException();
+
+        //TODO:
+        return null;
+    }
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {

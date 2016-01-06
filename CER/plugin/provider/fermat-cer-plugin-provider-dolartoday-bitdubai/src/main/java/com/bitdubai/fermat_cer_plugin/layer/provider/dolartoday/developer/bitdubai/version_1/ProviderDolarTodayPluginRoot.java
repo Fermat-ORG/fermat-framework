@@ -167,10 +167,10 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
-//    @Override
-//    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-//        throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
-//    }
+    @Override
+    public Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+        throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
+    }
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
