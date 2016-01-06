@@ -84,14 +84,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException;
 
     /**
-     * Get information about the current stock
-     *
-     * @param stockCurrency the stock currency
-     * @return information about the current stock
-     */
-    StockInformation getCurrentStock(String stockCurrency);
-
-    /**
      * @return list of identities associated with this wallet
      */
     List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException;
