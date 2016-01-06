@@ -59,6 +59,28 @@ public class BitcoinWatchOnlyVaultManager {
         this.pluginFileSystem = pluginFileSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.pluginId = pluginId;
+
+
+        try{
+            /**
+             * I will get all stored Hierarchy Accounts that may belong to multiple redeem points
+             */
+            for (HierarchyAccount hierarchyAccount : getDao().getHierarchyAccounts()){
+                /**
+                 * for each account, I will load the ExtendedPublicKey
+                 */
+                WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey = loadExtendedPublicKey(DIRECTORY_NAME, hierarchyAccount.getDescription());
+                DeterministicKey rootKey = getMasterPublicKey(watchOnlyVaultExtendedPublicKey);
+                VaultKeyHierarchyGenerator generator = new VaultKeyHierarchyGenerator(rootKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+                new Thread(generator).start();
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -94,16 +116,28 @@ public class BitcoinWatchOnlyVaultManager {
             e.printStackTrace();
         }
 
+        HierarchyAccount hierarchyAccount;
         try {
-            HierarchyAccount hierarchyAccount = createNewHierarchyAccount(watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getActorPublicKey());
+            hierarchyAccount = createNewHierarchyAccount(watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getActorPublicKey());
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, e, "Hierarchy Account could not be added to the database.", "database issue" );
         }
 
         DeterministicKey masterPublicKey = getMasterPublicKey(watchOnlyVaultExtendedPublicKey);
 
+        VaultKeyHierarchyGenerator generator = new VaultKeyHierarchyGenerator(masterPublicKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+        new Thread(generator).start();
+    }
 
 
+    /**
+     * starts in a new thread the process that will generate the Key hierarchy.
+     * Once created will start the KeyHierarchy Maintainer which will derive all needed keys and
+     * pass them to the crypto network to start the monitoring.
+     * @param generator
+     */
+    private void startHierarchyGenerationProcess(VaultKeyHierarchyGenerator generator){
+        new Thread(generator).start();
     }
 
     /**

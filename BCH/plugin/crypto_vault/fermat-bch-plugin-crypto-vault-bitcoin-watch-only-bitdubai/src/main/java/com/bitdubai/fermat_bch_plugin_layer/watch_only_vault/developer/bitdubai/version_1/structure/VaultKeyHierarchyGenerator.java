@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.database.BitcoinWatchOnlyCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -31,9 +32,9 @@ import java.util.UUID;
  */
 class VaultKeyHierarchyGenerator implements Runnable{
     /**
-     * Unique seed used to generate all the hierarchies
+     * The hierarchyAccount that I will be generating the hierarchy for.
      */
-    private DeterministicSeed seed;
+    HierarchyAccount hierarchyAccount;
 
     /**
      * The HierarchyMaintainer agent that keeps tracks of the keys used and generated.
@@ -70,11 +71,12 @@ class VaultKeyHierarchyGenerator implements Runnable{
 
     /**
      * Constructor
-     * @param seed
+
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
-        this.seed = seed;
+    public VaultKeyHierarchyGenerator(DeterministicKey rootKey, HierarchyAccount hierarchyAccount, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
+        this.rootKey = rootKey;
+        this.hierarchyAccount = hierarchyAccount;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.pluginId = pluginId;
@@ -98,22 +100,14 @@ class VaultKeyHierarchyGenerator implements Runnable{
      */
     private void doTheMainTask() throws CantLoadHierarchyAccountsException {
         /**
-         * I generate the rootKey (m) of the hierarchy.
-         */
-        rootKey = generateRootKeyFromSeed(seed);
-
-        /**
          * I create the VaultKeyHierarchy from the master key
          */
         vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId);
 
         /**
-         * I will get from the database the list of accounts to create
-         * and add them to the hierarchy
+         * I will add the passed hierarchy Account
          */
-        for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
-            vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
-        }
+        vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
 
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
