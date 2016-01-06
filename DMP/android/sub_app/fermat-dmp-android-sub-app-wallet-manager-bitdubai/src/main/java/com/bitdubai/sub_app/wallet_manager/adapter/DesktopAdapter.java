@@ -4,8 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
@@ -78,8 +82,34 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 //                holder.thumbnail.setImageBitmap(bitmap);
 //            }
             if(data.getIconResource()!=0)
-                if(data.getType()!= InterfaceType.EMPTY)
-                    holder.thumbnail.setImageResource(data.getIconResource());
+                if(data.getType()!= InterfaceType.EMPTY) {
+                    //holder.thumbnail.setImageResource(data.getIconResource());
+                    //LayerDrawable icon = (LayerDrawable) holder.thumbnail.getDrawable();
+                    // Update LayerDrawable's BadgeDrawable
+//                    if(data.getIconResource()!=-1) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        Drawable[] layers = new Drawable[]{context.getDrawable(data.getIconResource()),new BadgeDrawable.BadgeDrawableBuilder(context).setTextSize(38).setCount(data.getNotifications()).build()};
+                        LayerDrawable icon = new LayerDrawable(layers);
+                        holder.thumbnail.setImageDrawable(icon);
+                    }else{
+                        holder.thumbnail.setImageResource(data.getIconResource());
+                    }
+
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                            icon.setDrawableByLayerId(R.id.ic_icon, context.getDrawable(data.getIconResource()));
+//                        }
+//                        if (position == 0) {
+//                            if(DEKSTOP==fragmentWhoUseThisAdapter)
+//                            BadgeDrawable.Utils.setBadgeCount(context, icon, 2, icon.getId(1));
+//                        }
+//                    }else {
+//                        holder.thumbnail.setVisibility(View.GONE);
+//                        icon.getDrawable(0).setVisible(false,true);
+//                        icon.getDrawable(1).setVisible(false,true);
+//                        icon.setDrawableByLayerId(R.id.ic_icon,null);
+//                        icon.setVisible(false,true);
+//                    }
+                }
             if(data.getType()== InterfaceType.FOLDER){
                 holder.thumbnail.setVisibility(View.GONE);
                 holder.folder.setVisibility(View.VISIBLE);

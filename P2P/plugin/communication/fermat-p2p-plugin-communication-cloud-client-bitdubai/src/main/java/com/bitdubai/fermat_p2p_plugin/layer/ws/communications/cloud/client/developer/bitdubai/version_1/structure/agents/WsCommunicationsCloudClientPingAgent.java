@@ -23,7 +23,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
      * Represent the sleep time for send new ping (120000 milliseconds)
      */
     private static final long SLEEP_TIME = 120000;
-
+    private boolean running;
     /**
      * Represent the wsCommunicationsCloudClientChannel
      */
@@ -43,7 +43,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
      */
     @Override
     public void run() {
-
+        running = true;
         /*
          * While is no connect
          */
@@ -85,6 +85,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
                 }
 
             } catch (InterruptedException e) {
+                running = false;
                 e.printStackTrace();
             }
         }

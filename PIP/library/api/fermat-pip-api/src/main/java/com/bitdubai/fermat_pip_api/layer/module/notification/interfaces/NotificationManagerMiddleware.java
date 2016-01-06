@@ -35,4 +35,8 @@ public interface NotificationManagerMiddleware extends FermatManager {
     void addCallback(FermatNotificationListener notificationListener);
 
     void deleteCallback(FermatNotificationListener fermatNotificationListener);
+
+    void addReceiveRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount );
+
+    void addDeniedRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount );
 }

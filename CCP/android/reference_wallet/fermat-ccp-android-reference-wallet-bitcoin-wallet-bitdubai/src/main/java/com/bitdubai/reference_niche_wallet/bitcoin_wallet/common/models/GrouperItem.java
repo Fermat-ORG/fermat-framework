@@ -27,7 +27,8 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
 
     public int getChildCount() {
         if (childItemList != null)
-            childCount = this.childItemList.size();
+            // Le resto uno porque el ultimo es el total
+            childCount = this.childItemList.size()-1;
         return childCount;
     }
 
