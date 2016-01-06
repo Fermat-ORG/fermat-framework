@@ -88,11 +88,11 @@
                 android:id="@+id/empty_view"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
                     android:src="@drawable/contacts_empty_icon"
                     />
 
@@ -106,7 +106,7 @@
                     app:typeface="ROBOTO_REGULAR"
                     android:text="Click me to\nsearch contacts!"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/color_black_light"
+                    android:textColor="#fff"
                     />
 
             </LinearLayout>
