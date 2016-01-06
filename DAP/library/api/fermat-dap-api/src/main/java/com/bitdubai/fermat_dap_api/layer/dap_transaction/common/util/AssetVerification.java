@@ -106,17 +106,9 @@ public final class AssetVerification {
             transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
         }
 
-        if (transactionListFromCryptoNetwork == null) {
-            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + genesisTransaction + " is null");
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
-                    "Getting the cryptoStatus from CryptoNetwork",
-                    "The crypto status from genesis transaction " + genesisTransaction + " return null");
-        }
-        if (transactionListFromCryptoNetwork.isEmpty()) {
-            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + genesisTransaction + " is empty");
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
-                    "Getting the cryptoStatus from CryptoNetwork",
-                    "The genesis transaction " + genesisTransaction + " cannot be found in crypto network");
+        if (transactionListFromCryptoNetwork == null || transactionListFromCryptoNetwork.isEmpty()) {
+            System.out.println("ASSET TRANSACTION transaction List From Crypto Network for " + genesisTransaction + " is null or empty");
+            return null;
         }
         System.out.println("ASSET TRANSACTION I found " + transactionListFromCryptoNetwork.size() + " in Crypto network from genesis transaction:\n" + genesisTransaction);
 
@@ -129,9 +121,8 @@ public final class AssetVerification {
                 return cryptoTransaction;
             }
         }
-        throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
-                "Getting the cryptoStatus from bitcoinnetwork",
-                "The genesis transaction " + genesisTransaction + " cannot be found in " + cryptoStatus.getCode());
+        System.out.println("ASSET TREANSACTION COULDN'T FIND THE CRYPTO TRANSACTION.");
+        return null;
     }
 
 

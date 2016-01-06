@@ -58,9 +58,11 @@ public class AssetFactoryMiddlewareDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
 
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN, DatabaseDataType.STRING, 15, Boolean.FALSE);
