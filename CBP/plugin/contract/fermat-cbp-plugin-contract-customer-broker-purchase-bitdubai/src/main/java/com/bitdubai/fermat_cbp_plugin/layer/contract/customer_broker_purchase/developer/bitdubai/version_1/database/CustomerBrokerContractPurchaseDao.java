@@ -395,7 +395,7 @@ public class CustomerBrokerContractPurchaseDao {
             databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiationID);
             databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
             databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
-            databaseTableRecord.setFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME, DateTime);
+            databaseTableRecord.setLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME, DateTime);
             databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, status.getCode());
 
             String _nearExpirationDatetime = "0";
@@ -455,7 +455,7 @@ public class CustomerBrokerContractPurchaseDao {
             UUID                    clauseID        = record.getUUIDValue(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_CLAUSE_ID_COLUMN_NAME);
             ContractClauseType      type            = ContractClauseType.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_TYPE_COLUMN_NAME));
             Integer                 executionOrder  = record.getIntegerValue(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_EXECUTION_ORDER_COLUMN_NAME);
-            ContractClauseStatus    status          = ContractClauseStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME));
+            ContractClauseStatus    status          = ContractClauseStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_CURRENT_STATUS_COLUMN_NAME));
             return new ContractClauseInformation(
                     clauseID,
                     type,
