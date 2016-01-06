@@ -482,4 +482,9 @@ public class WizardActivity extends FermatActivity
     public void onControlledActivityBack(String activityCodeBack) {
 
     }
+
+    @Override
+    public void setChangeBackActivity(Activities activityCodeBack) {
+
+    }
 }

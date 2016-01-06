@@ -276,7 +276,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
                 balanceType = BalanceType.AVAILABLE;
             }
             System.out.println("ASSET Distribution OR RECEPTION - DELIVER TO WALLET TEST - " + balanceType + "\nHash: " + genesisTransaction.getTransactionHash());
-            deliverDigitalAssetMetadata(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType, dapTransactionType, externalActorPublicKey);
+            updateWalletBalance(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType, dapTransactionType, externalActorPublicKey);
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         } catch (CantGetTransactionsException exception) {
@@ -296,53 +296,48 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         }
     }
 
-    private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
+    public void updateWalletBalance(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
         String actorFromPublicKey = "ActorFromPublicKey";
-        String actorToPublicKey = "ActorToPublicKey";
-        if (dapTransactionType.getCode().equals(DAPTransactionType.DISTRIBUTION.getCode())) {
-            AssetIssuerWallet assetWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-            AssetIssuerWalletBalance assetIssuerWalletBalance = assetWallet.getBookBalance(balanceType);
-            actorFromPublicKey = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-            System.out.println("ASSET DISTRIBUTION Actor Issuer public key:" + actorFromPublicKey);
-            System.out.println("ASSET Distribution Transaction to deliver: " + genesisTransaction.getTransactionHash());
-            AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
-                    digitalAssetMetadata,
-                    genesisTransaction,
-                    actorFromPublicKey,
-                    actorToPublicKey
-            );
-            System.out.println("ASSET Distribution AssetIssuerWalletTransactionRecordWrapper: " + assetIssuerWalletTransactionRecordWrapper.getDescription());
-            System.out.println("ASSET Distribution Balance Type: " + balanceType);
-            System.out.println("ASSET Distribution Transaction Type: " + transactionType);
-            if (transactionType.getCode().equals(TransactionType.CREDIT.getCode())) {
-                assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
-            }
-            if (transactionType.getCode().equals(TransactionType.DEBIT.getCode())) {
-                assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
-            }
+        String actorToPublicKey = externalActorPublicKey;
+        switch (dapTransactionType) {
+            case DISTRIBUTION:
+                AssetIssuerWallet issuerWalet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+                AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWalet.getBookBalance(balanceType);
+                actorFromPublicKey = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
+                AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
+                        digitalAssetMetadata,
+                        genesisTransaction,
+                        actorFromPublicKey,
+                        actorToPublicKey
+                );
+                switch (transactionType) {
+                    case CREDIT:
+                        assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
+                        break;
+                    case DEBIT:
+                        assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
+                        break;
+                }
+                break;
+            case RECEPTION:
+                AssetUserWallet userWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
+                AssetUserWalletBalance assetUserWalletBalance = userWallet.getBalance();
+                actorToPublicKey = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
+                AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper = new AssetUserWalletTransactionRecordWrapper(
+                        digitalAssetMetadata,
+                        genesisTransaction,
+                        actorFromPublicKey,
+                        actorToPublicKey
+                );
+                switch (transactionType) {
+                    case DEBIT:
+                        assetUserWalletBalance.debit(assetUserWalletTransactionRecordWrapper, balanceType);
+                        break;
+                    case CREDIT:
+                        assetUserWalletBalance.credit(assetUserWalletTransactionRecordWrapper, balanceType);
+                        break;
+                }
+                break;
         }
-        if (dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION.getCode())) {
-            AssetUserWallet assetWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
-            AssetUserWalletBalance assetUserWalletBalance = assetWallet.getBalance();
-            actorToPublicKey = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
-            System.out.println("ASSET RECEPTION Actor Issuer public key:" + actorToPublicKey);
-            System.out.println("ASSET RECEPTION Transaction to deliver: " + genesisTransaction.getTransactionHash());
-            AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper = new AssetUserWalletTransactionRecordWrapper(
-                    digitalAssetMetadata,
-                    genesisTransaction,
-                    actorFromPublicKey,
-                    actorToPublicKey
-            );
-            System.out.println("ASSET RECEPTION AssetIssuerWalletTransactionRecordWrapper: " + assetUserWalletTransactionRecordWrapper.getDescription());
-            System.out.println("ASSET RECEPTION Balance Type: " + balanceType);
-            System.out.println("ASSET RECEPTION Transaction Type: " + transactionType);
-            if (transactionType.getCode().equals(TransactionType.CREDIT.getCode())) {
-                assetUserWalletBalance.credit(assetUserWalletTransactionRecordWrapper, balanceType);
-            }
-            if (transactionType.getCode().equals(TransactionType.DEBIT.getCode())) {
-                assetUserWalletBalance.debit(assetUserWalletTransactionRecordWrapper, balanceType);
-            }
-        }
-
     }
 }
