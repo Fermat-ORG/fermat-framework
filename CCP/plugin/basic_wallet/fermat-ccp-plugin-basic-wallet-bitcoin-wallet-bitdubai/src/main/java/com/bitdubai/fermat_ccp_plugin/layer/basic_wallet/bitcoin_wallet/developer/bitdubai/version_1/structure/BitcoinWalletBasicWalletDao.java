@@ -165,7 +165,22 @@ public class BitcoinWalletBasicWalletDao {
 
 
             bitcoinWalletTable.loadToMemory();
+
+            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.CREDIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.DEBIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+
             return createTransactionList(bitcoinWalletTable.getRecords());
+
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
         } catch (Exception exception){

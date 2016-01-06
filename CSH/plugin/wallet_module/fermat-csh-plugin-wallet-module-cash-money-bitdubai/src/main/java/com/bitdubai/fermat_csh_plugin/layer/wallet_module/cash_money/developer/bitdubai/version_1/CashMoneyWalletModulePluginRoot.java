@@ -18,7 +18,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
@@ -220,8 +219,15 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
         return null;
     }
 
+    @Override
+    public void setAppPublicKey(String publicKey) {
 
+    }
 
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
+    }
 
     /*CER TEST METHODS*/
     private void testCERPlatform(){

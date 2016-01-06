@@ -522,6 +522,11 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         return new Object[0];
     }
 
+    @Override
+    public void onControlledActivityBack(String activityCodeBack) {
+        //todo implement in the super class
+    }
+
 
     private void loadFragment(String fragmentType) {
 

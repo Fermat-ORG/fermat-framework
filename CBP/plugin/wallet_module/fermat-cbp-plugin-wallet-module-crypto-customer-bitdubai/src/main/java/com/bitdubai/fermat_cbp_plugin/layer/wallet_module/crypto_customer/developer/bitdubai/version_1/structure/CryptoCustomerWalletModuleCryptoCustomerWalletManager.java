@@ -22,7 +22,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
@@ -44,6 +46,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexIn
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletProviderSettingException;
@@ -75,7 +78,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final WalletManagerManager walletManagerManager;
     private final CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
     private final UUID pluginId;
-    private final PluginFileSystem pluginFileSystem    ;
+    private final PluginFileSystem pluginFileSystem;
+    private final CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
 
     /*
     *Constructor with Parameters
@@ -83,12 +87,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     public CryptoCustomerWalletModuleCryptoCustomerWalletManager(WalletManagerManager walletManagerManager,
                                                                  CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
                                                                  UUID pluginId,
-                                                                 PluginFileSystem pluginFileSystem)
+                                                                 PluginFileSystem pluginFileSystem,
+                                                                 CryptoCustomerIdentityManager cryptoCustomerIdentityManager)
     {
         this.walletManagerManager                     = walletManagerManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
         this.pluginId                                 = pluginId;
         this.pluginFileSystem                         = pluginFileSystem;
+        this.cryptoCustomerIdentityManager            = cryptoCustomerIdentityManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -224,6 +230,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public boolean associateIdentity(String customerId) {
         return false;
+    }
+
+    /**
+     * @return list of identities associated with this wallet
+     */
+    @Override
+    public List<CryptoCustomerIdentity> getListOfIdentities() throws CantGetCryptoCustomerIdentityListException, CantGetCryptoCustomerIdentityException {
+        List<CryptoCustomerIdentity> cryptoCustomerIdentities = cryptoCustomerIdentityManager.getAllCryptoCustomerFromCurrentDeviceUser();
+        return cryptoCustomerIdentities;
     }
 
     @Override
@@ -551,5 +566,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }

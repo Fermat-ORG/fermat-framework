@@ -53,3 +53,5 @@ Please, configure your script to generate all the issues following the next step
     * Add the variable networkService.
 * 1.2.4:	
   	* Fix a bug in Agent and events issues generation.
+* 1.2.8:
+	* Fix a bug described in https://github.com/bitDubai/fermat/issues/4285

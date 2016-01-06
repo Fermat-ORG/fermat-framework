@@ -26,7 +26,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocatio
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
@@ -131,6 +133,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CryptoMoneyDestockManager cryptoMoneyDestockManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
     private final CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager;
+    private final CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
     /*
     *Constructor with Parameters
     */
@@ -146,7 +149,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              CashMoneyDestockManager cashMoneyDestockManager,
                                                              CryptoMoneyDestockManager cryptoMoneyDestockManager,
                                                              CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-                                                             CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager)
+                                                             CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager,
+                                                             CryptoBrokerIdentityManager cryptoBrokerIdentityManager)
     {
         this.walletManagerManager                 = walletManagerManager;
         this.cryptoBrokerWalletManager            = cryptoBrokerWalletManager;
@@ -161,6 +165,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.cryptoMoneyDestockManager            = cryptoMoneyDestockManager;
         this.customerBrokerContractSaleManager    = customerBrokerContractSaleManager;
         this.currencyExchangeProviderFilterManager= currencyExchangeProviderFilterManager;
+        this.cryptoBrokerIdentityManager          = cryptoBrokerIdentityManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -359,8 +364,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException {
-        return getListOfIdentitiesTestData();
+    public List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException {
+        List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        return cryptoBrokerIdentities;//getListOfIdentitiesTestData();
     }
 
     private List<CryptoBrokerIdentity> getListOfIdentitiesTestData() {
@@ -1228,5 +1234,15 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }
