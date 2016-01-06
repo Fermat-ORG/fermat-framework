@@ -197,7 +197,6 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_EDIT_CONTACT_FRAGMENT("CHTEDCOF"),
     CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT("CHTOCONNLTF"),
 
-
     WPD_DESKTOP("WPD"),;
 
     private String code;
@@ -501,7 +500,6 @@ public enum Activities implements FermatEnum {
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
-
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

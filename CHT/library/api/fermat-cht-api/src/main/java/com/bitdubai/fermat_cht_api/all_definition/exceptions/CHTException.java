@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) 04/01/2016.
  */
-// TODO DELETE OR MOVE THIS, IT DOESN'T BELONG HERE
+
 public class CHTException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "THE CHAT PLATFORM HAS DETECTED AN EXCEPTION";
