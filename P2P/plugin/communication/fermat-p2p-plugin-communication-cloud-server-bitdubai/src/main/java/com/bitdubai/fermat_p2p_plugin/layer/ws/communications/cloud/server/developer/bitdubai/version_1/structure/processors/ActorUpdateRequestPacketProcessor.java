@@ -118,7 +118,7 @@ public class ActorUpdateRequestPacketProcessor extends FermatPacketProcessor {
              */
             JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
             packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-            packetContent.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToUpdate.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.PROFILE_TO_UPDATE, platformComponentProfileToUpdate.toJson());
             packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in Update Component Actor Profile: "+e.getMessage());
 
             /*

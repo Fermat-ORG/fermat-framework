@@ -321,6 +321,57 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
+     * @see CommunicationsClientConnection#updateRegisterActorProfile(NetworkServiceType, PlatformComponentProfile)
+     */
+    @Override
+    public void updateRegisterActorProfile(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
+
+        try {
+
+            System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
+
+            /*
+             * Validate parameter
+             */
+            if (platformComponentProfile == null){
+
+                throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
+            }
+
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceNetworkServiceTypeApplicant.toString());
+            jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_UPDATE, platformComponentProfile.toJson());
+
+             /*
+             * Construct a fermat packet whit the PlatformComponentProfile
+             */
+            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                    gson.toJson(jsonObject),                                                 //Message Content
+                    FermatPacketType.UPDATE_ACTOR_REQUEST,                         //Packet type
+                    wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+
+
+            String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
+
+            /*
+             * Send the encode packet to the server
+             */
+            wsCommunicationsCloudClientChannel.send(fermatPacketEncode);
+
+
+        }catch (Exception e){
+
+            CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
+            throw pluginStartException;
+
+        }
+
+    }
+
+    /**
+     * (non-javadoc)
      * @see CommunicationsClientConnection#requestListComponentRegistered(PlatformComponentProfile, DiscoveryQueryParameters)
      */
     @Override
