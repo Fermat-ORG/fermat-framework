@@ -26,6 +26,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoV
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
+import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.database.BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory;
+import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.structure.BitcoinWatchOnlyVaultManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
@@ -55,6 +57,11 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
     private BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
+     * CryptoVaultBitcoinWatchOnlyPluginRoot class variables
+     */
+    BitcoinWatchOnlyVaultManager bitcoinWatchOnlyVaultManager;
+
+    /**
      * Constructor
      */
     public CryptoVaultBitcoinWatchOnlyPluginRoot() {
@@ -68,7 +75,8 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     /**
@@ -79,7 +87,8 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     /**
@@ -91,7 +100,8 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     /**
@@ -104,6 +114,7 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
         if (extendedPublicKey == null)
             throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, null, "Extended public Key received is null. Can't go on.", null);
 
+        bitcoinWatchOnlyVaultManager.initialize(extendedPublicKey);
     }
 
     /**
@@ -113,7 +124,7 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
      */
     @Override
     public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
-        return null;
+        return bitcoinWatchOnlyVaultManager.getCryptoAddress(blockchainNetworkType);
     }
 
     /**
@@ -127,6 +138,7 @@ public class CryptoVaultBitcoinWatchOnlyPluginRoot
 
     @Override
     public void start() throws CantStartPluginException {
+        bitcoinWatchOnlyVaultManager = new BitcoinWatchOnlyVaultManager(this.errorManager, this.pluginDatabaseSystem, this.pluginFileSystem, this.bitcoinNetworkManager, this.pluginId);
         super.start();
     }
 
