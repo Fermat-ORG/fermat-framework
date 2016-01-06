@@ -69,12 +69,12 @@ public class CustomerBrokerContractPurchaseDao {
                 }
             }
 
-            System.out.println(":==:=======================================================================================");
+            System.out.println("|==|=======================================================================================");
 
-            System.out.println(":==: Inicio de las pruebas en el Contract Purchase");
+            System.out.println("|==| Inicio de las pruebas en el Contract Purchase");
 
 
-            //try {
+            try {
 
                 Collection<ContractClause> clauses = new ArrayList<>();
 
@@ -98,22 +98,20 @@ public class CustomerBrokerContractPurchaseDao {
                         false
                 );
 
-                //CustomerBrokerContractPurchase contrato = this.createCustomerBrokerPurchaseContract(contract);
+                CustomerBrokerContractPurchase contrato = this.createCustomerBrokerPurchaseContract(contract);
 
-                System.out.println(":==: Contrato creado exitosamente");
+                System.out.println("|==| Contrato creado exitosamente");
             /*
             } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
                 System.out.println(":==: Error Obteniendo el listado de Contratos");
                 */
-                /*
             } catch (CantCreateCustomerBrokerContractPurchaseException e) {
-                System.out.println(":==: Error creando el Contrato");
+                System.out.println("|==| Error creando el Contrato");
             }
-            */
 
-            System.out.println(":==: Fin de las pruebas en el Actor Broker");
+            System.out.println("|==| Fin de las pruebas en el Contract Purchase");
 
-            System.out.println(":==:=======================================================================================");
+            System.out.println("|==|=======================================================================================");
         }
 
         public CustomerBrokerContractPurchase createCustomerBrokerPurchaseContract(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException {
@@ -132,18 +130,20 @@ public class CustomerBrokerContractPurchaseDao {
                         contract.getNearExpirationDatetime()
                 );
                 PurchaseTable.insertRecord(recordToInsert);
-                //createCustomerBrokerPurchaseContractClauses(contract.getContractId(), contract.getContractClause());
-                return constructCustomerBrokerPurchaseContractFromRecord(recordToInsert);
-            } catch (InvalidParameterException e) {
-                System.out.println(":==: Error InvalidParameterException");
-                //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
+                createCustomerBrokerPurchaseContractClauses(contract.getContractId(), contract.getContractClause());
+                //return constructCustomerBrokerPurchaseContractFromRecord(recordToInsert);
+                return null;
+
             } catch (CantInsertRecordException e) {
-                System.out.println(":==: Error CantInsertRecordException");
+                System.out.println("|==| Error CantInsertRecordException");
+                //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
+            } /*catch (InvalidParameterException e) {
+                System.out.println(":==: Error InvalidParameterException");
                 //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
             } catch (CantGetListCustomerBrokerContractPurchaseException e) {
                 System.out.println(":==: Error CantCreateCustomerBrokerContractPurchaseException");
                 //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
-            }
+            }*/
 
             return null;
         }
@@ -189,10 +189,13 @@ public class CustomerBrokerContractPurchaseDao {
                 }
                 return Purchases;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                System.out.println("|==| Error CantLoadTableToMemoryException en getAllCustomerBrokerContractPurchase");
+                //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                System.out.println("|==| Error InvalidParameterException en getAllCustomerBrokerContractPurchase");
+                //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
+            return null;
         }
 
         public CustomerBrokerContractPurchase getCustomerBrokerPurchaseContractForcontractID(String contractID) throws CantGetListCustomerBrokerContractPurchaseException {
@@ -336,9 +339,9 @@ public class CustomerBrokerContractPurchaseDao {
     * */
 
         public void createCustomerBrokerPurchaseContractClauses(String contractID, Collection<ContractClause> clauses) throws CantCreateCustomerBrokerContractPurchaseException{
+            DatabaseTable ContractClausePurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
+            ContractClausePurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
             for(ContractClause clause : clauses){
-                DatabaseTable ContractClausePurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
-                ContractClausePurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
                 DatabaseTableRecord recordToInsert = ContractClausePurchaseTable.getEmptyRecord();;
                 loadRecordAsNewClause(
                         recordToInsert,
@@ -351,7 +354,8 @@ public class CustomerBrokerContractPurchaseDao {
                 try {
                     ContractClausePurchaseTable.insertRecord(recordToInsert);
                 } catch (CantInsertRecordException e) {
-                    throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
+                    System.out.println("|==| Error CantInsertRecordException en clause");
+                    //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
                 }
             }
         }
@@ -368,13 +372,16 @@ public class CustomerBrokerContractPurchaseDao {
                     try {
                         Purchases.add(constructCustomerBrokerPurchaseContractClauseFromRecord(record));
                     } catch (InvalidParameterException e) {
-                        throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                        System.out.println("|==| Error InvalidParameterException en clause");
+                        //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
                     }
                 }
                 return Purchases;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                System.out.println("|==| Error CantLoadTableToMemoryException en clause");
+                //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
+            return null;
         }
 
     /*
