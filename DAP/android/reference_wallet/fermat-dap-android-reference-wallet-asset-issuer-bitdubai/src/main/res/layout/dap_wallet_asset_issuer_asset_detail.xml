@@ -7,7 +7,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbarAlwaysDrawVerticalTrack="true">
 
         <ImageView
@@ -128,12 +128,21 @@
                 android:paddingBottom="15dp"
                 android:paddingRight="15dp"/>
 
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="47dp"
+                android:src="@drawable/bg_asset_price"
+                android:paddingRight="4dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true" />
+
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/assetDetailRemainingLayout"
             android:layout_width="match_parent"
-            android:layout_height="75dp">
+            android:layout_height="75dp"
+            android:background="#24202E">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetDetailRemainingText"
@@ -163,7 +172,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:id="@+id/assetDetailAvailableLayout">
+            android:id="@+id/assetDetailAvailableLayout"
+            android:background="#24202E">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -211,7 +221,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp">
+            android:layout_height="75dp"
+            android:background="#24202E">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -258,7 +269,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp">
+            android:layout_height="75dp"
+            android:background="#24202E">
 
             <LinearLayout
                 android:orientation="vertical"
