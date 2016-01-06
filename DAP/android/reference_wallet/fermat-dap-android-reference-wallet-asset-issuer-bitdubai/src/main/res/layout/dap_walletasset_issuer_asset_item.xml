@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:id="@+id/assetItem"
-        android:background="@color/gray">
+        android:id="@+id/assetItem">
 
         <ImageView
             android:id="@+id/asset_image"

@@ -115,9 +115,10 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 //                window.setStatusBarColor(Color.parseColor("#1d1d25"));
 //            }
             Drawable drawable = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
-            else
+                toolbar.setElevation(0);
+            } else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
 
             toolbar.setBackground(drawable);
