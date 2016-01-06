@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by rodrigo on 2015.07.20..
  */
-public enum Activities {
+public enum Activities implements FermatEnum {
 
     CWP_SHELL_LOGIN("CSL"),
     CWP_SHOP_MANAGER_MAIN("CSMM"),
@@ -87,9 +88,13 @@ public enum Activities {
     // DAP
     DAP_SUB_APP_ASSET_FACTORY_MAIN("DSAAFM"),
     DAP_ASSET_EDITOR_ACTIVITY("DAEA"),
+
     DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL("DAIWAD"),
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
     DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST("DWAIUDL"),
+    DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY("DWAIADL"),
+    DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS("DWAIADSUG"),
+
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
 
@@ -108,7 +113,8 @@ public enum Activities {
     CBP_CRYPTO_BROKER_WALLET_EARNINGS("CBPCBWE"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS"),
     CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS("CBPCBWOND"),
-    CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS("CBPCBWCND"),
+    CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT("CBPCBWCNDOC"),
+    CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT("CBPCBWCNDCC"),
     CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS("CBPCBWOCD"),
     CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS("CBPCBWCCD"),
     CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY("CBPCBWSI"),
@@ -126,7 +132,8 @@ public enum Activities {
     CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS("CBPCCWS"),
     CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION("CBPCCWSN"),
     CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS("CBPCCWOND"),
-    CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS("CBPCCWCND"),
+    CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT("CBPCCWCNDOC"),
+    CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT("CBPCCWCNDCC"),
     CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS("CBPCCWOCD"),
     CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS("CBPCCWCCD"),
     CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY("CBPCCWSI"),
@@ -182,6 +189,15 @@ public enum Activities {
     //CONNECTIONS ACTIVITY
     BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
 
+    /**
+     * Chat
+     */
+    CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT("CHTOCHLTF"),
+    CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT("CHTOCONTLTF"),
+    CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT("CHTOCHDF"),
+    CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT("CHTOCODF"),
+    CHT_CHAT_EDIT_CONTACT_FRAGMENT("CHTEDCOF"),
+    CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT("CHTOCONNLTF"),
 
     WPD_DESKTOP("WPD"),;
 
@@ -340,8 +356,10 @@ public enum Activities {
                 return CBP_CRYPTO_BROKER_WALLET_SETTINGS;
             case "CBPCBWOND":
                 return CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS;
-            case "CBPCBWCND":
-                return CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS;
+            case "CBPCBWCNDOC":
+                return CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT;
+            case "CBPCBWCNDCC":
+                return CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT;
             case "CBPCBWOCD":
                 return CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS;
             case "CBPCBWCCD":
@@ -372,8 +390,10 @@ public enum Activities {
                 return CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION;
             case "CBPCCWOND":
                 return CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS;
-            case "CBPCCWCND":
-                return CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS;
+            case "CBPCCWCNDOC":
+                return CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT;
+            case "CBPCCWCNDCC":
+                return CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT;
             case "CBPCCWOCD":
                 return CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS;
             case "CBPCCWCCD":
@@ -466,16 +486,36 @@ public enum Activities {
                 return DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL;
             case "DWAIUDL":
                 return DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST;
+            case "DWAIADL":
+                return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY;
+            case "DWAIADSUG":
+                return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS;
+            /* CHAT */
+            case "CHTOCHLTF":
+                return CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT;
+            case "CHTOCONTLTF":
+                return CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT;
+            case "CHTOCHDF":
+                return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
+            case "CHTOCODF":
+                return CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT;
+            case "CHTEDCOF":
+                return CHT_CHAT_EDIT_CONTACT_FRAGMENT;
+            case "CHTOCONNLTF":
+                return CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT;
+
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
+                throw new InvalidParameterException(
+                        "Code Received: " + code,
+                        "This code is not valid for the Activities enum"
+                );
         }
-        // throw an IllegalArgumentException or return null
-        //throw new IllegalArgumentException("the given number doesn't match any Status.");
-        // return null;
+
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }
@@ -483,4 +523,5 @@ public enum Activities {
     public String toString() {
         return code;
     }
+
 }

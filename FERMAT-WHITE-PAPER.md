@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 #--draft--
 
@@ -40,7 +40,7 @@ OS dependent GUI components are built on top of the multi-layered plug-in struct
 
 A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalogue.
 
-![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/master/Readme%20Image/Slides/slide-core-concept.png "Core Concept")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Slides/slide-core-concept.png "Core Concept")
 
 <br> 
 ## The Fermat Network
@@ -96,7 +96,7 @@ Fermat generates its tokens, the _fermats_, with a predetermined algorithm that 
 
 These application tokens are native to the Fermat system and are necessary for access to the application. Contribution of value from miners are rewarded in the application’s tokens as well as developers which are rewarded with tokens for the Plug-ins they build for the system. Fermat's blockchain only records the issuing of new fermats and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]
 
-![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/master/Coins/Fermat%20App%20Token/Fermat_App_Token.jpg "Fermat Application Token")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Tokens/Fermat%20App%20Token/PerspView/HQ_1920x1080.jpg "Fermat Application Token")
 
 ### Token Records
 
@@ -140,9 +140,9 @@ The protocol itself issues tokens for miners and for development. In the last ca
 
 ### Token Usage
 
-End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoin by transfering fermats into a Bitcoin wallet. 
+End users automatically acquire fermats by receiving bitcoins into a Fermat wallet of their own. They can go back to bitcoins by transfering fermats into a Bitcoin wallet. 
 
-Fermat tokes are necesary for users to pay for three things:
+Fermat tokens are necessary for users to pay for three things:
 
 #### Communication
 
@@ -391,7 +391,7 @@ We have proposed a system for developing and running peer-to-peer financial appl
 * How to maximize reusability by building with plug-ins
 * How to enable even non-developers to create and use their own wallets and financial applications. 
 
-We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "iilusion" of using a custom tailored financial application, while underneeth the skin a set of plug-ins are collaborating to provide end users the desired functionality and present it in the exact way they fell confortable with.
+We have shifted the paradigm from competition to collaboration by designing and building pieces of a large master plan where anyone can collaborate and be part of it. At the same time we are giving end users the "illusion" of using a custom tailored financial application, while underneeth the skin a set of plug-ins are collaborating to provide end users the desired functionality and present it in the exact way they feel comfortable with.
 
 As Fermat applications and wallets are a set of plug-ins, the more applications built, the more plug-ins are added to the system and more unique components are ready to be re-used. This produces a positive feedback loop on the development of Fermat applications.
 

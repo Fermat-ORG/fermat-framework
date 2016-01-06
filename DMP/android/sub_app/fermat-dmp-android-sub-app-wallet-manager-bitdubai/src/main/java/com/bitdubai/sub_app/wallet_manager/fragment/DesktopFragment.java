@@ -123,6 +123,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
 //            searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
            lstItems = new ArrayList<>();
 
+
         } catch (Exception ex) {
             //errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
@@ -457,6 +458,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
 
             for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
+                emptyItem.setIconResource(-1);
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 

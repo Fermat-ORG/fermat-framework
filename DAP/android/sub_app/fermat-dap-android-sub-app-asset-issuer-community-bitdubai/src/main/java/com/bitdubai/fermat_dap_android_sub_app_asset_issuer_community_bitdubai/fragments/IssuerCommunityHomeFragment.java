@@ -143,7 +143,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     List<ActorAssetIssuer> toConnect = new ArrayList<>();
                     for (ActorIssuer actorIssuer : actors) {
                         if (actorIssuer.selected)
-                            toConnect.add(actorIssuer);
+                            toConnect.add(actorIssuer.getRecord());
                     }
                     //// TODO: 20/11/15 get Actor asset issuer
                     manager.connectToActorAssetIssuer(null, toConnect);

@@ -1,10 +1,14 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -38,6 +42,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     private List<CryptoCustomerIdentity> identities;
     private CryptoCustomerIdentity selectedIdentity;
 
+    private LinearLayout container;
+
     private ErrorManager errorManager;
     private CryptoCustomerWalletManager walletManager;
 
@@ -65,6 +71,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     protected void initViews(View layout) {
         super.initViews(layout);
 
+        container = (LinearLayout) layout.findViewById(R.id.ccw_wizard_set_identity_container);
+
         View nextStepButton = layout.findViewById(R.id.ccw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +89,36 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS, appSession.getAppPublicKey());
             }
         });
+
+        verifyIfWalletConfigured();
+    }
+
+    private void verifyIfWalletConfigured() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
+                    boolean walletConfigured = (data != null); // walletManager.isWalletConfigured(appSession.getAppPublicKey()); TODO
+
+                    if (walletConfigured) {
+                        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+                    } else {
+                        Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+                        container.setVisibility(View.VISIBLE);
+                        container.startAnimation(fadeInAnimation);
+                    }
+
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage(), ex);
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                }
+
+            }
+        }, 500);
     }
 
     @Override
@@ -113,18 +151,17 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     public List<CryptoCustomerIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoCustomerIdentity> data = new ArrayList<>();
 
-        // TODO
-//        try {
-//            data.addAll(walletManager.getListOfIdentities());
-//
-//        } catch (CantGetCryptoBrokerIdentityListException ex) {
-//
-//            Log.e(TAG, ex.getMessage(), ex);
-//            if (errorManager != null) {
-//                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-//                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
-//            }
-//        }
+        try {
+            data.addAll(walletManager.getListOfIdentities());
+
+        } catch (FermatException ex) {
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            }
+        }
 
         return data;
     }
