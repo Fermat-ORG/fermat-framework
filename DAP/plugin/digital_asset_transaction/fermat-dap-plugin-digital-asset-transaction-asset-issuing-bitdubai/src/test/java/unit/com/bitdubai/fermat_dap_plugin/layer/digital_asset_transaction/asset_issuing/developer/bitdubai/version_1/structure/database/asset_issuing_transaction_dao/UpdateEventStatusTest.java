@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 
@@ -69,13 +68,13 @@ public class UpdateEventStatusTest {
 
     @Test
     public void test_OK() throws Exception {
-        assetIssuingTransactionDao.updateEventStatus(eventId);
+        assetIssuingTransactionDao.notifyEvent(eventId);
     }
 
     @Test
     public void test_Throws_CantExecuteQueryException() throws Exception {
         doThrow(new CantUpdateRecordException("error")).when(databaseTable).updateRecord(databaseTableRecord);
-        catchException(assetIssuingTransactionDao).updateEventStatus(eventId);
+        catchException(assetIssuingTransactionDao).notifyEvent(eventId);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()

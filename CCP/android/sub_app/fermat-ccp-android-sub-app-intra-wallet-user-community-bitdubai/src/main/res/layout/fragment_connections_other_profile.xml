@@ -144,7 +144,7 @@
             android:layout_marginTop="32dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="Phrase"
+            android:text="Status"
             android:textColor="#0072bc"
             android:textSize="12sp"
             tools:ignore="HardcodedText" />

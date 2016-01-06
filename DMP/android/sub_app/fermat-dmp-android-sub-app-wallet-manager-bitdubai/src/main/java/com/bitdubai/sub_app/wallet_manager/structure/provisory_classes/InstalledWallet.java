@@ -108,6 +108,11 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         this.position = position;
     }
 
+    @Override
+    public int getNotifications() {
+        return 0;
+    }
+
     public void setIconResource(int iconResource) {
         this.iconResource = iconResource;
     }

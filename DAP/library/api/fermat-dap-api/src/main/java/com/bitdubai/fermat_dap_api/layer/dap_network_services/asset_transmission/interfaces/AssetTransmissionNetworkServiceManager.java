@@ -43,7 +43,7 @@ public interface AssetTransmissionNetworkServiceManager extends TransactionProto
      * @param senderType {@link PlatformComponentType} that represents the type of actor that sends the message
      * @param actorReceiverPublicKey {@link String} that represents the public key from the actor that receives the message.
      * @param receiverType {@link PlatformComponentType} that represents the type of actor that receives the message
-     * @param transactionId {@link String} the id of the transaction related with the status notification
+     * @param genesisTransaction {@link String} the genesisTransaction related with the status notification
      * @param newDistributionStatus {@link DistributionStatus} with the new status for the transaction.
      * @throws CantSendTransactionNewStatusNotificationException in case something goes wrong while trying to send the message.
      */
@@ -51,6 +51,6 @@ public interface AssetTransmissionNetworkServiceManager extends TransactionProto
                                               PlatformComponentType senderType,
                                               String actorReceiverPublicKey,
                                               PlatformComponentType receiverType,
-                                              String transactionId,
+                                              String genesisTransaction,
                                               DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
 }
