@@ -1007,7 +1007,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
                                                      PlatformComponentType senderType,
                                                      String actorReceiverPublicKey,
                                                      PlatformComponentType receiverType,
-                                                     String transactionId,
+                                                     String genesisTransaction,
                                                      DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException {
         try {
 
@@ -1022,7 +1022,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
             /*
              * Construct the message content in json format
              */
-            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(transactionId, newDistributionStatus, senderType, receiverType);
+            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(genesisTransaction, newDistributionStatus, senderType, receiverType);
 
             /*
              * If not null

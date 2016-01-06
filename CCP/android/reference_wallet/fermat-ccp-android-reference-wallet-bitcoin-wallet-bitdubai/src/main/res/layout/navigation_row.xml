@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:id="@+id/row_container">
 
@@ -24,7 +24,7 @@
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/textView_label"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="14dip"
             android:paddingLeft="8dip"
@@ -33,8 +33,16 @@
             android:text="Home"
             android:textColor="#ffffff"
             android:textSize="16sp"
+            android:layout_weight="1"
             >
         </com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView>
+
+
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:id="@+id/badge"/>
 
 
     </LinearLayout>

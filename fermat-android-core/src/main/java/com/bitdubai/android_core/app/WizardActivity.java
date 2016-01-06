@@ -477,4 +477,9 @@ public class WizardActivity extends FermatActivity
     public Object[] connectBetweenAppsData() {
         return new Object[0];
     }
+
+    @Override
+    public void onControlledActivityBack(String activityCodeBack) {
+
+    }
 }

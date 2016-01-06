@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,10 +27,10 @@
                 android:scaleType="centerCrop"
                 android:layout_gravity="center_horizontal"
                 android:clickable="true"
-                android:src="@drawable/mati_profile"
+                android:src="@drawable/ic_icon_notifications"
                 />
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:text="App Name"
+                tools:text="App Name"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"

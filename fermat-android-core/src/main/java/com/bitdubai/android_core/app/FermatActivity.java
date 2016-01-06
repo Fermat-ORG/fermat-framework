@@ -344,8 +344,9 @@ public abstract class FermatActivity extends AppCompatActivity
         // rendering UI components
         try {
 
+            ModuleManager moduleManager = null;
             if(appConnections!=null) {
-                ModuleManager moduleManager = getModuleManager(appConnections.getPluginVersionReference());
+                moduleManager = getModuleManager(appConnections.getPluginVersionReference());
                 appConnections.setActiveIdentity(moduleManager.getSelectedActorIdentity());
             }
             TabStrip tabs = activity.getTabStrip();
@@ -364,6 +365,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             paintTitleBar(titleBar, activity);
 
+            if(moduleManager!=null && sideMenu!=null) sideMenu.setNotifications(moduleManager.getMenuNotifications());
             paintSideMenu(activity, sideMenu,appConnections);
 
             if(appConnections!=null) {
@@ -1707,7 +1709,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     case INCOMING_CONNECTION:
                         //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
-                    case INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION:
+                    case INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case MONEY_REQUEST:
@@ -1777,7 +1779,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     case INCOMING_CONNECTION:
                         //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
-                    case INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION:
+                    case INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case MONEY_REQUEST:
@@ -1788,6 +1790,15 @@ public abstract class FermatActivity extends AppCompatActivity
                         break;
                     case OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION:
                         launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case RECEIVE_REQUEST_PAYMENT_NOTIFICATION:
+                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case DENIED_REQUEST_PAYMENT_NOTIFICATION:
+                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+
+
                     default:
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;

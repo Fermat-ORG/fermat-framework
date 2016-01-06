@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -17,22 +18,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -40,13 +35,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.developer_utils.AssetReceptionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.developer_utils.mocks.MockDigitalAssetMetadataForTesting;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantCheckAssetReceptionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptor;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
@@ -54,12 +45,11 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rece
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events.AssetReceptionMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events.AssetReceptionRecorderService;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,11 +100,8 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     private EventManager eventManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-    AssetReceptionMonitorAgent assetReceptionMonitorAgent;
-    DigitalAssetReceptionVault digitalAssetReceptionVault;
-    DigitalAssetReceptor digitalAssetReceptor;
-    Database assetReceptionDatabase;
-    AssetReceptionRecorderService assetReceptionRecorderService;
+    private AssetReceptionMonitorAgent assetReceptionMonitorAgent;
+    private DigitalAssetReceptor digitalAssetReceptor;
 
     public AssetReceptionDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -188,13 +175,13 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     private void createAssetReceptionTransactionDatabase() throws CantCreateDatabaseException {
         AssetReceptionDatabaseFactory databaseFactory = new AssetReceptionDatabaseFactory(this.pluginDatabaseSystem);
-        assetReceptionDatabase = databaseFactory.createDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
+        databaseFactory.createDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
     }
 
     @Override
     public void start() throws CantStartPluginException {
         try {
-            this.assetReceptionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
+            this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             try {
                 createAssetReceptionTransactionDatabase();
@@ -203,53 +190,51 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             }
         }
         try {
-            digitalAssetReceptionVault = new DigitalAssetReceptionVault(
+            AssetReceptionDao assetReceptionDao = new AssetReceptionDao(this.pluginDatabaseSystem, this.pluginId);
+            DigitalAssetReceptionVault digitalAssetReceptionVault = new DigitalAssetReceptionVault(
                     pluginId,
                     pluginFileSystem,
-                    errorManager);
-            digitalAssetReceptionVault.setAssetUserWalletManager(this.assetUserWalletManager);
+                    errorManager,
+                    assetUserWalletManager);
             printSomething("The wallet public key is hardcoded");
             digitalAssetReceptionVault.setWalletPublicKey("walletPublicKeyTest");
-            digitalAssetReceptor = new DigitalAssetReceptor(this.errorManager, this.pluginId, this.pluginFileSystem, this.bitcoinNetworkManager);
-            digitalAssetReceptor.setDigitalAssetReceptionVault(digitalAssetReceptionVault);
+            digitalAssetReceptor = new DigitalAssetReceptor(this.errorManager,
+                    this.pluginId,
+                    this.pluginFileSystem,
+                    this.bitcoinNetworkManager,
+                    digitalAssetReceptionVault,
+                    assetReceptionDao);
 
-            AssetReceptionDao assetReceptionDao = new AssetReceptionDao(this.pluginDatabaseSystem, this.pluginId);
-            digitalAssetReceptor.setAssetReceptionDao(assetReceptionDao);
 
-            this.assetReceptionRecorderService = new AssetReceptionRecorderService(assetReceptionDao, eventManager);
+            AssetReceptionRecorderService assetReceptionRecorderService = new AssetReceptionRecorderService(assetReceptionDao, eventManager);
             try {
                 //I need to check if this works
-                this.assetReceptionRecorderService.setAssetReceptionDigitalAssetTransactionPluginRoot(this);
-                this.assetReceptionRecorderService.start();
+                assetReceptionRecorderService.start();
             } catch (CantStartServiceException exception) {
                 //This plugin must be stopped if this happens.
                 this.serviceStatus = ServiceStatus.STOPPED;
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
-            //testDeveloperDatabase();
-
             /**
              * I will start the Monitor Agent at start up
              */
-            this.startMonitorAgent();
+            this.startMonitorAgent(digitalAssetReceptionVault);
 
         } catch (CantSetObjectException exception) {
-            this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
-            this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot execute a database operation");
         } catch (CantStartServiceException exception) {
-            this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Reception plugin", "Cannot start event recorder service");
         } catch (Exception exception) {
             System.out.println("ASSET RECEPTION EXCEPTION TEST " + exception);
             exception.printStackTrace();
+        } finally {
+            this.serviceStatus = ServiceStatus.STOPPED;
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
-        //testRaiseEvent();
     }
 
     /**
@@ -259,25 +244,21 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
      * @throws CantSetObjectException
      * @throws CantStartAgentException
      */
-    public void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
-        if (this.assetReceptionMonitorAgent == null) {
-            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            this.assetReceptionMonitorAgent = new AssetReceptionMonitorAgent(this.eventManager,
-                    this.pluginDatabaseSystem,
-                    this.errorManager,
-                    this.pluginId,
-                    userPublicKey);
-            this.assetReceptionMonitorAgent.setLogManager(this.logManager);
-            this.assetReceptionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
-            this.assetReceptionMonitorAgent.setDigitalAssetDistributionVault(this.digitalAssetReceptionVault);
-            this.assetReceptionMonitorAgent.setAssetTransmissionManager(this.assetTransmissionNetworkServiceManager);
-            this.assetReceptionMonitorAgent.setActorAssetUserManager(this.actorAssetUserManager);
-            this.assetReceptionMonitorAgent.setActorAssetIssuerManager(this.actorAssetIssuerManager);
-            this.assetReceptionMonitorAgent.setDigitalAssetReceptor(this.digitalAssetReceptor);
-            this.assetReceptionMonitorAgent.start();
-        }else{
-            this.assetReceptionMonitorAgent.start();
+    public void startMonitorAgent(DigitalAssetReceptionVault digitalAssetReceptionVault) throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
+        if (assetReceptionMonitorAgent == null) {
+            assetReceptionMonitorAgent = new AssetReceptionMonitorAgent(
+                    pluginDatabaseSystem,
+                    errorManager,
+                    pluginId,
+                    logManager,
+                    bitcoinNetworkManager,
+                    assetTransmissionNetworkServiceManager,
+                    actorAssetUserManager,
+                    digitalAssetReceptor,
+                    digitalAssetReceptionVault);
         }
+        assetReceptionMonitorAgent.start();
+
     }
 
     //TODO: DELETE THIS USELESS METHOD
@@ -300,28 +281,4 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
             return DEFAULT_LOG_LEVEL;
         }
     }
-
-    private void testRaiseEvent() {
-        printSomething("Start event test");
-        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
-        eventManager.raiseEvent(eventToRaise);
-        printSomething("End event test");
-    }
-
-    private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetReceptionProgressException {
-        System.out.println("START TEST DEVELOPER DATABASE ASSET RECEPTION");
-        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting = new MockDigitalAssetMetadataForTesting();
-        System.out.println("ASSET RECEPTION MOCKED DAM:" + mockDigitalAssetMetadataForTesting);
-        AssetReceptionDao assetReceptionDao = new AssetReceptionDao(pluginDatabaseSystem, pluginId);
-        assetReceptionDao.persistDigitalAsset(
-                mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
-                "testLocalStorage",
-                mockDigitalAssetMetadataForTesting.getDigitalAssetHash(),
-                "testReceiverPublicKey");
-        System.out.println("ASSET RECEPTION status settled: " + ReceptionStatus.ASSET_ACCEPTED + "\nfor GT " + mockDigitalAssetMetadataForTesting.getGenesisTransaction());
-        assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, mockDigitalAssetMetadataForTesting.getGenesisTransaction());
-        System.out.println("ASSET RECEPTION status from data base is:  " + assetReceptionDao.getGenesisTransactionByReceptionStatus(ReceptionStatus.ASSET_ACCEPTED));
-    }
-
 }
