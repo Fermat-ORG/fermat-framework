@@ -1,5 +1,5 @@
 <!-- all links tested by laderuner -->
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 # Welcome to Fermat!
 
@@ -25,7 +25,7 @@ Fermat is a p2p financial application framework that enables any kind of trust-l
 
 The framework evolves from the stand-alone crypto wallet and enables an ecosystem of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from an OS API level, to a Blockchain, Communication, Platform, and User Interface Level. 
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/PIP.jpg "Plugins Platform")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Platform%20Coins/PIP/PIP.jpg "Plugins Platform")
 
 #### The Network
 
@@ -33,7 +33,7 @@ Crypto networks are peer-to-Peer electronic cash systems that allow online payme
 
 Fermat features a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. On top of that network a synchronization scheme transforms a standalone app into a distributed application across several devices still owned by the same user. 
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/P2P.jpg "Peer to Peer Network")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Platform%20Coins/P2P/P2P.jpg "Peer to Peer Network")
 
 #### Fermat Goals
 
@@ -115,7 +115,7 @@ Fermat is moving towards version 1, but we're not stopping there. We have many f
 You can learn more, see some cool images of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
 
-![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/05aa4fc11e7a523ecf21d6d2b1fc631a73412798/Coins/Fiat_art_3_wb.jpg "Fermat Digital Money")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fiat%20Coins/Fiat%20Art/Scene1/HQ_1920x1080.jpg "Fermat Digital Money")
 
 <br>
 ### Fermat's Purpose
@@ -275,5 +275,5 @@ then learn how to pull the repo and hack on Fermat. Then say hi at our [IRC DEV 
 
 You don't need to be a developer to participate on the project. There are many ways to do it and we explain each one of them at the [How to Participate Guide](https://github.com/bitDubai/participate-now).
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg "Fermat Coin")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fermat%20Bitcoin/PerspView/1/Front_HQ_1920x1080.jpg "Fermat Coin")
 

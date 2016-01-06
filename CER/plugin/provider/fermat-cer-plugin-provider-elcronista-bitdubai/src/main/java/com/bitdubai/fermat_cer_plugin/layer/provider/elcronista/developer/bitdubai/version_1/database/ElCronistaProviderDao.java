@@ -1,0 +1,242 @@
+package com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.database;
+
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantCreateExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantInitializeProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.exceptions.CantInitializeElCronistaProviderDatabaseException;
+import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Created by Alejandro Bicelis on 12/7/2015.
+ */
+public class ElCronistaProviderDao {
+
+
+    private final ErrorManager errorManager;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID pluginId;
+
+    private Database database;
+
+    public ElCronistaProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
+        this.errorManager = errorManager;
+    }
+
+
+    public void initialize() throws CantInitializeElCronistaProviderDatabaseException {
+        try {
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+        } catch (DatabaseNotFoundException e) {
+            ElCronistaProviderDatabaseFactory databaseFactory = new ElCronistaProviderDatabaseFactory(pluginDatabaseSystem);
+            try {
+                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+            }
+        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
+        }
+    }
+
+    public void initializeProvider(String providerName) throws CantInitializeProviderInfoException {
+        //Try to get info, if there's no info, populate.
+        try{
+            this.getProviderInfo();
+        }catch (CantGetProviderInfoException e){
+            this.populateProviderInfo(providerName);
+        }
+    }
+
+
+    public void saveExchangeRate(ExchangeRate exchangeRate) throws CantSaveExchangeRateException {
+
+        DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+        DatabaseTableRecord newRecord = table.getEmptyRecord();
+        constructRecordFromExchangeRate(newRecord, exchangeRate);
+        try {
+            table.insertRecord(newRecord);
+        }catch (CantInsertRecordException e) {
+            throw new CantSaveExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Cant save new record in table");
+        }
+    }
+
+    public List<ExchangeRate> getQueriedExchangeRateHistory(CurrencyPair currencyPair) throws CantGetExchangeRateException
+    {
+        List<ExchangeRate> exchangeRateList = new ArrayList<>();
+
+        DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+
+        table.addStringFilter(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                ExchangeRate exchangeRate = constructExchangeRateFromRecord(record);
+                exchangeRateList.add(exchangeRate);
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
+        }catch (CantCreateExchangeRateException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get History for currencyPair: " + currencyPair.toString(), "Couldn't create ExchangeRate object");
+        }
+
+        return exchangeRateList;
+    }
+
+
+
+
+
+
+    /* PROVIDER INFO GETTERS */
+    public String getProviderName() throws CantGetProviderInfoException {
+        DatabaseTableRecord record = this.getProviderInfo();
+        return record.getStringValue(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME);
+    }
+
+    public UUID getProviderId() throws CantGetProviderInfoException {
+        DatabaseTableRecord record = this.getProviderInfo();
+        return record.getUUIDValue(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME);
+    }
+
+    private DatabaseTableRecord getProviderInfo() throws CantGetProviderInfoException {
+        List<DatabaseTableRecord> records;
+        DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
+
+        try{
+            table.loadToMemory();
+            records = table.getRecords();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetProviderInfoException(CantGetProviderInfoException.DEFAULT_MESSAGE);
+        }
+
+        if (records.size() != 1)
+            throw new CantGetProviderInfoException("Inconsistent number of fetched records (" + records.size() + "), should be 1.");
+
+        return records.get(0);
+    }
+    private void populateProviderInfo(String providerName) throws CantInitializeProviderInfoException {
+        DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
+        DatabaseTableRecord newRecord = table.getEmptyRecord();
+
+        newRecord.setUUIDValue(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME, UUID.randomUUID());
+        newRecord.setStringValue(ElCronistaProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME, providerName);
+
+        try {
+            table.insertRecord(newRecord);
+        }catch (CantInsertRecordException e) {
+            throw new CantInitializeProviderInfoException(e.getMessage());
+        }
+    }
+
+
+
+    /* INTERNAL HELPER FUNCTIONS */
+    private DatabaseTableFilter getEmptyTableFilter() {
+        return this.database.getTable(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME).getEmptyTableFilter();
+    }
+
+
+
+    private List<DatabaseTableRecord> getRecordsByFilter(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+        DatabaseTable table = this.database.getTable(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+
+        if (filter != null)
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
+        table.loadToMemory();
+        return table.getRecords();
+    }
+
+
+    private void constructRecordFromExchangeRate(DatabaseTableRecord newRecord, ExchangeRate exchangeRate) {
+
+        newRecord.setUUIDValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, UUID.randomUUID());
+        newRecord.setStringValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, exchangeRate.getFromCurrency().getCode());
+        newRecord.setStringValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, exchangeRate.getToCurrency().getCode());
+        newRecord.setDoubleValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, exchangeRate.getSalePrice());
+        newRecord.setDoubleValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, exchangeRate.getPurchasePrice());
+        newRecord.setLongValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
+
+    }
+
+    private ExchangeRate constructExchangeRateFromRecord(DatabaseTableRecord record) throws CantCreateExchangeRateException {
+
+        UUID id = record.getUUIDValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME);
+        double salePrice = record.getDoubleValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME);
+        double purchasePrice = record.getDoubleValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME);
+        long timestamp = record.getLongValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+
+        Currency fromCurrency;
+        try {
+            String fromCurrencyStr = record.getStringValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME);
+
+            if(FiatCurrency.codeExists(fromCurrencyStr))
+                fromCurrency = FiatCurrency.getByCode(fromCurrencyStr);
+            else if(CryptoCurrency.codeExists(fromCurrencyStr))
+                fromCurrency = CryptoCurrency.getByCode(fromCurrencyStr);
+            else throw new InvalidParameterException();
+
+        } catch (InvalidParameterException e) {
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Invalid From Currency value stored in table"
+                    + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+        }
+
+        Currency toCurrency;
+        try {
+            String toCurrencyStr = record.getStringValue(ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME);
+
+            if(FiatCurrency.codeExists(toCurrencyStr))
+                toCurrency = FiatCurrency.getByCode(toCurrencyStr);
+            else if(CryptoCurrency.codeExists(toCurrencyStr))
+                toCurrency = CryptoCurrency.getByCode(toCurrencyStr);
+            else throw new InvalidParameterException();
+
+        } catch (InvalidParameterException e) {
+            throw new CantCreateExchangeRateException(e.getMessage(), e, "ElCronista provider plugin", "Invalid To Currency value stored in table"
+                    + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME + " for id " + id);
+        }
+
+        return new ExchangeRateImpl(fromCurrency, toCurrency, salePrice, purchasePrice, timestamp);
+    }
+
+
+
+}
