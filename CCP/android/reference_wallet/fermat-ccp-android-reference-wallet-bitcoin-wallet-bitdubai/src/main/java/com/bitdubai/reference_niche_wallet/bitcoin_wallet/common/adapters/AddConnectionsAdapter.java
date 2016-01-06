@@ -102,6 +102,9 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
             holder.getContainer_data().setBackgroundColor(Color.parseColor("#ffffff"));
 
         }
+
+        holder.getCheckbox_connection().setChecked(false);
+        holder.getCheckbox_connection().setEnabled(false);
     }
 
 }

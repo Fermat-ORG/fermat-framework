@@ -254,6 +254,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public List<CryptoWalletIntraUserActor> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoWalletIntraUserActor> data = new ArrayList<>();
+        menu.clear();
 
         try {
             if (moduleManager == null) {
