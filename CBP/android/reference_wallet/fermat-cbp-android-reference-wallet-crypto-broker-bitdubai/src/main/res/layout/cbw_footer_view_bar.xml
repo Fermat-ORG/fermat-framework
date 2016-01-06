@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="#aaaaaa"
+    android:gravity="center_vertical"
+    android:paddingLeft="16dp"
+    android:text="Bitcoin: 120 BTC"
+    android:textColor="@color/black"
+    android:textSize="16sp"/>
