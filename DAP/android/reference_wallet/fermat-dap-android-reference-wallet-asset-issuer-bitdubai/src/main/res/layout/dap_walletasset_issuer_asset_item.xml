@@ -22,8 +22,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#1affffff">
+            android:layout_height="match_parent">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetNameText"
@@ -140,6 +139,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
-        android:background="#FFFFFF" />
+        android:background="#1affffff" />
 
 </LinearLayout>
