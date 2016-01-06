@@ -191,7 +191,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
         if (selectedProviders.isEmpty()) {
             Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
-            return;
+            //TODO
+            //return;
         }
 
         try {
@@ -212,6 +213,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
+        // TODO
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
     }
 
