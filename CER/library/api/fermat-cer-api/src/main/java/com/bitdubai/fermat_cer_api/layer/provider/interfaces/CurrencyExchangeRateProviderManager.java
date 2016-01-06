@@ -63,7 +63,7 @@ public interface CurrencyExchangeRateProviderManager extends FermatManager {
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    //Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
      * Returns a list of queried exchange rates, for a specific currencyPair
