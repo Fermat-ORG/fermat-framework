@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.10.18..
  */
-public abstract class AbstractFermatSession<A extends FermatApp,M extends ModuleManager,R extends ResourceProviderManager> implements FermatSession{
+public abstract class AbstractFermatSession<A extends FermatApp,M extends ModuleManager,R extends ResourceProviderManager> implements FermatSession<A,M>{
 
     private String publicKey;
     private A fermatApp;

@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.intra_user_community.holders;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -23,8 +22,7 @@ public class AppNotificationsHolder extends FermatViewHolder {
      */
     public AppNotificationsHolder(View itemView) {
         super(itemView);
-
-        userName = (FermatTextView)itemView.findViewById(R.id.userName);
+        userName = (FermatTextView) itemView.findViewById(R.id.username);
         userAvatar = (ImageView)itemView.findViewById(R.id.imageView_avatar);
 
     }
