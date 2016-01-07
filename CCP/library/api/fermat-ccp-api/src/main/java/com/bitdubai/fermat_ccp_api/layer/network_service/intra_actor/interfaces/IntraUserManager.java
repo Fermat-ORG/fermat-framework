@@ -125,4 +125,6 @@ public interface IntraUserManager extends FermatManager {
     void registrateActor(Actor actor);
 
     Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors ,byte[] profileImage);
+
+    void updateActor(Actor actor);
 }
