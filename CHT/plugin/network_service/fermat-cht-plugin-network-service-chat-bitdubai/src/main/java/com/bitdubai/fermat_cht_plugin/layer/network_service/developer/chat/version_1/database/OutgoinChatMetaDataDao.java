@@ -16,31 +16,32 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.structure.ChatMetadaTransactionRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
+
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao</code> is
  * throw when error occurred updating new record in a table of the data base
  * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
+ * Created by Roberto Requena - (rart3001@gn¡mail.com) on 15/10/2015
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class OutgoingMessageDao {
+public class OutgoinChatMetaDataDao {
 
     /**
      * Represent the dataBase
@@ -52,7 +53,7 @@ public class OutgoingMessageDao {
      *
      * @param dataBase
      */
-    public OutgoingMessageDao(Database dataBase) {
+    public OutgoinChatMetaDataDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
@@ -72,23 +73,23 @@ public class OutgoingMessageDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+        return getDataBase().getTable(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_TABLE_NAME);
     }
 
     /**
-     * Method that find an FermatMessage by id in the data base.
+     * Method that find an ChatMetadaTransactionRecord by id in the data base.
      *
      * @param id Long id.
-     * @return FermatMessage found.
+     * @return ChatMetadaTransactionRecord found.
      * @throws CantReadRecordDataBaseException
      */
-    public FermatMessage findById(String id) throws CantReadRecordDataBaseException {
+    public ChatMetadaTransactionRecord findById(String id) throws CantReadRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        FermatMessage outgoingTemplateNetworkServiceMessage = null;
+        ChatMetadaTransactionRecord  chatMetadaTransactionRecord = null;
 
         try {
 
@@ -96,7 +97,7 @@ public class OutgoingMessageDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.addStringFilter(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -106,14 +107,14 @@ public class OutgoingMessageDao {
 
 
             /*
-             * 3 - Convert into FermatMessage objects
+             * 3 - Convert into ChatMetadaTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 3.1 - Create and configure a  FermatMessage
+                 * 3.1 - Create and configure a  ChatMetadaTransactionRecord
                  */
-                outgoingTemplateNetworkServiceMessage = constructFrom(record);
+                chatMetadaTransactionRecord = constructFrom(record);
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -127,21 +128,19 @@ public class OutgoingMessageDao {
             throw cantReadRecordDataBaseException;
         }
 
-        return outgoingTemplateNetworkServiceMessage;
+        return chatMetadaTransactionRecord;
     }
-
-    ;
 
     /**
      * Method that list the all entities on the data base.
      *
-     * @return All FermatMessage.
+     * @return All ChatMetadaTransactionRecord.
      * @throws CantReadRecordDataBaseException
      */
-    public List<FermatMessage> findAll() throws CantReadRecordDataBaseException {
+    public List<ChatMetadaTransactionRecord> findAll() throws CantReadRecordDataBaseException {
 
 
-        List<FermatMessage> list = null;
+        List<ChatMetadaTransactionRecord> list = null;
 
         try {
 
@@ -157,25 +156,25 @@ public class OutgoingMessageDao {
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 3 - Create a list of FermatMessage objects
+             * 3 - Create a list of ChatMetadaTransactionRecord objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into FermatMessage objects
+             * 4 - Convert into ChatMetadaTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  FermatMessage
+                 * 4.1 - Create and configure a  ChatMetadaTransactionRecord
                  */
-                FermatMessage outgoingTemplateNetworkServiceMessage = constructFrom(record);
+                ChatMetadaTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(outgoingTemplateNetworkServiceMessage);
+                list.add(ChatMetadaTransactionRecord);
 
             }
 
@@ -196,18 +195,16 @@ public class OutgoingMessageDao {
         return list;
     }
 
-    ;
-
 
     /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>NetworkServiceChatNetworkServiceDatabaseConstants</code>
      *
-     * @return All FermatMessage.
+     * @return All ChatMetadaTransactionRecord.
      * @throws CantReadRecordDataBaseException
      * @see NetworkServiceChatNetworkServiceDatabaseConstants
      */
-    public List<FermatMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<ChatMetadaTransactionRecord> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -218,7 +215,7 @@ public class OutgoingMessageDao {
         }
 
 
-        List<FermatMessage> list = null;
+        List<ChatMetadaTransactionRecord> list = null;
 
         try {
 
@@ -235,25 +232,25 @@ public class OutgoingMessageDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 3 - Create a list of FermatMessage objects
+             * 3 - Create a list of ChatMetadaTransactionRecord objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into FermatMessage objects
+             * 4 - Convert into ChatMetadaTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  FermatMessage
+                 * 4.1 - Create and configure a  ChatMetadaTransactionRecord
                  */
-                FermatMessage outGoingTemplateNetworkServiceMessage = constructFrom(record);
+                ChatMetadaTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(outGoingTemplateNetworkServiceMessage);
+                list.add(ChatMetadaTransactionRecord);
 
             }
 
@@ -274,18 +271,16 @@ public class OutgoingMessageDao {
         return list;
     }
 
-    ;
-
 
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>NetworkServiceChatNetworkServiceDatabaseConstants</code>
      *
      * @param filters
-     * @return List<FermatMessage>
+     * @return List<ChatMetadaTransactionRecord>
      * @throws CantReadRecordDataBaseException
      */
-    public List<FermatMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<ChatMetadaTransactionRecord> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -293,7 +288,7 @@ public class OutgoingMessageDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<FermatMessage> list = null;
+        List<ChatMetadaTransactionRecord> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -327,25 +322,25 @@ public class OutgoingMessageDao {
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
             /*
-             * 4 - Create a list of FermatMessage objects
+             * 4 - Create a list of ChatMetadaTransactionRecord objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into FermatMessage objects
+             * 5 - Convert into ChatMetadaTransactionRecord objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 5.1 - Create and configure a  FermatMessage
+                 * 5.1 - Create and configure a  ChatMetadaTransactionRecord
                  */
-                FermatMessage outgoingTemplateNetworkServiceMessage = constructFrom(record);
+                ChatMetadaTransactionRecord ChatMetadaTransactionRecord = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
                  */
-                list.add(outgoingTemplateNetworkServiceMessage);
+                list.add(ChatMetadaTransactionRecord);
 
             }
 
@@ -366,15 +361,13 @@ public class OutgoingMessageDao {
         return list;
     }
 
-    ;
-
     /**
      * Method that create a new entity in the data base.
      *
-     * @param entity FermatMessage to create.
+     * @param entity ChatMetadaTransactionRecord to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(FermatMessage entity) throws CantInsertRecordDataBaseException {
+    public void create(ChatMetadaTransactionRecord entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -412,10 +405,10 @@ public class OutgoingMessageDao {
     /**
      * Method that update an entity in the data base.
      *
-     * @param entity FermatMessage to update.
+     * @param entity ChatMetadaTransactionRecord to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(FermatMessage entity) throws CantUpdateRecordDataBaseException {
+    public void update(ChatMetadaTransactionRecord entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -488,42 +481,47 @@ public class OutgoingMessageDao {
 
 
     /**
+     * Create a instance of ChatMetadaTransactionRecord from the DatabaseTableRecord
+     *
      * @param record with values from the table
-     * @return FermatMessage setters the values from table
+     * @return ChatMetadaTransactionRecord setters the values from table
      */
-    private FermatMessage constructFrom(DatabaseTableRecord record) {
+    private ChatMetadaTransactionRecord constructFrom(DatabaseTableRecord record) {
 
-        FermatMessageCommunication outgoingTemplateNetworkServiceMessage = new FermatMessageCommunication();
+        ChatMetadaTransactionRecord ChatMetadaTransactionRecord = new ChatMetadaTransactionRecord();
 
         try {
 
-            outgoingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setSender(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setContent(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
+            ChatMetadaTransactionRecord.setIdChat(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setIdObjecto(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setLocalActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORTYPE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setLocalActorPubKey(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setRemoteActorType(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORTYPE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setRemoteActorPubKey(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setChatName(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATNAME_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setChatMessageStatus(ChatMessageStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATSTATUS_COLUMN_NAME)));
+            ChatMetadaTransactionRecord.setDate(new Timestamp(Long.parseLong(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DATE_COLUMN_NAME))));
+            ChatMetadaTransactionRecord.setIdMessage(record.getIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setMessage(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_COLUMN_NAME));
+            ChatMetadaTransactionRecord.setDistributionStatus(DistributionStatus.getByCode(record.getStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
-            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             //this should not happen, but if it happens return null
             e.printStackTrace();
             return null;
         }
 
-        return outgoingTemplateNetworkServiceMessage;
+        return ChatMetadaTransactionRecord;
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a FermatMessage pass
+     * Construct a DatabaseTableRecord whit the values of the a ChatMetadaTransactionRecord pass
      * by parameter
      *
-     * @param outGoingTemplateNetworkServiceMessage the contains the values
+     * @param ChatMetadaTransactionRecord the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(FermatMessage outGoingTemplateNetworkServiceMessage) {
+    private DatabaseTableRecord constructFrom(ChatMetadaTransactionRecord ChatMetadaTransactionRecord) {
 
         /*
          * Create the record to the entity
@@ -533,25 +531,18 @@ public class OutgoingMessageDao {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getId().toString());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getContent());
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
-
-        if (outGoingTemplateNetworkServiceMessage.getShippingTimestamp() != null){
-            entityRecord.setLongValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, (long) 0);
-        }
-
-        if (outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null){
-            entityRecord.setLongValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, (long) 0);
-        }
-
-        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
+        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDCHAT_COLUMN_NAME,                    ChatMetadaTransactionRecord.getIdChat());
+        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDOBJECTO_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdChat());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORTYPE_COLUMN_NAME,             ChatMetadaTransactionRecord.getLocalActorType());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_LOCALACTORPUBKEY_COLUMN_NAME,           ChatMetadaTransactionRecord.getLocalActorPubKey());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORTYPE_COLUMN_NAME,            ChatMetadaTransactionRecord.getRemoteActorType());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_REMOTEACTORPUBKEY_COLUMN_NAME,          ChatMetadaTransactionRecord.getRemoteActorPubKey());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATNAME_COLUMN_NAME,                   ChatMetadaTransactionRecord.getChatName());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_CHATSTATUS_COLUMN_NAME,                 ChatMetadaTransactionRecord.getChatMessageStatus().getCode());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DATE_COLUMN_NAME,                       ChatMetadaTransactionRecord.getDate().toString());
+        entityRecord.setIntegerValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_IDMENSAJE_COLUMN_NAME,                 ChatMetadaTransactionRecord.getIdMessage());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_MESSAGE_COLUMN_NAME,                    ChatMetadaTransactionRecord.getMessage());
+        entityRecord.setStringValue(NetworkServiceChatNetworkServiceDatabaseConstants.OUTGOING_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME,         ChatMetadaTransactionRecord.getDistributionStatus().getCode());
 
         /*
          * return the new table record
