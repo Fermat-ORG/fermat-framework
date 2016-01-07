@@ -499,14 +499,10 @@ public class AssetCryptoVaultManager  {
         byte[] pubKeyBytes = accountMasterKey.getPubKey();
         byte[] chainCode = accountMasterKey.getChainCode();
 
-
-        // Deserialize the pub key.
-        final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
-
         /**
          * return the extended public Key
          */
-        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(watchPubKeyAccountZero,watchPubKeyAccountZero);
+        ExtendedPublicKey extendedPublicKey = new ExtendedPublicKey(redeemPointPublicKey, pubKeyBytes, chainCode);
         return extendedPublicKey;
     }
 

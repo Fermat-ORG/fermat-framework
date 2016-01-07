@@ -26,6 +26,10 @@ public class DigitalAsset {
     private ActorAssetUser actorAssetUser;
     private byte[] image;
 
+    private int redeemed;
+    private int appropriated;
+    private int unused;
+
     public DigitalAsset() {
     }
 
@@ -140,5 +144,29 @@ public class DigitalAsset {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public int getRedeemed() {
+        return redeemed;
+    }
+
+    public void setRedeemed(int redeemed) {
+        this.redeemed = redeemed;
+    }
+
+    public int getAppropriated() {
+        return appropriated;
+    }
+
+    public void setAppropriated(int appropriated) {
+        this.appropriated = appropriated;
+    }
+
+    public int getUnused() {
+        return unused;
+    }
+
+    public void setUnused(int unused) {
+        this.unused = unused;
     }
 }
