@@ -14,13 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -52,6 +50,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 /**
  * Created by Manuel Perez on 15/12/2015.
@@ -235,7 +235,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                     new BrokerAckOnlinePaymentRecorderService(
                             brokerAckOnlinePaymentBusinessTransactionDao,
                             eventManager);
-//            brokerAckOnlinePaymentRecorderService.start();
+
+            //brokerAckOnlinePaymentRecorderService.start();
 
             /**
              * Initialize plugin manager

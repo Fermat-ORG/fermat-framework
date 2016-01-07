@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
@@ -13,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 23.11.15.
  */
-public interface CustomerBrokerNewManager {
+public interface CustomerBrokerNewManager extends FermatManager {
 
     /**
      * Create an Customer Broker New  Negotiation Transaction for the customer

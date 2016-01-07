@@ -33,7 +33,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
-public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment implements View.OnKeyListener {
+public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment {
 
     /**
      * FLAGS
@@ -68,9 +68,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     @Override
     public void onResume() {
-//        getView().setFocusableInTouchMode(true);
-//        getView().requestFocus();
-//        getView().setOnKeyListener(this);
         super.onResume();
     }
 
@@ -230,16 +227,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         getFermatScreenSwapper().onControlledActivityBack(activityCodeBack);
     }
 
-    protected final void setChangeBackActivity(String backActivity){
-        this.changeBackActivity = backActivity;
+    protected final void setChangeBackActivity(Activities backActivity){
+        getFermatScreenSwapper().setChangeBackActivity(backActivity);
     }
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if( keyCode == KeyEvent.KEYCODE_BACK ){
-                onBack(changeBackActivity);
-                return true;
-            }
-            return false;
-    }
 }

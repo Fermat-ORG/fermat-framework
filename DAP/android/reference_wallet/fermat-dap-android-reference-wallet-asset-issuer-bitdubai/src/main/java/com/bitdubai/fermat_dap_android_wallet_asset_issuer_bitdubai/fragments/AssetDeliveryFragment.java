@@ -2,9 +2,12 @@ package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +30,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.Ass
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 import java.io.ByteArrayInputStream;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
@@ -84,6 +88,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     }
 
     private void setupUI() {
+        setupBackgroundBitmap();
+
         assetDeliveryImage = (ImageView) rootView.findViewById(R.id.assetDeliveryImage);
         assetDeliveryNameText = (FermatTextView) rootView.findViewById(R.id.assetDeliveryNameText);
         assetDeliveryRemainingText = (FermatTextView) rootView.findViewById(R.id.assetDeliveryRemainingText);
@@ -119,6 +125,41 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         selectedUsersCount = getUsersSelectedCount();
         String message = (selectedUsersCount == 0) ? "Select users" : selectedUsersCount + " users selected";
         selectedUsersText.setText(message);
+    }
+
+    private void setupBackgroundBitmap() {
+        AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
+
+            WeakReference<ViewGroup> view;
+
+            @Override
+            protected void onPreExecute() {
+                view = new WeakReference(rootView) ;
+            }
+
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                Bitmap drawable = null;
+                try {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inScaled = true;
+                    options.inSampleSize = 5;
+                    drawable = BitmapFactory.decodeResource(
+                            getResources(), R.drawable.bg_app_image,options);
+                }catch (OutOfMemoryError error){
+                    error.printStackTrace();
+                }
+                return drawable;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap drawable) {
+                if (drawable!= null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                }
+            }
+        } ;
+        asyncTask.execute();
     }
 
     private int getUsersSelectedCount() {

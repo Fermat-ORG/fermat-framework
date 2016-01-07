@@ -48,6 +48,7 @@
         android:orientation="horizontal">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/is_published"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="4dp"
@@ -56,12 +57,6 @@
             android:textColor="@android:color/secondary_text_light"
             android:textSize="18sp" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
-            android:id="@+id/publish_identity"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:button="@drawable/switch_button_states"
-            tools:checked="true" />/>
     </LinearLayout>
 
 

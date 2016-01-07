@@ -15,9 +15,11 @@ public class AssertFactoryMiddlewareDatabaseConstant {
 
     public static final String ASSET_FACTORY_TABLE_NAME = "asset";
 
+    public static final String ASSET_FACTORY_ID_COLUMN = "factory_id";
     public static final String ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN = "asset_public_key";
     public static final String ASSET_FACTORY_NAME_COLUMN = "name";
     public static final String ASSET_FACTORY_QUANTITY_COLUMN = "quantity";
+    public static final String ASSET_FACTORY_TOTAL_QUANTITY_COLUMN = "total_quantity";
     public static final String ASSET_FACTORY_AMOUNT_COLUMN = "amount";
     public static final String ASSET_FACTORY_FEE_COLUMN = "fee";
     public static final String ASSET_FACTORY_STATE_COLUMN = "state";
@@ -32,7 +34,7 @@ public class AssertFactoryMiddlewareDatabaseConstant {
     public static final String ASSET_FACTORY_EXPIRATION_DATE = "expiration_date";
     public static final String ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY = "wallet_public_key";
 
-    public static final String ASSET_FACTORY_FIRST_KEY_COLUMN = ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+    public static final String ASSET_FACTORY_FIRST_KEY_COLUMN = ASSET_FACTORY_ID_COLUMN;
 
     /**
      * Asset Factory Resource database table definition.

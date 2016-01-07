@@ -49,7 +49,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
 
         try {
 
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (final CantOpenDatabaseException cantOpenDatabaseException) {
 

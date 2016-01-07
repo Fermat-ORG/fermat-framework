@@ -1,12 +1,13 @@
 package com.bitdubai.sub_app.intra_user_identity.common.model;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 
 /**
  * Created by nelson on 09/10/15.
  */
-public class IntraUserIdentityInformationImp implements IntraWalletUserIdentity {
+public class IntraUserIdentityInformationImp implements IntraUserModuleIdentity {
 
     private String intraUserName;
     private String intraUserPhrase;
@@ -46,13 +47,5 @@ public class IntraUserIdentityInformationImp implements IntraWalletUserIdentity 
         return null;
     }
 
-    @Override
-    public void setNewProfileImage(byte[] newProfileImage)  {
 
-    }
-
-    @Override
-    public String createMessageSignature(String message) {
-        return null;
-    }
 }

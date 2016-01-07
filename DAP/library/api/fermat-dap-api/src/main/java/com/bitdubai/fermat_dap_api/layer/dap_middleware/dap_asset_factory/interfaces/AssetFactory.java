@@ -15,10 +15,13 @@ import java.util.List;
  * Created by franklin on 07/09/15.
  */
 public interface AssetFactory {
+    String getFactoryId();
+    void setFactoryId(String factoryId);
+
     String getWalletPublicKey();
     void setWalletPublicKey(String walletPublicKey);
 
-    String getPublicKey();
+    String getAssetPublicKey();
     void setPublicKey(String publicKey);
 
     String getName();
@@ -33,9 +36,6 @@ public interface AssetFactory {
     DigitalAssetContract getContract();
     void setContract(DigitalAssetContract contract);
 
-//    ContractProperty getContractProperty();
-//    void setContractProperty(ContractProperty contractProperty);
-
     List<ContractProperty> getContractProperties();
     void setContractProperties(List<ContractProperty> contractProperties);
 
@@ -44,6 +44,9 @@ public interface AssetFactory {
 
     int getQuantity();
     void setQuantity(int quantity);
+
+    int getTotalQuantity();
+    void setTotalQuantity(int quantity);
 
     long getAmount();
     void setAmount(long amount);
@@ -65,9 +68,6 @@ public interface AssetFactory {
 
     Timestamp getLastModificationTimestamp();
     void setLastModificationTimeststamp(Timestamp timestamp);
-
-//    String getAssetIssuerIdentityPublicKey();
-//    void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
 
     IdentityAssetIssuer getIdentyAssetIssuer();
     void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer);

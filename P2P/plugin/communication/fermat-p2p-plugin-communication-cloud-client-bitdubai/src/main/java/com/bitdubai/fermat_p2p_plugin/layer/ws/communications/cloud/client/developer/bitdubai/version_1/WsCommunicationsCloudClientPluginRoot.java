@@ -7,18 +7,23 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
@@ -32,6 +37,8 @@ import org.java_websocket.WebSocketImpl;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
@@ -59,7 +66,17 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCCTION;
+     public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
+
+    /**
+     * Represent the uri
+     */
+    private URI uri;
+
+    /**
+     * Represent the clientIdentity
+     */
+    private ECCKeyPair clientIdentity;
 
     /*
      * Hold the list of event listeners
@@ -82,6 +99,11 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public WsCommunicationsCloudClientPluginRoot(){
         super(new PluginVersionReference(new Version()));
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
+        this.clientIdentity = new ECCKeyPair("26e7c52da72a429ed9d2a52eadab439d0daedd3f8d47aa8f7bf73d4d5511e881",
+                "04148E64EF734692F7C8636AF1D9ADA79757EEFDE7C0C708B889D4E37D30D5CA829EFBEA913D2605F924A5135A607D4FAD5294896CFF9B81E28779ADDE32194732");
+
+        System.out.println("WsCommunicationsCloudClientPluginRoot - PrivateKey = "+clientIdentity.getPrivateKey());
+        System.out.println("WsCommunicationsCloudClientPluginRoot - PublicKey  = "+clientIdentity.getPublicKey());
     }
 
     /**
@@ -137,10 +159,23 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             WebSocketImpl.DEBUG = false;
 
-            URI uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
+            uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT);
 
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager);
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
+
+            /*
+             * Handle connection loose
+             */
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+            fermatEventListener.setEventHandler(new FermatEventHandler() {
+                @Override
+                public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+                    handleConnectionLoose();
+                }
+            });
+            eventManager.addListener(fermatEventListener);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,4 +253,34 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public Boolean isDisable() {
         return getDisableClientFlag();
     }
+
+
+    /**
+     * Handle de connection Loose event to try to reconnect
+     */
+    public void handleConnectionLoose(){
+
+        try {
+
+            System.out.println("WsCommunicationsCloudClientPluginRoot - handleConnectionLoose trying to reconnect");
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
+            wsCommunicationsCloudClientConnection.initializeAndConnect();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect on 40 seg");
+
+            new Timer().schedule(new TimerTask() {
+                               @Override
+                               public void run() {
+                                   handleConnectionLoose();
+                               }
+                           },
+                    40000
+            );
+
+        }
+
+    }
+
 }

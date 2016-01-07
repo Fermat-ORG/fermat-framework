@@ -33,6 +33,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExec
 
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.MISSING_IMAGE;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
 /**
@@ -189,6 +190,9 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                 break;
             case INVALID_ENTRY_DATA:
                 Toast.makeText(getActivity(), "Cannot create identity due to wrong data.", Toast.LENGTH_LONG).show();
+                break;
+            case MISSING_IMAGE:
+                Toast.makeText(getActivity(), "Please select a valid profile image for the identity.", Toast.LENGTH_LONG).show();
                 break;
         }
     }

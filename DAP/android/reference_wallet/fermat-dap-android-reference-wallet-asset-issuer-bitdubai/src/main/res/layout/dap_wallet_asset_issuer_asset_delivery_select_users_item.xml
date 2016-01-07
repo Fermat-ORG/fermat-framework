@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:layout_height="35dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/userName"
@@ -13,17 +13,17 @@
         android:paddingBottom="8dp"
         android:text="Frank Contreras"
         android:textSize="16sp"
-        android:textColor="#ffffff"
+        android:textColor="#2d3e50"
         android:fontFamily="regular" />
 
     <ImageView
         android:id="@+id/selectUserButton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:src="@drawable/ic_deliver_user_add"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="6dp" />
 
     <View
         android:layout_width="fill_parent"

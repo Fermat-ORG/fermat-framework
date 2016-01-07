@@ -49,6 +49,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
@@ -234,6 +235,11 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
+    }
+
+    @Override
+    public void setChangeBackActivity(Activities activityCodeBack) {
+        getWalletRuntimeManager().getLastWallet().getLastActivity().setBackActivity(activityCodeBack);
     }
 
 
@@ -490,9 +496,13 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-
     }
+
+    @Override
+    protected FermatStructure getAppInUse() {
+        return getWalletRuntimeManager().getLastWallet();
+    }
+
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {

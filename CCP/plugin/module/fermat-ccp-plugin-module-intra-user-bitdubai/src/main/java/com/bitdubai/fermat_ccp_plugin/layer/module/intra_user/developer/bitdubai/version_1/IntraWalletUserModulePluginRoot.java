@@ -4,11 +4,13 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
@@ -353,19 +355,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] profileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
 
         try {
             /**
              *Call Actor Intra User to add request connection
              */
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase,intraUserToAddPublicKey, profileImage);
 
             /**
              *Call Network Service Intra User to add request connection
              */
 
-            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER, profileImage);
+            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, profileImage);
         } catch (CantCreateIntraWalletUserException e) {
             throw new CantStartRequestException("", e, "", "");
         } catch (RequestAlreadySendException e) {
@@ -508,7 +510,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {
@@ -810,10 +812,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         }
     }
 
-    private SettingsManager<FermatSettings> settingsManager;
+    private SettingsManager<IntraUserWalletSettings> settingsManager;
 
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
+    public SettingsManager<IntraUserWalletSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 
@@ -826,7 +828,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
         } catch (CantListIntraWalletUsersException e) {
@@ -849,7 +851,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
         } catch (CantGetIntraWalletUsersException e) {
             e.printStackTrace();
-        } catch (CantGetSelectedActorIdentityException e) {
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
         return notifications;

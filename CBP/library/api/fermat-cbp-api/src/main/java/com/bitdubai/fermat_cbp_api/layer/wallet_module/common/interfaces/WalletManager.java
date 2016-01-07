@@ -121,5 +121,5 @@ public interface WalletManager extends ModuleManager<FermatSettings, ActiveActor
      *
      * @return Collection<NegotiationLocations>
      */
-    Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException;
+    Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException, CantGetListLocationsPurchaseException;
 }

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
@@ -136,7 +137,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                     connectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
                     connectDialog.setSecondDescription("a connection request");
                     connectDialog.show();
-                } catch (CantGetSelectedActorIdentityException e) {
+                } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
             }
@@ -152,7 +153,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                     disconectDialog.setDescription("Want to disconnect from");
                     disconectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
                     disconectDialog.show();
-                } catch (CantGetSelectedActorIdentityException e) {
+                } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
             }

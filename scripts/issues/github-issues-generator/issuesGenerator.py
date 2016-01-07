@@ -7,6 +7,8 @@
 #	sudo apt-get install python-pip
 #Now you need to install the github api python library:
 #	pip install pygithub3
+#In case you can't install pygithub3 with pip you can try with:
+#       sudo easy_install pygithub3
 #To run this script in the ubuntu shell, please, run this command:
 #	python $SCRIPT_PATH/issuesGenerator.py
 ######
@@ -42,6 +44,7 @@
 #		- Add the labels list (only for team leaders use).
 #   		- Add the variable networkService.
 #   1.2.4:	- Fix a bug in Agent and events issues generation.
+#   1.2.8:      - Fix a bug described in https://github.com/bitDubai/fermat/issues/4285
  
 from pygithub3 import Github
 
@@ -221,13 +224,13 @@ for nsMessage in nsMessages:
 
 #Testing issues
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Unit Testing"
-bodyGenerated="It is closed whenever all testing is done."
+bodyGenerated="It is closed whenever all testing is done."+teamLeaderMessage
 if isTeamLeader:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated),user=repositoryUser,repo=repository)
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Testing - Integration Testing"
-bodyGenerated="It is closed whenever all testing is done."
+bodyGenerated="It is closed whenever all testing is done."+teamLeaderMessage
 if isTeamLeader:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
@@ -235,7 +238,7 @@ else:
 
 #QA issue
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - QA"
-bodyGenerated="It is closed whenever QA tests are passed."
+bodyGenerated="It is closed whenever QA tests are passed."+teamLeaderMessage
 if isTeamLeader:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:
@@ -243,7 +246,7 @@ else:
 
 #Production issue
 titleGenerated= platform+" - "+layer+" - "+pluginName+" - Production"
-bodyGenerated="It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed."
+bodyGenerated="It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed."+teamLeaderMessage
 if isTeamLeader:
 	issues.create(dict(title=titleGenerated,body=bodyGenerated, assignee=githubLogin, labels=labels),user=repositoryUser,repo=repository)
 else:

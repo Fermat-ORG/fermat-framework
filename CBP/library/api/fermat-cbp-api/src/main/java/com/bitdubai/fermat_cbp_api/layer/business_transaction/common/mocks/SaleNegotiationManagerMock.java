@@ -149,4 +149,9 @@ public class SaleNegotiationManagerMock implements CustomerBrokerSaleNegotiation
     public Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException {
         return null;
     }
+
+    @Override
+    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException{
+        return null;
+    }
 }
