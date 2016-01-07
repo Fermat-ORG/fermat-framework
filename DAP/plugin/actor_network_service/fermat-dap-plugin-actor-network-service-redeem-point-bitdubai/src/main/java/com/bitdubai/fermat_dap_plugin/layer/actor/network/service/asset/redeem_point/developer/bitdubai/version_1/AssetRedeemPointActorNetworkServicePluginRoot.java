@@ -508,7 +508,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                      * Ask the client to connect
                      */
                     communicationNetworkServiceConnectionManager.connectTo(sender, getPlatformComponentProfilePluginRoot(), receiver);
-
                 }
 
 

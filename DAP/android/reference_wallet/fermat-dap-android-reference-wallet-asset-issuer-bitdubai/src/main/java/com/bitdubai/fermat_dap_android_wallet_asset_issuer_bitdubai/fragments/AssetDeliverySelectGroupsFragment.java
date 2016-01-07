@@ -1,20 +1,18 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -24,40 +22,39 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDeliverySelectUsersAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAsset>
-        implements FermatListItemListeners<DigitalAsset> {
+public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<User>
+        implements FermatListItemListeners<User> {
 
     // Constants
-    private static final String TAG = "MyAssetsActivityFragment";
+    private static final String TAG = "AssetDeliverySelectGroupsFragment";
 
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
-    private List<DigitalAsset> digitalAssets;
+    private List<User> users;
 
     //UI
-    private View noAssetsView;
+    private View noUsersView;
 
-    public static MyAssetsActivityFragment newInstance() {
-        return new MyAssetsActivityFragment();
+    public static AssetDeliverySelectGroupsFragment newInstance() {
+        return new AssetDeliverySelectGroupsFragment();
     }
 
     @Override
@@ -68,7 +65,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -81,13 +78,11 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        setupBackgroundBitmap(layout);
-
         configureToolbar();
 
-        noAssetsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_assets);
+        noUsersView = layout.findViewById(R.id.dap_wallet_asset_issuer_delivery_no_groups);
 
-        showOrHideNoAssetsView(digitalAssets.isEmpty());
+        showOrHideNoAssetsView(users.isEmpty());
     }
 
     @Override
@@ -108,57 +103,20 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         if (toolbar != null) {
 //            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
-//            toolbar.setBackgroundColor(Color.TRANSPARENT);
-//            toolbar.setBottom(Color.WHITE);
+            toolbar.setBackgroundColor(Color.TRANSPARENT);
+            toolbar.setBottom(Color.WHITE);
 //            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 //                Window window = getActivity().getWindow();
 //                window.setStatusBarColor(Color.parseColor("#1d1d25"));
 //            }
             Drawable drawable = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
-                toolbar.setElevation(0);
-            } else {
+            else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-            }
 
             toolbar.setBackground(drawable);
         }
-    }
-
-    private void setupBackgroundBitmap(final View rootView) {
-        AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
-
-            WeakReference<ViewGroup> view;
-
-            @Override
-            protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
-            }
-
-            @Override
-            protected Bitmap doInBackground(Void... params) {
-                Bitmap drawable = null;
-                try {
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inScaled = true;
-                    options.inSampleSize = 5;
-                    drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
-                    error.printStackTrace();
-                }
-                return drawable;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
-                }
-            }
-        } ;
-        asyncTask.execute();
     }
 
     @Override
@@ -168,7 +126,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.dap_wallet_asset_issuer_my_assets_activity;
+        return R.layout.dap_wallet_asset_issuer_asset_delivery_select_groups;
     }
 
     @Override
@@ -178,7 +136,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.dap_wallet_asset_issuer_my_assets_activity_recycler_view;
+        return R.id.dap_wallet_asset_issuer_asset_delivery_select_groups_activity_recycler_view;
     }
 
     @Override
@@ -192,11 +150,11 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                digitalAssets = (ArrayList) result[0];
+                users = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(digitalAssets);
+                    adapter.changeDataSet(users);
 
-                showOrHideNoAssetsView(digitalAssets.isEmpty());
+                showOrHideNoAssetsView(users.isEmpty());
             }
         }
     }
@@ -213,7 +171,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new MyAssetsAdapter(getActivity(), digitalAssets, moduleManager);
+            adapter = new AssetDeliverySelectUsersAdapter(getActivity(), users, moduleManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -228,21 +186,24 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     }
 
     @Override
-    public void onItemClickListener(DigitalAsset data, int position) {
-        appSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
+    public void onItemClickListener(User data, int position) {
+        //TODO select user
+//        appSession.setData("asset_data", data);
+//        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(DigitalAsset data, int position) {
+    public void onLongItemClickListener(User data, int position) {
     }
 
     @Override
-    public List<DigitalAsset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<DigitalAsset> digitalAssets = new ArrayList<>();
+    public List<User> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<User> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                digitalAssets = Data.getAllDigitalAssets(moduleManager);
+                users = Data.getConnectedUsers(moduleManager, users);
+
+                appSession.setData("groups", users);
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -258,16 +219,16 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     Toast.LENGTH_SHORT).
                     show();
         }
-        return digitalAssets;
+        return users;
     }
 
     private void showOrHideNoAssetsView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
-            noAssetsView.setVisibility(View.VISIBLE);
+            noUsersView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            noAssetsView.setVisibility(View.GONE);
+            noUsersView.setVisibility(View.GONE);
         }
     }
 }
