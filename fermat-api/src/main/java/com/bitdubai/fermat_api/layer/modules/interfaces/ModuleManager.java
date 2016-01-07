@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.modules.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 
 /**
@@ -28,8 +29,9 @@ public interface ModuleManager<Z extends FermatSettings, Y extends ActiveActorId
      * @return an instance of the selected actor identity.
      *
      * @throws CantGetSelectedActorIdentityException if something goes wrong.
+     * @throws ActorIdentityNotSelectedException     if there's no actor identity selected.
      */
-    Y getSelectedActorIdentity() throws CantGetSelectedActorIdentityException;
+    Y getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
 
     void setAppPublicKey(String publicKey);
 
