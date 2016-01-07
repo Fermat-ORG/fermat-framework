@@ -10,20 +10,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="100dp">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:layout_height="100dp"
                     android:layout_width="100dp">
 
                     <ImageView
-                        android:id="@+id/assetImageUserDeliveryList"
+                        android:id="@+id/assetDeliveryListImage"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:src="@drawable/img_asset_without_image"
@@ -39,19 +39,23 @@
                     android:layout_marginLeft="5dp">
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                        android:id="@+id/assetNameUserDeliveryListText"
+                        android:id="@+id/assetDeliveryListNameText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Asset Name"
                         android:layout_marginBottom="15dp"
-                        android:textSize="@dimen/abc_text_size_title_material"/>
+                        android:textSize="17sp"
+                        android:textColor="#b3ffffff"
+                        android:fontFamily="regular"/>
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                        android:id="@+id/assetsRemainingUserDeliveryListText"
+                        android:id="@+id/assetDeliveryListRemainingText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="94 Assets Remaining"
-                        android:textSize="@dimen/abc_text_size_small_material"/>
+                        android:textSize="15sp"
+                        android:textColor="#b3ffffff"
+                        android:fontFamily="light"/>
 
                 </LinearLayout>
 
@@ -62,7 +66,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#FFFFFF">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh"
@@ -102,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/no_users"
-                    android:textColor="@color/fab_material_white"
+                    android:textColor="#2A3F52"
                     android:textSize="20sp"/>
 
             </LinearLayout>
