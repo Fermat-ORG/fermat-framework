@@ -18,14 +18,13 @@ public class DAPMessageGson {
     //PUBLIC METHODS
 
     public static Gson getGson() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(DAPContentMessage.class, new GenericGsonAdapter<DAPContentMessage>());
-        builder.registerTypeAdapter(DAPActor.class, new GenericGsonAdapter<DAPActor>());
+        GsonBuilder builder = new GsonBuilder()
+                .registerTypeAdapter(DAPContentMessage.class, new GenericGsonAdapter<DAPContentMessage>())
+                .registerTypeAdapter(DAPActor.class, new GenericGsonAdapter<DAPActor>());
         return builder.create();
     }
 
     //PRIVATE METHODS
-
     //GETTER AND SETTERS
 
     //INNER CLASSES

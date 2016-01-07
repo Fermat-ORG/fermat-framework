@@ -4,23 +4,24 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.TransactionListAdapter;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 
@@ -39,6 +40,13 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private String walletPublicKey= "banking_wallet";
     private BankAccountNumber bankAccountNumber;
 
+    com.getbase.floatingactionbutton.FloatingActionsMenu fab;
+    CreateTransactionFragmentDialog dialog;
+
+
+    FermatTextView bookTextView;
+    FermatTextView availableTextView;
+
     private static final String TAG = "AccountListActivityFragment";
     public AccountDetailFragment() {
     }
@@ -47,12 +55,6 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         return new AccountDetailFragment();
     }
 
-    /*@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.bw_account_detail_summary, container, false);
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,8 +78,36 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+        this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
+        this.availableTextView = (FermatTextView) layout.findViewById(R.id.textView_available_amount);
+        this.bookTextView = (FermatTextView) layout.findViewById(R.id.textView_book_amount);
+        updateBalance();
+        layout.findViewById(R.id.bw_fab_withdraw).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchCreateTransactionDialog(TransactionType.DEBIT);
+            }
+        });
+
+        layout.findViewById(R.id.bw_fab_deposit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchCreateTransactionDialog(TransactionType.CREDIT);
+            }
+        });
         configureToolbar();
         //showOrHideNoAccountListView(accountsList.isEmpty());
+    }
+
+    private void launchCreateTransactionDialog(TransactionType transactionType){
+        dialog = new CreateTransactionFragmentDialog(getActivity(), (BankMoneyWalletSession) appSession, getResources(), transactionType,bankAccountNumber.getAccount(),bankAccountNumber.getCurrencyType());
+        dialog.setOnDismissListener(this);
+        dialog.show();
+    }
+
+    private void updateBalance(){
+        availableTextView.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount())));
+        bookTextView.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount())));
     }
 
     private void configureToolbar() {
@@ -111,12 +141,35 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                transactionList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(transactionList);
+                showOrHideNoTransactionsView(transactionList.isEmpty());
+            }
+        }
+    }
 
+    private void showOrHideNoTransactionsView(boolean show) {
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+            //noTransactionsView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            //noTransactionsView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onErrorOccurred(Exception ex) {
-
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            //TODO: show error, toast?
+        }
     }
 
     @Override
@@ -148,7 +201,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-
+        fab.collapse();
+        updateBalance();
+        onRefresh();
     }
 
     @Override

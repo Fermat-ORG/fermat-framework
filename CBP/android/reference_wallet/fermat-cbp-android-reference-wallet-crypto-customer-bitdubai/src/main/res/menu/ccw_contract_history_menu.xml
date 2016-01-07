@@ -4,7 +4,7 @@
       tools:context=".MainActivity">
     <item
         android:id="@+id/ccw_contract_history_filter_menu_button"
-        android:icon="@drawable/ic_action_filters"
+        android:icon="@drawable/ccw_action_filters"
         android:orderInCategory="100"
         android:title="@string/ccw_action_filter"
         app:showAsAction="always">

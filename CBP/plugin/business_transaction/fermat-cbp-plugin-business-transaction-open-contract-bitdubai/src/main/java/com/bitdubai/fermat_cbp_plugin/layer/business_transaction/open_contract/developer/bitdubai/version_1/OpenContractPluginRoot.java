@@ -33,12 +33,19 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.FiatIndexMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
@@ -227,6 +234,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     new OpenContractBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
                             database);
+            openContractBusinessTransactionDao.initialize();
             /**
              * Initialize manager
              */
@@ -250,6 +258,14 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             openContractRecorderService.start();
 
             /**
+             * Init developer database factory
+             */
+            openContractBusinessTransactionDeveloperDatabaseFactory=
+                    new OpenContractBusinessTransactionDeveloperDatabaseFactory(
+                            pluginDatabaseSystem,
+                            pluginId);
+            openContractBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
+            /**
              * Init monitor Agent
              */
             OpenContractMonitorAgent openContractMonitorAgent=new OpenContractMonitorAgent(
@@ -266,6 +282,9 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Starting Open Contract Business Transaction");
             //launchNotificationTest();
+            //This method is only for testing
+            //openPurchaseContractTest();
+            //openSaleContractTest();
         } catch (CantInitializeDatabaseException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -361,6 +380,30 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
         IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
         incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
+    }
+
+    private void openPurchaseContractTest(){
+        CustomerBrokerPurchaseNegotiation negotiationMock=new PurchaseNegotiationMock();
+        FiatIndex fiatIndex=new FiatIndexMock();
+        try {
+            openContractTransactionManager.openPurchaseContract(negotiationMock,fiatIndex);
+        } catch (CantOpenContractException e) {
+            System.out.println("OPEN CONTRACT TEST EXCEPTION:");
+            e.printStackTrace();
+        }
+
+    }
+
+    private void openSaleContractTest(){
+        CustomerBrokerSaleNegotiation negotiationMock=new SaleNegotiationMock();
+        FiatIndex fiatIndex=new FiatIndexMock();
+        try {
+            openContractTransactionManager.openSaleContract(negotiationMock,fiatIndex);
+        } catch (CantOpenContractException e) {
+            System.out.println("OPEN CONTRACT TEST EXCEPTION:");
+            e.printStackTrace();
+        }
+
     }
 
 }

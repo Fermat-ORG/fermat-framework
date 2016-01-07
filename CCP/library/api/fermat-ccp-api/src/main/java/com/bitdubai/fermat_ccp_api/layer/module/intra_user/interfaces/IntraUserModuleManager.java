@@ -95,7 +95,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param profileImage            The profile image that the intra user has
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException
      */
-     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 
     /**
      * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts

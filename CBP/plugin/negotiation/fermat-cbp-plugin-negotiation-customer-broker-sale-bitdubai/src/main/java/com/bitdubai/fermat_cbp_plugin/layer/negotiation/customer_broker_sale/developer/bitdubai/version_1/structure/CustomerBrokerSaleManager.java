@@ -206,6 +206,11 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
         return this.customerBrokerSaleNegotiationDao.getAllPaymentCurrencies();
     }
 
+    @Override
+    public Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException {
+        return this.customerBrokerSaleNegotiationDao.getCurrencyTypeAvailableBankAccount();
+    }
+
 
     /*
     *   Private Methods

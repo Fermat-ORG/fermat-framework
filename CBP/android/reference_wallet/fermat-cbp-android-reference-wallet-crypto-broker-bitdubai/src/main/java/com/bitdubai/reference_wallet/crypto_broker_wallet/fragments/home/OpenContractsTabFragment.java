@@ -130,7 +130,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_open_contracts_tab;
+        return R.layout.cbw_fragment_open_contracts_tab;
     }
 
     @Override

@@ -174,7 +174,12 @@ public enum Plugins implements FermatPluginsEnum {
     // End CSH Plugins
 
     //Init CER Plugins
-    BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPD"  ),
+    BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
+    BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
+    BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
+    BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
+    BITDUBAI_CER_PROVIDER_LANACION              ("BCERPLN"  ),
+    BITDUBAI_CER_PROVIDER_YAHOO                 ("BCERPYH"  ),
 
     // End CER Plugins
 
@@ -217,6 +222,7 @@ public enum Plugins implements FermatPluginsEnum {
     INCOMING_CRYPTO             ("IC"),
     INCOMING_EXTRA_USER         ("IEU"),
     INCOMING_INTRA_USER         ("IIU"),
+    INTRA_IDENTITY_USER          ("IIA"),
     INTRA_WALLET_USER           ("IWU"),
     ISSUER_REDEMPTION           ("IR"),
     NOTIFICATION                ("NOT"),
@@ -333,6 +339,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "IEU"  :   return INCOMING_EXTRA_USER      ;
             case "IIU"  :   return INCOMING_INTRA_USER      ;
             case "IWU"  :   return INTRA_WALLET_USER        ;
+            case "IIA"  :   return INTRA_IDENTITY_USER      ;
             case "IR"   :   return ISSUER_REDEMPTION        ;
             case "NOT"  :   return NOTIFICATION             ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
@@ -381,7 +388,12 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
             case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
-            case "BCERPD":  return BITDUBAI_CER_PROVIDER_DOLARTODAY;
+            case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
+            case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
+            case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
+            case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;
+            case "BCERPLN": return BITDUBAI_CER_PROVIDER_LANACION;
+            case "BCERPYH": return BITDUBAI_CER_PROVIDER_YAHOO;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION         ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW              ;
             case ("CBUP"):  return CUSTOMER_BROKER_UPDATE           ;
