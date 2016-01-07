@@ -5,26 +5,26 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedP
 /**
  * Created by rodrigo on 1/5/16.
  */
-class WatchOnlyVaultExtendedPublicKey{
-    final String FILE_NAME;
-    final String DIRECTORY_NAME;
-    final ExtendedPublicKey extendedPublicKey;
+public class WatchOnlyVaultExtendedPublicKey{
+    private final String fileName;
+    private final String directoryName;
+    private final ExtendedPublicKey extendedPublicKey;
 
-    public WatchOnlyVaultExtendedPublicKey(String FILE_NAME, String DIRECTORY_NAME, ExtendedPublicKey extendedPublicKey) {
-        this.FILE_NAME = FILE_NAME;
-        this.DIRECTORY_NAME = DIRECTORY_NAME;
+    public WatchOnlyVaultExtendedPublicKey(String fileName, String directoryName, ExtendedPublicKey extendedPublicKey) {
+        this.fileName = fileName;
+        this.directoryName = directoryName;
         this.extendedPublicKey = extendedPublicKey;
     }
 
-    public String getFILE_NAME() {
-        return FILE_NAME;
+    public String getFilename() {
+        return this.fileName;
     }
 
-    public String getDIRECTORY_NAME() {
-        return DIRECTORY_NAME;
+    public String getDirectoryName() {
+        return this.directoryName;
     }
 
     public ExtendedPublicKey getExtendedPublicKey() {
-        return extendedPublicKey;
+        return this.extendedPublicKey;
     }
 }

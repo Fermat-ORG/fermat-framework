@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -95,6 +97,9 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
     private AssetVaultManager assetVaultManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_WATCH_ONLY_VAULT)
+    private WatchOnlyVaultManager WatchOnlyVaultManager;
+
     private AssetIssuerActorDao assetIssuerActorDao;
 
     private ActorAssetIssuerMonitorAgent actorAssetIssuerMonitorAgent;
@@ -117,6 +122,11 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 //            startMonitorAgent();
 
             this.serviceStatus = ServiceStatus.STARTED;
+
+            /**
+             * Test to comment when not needed.
+             */
+            testGenerateAndInitializeWatchOnlyVault();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -351,6 +361,29 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    private void testGenerateAndInitializeWatchOnlyVault(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                ExtendedPublicKey extendedPublicKey = null;
+                try {
+                    extendedPublicKey = assetVaultManager.getRedeemPointExtendedPublicKey("TestRedeemPoint");
+                    WatchOnlyVaultManager.initialize(extendedPublicKey);
+                } catch (CantGetExtendedPublicKeyException e) {
+                    e.printStackTrace();
+                } catch (CantInitializeWatchOnlyVaultException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
+    }
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         AssetIssuerActorDeveloperDatabaseFactory dbFactory = new AssetIssuerActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
