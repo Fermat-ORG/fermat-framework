@@ -12,6 +12,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @author lnacosta
  * @version 1.0.0
  */
-public final class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp, CryptoBrokerCommunitySubAppModuleManager, SubAppResourcesProviderManager> implements SubAppsSession {
+public final class CryptoBrokerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp, CryptoBrokerCommunitySubAppModuleManager, SubAppResourcesProviderManager> {
 
 }

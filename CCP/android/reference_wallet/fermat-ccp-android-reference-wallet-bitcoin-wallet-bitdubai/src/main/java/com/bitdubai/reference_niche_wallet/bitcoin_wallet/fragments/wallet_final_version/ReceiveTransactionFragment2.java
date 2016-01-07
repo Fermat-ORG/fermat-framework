@@ -115,6 +115,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
         lstCryptoWalletTransactionsBook = new ArrayList<>();
+        mHandler = new Handler();
 
         try {
             referenceWalletSession = (ReferenceWalletSession) appSession;
