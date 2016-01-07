@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,7 +33,7 @@ import java.util.List;
 public class SettingsMylocationsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String> {
 
     // Constants
-    private static final String TAG = "WizardPageSetLocations";
+    private static final String TAG = "settingsMyLocations";
 
     // Data
     private List<String> locationList;
@@ -102,7 +101,6 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: CHANGE ACTIVITY
                 locationList.add("settings");
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS, appSession.getAppPublicKey());
             }
