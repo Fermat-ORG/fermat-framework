@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
@@ -37,9 +38,9 @@ public class AssetDeliverySelectGroupsHolder extends FermatViewHolder {
         selectUserButton = (ImageView) itemView.findViewById(R.id.selectGroupButton);
     }
 
-    public void bind(final User user) {
-        nameText.setText(user.getName());
-        if (user.isSelected()) {
+    public void bind(final Group group) {
+        nameText.setText(group.getName());
+        if (group.isSelected()) {
             selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
         } else {
             selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
@@ -47,11 +48,11 @@ public class AssetDeliverySelectGroupsHolder extends FermatViewHolder {
 
         selectUserButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (!user.isSelected()) {
-                    user.setSelected(true);
+                if (!group.isSelected()) {
+                    group.setSelected(true);
                     selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
                 } else {
-                    user.setSelected(false);
+                    group.setSelected(false);
                     selectUserButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
                 }
             }
