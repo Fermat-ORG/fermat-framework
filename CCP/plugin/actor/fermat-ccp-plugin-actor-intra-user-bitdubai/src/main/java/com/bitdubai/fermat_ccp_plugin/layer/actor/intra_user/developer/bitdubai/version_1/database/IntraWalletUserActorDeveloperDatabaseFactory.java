@@ -126,6 +126,7 @@ public class IntraWalletUserActorDeveloperDatabaseFactory implements DealsWithPl
         intraUserColumns.add(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME);
         intraUserColumns.add(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME);
         intraUserColumns.add(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME);
+        intraUserColumns.add(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME);
 
 
         /**

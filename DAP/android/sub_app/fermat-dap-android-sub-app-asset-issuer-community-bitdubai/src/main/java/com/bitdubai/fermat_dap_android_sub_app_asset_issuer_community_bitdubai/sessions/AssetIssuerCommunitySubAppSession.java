@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by francisco on 21/10/15.
  */
-public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetIssuerCommunitySubAppModuleManager,SubAppResourcesProviderManager> implements SubAppsSession {
+public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetIssuerCommunitySubAppModuleManager,SubAppResourcesProviderManager> {
 
     public AssetIssuerCommunitySubAppSession() {}
 

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
@@ -47,25 +49,25 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
 
-        if(getIntent().getExtras()!=null) {
-            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
-                System.out.println("EJECUTANDO START ALL");
-
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
-                        } catch (CantStartAllRegisteredPlatformsException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
-
-
-            }
-        }
+//        if(getIntent().getExtras()!=null) {
+//            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
+//                System.out.println("EJECUTANDO START ALL");
+//
+//                Thread thread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
+//                        } catch (CantStartAllRegisteredPlatformsException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                thread.start();
+//
+//
+//            }
+//        }
         try {
 
             loadUI();
@@ -86,6 +88,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         unbindDrawables(findViewById(R.id.drawer_layout));
         System.gc();
+    }
+
+    @Override
+    protected FermatStructure getAppInUse() {
+        //TODO por ahora en null va esto
+        return null;
+    }
+
+    @Override
+    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+        //TODO : por ahora va null esto
+        return null;
     }
 
     private void unbindDrawables(View view) {

@@ -721,7 +721,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
 
             if (this.isRegister()) {
-                Gson gson = new DAPMessageGson().getGson();
+                Gson gson = DAPMessageGson.getGson();
 
                 String messageContentIntoJson = gson.toJson(dapMessage);
 

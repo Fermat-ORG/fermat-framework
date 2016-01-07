@@ -24,6 +24,8 @@ public interface IntraUserNotification {
 
     //new
 
+    String getActorSenderPhrase();
+
     UUID getId();
 
     Actors getActorDestinationType();
