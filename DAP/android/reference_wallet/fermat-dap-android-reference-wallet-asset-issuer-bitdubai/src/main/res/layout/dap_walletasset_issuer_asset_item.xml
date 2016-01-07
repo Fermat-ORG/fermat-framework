@@ -22,8 +22,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#1affffff">
+            android:layout_height="match_parent">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetNameText"
@@ -41,7 +40,7 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetAvailableText"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="500"
@@ -68,7 +67,7 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetBookText"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="300"
@@ -106,6 +105,14 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="25dp"/>
 
+            <ImageView
+                android:layout_width="127dp"
+                android:layout_height="29dp"
+                android:src="@drawable/bg_asset_price"
+                android:layout_below="@+id/assetBookText"
+                android:paddingTop="9dp"
+                android:paddingLeft="7dp"/>
+
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
@@ -140,6 +147,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
-        android:background="#FFFFFF" />
+        android:background="#1affffff" />
 
 </LinearLayout>
