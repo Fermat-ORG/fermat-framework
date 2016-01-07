@@ -11,9 +11,9 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.As
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListHeaderFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserRedeemedListFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserRedeemedListHeaderFragment;
+
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -40,9 +40,9 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
                 case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST:
                     currentFragment = new UserDeliveryListFragment();
                     break;
-                case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER:
-                    currentFragment = new UserDeliveryListHeaderFragment();
-                    break;
+//                case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER:
+//                    currentFragment = new UserDeliveryListHeaderFragment();
+//                    break;
                 case DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST:
                     currentFragment = new UserRedeemedListFragment();
                     break;

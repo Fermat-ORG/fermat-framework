@@ -278,6 +278,11 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public List<AssetStatistic> getWalletStatisticsByAsset(String walletPublicKey, String assetName) throws CantLoadWalletException, CantGetAssetStatisticException {
+        return loadAssetIssuerWallet(walletPublicKey).getAllStatisticForGivenAsset(assetName);
+    }
+
+    @Override
     public SettingsManager getSettingsManager() {
         return null;
     }
@@ -286,9 +291,8 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
 //        try {
             return assetIssuerWalletModuleManager.getActiveIdentities().get(0);
-//        } catch (CantGetIssuerWalletModuleException e) {
-//            e.printStackTrace();
-//            return null;
+//        } catch (Exception e) {
+//            throw new CantGetSelectedActorIdentityException("Can't get Actor Identity", e, "Asset Issuer Wallet", "Identity must be created");
 //        }
     }
 

@@ -64,17 +64,7 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      */
     void deriveKeys(Plugins plugin, int keysToDerive) throws CantDeriveNewKeysException;
 
-    /**
-     * * Creates a new hierarchy Account in the vault.
-     * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param description
-     * @param hierarchyAccountType
-     * @return
-     * @throws CantAddHierarchyAccountException
-     */
-    HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException;
-
-    /**
+       /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
      * @param redeemPointPublicKey a Redeem Point publicKey
      * @return the Extended Public Keythat will be used by the redeem Points.
