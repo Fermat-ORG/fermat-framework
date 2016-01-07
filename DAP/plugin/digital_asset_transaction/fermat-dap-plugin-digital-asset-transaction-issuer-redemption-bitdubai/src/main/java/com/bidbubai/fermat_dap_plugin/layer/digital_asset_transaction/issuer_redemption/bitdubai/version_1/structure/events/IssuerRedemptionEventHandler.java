@@ -30,7 +30,7 @@ public class IssuerRedemptionEventHandler implements FermatEventHandler {
             throw new TransactionServiceNotStartedException();
         }
         if (fermatEvent == null) {
-            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
+            throw new CantSaveEventException(null, "IssuerRedemptionEventHandler", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
         }
         String context = "Event Type: " + fermatEvent.getEventType() +
                 "Event Source: " + fermatEvent.getSource();
