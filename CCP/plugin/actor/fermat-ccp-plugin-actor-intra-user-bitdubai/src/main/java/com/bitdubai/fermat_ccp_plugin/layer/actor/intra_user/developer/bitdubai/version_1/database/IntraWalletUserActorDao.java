@@ -104,17 +104,7 @@ public class IntraWalletUserActorDao {
 
         try {
 
-            /**
-             * if intra user exist on table
-             * return error
-             */
-            if (intraUserExists(intraUserToAddPublicKey)) {
 
-                throw new RequestAlreadySendException("CAN'T INSERT INTRA USER", null, "", "The request already sent to actor.");
-
-                //this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
-
-            } else {
                 /**
                  * Get actual date
                  */
@@ -140,7 +130,7 @@ public class IntraWalletUserActorDao {
                  */
                 if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
-            }
+
 
 
         } catch (CantInsertRecordException e) {
@@ -151,8 +141,8 @@ public class IntraWalletUserActorDao {
         } catch (CantPersistProfileImageException e) {
             throw new CantAddPendingIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant Persist Profile Image.");
 
-        } catch (CantCreateNewDeveloperException e) {
-            throw new CantAddPendingIntraWalletUserException("CAN'T INSERT INTRA USER", e, "", "Cant get if intra user exist.");
+        } catch (Exception e) {
+            throw new CantAddPendingIntraWalletUserException("CAN'T INSERT INTRA USER", FermatException.wrapException(e), "", "Cant get if intra user exist.");
         }
 
 
@@ -160,7 +150,7 @@ public class IntraWalletUserActorDao {
     }
 
 
-    public void createActorIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState) throws CantCreateIntraWalletUserException {
+  /*  public void createActorIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState) throws CantCreateIntraWalletUserException {
 
         try {
 
@@ -168,7 +158,7 @@ public class IntraWalletUserActorDao {
              * if intra user exist on table
              * change status
              */
-            if (intraUserExists(intraUserToAddPublicKey)) {
+         /*   if (intraUserExists(intraUserToAddPublicKey)) {
 
                 this.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, contactState);
 
@@ -176,7 +166,7 @@ public class IntraWalletUserActorDao {
                 /**
                  * Get actual date
                  */
-                Date d = new Date();
+            /*    Date d = new Date();
                 long milliseconds = d.getTime();
 
                 DatabaseTable table = this.database.getTable(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
@@ -195,7 +185,7 @@ public class IntraWalletUserActorDao {
                 /**
                  * Persist profile image on a file
                  */
-                if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+             /*   if(profileImage!=null && profileImage.length > 0) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
             }
 
@@ -214,7 +204,7 @@ public class IntraWalletUserActorDao {
         }
 
 
-    }
+    */
 
 
     public void updateConnectionState(final String          intraUserLoggedInPublicKey,
@@ -582,7 +572,7 @@ public class IntraWalletUserActorDao {
      * @return boolean exists
      * @throws CantCreateNewDeveloperException
      */
-    private boolean intraUserExists(final String intraUserToAddPublicKey) throws CantCreateNewDeveloperException {
+    public boolean intraUserRequestExists(final String intraUserToAddPublicKey, ConnectionState connectionState) throws CantCreateNewDeveloperException {
 
         try {
 
@@ -593,7 +583,7 @@ public class IntraWalletUserActorDao {
             }
 
             table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, ConnectionState.PENDING_REMOTELY_ACCEPTANCE.getCode(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -608,7 +598,5 @@ public class IntraWalletUserActorDao {
         }
     }
 
-    public boolean isConnectionExist(String publicKey) throws CantCreateNewDeveloperException {
-        return intraUserExists(publicKey);
-    }
+
 }

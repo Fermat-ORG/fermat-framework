@@ -46,7 +46,6 @@ public interface DAO {
     public void changeProtocolState(final UUID                 requestId    ,
                                     final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException;
 
-    public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException;
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,
                                                                               final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException;

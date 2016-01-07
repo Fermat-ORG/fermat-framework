@@ -410,7 +410,7 @@ public abstract class FermatActivity extends AppCompatActivity
         if (footer != null && footerViewPainter!=null) {
             FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
             RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
-            if (footer_container != null && footerViewPainter != null && slide_container != null) {
+            if (footer_container != null && slide_container != null) {
                 footerViewPainter.addNavigationViewFooterElementVisible(getLayoutInflater(), slide_container);
                 footerViewPainter.addFooterViewContainer(getLayoutInflater(), footer_container);
             } else {
@@ -685,7 +685,7 @@ public abstract class FermatActivity extends AppCompatActivity
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
-        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this);
+        FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey(), this,subAppsSession);
         com.bitdubai.fermat_android_api.engine.FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
         adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),
@@ -891,6 +891,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -1038,6 +1039,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
+            invalidateOptionsMenu();
             removecallbacks();
             onRestart();
         } catch (Exception e) {
@@ -1700,7 +1702,8 @@ public abstract class FermatActivity extends AppCompatActivity
             case ACTIVITY_TYPE_WALLET:
                 WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
                 Activity activity = walletNavigationStructure.getLastActivity();
-                AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this);
+                FermatSession fermatSession = getFermatSessionInUse(walletNavigationStructure.getPublicKey());
+                AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this,fermatSession);
                 try {
                     appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
                 } catch (CantGetSelectedActorIdentityException e) {
@@ -1771,7 +1774,8 @@ public abstract class FermatActivity extends AppCompatActivity
         //TODO: acá seria bueno un getLastApp
         if(ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
             FermatStructure fermatStructure = getAppInUse();
-            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
+            FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
+            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
             NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
             FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
             List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getNavigationMenu();
@@ -1788,6 +1792,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
     protected abstract FermatStructure getAppInUse();
+    protected abstract FermatSession getFermatSessionInUse(String appPublicKey);
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
