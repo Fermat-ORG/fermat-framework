@@ -32,11 +32,13 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.MessageReceiver;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
@@ -64,6 +66,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     private FermatTextView userPhrase;
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
+    private Button accept;
     private IntraWalletUserActorManager intraWalletUserActorManager;
     private ConnectionState connectionState;
 
@@ -102,6 +105,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
+        accept = (Button) rootView.findViewById(R.id.btn_connection_accept);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
         connectionRequestSend.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
@@ -131,6 +135,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                     connectRequest();
                     break;
                 case PENDING_LOCALLY_ACCEPTANCE:
+                    conectionAccept();
+                    break;
                 case PENDING_REMOTELY_ACCEPTANCE:
                     connectionSend();
                     break;
@@ -206,6 +212,22 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                 e.printStackTrace();
             }
         }
+        if (i == R.id.btn_connection_accept){
+            try {
+
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                notificationAcceptDialog.show();
+
+            } catch ( CantGetActiveLoginIdentityException e) {
+                e.printStackTrace();
+            }
+        }
         if (i == R.id.btn_connection_request_send) {
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
@@ -240,9 +262,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             case DENIED_REMOTELY:
                 connectRequest();
                 break;
-            case PENDING_LOCALLY_ACCEPTANCE:
             case PENDING_REMOTELY_ACCEPTANCE:
                 connectionSend();
+                break;
+
+            case PENDING_LOCALLY_ACCEPTANCE:
+                conectionAccept();
                 break;
         }
     }
@@ -253,6 +278,15 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
+    }
+
+    private void conectionAccept(){
+        connectionRequestSend.setVisibility(View.GONE);
+        connect.setVisibility(View.GONE);
+        disconnect.setVisibility(View.GONE);
+        connectionRequestRejected.setVisibility(View.GONE);
+        accept.setVisibility(View.VISIBLE);
+
     }
 
     private void connectRequest() {
