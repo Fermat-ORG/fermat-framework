@@ -89,7 +89,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
         System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
 
-        testCERPlatform();
+        //testCERPlatform();
     }
 
 
@@ -240,28 +240,29 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                     try {
 
 
-//                        UUID bitcoinVzlaKey = null;
-//
-//                        System.out.println("---Listing ALL CER Providers and their supported currencies---");
-//                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
-//                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
-//
-//                            for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
-//                                System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
-//
-//                            if(provider.getValue().toString().equals("BitcoinVenezuela"))
-//                                bitcoinVzlaKey = provider.getKey();
-//                        }
-//                        System.out.println(" ");
-//
-//
-//                        System.out.println("---Getting all ExchangeRates from BitcoinVenezuela Provider");
-//                        CurrencyExchangeRateProviderManager btcVzlaProvider = providerFilter.getProviderReference(bitcoinVzlaKey);
-//                        for(CurrencyPair p : btcVzlaProvider.getSupportedCurrencyPairs()){
-//                            System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
-//                            System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
-//
-//                        }
+                        UUID bitcoinVzlaKey = null;
+
+                        System.out.println("---Listing ALL CER Providers and their supported currencies---");
+                        for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
+                            System.out.println("Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
+
+                            for(CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
+                                System.out.println("    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+
+                            if(provider.getValue().toString().equals("BitcoinVenezuela"))
+                                bitcoinVzlaKey = provider.getKey();
+                        }
+                        System.out.println(" ");
+
+
+                        System.out.println("BVP ---Getting all ExchangeRates from BitcoinVenezuela Provider");
+                        CurrencyExchangeRateProviderManager btcVzlaProvider = providerFilter.getProviderReference(bitcoinVzlaKey);
+                        for(CurrencyPair p : btcVzlaProvider.getSupportedCurrencyPairs()){
+                            p = new CurrencyPairImpl(p.getTo(), p.getFrom());
+                            System.out.println("BVP    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+                            System.out.println("    Exchange: " + btcVzlaProvider.getCurrentExchangeRate(p).getPurchasePrice());
+                            System.out.println("BVP    Exchange for 2015-09-01: " + btcVzlaProvider.getExchangeRateFromDate(p, 1441065600).getPurchasePrice());
+                        }
 
 
 

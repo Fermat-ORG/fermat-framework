@@ -15,27 +15,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantCreateExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantInitializeProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinVenezuelaProviderDatabaseException;
-import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -109,8 +104,14 @@ public class BitcoinVenezuelaProviderDao {
 
         try {
             table.loadToMemory();
-            DatabaseTableRecord record = table.getRecords().get(0);
-            return constructExchangeRateFromRecord(record);
+            List<DatabaseTableRecord> records = table.getRecords();
+            if (records.size() > 0){
+                DatabaseTableRecord record = records.get(0);
+                return constructExchangeRateFromRecord(record);
+            }
+            else {
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, null, "Failed to get exchange rate for timestamp: " + timestamp, "Exchange Rate not found in database");
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get exchange rate for timestamp: " + timestamp, "Couldn't load table to memory");
@@ -145,6 +146,34 @@ public class BitcoinVenezuelaProviderDao {
         return exchangeRateList;
     }
 
+    public void updateExchangeRatesFromDates(CurrencyPair currencyPair, List<ExchangeRate> exchangeRates) throws CantSaveExchangeRateException
+    {
+        List<String> exchangeRateTimestampsInDatabase = new ArrayList<>();
+
+        DatabaseTable table = this.database.getTable(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME);
+        table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, currencyPair.getFrom().getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, currencyPair.getTo().getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                String timestamp = record.getStringValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME);
+                exchangeRateTimestampsInDatabase.add(timestamp);
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantSaveExchangeRateException(CantSaveExchangeRateException.DEFAULT_MESSAGE, e, "Failed to get ExchangeRates in database for CurrencyPair: " + currencyPair.toString(), "Couldn't load table to memory");
+        }
+
+        for(ExchangeRate e : exchangeRates)
+        {
+            String currentTimestamp = String.valueOf(e.getTimestamp());
+            if(!exchangeRateTimestampsInDatabase.contains(currentTimestamp)) {
+                this.saveExchangeRate(e);
+            }
+        }
+
+    }
 
 
 
@@ -218,7 +247,7 @@ public class BitcoinVenezuelaProviderDao {
         newRecord.setStringValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, exchangeRate.getToCurrency().getCode());
         newRecord.setDoubleValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, exchangeRate.getSalePrice());
         newRecord.setDoubleValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, exchangeRate.getPurchasePrice());
-        newRecord.setLongValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, (new Date().getTime() / 1000));
+        newRecord.setLongValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, exchangeRate.getTimestamp());
 
     }
 

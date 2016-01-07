@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -123,7 +124,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
                     appSession.setData(CryptoCustomerWalletSession.NEGOTIATION_DATA, negotiationInformation);
                     changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
 
-                } catch (CantGetCryptoCustomerWalletException | CantGetNegotiationInformationException ex) {
+                } catch (CantGetCryptoCustomerWalletException | CantGetNegotiationInformationException | CantGetListSaleNegotiationsException ex) {
                     Log.e(TAG, CantGetCryptoBrokerWalletException.DEFAULT_MESSAGE, ex);
                     if (errorManager != null) {
                         errorManager.reportUnexpectedWalletException(
