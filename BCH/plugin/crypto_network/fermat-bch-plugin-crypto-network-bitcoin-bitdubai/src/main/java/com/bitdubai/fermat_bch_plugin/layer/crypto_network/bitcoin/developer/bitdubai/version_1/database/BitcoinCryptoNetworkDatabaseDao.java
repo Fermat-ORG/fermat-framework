@@ -37,6 +37,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMainten
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isValidString;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -1151,9 +1152,9 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * I will get the stored exception, if any.
          */
         String xmlException = record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION);
-        if (!xmlException.isEmpty()){
+        if (isValidString(xmlException)){
             Exception broadcastException = null;
-            broadcastException = (Exception) XMLParser.parseXML(xmlException, Exception.class);
+            broadcastException = (Exception) XMLParser.parseXML(xmlException, new Exception());
             broadcastStatus.setLastException(broadcastException);
         }
 

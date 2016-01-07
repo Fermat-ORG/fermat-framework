@@ -245,8 +245,8 @@ public class BitcoinVenezuelaProviderDao {
         newRecord.setUUIDValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, UUID.randomUUID());
         newRecord.setStringValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, exchangeRate.getFromCurrency().getCode());
         newRecord.setStringValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, exchangeRate.getToCurrency().getCode());
-        newRecord.setDoubleValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, exchangeRate.getSalePrice());
-        newRecord.setDoubleValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, exchangeRate.getPurchasePrice());
+        newRecord.setStringValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, String.valueOf(exchangeRate.getSalePrice()));
+        newRecord.setStringValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, String.valueOf(exchangeRate.getPurchasePrice()));
         newRecord.setLongValue(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, exchangeRate.getTimestamp());
 
     }

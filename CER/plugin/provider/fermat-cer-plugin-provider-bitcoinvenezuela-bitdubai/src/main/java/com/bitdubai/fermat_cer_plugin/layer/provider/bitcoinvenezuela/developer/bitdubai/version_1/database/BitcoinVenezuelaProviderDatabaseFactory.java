@@ -92,8 +92,8 @@ public class BitcoinVenezuelaProviderDatabaseFactory implements DealsWithPluginD
             table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
-            table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.MONEY, 100, Boolean.FALSE);
+            table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_SALE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(BitcoinVenezuelaProviderDatabaseConstants.QUERY_HISTORY_FIRST_KEY_COLUMN);

@@ -16,15 +16,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -32,7 +30,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -119,18 +116,16 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
             public void onClick(View view) {
                 try {
                     CryptoCustomerWalletManager walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
-                    CustomerBrokerNegotiationInformation negotiationInformation = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
+                    CustomerBrokerNegotiationInformation info = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
 
-                    appSession.setData(CryptoCustomerWalletSession.NEGOTIATION_DATA, negotiationInformation);
-                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
+                    appSession.setData(CryptoCustomerWalletSession.NEGOTIATION_DATA, info);
+                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
 
-                } catch (CantGetCryptoCustomerWalletException | CantGetNegotiationInformationException | CantGetListSaleNegotiationsException ex) {
+                } catch (FermatException ex) {
                     Log.e(TAG, CantGetCryptoBrokerWalletException.DEFAULT_MESSAGE, ex);
                     if (errorManager != null) {
-                        errorManager.reportUnexpectedWalletException(
-                                Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                                ex);
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                     }
 
                 }
