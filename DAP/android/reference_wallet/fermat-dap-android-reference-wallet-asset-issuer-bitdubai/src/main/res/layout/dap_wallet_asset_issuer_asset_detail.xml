@@ -270,7 +270,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:background="#24202E">
+            android:background="#24202E"
+            android:id="@+id/assetDetailAppropiateLayout">
 
             <LinearLayout
                 android:orientation="vertical"

@@ -8,6 +8,8 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.As
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliverySelectUsersFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDetailActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserAppropiateListFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserAppropiateListHeaderFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.UserDeliveryListHeaderFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
@@ -44,6 +46,12 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
                     break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_USERS:
                     currentFragment = new AssetDeliverySelectUsersFragment();
+                    break;
+                case DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST:
+                    currentFragment = new UserAppropiateListFragment();
+                    break;
+                case DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST_HEADER:
+                    currentFragment = new UserAppropiateListHeaderFragment();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");

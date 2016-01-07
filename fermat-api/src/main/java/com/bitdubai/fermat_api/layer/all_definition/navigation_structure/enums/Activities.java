@@ -94,6 +94,7 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST("DWAIUDL"),
     DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY("DWAIADL"),
     DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS("DWAIADSUG"),
+    DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST("DWAIUAL"),
 
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
@@ -477,6 +478,8 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_SELECT_USERS_GROUPS;
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
+            case "DWAIUAL":
+                return DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

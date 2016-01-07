@@ -34,12 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by frank on 12/22/15.
+ * Created by Jinmy on 01/06/16.
  */
 public class UserAppropiateListFragment extends FermatWalletListFragment<UserDelivery> {
 
     // Constants
-    private static final String TAG = "UserDeliveryListFragment";
+    private static final String TAG = "UserAppropiateListFragment";
 
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
@@ -161,7 +161,7 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserDel
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.dap_wallet_asset_issuer_user_delivery_list;
+        return R.layout.dap_wallet_asset_issuer_user_appropiate_list;
     }
 
     @Override
