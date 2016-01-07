@@ -23,9 +23,10 @@ public class AssetUserWalletBalance implements AssetUserWalletList {
         this.availableBalance = availableBalance;
         this.quantityAvailableBalance = quantityAvailableBalance;
         this.quantityBookBalance = quantityBookBalance;
-    };
+    }
 
-    public AssetUserWalletBalance(){};
+    public AssetUserWalletBalance() {
+    }
 
     @Override
     public String getAssetPublicKey() {
