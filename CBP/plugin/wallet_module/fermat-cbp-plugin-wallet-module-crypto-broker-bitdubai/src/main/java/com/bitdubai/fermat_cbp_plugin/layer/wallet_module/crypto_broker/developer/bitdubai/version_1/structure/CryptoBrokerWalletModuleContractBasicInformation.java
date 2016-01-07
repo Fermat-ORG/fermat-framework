@@ -36,31 +36,35 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
-        this.cancellationReason = customerBrokerSaleNegotiation.getCancelReason(); //Negotiation del objeto como tal
 
-        try {
-            for(Clause clause : customerBrokerSaleNegotiation.getClauses())
-            {
-                if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())
-                {
-                    amount = Float.valueOf(clause.getValue());
+        if (customerBrokerSaleNegotiation != null) {
+            this.cancellationReason = customerBrokerSaleNegotiation.getCancelReason(); //Negotiation del objeto como tal
+            date = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis(); //
+            negotiationId = customerBrokerSaleNegotiation.getNegotiationId(); //UUID.fromString(customerBrokerContractSale.getNegotiatiotId()); //Contrato
+            try {
+                for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
+                    if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode()) {
+                        amount = Float.valueOf(clause.getValue());
+                    }
+                    if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
+                        exchangeRateAmount = Float.valueOf(clause.getValue());
+                    }
                 }
-                if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode())
-                {
-                    exchangeRateAmount = Float.valueOf(clause.getValue());
-                }
+            } catch (CantGetListClauseException e) {
+                e.printStackTrace();
             }
-        } catch (CantGetListClauseException e) {
-            e.printStackTrace();
+        }else{
+            amount = random.nextFloat() * 100; //Cantidad de mercancia que recibe el customer
+            exchangeRateAmount = random.nextFloat(); //tasa de cambio
+            this.cancellationReason = ""; //Negotiation del objeto como tal
+            date = instance.getTimeInMillis(); //
+            negotiationId = UUID.randomUUID(); //Contrato
         }
-        //amount = random.nextFloat() * 100; //Cantidad de mercancia que recibe el customer
-        //exchangeRateAmount = random.nextFloat(); //tasa de cambio
 
         imageBytes = new byte[0]; //Actor customer
-        negotiationId = UUID.fromString(customerBrokerContractSale.getNegotiatiotId()); //Contrato
-
-        date = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis(); //
-        this.status =  customerBrokerContractSale.getStatus(); //getLastNegotiationUpdateDate del Negotiation
+        if (customerBrokerContractSale != null){
+            this.status =  customerBrokerContractSale.getStatus(); //getLastNegotiationUpdateDate del Negotiation
+        }else this.status = ContractStatus.PAUSED;
     }
 
     @Override
