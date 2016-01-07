@@ -258,18 +258,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
         assetCryptoVaultManager.deriveKeys(plugin, keysToDerive);
     }
 
-    /**
-     * * Creates a new hierarchy Account in the vault.
-     * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param description
-     * @param hierarchyAccountType
-     * @return
-     * @throws CantAddHierarchyAccountException
-     */
-    @Override
-    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
-        return assetCryptoVaultManager.addHierarchyAccount(description, hierarchyAccountType);
-    }
 
     /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
