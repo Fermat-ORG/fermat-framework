@@ -74,6 +74,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                                            Actors                      senderType     ,
                                            String                      destinationPublicKey   ,
                                            String                      senderAlias,
+                                           String                      senderPhrase,
                                            byte[]                      senderProfileImage,
                                            Actors                      destinationType        ,
                                            NotificationDescriptor descriptor      ,
@@ -91,6 +92,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             ActorNetworkServiceRecord connectionRequestRecord = new ActorNetworkServiceRecord(
                     notificationId        ,
                     senderAlias,
+                    senderPhrase,
                     senderProfileImage     ,
                     descriptor   ,
                     destinationType        ,
@@ -358,6 +360,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         try {
             record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, connectionRequestRecord.getId());
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, connectionRequestRecord.getActorSenderAlias());
+            record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME, connectionRequestRecord.getActorSenderPhrase());
 
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , connectionRequestRecord.getNotificationDescriptor().getCode()                                 );
             record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, connectionRequestRecord.getActorDestinationType().getCode());
@@ -390,7 +393,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         {
         UUID   notificationId            = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
         String senderAlias    = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
-        //String senderProfileImage   = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME      );
+        String senderPhase   = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME      );
         String descriptor       = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME   );
         String destinationType      = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME         );
         String senderType          = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
@@ -422,6 +425,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         return new ActorNetworkServiceRecord(
                 notificationId        ,
                 senderAlias,
+                senderPhase,
                 profileImage,
                 notificationDescriptor,
                 actorDestinationType        ,

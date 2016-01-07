@@ -126,7 +126,12 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     @Override
     public long getItemId(int position) {
-        return mListItems.get(position).hashCode();
+        try {
+            return mListItems.get(position).hashCode();
+        }catch (IndexOutOfBoundsException i){
+            i.printStackTrace();
+            return 0;
+        }
     }
 
 

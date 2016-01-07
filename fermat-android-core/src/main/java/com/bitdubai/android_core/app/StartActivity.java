@@ -21,6 +21,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -257,8 +258,12 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
             try {
                 Context context = getApplicationContext();
                 fermatSystem.start(context, new OSAPlatform());
+                fermatSystem.startAllRegisteredPlatforms();
 
-            } catch (FermatException e) {
+            } catch (CantStartAllRegisteredPlatformsException e) {
+                e.printStackTrace();
+            }
+            catch (FermatException e) {
                 System.err.println(e.toString());
                 System.out.println(e.getPossibleReason());
                 System.out.println(e.getFormattedContext());
