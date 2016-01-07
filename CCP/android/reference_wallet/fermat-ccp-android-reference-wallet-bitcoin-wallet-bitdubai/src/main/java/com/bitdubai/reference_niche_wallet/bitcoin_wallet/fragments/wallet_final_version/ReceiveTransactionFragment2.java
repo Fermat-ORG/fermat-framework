@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -89,6 +90,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
     private int available_offset=0;
     private int book_offset=0;
+    private Handler mHandler;
     //private CryptoBrokerWallet cryptoBrokerWallet;
 
     ReferenceWalletSession referenceWalletSession;
@@ -167,7 +169,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help").setIcon(R.drawable.ic_contact_question)
+        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -367,7 +369,13 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                     data.add(grouperItem);
                 }
                 if(!data.isEmpty()){
-                    FermatAnimationsUtils.showEmpty(getActivity(),false,emptyListViewsContainer);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            FermatAnimationsUtils.showEmpty(getActivity(),false,emptyListViewsContainer);
+                        }
+                    });
+
                 }
 
             }
