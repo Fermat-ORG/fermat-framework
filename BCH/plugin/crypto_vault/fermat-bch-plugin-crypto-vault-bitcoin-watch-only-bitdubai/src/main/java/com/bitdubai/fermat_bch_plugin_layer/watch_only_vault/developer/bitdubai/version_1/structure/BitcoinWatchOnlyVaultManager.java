@@ -119,8 +119,9 @@ public class BitcoinWatchOnlyVaultManager {
          * If this Account Key was added before, I can't continue because I might not have the same Key
          */
         try {
-            if (getDao().isExistingRedeemPoint(extendedPublicKey.getActorPublicKey()));
-            throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, null, "A Hierarchy Account already exists for this public Key.", null );
+            if (getDao().isExistingRedeemPoint(extendedPublicKey.getActorPublicKey())) {
+                throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, null, "A Hierarchy Account already exists for this public Key.", null);
+            }
         } catch (CantExecuteDatabaseOperationException e) {
             /**
              * If there was a database error, I will continue.
@@ -225,7 +226,7 @@ public class BitcoinWatchOnlyVaultManager {
         PluginTextFile textFile = pluginFileSystem.getTextFile(this.pluginId, directory_name, file_name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
         String fileContent = textFile.getContent();
-        extendedPublicKey  = (ExtendedPublicKey) XMLParser.parseXML(fileContent, ExtendedPublicKey.class);
+        extendedPublicKey  = (ExtendedPublicKey) XMLParser.parseXML(fileContent, extendedPublicKey);
 
         return extendedPublicKey;
     }

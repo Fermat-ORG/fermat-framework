@@ -126,7 +126,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             /**
              * Test to comment when not needed.
              */
-            testGenerateAndInitializeWatchOnlyVault();
+            //testGenerateAndInitializeWatchOnlyVault();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
