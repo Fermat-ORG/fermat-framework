@@ -67,6 +67,7 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME = "notification_descriptor";
     public static final String INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME = "notification_protocol_state";
     public static final String INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME = "notification_read_mark";
+    public static final String INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME = "sender_phrase";
 
     public static final String INCOMING_NOTIFICATION_FIRST_KEY_COLUMN = "id";
 
@@ -86,6 +87,7 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME = "notification_protocol_state";
     public static final String OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME = "notification_read_mark";
     public static final String OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME = "notification_sent_count";
+    public static final String OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME = "sender_phrase";
     public static final String OUTGOING_NOTIFICATION_FIRST_KEY_COLUMN = "id";
 
 }

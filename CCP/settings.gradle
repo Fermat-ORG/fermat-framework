@@ -76,3 +76,6 @@ project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai').proje
 
 include ':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai'
 project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai').projectDir = new File('CCP/android/sub_app/fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')
+
+include ':fermat-ccp-plugin-module-intra-user-identity-bitdubai'
+project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')
