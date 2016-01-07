@@ -172,7 +172,7 @@ public interface CommunicationsClientConnection {
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile);
 
     /*
-    * Close the main connection
+    * Close the main connection when is closing the App
      */
     public void closeMainConnection();
 

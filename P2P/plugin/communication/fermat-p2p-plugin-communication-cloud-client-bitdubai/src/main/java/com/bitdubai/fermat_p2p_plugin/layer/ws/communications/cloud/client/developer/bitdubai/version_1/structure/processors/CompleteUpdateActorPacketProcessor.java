@@ -89,7 +89,7 @@ public class CompleteUpdateActorPacketProcessor extends FermatPacketProcessor {
           /*
          * Create a raise a new event whit the platformComponentProfile registered
          */
-        FermatEvent event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION.getNewEvent();
+        FermatEvent event = P2pEventType.COMPLETE_UPDATE_ACTOR_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
 
         /*

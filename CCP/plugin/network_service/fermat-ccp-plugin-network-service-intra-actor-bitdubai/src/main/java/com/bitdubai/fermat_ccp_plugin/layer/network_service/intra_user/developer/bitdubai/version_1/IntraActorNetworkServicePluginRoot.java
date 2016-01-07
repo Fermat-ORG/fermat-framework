@@ -1694,6 +1694,48 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         return new Identity(publicKey, alias,phrase, actors, profileImage);
     }
 
+    @Override
+    public void updateActor(Actor actor) {
+        try {
+            if (register) {
+                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("PHRASE", actor.getPhrase());
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                String extraData = gson.toJson(jsonObject);
+
+
+                final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
+                        (actor.getName().toLowerCase()),
+                        (actor.getName().toLowerCase() + "_" + this.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_INTRA_USER,
+                        extraData);
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
+                            communicationsClientConnection.updateRegisterActorProfile(networkServiceType, platformComponentProfile);
+                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                thread.start();
+                System.out.println("----------\n Pasamos por el UPDATE robert\n --------------------");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void connectToBetweenActors(String senderPK, PlatformComponentType senderType, String receiverPK, PlatformComponentType receiverType) {
         PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
                 senderPK,

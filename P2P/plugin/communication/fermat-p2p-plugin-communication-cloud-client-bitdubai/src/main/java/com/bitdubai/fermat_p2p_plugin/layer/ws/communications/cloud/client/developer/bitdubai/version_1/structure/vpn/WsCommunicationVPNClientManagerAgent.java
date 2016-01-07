@@ -273,6 +273,9 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         return isRunning;
     }
 
+    /*
+     * Close all Vpn Connections when close the App
+     */
     public void closeAllVpnConnections(){
 
         try {

@@ -728,6 +728,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
     }
 
+    /*
+     * Close the main connection when is closing the App
+     */
     @Override
     public void closeMainConnection() {
 
