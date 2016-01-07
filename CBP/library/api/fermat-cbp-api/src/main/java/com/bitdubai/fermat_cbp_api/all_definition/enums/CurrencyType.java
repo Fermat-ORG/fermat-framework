@@ -5,12 +5,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by angel on 18/9/15.
+ * Updated by Manuel Perez on 06/01/2015
  */
 public enum CurrencyType implements FermatEnum {
-    CRYPTO_MONEY("CRYP"),
-    BANK_MONEY("BANK"),
-    CASH_ON_HAND_MONEY("CASHOH"),
-    CASH_DELIVERY_MONEY("CASHD");
+    CRYPTO_MONEY("CRT"),
+    BANK_MONEY("BAT"),
+    CASH_ON_HAND_MONEY("CAD"),
+    CASH_DELIVERY_MONEY("COH");
 
     private String code;
 
@@ -25,10 +26,10 @@ public enum CurrencyType implements FermatEnum {
 
     public static CurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "CRYP": return CurrencyType.CRYPTO_MONEY;
-            case "BANK": return CurrencyType.BANK_MONEY;
-            case "CASHOH": return CurrencyType.CASH_ON_HAND_MONEY;
-            case "CASHD": return CurrencyType.CASH_DELIVERY_MONEY;
+            case "CRT": return CurrencyType.CRYPTO_MONEY;
+            case "BAT": return CurrencyType.BANK_MONEY;
+            case "CAD": return CurrencyType.CASH_ON_HAND_MONEY;
+            case "COH": return CurrencyType.CASH_DELIVERY_MONEY;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }

@@ -64,7 +64,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         imageBytes = new byte[0]; //Actor customer
         if (customerBrokerContractSale != null){
             this.status =  customerBrokerContractSale.getStatus(); //getLastNegotiationUpdateDate del Negotiation
-        }else this.status = ContractStatus.PAUSED;
+        }else this.status = status;
     }
 
     @Override

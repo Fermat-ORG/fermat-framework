@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cht_core.layer.network_service.chat;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.DeveloperBitDubai;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 

@@ -23,8 +23,8 @@ public class CHTPlatform extends AbstractPlatform {
 
         try {
 
+            //registerLayer(new NetworkServiceLayer());
             registerLayer(new SupAppModuleLayer());
-            registerLayer(new NetworkServiceLayer());
 
         } catch (CantRegisterLayerException e) {
 
