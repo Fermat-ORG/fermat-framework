@@ -59,7 +59,7 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
         */
         String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
-        System.out.println("CompleteRegistrationComponentPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        System.out.println("ClientSuccessfullyReconnectPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Create a raise a new event whit the platformComponentProfile registered
@@ -70,7 +70,7 @@ public class ClientSuccessfullyReconnectPacketProcessor extends FermatPacketProc
         /*
          * Raise the event
          */
-        //System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
+        System.out.println("ClientSuccessfullyReconnectPacketProcessor - Raised a event = P2pEventType.CLIENT_SUCCESS_RECONNECT");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

@@ -37,6 +37,8 @@ import org.java_websocket.WebSocketImpl;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
@@ -258,9 +260,27 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     public void handleConnectionLoose(){
 
-        System.out.println("WsCommunicationsCloudClientPluginRoot - handleConnectionLoose trying to reconnect");
-        wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
-        wsCommunicationsCloudClientConnection.initializeAndConnect();
+        try {
+
+            System.out.println("WsCommunicationsCloudClientPluginRoot - handleConnectionLoose trying to reconnect");
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
+            wsCommunicationsCloudClientConnection.initializeAndConnect();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("WsCommunicationsCloudClientPluginRoot - trying to reconnect on 40 seg");
+
+            new Timer().schedule(new TimerTask() {
+                               @Override
+                               public void run() {
+                                   handleConnectionLoose();
+                               }
+                           },
+                    40000
+            );
+
+        }
+
     }
 
 }
