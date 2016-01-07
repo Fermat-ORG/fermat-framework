@@ -330,6 +330,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         if (extendedPublicKey != null) {
             AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
 
+            System.out.println("*****Actor Asset Issuer ****: extended Public KEy generada");
             /**
              * and send it using the redeem point network service.
              */
@@ -341,6 +342,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         redeemPoint);
 
                 assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessageSend);
+                System.out.println("*****Actor Asset Issuer ****: enviando mensaje a Redeempoint Network Service");
             } catch (CantSetObjectException e) {
                 e.printStackTrace();
             } catch (CantSendMessageException e) {

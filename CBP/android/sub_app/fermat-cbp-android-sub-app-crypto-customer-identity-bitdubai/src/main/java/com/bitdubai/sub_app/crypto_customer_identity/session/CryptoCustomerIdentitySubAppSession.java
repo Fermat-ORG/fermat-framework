@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class CryptoCustomerIdentitySubAppSession
         extends AbstractFermatSession<InstalledSubApp, CryptoCustomerIdentityModuleManager, SubAppResourcesProviderManager>
-        implements SubAppsSession {
+        {
 
     public static final String IDENTITY_INFO = "CRYPTO_CUSTOMER_IDENTITY_INFORMATION";
 
