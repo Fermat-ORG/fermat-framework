@@ -103,12 +103,12 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
             if(locations.get(pos).equals("settings")){
                 locations.remove(pos);
                 locations.add(location.toString());
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
             }
             if(locations.get(pos).equals("wizard")){
                 locations.remove(pos);
                 locations.add(location.toString());
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
             }
         } else {
             Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();

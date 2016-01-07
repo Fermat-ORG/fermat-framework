@@ -2198,8 +2198,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Create Location");
-        runtimeTitleBar.setLabelSize(titleBarTextSize);
-        runtimeTitleBar.setTitleColor(titleBarTitleColor);
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
