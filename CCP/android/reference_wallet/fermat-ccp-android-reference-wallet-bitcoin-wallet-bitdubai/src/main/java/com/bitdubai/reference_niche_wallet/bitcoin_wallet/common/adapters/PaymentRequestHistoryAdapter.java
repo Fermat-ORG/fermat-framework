@@ -3,11 +3,15 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -84,12 +88,12 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
      * @param position position to render
      */
     @Override
-    protected void bindHolder(PaymentHistoryItemViewHolder holder, final PaymentRequest data, int position) {
+    protected void bindHolder(final PaymentHistoryItemViewHolder holder, final PaymentRequest data, int position) {
 
         try {
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
         }catch (Exception e){
-            holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.celine_profile_picture));
+            holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
         }
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
@@ -187,7 +191,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                                 , referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
-                        onRefreshList.onRefresh();
+                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
+                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+                        //onRefreshList.onRefresh();
                     } catch (Exception e) {
                         showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
                     }
@@ -202,13 +208,15 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
-                    onRefreshList.onRefresh();
+                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
+                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                 } catch (Exception e) {
                     showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
                 }
             }
         });
     }
+
 
 
 }

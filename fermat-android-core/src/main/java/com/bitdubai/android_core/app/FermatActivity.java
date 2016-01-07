@@ -410,7 +410,7 @@ public abstract class FermatActivity extends AppCompatActivity
         if (footer != null && footerViewPainter!=null) {
             FrameLayout slide_container = (FrameLayout) findViewById(R.id.slide_container);
             RelativeLayout footer_container = (RelativeLayout) findViewById(R.id.footer_container);
-            if (footer_container != null && footerViewPainter != null && slide_container != null) {
+            if (footer_container != null && slide_container != null) {
                 footerViewPainter.addNavigationViewFooterElementVisible(getLayoutInflater(), slide_container);
                 footerViewPainter.addFooterViewContainer(getLayoutInflater(), footer_container);
             } else {
