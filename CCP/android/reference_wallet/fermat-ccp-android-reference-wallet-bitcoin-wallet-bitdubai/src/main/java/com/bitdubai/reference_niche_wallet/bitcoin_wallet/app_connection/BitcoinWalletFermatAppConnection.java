@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -23,7 +24,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class BitcoinWalletFermatAppConnection extends AppConnections{
+public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWalletSession>{
 
 
     public BitcoinWalletFermatAppConnection(Activity activity) {
