@@ -612,8 +612,8 @@ public abstract class FermatActivity extends AppCompatActivity
      * @param title
      */
     protected void setActionBarProperties(String title, Activity activity) {
-        SpannableString s = new SpannableString(title);
-
+        if(title!=null) {
+            SpannableString s = new SpannableString(title);
 
 
 //        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
@@ -638,6 +638,7 @@ public abstract class FermatActivity extends AppCompatActivity
 //                collapsingToolbarLayout.setBackgroundDrawable(ld);
 //            }
 //        }
+        }
     }
 
     /**
@@ -892,7 +893,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.clear();
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -1040,7 +1040,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
-            invalidateOptionsMenu();
+
             removecallbacks();
             onRestart();
         } catch (Exception e) {

@@ -188,7 +188,6 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
             table.addStringFilter(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-
             // 3) Get Intra users.
             for (DatabaseTableRecord record : table.getRecords ()) {
 
@@ -297,13 +296,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.
-                list.add(new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME),
-                        record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME),
-                        record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getIntraUserIdentityPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
-                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
-                        pluginFileSystem,
-                        pluginId));
+                list.add(buildIdentity(record));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListIntraWalletUserIdentitiesException(e.getMessage(), e, "Intra User Identity", "Cant load " + IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
@@ -317,6 +310,16 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
         // Return the list values.
         return list;
+    }
+
+    private com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity buildIdentity(DatabaseTableRecord record) throws CantGetIntraWalletUserIdentityPrivateKeyException, CantGetIntraWalletUserIdentityProfileImageException {
+        return new com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME),
+                record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME),
+                record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
+                getIntraUserIdentityPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
+                getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
+                pluginFileSystem,
+                pluginId);
     }
 
 
