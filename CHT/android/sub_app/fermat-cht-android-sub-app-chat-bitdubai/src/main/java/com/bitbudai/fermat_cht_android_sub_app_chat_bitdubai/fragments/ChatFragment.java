@@ -107,8 +107,6 @@ public class ChatFragment extends AbstractFermatFragment  {//ActionBarActivity
         return layout;
     }
 
-
-
     public void displayMessage(ChatMessage message) {
         adapter.add(message);
         //adapter.notifyDataSetChanged();
