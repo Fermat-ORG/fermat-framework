@@ -11,7 +11,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import java.util.List;
 import java.util.Map;
 
-/**
+/** TODO: Gabriel, please, fix this class, I'm gonna comment all the lines that had instances from Transaction Transmission (CBP) because is not correct and your code is not compiling
  * Created by root on 07/01/16.
  */
 public class ChatTransactionAgent {
@@ -55,13 +55,15 @@ public class ChatTransactionAgent {
     /**
      * plugin root
      */
-    TransactionTransmissionPluginRoot transactionTransmissionPluginRoot;
+    //TODO: to fix
+    //TransactionTransmissionPluginRoot transactionTransmissionPluginRoot;
 
     /**
      * DAO TransactionTransmission
      */
-    TransactionTransmissionContractHashDao transactionTransmissionContractHashDao;
-    TransactionTransmissionConnectionsDAO transactionTransmissionConnectionsDAO;
+    //TODO: to fix
+    //TransactionTransmissionContractHashDao transactionTransmissionContractHashDao;
+    //TransactionTransmissionConnectionsDAO transactionTransmissionConnectionsDAO;
 
     /**
      *  Represent the remoteNetworkServicesRegisteredList
@@ -88,7 +90,8 @@ public class ChatTransactionAgent {
      * Cache de metadata con conexions leidas anteriormente
      * ActorPublicKey, metadata de respuesta
      */
-    Map<String, TransactionTransmissionStates> cacheResponseMetadataFromRemotes;
+    //TODO: to fix
+    //Map<String, TransactionTransmissionStates> cacheResponseMetadataFromRemotes;
 
     /**
      * Map contains publicKey from componentProfile to connect
@@ -99,14 +102,16 @@ public class ChatTransactionAgent {
     /**
      * Cola de espera, a la cual van pasando las conecciones que no se pudieron conectar para que se hagan con más tiempo y no saturen el server
      */
-    Map<String, TransactionTransmissionPlatformComponentProfilePlusWaitTime> waitingPlatformComponentProfile;
+    //TODO: to fix
+    //Map<String, TransactionTransmissionPlatformComponentProfilePlusWaitTime> waitingPlatformComponentProfile;
 
     /**
      * Pool connections requested waiting for peer or server response
      *
      * publicKey  and transaccion metadata waiting to be a response
      */
-    Map<String,BusinessTransactionMetadata> poolConnectionsWaitingForResponse;
+    //TODO: to fix
+    //Map<String,BusinessTransactionMetadata> poolConnectionsWaitingForResponse;
 
 
     Map<String, FermatMessage> receiveMessage;
