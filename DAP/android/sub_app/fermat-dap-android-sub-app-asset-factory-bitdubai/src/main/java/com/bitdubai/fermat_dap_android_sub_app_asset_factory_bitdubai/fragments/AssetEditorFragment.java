@@ -395,7 +395,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         FermatWorker worker = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                manager.removeAssetFactory(asset.getPublicKey());
+                manager.removeAssetFactory(asset.getAssetPublicKey());
                 return true;
             }
         };
@@ -424,9 +424,11 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     private void saveAsset() {
         //asset.setPublicKey("asset-factory-public-key");//// TODO: 02/10/15 set public key
+        asset.setFactoryId(UUID.randomUUID().toString());
         asset.setName(nameView.getText().toString().trim());
         asset.setDescription(descriptionView.getText().toString().trim());
         asset.setQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
+        asset.setTotalQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
         asset.setAmount(Long.parseLong(bitcoinsView.getText().toString().trim().isEmpty() ? "0" : bitcoinsView.getText().toString().trim()));
         asset.setIsRedeemable(isRedeemableView.isChecked());
         asset.setState(State.DRAFT);
@@ -442,7 +444,6 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             }
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-//            resource.setResourceBinayData(toByteArray(((BitmapDrawable) takePicture.getDrawable()).getBitmap()));
             resource.setResourceBinayData(toByteArray(takePicture));
             resources.add(resource);
             asset.setResources(resources);

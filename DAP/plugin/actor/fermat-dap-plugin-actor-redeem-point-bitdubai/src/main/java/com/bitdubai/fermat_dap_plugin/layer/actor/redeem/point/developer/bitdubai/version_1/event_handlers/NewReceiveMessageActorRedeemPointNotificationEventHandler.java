@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_bch_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.RedeemPointActorPluginRoot;
 
@@ -24,15 +25,13 @@ public class NewReceiveMessageActorRedeemPointNotificationEventHandler implement
 
         if (this.redeemPointActorPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if(fermatEvent.getSource() == EventSource.ACTOR_ASSET_ISSUER) {
+            if (fermatEvent.getSource().equals(EventSource.NETWORK_SERVICE_ACTOR_ASSET_REDEEM_POINT)) {
                 System.out.println("ACTOR ASSET REDEEM POINT RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
                 NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
              /*
               *  Actor Asset Issuer make the job
               */
                 this.redeemPointActorPluginRoot.handleNewReceiveMessageActorNotificationEvent(
-                        newReceiveMessageActorNotificationEvent.getActorAssetSender(),
-                        newReceiveMessageActorNotificationEvent.getActorAssetDestination(),
                         newReceiveMessageActorNotificationEvent.getMessage());
             }
         }
