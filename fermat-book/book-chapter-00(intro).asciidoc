@@ -27,9 +27,9 @@ Fermat's architecture includes the possibility of interconnecting the trust-less
 
 === Fermat Community
 
-Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it. The project's maintainer community is bitDubai, a joint venture of developers.
+Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it, beyond bitDubai, the project's main maintainer community.
 
-The project started on August 2014 and its earliest version was written from January to May 2015 by a handful of people, the core developers team. From there, many more developers joined in. It is *code base portable* because most of it is written in *JAVA*.
+The project started on August 2014 and its earliest version was written from January to May 2015 by a handful of people, the core developers team. From there, many more developers, graphic and UX designers, and some industry related people joined in. 
 
 Today Fermat is a vibrant community spanning several countries and disciplines.
 
