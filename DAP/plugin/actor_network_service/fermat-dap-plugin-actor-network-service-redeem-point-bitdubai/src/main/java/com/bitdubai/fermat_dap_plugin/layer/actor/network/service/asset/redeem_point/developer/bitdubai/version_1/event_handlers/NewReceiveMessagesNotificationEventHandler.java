@@ -37,10 +37,8 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
             NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
             FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
-
-            Gson gson = DAPMessageGson.getGson();
-
             if (fermatMessageReceive.getContent() != null) {
+                Gson gson = DAPMessageGson.getGson();
                 DAPMessage message = gson.fromJson(fermatMessageReceive.getContent(), DAPMessage.class);
 
                     System.out.println("ACTOR NETWORK SERVICE ASSET REDEEM POINT - SE LANZARA EVENTO PARA REQUEST PUBLIC KEY EXTENDED");

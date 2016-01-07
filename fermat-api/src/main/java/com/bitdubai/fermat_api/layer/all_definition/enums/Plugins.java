@@ -287,7 +287,8 @@ public enum Plugins implements FermatPluginsEnum {
 
     //CHT
 
-    CHAT_NETWORK_SERVICE                ("CHTNS");
+    CHAT_NETWORK_SERVICE                ("CHTNS"),
+    CHAT_SUP_APP_MODULE                 ("CHTSAM");
 
     // End  new Plugins
 
@@ -415,6 +416,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
             case "CHTNS"     : return CHAT_NETWORK_SERVICE;
+            case "CHTSAM"     : return CHAT_SUP_APP_MODULE;
 
             default:
                 throw new InvalidParameterException(

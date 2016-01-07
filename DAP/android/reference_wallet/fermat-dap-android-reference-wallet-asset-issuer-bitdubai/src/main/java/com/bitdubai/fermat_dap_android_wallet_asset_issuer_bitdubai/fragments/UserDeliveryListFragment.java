@@ -1,13 +1,18 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -17,13 +22,14 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.UserDeliveryListAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.UserDelivery;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.UserDelivery;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +76,8 @@ public class UserDeliveryListFragment extends FermatWalletListFragment<UserDeliv
     protected void initViews(View layout) {
         super.initViews(layout);
 
+        setupBackgroundBitmap(layout);
+
         configureToolbar();
 
         noUsersView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_users);
@@ -109,6 +117,41 @@ public class UserDeliveryListFragment extends FermatWalletListFragment<UserDeliv
 
             toolbar.setBackground(drawable);
         }
+    }
+
+    private void setupBackgroundBitmap(final View rootView) {
+        AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
+
+            WeakReference<ViewGroup> view;
+
+            @Override
+            protected void onPreExecute() {
+                view = new WeakReference(rootView) ;
+            }
+
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                Bitmap drawable = null;
+                try {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inScaled = true;
+                    options.inSampleSize = 5;
+                    drawable = BitmapFactory.decodeResource(
+                            getResources(), R.drawable.bg_app_image,options);
+                }catch (OutOfMemoryError error){
+                    error.printStackTrace();
+                }
+                return drawable;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap drawable) {
+                if (drawable!= null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                }
+            }
+        } ;
+        asyncTask.execute();
     }
 
     @Override

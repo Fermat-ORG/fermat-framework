@@ -32,6 +32,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -227,6 +228,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                 continue;
                             }
                             CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_CRYPTO_NETWORK);
+                            if(cryptoTransaction == null) continue;
                             AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
                             AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
@@ -243,6 +245,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER:
                         for (AssetAppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
                             CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.genesisTransaction(), CryptoStatus.ON_BLOCKCHAIN);
+                            if(cryptoTransaction == null) continue;
                             AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.userWalletPublicKey());
                             AssetUserWalletBalance balance = userWallet.getBalance();
                             AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.digitalAsset(),
@@ -338,115 +341,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
 
 
         public void sendMessageAssetAppropriated(final DigitalAsset assetAppropriated) throws CantGetAssetUserActorsException, CantSetObjectException, CantSendMessageException {
-            ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
-                /**
-                 * The method <code>getActorPublicKey</code> gives us the public key of the represented a Actor
-                 *
-                 * @return the publicKey
-                 */
-                @Override
-                public String getActorPublicKey() {
-                    return assetAppropriated.getIdentityAssetIssuer().getPublicKey();
-                }
-
-                /**
-                 * The method <code>getName</code> gives us the name of the represented a Actor
-                 *
-                 * @return the name of the intra user
-                 */
-                @Override
-                public String getName() {
-                    return assetAppropriated.getIdentityAssetIssuer().getAlias();
-                }
-
-                /**
-                 * The method <coda>getProfileImage</coda> gives us the profile image of the represented a Actor
-                 *
-                 * @return the image
-                 */
-                @Override
-                public byte[] getProfileImage() {
-                    return assetAppropriated.getIdentityAssetIssuer().getImage();
-                }
-
-                /**
-                 * The method <code>getRegistrationDate</code> gives us the date when both Asset Issuers
-                 * exchanged their information and accepted each other as contacts.
-                 *
-                 * @return the date
-                 */
-                @Override
-                public long getRegistrationDate() {
-                    return 0;
-                }
-
-                /**
-                 * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Connection Date
-                 */
-                @Override
-                public long getLastConnectionDate() {
-                    return 0;
-                }
-
-                /**
-                 * The method <code>getConnectionState</code> gives us the connection state of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Connection state
-                 */
-                @Override
-                public DAPConnectionState getDapConnectionState() {
-                    return DAPConnectionState.REGISTERED_OFFLINE;
-                }
-
-                /**
-                 * Método {@code getDescription}
-                 * The Method return a description about Issuer
-                 * acerca de él mismo.
-                 *
-                 * @return {@link String} con la descripción del {@link ActorAssetIssuer}
-                 */
-                @Override
-                public String getDescription() {
-                    return null;
-                }
-
-                /**
-                 * The method <code>getLocation</code> gives us the Location of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Location
-                 */
-                @Override
-                public Location getLocation() {
-                    return null;
-                }
-
-                /**
-                 * The method <code>getLocationLatitude</code> gives us the Location of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Location Latitude
-                 */
-                @Override
-                public Double getLocationLatitude() {
-                    return null;
-                }
-
-                /**
-                 * The method <code>getLocationLongitude</code> gives us the Location of the represented
-                 * Asset Issuer
-                 *
-                 * @return the Location Longitude
-                 */
-                @Override
-                public Double getLocationLongitude() {
-                    return null;
-                }
-            };
+            ActorAssetIssuer actorAssetIssuer = new AssetIssuerActorRecord(assetAppropriated.getIdentityAssetIssuer().getAlias(),
+                    assetAppropriated.getIdentityAssetIssuer().getPublicKey());
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
             DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(assetAppropriated, actorAssetUser), actorAssetUser, actorAssetIssuer);
             assetIssuerActorNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.

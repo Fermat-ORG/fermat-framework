@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 
 /** The enum <code>com.bitdubai.fermat_cht_api.fermat_cbp_api.events.enums.EventType</code>
  * represent the different type of events found on cht platform.<p/>
@@ -17,9 +19,15 @@ public enum EventType implements FermatEventEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
-    FOO_EVENT("FOO"){
-        public final FermatEvent getNewEvent() { return null;}
+    /**
+     * NETWORK SERVICES
+     */
+    OUTGOING_CHAT("OUTGCHAT"){
+        public final FermatEvent getNewEvent() { return new OutgoingChat(this);}
     },
+    INCOMING_CHAT("INCHAT"){
+        public final FermatEvent getNewEvent()  {   return new IncomingChat(this);}
+    }
     ;
 
     private final String code;
