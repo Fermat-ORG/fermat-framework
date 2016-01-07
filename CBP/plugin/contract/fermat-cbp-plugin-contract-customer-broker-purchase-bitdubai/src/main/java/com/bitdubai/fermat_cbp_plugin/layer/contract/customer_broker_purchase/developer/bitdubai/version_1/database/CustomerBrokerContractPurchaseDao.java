@@ -76,37 +76,178 @@ public class CustomerBrokerContractPurchaseDao {
 
             try {
 
-                Collection<ContractClause> clauses = new ArrayList<>();
-
-                ContractClause clause = new ContractClauseInformation(
-                        UUID.randomUUID(),
-                        ContractClauseType.CRYPTO_TRANSFER,
-                        0,
-                        ContractClauseStatus.PENDING
-                );
-
-                clauses.add(clause);
-
-                CustomerBrokerContractPurchase contract = new CustomerBrokerContractPurchaseInformation(
-                        "contractID_1",
-                        "negotiationID_1",
-                        "publicKeyCustomer_1",
-                        "publicKeyBroker_1",
-                        System.currentTimeMillis(),
+                ContractStatus[] status = {
+                        ContractStatus.MERCHANDISE_SUBMIT,
+                        ContractStatus.CANCELLED,
+                        ContractStatus.COMPLETED,
+                        ContractStatus.PAUSED,
                         ContractStatus.PAYMENT_SUBMIT,
-                        clauses,
-                        false
-                );
+                        ContractStatus.PENDING_MERCHANDISE,
+                        ContractStatus.PENDING_PAYMENT,
+                        ContractStatus.READY_TO_CLOSE
+                };
 
-                CustomerBrokerContractPurchase contrato = this.createCustomerBrokerPurchaseContract(contract);
+                ContractClauseType[] type = {
+                        ContractClauseType.BANK_TRANSFER,
+                        ContractClauseType.CASH_DELIVERY,
+                        ContractClauseType.CASH_ON_HAND,
+                        ContractClauseType.CRYPTO_TRANSFER,
+                        ContractClauseType.BANK_TRANSFER,
+                        ContractClauseType.CASH_DELIVERY,
+                        ContractClauseType.CASH_ON_HAND,
+                        ContractClauseType.CRYPTO_TRANSFER
+                };
 
-                System.out.println("|==| Contrato creado exitosamente");
-            /*
-            } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
-                System.out.println(":==: Error Obteniendo el listado de Contratos");
+                Collection<ContractClause> clauses = null;
+                ContractClause clause = null;
+
+                for(int i=0; i<status.length; i++){
+
+                    clauses = new ArrayList<>();
+                    clause = new ContractClauseInformation(
+                            UUID.randomUUID(),
+                            type[i],
+                            0,
+                            ContractClauseStatus.PENDING
+                    );
+                    clauses.add(clause);
+
+                    CustomerBrokerContractPurchase contract = new CustomerBrokerContractPurchaseInformation(
+                            "contractID_"+i,
+                            "negotiationID_"+i,
+                            "publicKeyCustomer_"+i,
+                            "publicKeyBroker_"+i,
+                            System.currentTimeMillis(),
+                            status[i],
+                            clauses,
+                            false
+                    );
+
+                    CustomerBrokerContractPurchase contrato = this.createCustomerBrokerPurchaseContract(contract);
+
+                }
+
+                System.out.println("|==| Contratos creados exitosamente");
+
+
+                this.updateStatusCustomerBrokerPurchaseContract("contractID_3", ContractStatus.READY_TO_CLOSE);
+                System.out.println("|==| Status del contrato contractID_2 actualizado exitosamente");
+
+                this.updateContractNearExpirationDatetime("contractID_2", true);
+                System.out.println("|==| Near del contrato contractID_3 actualizado exitosamente");
+
+                /*
+                System.out.println("|==| Listando contratos");
+                Collection<CustomerBrokerContractPurchase> contratos = this.getAllCustomerBrokerContractPurchase();
+
+                for (CustomerBrokerContractPurchase contr : contratos) {
+                    System.out.println("|==| \tContractID: "+contr.getContractId());
+                    System.out.println("|==| \tNegotiationID: "+contr.getNegotiatiotId());
+                    System.out.println("|==| \tKeyCustomer: "+contr.getPublicKeyCustomer());
+                    System.out.println("|==| \tKeyBroker: "+contr.getPublicKeyBroker());
+                    System.out.println("|==| \tDateTime: "+contr.getDateTime());
+                    System.out.println("|==| \tStatus: "+contr.getStatus());
+                    System.out.println("|==| \tNear: "+contr.getNearExpirationDatetime());
+
+                    System.out.println("|==| \tClausulas");
+                    for (ContractClause clausula : contr.getContractClause()) {
+                        System.out.println("|==| \t\tClauseId: "+clausula.getClauseId()+", Type: "+clausula.getType()+", Status: "+clausula.getStatus()+", Order: "+clausula.getExecutionOrder());
+                    }
+                }
+                System.out.println("|==| Buscando crotrato po ID: contractID_3");
+                CustomerBrokerContractPurchase co = this.getCustomerBrokerPurchaseContractForcontractID("contractID_3");
+
+                System.out.println("|==| \tContractID: "+co.getContractId());
+                System.out.println("|==| \tNegotiationID: "+co.getNegotiatiotId());
+                System.out.println("|==| \tKeyCustomer: "+co.getPublicKeyCustomer());
+                System.out.println("|==| \tKeyBroker: "+co.getPublicKeyBroker());
+                System.out.println("|==| \tDateTime: " + co.getDateTime());
+                System.out.println("|==| \tStatus: "+co.getStatus());
+                System.out.println("|==| \tNear: " + co.getNearExpirationDatetime());
+
+                System.out.println("|==| \tClausulas");
+                for (ContractClause clausula : co.getContractClause()) {
+                    System.out.println("|==| \t\tClauseId: "+clausula.getClauseId()+", Type: "+clausula.getType()+", Status: "+clausula.getStatus()+", Order: "+clausula.getExecutionOrder());
+                }
+
+                System.out.println("|==| Listando contratos por status");
+                Collection<CustomerBrokerContractPurchase> contratos = this.getCustomerBrokerContractPurchaseForStatus(ContractStatus.READY_TO_CLOSE);
+
+                for (CustomerBrokerContractPurchase contr : contratos) {
+                    System.out.println("|==| \tContractID: "+contr.getContractId());
+                    System.out.println("|==| \tNegotiationID: "+contr.getNegotiatiotId());
+                    System.out.println("|==| \tKeyCustomer: "+contr.getPublicKeyCustomer());
+                    System.out.println("|==| \tKeyBroker: "+contr.getPublicKeyBroker());
+                    System.out.println("|==| \tDateTime: "+contr.getDateTime());
+                    System.out.println("|==| \tStatus: "+contr.getStatus());
+                    System.out.println("|==| \tNear: "+contr.getNearExpirationDatetime());
+
+                    System.out.println("|==| \tClausulas");
+                    for (ContractClause clausula : contr.getContractClause()) {
+                        System.out.println("|==| \t\tClauseId: "+clausula.getClauseId()+", Type: "+clausula.getType()+", Status: "+clausula.getStatus()+", Order: "+clausula.getExecutionOrder());
+                    }
+                }
                 */
+
+                System.out.println("|==| Mostrando el History");
+
+                ListsForStatusPurchase historiales = this.getCustomerBrokerContractHistory();
+                for (CustomerBrokerContractPurchase contr : historiales.getHistoryContracts()) {
+                    System.out.println("|==| \tContractID: "+contr.getContractId());
+                    System.out.println("|==| \tNegotiationID: "+contr.getNegotiatiotId());
+                    System.out.println("|==| \tKeyCustomer: "+contr.getPublicKeyCustomer());
+                    System.out.println("|==| \tKeyBroker: "+contr.getPublicKeyBroker());
+                    System.out.println("|==| \tDateTime: "+contr.getDateTime());
+                    System.out.println("|==| \tStatus: "+contr.getStatus());
+                    System.out.println("|==| \tNear: "+contr.getNearExpirationDatetime());
+
+                    System.out.println("|==| \tClausulas");
+                    for (ContractClause clausula : contr.getContractClause()) {
+                        System.out.println("|==| \t\tClauseId: "+clausula.getClauseId()+", Type: "+clausula.getType()+", Status: "+clausula.getStatus()+", Order: "+clausula.getExecutionOrder());
+                    }
+                }
+
+                System.out.println("|==| Mostrando el ContractsWaitingForBroker");
+
+                for (CustomerBrokerContractPurchase contr : historiales.getContractsWaitingForBroker()) {
+                    System.out.println("|==| \tContractID: "+contr.getContractId());
+                    System.out.println("|==| \tNegotiationID: "+contr.getNegotiatiotId());
+                    System.out.println("|==| \tKeyCustomer: "+contr.getPublicKeyCustomer());
+                    System.out.println("|==| \tKeyBroker: "+contr.getPublicKeyBroker());
+                    System.out.println("|==| \tDateTime: "+contr.getDateTime());
+                    System.out.println("|==| \tStatus: "+contr.getStatus());
+                    System.out.println("|==| \tNear: "+contr.getNearExpirationDatetime());
+
+                    System.out.println("|==| \tClausulas");
+                    for (ContractClause clausula : contr.getContractClause()) {
+                        System.out.println("|==| \t\tClauseId: "+clausula.getClauseId()+", Type: "+clausula.getType()+", Status: "+clausula.getStatus()+", Order: "+clausula.getExecutionOrder());
+                    }
+                }
+
+                System.out.println("|==| Mostrando el ContractsWaitingForCustomer");
+
+                for (CustomerBrokerContractPurchase contr : historiales.getContractsWaitingForCustomer()) {
+                    System.out.println("|==| \tContractID: "+contr.getContractId());
+                    System.out.println("|==| \tNegotiationID: "+contr.getNegotiatiotId());
+                    System.out.println("|==| \tKeyCustomer: "+contr.getPublicKeyCustomer());
+                    System.out.println("|==| \tKeyBroker: "+contr.getPublicKeyBroker());
+                    System.out.println("|==| \tDateTime: "+contr.getDateTime());
+                    System.out.println("|==| \tStatus: "+contr.getStatus());
+                    System.out.println("|==| \tNear: "+contr.getNearExpirationDatetime());
+
+                    System.out.println("|==| \tClausulas");
+                    for (ContractClause clausula : contr.getContractClause()) {
+                        System.out.println("|==| \t\tClauseId: "+clausula.getClauseId()+", Type: "+clausula.getType()+", Status: "+clausula.getStatus()+", Order: "+clausula.getExecutionOrder());
+                    }
+                }
+
+
             } catch (CantCreateCustomerBrokerContractPurchaseException e) {
                 System.out.println("|==| Error creando el Contrato");
+            } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+                System.out.println("|==| Error Obteniendo el listado de Contratos");
+            } catch (CantUpdateCustomerBrokerContractPurchaseException e) {
+                System.out.println("|==| Error Actualizando el Near del contrato contractID_3");
             }
 
             System.out.println("|==| Fin de las pruebas en el Contract Purchase");
@@ -116,6 +257,7 @@ public class CustomerBrokerContractPurchaseDao {
 
         public CustomerBrokerContractPurchase createCustomerBrokerPurchaseContract(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException {
             try {
+
                 DatabaseTable PurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
                 DatabaseTableRecord recordToInsert = PurchaseTable.getEmptyRecord();
 
@@ -131,21 +273,11 @@ public class CustomerBrokerContractPurchaseDao {
                 );
                 PurchaseTable.insertRecord(recordToInsert);
                 createCustomerBrokerPurchaseContractClauses(contract.getContractId(), contract.getContractClause());
-                //return constructCustomerBrokerPurchaseContractFromRecord(recordToInsert);
-                return null;
+                return contract;
 
             } catch (CantInsertRecordException e) {
-                System.out.println("|==| Error CantInsertRecordException");
-                //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
-            } /*catch (InvalidParameterException e) {
-                System.out.println(":==: Error InvalidParameterException");
-                //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
-            } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-                System.out.println(":==: Error CantCreateCustomerBrokerContractPurchaseException");
-                //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
-            }*/
-
-            return null;
+                throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
+            }
         }
 
         public void updateStatusCustomerBrokerPurchaseContract(String contractID, ContractStatus status) throws CantUpdateCustomerBrokerContractPurchaseException {
@@ -160,7 +292,7 @@ public class CustomerBrokerContractPurchaseDao {
             }
         }
 
-        public void updateNegotiationNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractPurchaseException {
+        public void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractPurchaseException {
             try {
                 DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
                 PurchaseNegotiationClauseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId, DatabaseFilterType.EQUAL);
@@ -189,13 +321,10 @@ public class CustomerBrokerContractPurchaseDao {
                 }
                 return Purchases;
             } catch (CantLoadTableToMemoryException e) {
-                System.out.println("|==| Error CantLoadTableToMemoryException en getAllCustomerBrokerContractPurchase");
-                //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                System.out.println("|==| Error InvalidParameterException en getAllCustomerBrokerContractPurchase");
-                //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
-            return null;
         }
 
         public CustomerBrokerContractPurchase getCustomerBrokerPurchaseContractForcontractID(String contractID) throws CantGetListCustomerBrokerContractPurchaseException {
@@ -260,12 +389,19 @@ public class CustomerBrokerContractPurchaseDao {
                         ContractStatus.CANCELLED.getCode() +
                         "' ORDER BY " +
                         CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME +
-                        "' DESC";
+                        " DESC";
+
+                System.out.println("|==| "+Query);
 
                 Collection<DatabaseTableRecord> res_1 = ContractPurchaseTable.customQuery(Query, true);
 
-                Collection<CustomerBrokerContractPurchase> historyContracts = new ArrayList<>();
+                System.out.println("|==| Registros devueltos: "+res_1.size());
+
+                Collection<CustomerBrokerContractPurchase> historyContracts = new ArrayList<>(); int i=0;
                 for (DatabaseTableRecord record : res_1) {
+
+                    System.out.println("|==| I: "+i); i++;
+
                     historyContracts.add(constructCustomerBrokerPurchaseContractFromRecord(record));
                 }
 
@@ -287,7 +423,7 @@ public class CustomerBrokerContractPurchaseDao {
                         ContractStatus.PENDING_MERCHANDISE.getCode() +
                         "' ORDER BY " +
                         CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME +
-                        "' DESC";
+                        " DESC";
 
                 Collection<DatabaseTableRecord> res_2 = ContractPurchaseTable.customQuery(Query, true);
 
@@ -314,7 +450,7 @@ public class CustomerBrokerContractPurchaseDao {
                         ContractStatus.PENDING_PAYMENT.getCode() +
                         "' ORDER BY " +
                         CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME +
-                        "' DESC";
+                        " DESC";
 
                 Collection<DatabaseTableRecord> res_3 = ContractPurchaseTable.customQuery(Query, true);
 
@@ -354,8 +490,7 @@ public class CustomerBrokerContractPurchaseDao {
                 try {
                     ContractClausePurchaseTable.insertRecord(recordToInsert);
                 } catch (CantInsertRecordException e) {
-                    System.out.println("|==| Error CantInsertRecordException en clause");
-                    //throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
+                    throw new CantCreateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
                 }
             }
         }
@@ -372,16 +507,13 @@ public class CustomerBrokerContractPurchaseDao {
                     try {
                         Purchases.add(constructCustomerBrokerPurchaseContractClauseFromRecord(record));
                     } catch (InvalidParameterException e) {
-                        System.out.println("|==| Error InvalidParameterException en clause");
-                        //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                        throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
                     }
                 }
                 return Purchases;
             } catch (CantLoadTableToMemoryException e) {
-                System.out.println("|==| Error CantLoadTableToMemoryException en clause");
-                //throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerBrokerContractPurchaseException(CantGetListCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
-            return null;
         }
 
     /*
