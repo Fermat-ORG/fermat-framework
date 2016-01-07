@@ -35,7 +35,6 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
-import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
@@ -154,12 +153,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                 } else {
                     bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
                 }
-                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             } else {
                 Bitmap bitmap;
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             }
         } catch (Exception ex) {
