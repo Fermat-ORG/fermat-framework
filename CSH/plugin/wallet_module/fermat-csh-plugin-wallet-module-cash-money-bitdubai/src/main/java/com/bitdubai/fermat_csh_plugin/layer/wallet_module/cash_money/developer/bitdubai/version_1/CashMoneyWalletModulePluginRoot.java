@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -42,6 +43,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoney
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashWalletBalancesImpl;
@@ -69,6 +71,9 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
 
 
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL)
@@ -210,10 +215,27 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
         cashMoneyWalletManager.createCashMoneyWallet(walletPublicKey, fiatCurrency);
     }
 
+
+
+
+
+
+
+
+
+    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
+
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
-    }
+    public SettingsManager<CashMoneyWalletPreferenceSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;    }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
@@ -229,6 +251,9 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     public int[] getMenuNotifications() {
         return new int[0];
     }
+
+
+
 
     /*CER TEST METHODS*/
     private void testCERPlatform(){

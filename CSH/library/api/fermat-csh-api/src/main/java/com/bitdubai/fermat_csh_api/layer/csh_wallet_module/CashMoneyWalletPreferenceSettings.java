@@ -1,10 +1,7 @@
-package com.bitdubai.reference_wallet.cash_money_wallet.preference_settings;
+package com.bitdubai.fermat_csh_api.layer.csh_wallet_module;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.PreferenceWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
@@ -15,6 +12,28 @@ import java.util.UUID;
  * Created by Alejandro Bicelis on 12/9/2015.
  */
 public class CashMoneyWalletPreferenceSettings implements WalletSettings {
+
+    private boolean isHomeTutorialDialogEnabled;
+
+    public boolean isHomeTutorialDialogEnabled() {
+        return isHomeTutorialDialogEnabled;
+    }
+
+    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
+        this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
+    }
+
+
+
+
+
+
+
+
+
+
+    /* WalletSettings interface implementation */
+
     /**
      * This method let us know the default language of a wallet
      *
