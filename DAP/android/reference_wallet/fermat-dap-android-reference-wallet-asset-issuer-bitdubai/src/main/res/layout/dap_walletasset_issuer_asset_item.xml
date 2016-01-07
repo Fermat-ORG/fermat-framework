@@ -107,10 +107,10 @@
 
             <ImageView
                 android:layout_width="127dp"
-                android:layout_height="29dp"
+                android:layout_height="30dp"
                 android:src="@drawable/bg_asset_price"
                 android:layout_below="@+id/assetBookText"
-                android:paddingTop="9dp"
+                android:paddingTop="10dp"
                 android:paddingLeft="7dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

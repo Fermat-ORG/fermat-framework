@@ -104,7 +104,10 @@ public enum Activities implements FermatEnum {
     DAP_DESKTOP("DAPD"),
     CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
+
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAPAUCAM"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN("DAPAUCAAGM"),
+
     DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
     DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
 
@@ -400,6 +403,8 @@ public enum Activities implements FermatEnum {
                 return null; //TODO dejaron este case por fuera
             case "DAPAUCAM":
                 return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
+            case "DAPAUCAAGM":
+                return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN;
             case "DAPAICAM":
                 return Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN;
             case "DAPARPCAM":

@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class SubAppSessionManager implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager {
 
-    private Map<String, FermatSession<InstalledSubApp>> lstSubAppSession;
+    private Map<String, FermatSession<InstalledSubApp,?>> lstSubAppSession;
 
 
     public SubAppSessionManager() {
@@ -23,13 +23,13 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
 
 
     @Override
-    public Map<String, FermatSession<InstalledSubApp>> listOpenSubApps() {
+    public Map<String, FermatSession<InstalledSubApp,?>> listOpenSubApps() {
         return lstSubAppSession;
     }
 
     @Override
-    public FermatSession<InstalledSubApp> openSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, ModuleManager moduleManager,AppConnections appConnections) {
-        FermatSession<InstalledSubApp> subAppsSession  = appConnections.buildSession(subApp,moduleManager,errorManager);
+    public FermatSession<InstalledSubApp,?> openSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, ModuleManager moduleManager,AppConnections appConnections) {
+        FermatSession<InstalledSubApp,?> subAppsSession  = appConnections.buildSession(subApp,moduleManager,errorManager);
         lstSubAppSession.put(subApp.getAppPublicKey(), subAppsSession);
         return subAppsSession;
     }
@@ -52,7 +52,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
     }
 
     @Override
-    public FermatSession<InstalledSubApp> getSubAppsSession(String subAppPublicKey) {
+    public FermatSession<InstalledSubApp,?> getSubAppsSession(String subAppPublicKey) {
         return lstSubAppSession.get(subAppPublicKey);
     }
 

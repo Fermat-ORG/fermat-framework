@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,AssetIssuerWalletSupAppModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,AssetIssuerWalletSupAppModuleManager,WalletResourcesProviderManager> {
 
     private final InstalledWallet installedWallet;
     /**
@@ -71,11 +71,6 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
     }
 
     @Override
-    public String getIdentityConnection() {
-        return "public_key_dap_asset_issuer_identity";
-    }
-
-    @Override
     public Object getData(String key) {
         return data.get(key);
     }
@@ -89,10 +84,6 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet,As
 //        return null;
 //    }
 
-    @Override
-    public WalletSettings getWalletSettings() {
-        return this.walletSettings;
-    }
 
 
     /**
