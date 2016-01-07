@@ -137,7 +137,6 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         double salePrice = 0;
         try{
             JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
-            //System.out.println("String JSON:" + json.toString());
 
             purchasePrice = (double) json.getJSONObject("USD").get("transferencia");
             salePrice = (double) json.getJSONObject("USD").get("transferencia");

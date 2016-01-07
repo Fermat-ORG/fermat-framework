@@ -172,7 +172,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             throw new UnsupportedCurrencyPairException();
 
         //TODO:
-        return null;
+        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
     }
 
     @Override
@@ -181,7 +181,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             throw new UnsupportedCurrencyPairException();
 
         //TODO:
-        return null;
+        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
     }
 
     @Override

@@ -178,7 +178,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             throw new UnsupportedCurrencyPairException();
 
         //TODO:
-        return null;
+        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             throw new UnsupportedCurrencyPairException();
 
         //TODO:
-        return null;
+        throw new CantGetExchangeRateException("Not currently supported but coming soon ASAP");
     }
 
     @Override
