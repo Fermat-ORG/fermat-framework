@@ -147,9 +147,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public void closeAllConnection() {
 
         for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
-
-            //Remove the instance and stop his threads
-            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
+            closeConnection(key);
         }
 
     }
