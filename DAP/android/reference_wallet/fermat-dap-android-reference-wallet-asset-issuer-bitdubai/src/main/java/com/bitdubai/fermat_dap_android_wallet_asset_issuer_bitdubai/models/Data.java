@@ -65,7 +65,7 @@ public class Data {
         return users;
     }
 
-    public static List<User> getConnectedUsers(AssetIssuerWalletSupAppModuleManager moduleManager) throws CantGetAssetUserActorsException {
+    public static List<User> getConnectedUsers(AssetIssuerWalletSupAppModuleManager moduleManager, List<User> usersSelected) throws CantGetAssetUserActorsException {
 //        List<User> users = new ArrayList<>();
 //        users.add(new User("Frank Contreras"));
 //        users.add(new User("Victor Mars"));
@@ -74,7 +74,10 @@ public class Data {
         List<User> users = new ArrayList<>();
         List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
         for (ActorAssetUser actorAssetUser:actorAssetUsers) {
-            users.add(new User(actorAssetUser.getName(), actorAssetUser));
+            User newUser = new User(actorAssetUser.getName(), actorAssetUser);
+//            int index = usersSelected.indexOf(newUser);
+//            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
+            users.add(newUser);
         }
         return users;
     }
