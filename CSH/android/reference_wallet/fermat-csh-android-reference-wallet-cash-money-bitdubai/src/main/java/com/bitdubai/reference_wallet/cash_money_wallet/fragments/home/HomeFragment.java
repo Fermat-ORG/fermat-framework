@@ -38,10 +38,10 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class BalanceSummaryFragment extends FermatWalletListFragment<CashMoneyWalletTransaction>
+public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransaction>
 implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
 
-    protected final String TAG = "BalanceSummaryFragment";
+    protected final String TAG = "HomeFragment";
     protected final String walletPublicKey = "cash_wallet";
 
     // Fermat Managers
@@ -66,8 +66,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
 
 
-    public BalanceSummaryFragment() {}
-    public static BalanceSummaryFragment newInstance() {return new BalanceSummaryFragment();}
+    public HomeFragment() {}
+    public static HomeFragment newInstance() {return new HomeFragment();}
 
 
     @Override
@@ -154,7 +154,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.balance_summary;
+        return R.layout.csh_home;
     }
 
     @Override
@@ -279,7 +279,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                     errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened in BalanceSummaryFragment (Module == null)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Sorry, an error happened in HomeFragment (Module == null)", Toast.LENGTH_SHORT).show();
         }
         return data;
     }

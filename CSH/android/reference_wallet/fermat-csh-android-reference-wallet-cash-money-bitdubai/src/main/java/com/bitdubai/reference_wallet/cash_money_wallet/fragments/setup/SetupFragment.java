@@ -76,7 +76,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.setup_page, container, false);
+        View layout = inflater.inflate(R.layout.csh_setup_page, container, false);
 
 
         //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));

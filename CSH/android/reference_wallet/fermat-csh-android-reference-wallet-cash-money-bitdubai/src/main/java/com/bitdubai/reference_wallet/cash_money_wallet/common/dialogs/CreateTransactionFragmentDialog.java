@@ -3,8 +3,6 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
@@ -109,7 +107,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.create_transaction_dialog);
+            setContentView(R.layout.csh_create_transaction_dialog);
 
 
             dialogTitleLayout = (LinearLayout) findViewById(R.id.csh_ctd_title_layout);
@@ -163,9 +161,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private String getTransactionTitleText()
     {
         if (transactionType == TransactionType.DEBIT)
-            return resources.getString(R.string.withdrawal_transaction_text);
+            return resources.getString(R.string.csh_withdrawal_transaction_text);
         else
-            return resources.getString(R.string.deposit_transaction_text);
+            return resources.getString(R.string.csh_deposit_transaction_text);
     }
 
     private int getTransactionTitleColor()

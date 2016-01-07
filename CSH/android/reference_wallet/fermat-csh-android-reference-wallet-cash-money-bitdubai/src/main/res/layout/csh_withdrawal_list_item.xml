@@ -22,7 +22,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="8dp"
-        android:contentDescription="@string/transaction_img"
+        android:contentDescription="@string/csh_transaction_img_desc"
         tools:src="@drawable/csh_withdrawal"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
