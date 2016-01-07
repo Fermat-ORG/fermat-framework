@@ -11,19 +11,9 @@ import com.bitdubai.reference_wallet.bank_money_wallet.preference_settings.BankM
 /**
  * Created by memo on 04/12/15.
  */
-public class BankMoneyWalletSession extends AbstractFermatSession<InstalledWallet,BankMoneyWalletModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class BankMoneyWalletSession extends AbstractFermatSession<InstalledWallet,BankMoneyWalletModuleManager,WalletResourcesProviderManager> {
 
 
     public BankMoneyWalletSession() {
-    }
-
-    @Override
-    public String getIdentityConnection() {
-        return null;
-    }
-
-    @Override
-    public WalletSettings getWalletSettings() {
-        return new BankMoneyWalletPreferenceSettings();
     }
 }

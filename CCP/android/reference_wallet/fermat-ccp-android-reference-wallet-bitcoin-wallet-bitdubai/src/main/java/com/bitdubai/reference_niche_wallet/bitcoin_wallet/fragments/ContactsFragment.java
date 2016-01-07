@@ -336,7 +336,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         super.onCreateOptionsMenu(menu, inflater);
         
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.ic_contact_question)
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
