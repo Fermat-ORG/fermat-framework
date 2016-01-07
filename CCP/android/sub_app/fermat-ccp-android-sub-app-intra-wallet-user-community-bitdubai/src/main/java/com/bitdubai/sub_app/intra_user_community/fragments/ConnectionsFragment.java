@@ -4,7 +4,6 @@ package com.bitdubai.sub_app.intra_user_community.fragments;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,11 +42,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
-import com.bitdubai.sub_app.intra_user_community.common.views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FernatAnimationUtils;
-import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -249,31 +245,8 @@ public class ConnectionsFragment extends AbstractFermatFragment implements Searc
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
         super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.intra_user_menu, menu);
-
-        //MenuItem menuItem = new SearchView(getActivity());
-
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//        mSearchView.setOnQueryTextListener(this);
-//        mSearchView.setSubmitButtonEnabled(true);
-//        mSearchView.setOnCloseListener(this);
-
-
-        //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
-        // Get the notifications MenuItem and
-        // its LayerDrawable (layer-list)
-        MenuItem item = menu.findItem(R.id.action_notifications);
-        LayerDrawable icon = (LayerDrawable) item.getIcon();
-
-        // Update LayerDrawable's BadgeDrawable
-        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
-
-
+        menu.clear();
     }
 
     @Override
