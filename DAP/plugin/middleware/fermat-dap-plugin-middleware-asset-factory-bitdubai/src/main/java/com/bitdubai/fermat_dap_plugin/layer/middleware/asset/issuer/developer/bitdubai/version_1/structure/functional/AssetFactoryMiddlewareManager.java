@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -21,9 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
@@ -37,11 +34,9 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetFactoryRecord;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -382,6 +377,80 @@ public final class AssetFactoryMiddlewareManager {
             return assetFactories;
         } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByIssuer()", "IssuerIdentityPublicKey " + issuerIdentityPublicKey);
+        }
+    }
+
+    public List<AssetFactory> getFactoryByStateAndName(final AssetFactory assetFactory, final State state) throws CantGetAssetFactoryException, CantCreateFileException {
+        // I define the filter to search for the state
+        DatabaseTableFilter stateFilter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+            }
+
+            @Override
+            public String getValue() {
+                return state.getCode();
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
+
+        DatabaseTableFilter assetPublicKeyFilter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN;
+            }
+
+            @Override
+            public String getValue() {
+                return assetFactory.getName();
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
+        List<AssetFactory> assetFactories;
+        try {
+            assetFactories = getAssetFactories(stateFilter, assetPublicKeyFilter);
+            return assetFactories;
+        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+            throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByState()", "State " + state.getCode());
         }
     }
 

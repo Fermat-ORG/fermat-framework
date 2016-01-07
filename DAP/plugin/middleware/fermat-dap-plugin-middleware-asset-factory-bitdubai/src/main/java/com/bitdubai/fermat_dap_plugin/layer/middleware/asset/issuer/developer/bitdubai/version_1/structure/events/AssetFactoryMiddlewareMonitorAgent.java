@@ -113,7 +113,9 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
                             case ISSUING:
                                 break;
                             case ISSUED:
-                                assetFactoryMiddlewareManager.removePendingFinalFactory(assetFactory.getAssetPublicKey());
+                                if (!assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.PENDING_FINAL).isEmpty()) {
+                                    assetFactoryMiddlewareManager.removePendingFinalFactory(assetFactory.getAssetPublicKey());
+                                }
                                 break;
                             case INSUFFICIENT_FONDS:
                                 break;
@@ -132,14 +134,18 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
                             assetFactory.setQuantity(assetsIssued);
                             assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
                         } else {
-                            AssetFactory finalFactory = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL).get(0);
+                            List<AssetFactory> finalFactories = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.FINAL);
                             List<AssetFactory> pendingFinal = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.PENDING_FINAL);
                             List<AssetFactory> both = assetFactoryMiddlewareManager.getFactoryByStateAndAssetPublicKey(assetFactory, State.DRAFT);
                             both.addAll(pendingFinal);
-                            AssetFactory notFinalFactory = both.get(0);
-                            assetFactoryMiddlewareManager.updateAssetFactoryQuantity(assetsIssued, finalFactory.getFactoryId());
-                            int missingAmount = notFinalFactory.getTotalQuantity() - assetsIssued;
-                            assetFactoryMiddlewareManager.updateAssetFactoryQuantity(missingAmount, notFinalFactory.getFactoryId());
+                            if (!finalFactories.isEmpty()) {
+                                assetFactoryMiddlewareManager.updateAssetFactoryQuantity(assetsIssued, finalFactories.get(0).getFactoryId());
+                            }
+                            if (!both.isEmpty()) {
+                                AssetFactory notFinalFactory = both.get(0);
+                                int missingAmount = notFinalFactory.getTotalQuantity() - assetsIssued;
+                                assetFactoryMiddlewareManager.updateAssetFactoryQuantity(missingAmount, notFinalFactory.getFactoryId());
+                            }
                         }
                     }
                 }
