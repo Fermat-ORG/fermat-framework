@@ -221,6 +221,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                     new CustomerAckOnlineMerchandiseRecorderService(
                             customerAckOnlineMerchandiseBusinessTransactionDao,
                             eventManager);
+
             //customerAckOnlineMerchandiseRecorderService.start();
 
             /**

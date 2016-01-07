@@ -3,8 +3,10 @@ package com.bitdubai.sub_app.intra_user_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -67,7 +69,9 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
         if (profileImage != null) {
             if (profileImage.length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                //bitmap = ImagesUtils.cropImage(bitmap);
                 holder.thumbnail.setImageBitmap(bitmap);
+                //holder.thumbnail.setCropToPadding(true);
             } else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
         } else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
 

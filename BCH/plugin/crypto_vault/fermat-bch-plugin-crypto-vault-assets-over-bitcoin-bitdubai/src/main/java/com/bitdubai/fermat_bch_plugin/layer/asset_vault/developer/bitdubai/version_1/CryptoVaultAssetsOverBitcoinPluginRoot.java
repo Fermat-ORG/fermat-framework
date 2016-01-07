@@ -32,6 +32,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarch
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -237,25 +238,24 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
 
     /**
      * Gets the amount of unused keys that are available from the passed account.
-     * @param  account the hierarchy account to get the keys from
      * @return
      */
     @Override
-    public int getAvailableKeyCount(HierarchyAccount account){
-        return assetCryptoVaultManager.getAvailableKeyCount(account);
+    public int getAvailableKeyCount(){
+        HierarchyAccount masterAccount = new HierarchyAccount(0, "Asset Vault", HierarchyAccountType.MASTER_ACCOUNT);
+        return assetCryptoVaultManager.getAvailableKeyCount(masterAccount);
     }
 
 
     /**
      * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
      * @param plugin the pluginId invoking this call. Might not have permissions to create new keys.
-     * @param account the account to derive keys from.
      * @param keysToDerive thre amount of keys to derive.
      * @throws CantDeriveNewKeysException
      */
     @Override
-    public void deriveKeys(Plugins plugin, HierarchyAccount account, int keysToDerive) throws CantDeriveNewKeysException{
-        assetCryptoVaultManager.deriveKeys(plugin, account, keysToDerive);
+    public void deriveKeys(Plugins plugin,  int keysToDerive) throws CantDeriveNewKeysException{
+        assetCryptoVaultManager.deriveKeys(plugin, keysToDerive);
     }
 
     /**
@@ -273,12 +273,12 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
 
     /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
-     * @param hierarchyAccount a Redeem Point account.
+     * @param redeemPointPublicKey a Redeem Point publicKey
      * @return the DeterministicKey that will be used by the redeem Points.
      * @throws CantGetExtendedPublicKeyException
      */
     @Override
-    public DeterministicKey getExtendedPublicKey(HierarchyAccount hierarchyAccount) throws CantGetExtendedPublicKeyException {
-        return assetCryptoVaultManager.getExtendedPublicKey(hierarchyAccount);
+    public ExtendedPublicKey getRedeemPointExtendedPublicKey(String redeemPointPublicKey) throws CantGetExtendedPublicKeyException {
+        return assetCryptoVaultManager.getRedeemPointExtendedPublicKey(redeemPointPublicKey);
     }
 }

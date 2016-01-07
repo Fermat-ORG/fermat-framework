@@ -34,7 +34,6 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     public FermatTextView bookText;
     public FermatTextView btcText;
     public FermatTextView expDateText;
-    public FermatButton distributeTempButton; //TODO button only for temporally use
 
     /**
      * Constructor
@@ -53,7 +52,6 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         bookText = (FermatTextView) itemView.findViewById(R.id.assetBookText);
         btcText = (FermatTextView) itemView.findViewById(R.id.assetBtcText);
         expDateText = (FermatTextView) itemView.findViewById(R.id.assetExpDateText);
-        distributeTempButton = (FermatButton) itemView.findViewById(R.id.distributeTempButton);
     }
 
     public void bind(final DigitalAsset digitalAsset) {
@@ -67,50 +65,5 @@ public class MyAssetsViewHolder extends FermatViewHolder {
         bookText.setText(digitalAsset.getBookBalanceQuantity()+"");
         btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
         expDateText.setText(digitalAsset.getFormattedExpDate());
-
-        distributeTempButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                doDistribute(digitalAsset.getAssetPublicKey());
-            }
-        });
-    }
-
-    private void doDistribute(final String assetPublicKey) {
-        final ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setMessage("Please wait...");
-        dialog.setCancelable(false);
-        dialog.show();
-        FermatWorker task = new FermatWorker() {
-            @Override
-            protected Object doInBackground() throws Exception {
-//                    manager.distributionAssets(
-//                            asset.getAssetPublicKey(),
-//                            asset.getWalletPublicKey(),
-//                            asset.getActorAssetUser()
-//                    );
-                //TODO: Solo para la prueba del Distribution
-                manager.distributionAssets(assetPublicKey, null);
-                return true;
-            }
-        };
-        task.setContext((Activity) context);
-        task.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                dialog.dismiss();
-                if (context != null) {
-                    Toast.makeText(context, "Everything ok...", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                dialog.dismiss();
-                if (context != null)
-                    Toast.makeText(context, "Fermat Has detected an exception",
-                            Toast.LENGTH_SHORT).show();
-            }
-        });
-        task.execute();
     }
 }

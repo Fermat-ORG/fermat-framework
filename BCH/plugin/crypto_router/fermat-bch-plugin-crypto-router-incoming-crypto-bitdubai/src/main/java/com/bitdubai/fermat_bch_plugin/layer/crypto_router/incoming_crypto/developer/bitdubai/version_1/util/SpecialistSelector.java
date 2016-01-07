@@ -33,6 +33,11 @@ public class SpecialistSelector {
 
         try {
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoAddress);
+            /**
+             * If I don't have this address registered, then I will set unknown specialist.
+             */
+            if (cryptoAddressBookRecord == null)
+                return Specialist.UNKNOWN_SPECIALIST;
             switch (cryptoAddressBookRecord.getDeliveredToActorType()) {
                 case DEVICE_USER:
                     return Specialist.DEVICE_USER_SPECIALIST;
@@ -46,36 +51,13 @@ public class SpecialistSelector {
                     return Specialist.ASSET_USER_SPECIALIST;
                 default:
                     // Here we have a serious problem
-                    throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Actor: " + cryptoAddressBookRecord.getDeliveredToActorType() + " with code " + cryptoAddressBookRecord.getDeliveredToActorType().getCode(),"Actor not considered in switch statement");
+                    throw new CantSelectSpecialistException("NO SPECIALIST FOUND", null, "Actor: " + cryptoAddressBookRecord.getDeliveredToActorType() + " with code " + cryptoAddressBookRecord.getDeliveredToActorType().getCode(), "Actor not considered in switch statement");
             }
-
-        } catch (CantGetCryptoAddressBookRecordException|CryptoAddressBookRecordNotFoundException e) {
-            cryptoAddress.setAddress(cryptoTransaction.getAddressFrom().getAddress());
-            cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
-
-            try {
-                CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoAddress);
-                switch (cryptoAddressBookRecord.getDeliveredToActorType()) {
-                    case DEVICE_USER:
-                        return Specialist.DEVICE_USER_SPECIALIST;
-                    case INTRA_USER:
-                        return Specialist.INTRA_USER_SPECIALIST;
-                    case EXTRA_USER:
-                        return Specialist.EXTRA_USER_SPECIALIST;
-                    case DAP_ASSET_ISSUER:
-                        return Specialist.ASSET_ISSUER_SPECIALIST;
-                    case DAP_ASSET_USER:
-                        return Specialist.ASSET_USER_SPECIALIST;
-                    default:
-                        // Here we have a serious problem
-                        throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Actor: " + cryptoAddressBookRecord.getDeliveredToActorType() + " with code " + cryptoAddressBookRecord.getDeliveredToActorType().getCode(),"Actor not considered in switch statement");
-                }
-
-            } catch (CantGetCryptoAddressBookRecordException|CryptoAddressBookRecordNotFoundException e1) {
-                // todo ver como manejar CryptoAddressBookRecordNotFoundException
-                // This exception will be managed by the relay agent
-                throw new CantSelectSpecialistException("Can't get actor address from registry", e1,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
-            }
+        } catch (CantGetCryptoAddressBookRecordException | CryptoAddressBookRecordNotFoundException e) {
+            /**
+             * If I couldn't get the specialist from the database, then I will continue with an unknown specialist.
+             */
+            return Specialist.UNKNOWN_SPECIALIST;
         }
     }
 }

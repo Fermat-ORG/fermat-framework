@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -36,8 +37,10 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.Simpl
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -151,31 +154,45 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
     private void showProvidersDialog() {
 
-        // TODO usar metodo de franklin que devuelve esta informacion
-        List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
+        try {
+            List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
 
-        final SimpleListDialogFragment<CurrencyExchangeRateProviderManager> dialogFragment = new SimpleListDialogFragment<>();
-        dialogFragment.configure("Select a Provider", providers);
-        dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyExchangeRateProviderManager>() {
-            @Override
-            public void onItemSelected(CurrencyExchangeRateProviderManager selectedItem) {
-                if (!containProvider(selectedItem)) {
-                    selectedProviders.add(selectedItem);
-                    adapter.changeDataSet(selectedProviders);
-                    showOrHideNoProvidersView();
+            Collection<CurrencyExchangeRateProviderManager> providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+            if (providerManagers != null)
+                providers.addAll(providerManagers);
+
+
+            final SimpleListDialogFragment<CurrencyExchangeRateProviderManager> dialogFragment = new SimpleListDialogFragment<>();
+            dialogFragment.configure("Select a Provider", providers);
+            dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyExchangeRateProviderManager>() {
+                @Override
+                public void onItemSelected(CurrencyExchangeRateProviderManager selectedItem) {
+                    if (!containProvider(selectedItem)) {
+                        selectedProviders.add(selectedItem);
+                        adapter.changeDataSet(selectedProviders);
+                        showOrHideNoProvidersView();
+                    }
                 }
-            }
-        });
+            });
 
-        dialogFragment.show(getFragmentManager(), "ProvidersDialog");
+            dialogFragment.show(getFragmentManager(), "ProvidersDialog");
+
+        } catch (CantGetProviderException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        }
+
+
     }
 
     private void saveSettingAndGoNextStep() {
 
         if (selectedProviders.isEmpty()) {
             Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
-            // TODO descomentar cuando pueda agregar un proveedor en la lista
-            // return;
+            //TODO
+            //return;
         }
 
         try {
@@ -196,6 +213,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
+        // TODO
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
     }
 

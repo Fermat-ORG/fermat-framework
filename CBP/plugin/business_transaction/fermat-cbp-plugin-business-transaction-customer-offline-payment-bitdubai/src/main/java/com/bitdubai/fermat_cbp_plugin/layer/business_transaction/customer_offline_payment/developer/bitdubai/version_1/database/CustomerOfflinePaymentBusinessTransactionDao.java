@@ -361,6 +361,9 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
             String value=records
                     .get(0)
@@ -641,7 +644,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
         updateRecordStatus(contractHash,
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 contractTransactionStatus.getCode());
     }
 

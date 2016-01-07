@@ -119,6 +119,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     private PluginTextFile intraUserLoginXml;
 
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private String appPublicKey;
 
 
     public IntraWalletUserModulePluginRoot() {
@@ -809,9 +810,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         }
     }
 
+    private SettingsManager<FermatSettings> settingsManager;
+
     @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
@@ -821,6 +832,26 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         } catch (CantListIntraWalletUsersException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e){
+            return null;
         }
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+        this.appPublicKey = publicKey;
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        int[] notifications = new int[4];
+        try {
+            notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
+        } catch (CantGetIntraWalletUsersException e) {
+            e.printStackTrace();
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        }
+        return notifications;
     }
 }

@@ -96,6 +96,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
     private ErrorManager errorManager;
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
+
     public AssetDistributionDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -133,12 +134,15 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset Distribution plugin - " + this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            this.digitalAssetDistributionVault = new DigitalAssetDistributionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
-            this.digitalAssetDistributionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
-            this.digitalAssetDistributionVault.setErrorManager(this.errorManager);
-            this.digitalAssetDistributionVault.setActorAssetIssuerManager(this.actorAssetIssuerManager);
-            this.digitalAssetDistributionVault.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
-            AssetDistributionDao assetDistributionDao = new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault, actorAssetUserManager);
+            this.digitalAssetDistributionVault = new DigitalAssetDistributionVault(this.pluginId,
+                    this.pluginFileSystem,
+                    this.errorManager,
+                    assetIssuerWalletManager,
+                    actorAssetIssuerManager,
+                    bitcoinNetworkManager);
+            AssetDistributionDao assetDistributionDao = new AssetDistributionDao(pluginDatabaseSystem,
+                    pluginId,
+                    digitalAssetDistributionVault);
             this.assetDistributionTransactionManager = new AssetDistributionTransactionManager(
                     this.assetVaultManager,
                     this.errorManager,
@@ -150,12 +154,6 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     assetDistributionDao,
                     assetTransmissionNetworkServiceManager,
                     actorAssetIssuerManager);
-            this.assetDistributionTransactionManager.setAssetVaultManager(assetVaultManager);
-            this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(this.digitalAssetDistributionVault);
-            this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);
-            this.assetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(this.assetTransmissionNetworkServiceManager);
-            this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinNetworkManager);
-            this.assetDistributionTransactionManager.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             //Starting Event Recorder
             AssetDistributionRecorderService assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
             try {
@@ -166,7 +164,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
             }
-
+            startMonitorAgent();
         } catch (CantSetObjectException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -196,7 +194,6 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     this.errorManager,
                     this.pluginId,
                     pluginFileSystem,
-                    actorAssetUserManager,
                     assetVaultManager,
                     bitcoinNetworkManager,
                     logManager,
@@ -210,16 +207,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
         printSomething("The Wallet public key is hardcoded");
         walletPublicKey = "walletPublicKeyTest";
-        try {
-            startMonitorAgent();
-            this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute, walletPublicKey);
-        } catch (CantSetObjectException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Beginning the Digital Asset Distribution", "The setting object is null");
-        } catch (CantStartAgentException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Beginning the Digital Asset Distribution", "Cannot start the Asset Distribution Monitor Agent");
-        } catch (CantGetLoggedInDeviceUserException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Beginning the Digital Asset Distribution", "Cannot get the user logged in this device");
-        }
+        this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute, walletPublicKey);
     }
 
     @Override

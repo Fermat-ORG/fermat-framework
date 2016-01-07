@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
@@ -48,6 +49,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletM
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
 
+import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -82,26 +84,9 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException;
 
     /**
-     * Get information about the current stock
-     *
-     * @param stockCurrency the stock currency
-     * @return information about the current stock
-     */
-    StockInformation getCurrentStock(String stockCurrency);
-
-    /**
      * @return list of identities associated with this wallet
      */
-    List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException;
-
-    /**
-     * Get stock staticstics data about the given stock currency
-     *
-     * @param stockCurrency the stock currency
-     * @return stock statistics data
-     */
-    StockStatistics getStockStatistics(String stockCurrency);
-
+    List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException;
 
     List<String> getPaymentMethods(String currencyToSell);
 
@@ -354,11 +339,26 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
     /**
-     * Returns a list of exchange rates of a given date, for a specific currencyPair
+     * This method load the list CryptoBrokerWalletProviderSetting
+     * @param
+     * @return List<CryptoBrokerWalletAssociatedSetting>
+     * @exception CantGetCryptoBrokerWalletSettingException
+     */
+    List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+    /**
+     * Returns an exchange rate of a given date, for a specific currencyPair
+     *
+     * @return an exchangeRate object
+     */
+    ExchangeRate getExchangeRateFromDate(Currency currencyFrom, Currency currencyTo, long timestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
+
+    /**
+     * Given a TimeUnit (Days,weeks,months) and a currencyPair, returns a list of max ExchangeRates, starting from the given offset
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getExchangeRateListFromDate(UUID providerId, Currency currencyFrom, Currency currencyTo, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    Collection<ExchangeRate> getExchangeRatesFromPeriod(Currency currencyFrom, Currency currencyTo, TimeUnit timeUnit, int max, int offset, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
@@ -375,11 +375,11 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
-     *
-     * @return a Map of name/provider reference pairs
+     * @param currencyFrom
+     * @param currencyTo
+     * @return a Collection of provider reference pairs
      * */
-    Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException;
-
+    Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException;
     /**
      * This method save the instance CryptoBrokerWalletProviderSetting
      * @param cryptoBrokerWalletProviderSetting

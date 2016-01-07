@@ -30,6 +30,7 @@ dependencies {
     //Sub App Module
 
     //Network Service
+    compile project(':fermat-cht-plugin-network-service-chat-bitdubai')
 
 }
 

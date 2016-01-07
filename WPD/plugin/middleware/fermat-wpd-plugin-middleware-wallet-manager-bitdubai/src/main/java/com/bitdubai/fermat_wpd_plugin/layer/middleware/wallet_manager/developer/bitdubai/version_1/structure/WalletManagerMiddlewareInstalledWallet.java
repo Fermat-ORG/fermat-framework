@@ -40,6 +40,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     private String         navigationStructureVersion;
     private String         walletDeveloper;
     private String         deviceUserPublicKey;
+    private Platforms      platforms;
 
     private List<InstalledSkin>     skinsId;
     private List<InstalledLanguage> languagesId;
@@ -74,6 +75,37 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         this.deviceUserPublicKey = deviceUserPublicKey;
     }
 
+
+    public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
+                                                  List<InstalledSkin> skinsId,
+                                                  List<InstalledLanguage> languajesId,
+                                                  String walletIcon, String walletName,
+                                                  String publicKey,
+                                                  String walletPlatformIdentifier,
+                                                  Version version,
+                                                  WalletType walletType,
+                                                  String screenSize,
+                                                  String navigationStructureVersion,
+                                                  UUID walletCatalogId,
+                                                  String walletDeveloper,
+                                                  String deviceUserPublicKey,Platforms platforms)
+    {
+        this.walletCategory = walletCategory;
+        this.skinsId = skinsId;
+        this.languagesId = languajesId;
+        this.walletIcon = walletIcon;
+        this.walletName = walletName;
+        this.publicKey = publicKey;
+        this.walletPlatformIdentifier = walletPlatformIdentifier;
+        this.version = version;
+        this.walletType = walletType;
+        this.screenSize = screenSize;
+        this.navigationStructureVersion = navigationStructureVersion;
+        this.walletCatalogId = walletCatalogId;
+        this.walletDeveloper =  walletDeveloper;
+        this.deviceUserPublicKey = deviceUserPublicKey;
+        this.platforms = platforms;
+    }
     /**
      * InstalledWallet Interface implementation.
      */
@@ -201,6 +233,9 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     @Override
     public Platforms getPlatform() {
         // TODO NOW IS BY DEFECT
+        if(this.platforms!=null){
+            return this.platforms;
+        }
         return Platforms.CRYPTO_CURRENCY_PLATFORM;
     }
 
