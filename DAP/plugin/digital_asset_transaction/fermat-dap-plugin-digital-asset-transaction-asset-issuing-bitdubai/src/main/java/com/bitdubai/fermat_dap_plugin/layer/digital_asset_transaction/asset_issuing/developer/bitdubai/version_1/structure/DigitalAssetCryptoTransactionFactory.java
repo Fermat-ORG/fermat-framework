@@ -23,11 +23,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.excep
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -254,13 +250,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
      * @param publicKey
      * @throws CantIssueDigitalAssetException
      */
-    private void isPublicKeyInDatabase(String publicKey) throws CantIssueDigitalAssetException {
+    private boolean isPublicKeyInDatabase(String publicKey) {
         try {
-            if (this.assetIssuingTransactionDao.isPublicKeyUsed(publicKey)) {
-                throw new CantIssueDigitalAssetException("The public key " + publicKey + " is already registered in database");
-            }
+            return this.assetIssuingTransactionDao.isPublicKeyUsed(publicKey);
         } catch (CantCheckAssetIssuingProgressException exception) {
-            throw new CantIssueDigitalAssetException(exception, "Checking the asset publicKey in database", "Cannot check the publicKey in database");
+            return true;
         }
     }
 
@@ -417,11 +411,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             LOG.info("ASSET ISSUING Digital Asset CHECK Objects");
             areObjectsSettled();
             this.genesisAmount = digitalAsset.getGenesisAmount();
-            try {
-                isPublicKeyInDatabase(digitalAsset.getPublicKey());
-            } catch (CantIssueDigitalAssetException ex) {
+            if (isPublicKeyInDatabase(digitalAsset.getPublicKey())) {
                 this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.ISSUING);
-                throw ex;
+                for (String genesisTransaction : assetIssuingTransactionDao.getGenesisTransactionByAssetKey(digitalAsset.getPublicKey())) {
+                    assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
+                    this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction), TransactionStatus.ISSUING);
+                }
+                return;
             }
             //Persist the digital asset in local storage
             persistInLocalStorage();
@@ -732,58 +728,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         String digitalAssetHash = digitalAssetMetadata.getDigitalAssetHash();
         this.assetIssuingTransactionDao.persistDigitalAssetHash(transactionId, digitalAssetHash);
         return digitalAssetHash;
-    }
-
-    /**
-     * This method is a short way to send bitcoins, this is ONLY for testing, please, don't use it in production
-     *
-     * @param genesisAddress
-     * @param digitalAssetHash
-     * @param transactionId
-     */
-    private void sendBitcoinsFromCryptoVault(CryptoAddress genesisAddress, String digitalAssetHash, String transactionId, DigitalAssetMetadata digitalAssetMetadata) throws CantSendGenesisAmountException, CantPersistsGenesisTransactionException, CantCheckAssetIssuingProgressException {
-        //String genesisTransaction="d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
-        String genesisTransaction = "empty-genesis-transaction";
-        try {
-            //this.assetVaultManager.sendBitcoinAssetToUser(genesisTransaction, genesisAddress);
-            this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_CRYPTO);
-            this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
-            UUID internalUUID = UUID.randomUUID();
-            genesisTransaction = this.cryptoVaultManager.sendBitcoins(this.walletPublicKey, internalUUID, genesisAddress, this.genesisAmount, digitalAssetHash);
-            System.out.println("ASSET ISSUING genesis transaction from Crypto Vault " + genesisTransaction);
-            this.assetIssuingTransactionDao.updateTransactionProtocolStatusByTransactionId(transactionId, ProtocolStatus.TO_BE_NOTIFIED);
-            digitalAssetMetadata.setGenesisTransaction(genesisTransaction);
-            UUID outgoingId = UUID.randomUUID();
-            System.out.println("ASSET ISSUING mock outgoing UUID " + outgoingId);
-            this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
-            assetIssuingTransactionDao.persistGenesisTransaction(outgoingId.toString(), genesisTransaction);
-            saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
-            //digitalAssetIssuingVault.setGenesisTransaction(transactionId, genesisTransaction);
-        } catch (InsufficientCryptoFundsException exception) {
-            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(this.digitalAsset.getPublicKey(), IssuingStatus.INSUFFICIENT_FONDS);
-            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount from Asset vault", "Insufficient funds");
-        } catch (InvalidSendToAddressException exception) {
-            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(this.digitalAsset.getPublicKey(), IssuingStatus.INVALID_ADDRESS_TO_SEND);
-            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount from Asset vault", "Genesis address invalid: " + genesisAddress.getAddress());
-        } catch (CouldNotSendMoneyException exception) {
-            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(this.digitalAsset.getPublicKey(), IssuingStatus.WALLET_EXCEPTION);
-            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount from Asset vault", "Cannot send money");
-        } catch (CryptoTransactionAlreadySentException exception) {
-            this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(this.digitalAsset.getPublicKey(), IssuingStatus.TRANSACTION_ALREADY_SENT);
-            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount from Asset vault", "The genesis transaction " + genesisTransaction + " is used");
-        } catch (CantExecuteQueryException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Sending the genesis amount from Asset vault", "Cannot execute a query");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Sending the genesis amount from Asset vault", "Unexpected result from database");
-        } catch (CantCheckAssetIssuingProgressException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Sending the genesis amount from Asset vault", "Cannot check the asset issuing progress");
-        } catch (CantDeliverDigitalAssetToAssetWalletException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Sending the genesis amount from Asset vault", "Cannot deliver Digital Asset to issuer wallet");
-        } catch (CantCreateDigitalAssetFileException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Sending the genesis amount from Asset vault", "Cannot persists Genesis Transaction");
-        } catch (CantPersistsTransactionUUIDException exception) {
-            throw new CantPersistsGenesisTransactionException(exception, "Sending the genesis amount from Asset vault", "Cannot persists UUID from 'OIA'");
-        }
     }
 
     /**

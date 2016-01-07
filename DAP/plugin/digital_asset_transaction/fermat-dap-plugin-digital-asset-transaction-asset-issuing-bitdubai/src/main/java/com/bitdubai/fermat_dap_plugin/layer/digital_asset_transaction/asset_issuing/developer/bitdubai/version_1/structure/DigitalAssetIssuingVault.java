@@ -94,7 +94,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
                     throw new CantDeliverDigitalAssetToAssetWalletException("Incorrect AssetBalanceType");
             }
             System.out.println("ASSET ISSUING - DELIVER TO WALLET TEST - "+balanceType+"\nHash: "+genesisTransaction.getTransactionHash());
-            deliverDigitalAssetMetadata(digitalAssetMetadataToDeliver, genesisTransaction, balanceType);
+            creditIssuerWallet(digitalAssetMetadataToDeliver, genesisTransaction, balanceType);
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         } catch (CantGetTransactionsException exception) {
@@ -110,7 +110,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
         }
     }
 
-    private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
+    private void creditIssuerWallet(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
         /////////////////////////////////////////////
         // TODO: Coloque esto porque es la wallet que tengo hardcore para la wallet y para hacer las pruebas
         this.walletPublicKey = "walletPublicKeyTest";

@@ -76,7 +76,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
     public void start() throws CantStartPluginException {
         try {
             /**
-             * I will initialize the handling of com.bitdubai.platform events.
+             * I will initialize the handling o
+             *
+             * f com.bitdubai.platform events.
              */
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
@@ -157,6 +159,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setPublicKey("public_key_shell");
             runtimeSubApp.setType(SubApps.CWP_SHELL);
+
             runtimeApp.addSubApp(runtimeSubApp);
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
@@ -706,6 +709,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#0072bb");
+            runtimeTitleBar.setIconName("back");
             runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 

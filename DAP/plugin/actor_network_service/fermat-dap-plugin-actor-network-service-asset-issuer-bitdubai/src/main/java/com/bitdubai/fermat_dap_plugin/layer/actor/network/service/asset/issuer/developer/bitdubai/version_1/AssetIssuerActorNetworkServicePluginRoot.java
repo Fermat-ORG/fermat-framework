@@ -721,7 +721,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerReceiver.getActorPublicKey());
 
             if (this.isRegister()) {
-                Gson gson = new Gson();
+                Gson gson = new DAPMessageGson().getGson();
 
                 String messageContentIntoJson = gson.toJson(dapMessage);
 
@@ -1120,11 +1120,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         List<DAPMessage> listToReturn = new ArrayList<>();
         try {
             for (FermatMessage message : getNewReceivedMessageList()) {
-                Gson gson = new Gson();
+                Gson gson = DAPMessageGson.getGson();
                 try {
                     DAPMessage dapMessage = gson.fromJson(message.getContent(), DAPMessage.class);
-                    listToReturn.add(dapMessage);
-                    markAsRead(message);
+                    if (dapMessage.getMessageType() == type) {
+                        listToReturn.add(dapMessage);
+                        markAsRead(message);
+                    }
                 } catch (JsonSyntaxException jsonException) {
                     //This is not a DAPMessage, that's not my business. Let's just continue.
                     continue; //This statement is unnecessary but I'll keep it so people can understand better.
