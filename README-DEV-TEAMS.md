@@ -6,7 +6,7 @@
 
 All the work done on the Fermat project is done by a Team. We have several teams working in parallel. Most of them are teams of developers, but these are not the only types of teams. We also have teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
 
-bitDubai is a network of teams. Besides this developers teams bitDubai also have designers teams, copywriters, artits, video producers, etc. The following organization is valid only to bitDubais teams. Other professionals might want to get organized in a different way.
+bitDubai is a network of teams. Besides these developers teams bitDubai also have designers teams, copywriters, artits, video producers, etc. The following organization is valid only to bitDubais teams. Other professionals might want to get organized in a different way.
 
 At this file you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
 
