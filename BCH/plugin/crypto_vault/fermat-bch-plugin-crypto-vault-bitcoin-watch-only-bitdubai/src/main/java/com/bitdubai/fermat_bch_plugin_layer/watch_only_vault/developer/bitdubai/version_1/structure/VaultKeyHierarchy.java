@@ -189,7 +189,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         /**
          * I convert from a HD key to a ECKey
          */
-        ECKey ecKey = ECKey.fromPrivate(deterministicKey.getPrivKey());
+        ECKey ecKey = ECKey.fromPublicOnly(deterministicKey.getPubKey());
         return ecKey;
     }
 
