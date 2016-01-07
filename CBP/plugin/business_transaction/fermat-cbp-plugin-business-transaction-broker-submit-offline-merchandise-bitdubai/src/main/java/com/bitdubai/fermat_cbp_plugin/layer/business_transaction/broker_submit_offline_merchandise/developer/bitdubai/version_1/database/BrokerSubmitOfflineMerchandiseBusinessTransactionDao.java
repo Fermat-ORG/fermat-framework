@@ -572,6 +572,8 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
             BusinessTransactionRecord businessTransactionRecord){
+        BigDecimal referencePrice;
+        double doubleReferencePrice;
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getBrokerPublicKey());
@@ -597,9 +599,14 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getExternalWalletPublicKey());
+        /**
+         * Transform BigDecimal Object to double, this version of database plugin not support BigDecimal.
+         */
+        referencePrice=businessTransactionRecord.getPriceReference();
+        doubleReferencePrice=referencePrice.doubleValue();
         record.setDoubleValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
-                businessTransactionRecord.getCryptoAmount()
+                doubleReferencePrice
         );
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
