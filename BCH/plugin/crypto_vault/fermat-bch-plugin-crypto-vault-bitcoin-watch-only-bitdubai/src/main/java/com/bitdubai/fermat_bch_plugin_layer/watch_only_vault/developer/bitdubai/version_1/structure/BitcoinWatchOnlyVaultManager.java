@@ -37,7 +37,7 @@ public class BitcoinWatchOnlyVaultManager {
     /**
      * BitcoinWatchOnlyVaultManager variables
      */
-    WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey;
+    ExtendedPublicKey extendedPublicKey;
     final String DIRECTORY_NAME = "WatchOnlyVault";
     BitcoinWatchOnlyCryptoVaultDao bitcoinWatchOnlyCryptoVaultDao;
     VaultKeyHierarchyGenerator generator;
@@ -75,8 +75,8 @@ public class BitcoinWatchOnlyVaultManager {
                 /**
                  * for each account, I will load the ExtendedPublicKey
                  */
-                WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey = loadExtendedPublicKey(DIRECTORY_NAME, hierarchyAccount.getDescription());
-                DeterministicKey rootKey = getMasterPublicKey(watchOnlyVaultExtendedPublicKey);
+                extendedPublicKey = loadExtendedPublicKey(DIRECTORY_NAME, hierarchyAccount.getDescription());
+                DeterministicKey rootKey = getMasterPublicKey(extendedPublicKey);
                 /**
                  * and will generate the KeyHierarchy from this Extended Key.
                  */
@@ -110,7 +110,7 @@ public class BitcoinWatchOnlyVaultManager {
          * I will get the WatchOnlyVaultExtendedPublicKey by storing the received extendedPublicKey
          */
         try {
-            watchOnlyVaultExtendedPublicKey = getExtendedPublicKey(extendedPublicKey);
+            this.extendedPublicKey = getExtendedPublicKey(extendedPublicKey);
         } catch (CantGetExtendedPublicKeyException e) {
             throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, e, "Error loading or saving the extended key", "IO issue");
         }
@@ -119,7 +119,7 @@ public class BitcoinWatchOnlyVaultManager {
          * If this Account Key was added before, I can't continue because I might not have the same Key
          */
         try {
-            if (getDao().isExistingRedeemPoint(watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getActorPublicKey()));
+            if (getDao().isExistingRedeemPoint(extendedPublicKey.getActorPublicKey()));
             throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, null, "A Hierarchy Account already exists for this public Key.", null );
         } catch (CantExecuteDatabaseOperationException e) {
             /**
@@ -130,12 +130,12 @@ public class BitcoinWatchOnlyVaultManager {
 
         HierarchyAccount hierarchyAccount;
         try {
-            hierarchyAccount = createNewHierarchyAccount(watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getActorPublicKey());
+            hierarchyAccount = createNewHierarchyAccount(extendedPublicKey.getActorPublicKey());
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantInitializeWatchOnlyVaultException(CantInitializeWatchOnlyVaultException.DEFAULT_MESSAGE, e, "Hierarchy Account could not be added to the database.", "database issue" );
         }
 
-        DeterministicKey masterPublicKey = getMasterPublicKey(watchOnlyVaultExtendedPublicKey);
+        DeterministicKey masterPublicKey = getMasterPublicKey(extendedPublicKey);
 
         VaultKeyHierarchyGenerator generator = new VaultKeyHierarchyGenerator(masterPublicKey, hierarchyAccount, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         new Thread(generator).start();
@@ -154,14 +154,14 @@ public class BitcoinWatchOnlyVaultManager {
 
     /**
      * Will deserialize the public Key that we just recieved to get the master Public Key.
-     * @param watchOnlyVaultExtendedPublicKey
+     * @param extendedPublicKey
      * @return
      */
-    private DeterministicKey getMasterPublicKey(WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey) {
+    private DeterministicKey getMasterPublicKey(ExtendedPublicKey extendedPublicKey) {
         byte[] pubKeyBytes, chainCode;
 
-        pubKeyBytes = watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getPubKeyBytes();
-        chainCode = watchOnlyVaultExtendedPublicKey.getExtendedPublicKey().getChainCode();
+        pubKeyBytes = extendedPublicKey.getPubKeyBytes();
+        chainCode = extendedPublicKey.getChainCode();
 
         final DeterministicKey watchPubKeyAccountZero = HDKeyDerivation.createMasterPubKeyFromBytes(pubKeyBytes, chainCode);
         return watchPubKeyAccountZero;
@@ -203,12 +203,10 @@ public class BitcoinWatchOnlyVaultManager {
      * @param extendedPublicKey
      * @return
      */
-    private WatchOnlyVaultExtendedPublicKey getExtendedPublicKey(ExtendedPublicKey extendedPublicKey) throws CantGetExtendedPublicKeyException {
-        WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey = new WatchOnlyVaultExtendedPublicKey(extendedPublicKey.getActorPublicKey(), DIRECTORY_NAME, extendedPublicKey);
-
+    private ExtendedPublicKey getExtendedPublicKey(ExtendedPublicKey extendedPublicKey) throws CantGetExtendedPublicKeyException {
         try {
-            storeExtendedPublicKey(watchOnlyVaultExtendedPublicKey);
-            return loadExtendedPublicKey(watchOnlyVaultExtendedPublicKey.getDirectoryName(), watchOnlyVaultExtendedPublicKey.getFilename());
+            storeExtendedPublicKey(extendedPublicKey);
+            return loadExtendedPublicKey(DIRECTORY_NAME, extendedPublicKey.getActorPublicKey());
         } catch (Exception e) {
             throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "Error loading or saving from disk the Extended Public JKey", "IO failure");
         }
@@ -220,36 +218,36 @@ public class BitcoinWatchOnlyVaultManager {
      * @param file_name
      * @return
      */
-    private WatchOnlyVaultExtendedPublicKey loadExtendedPublicKey(String directory_name, String file_name) throws FileNotFoundException, CantCreateFileException {
+    private ExtendedPublicKey loadExtendedPublicKey(String directory_name, String file_name) throws FileNotFoundException, CantCreateFileException {
         /**
          * Loads the file ans instantiate the WatchOnlyVaultExtendedPublicKey class.
          */
         PluginTextFile textFile = pluginFileSystem.getTextFile(this.pluginId, directory_name, file_name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
         String fileContent = textFile.getContent();
-        WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey = (WatchOnlyVaultExtendedPublicKey) XMLParser.parseXML(fileContent, WatchOnlyVaultExtendedPublicKey.class);
+        extendedPublicKey  = (ExtendedPublicKey) XMLParser.parseXML(fileContent, ExtendedPublicKey.class);
 
-        return watchOnlyVaultExtendedPublicKey;
+        return extendedPublicKey;
     }
 
-    private void storeExtendedPublicKey(WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey) throws CantCreateFileException, CantPersistFileException {
+    private void storeExtendedPublicKey(ExtendedPublicKey extendedPublicKey) throws CantCreateFileException, CantPersistFileException {
         /**
          * Create the file and set it content.
          */
-        PluginTextFile textFile = pluginFileSystem.createTextFile(this.pluginId, watchOnlyVaultExtendedPublicKey.getDirectoryName(), watchOnlyVaultExtendedPublicKey.getFilename(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        PluginTextFile textFile = pluginFileSystem.createTextFile(this.pluginId, DIRECTORY_NAME, extendedPublicKey.getActorPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
-        String fileContent = getFileContent(watchOnlyVaultExtendedPublicKey);
+        String fileContent = getFileContent(extendedPublicKey);
         textFile.setContent(fileContent);
         textFile.persistToMedia();
     }
 
     /**
      * transform into XML the extendedPublicKey received class.
-     * @param watchOnlyVaultExtendedPublicKey
+     * @param extendedPublicKey
      * @return
      */
-    private String getFileContent(WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey) {
-        return XMLParser.parseObject(watchOnlyVaultExtendedPublicKey);
+    private String getFileContent(ExtendedPublicKey extendedPublicKey) {
+        return XMLParser.parseObject(extendedPublicKey);
     }
 
     /**
