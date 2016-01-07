@@ -24,6 +24,7 @@
     <color name="ccw_third_line_item">#7b7b7b</color>
     <color name="ccw_waiting_for_broker_grouper_background">#0191ba</color>
     <color name="ccw_waiting_for_broker_grouper_text">#ffffff</color>
+    <color name="ccw_wizard_color">#492781</color>
     <color name="contract_cancelled_list_item_background">#ff8b8b</color>
     <color name="contract_completed_list_item_background">#f3f3f3</color>
     <color name="dark_grey">#7b7b7b</color>
@@ -34,6 +35,7 @@
     <color name="waiting_for_text">#6b7378</color>
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
+    <color name="light_grey">#EEE</color>
     <color name="withe">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="white">#FFF</color>

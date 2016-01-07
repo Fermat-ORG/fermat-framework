@@ -408,6 +408,9 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
             String value=records
                     .get(0)
@@ -996,7 +999,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      */
     public void saveIncomingMoneyEvent(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
         try {
-            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTable databaseTable = getDatabaseIncomingMoneyTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
                     event);

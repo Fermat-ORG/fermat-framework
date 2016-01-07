@@ -163,11 +163,11 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                             if (walletContact.getProfilePicture() != null && walletContact.getProfilePicture().length > 0) {
                                 holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
                             } else
-                                Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
+                                Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
                         }catch (Exception e){
                             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                             Toast.makeText(mContext,"Image database problem",Toast.LENGTH_SHORT).show();
-                            Picasso.with(mContext).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(holder.imageView);
+                            Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
                         }
                         text = walletContact.getActorName();
                         //contact image

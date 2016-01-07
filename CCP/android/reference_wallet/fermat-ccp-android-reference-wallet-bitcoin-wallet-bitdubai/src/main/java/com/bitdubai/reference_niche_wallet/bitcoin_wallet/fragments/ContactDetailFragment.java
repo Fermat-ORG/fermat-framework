@@ -104,6 +104,9 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             referenceWalletSession = (ReferenceWalletSession) appSession;
             setHasOptionsMenu(true);
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
+            if(cryptoWalletWalletContact==null){
+                onBack(null);
+            }
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             cryptoWalletManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -197,6 +200,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 receive_button.setTypeface(typeface);
                 send_button.setTypeface(typeface);
             }
+            if(cryptoWalletWalletContact!=null)
             if(cryptoWalletWalletContact.getActorType().equals(Actors.INTRA_USER)){
                 linear_layout_extra_user_receive.setVisibility(View.GONE);
             }
@@ -217,9 +221,9 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                             bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), image_view_profile.getHeight(), true);
                             image_view_profile.setImageBitmap(bitmapDrawable);
                     } else
-                        Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                        Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
                 }catch (Exception e){
-                    Picasso.with(getActivity()).load(R.drawable.profile_image_standard).into(image_view_profile);
+                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(image_view_profile);
                 }
             }
             if (edit_text_name != null)

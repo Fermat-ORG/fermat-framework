@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -30,15 +31,28 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.FiatIndexMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
+import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.event_handler.OpenContractRecorderService;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantInitializeOpenContractBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -79,16 +93,16 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     //private FiatIndexManager fiatIndexManager;
 
     //This references were commented because this plugins are not started right now, please uncommented when are working
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
-    //private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
-    //private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
     /**
@@ -220,6 +234,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     new OpenContractBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
                             database);
+            openContractBusinessTransactionDao.initialize();
             /**
              * Initialize manager
              */
@@ -231,7 +246,8 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     //customerBrokerSaleNegotiationManager,
                     //fiatIndexManager,
                     transactionTransmissionManager,
-                    openContractBusinessTransactionDao);
+                    openContractBusinessTransactionDao,
+                    this.errorManager);
 
             /**
              * Init event recorder service.
@@ -241,6 +257,14 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     eventManager);
             openContractRecorderService.start();
 
+            /**
+             * Init developer database factory
+             */
+            openContractBusinessTransactionDeveloperDatabaseFactory=
+                    new OpenContractBusinessTransactionDeveloperDatabaseFactory(
+                            pluginDatabaseSystem,
+                            pluginId);
+            openContractBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
             /**
              * Init monitor Agent
              */
@@ -258,6 +282,39 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Starting Open Contract Business Transaction");
             //launchNotificationTest();
+            //This method is only for testing
+            //openPurchaseContractTest();
+            //openSaleContractTest();
+        } catch (CantInitializeDatabaseException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    "Starting open contract plugin",
+                    "Cannot initialize plugin database");
+        } catch (CantInitializeOpenContractBusinessTransactionDatabaseException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    exception,
+                    "Starting open contract plugin",
+                    "Unexpected Exception");
+        } catch (CantStartServiceException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    exception,
+                    "Starting open contract plugin",
+                    "Cannot start recorder service");
+        } catch (CantSetObjectException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    exception,
+                    "Starting open contract plugin",
+                    "Cannot set an object");
+        } catch (CantStartAgentException exception) {
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    "Starting open contract plugin",
+                    "Cannot start the monitor agent");
         } catch (Exception exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -323,6 +380,30 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
         IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
         incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
+    }
+
+    private void openPurchaseContractTest(){
+        CustomerBrokerPurchaseNegotiation negotiationMock=new PurchaseNegotiationMock();
+        FiatIndex fiatIndex=new FiatIndexMock();
+        try {
+            openContractTransactionManager.openPurchaseContract(negotiationMock,fiatIndex);
+        } catch (CantOpenContractException e) {
+            System.out.println("OPEN CONTRACT TEST EXCEPTION:");
+            e.printStackTrace();
+        }
+
+    }
+
+    private void openSaleContractTest(){
+        CustomerBrokerSaleNegotiation negotiationMock=new SaleNegotiationMock();
+        FiatIndex fiatIndex=new FiatIndexMock();
+        try {
+            openContractTransactionManager.openSaleContract(negotiationMock,fiatIndex);
+        } catch (CantOpenContractException e) {
+            System.out.println("OPEN CONTRACT TEST EXCEPTION:");
+            e.printStackTrace();
+        }
+
     }
 
 }

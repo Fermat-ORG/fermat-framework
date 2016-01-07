@@ -173,6 +173,16 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_CSH_WALLET_CASH_MONEY              ("BCSHWCM"  ),
     // End CSH Plugins
 
+    //Init CER Plugins
+    BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
+    BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
+    BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
+    BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
+    BITDUBAI_CER_PROVIDER_LANACION              ("BCERPLN"  ),
+    BITDUBAI_CER_PROVIDER_YAHOO                 ("BCERPYH"  ),
+
+    // End CER Plugins
+
     // Init new Plugins
 
     ASSET_APPROPRIATION         ("ASAP"),
@@ -275,6 +285,11 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_BROKER_PURCHASE            ("CBPU"),
     CUSTOMER_BROKER_SALE                ("CBSA"),
 
+    //CHT
+
+    CHAT_NETWORK_SERVICE                ("CHTNS"),
+    CHAT_SUP_APP_MODULE                 ("CHTSAM");
+
     // End  new Plugins
 
     ;
@@ -374,8 +389,14 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
             case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
-            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE ;
-            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY   ;
+            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
+            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
+            case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
+            case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
+            case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
+            case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;
+            case "BCERPLN": return BITDUBAI_CER_PROVIDER_LANACION;
+            case "BCERPYH": return BITDUBAI_CER_PROVIDER_YAHOO;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION         ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW              ;
             case ("CBUP"):  return CUSTOMER_BROKER_UPDATE           ;
@@ -394,6 +415,8 @@ public enum Plugins implements FermatPluginsEnum {
 
             case "BCNNODE"   : return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" : return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "CHTNS"     : return CHAT_NETWORK_SERVICE;
+            case "CHTSAM"     : return CHAT_SUP_APP_MODULE;
 
             default:
                 throw new InvalidParameterException(

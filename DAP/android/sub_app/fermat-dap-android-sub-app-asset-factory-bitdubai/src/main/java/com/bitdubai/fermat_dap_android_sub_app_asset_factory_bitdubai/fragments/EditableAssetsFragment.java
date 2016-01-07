@@ -167,7 +167,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.asset_factory_main, popupMenu.getMenu());
                     try {
-                        if (!manager.isReadyToPublish(selectedAsset.getPublicKey())) {
+                        if (!manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
                             popupMenu.getMenu().findItem(R.id.action_publish).setVisible(false);
                         }
                     } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
@@ -275,7 +275,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 selectedAsset = null;
         } else if (menuItem.getItemId() == R.id.action_publish) {
             try {
-                if (manager.isReadyToPublish(selectedAsset.getPublicKey())) {
+                if (manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
                     final ProgressDialog dialog = new ProgressDialog(getActivity());
                     dialog.setTitle("Asset Factory");
                     dialog.setMessage("Publishing asset, please wait...");

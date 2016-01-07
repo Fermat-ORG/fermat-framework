@@ -1,14 +1,17 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -17,7 +20,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -28,15 +32,17 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity> implements FermatListItemListeners<CryptoBrokerIdentity>, WizardPageListener {
+public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity>
+        implements FermatListItemListeners<CryptoBrokerIdentity> {
 
     private List<CryptoBrokerIdentity> identities;
     private CryptoBrokerIdentity selectedIdentity;
+
+    private LinearLayout container;
 
     private ErrorManager errorManager;
     private CryptoBrokerWalletManager walletManager;
@@ -62,8 +68,10 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     }
 
     @Override
-    protected void initViews(View layout) {
+    protected void initViews(final View layout) {
         super.initViews(layout);
+
+        container = (LinearLayout) layout.findViewById(R.id.cbw_wizard_set_identity_container);
 
         View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
@@ -75,10 +83,40 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
                 } else {
-                    Toast.makeText(getActivity(), R.string.select_identity_warning_msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
                 }
             }
         });
+
+        verifyIfWalletConfigured();
+    }
+
+    private void verifyIfWalletConfigured() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Object data = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
+                    boolean walletConfigured = (data != null); // walletManager.isWalletConfigured(appSession.getAppPublicKey()); TODO
+
+                    if (walletConfigured) {
+                        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+                    } else {
+                        Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+                        container.setVisibility(View.VISIBLE);
+                        container.startAnimation(fadeInAnimation);
+                    }
+
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage(), ex);
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                }
+
+            }
+        }, 500);
     }
 
     @Override
@@ -114,7 +152,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         try {
             data.addAll(walletManager.getListOfIdentities());
 
-        } catch (CantGetCryptoBrokerIdentityListException ex) {
+        } catch (FermatException ex) {
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
@@ -176,27 +214,8 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     }
 
     @Override
-    public boolean validate() {
-        return false;
-    }
-
-    @Override
-    public void savePage() {
-
-    }
-
-    @Override
-    public void onWizardFinish(Map<String, Object> data) {
-
-    }
-
-    @Override
-    public void onActivated(Map<String, Object> data) {
-
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return null;
+    public void onDetach() {
+        layoutManager = null;
+        super.onDetach();
     }
 }

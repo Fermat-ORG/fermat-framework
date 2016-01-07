@@ -3,9 +3,12 @@ package com.bitdubai.sub_app.intra_user_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppWorldHolder;
@@ -36,15 +39,41 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
 
     @Override
     protected void bindHolder(AppWorldHolder holder, IntraUserInformation data, int position) {
+        holder.connectionState.setVisibility(View.GONE);
+        ConnectionState connectionState = data.getConnectionState();
+        switch (connectionState) {
+            case CONNECTED:
+                if (holder.connectionState.getVisibility() == View.GONE)
+                    holder.connectionState.setVisibility(View.VISIBLE);
+                break;
+            case BLOCKED_LOCALLY:
+            case BLOCKED_REMOTELY:
+            case CANCELLED_LOCALLY:
+            case CANCELLED_REMOTELY:
+            case NO_CONNECTED:
+            case DENIED_LOCALLY:
+            case DENIED_REMOTELY:
+            case DISCONNECTED_LOCALLY:
+            case DISCONNECTED_REMOTELY:
+            case ERROR:
+            case INTRA_USER_NOT_FOUND:
+            case PENDING_LOCALLY_ACCEPTANCE:
+            case PENDING_REMOTELY_ACCEPTANCE:
+            default:
+                if (holder.connectionState.getVisibility() == View.VISIBLE)
+                    holder.connectionState.setVisibility(View.GONE);
+                break;
+        }
         holder.name.setText(data.getName());
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null) {
-            if(profileImage.length>0) {
+            if (profileImage.length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                //bitmap = ImagesUtils.cropImage(bitmap);
                 holder.thumbnail.setImageBitmap(bitmap);
-            }
-            else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
-        } else  Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
+                //holder.thumbnail.setCropToPadding(true);
+            } else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
+        } else Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
 
     }
 

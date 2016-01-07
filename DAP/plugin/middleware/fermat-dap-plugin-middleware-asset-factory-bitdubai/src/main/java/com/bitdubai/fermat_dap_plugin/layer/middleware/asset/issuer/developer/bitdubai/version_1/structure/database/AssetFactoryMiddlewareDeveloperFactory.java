@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetFactoryMiddlewareDatabaseException;
 
 import java.util.ArrayList;
@@ -60,24 +59,23 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         this.pluginId = pluginId;
     }
 
-    public void initializeDatabase() throws CantInitializeAssetFactoryMiddlewareDatabaseException
-    {
+    public void initializeDatabase() throws CantInitializeAssetFactoryMiddlewareDatabaseException {
         try {
 
              /*
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            database.closeDatabase();
 
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
             throw new CantInitializeAssetFactoryMiddlewareDatabaseException(cantOpenDatabaseException.getMessage());
 
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
              /*
               * The database no exist may be the first time the plugin is running on this device,
@@ -90,9 +88,8 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
                    * We create the new database
                    */
                 database = assetFactoryMiddlewareDatabaseFactory.createDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-                database.closeDatabase();
-            }
-            catch(CantCreateDatabaseException cantCreateDatabaseException) {
+
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
@@ -105,26 +102,28 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * I only have one database on my plugin. I will return its name.
          */
-        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
+        List<DeveloperDatabase> databases = new ArrayList<>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase(AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME));
 
         return databases;
     }
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+        List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**
          * Table Project columns.
          */
-        List<String> assetFactoryColumns = new ArrayList<String>();
+        List<String> assetFactoryColumns = new ArrayList<>();
 
         /**
          * Table Asset Factory addition.
          */
+        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN);
         assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN);
         assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN);
         assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN);
+        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN);
         assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN);
         assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN);
         assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN);
@@ -144,7 +143,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Project columns.
          */
-        List<String> assetFactoryResourceColumns = new ArrayList<String>();
+        List<String> assetFactoryResourceColumns = new ArrayList<>();
         /**
          * Table Asset Factory Resource addition.
          */
@@ -161,7 +160,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Project columns.
          */
-        List<String> assetFactoryContractColumns = new ArrayList<String>();
+        List<String> assetFactoryContractColumns = new ArrayList<>();
         /**
          * Table Asset Factory Contract properties addition.
          */
@@ -174,7 +173,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Project columns.
          */
-        List<String> assetFactoryIdentityColumns = new ArrayList<String>();
+        List<String> assetFactoryIdentityColumns = new ArrayList<>();
         /**
          * Table Asset Factory Identity Issuer properties addition.
          */
@@ -192,7 +191,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Will get the records for the given table
          */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
+        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
         /**
          * I load the passed table name from the SQLite database.
          */
@@ -200,12 +199,12 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -223,13 +222,13 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
+
             return returnedRecords;
-        } catch (Exception e){
-            database.closeDatabase();
+        } catch (Exception e) {
+
             return returnedRecords;
         }
-        database.closeDatabase();
+
         return returnedRecords;
     }
 }

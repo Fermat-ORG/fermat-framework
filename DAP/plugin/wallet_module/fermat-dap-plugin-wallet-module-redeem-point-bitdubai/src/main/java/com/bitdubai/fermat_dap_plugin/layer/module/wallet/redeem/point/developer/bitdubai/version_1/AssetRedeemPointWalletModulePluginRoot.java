@@ -116,4 +116,14 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
 //            return null;
 //        }
     }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
+    }
 }

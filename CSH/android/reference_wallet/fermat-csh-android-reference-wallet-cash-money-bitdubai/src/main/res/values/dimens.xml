@@ -1,25 +1,38 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
 
+    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="csh_activity_horizontal_margin">16dp</dimen>
     <dimen name="csh_activity_vertical_margin">8dp</dimen>
 
+    <dimen name="csh_titlebar_intertitle_padding">10dp</dimen>
 
 
-    <dimen name="csh_balance_left_margin">64dp</dimen>
 
-    <dimen name="csh_transaction_image_width_and_height">50dp</dimen>
-
+    <!-- Text Sizes -->
     <dimen name="csh_largest_text_size">24sp</dimen>
     <dimen name="csh_large_text_size">20sp</dimen>
+    <dimen name="csh_regular_plus_text_size">16sp</dimen>
     <dimen name="csh_regular_text_size">14sp</dimen>
-    <dimen name="csh_small_text_size">10sp</dimen>
+    <dimen name="csh_small_text_size">12sp</dimen>
+    <dimen name="csh_smallest_text_size">10sp</dimen>
 
-    <dimen name="csh_margin_text">2dp</dimen>
 
+    <!-- Home -->
+    <dimen name="csh_home_titlebar_margin_top">20dp</dimen>
+    <dimen name="csh_home_titlebar_margin_bottom">15dp</dimen>
+
+    <!-- Setup -->
+    <dimen name="csh_setup_titlebar_margin_top">40dp</dimen>
+    <dimen name="csh_setup_titlebar_margin_bottom">10dp</dimen>
+
+
+    <!-- Transactions -->
+    <dimen name="csh_transaction_image_width_and_height">50dp</dimen>
+    <dimen name="csh_transaction_margin_text">2dp</dimen>
+
+
+    <!-- FAB -->
     <dimen name="csh_fab_bottom_right_margin">24dp</dimen>
-
-
 
 
 </resources>

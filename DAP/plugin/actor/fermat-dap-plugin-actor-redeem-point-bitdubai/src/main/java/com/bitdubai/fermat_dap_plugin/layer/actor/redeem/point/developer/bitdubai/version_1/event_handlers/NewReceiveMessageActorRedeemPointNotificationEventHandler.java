@@ -24,15 +24,13 @@ public class NewReceiveMessageActorRedeemPointNotificationEventHandler implement
 
         if (this.redeemPointActorPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if(fermatEvent.getSource() == EventSource.ACTOR_ASSET_ISSUER) {
+            if (fermatEvent.getSource().equals(EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER)) {
                 System.out.println("ACTOR ASSET REDEEM POINT RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
                 NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
              /*
               *  Actor Asset Issuer make the job
               */
                 this.redeemPointActorPluginRoot.handleNewReceiveMessageActorNotificationEvent(
-                        newReceiveMessageActorNotificationEvent.getActorAssetSender(),
-                        newReceiveMessageActorNotificationEvent.getActorAssetDestination(),
                         newReceiveMessageActorNotificationEvent.getMessage());
             }
         }

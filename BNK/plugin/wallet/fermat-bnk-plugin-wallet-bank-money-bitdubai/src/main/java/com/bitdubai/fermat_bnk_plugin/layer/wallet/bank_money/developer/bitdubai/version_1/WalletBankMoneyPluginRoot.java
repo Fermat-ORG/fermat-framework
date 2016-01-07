@@ -64,7 +64,7 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-        test();
+        //test();
     }
 
     @Override
@@ -112,16 +112,16 @@ public class WalletBankMoneyPluginRoot extends AbstractPlugin implements Databas
 
     public void test() {
         try {
-            BankMoneyWallet bankMoneyWallet = loadBankMoneyWallet("testbankwallet");
+            BankMoneyWallet bankMoneyWallet = loadBankMoneyWallet("banking_wallet");
             bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("guillermo account", "1234567887654321", FiatCurrency.EURO, BankAccountType.SAVING));
             bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("Test2 account", "9876543210123456", FiatCurrency.US_DOLLAR, BankAccountType.SAVING));
             bankMoneyWallet.addNewAccount(new BankAccountNumberImpl("Test3", "3210123456987654", FiatCurrency.VENEZUELAN_BOLIVAR, BankAccountType.SAVING));
             try {
-                bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
+               /* bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
                 bankMoneyWallet.getAvailableBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
                 bankMoneyWallet.getAvailableBalance().debit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
                 bankMoneyWallet.getBookBalance().credit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
-                bankMoneyWallet.getBookBalance().debit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.CREDIT.getCode(), 300, FiatCurrency.EURO.getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));
+                bankMoneyWallet.getBookBalance().debit(new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.DEBIT.getCode(), 250, FiatCurrency.EURO.getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, "1234567887654321", BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), null, null));*/
             } catch (Exception e) {
                 System.out.println("error en transacciones = " + e.getMessage());
             }

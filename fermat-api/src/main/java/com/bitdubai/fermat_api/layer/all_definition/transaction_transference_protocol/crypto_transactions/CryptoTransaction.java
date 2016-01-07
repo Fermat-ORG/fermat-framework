@@ -147,7 +147,7 @@ public class CryptoTransaction{
                 return CryptoStatus.ON_CRYPTO_NETWORK;
             else if(depth == 1)
                 return CryptoStatus.ON_BLOCKCHAIN;
-            else if (depth >= 2)
+            else if (depth >= 3)
                 return CryptoStatus.IRREVERSIBLE;
             else
                 return CryptoStatus.PENDING_SUBMIT;

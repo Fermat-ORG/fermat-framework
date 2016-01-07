@@ -45,7 +45,6 @@ public class AssetIssuingTransactionDao {
     Database database;
 
     PluginDatabaseSystem pluginDatabaseSystem;
-    private final int INITIAL_DIGITAL_ASSET_GENERATED_AMOUNT = 0;
 
     public AssetIssuingTransactionDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantExecuteDatabaseOperationException {
 
@@ -69,17 +68,16 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public void updateTransactionProtocolStatus(String transactionID, ProtocolStatus protocolStatus) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateTransactionProtocolStatus(String genesisTransaction, ProtocolStatus protocolStatus) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             if (databaseTableRecords.size() > 1) {
-
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", "Transaction ID:" + transactionID + " Protocol Status:" + protocolStatus.getCode());
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", "Transaction ID:" + genesisTransaction + " Protocol Status:" + protocolStatus.getCode());
             } else {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
@@ -156,7 +154,7 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public void updateEventStatus(String eventId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+    public void notifyEvent(String eventId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
@@ -255,6 +253,7 @@ public class AssetIssuingTransactionDao {
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, digitalAssetPublicKey);
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_LOCAL_STORAGE_PATH_COLUMN_NAME, digitalAssetLocalStoragePath);
             record.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE_COLUMN_NAME, assetsAmount);
+            int INITIAL_DIGITAL_ASSET_GENERATED_AMOUNT = 0;
             record.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME, INITIAL_DIGITAL_ASSET_GENERATED_AMOUNT);
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublickey);
@@ -473,26 +472,19 @@ public class AssetIssuingTransactionDao {
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
             if (databaseTableRecords.size() > 1) {
-
                 throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", "Public key:" + publicKey);
-            } else {
-                databaseTableRecord = databaseTableRecords.get(0);
             }
-            int assetsGenerated = databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME);
+            if (databaseTableRecords.isEmpty()) return 0;
+            databaseTableRecord = databaseTableRecords.get(0);
 
-            return assetsGenerated;
-
+            return databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME);
         } catch (DatabaseNotFoundException exception) {
-
             throw new CantCheckAssetIssuingProgressException(exception, "Getting the number of Digital Assets generated", "Cannot found the Asset Issuing database");
         } catch (CantOpenDatabaseException exception) {
-
             throw new CantCheckAssetIssuingProgressException(exception, "Getting the number of Digital Assets generated", "Cannot open the Asset Issuing database");
         } catch (CantLoadTableToMemoryException exception) {
-
             throw new CantCheckAssetIssuingProgressException(exception, "Getting the number of Digital Assets generated", "Cannot load the Asset Issuing database");
         } catch (Exception exception) {
-
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting the number of Digital Assets generated", "Unexpected exception");
         }
     }
@@ -892,10 +884,10 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public List<String> getGenesisTransactionByDeliveredStatus() throws CantCheckAssetIssuingProgressException {
+    public List<String> getGenesisTransactionByAssetKey(String assetPublicKey) throws CantCheckAssetIssuingProgressException {
         return getValueListFromAssetIssuingTableByFieldCode(
-                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME,
-                TransactionStatus.DELIVERED.getCode(),
+                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME,
+                assetPublicKey,
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
@@ -959,7 +951,8 @@ public class AssetIssuingTransactionDao {
             databaseTable.addStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             for (DatabaseTableRecord record : databaseTable.getRecords()) {
-                transactionsHashList.add(record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME));
+                String genesisTx = record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
+                if (genesisTx != null) transactionsHashList.add(genesisTx);
             }
 
             return transactionsHashList;

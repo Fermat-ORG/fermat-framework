@@ -20,8 +20,8 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.d
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +86,7 @@ public class AssetIssuerActorNetworkServiceAgent {
      */
     private Thread toSend;
 
-    private boolean flag=true;
+    private boolean flag = true;
 
     private OutgoingMessageDao outgoingMessageDao;
 
@@ -96,10 +96,10 @@ public class AssetIssuerActorNetworkServiceAgent {
 
     /**
      * Pool connections requested waiting for peer or server response
-     *
+     * <p/>
      * publicKey  and transaccion metadata waiting to be a response
      */
-    Map<String,FermatMessage> poolConnectionsWaitingForResponse;
+    Map<String, FermatMessage> poolConnectionsWaitingForResponse;
 
 
     public AssetIssuerActorNetworkServiceAgent(AssetIssuerActorNetworkServicePluginRoot assetIssuerActorNetworkServicePluginRoot,
@@ -108,7 +108,7 @@ public class AssetIssuerActorNetworkServiceAgent {
                                                PlatformComponentProfile platformComponentProfile,
                                                ErrorManager errorManager,
                                                ECCKeyPair identity,
-                                               Database dataBase){
+                                               Database dataBase) {
 
 
         this.assetIssuerActorNetworkServicePluginRoot = assetIssuerActorNetworkServicePluginRoot;
@@ -117,7 +117,7 @@ public class AssetIssuerActorNetworkServiceAgent {
         this.platformComponentProfile = platformComponentProfile;
         this.errorManager = errorManager;
         this.identity = identity;
-        this.dataBase =dataBase;
+        this.dataBase = dataBase;
 
         outgoingMessageDao = new OutgoingMessageDao(this.dataBase);
 
@@ -128,7 +128,7 @@ public class AssetIssuerActorNetworkServiceAgent {
         this.toSend = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (running){
+                while (running) {
                     sendCycle();
                 }
             }
@@ -140,10 +140,10 @@ public class AssetIssuerActorNetworkServiceAgent {
     /**
      * Start the internal threads to make the job
      */
-    public void start(){
+    public void start() {
 
         //Set to running
-        this.running  = Boolean.TRUE;
+        this.running = Boolean.TRUE;
 
         System.out.println("START READ IN THE TABLE TO SEND MESSAGE WITH STATE PENDING_TO_SEND ");
 
@@ -156,43 +156,47 @@ public class AssetIssuerActorNetworkServiceAgent {
     /**
      * Pause the internal threads
      */
-    public void pause(){ this.running  = Boolean.FALSE;  }
+    public void pause() {
+        this.running = Boolean.FALSE;
+    }
 
     /**
      * Resume the internal threads
      */
-    public void resume(){  this.running  = Boolean.TRUE; }
+    public void resume() {
+        this.running = Boolean.TRUE;
+    }
 
 
     /**
      * Stop the internal threads
      */
-    public void stop(){  toSend.interrupt(); }
+    public void stop() {
+        toSend.interrupt();
+    }
 
 
     /**
-     *
      * Lifeclycle of the actornetworkService
-     *
      */
-    public void sendCycle(){
+    public void sendCycle() {
 
-        try{
+        try {
 
-            if(this.assetIssuerActorNetworkServicePluginRoot.isRegister()){
+            if (this.assetIssuerActorNetworkServicePluginRoot.isRegister()) {
 
                 processMetadata();
             }
 
-            if(toSend.isInterrupted() == Boolean.FALSE){
+            if (toSend.isInterrupted() == Boolean.FALSE) {
                 //Sleep for a time
                 Thread.sleep(AssetIssuerActorNetworkServiceAgent.SLEEP_TIME);
             }
 
-        }catch(InterruptedException e) {
+        } catch (InterruptedException e) {
+            running = false;
             toSend.interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
-            return;
+            System.out.println(this.getClass().getSimpleName() + " - Thread Interrupted stopped ...  ");
         }
 
     }
@@ -204,45 +208,42 @@ public class AssetIssuerActorNetworkServiceAgent {
 
             listRecorMessageToSend = outgoingMessageDao.findAll(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, FermatMessagesStatus.PENDING_TO_SEND.getCode());
 
-            if(listRecorMessageToSend != null && !listRecorMessageToSend.isEmpty()){
+            if (listRecorMessageToSend != null && !listRecorMessageToSend.isEmpty()) {
 
 
-                    for (FermatMessage fm : listRecorMessageToSend) {
+                for (FermatMessage fm : listRecorMessageToSend) {
 
-                        if(!poolConnectionsWaitingForResponse.containsKey(fm.getReceiver())) {
+                    if (!poolConnectionsWaitingForResponse.containsKey(fm.getReceiver())) {
 
 
 
                             /*
                             * Create the sender basic profile
                             */
-                                PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                                        constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
+                        PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                constructBasicPlatformComponentProfileFactory(fm.getSender(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
 
                             /*
                              * Create the receiver basic profile
                              */
-                                PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                                        constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                                constructBasicPlatformComponentProfileFactory(fm.getReceiver(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
 
-                            try {
-                                communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-
-                            // pass the metada to a pool wainting for the response of the other peer or server failure
-                                poolConnectionsWaitingForResponse.put(fm.getReceiver(), fm);
-
-
-
-
-
+                        try {
+                            communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
+
+                        // pass the metada to a pool wainting for the response of the other peer or server failure
+                        poolConnectionsWaitingForResponse.put(fm.getReceiver(), fm);
+
+
                     }
+
+                }
 
             }
 
@@ -252,14 +253,11 @@ public class AssetIssuerActorNetworkServiceAgent {
         }
 
 
-
     }
 
-    public void connectionFailure(String identityPublicKey){
+    public void connectionFailure(String identityPublicKey) {
         this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
     }
-
-
 
 
 }

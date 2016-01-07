@@ -10,25 +10,29 @@
     android:paddingRight="16dp">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:layout_width="wrap_content"
+        android:id="@+id/cbw_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@color/black"
         android:textSize="14sp"
+        android:layout_weight="1"
         tools:text="Cash"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_sub_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:textColor="@color/cbw_wizard_color"
         android:textSize="14sp"
         tools:text="Wallet Cash USD"/>
 
     <ImageView
+        android:id="@+id/cbw_close_img_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end|center_vertical"

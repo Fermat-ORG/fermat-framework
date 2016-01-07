@@ -171,7 +171,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                 loadIdentity();
             } else {
                 List<IntraWalletUserIdentity> lst = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
-                if(lst.isEmpty()){
+                if(!lst.isEmpty()){
                     identitySelected = lst.get(0);
                 }
                 if (identitySelected != null) {

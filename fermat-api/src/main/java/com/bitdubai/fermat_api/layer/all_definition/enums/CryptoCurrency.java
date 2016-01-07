@@ -17,16 +17,22 @@ public enum CryptoCurrency implements FermatEnum, Currency {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BITCOIN     ("BTC"),
-    CHAVEZCOIN  ("CHC"),
-    LITECOIN    ("LTC")
+    BITCOIN     ("BTC", "Bitcoin"),
+    CHAVEZCOIN  ("CHC", "Chavezcoin"),
+    LITECOIN    ("LTC", "Litecoin")
 
     ;
 
     private final String code;
+    private final String friendlyName;
 
-    CryptoCurrency(final String code) {
+    CryptoCurrency(final String code, String friendlyName) {
         this.code = code;
+        this.friendlyName = friendlyName;
+    }
+
+    public String getFriendlyName() {
+        return this.friendlyName;
     }
 
     public static CryptoCurrency getByCode(String code) throws InvalidParameterException {
@@ -40,6 +46,15 @@ public enum CryptoCurrency implements FermatEnum, Currency {
                         "Code Received: " + code,
                         "This Code Is Not Valid for the CryptoCurrency enum"
                 );
+        }
+    }
+
+    public static boolean codeExists(String code) {
+        try {
+            getByCode(code);
+            return true;
+        } catch(InvalidParameterException e) {
+            return false;
         }
     }
 

@@ -142,7 +142,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     cryptoPaymentRequestManager,
                     pluginDatabaseSystem,
                     pluginId,
-                    walletManagerManager
+                    walletManagerManager,
+                    eventManager
             );
 
             eventActions.initialize();

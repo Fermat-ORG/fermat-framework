@@ -48,6 +48,9 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantConfirmMetaDataNotificationException;
@@ -66,6 +69,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseFactory;
@@ -104,6 +108,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -340,6 +346,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         listenersAdded.add(fermatEventListener);
 
 
+        /**
+         *  Message sent
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
     }
 
     /**
@@ -520,6 +535,21 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
             connectionArrived = new AtomicBoolean(false);
+
+
+            // change message state to process again first time
+            reprocessWaitingMessage();
+
+            //declare a schedule to process waiting request message
+            Timer timer = new Timer();
+
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // change message state to process again
+                    reprocessWaitingMessage();
+                }
+            }, 2*3600*1000);
 
             /*
              * Its all ok, set the new status
@@ -741,6 +771,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         cryptoTransmissionAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
+        //I check my time trying to send the message
+        checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+
     }
 
     /**
@@ -823,6 +856,47 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
 
 
+            try {
+
+                Map<String, Object> filters = new HashMap<>();
+                filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.WAITING_RESPONSE.getCode());
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+                List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+                for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                    cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                }
+
+
+            } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+                System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+                e.printStackTrace();
+            }
+
+            try {
+
+                Map<String, Object> filters = new HashMap<>();
+                filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SENT.getCode());
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+                List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+                for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                    cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                }
+
+
+            } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+                System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+                e.printStackTrace();
+            }
+
+
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
@@ -844,12 +918,64 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
 
         //TODO: esto lo comento porque cierra las conexiones, tiene que decirnos de quien es
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+
+            try {
+
+                Map<String, Object> filters = new HashMap<>();
+                filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.WAITING_RESPONSE.getCode());
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+                List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+                for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                    cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                }
+
+
+            } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+                System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+                e.printStackTrace();
+            }
+
+            try {
+
+                Map<String, Object> filters = new HashMap<>();
+                filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.SENT.getCode());
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+                List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+                for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                    cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+                }
+
+
+            } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+                System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+                e.printStackTrace();
+            }
+
             this.register = false;
 
             if(communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
         }
 
+    }
+
+
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+        Gson gson = new Gson();
+        CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(data.getContent(),CryptoTransmissionMetadata.class);
+        if(cryptoTransmissionMetadata.getCryptoTransmissionStates() == CryptoTransmissionStates.SENT){
+            cryptoTransmissionAgent.addToTimer(data.getReceiver(),data.getId());
+        }
     }
 
     /**
@@ -999,7 +1125,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 senderPublicKey
                 ,transactionId,
                 CryptoTransmissionStates.PRE_PROCESSING_SEND,
-                CryptoTransmissionMetadataType.METADATA_SEND
+                CryptoTransmissionMetadataType.METADATA_SEND,0
         );
 
         try {
@@ -1034,7 +1160,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
                 senderPublicKey
                 ,transactionId,
                 CryptoTransmissionStates.PRE_PROCESSING_SEND,
-                CryptoTransmissionMetadataType.METADATA_SEND
+                CryptoTransmissionMetadataType.METADATA_SEND,
+                0
         );
 
         try {
@@ -1203,7 +1330,94 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
         }
     }
 
+
+
     public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
         this.platformComponentProfilePluginRoot = platformComponentProfilePluginRoot;
+    }
+
+
+    private void checkFailedDeliveryTime(String destinationPublicKey)
+    {
+        try{
+
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey);
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+            List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+
+            //if I try to send more than 5 times I put it on hold
+            for (CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+
+                if(!record.getCryptoTransmissionStates().getCode().equals(RequestProtocolState.WAITING_RESPONSE.getCode()))
+                {
+                    if(record.getSentCount() > 10)
+                    {
+                        //update state and process again later
+                        cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.WAITING_RESPONSE);
+                    }
+                    else
+                    {
+
+                        cryptoTransmissionMetadataDAO.changeSentNumber(record.getTransactionId(), record.getSentCount() + 1);
+                    }
+                }
+                else
+                {
+                    //I verify the number of days I'm around trying to send if it exceeds three days I delete record
+
+                    long sentDate = record.getTimestamp();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
+
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                    if((int) dias > 3)
+                    {
+                        //notify the user does not exist to intra user actor plugin
+
+                        cryptoTransmissionMetadataDAO.delete(record.getRequestId());
+                    }
+
+                }
+
+            }
+
+
+        }
+        catch(Exception e)
+        {
+            System.out.print("CRYPTO TRANSMISSION EXCEPCION VERIFICANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void reprocessWaitingMessage()
+    {
+        try {
+
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.WAITING_RESPONSE.getCode());
+                    /*
+         * Read all pending CryptoTransmissionMetadata from database
+         */
+            List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
+
+            for(CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
+
+                cryptoTransmissionMetadataDAO.changeState(record.getTransactionId(), CryptoTransmissionStates.PRE_PROCESSING_SEND);
+            }
+
+
+        } catch (CantUpdateRecordDataBaseException | CantReadRecordDataBaseException e) {
+            System.out.print("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
     }
 }

@@ -7,6 +7,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
@@ -25,37 +28,12 @@ import java.util.UUID;
 public interface WalletManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
 
     /**
-     * Add a new clause to the negotiation
-     *
-     * @param negotiation the negotiation where is going the clause is going to be added
-     * @param clause      the clause to be added
-     * @return the {@link CustomerBrokerNegotiationInformation} with added clause
-     */
-    CustomerBrokerNegotiationInformation addClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause);
-
-    /**
-     * modify the data of a clause's negotiation
-     *
-     * @param negotiation the negotiation with the clause to be modified
-     * @param clause      the modified clause
-     * @return the {@link CustomerBrokerNegotiationInformation} with modified clause
-     */
-    CustomerBrokerNegotiationInformation changeClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause);
-
-    /**
      * Cancel a current negotiation
      *
      * @param negotiation the negotiation to cancel
      * @param reason      the reason to cancel
      */
-    CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException;
-
-    /**
-     * Confirm the given negotiation to create a contract based on this
-     *
-     * @param negotiation the negotiation to confirm
-     */
-    CustomerBrokerNegotiationInformation confirmNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotConfirmNegotiationException;
+    CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException, CantCancelNegotiationException;
 
     /**
      * Return as much as "max" results from the list of Contract Basic Info in this wallet,
@@ -114,11 +92,11 @@ public interface WalletManager extends ModuleManager<FermatSettings, ActiveActor
      * @param negotiationID the negotiation's ID
      * @return the negotiation information
      */
-    CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException;
+    CustomerBrokerNegotiationInformation getNegotiationInformation(UUID negotiationID) throws CantGetNegotiationInformationException, CantGetListSaleNegotiationsException;
 
     /**
      *
      * @return Collection<NegotiationLocations>
      */
-    Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType);
+    Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException, CantGetListLocationsPurchaseException;
 }

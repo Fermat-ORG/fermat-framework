@@ -1,8 +1,12 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -28,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +81,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     protected void initViews(View layout) {
         super.initViews(layout);
 
+        setupBackgroundBitmap(layout);
+
         configureToolbar();
 
         noAssetsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_assets);
@@ -107,14 +115,49 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 //                window.setStatusBarColor(Color.parseColor("#1d1d25"));
 //            }
             Drawable drawable = null;
-            //TODO uncomment
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
-            else
+                toolbar.setElevation(0);
+            } else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
 
             toolbar.setBackground(drawable);
         }
+    }
+
+    private void setupBackgroundBitmap(final View rootView) {
+        AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
+
+            WeakReference<ViewGroup> view;
+
+            @Override
+            protected void onPreExecute() {
+                view = new WeakReference(rootView) ;
+            }
+
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                Bitmap drawable = null;
+                try {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inScaled = true;
+                    options.inSampleSize = 5;
+                    drawable = BitmapFactory.decodeResource(
+                            getResources(), R.drawable.bg_app_image,options);
+                }catch (OutOfMemoryError error){
+                    error.printStackTrace();
+                }
+                return drawable;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap drawable) {
+                if (drawable!= null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                }
+            }
+        } ;
+        asyncTask.execute();
     }
 
     @Override
@@ -196,7 +239,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public List<DigitalAsset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
-        //TODO load more assets
         if (moduleManager != null) {
             try {
                 digitalAssets = Data.getAllDigitalAssets(moduleManager);
@@ -205,7 +247,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            Wallets.DAP_ASSET_ISSUER_WALLET,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                             ex);
             }

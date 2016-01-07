@@ -43,6 +43,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -52,6 +53,8 @@ import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
@@ -126,6 +129,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -512,11 +517,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication);
+            incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
-            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication);
+            outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication,this.pluginFileSystem, this.pluginId);
 
-            intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase);
+            intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem,this.pluginId);
 
 
             actorsToRegisterCache = new ArrayList<>();
@@ -524,6 +529,21 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
 
             connectionArrived = new AtomicBoolean(false);
+
+            // change message state to process again first time
+            reprocessWaitingMessage();
+
+            //declare a schedule to process waiting request message
+            Timer timer = new Timer();
+
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // change message state to process again
+                    reprocessWaitingMessage();
+                }
+            }, 2*3600*1000);
+
 
             /*
              * Its all ok, set the new status
@@ -826,6 +846,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
 
+                    System.out.println("----------------------------\n" +
+                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
 
                     //NOTIFICATION LAUNCH
@@ -856,12 +881,25 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 case RECEIVED:
 
                     //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
-
+                    System.out.println("----------------------------\n" +
+                            "INTRA ACTOR NETWORK SERVICE" +
+                            "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
                     getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
                     if (actorNetworkServiceRecord.getActorProtocolState().getCode().equals(ActorProtocolState.DONE)){
                         // close connection, sender is the destination
+                        System.out.println("----------------------------\n" +
+                                "INTRA ACTOR NETWORK SERVICE" +
+                                "THE CONNECTION BECAUSE THE ACTOR PROTOCOL STATE" +
+                                "WAS CHANGE TO DONE" + actorNetworkServiceRecord
+                                + "\n-------------------------------------------------");
+
                         communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
                         actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
+                        System.out.println("----------------------------\n" +
+                                "INTRA ACTOR NETWORK SERVICE" +
+                                "THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + actorNetworkServiceRecord
+                                + "\n-------------------------------------------------");
 
                     }
 
@@ -925,7 +963,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
         actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
 
-        changeActor(actorNetworkServiceRecord);
+        actorNetworkServiceRecord = changeActor(actorNetworkServiceRecord);
 
 
         communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
@@ -937,11 +975,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     }
 
-    private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
+    private ActorNetworkServiceRecord changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
         // change actor
         String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
         actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
         actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
+        return actorNetworkServiceRecord;
     }
 
     private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
@@ -965,7 +1004,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if(!record.getActorProtocolState().getCode().equals(ActorProtocolState.WAITING_RESPONSE.getCode()))
                 {
-                    if(record.getSentCount() > 5 )
+                    if(record.getSentCount() > 10 )
                     {
                         record.setActorProtocolState(ActorProtocolState.WAITING_RESPONSE);
                         //update state and process again later
@@ -1153,6 +1192,33 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                System.out.println("----------------------------\n" +
+                        "CHANGING OUTGOING NOTIFICATIONS RECORDS " +
+                        "THAT HAVE THE PROTOCOL STATE SET TO SENT" +
+                        "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
+                        + "\n-------------------------------------------------");
+
+                try {
+
+                    List<ActorNetworkServiceRecord> lstActorRecord = getOutgoingNotificationDao().listRequestsByProtocolStateAndType(
+                            ActorProtocolState.SENT
+                    );
+
+
+                    for (ActorNetworkServiceRecord cpr : lstActorRecord) {
+                        getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.PROCESSING_SEND);
+
+                    }
+                } catch (CantListIntraWalletUsersException e) {
+                    e.printStackTrace();
+                } catch (CantUpdateRecordDataBaseException e) {
+                    e.printStackTrace();
+                } catch (CantUpdateRecordException e) {
+                    e.printStackTrace();
+                } catch (RequestNotFoundException e) {
+                    e.printStackTrace();
+                }
+
                 if(communicationNetworkServiceConnectionManager != null)
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
 
@@ -1170,6 +1236,36 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
+
+            System.out.println("----------------------------\n" +
+                    "CHANGING OUTGOING NOTIFICATIONS RECORDS " +
+                    "THAT HAVE THE PROTOCOL STATE SET TO SENT" +
+                    "TO PROCESSING SEND IN ORDER TO ENSURE PROPER RECEPTION :"
+                    + "\n-------------------------------------------------");
+
+
+            try {
+
+                List<ActorNetworkServiceRecord> lstActorRecord = getOutgoingNotificationDao().listRequestsByProtocolStateAndType(
+                        ActorProtocolState.SENT
+                );
+
+
+                for (ActorNetworkServiceRecord cpr : lstActorRecord) {
+                  getOutgoingNotificationDao().changeProtocolState(cpr.getId(), ActorProtocolState.PROCESSING_SEND);
+
+                }
+            } catch (CantListIntraWalletUsersException e) {
+                e.printStackTrace();
+            } catch (CantUpdateRecordDataBaseException e) {
+                e.printStackTrace();
+            } catch (CantUpdateRecordException e) {
+                e.printStackTrace();
+            } catch (RequestNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
             this.register = false;
             if(communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
@@ -1393,7 +1489,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
         } catch (Exception e) {
-            throw new ErrorAcceptIntraUserException("ERROR ACCEPTED CONNECTION TO INTRAUSER", e, "", "Generic Exception");
+            throw new ErrorAcceptIntraUserException("ERROR INTRA ACTOR NS WHEN ACCEPTING CONNECTION TO INTRAUSER", e, "", "Generic Exception");
         }
     }
 
@@ -1426,7 +1522,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
+        /*    ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToDisconnectPublicKey);
 
@@ -1435,8 +1531,30 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
-
             outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
+            */
+
+            //make message to actor
+            UUID newNotificationID = UUID.randomUUID();
+            NotificationDescriptor notificationDescriptor = NotificationDescriptor.DISCONNECTED;
+            long currentTime = System.currentTimeMillis();
+            ActorProtocolState protocolState = ActorProtocolState.PROCESSING_SEND;
+
+            outgoingNotificationDao.createNotification(
+                    newNotificationID,
+                    intraUserLoggedInPublicKey,
+                    Actors.INTRA_USER,
+                    intraUserToDisconnectPublicKey,
+                    "",
+                    new byte[0],
+                    Actors.INTRA_USER,
+                    notificationDescriptor,
+                    currentTime,
+                    protocolState,
+                    false, 1
+            );
+
+
 
 
         } catch (Exception e) {
@@ -1567,31 +1685,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             if (register) {
                 final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
-                // Compressor with highest level of compression
-                Deflater compressor = new Deflater();
-                compressor.setLevel(Deflater.BEST_COMPRESSION);
-                // Give the compressor the data to compress
-                compressor.setInput(actor.getPhoto());
-                compressor.finish();
-                // Create an expandable byte array to hold the compressed data.
-                // It is not necessary that the compressed data will be smaller than
-                // the uncompressed data.
-                ByteArrayOutputStream bos = new ByteArrayOutputStream(actor.getPhoto().length);
-                // Compress the data
-                byte[] buf = new byte[1024];
-                while (!compressor.finished()) {
-                    int count = compressor.deflate(buf);
-                    bos.write(buf, 0, count);
-                }
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                }
+
 
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT));
+                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
 
@@ -1835,5 +1934,22 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
 
+    private void reprocessWaitingMessage()
+    {
+        try {
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndType(ActorProtocolState.WAITING_RESPONSE);
+            for(ActorNetworkServiceRecord record : lstActorRecord) {
+
+                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
+            }
+        }
+        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
+        e)
+        {
+            System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
 
 }
