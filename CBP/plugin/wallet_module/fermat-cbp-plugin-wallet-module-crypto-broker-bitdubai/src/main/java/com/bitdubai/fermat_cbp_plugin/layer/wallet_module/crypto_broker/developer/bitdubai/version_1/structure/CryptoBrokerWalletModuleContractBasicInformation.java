@@ -31,16 +31,16 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
-        this.cancellationReason = "";
+        this.cancellationReason = ""; //Negotiation del objeto como tal
 
-        amount = random.nextFloat() * 100;
-        exchangeRateAmount = random.nextFloat();
+        amount = random.nextFloat() * 100; //Cantidad de mercancia que recibe el customer
+        exchangeRateAmount = random.nextFloat(); //tasa de cambio
 
-        imageBytes = new byte[0];
-        negotiationId = UUID.randomUUID();
+        imageBytes = new byte[0]; //Actor customer
+        negotiationId = UUID.randomUUID(); //Contrato
 
-        date = instance.getTimeInMillis();
-        this.status = status;
+        date = instance.getTimeInMillis(); //
+        this.status = status; //getLastNegotiationUpdateDate del Negotiation
     }
 
     @Override

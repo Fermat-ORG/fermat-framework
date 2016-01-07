@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
@@ -63,6 +64,9 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_CUSTOMER)
     private CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
+    CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+
     private CryptoCustomerWalletModuleCryptoCustomerWalletManager walletManager;
 
     public CryptoCustomerWalletModulePluginRoot() {
@@ -84,7 +88,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                         customerBrokerPurchaseNegotiationManager,
                         pluginId,
                         pluginFileSystem,
-                        cryptoCustomerIdentityManager);
+                        cryptoCustomerIdentityManager,
+                        customerBrokerContractPurchaseManager);
             return walletManager;
 
         } catch (Exception e) {
