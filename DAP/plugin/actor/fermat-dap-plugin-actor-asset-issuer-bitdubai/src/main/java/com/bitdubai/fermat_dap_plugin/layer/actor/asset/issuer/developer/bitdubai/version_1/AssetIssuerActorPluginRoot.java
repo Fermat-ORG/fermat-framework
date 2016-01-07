@@ -12,16 +12,23 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
@@ -99,6 +106,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_WATCH_ONLY_VAULT)
     private WatchOnlyVaultManager WatchOnlyVaultManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_MODULE   , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
 
     private AssetIssuerActorDao assetIssuerActorDao;
 
@@ -353,12 +364,48 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
                 assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessageSend);
                 System.out.println("*****Actor Asset Issuer ****: enviando mensaje a Redeempoint Network Service");
+
+                /**
+                 * Once I send back the ExtendedPublicKey, I will wait until the keys are generated and
+                 * register them in the address book.
+                 */
+                List<CryptoAddress> cryptoAddresses;
+                try {
+                    cryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPoint.getActorPublicKey());
+
+                    while (cryptoAddresses == null){
+                        //wait until I got the address
+                    }
+
+                    /**
+                     * Once I got them, I will registed them in the address book
+                     */
+                    registerRedeemPointAddresses(cryptoAddresses, issuer.getActorPublicKey(), redeemPoint.getActorPublicKey());
+
+                } catch (CantGetActiveRedeemPointAddressesException e) {
+                    e.printStackTrace();
+                }
             } catch (CantSetObjectException e) {
                 e.printStackTrace();
             } catch (CantSendMessageException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * I will register the passed addresses in the address book
+     * @param cryptoAddresses
+     */
+    private void registerRedeemPointAddresses(List<CryptoAddress> cryptoAddresses,String issuerPublicKey,  String reddemPointPublicKey) {
+        for (CryptoAddress cryptoAddress : cryptoAddresses){
+            try {
+                cryptoAddressBookManager.registerCryptoAddress(cryptoAddress,issuerPublicKey ,Actors.DAP_ASSET_ISSUER,reddemPointPublicKey, Actors.DAP_ASSET_REDEEM_POINT, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.WATCH_ONLY_VAULT, "WatchOnlyVault", "", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+            } catch (CantRegisterCryptoAddressBookRecordException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void testGenerateAndInitializeWatchOnlyVault(){

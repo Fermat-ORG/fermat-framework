@@ -1,5 +1,5 @@
 /*
- * @#ProfileCheckInMsgRequest.java - 2015
+ * @#CheckInProfileMsgRequest.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -11,7 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ProfileCheckInMsgRequest</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest</code>
  * represent the message to request to register a profile with the node<p/>
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/12/15.
@@ -19,7 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ProfileCheckInMsgRequest extends PackageContent {
+public class CheckInProfileMsgRequest extends PackageContent {
 
     /**
      * Represent the profileToRegister to check in
@@ -31,7 +31,7 @@ public class ProfileCheckInMsgRequest extends PackageContent {
      *
      * @param profileToRegister
      */
-    public ProfileCheckInMsgRequest(Profile profileToRegister) {
+    public CheckInProfileMsgRequest(Profile profileToRegister) {
         this.profileToRegister = profileToRegister;
     }
 
