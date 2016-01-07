@@ -29,7 +29,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerActorProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantUpdateConnectionRegisterCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorImpl;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityWalletRelationshipRecordImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerActorException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerIdentityWalletRelationshipException;
@@ -176,7 +176,7 @@ public class CryptoCustomerActorDatabaseDao {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, unknown failure.");
         }
 
-        return new CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl(relationshipId, walletPublicKey, identityPublicKey);
+        return new CryptoCustomerIdentityWalletRelationshipRecordImpl(relationshipId, walletPublicKey, identityPublicKey);
     }
 
     //UPDATE RELATIONSHIP
@@ -184,6 +184,9 @@ public class CryptoCustomerActorDatabaseDao {
         try {
             if (!relationshipExists(relationshipId))
                 throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("Cant Update Customer Identity Wallet Relationship, not exists.", "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant Update Customer Identity Wallet Relationship, not exists");
+
+            if (relationshipExists(walletPublicKey, identityPublicKey))
+                throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException("Cant create new Customer Identity Wallet Relationship, It exists.", "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant create new Customer Identity Wallet Relationship, Relationship exists.");
 
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME);
             table.addUUIDFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, relationshipId, DatabaseFilterType.EQUAL);
@@ -198,7 +201,7 @@ public class CryptoCustomerActorDatabaseDao {
             throw new CantRegisterCryptoCustomerIdentityWalletRelationshipException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Actor, Customer Identity Wallet Relationship", "Cant update Customer Identity Wallet Relationship, unknown failure.");
         }
 
-        return new CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl(relationshipId, walletPublicKey, identityPublicKey);
+        return new CryptoCustomerIdentityWalletRelationshipRecordImpl(relationshipId, walletPublicKey, identityPublicKey);
     }
 
     //DELETE RELATIONSHIP
@@ -440,6 +443,6 @@ public class CryptoCustomerActorDatabaseDao {
         String walletPublicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME);
         String identityPublicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME);
 
-        return new CryptoCryptoCustomerIdentityWalletRelationshipRecordImpl(relationshipId, walletPublicKey, identityPublicKey);
+        return new CryptoCustomerIdentityWalletRelationshipRecordImpl(relationshipId, walletPublicKey, identityPublicKey);
     }
 }

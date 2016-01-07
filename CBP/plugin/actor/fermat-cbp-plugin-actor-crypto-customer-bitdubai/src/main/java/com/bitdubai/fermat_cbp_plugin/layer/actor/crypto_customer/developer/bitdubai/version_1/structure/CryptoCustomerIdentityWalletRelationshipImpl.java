@@ -16,11 +16,11 @@ import java.util.UUID;
  * Created by jorge on 30-10-2015.
  * Modified by Yordin Alayn 11.11.2015
  */
-public class CryptoCryptoCustomerIdentityWalletRelationshipImpl implements CryptoCustomerIdentityWalletRelationship {
+public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCustomerIdentityWalletRelationship {
 
     private final CryptoCustomerActorDatabaseDao databaseDao;
 
-    public CryptoCryptoCustomerIdentityWalletRelationshipImpl(CryptoCustomerActorDatabaseDao databaseDao){
+    public CryptoCustomerIdentityWalletRelationshipImpl(CryptoCustomerActorDatabaseDao databaseDao){
         this.databaseDao = databaseDao;
     }
 
@@ -69,7 +69,7 @@ public class CryptoCryptoCustomerIdentityWalletRelationshipImpl implements Crypt
     }
 
     @Override
-    public CryptoCustomerIdentityWalletRelationshipRecord getAllCustomerIdentityWalletRelationships(UUID relationshipId) throws CantGetCustomerIdentiyWalletRelationshipException{
+    public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationships(UUID relationshipId) throws CantGetCustomerIdentiyWalletRelationshipException{
         try {
             return databaseDao.getAllRegisterCustomerIdentityWalletRelationships(relationshipId);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
@@ -80,7 +80,7 @@ public class CryptoCryptoCustomerIdentityWalletRelationshipImpl implements Crypt
     }
 
     @Override
-    public CryptoCustomerIdentityWalletRelationshipRecord getAllCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
+    public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
         try {
             return databaseDao.getAllRegisterCustomerIdentityWalletRelationshipsByIdentity(identityPublicKey);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
@@ -91,7 +91,7 @@ public class CryptoCryptoCustomerIdentityWalletRelationshipImpl implements Crypt
     }
 
     @Override
-    public CryptoCustomerIdentityWalletRelationshipRecord getAllCustomerIdentityWalletRelationshipsByWallet(String walletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
+    public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationshipsByWallet(String walletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
         try {
             return databaseDao.getAllRegisterCustomerIdentityWalletRelationshipsByIdentity(walletPublicKey);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){

@@ -30,22 +30,29 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateCustomerIdentiyWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentiyWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateCustomerIdentiyWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CryptoCustomerIdentityWalletRelationshipRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantRegisterCryptoCustomerActorException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityWalletRelationshipImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -77,6 +84,8 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
 
     private CryptoCustomerActorDatabaseDao databaseDao;
 
+    private CryptoCustomerIdentityWalletRelationshipImpl cryptoCustomerIdentityWalletRelationshipImpl;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     public static final String ACTOR_CRYPTO_CUSTOMER_PROFILE_IMAGE_DIRECTORY_NAME = "actorCryptoCustomerProfileImage";
@@ -88,8 +97,20 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         try {
+
+            //INITIALIZE DAO
             databaseDao = new CryptoCustomerActorDatabaseDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
             databaseDao.initialize();
+
+            //IDENTITY WALLET RELATIONSHIP
+            cryptoCustomerIdentityWalletRelationshipImpl = new CryptoCustomerIdentityWalletRelationshipImpl(databaseDao);
+
+            //TEST IDENTITY WALLET RELATIONSHIP
+            createCustomerIdentityWalletRelationshipTest(true);
+            updateCustomerIdentityWalletRelationshipTest(true);
+            getAllCustomerIdentityWalletRelationshipsTest(true);
+            getCustomerIdentityWalletRelationshipsTest(true);
+
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (final CantInitializeCryptoCustomerActorDatabaseException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -249,4 +270,133 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
         }
     }
     /*END PRIVATE METHOD*/
+
+    /*TEST MOCK*/
+    private void createCustomerIdentityWalletRelationshipTest(boolean sw){
+
+        if(sw) {
+            try {
+
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP ****\n");
+
+                CryptoCustomerIdentityWalletRelationshipRecord relationshipRecord = null;
+
+                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.createCustomerIdentityWalletRelationship("walletPublicKey", "identityPublicKey");
+                System.out.print("\n- RELATIONSHIP DATE " +
+                                "\n- ID: " + relationshipRecord.getRelationship() +
+                                "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                );
+
+            } catch (CantCreateCustomerIdentiyWalletRelationshipException e) {
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP. ERROR CREATE REGISTER. ****\n");
+            }
+        }else{
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP. ERROR CREATE REGISTER. OFF****\n");
+        }
+
+    }
+    
+    private void updateCustomerIdentityWalletRelationshipTest(boolean sw){
+
+        if(sw) {
+            try {
+                
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP ****\n");
+                
+                CryptoCustomerIdentityWalletRelationshipRecord relationshipRecord = null;
+                
+                UUID id = UUID.fromString("7d884ad6-6eda-401b-b5e8-c2406b93de68");
+                
+                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.updateCustomerIdentityWalletRelationship(id, "walletPublicKey2", "identityPublicKey2");
+                System.out.print("\n- RELATIONSHIP DATE " +
+                                 "\n- ID: " + relationshipRecord.getRelationship() +
+                                 "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                 "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                );
+                
+            } catch (CantUpdateCustomerIdentiyWalletRelationshipException e){
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. ERROR UPDATE REGISTER. ****\n");
+            }
+
+        }else{
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. ERROR UPDATE REGISTER. OFF****\n");
+        }
+        
+    }
+    
+    private void getAllCustomerIdentityWalletRelationshipsTest(boolean sw){
+
+        if(sw) {
+            try{
+
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ALL RELATIONSHIP ****\n");
+                
+                Collection<CryptoCustomerIdentityWalletRelationshipRecord> getAllRelationship = new ArrayList<CryptoCustomerIdentityWalletRelationshipRecord>();
+
+                getAllRelationship = cryptoCustomerIdentityWalletRelationshipImpl.getAllCustomerIdentityWalletRelationships();
+
+                System.out.print("\n\n\n\n------------------------------- COLLECTION RELATIONSHIP -------------------------------");
+                for (CryptoCustomerIdentityWalletRelationshipRecord relationshipRecord : getAllRelationship) {
+
+                    System.out.print("\n- RELATIONSHIP DATE " +
+                                    "\n- ID: " + relationshipRecord.getRelationship() +
+                                    "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                    "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                    );
+
+                }
+                System.out.print("\n\n------------------------------- END COLLECTION RELATIONSHIP -------------------------------");
+                
+            }catch (CantGetCustomerIdentiyWalletRelationshipException e){
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ALL RELATIONSHIP. ERROR GET ALL REGISTER. ****\n");
+            }
+        }else{
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ALL RELATIONSHIP. ERROR GET ALL REGISTER. OFF****\n");
+        }
+    }
+
+    private void getCustomerIdentityWalletRelationshipsTest(boolean sw){
+
+        if(sw) {
+            try{
+
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP ****\n");
+
+                UUID id = UUID.fromString("7d884ad6-6eda-401b-b5e8-c2406b93de68");
+
+                CryptoCustomerIdentityWalletRelationshipRecord relationshipRecord = null;
+
+                //GET BY ID
+                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationships(id);
+                System.out.print("\n- RELATIONSHIP BY ID DATE " +
+                                "\n- ID: " + relationshipRecord.getRelationship() +
+                                "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                );
+
+                //GET BY WALLET
+                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationshipsByWallet("walletPublicKey");
+                System.out.print("\n- RELATIONSHIP BY WALLET DATE " +
+                                "\n- ID: " + relationshipRecord.getRelationship() +
+                                "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                );
+
+                //GET BY WALLET
+                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationshipsByWallet("identityPublicKey2");
+                System.out.print("\n- RELATIONSHIP BY IDENTITY DATE " +
+                                "\n- ID: " + relationshipRecord.getRelationship() +
+                                "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                );
+
+            }catch (CantGetCustomerIdentiyWalletRelationshipException e){
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. ERROR GET REGISTER. ****\n");
+            }
+        }else{
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. ERROR GET REGISTER. OFF****\n");
+        }
+    }
+    /*END TEST*/
 }
