@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -224,9 +225,9 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      */
     public void riseVpnConnectionLooseNotificationEvent(NetworkServiceType networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
-        System.out.println("WsCommunicationVPNClientManagerAgent - riseVpnConnectionCloseNotificationEvent");
+        System.out.println("WsCommunicationVPNClientManagerAgent - riseVpnConnectionLooseNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.VPN_CONNECTION_LOOSE);
-        VPNConnectionCloseNotificationEvent event =  (VPNConnectionCloseNotificationEvent) platformEvent;
+        VPNConnectionLooseNotificationEvent event =  (VPNConnectionLooseNotificationEvent) platformEvent;
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         event.setNetworkServiceApplicant(networkServiceApplicant);
         event.setRemoteParticipant(remoteParticipant);
