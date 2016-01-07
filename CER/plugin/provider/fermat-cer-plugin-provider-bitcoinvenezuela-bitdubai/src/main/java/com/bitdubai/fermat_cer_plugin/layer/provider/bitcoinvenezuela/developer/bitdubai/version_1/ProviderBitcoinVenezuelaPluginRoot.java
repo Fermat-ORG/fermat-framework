@@ -197,6 +197,8 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
     @Override
     public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
+        //TODO: Check if timestamp is into the future!!!!
+
         if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
