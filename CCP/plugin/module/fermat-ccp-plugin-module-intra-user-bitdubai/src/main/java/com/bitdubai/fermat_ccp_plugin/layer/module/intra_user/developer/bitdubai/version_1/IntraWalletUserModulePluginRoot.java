@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -827,7 +828,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
         } catch (CantListIntraWalletUsersException e) {
@@ -850,7 +851,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
         } catch (CantGetIntraWalletUsersException e) {
             e.printStackTrace();
-        } catch (CantGetSelectedActorIdentityException e) {
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
         return notifications;
