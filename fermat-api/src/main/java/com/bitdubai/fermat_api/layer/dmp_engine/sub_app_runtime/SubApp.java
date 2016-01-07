@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * Created by ciencias on 2/14/15.
  */
-public interface SubApp extends FermatApp {
+public interface SubApp extends FermatApp,FermatStructure {
 
     /**
      * SubApp type

@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class WalletFactorySubAppSession extends AbstractFermatSession<InstalledSubApp,WalletFactoryManager,SubAppResourcesProviderManager> implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession{
+public class WalletFactorySubAppSession extends AbstractFermatSession<InstalledSubApp,WalletFactoryManager,SubAppResourcesProviderManager> {
 
 
     /**

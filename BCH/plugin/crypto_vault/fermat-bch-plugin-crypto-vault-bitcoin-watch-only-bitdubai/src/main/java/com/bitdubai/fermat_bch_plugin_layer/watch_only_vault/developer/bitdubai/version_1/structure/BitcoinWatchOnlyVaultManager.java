@@ -208,7 +208,7 @@ public class BitcoinWatchOnlyVaultManager {
 
         try {
             storeExtendedPublicKey(watchOnlyVaultExtendedPublicKey);
-            return loadExtendedPublicKey(watchOnlyVaultExtendedPublicKey.DIRECTORY_NAME, watchOnlyVaultExtendedPublicKey.FILE_NAME);
+            return loadExtendedPublicKey(watchOnlyVaultExtendedPublicKey.getDirectoryName(), watchOnlyVaultExtendedPublicKey.getFilename());
         } catch (Exception e) {
             throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "Error loading or saving from disk the Extended Public JKey", "IO failure");
         }
@@ -224,7 +224,7 @@ public class BitcoinWatchOnlyVaultManager {
         /**
          * Loads the file ans instantiate the WatchOnlyVaultExtendedPublicKey class.
          */
-        PluginTextFile textFile = pluginFileSystem.getTextFile(this.pluginId, DIRECTORY_NAME, watchOnlyVaultExtendedPublicKey.getFILE_NAME(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        PluginTextFile textFile = pluginFileSystem.getTextFile(this.pluginId, directory_name, file_name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
         String fileContent = textFile.getContent();
         WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey = (WatchOnlyVaultExtendedPublicKey) XMLParser.parseXML(fileContent, WatchOnlyVaultExtendedPublicKey.class);
@@ -236,7 +236,7 @@ public class BitcoinWatchOnlyVaultManager {
         /**
          * Create the file and set it content.
          */
-        PluginTextFile textFile = pluginFileSystem.createTextFile(this.pluginId, DIRECTORY_NAME, watchOnlyVaultExtendedPublicKey.getFILE_NAME(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        PluginTextFile textFile = pluginFileSystem.createTextFile(this.pluginId, watchOnlyVaultExtendedPublicKey.getDirectoryName(), watchOnlyVaultExtendedPublicKey.getFilename(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
         String fileContent = getFileContent(watchOnlyVaultExtendedPublicKey);
         textFile.setContent(fileContent);
@@ -245,11 +245,11 @@ public class BitcoinWatchOnlyVaultManager {
 
     /**
      * transform into XML the extendedPublicKey received class.
-     * @param extendedPublicKey
+     * @param watchOnlyVaultExtendedPublicKey
      * @return
      */
-    private String getFileContent(WatchOnlyVaultExtendedPublicKey extendedPublicKey) {
-        return XMLParser.parseObject(extendedPublicKey);
+    private String getFileContent(WatchOnlyVaultExtendedPublicKey watchOnlyVaultExtendedPublicKey) {
+        return XMLParser.parseObject(watchOnlyVaultExtendedPublicKey);
     }
 
     /**
