@@ -318,21 +318,25 @@ Para la ejecución del servidor en un ambiente local de desarrollo se deben segu
 
 * Se debe ingresar a la carpeta principal donde está guardado el proyecto en el disco duro.
 ```Shell
+
 cd $PATH_TO_FERMAT_REPO/fermat
 ```
 * Luego se ejecuta el comando que ejecuta la compilación:
  ```Shell
+ 
 cd $PATH_TO_gradle/gradle fatjar
 ```
 * Ahora se ingresa a la carpeta en la cual se encuentra el archivo ejecutable, producto de la compilación anterior:
  ```Shell
-P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/
+ 
+P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/build/libs/
 ```
 * Se debe verificar el contenido de la carpeta anterior, para ello se usa el comando:
 ```Shell
+
 ls
 ```
-* Una vez obtenida la lista de archivos contenidos en **_P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai/build/libs/_** se debe copiar el nombre del archivo JAR que contenga en su nombre **with dependencies**
+* Una vez obtenida la lista de archivos contenidos en **_P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/build/libs/_** se debe copiar el nombre del archivo JAR que contenga en su nombre **with dependencies**
 * Para la ejecución del servidor, se debe ejecutar el siguiente comando:
 ```Shell
 java -jar $NOMBRE_DEL_ARCHIVO_OBTENIDO_EN_EL_PASO_ANTERIOR -jar
