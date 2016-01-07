@@ -48,25 +48,25 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
 
-        if(getIntent().getExtras()!=null) {
-            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
-                System.out.println("EJECUTANDO START ALL");
-
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
-                        } catch (CantStartAllRegisteredPlatformsException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
-
-
-            }
-        }
+//        if(getIntent().getExtras()!=null) {
+//            if (getIntent().getExtras().containsKey(StartActivity.START_ACTIVITY_INIT)) {
+//                System.out.println("EJECUTANDO START ALL");
+//
+//                Thread thread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            getApplicationSession().getFermatSystem().startAllRegisteredPlatforms();
+//                        } catch (CantStartAllRegisteredPlatformsException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                thread.start();
+//
+//
+//            }
+//        }
         try {
 
             loadUI();
