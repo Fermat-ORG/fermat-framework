@@ -42,9 +42,6 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
                 case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST:
                     currentFragment = new UserDeliveryListFragment();
                     break;
-//                case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER:
-//                    currentFragment = new UserDeliveryListHeaderFragment();
-//                    break;
                 case DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST:
                     currentFragment = new UserRedeemedListFragment();
                     break;
