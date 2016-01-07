@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -32,10 +33,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_redemption.interfaces.IssuerRedemptionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -68,6 +72,13 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
+    private AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
+
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
+    private AssetIssuerWalletManager assetIssuerWalletManager;
 
     public IssuerRedemptionDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -167,9 +178,9 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
             }
         }
         try {
-            IssuerRedemptionDao issuerRedemptionDao = new IssuerRedemptionDao(pluginDatabaseSystem, pluginId);
+            IssuerRedemptionDao issuerRedemptionDao = new IssuerRedemptionDao(pluginId, pluginDatabaseSystem);
             IssuerRedemptionRecorderService issuerRedemptionRecorderService = new IssuerRedemptionRecorderService(issuerRedemptionDao, eventManager);
-            IssuerRedemptionMonitorAgent issuerRedemptionMonitorAgent = new IssuerRedemptionMonitorAgent(errorManager);
+            IssuerRedemptionMonitorAgent issuerRedemptionMonitorAgent = new IssuerRedemptionMonitorAgent(assetIssuerActorNetworkServiceManager, assetIssuerWalletManager, errorManager, pluginId, pluginDatabaseSystem);
             try {
                 issuerRedemptionRecorderService.start();
                 issuerRedemptionMonitorAgent.start();
@@ -181,11 +192,10 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
         } catch (CantExecuteDatabaseOperationException exception) {
             this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting pluginDatabaseSystem in Issuer Redemption plugin", "Error in constructor method IssuerRedemptionDao");
-        } catch (CantStartServiceException exception) {
+        } catch (CantStartServiceException | CantSetObjectException exception) {
             this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Issuing Redemption plugin", "cannot start monitor agent");
         }
-
     }
 
     /**
