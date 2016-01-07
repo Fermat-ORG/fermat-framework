@@ -13,6 +13,11 @@
   - Cancel Reason va a ser un campo tipo String (texto libre) de `NegotiationInformation` no va a ser una clausula
 - Propcurar atomicidad en metodos que guardan settings en los diferentes plugins 
 - Es necesario actualizar `NegotiationBankAccount` para cambiar `UUID getBankAccountId();`por `String getWalletPublicKey();`
+- Despues de analizar la situacion con respecto a obtener la data complementaria que se debe mostrar en la lista de brokers llegamos a la siguientes concluciones:
+  - Basicamente el Plugin `Crypto Broker Actor` va a ser el encargado de persistir la informacion complementaria en Base de Datos, esta es: mercancias que vende, mercancias que acepta como pago, cotizaciones, modos de pago, por ahora
+  - Crear un agente en el `Plugin Crypto Broker Actor` que actualice o agregue periodicamente esta informacion llamando al `Crypto Broker Actor Network Service` para que devuelva la informacion complementaria de los brokers conectados que tiene registrados
+  - Haria falta un metodo en el Plugin `Crypto Broker Actor` que devuelva la informacion registrada para poder ser consumida por otros plugins, como por ejemplo los Modules
+  - El Plugin `Crypto Broker Actor` tambien a de guardar su propia informacion complementaria ademas de la de los actores conectados para que pueda ser consumida por el `Crypto Broker Actor Network Service` cuando lo requiera
 
 ### Crypto Broker Reference Wallet
 
