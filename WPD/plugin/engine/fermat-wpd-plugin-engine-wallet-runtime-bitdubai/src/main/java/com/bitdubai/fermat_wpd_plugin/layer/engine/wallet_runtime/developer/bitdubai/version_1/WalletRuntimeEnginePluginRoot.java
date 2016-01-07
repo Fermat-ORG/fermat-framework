@@ -2504,9 +2504,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER.getKey());
-        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST_HEADER.getKey());
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey());
 
 //        runtimeFragment = new Fragment();
 //        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey());
