@@ -15,6 +15,9 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
@@ -27,6 +30,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.adapters.TransactionsAdapter;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.HomeTutorialFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.math.BigDecimal;
@@ -42,10 +47,11 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
 implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
 
     protected final String TAG = "HomeFragment";
-    protected final String walletPublicKey = "cash_wallet";
 
     // Fermat Managers
+    private CashMoneyWalletSession walletSession;
     private CashMoneyWalletModuleManager moduleManager;
+    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
 
     //Data
@@ -61,7 +67,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     FermatTextView bookCurrencyTextView;
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;
     com.getbase.floatingactionbutton.FloatingActionButton fabWithdraw;
-    CreateTransactionFragmentDialog dialog;
+    CreateTransactionFragmentDialog transactionFragmentDialog;
+    HomeTutorialFragmentDialog homeTutorialDialog;
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
 
@@ -75,7 +82,9 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CashMoneyWalletSession) appSession).getModuleManager();
+            walletSession = ((CashMoneyWalletSession) appSession);
+            moduleManager = walletSession.getModuleManager();
+            settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
@@ -127,6 +136,17 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                 lauchCreateTransactionDialog(TransactionType.CREDIT);
             }
         });
+
+
+        boolean showHomeTutorial = false;
+        try{
+            showHomeTutorial = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+        } catch (CantGetSettingsException | SettingsNotFoundException  e){}
+
+        if(showHomeTutorial)
+            lauchHomeTutorialDialog();
+
+
     }
 
 
@@ -241,9 +261,14 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     /* MISC FUNCTIONS */
     private void lauchCreateTransactionDialog(TransactionType transactionType){
-        dialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType);
-        dialog.setOnDismissListener(this);
-        dialog.show();
+        transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType);
+        transactionFragmentDialog.setOnDismissListener(this);
+        transactionFragmentDialog.show();
+    }
+    private void lauchHomeTutorialDialog(){
+        homeTutorialDialog = new HomeTutorialFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources());
+        homeTutorialDialog.setOnDismissListener(this);
+        homeTutorialDialog.show();
     }
 
 
@@ -272,7 +297,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         if (moduleManager != null) {
             try {
-                data.addAll(moduleManager.getTransactions(walletPublicKey, transactionTypes, balanceTypes, 100, 0));
+                data.addAll(moduleManager.getTransactions(walletSession.getAppPublicKey(), transactionTypes, balanceTypes, 100, 0));
 
             } catch (Exception ex) {
                 if (errorManager != null)
@@ -289,14 +314,14 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     private void getWalletBalances() {
         try {
-            this.walletBalances = moduleManager.getWalletBalances(walletPublicKey);
+            this.walletBalances = moduleManager.getWalletBalances(walletSession.getAppPublicKey());
         } catch (CantGetCashMoneyWalletBalancesException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
     private void getWalletCurrency() {
         try {
-            this.walletCurrency = moduleManager.getWalletCurrency(walletPublicKey);
+            this.walletCurrency = moduleManager.getWalletCurrency(walletSession.getAppPublicKey());
         } catch (CantGetCashMoneyWalletCurrencyException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
