@@ -29,7 +29,6 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ServerHandshake;
 
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;

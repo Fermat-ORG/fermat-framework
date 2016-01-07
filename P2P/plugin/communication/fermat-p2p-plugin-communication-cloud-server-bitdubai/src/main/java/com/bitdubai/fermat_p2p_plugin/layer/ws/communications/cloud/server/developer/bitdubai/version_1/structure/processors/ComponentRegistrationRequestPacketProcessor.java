@@ -28,6 +28,7 @@ import org.java_websocket.WebSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor</code> this
@@ -218,52 +219,110 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          */
         if (getWsCommunicationCloudServer().getPendingRegisterClientConnectionsCache().containsKey(receiveFermatPacket.getSender())){
 
-            /*
-             * Add to the cache
-             */
-            getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
+            boolean exist = Boolean.FALSE;
 
             /*
-             * Remove from the PendingRegisterClientConnectionsCache
+             * Validate are not yet registered
              */
-            getWsCommunicationCloudServer().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
+            for (PlatformComponentProfile registered : getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values()) {
 
-            /*
-             * Add to the RegisteredClientConnectionsCache
-             */
-            getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
+                if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
+                    exist = Boolean.TRUE;
+                }
+            }
+
+            if (!exist){
+
+                /*
+                 * Add to the cache
+                 */
+                getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().put(clientConnection.hashCode(), platformComponentProfileToRegister);
+
+                /*
+                 * Remove from the PendingRegisterClientConnectionsCache
+                 */
+                getWsCommunicationCloudServer().getPendingRegisterClientConnectionsCache().remove(receiveFermatPacket.getSender()); //Remove using temporal client identity
+
+                /*
+                 * Add to the RegisteredClientConnectionsCache
+                 */
+                getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().put(platformComponentProfileToRegister.getIdentityPublicKey(), clientConnection); //Add using the real client identity from profile
 
 
-            /*
-             * Update the ClientIdentityByClientConnectionCache to the real identity
-             */
-            getWsCommunicationCloudServer().getClientIdentityByClientConnectionCache().put(clientConnection.hashCode(), platformComponentProfileToRegister.getIdentityPublicKey());
+                /*
+                 * Update the ClientIdentityByClientConnectionCache to the real identity
+                 */
+                getWsCommunicationCloudServer().getClientIdentityByClientConnectionCache().put(clientConnection.hashCode(), platformComponentProfileToRegister.getIdentityPublicKey());
 
 
-             /*
-             * Construct the respond
-             */
-            Gson gson = new Gson();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-            jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
+                FermatPacket fermatPacketRespond = null;
 
-            /*
-             * Construct a fermat packet whit the same platform component profile and different FermatPacketType
-             */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                                                                                                                        serverIdentity.getPublicKey(),                    //Sender
-                                                                                                                        gson.toJson(jsonObject),                          //Message Content
-                                                                                                                        FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                                                                                                                        serverIdentity.getPrivateKey());                  //Sender private key
+                /*
+                 * Validate if no has a profile references in stand by, is have is a reconnection
+                 */
+                if(!getWsCommunicationCloudServer().getStandByProfileByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
 
-            /*
-             * Send the encode packet to the server
-             */
-            clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+                    LOG.info("New registration");
 
-            LOG.info("Total Communications Cloud Client Component Registered = " + getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().size());
+                /*
+                 * Construct the respond
+                 */
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+                    jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfileToRegister.toJson());
 
+                /*
+                 * Construct a fermat packet whit the same platform component profile and different FermatPacketType
+                 */
+                    fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
+                            serverIdentity.getPublicKey(),                    //Sender
+                            gson.toJson(jsonObject),                          //Message Content
+                            FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
+                            serverIdentity.getPrivateKey());                  //Sender private key
+
+                }else{
+
+                    LOG.info("Registration for reconnection");
+
+                    if (getWsCommunicationCloudServer().getTimersByClientIdentity().containsKey(platformComponentProfileToRegister.getIdentityPublicKey())){
+                        LOG.info("Cancel timer task to clean references");
+                        Timer timer = getWsCommunicationCloudServer().getTimersByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+                        timer.cancel();
+                    }
+
+                /*
+                 * Get the profiles in stand by
+                 */
+                    List<PlatformComponentProfile> profilesInStandBy = getWsCommunicationCloudServer().getStandByProfileByClientIdentity().get(platformComponentProfileToRegister.getIdentityPublicKey());
+
+                /*
+                 * Move again to the registers profile cache
+                 */
+                    moveFromStandByToRegistersCache(profilesInStandBy);
+
+                /*
+                 * Construct a fermat packet whit reconnect notification
+                 */
+                    fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
+                            serverIdentity.getPublicKey(),                    //Sender
+                            "Reconnect successfully",                          //Message Content
+                            FermatPacketType.CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT, //Packet type
+                            serverIdentity.getPrivateKey());
+
+                }
+
+
+
+                /*
+                 * Send the encode packet to the server
+                 */
+                clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+                LOG.info("Total Communications Cloud Client Component Registered = " + getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().size());
+
+
+            }
 
 
         }else {
@@ -411,6 +470,105 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         LOG.info(" Total (" + platformComponentProfileToRegister.getPlatformComponentType() + ") Component Registered  = " + registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType()).size());
 
     }
+
+    /**
+     * Move all profile in stand by of the list to the respective register cache
+     * @param profilesInStandBy
+     */
+    private void moveFromStandByToRegistersCache(List<PlatformComponentProfile> profilesInStandBy){
+
+        LOG.info("moveFromStandByToRegistersCache");
+
+        for (PlatformComponentProfile platformComponentProfileToRegister: profilesInStandBy){
+
+            /*
+             * Switch between platform component type
+             */
+            switch (platformComponentProfileToRegister.getPlatformComponentType()){
+
+                case NETWORK_SERVICE :
+
+                        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWsCommunicationCloudServer().getRegisteredNetworkServicesCache();
+
+                        /*
+                         * Validate if contain a list for the NetworkServiceType
+                         */
+                        if (networkServiceRegistered.containsKey(platformComponentProfileToRegister.getNetworkServiceType())){
+
+                            /*
+                             * Validate are not yet registered
+                             */
+                            for (PlatformComponentProfile registered : networkServiceRegistered.get(platformComponentProfileToRegister.getNetworkServiceType())) {
+
+                                if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
+                                    throw new RuntimeException("The PlatformComponentProfile is already registered con el server");
+                                }
+                            }
+
+                            /*
+                             * Add to the list
+                             */
+                            networkServiceRegistered.get(platformComponentProfileToRegister.getNetworkServiceType()).add(platformComponentProfileToRegister);
+
+                        }else {
+
+                            /*
+                             * Create new list by the NetworkServiceType and add the profile
+                             */
+                            List<PlatformComponentProfile> newListPCP = new ArrayList<>();
+                            newListPCP.add(platformComponentProfileToRegister);
+
+                            networkServiceRegistered.put(platformComponentProfileToRegister.getNetworkServiceType(), newListPCP);
+
+                        }
+
+                    break;
+
+                //Others
+                default :
+
+                        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache();
+
+                        /*
+                         * Validate if contain a list for the NetworkServiceType
+                         */
+                        if (registeredPlatformComponentProfile.containsKey(platformComponentProfileToRegister.getPlatformComponentType())){
+
+                            /*
+                             * Validate are not yet registered
+                             */
+                            for (PlatformComponentProfile registered : registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType())) {
+
+                                if (registered.getIdentityPublicKey().equals(platformComponentProfileToRegister.getIdentityPublicKey())){
+                                    throw new RuntimeException("The PlatformComponentProfile is already registered con el server");
+                                }
+                            }
+
+                            /*
+                             * Add to the list
+                             */
+                            registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType()).add(platformComponentProfileToRegister);
+
+                        }else {
+
+                            /*
+                             * Create new list by the PlatformComponentType and add the profile
+                             */
+                            List<PlatformComponentProfile> newListPCP = new ArrayList<>();
+                            newListPCP.add(platformComponentProfileToRegister);
+
+                            registeredPlatformComponentProfile.put(platformComponentProfileToRegister.getPlatformComponentType(), newListPCP);
+
+                        }
+
+                    break;
+
+            }
+
+        }
+
+    }
+
 
     /**
      * (no-javadoc)

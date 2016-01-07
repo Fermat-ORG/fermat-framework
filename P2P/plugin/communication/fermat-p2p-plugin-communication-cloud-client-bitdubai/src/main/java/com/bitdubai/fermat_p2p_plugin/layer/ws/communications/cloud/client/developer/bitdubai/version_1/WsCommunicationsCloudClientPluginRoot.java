@@ -97,7 +97,11 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public WsCommunicationsCloudClientPluginRoot(){
         super(new PluginVersionReference(new Version()));
         this.disableClientFlag = ServerConf.ENABLE_CLIENT;
-        this.clientIdentity = new ECCKeyPair();
+        this.clientIdentity = new ECCKeyPair("26e7c52da72a429ed9d2a52eadab439d0daedd3f8d47aa8f7bf73d4d5511e881",
+                "04148E64EF734692F7C8636AF1D9ADA79757EEFDE7C0C708B889D4E37D30D5CA829EFBEA913D2605F924A5135A607D4FAD5294896CFF9B81E28779ADDE32194732");
+
+        System.out.println("WsCommunicationsCloudClientPluginRoot - PrivateKey = "+clientIdentity.getPrivateKey());
+        System.out.println("WsCommunicationsCloudClientPluginRoot - PublicKey  = "+clientIdentity.getPublicKey());
     }
 
     /**

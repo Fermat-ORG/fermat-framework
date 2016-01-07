@@ -118,7 +118,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     private Map<Integer, Boolean> pendingPongMessageByConnection;
 
     /**
-     * Holds all Timer by client identity
+     * Holds all Timer that clear references by client identity
      */
     private Map<String, Timer> timersByClientIdentity;
 
@@ -258,8 +258,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     public void onClose(WebSocket clientConnection, int code, String reason, boolean remote) {
 
         LOG.info(" --------------------------------------------------------------------- ");
-        LOG.info("WsCommunicationCloudServer - Starting method onClose");
-        LOG.info("WsCommunicationCloudServer - " + clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
+        LOG.info("Starting method onClose");
+        LOG.info(clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
 
         switch (code){
 
@@ -267,9 +267,10 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
                 if (remote){
 
-                    LOG.info("WsCommunicationCloudServer - waiting for client reconnect");
+                    LOG.info("Waiting for client reconnect");
                     final WebSocket connection = clientConnection;
                     final String clientIdentity = clientIdentityByClientConnectionCache.get(connection.hashCode());
+                    final String address = connection.getRemoteSocketAddress().toString();
 
                     if(clientIdentity != null && clientIdentity != ""){
 
@@ -279,11 +280,12 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                         timer.schedule(new TimerTask() {
                                            @Override
                                            public void run() {
-                                               LOG.info("WsCommunicationCloudServer - client not reconnect, proceed to clean references");
+                                               LOG.info("client ("+address+") not reconnect, proceed to clean references");
                                                standByProfileByClientIdentity.remove(clientIdentity);
+                                               LOG.info("standByProfileByClientIdentity = "+standByProfileByClientIdentity.size());
                                            }
                                        },
-                                9000
+                                60000
                         );
 
                         timersByClientIdentity.put(clientIdentity, timer);
@@ -361,7 +363,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     public void onError(WebSocket clientConnection, Exception ex) {
 
         LOG.info("--------------------------------------------------------------------- ");
-        LOG.info("WsCommunicationCloudServer - Starting method onError");
+        LOG.info("Starting method onError");
         ex.printStackTrace();
 
         cleanReferences(clientConnection);
@@ -488,6 +490,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
             clientIdentityByClientConnectionCache.remove(clientConnectionHashCode);
             pendingPongMessageByConnection.remove(clientConnectionHashCode);
             registeredCommunicationsCloudServerCache.remove(clientConnectionHashCode);
+            registeredCommunicationsCloudClientCache.remove(clientConnectionHashCode);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -674,5 +677,23 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      */
     public Map<Integer, Boolean> getPendingPongMessageByConnection() {
         return pendingPongMessageByConnection;
+    }
+
+    /**
+     * Gets the value of standByProfileByClientIdentity and returns
+     *
+     * @return standByProfileByClientIdentity
+     */
+    public Map<String, List<PlatformComponentProfile>> getStandByProfileByClientIdentity() {
+        return standByProfileByClientIdentity;
+    }
+
+    /**
+     * Gets the value of timersByClientIdentity and returns
+     *
+     * @return timersByClientIdentity
+     */
+    public Map<String, Timer> getTimersByClientIdentity() {
+        return timersByClientIdentity;
     }
 }
