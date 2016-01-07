@@ -7,7 +7,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageS
 /**
  * Created by root on 05/01/16.
  */
-public interface ChatMessageMetada {
+public interface ChatMetada {
 
     ChatMessageStatus getChatMessageStatus();
 
