@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStarte
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AbstractFermatEvent;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/10/15.
@@ -35,9 +34,6 @@ public class IssuerRedemptionEventHandler implements FermatEventHandler {
         }
         String context = "Event Type: " + fermatEvent.getEventType() +
                 "Event Source: " + fermatEvent.getSource();
-        if (!(fermatEvent instanceof AbstractFermatEvent)) {
-            throw new CantSaveEventException(null, "Handling a RPR Event...", "Uuum? This is not a DAP Event...: " + context);
-        }
 
         System.out.println("VAMM: RECEIVED A NEW EVENT!");
         System.out.println("VAMM: " + context);
