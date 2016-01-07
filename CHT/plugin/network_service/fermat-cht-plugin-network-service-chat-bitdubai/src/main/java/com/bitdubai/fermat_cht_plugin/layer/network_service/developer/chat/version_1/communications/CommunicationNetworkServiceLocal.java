@@ -11,8 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -86,14 +86,12 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
                                             ErrorManager errorManager, EventManager eventManager,
                                             OutgoingMessageDao outgoingMessageDao,
-                                            NetworkServiceType networkServiceTypePluginRoot,
-                                            AbstractNetworkService networkServicePluginRoot) {
+                                            NetworkServiceType networkServiceTypePluginRoot) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
         this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
-        this.networkServicePluginRoot = networkServicePluginRoot;
     }
 
 

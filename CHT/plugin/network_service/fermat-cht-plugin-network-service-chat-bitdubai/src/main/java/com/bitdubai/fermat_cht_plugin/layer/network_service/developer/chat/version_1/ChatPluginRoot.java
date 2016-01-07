@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.vers
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
@@ -37,11 +38,11 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.ChatNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.ChatNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.ChatNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.NetworkServiceChatNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.NetworkServiceChatNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.database.OutgoinChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.developer.chat.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
@@ -58,10 +59,10 @@ import java.util.regex.Pattern;
 /**
  * Created by Gabriel Araujo on 05/01/16.
  */
-public class ChatPluginRoot extends AbstractNetworkService implements
-        DatabaseManagerForDevelopers,
+public class ChatPluginRoot extends AbstractPlugin implements
+        NetworkService,
         LogManagerForDevelopers,
-        FermatManager {
+        DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -78,38 +79,98 @@ public class ChatPluginRoot extends AbstractNetworkService implements
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
-    public ChatPluginRoot() {
-        super(new PluginVersionReference(new Version()),
-                PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.CHAT,
-                "Chat Network Service",
-                "ChatNetworkService",
-                null,
-                EventSource.NETWORK_SERVICE_CHAT);
-        this.listenersAdded=new ArrayList<>();
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
+
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    public ChatPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+        this.listenersAdded = new ArrayList<>();
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
+        this.networkServiceType = NetworkServiceType.CHAT;
+        this.name = "Network Service Asset Transmission";
+        this.alias = "NetworkServiceAssetTransmission";
+
+        this.extraData = null;
+    }
+
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
+    /**
+     * Represent the name
+     */
+    private String name;
+
+    /**
+     * Represent the alias
+     */
+    private String alias;
+
+    /**
+     * Represent the extraData
+     */
+    private String extraData;
+
+    /**
+     * Represent the dataBase
+     */
+    private Database dataBase;
+
+    /**
+     * Represent the identity
+     */
+    private ECCKeyPair identity;
+
+    /**
+     * Represent the networkServiceType
+     */
+    private NetworkServiceType networkServiceType;
+
+    /**
+     * Represent the platformComponentProfile
+     */
+    private PlatformComponentProfile platformComponentProfile;
+
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
+    /**
+     * Represent the OutgoinChatMetaDataDao
+     */
+    private OutgoinChatMetaDataDao outgoinChatMetaDataDao;
+
+    public OutgoinChatMetaDataDao getOutgoinChatMetaDataDao() {
+        return outgoinChatMetaDataDao;
+    }
+
+    /**
+     * Represent the platformComponentType
+     */
+    private PlatformComponentType platformComponentType;
 
     /**
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CHAT;
 
-    /**
-     * Hold the listeners references
-     */
-    private List<FermatEventListener> listenersAdded;
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
 
     /**
      * Represent the communicationNetworkServiceConnectionManager
+
      */
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     private PlatformComponentProfile platformComponentProfilePluginRoot;
 
-    /**
-     * Represent the database
-     */
-    private Database database;
 
     /**
      *  Represent the remoteNetworkServicesRegisteredList
@@ -123,7 +184,8 @@ public class ChatPluginRoot extends AbstractNetworkService implements
     /**
      *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private ChatNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private NetworkServiceChatNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+
 
     /**
      * This method validate is all required resource are injected into
@@ -166,6 +228,36 @@ public class ChatPluginRoot extends AbstractNetworkService implements
     @Override
     public String getIdentityPublicKey() {
         return this.identity.getPublicKey();
+    }
+
+    @Override
+    public String getAlias() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getExtraData() {
+        return null;
+    }
+
+    @Override
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
+        return null;
+    }
+
+    @Override
+    public PlatformComponentType getPlatformComponentType() {
+        return null;
+    }
+
+    @Override
+    public NetworkServiceType getNetworkServiceType() {
+        return null;
     }
 
     @Override
@@ -255,6 +347,16 @@ public class ChatPluginRoot extends AbstractNetworkService implements
 
     }
 
+    @Override
+    public boolean isRegister() {
+        return false;
+    }
+
+    @Override
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
+
+    }
+
     /**
      * This method initialize the communicationNetworkServiceConnectionManager.
      * IMPORTANT: Call this method only in the CommunicationRegistrationProcessNetworkServiceAgent, when execute the registration process
@@ -264,17 +366,7 @@ public class ChatPluginRoot extends AbstractNetworkService implements
     public void initializeCommunicationNetworkServiceConnectionManager() {
         try{
 
-            this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                    platformComponentProfilePluginRoot,
-                    identity,
-                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
-                    database,
-                    errorManager,
-                    eventManager,
-                    EVENT_SOURCE,
-                    getPluginVersionReference(),
-                    this
-            );
+            this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
 
         }catch(Exception ex){
             StringBuffer contextBuffer = new StringBuffer();
@@ -295,16 +387,6 @@ public class ChatPluginRoot extends AbstractNetworkService implements
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, communicationNetworkServiceConnectionManagerException);
 
         }
-    }
-
-    @Override
-    public void handleNewMessages(FermatMessage message) {
-
-    }
-
-    @Override
-    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
-
     }
 
     @Override
@@ -354,7 +436,7 @@ public class ChatPluginRoot extends AbstractNetworkService implements
             /*
              * Initialize Developer Database Factory
              */
-            communicationNetworkServiceDeveloperDatabaseFactory = new ChatNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory = new NetworkServiceChatNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
 
@@ -363,7 +445,7 @@ public class ChatPluginRoot extends AbstractNetworkService implements
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
@@ -420,7 +502,7 @@ public class ChatPluginRoot extends AbstractNetworkService implements
             /*
              * Open new database connection
              */
-            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, ChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -436,14 +518,14 @@ public class ChatPluginRoot extends AbstractNetworkService implements
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            ChatNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new ChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            NetworkServiceChatNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new NetworkServiceChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, ChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, NetworkServiceChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
