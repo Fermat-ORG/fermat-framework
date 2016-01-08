@@ -326,6 +326,11 @@ public class DesktopSubAppFragment extends AbstractFermatFragment implements Sea
             item.setIconResource(R.drawable.developer);
             item.setPosition(3);
             lstItemsWithIcon.add(item);
+            installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT,null,null,"sub-app-chat","Chat","public_key_pip_chat","sub-app-chat",new Version(1,0,0));
+            item = new Item(installedSubApp);
+            item.setIconResource(R.drawable.chat);
+            item.setPosition(4);
+            lstItemsWithIcon.add(item);
 
             for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
