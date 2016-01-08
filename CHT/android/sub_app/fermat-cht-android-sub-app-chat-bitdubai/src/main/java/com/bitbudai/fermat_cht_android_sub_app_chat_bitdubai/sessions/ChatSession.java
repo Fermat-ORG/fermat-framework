@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.sessions;
+package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;

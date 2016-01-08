@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.exceptions;
+package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions;
 
         import com.bitdubai.fermat_api.FermatException;
 /**

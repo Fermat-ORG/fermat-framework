@@ -87,12 +87,14 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                             negotiationId);
             long amount = getCryptoAmount(customerBrokerSaleNegotiation);
             CurrencyType merchandiseType = getMerchandiseType(customerBrokerSaleNegotiation);
+            FiatCurrency fiatCurrencyType = getFiatCurrency(customerBrokerSaleNegotiation);
             this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
                     offlineWalletPublicKey,
                     amount,
                     cbpWalletPublicKey,
                     referencePrice,
+                    fiatCurrencyType,
                     merchandiseType);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             throw new CantSubmitMerchandiseException(e,
@@ -136,6 +138,12 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
         return customerBrokerSaleNegotiation;
     }
 
+    /**
+     * This method gets the Merchandise type from Negotiation Clauses.
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetBrokerMerchandiseException
+     */
     private CurrencyType getMerchandiseType(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
         try{
@@ -167,7 +175,37 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             }
     }
 
-    //TODO: GET FIAT CURRENCY
+    /**
+     * This method gets the currency type from Negotiation Clauses.
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetBrokerMerchandiseException
+     */
+    private FiatCurrency getFiatCurrency(
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
+        try{
+            Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
+            String clauseValue;
+            for(Clause clause : negotiationClauses){
+                if(clause.getType().equals(ClauseType.BROKER_CURRENCY)){
+                    clauseValue=clause.getValue();
+                    return FiatCurrency.getByCode(clauseValue);
+                }
+            }
+            throw new CantGetBrokerMerchandiseException(
+                    "The Negotiation clauses doesn't include the broker payment method");
+        } catch (InvalidParameterException e) {
+            throw new CantGetBrokerMerchandiseException(
+                    e,
+                    "Getting the merchandise type",
+                    "Invalid parameter Clause value");
+        } catch (CantGetListClauseException e) {
+            throw new CantGetBrokerMerchandiseException(
+                    e,
+                    "Getting the merchandise type",
+                    "Cannot get the clauses list");
+        }
+    }
 
     /**
      * This method returns a crypto amount (long) from a CustomerBrokerPurchaseNegotiation
