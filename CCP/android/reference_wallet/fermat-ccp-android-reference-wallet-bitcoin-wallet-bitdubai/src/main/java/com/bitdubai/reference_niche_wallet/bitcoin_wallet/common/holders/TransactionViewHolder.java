@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -22,6 +23,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class TransactionViewHolder extends ChildViewHolder {
 
+    private final LinearLayout container_sub_item;
     private Resources res;
     private View itemView;
 
@@ -41,6 +43,7 @@ public class TransactionViewHolder extends ChildViewHolder {
 
         this.itemView = itemView;
         res = itemView.getResources();
+        container_sub_item = (LinearLayout) itemView.findViewById(R.id.container_sub_item);
 
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
@@ -49,7 +52,8 @@ public class TransactionViewHolder extends ChildViewHolder {
 
     public void bind(CryptoWalletTransaction cryptoWalletTransaction) {
 
-        if (cryptoWalletTransaction.getBalanceType() == null){
+        if (cryptoWalletTransaction.getActorFromPublicKey() == null){
+            container_sub_item.getLayoutParams().height=50;
             txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
             txt_amount.setGravity(Gravity.CENTER_HORIZONTAL);
             txt_amount.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -63,6 +67,7 @@ public class TransactionViewHolder extends ChildViewHolder {
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()));
+
         }
     }
 }
