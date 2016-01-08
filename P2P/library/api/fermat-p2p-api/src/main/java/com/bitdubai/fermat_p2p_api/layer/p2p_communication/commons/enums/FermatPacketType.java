@@ -123,6 +123,11 @@ public enum FermatPacketType {
     FAILURE_MESSAGE_TRANSMIT ("FMSG_TRANS"),
 
     /**
+     * This type is use when client connection is successfully reconnect
+     */
+    CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT ("CCSR"),
+
+    /**
      * This type is use when the remote participant of the vpn is disconnected
      */
     VPN_REMOTE_PARTICIPANT_DISCONNECTED ("VRPD"),
@@ -130,7 +135,12 @@ public enum FermatPacketType {
     /**
      * This type is use when the remote participant of the vpn is reconnected
      */
-    VPN_REMOTE_PARTICIPANT_RECONNECTED ("VRPR");
+    VPN_REMOTE_PARTICIPANT_RECONNECTED ("VRPR"),
+
+    /**
+     * This type is use when vpn connection is successfully reconnect
+     */
+    VPN_CONNECTION_SUCCESSFULLY_RECONNECT ("VCSR");
 
     /**
      * Represent the code
@@ -184,8 +194,10 @@ public enum FermatPacketType {
             case "FAIL_COMP_CONNECT_REQ"  : return FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST;
             case "MSG_TRANS"              : return FermatPacketType.MESSAGE_TRANSMIT;
             case "FMSG_TRANS"             : return  FermatPacketType.FAILURE_MESSAGE_TRANSMIT;
+            case "CCSR"                   : return  FermatPacketType.CLIENT_CONNECTION_SUCCESSFULLY_RECONNECT;
             case "VRPD"                   : return  FermatPacketType.VPN_REMOTE_PARTICIPANT_DISCONNECTED;
             case "VRPR"                   : return  FermatPacketType.VPN_REMOTE_PARTICIPANT_RECONNECTED;
+            case "VCSR"                   : return  FermatPacketType.VPN_CONNECTION_SUCCESSFULLY_RECONNECT;
 
             default: throw new IllegalArgumentException();
         }
