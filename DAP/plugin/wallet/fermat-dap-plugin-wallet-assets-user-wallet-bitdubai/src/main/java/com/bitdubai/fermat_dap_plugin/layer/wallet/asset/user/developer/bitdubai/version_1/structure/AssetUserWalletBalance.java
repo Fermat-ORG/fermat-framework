@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 
 /**
@@ -7,75 +8,17 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
  */
 public class AssetUserWalletBalance implements AssetUserWalletList {
 
-    String assetPublicKey;
-    String name;
-    String description;
-    long bookBalance;
-    long availableBalance;
+    DigitalAsset digitalAsset;
     long quantityBookBalance;
     long quantityAvailableBalance;
 
-    public AssetUserWalletBalance(String assetPublicKey, String name, String description, long bookBalance, long availableBalance, long quantityBookBalance, long quantityAvailableBalance){
-        this.assetPublicKey = assetPublicKey;
-        this.name = name;
-        this.description = description;
-        this.bookBalance = bookBalance;
-        this.availableBalance = availableBalance;
-        this.quantityAvailableBalance = quantityAvailableBalance;
+    public AssetUserWalletBalance(DigitalAsset digitalAsset, long quantityBookBalance, long quantityAvailableBalance) {
+        this.digitalAsset = digitalAsset;
         this.quantityBookBalance = quantityBookBalance;
+        this.quantityAvailableBalance = quantityAvailableBalance;
     }
 
     public AssetUserWalletBalance() {
-    }
-
-    @Override
-    public String getAssetPublicKey() {
-        return assetPublicKey;
-    }
-
-    @Override
-    public void setAssetPublicKey(String assetPublicKey) {
-        this.assetPublicKey = assetPublicKey;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public long getBookBalance() {
-        return bookBalance;
-    }
-
-    @Override
-    public void setBookBalance(long bookBalance) {
-        this.bookBalance = bookBalance;
-    }
-
-    @Override
-    public long getAvailableBalance() {
-        return availableBalance;
-    }
-
-    @Override
-    public void setAvailableBalance(long availableBalance) {
-        this.availableBalance = availableBalance;
     }
 
     @Override
@@ -86,6 +29,16 @@ public class AssetUserWalletBalance implements AssetUserWalletList {
     @Override
     public void setQuantityAvailableBalance(long quantityAvailableBalance) {
         this.quantityAvailableBalance = quantityAvailableBalance;
+    }
+
+    @Override
+    public DigitalAsset getDigitalAsset() {
+        return digitalAsset;
+    }
+
+    @Override
+    public void setDigitalAsset(DigitalAsset digitalAsset) {
+        this.digitalAsset = digitalAsset;
     }
 
     @Override

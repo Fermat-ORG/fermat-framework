@@ -441,7 +441,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
          * @throws CantGetCryptoTransactionException
          */
         private CryptoTransaction getCryptoTransactionByCryptoStatus(CryptoStatus cryptoStatus, String genesisTransaction) throws CantGetCryptoTransactionException {
-            List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
+            List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getChildCryptoTransaction(genesisTransaction);
             if (transactionListFromCryptoNetwork == null) {
                 System.out.println("ASSET USER REDEMPTION transaction List From Crypto Network for " + genesisTransaction + " is null");
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null,
@@ -461,6 +461,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 System.out.println("ASSET USER REDEMPTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
                 if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
                     System.out.println("ASSET USER REDEMPTION I found it!");
+                    cryptoTransaction.setTransactionHash(genesisTransaction);
                     return cryptoTransaction;
                 }
             }

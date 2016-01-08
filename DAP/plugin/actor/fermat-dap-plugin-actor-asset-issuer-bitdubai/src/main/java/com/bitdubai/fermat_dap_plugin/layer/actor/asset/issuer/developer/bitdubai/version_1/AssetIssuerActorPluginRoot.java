@@ -321,8 +321,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     }
 
     private void receiveNewRequestExtendedPublicKey(DAPMessage dapMessage) {
-        DAPActor redeemPoint = dapMessage.getActorSender();
-        DAPActor issuer = dapMessage.getActorReceiver();
+        final DAPActor redeemPoint = dapMessage.getActorSender();
+        final DAPActor issuer = dapMessage.getActorReceiver();
 
         System.out.println("*****Actor Asset Redeem Point Solicita*****");
         System.out.println("Actor Asset Redeem Point name: " + redeemPoint.getName());
@@ -369,23 +369,29 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                  * Once I send back the ExtendedPublicKey, I will wait until the keys are generated and
                  * register them in the address book.
                  */
-                List<CryptoAddress> cryptoAddresses = null;
-                try {
-                    while (cryptoAddresses == null){
-                        cryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPoint.getActorPublicKey());
-                        Thread.sleep(5000);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<CryptoAddress> cryptoAddresses = null;
+                        try {
+                            while (cryptoAddresses == null){
+                                cryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPoint.getActorPublicKey());
+                                Thread.sleep(5000);
+                            }
+
+                            /**
+                             * Once I got them, I will registed them in the address book
+                             */
+                            registerRedeemPointAddresses(cryptoAddresses, issuer.getActorPublicKey(), redeemPoint.getActorPublicKey());
+
+                        } catch (CantGetActiveRedeemPointAddressesException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
+                }).start();
 
-                    /**
-                     * Once I got them, I will registed them in the address book
-                     */
-                    registerRedeemPointAddresses(cryptoAddresses, issuer.getActorPublicKey(), redeemPoint.getActorPublicKey());
-
-                } catch (CantGetActiveRedeemPointAddressesException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             } catch (CantSetObjectException e) {
                 e.printStackTrace();
             } catch (CantSendMessageException e) {

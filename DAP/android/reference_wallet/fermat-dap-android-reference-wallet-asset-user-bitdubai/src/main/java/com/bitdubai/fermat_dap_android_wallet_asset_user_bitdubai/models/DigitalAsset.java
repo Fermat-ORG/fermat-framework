@@ -22,6 +22,7 @@ public class DigitalAsset {
     private String walletPublicKey;
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
+    private byte[] image;
 
     public DigitalAsset() {
     }
@@ -113,8 +114,17 @@ public class DigitalAsset {
     }
 
     public String getFormattedExpDate() {
+        if (expDate == null) return "No expiration date";
         DateFormat df = new SimpleDateFormat("dd MMM yyyy");
         return df.format(expDate);
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public void setExpDate(Date expDate) {
