@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.factory;
+package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
