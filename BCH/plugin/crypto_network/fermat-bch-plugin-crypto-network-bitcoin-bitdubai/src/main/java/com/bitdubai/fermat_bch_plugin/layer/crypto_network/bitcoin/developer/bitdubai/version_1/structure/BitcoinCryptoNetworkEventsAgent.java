@@ -173,19 +173,24 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
             FermatEvent event = null;
             switch (cryptoStatus){
                 case ON_CRYPTO_NETWORK:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_CRYPTO_NETWORK);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_CRYPTO_NETWORK);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
                     break;
                 case ON_BLOCKCHAIN:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_BLOCKCHAIN);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_BLOCKCHAIN);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
                     break;
                 case REVERSED_ON_CRYPTO_NETWORK:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
                     break;
                 case REVERSED_ON_BLOCKCHAIN:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
                     break;
                 case IRREVERSIBLE:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_IRREVERSIBLE);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_IRREVERSIBLE);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
                     break;
             }
             /**

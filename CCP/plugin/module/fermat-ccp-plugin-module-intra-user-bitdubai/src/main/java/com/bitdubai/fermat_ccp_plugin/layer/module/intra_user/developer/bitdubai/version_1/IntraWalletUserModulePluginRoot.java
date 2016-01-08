@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
@@ -119,6 +120,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     private PluginTextFile intraUserLoginXml;
 
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private String appPublicKey;
 
 
     public IntraWalletUserModulePluginRoot() {
@@ -809,9 +811,19 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         }
     }
 
+    private SettingsManager<IntraUserWalletSettings> settingsManager;
+
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+    public SettingsManager<IntraUserWalletSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
@@ -821,6 +833,26 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         } catch (CantListIntraWalletUsersException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e){
+            return null;
         }
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+        this.appPublicKey = publicKey;
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        int[] notifications = new int[4];
+        try {
+            notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
+        } catch (CantGetIntraWalletUsersException e) {
+            e.printStackTrace();
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        }
+        return notifications;
     }
 }

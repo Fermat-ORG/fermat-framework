@@ -1,19 +1,17 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_offline_merchandise.interfaces.BrokerSubmitOfflineMerchandiseManager;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
@@ -83,11 +81,12 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             CustomerBrokerContractSale customerBrokerContractSale=
                     this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
                             contractHash);
+            String negotiationId=customerBrokerContractSale.getNegotiatiotId();
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation=
                     getCustomerBrokerSaleNegotiation(
-                            contractHash);
+                            negotiationId);
             long amount = getCryptoAmount(customerBrokerSaleNegotiation);
-            CurrencyType merchandiseType = getPaymentType(customerBrokerSaleNegotiation);
+            CurrencyType merchandiseType = getMerchandiseType(customerBrokerSaleNegotiation);
             this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
                     offlineWalletPublicKey,
@@ -137,7 +136,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
         return customerBrokerSaleNegotiation;
     }
 
-    private CurrencyType getPaymentType(
+    private CurrencyType getMerchandiseType(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
         try{
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
@@ -167,6 +166,8 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                     "Cannot get the clauses list");
             }
     }
+
+    //TODO: GET FIAT CURRENCY
 
     /**
      * This method returns a crypto amount (long) from a CustomerBrokerPurchaseNegotiation

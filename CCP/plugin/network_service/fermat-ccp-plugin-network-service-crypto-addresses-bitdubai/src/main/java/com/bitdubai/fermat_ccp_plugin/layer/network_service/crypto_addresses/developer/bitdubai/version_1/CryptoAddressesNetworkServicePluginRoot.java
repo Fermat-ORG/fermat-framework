@@ -249,6 +249,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
+            // change message state to process again first time
+            reprocessWaitingMessage();
 
             //declare a schedule to process waiting request message
             Timer timer = new Timer();
@@ -874,6 +876,21 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
 
+                try {
+
+                    List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
+
+                    for(CryptoAddressRequest record : cryptoAddressRequestList) {
+
+                        cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+                    }
+                }
+                catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
+                {
+                    System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+                    e.printStackTrace();
+                }
+
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
                 }
@@ -892,6 +909,22 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
             System.out.println("CLOSSING ALL CONNECTIONS IN CRYPTO ADDRESSES ");
+
+            try {
+
+                List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
+
+                for(CryptoAddressRequest record : cryptoAddressRequestList) {
+
+                    cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+                }
+            }
+            catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
+            {
+                System.out.print("EXCEPCION REPROCESANDO WAIT MESSAGE");
+                e.printStackTrace();
+            }
+
             this.register = false;
             if(communicationNetworkServiceConnectionManager != null) {
                 communicationNetworkServiceConnectionManager.closeAllConnection();
@@ -1064,7 +1097,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
                 if(!record.getState().getCode().equals(ProtocolState.WAITING_RESPONSE.getCode()))
                 {
-                    if(record.getSentNumber() > 5 )
+                    if(record.getSentNumber() > 10)
                     {
                          //update state and process again later
                         cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.WAITING_RESPONSE);

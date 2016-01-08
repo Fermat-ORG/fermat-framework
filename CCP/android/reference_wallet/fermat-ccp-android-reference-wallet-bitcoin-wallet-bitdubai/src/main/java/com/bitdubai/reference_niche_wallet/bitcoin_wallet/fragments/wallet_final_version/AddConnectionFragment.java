@@ -149,10 +149,13 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
+        menu.clear();
+        connectionPickCounter = 0;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 intraUserInformationList = (ArrayList) result[0];
+                clean(intraUserInformationList);
                 if (adapter != null)
                     adapter.changeDataSet(intraUserInformationList);
                 if(intraUserInformationList.isEmpty()){
@@ -161,6 +164,12 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                     FermatAnimationsUtils.showEmpty(getActivity(),false,empty_view);
                 }
             }
+        }
+    }
+
+    private void clean(List<CryptoWalletIntraUserActor> intraUserInformationList){
+        for(CryptoWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
+             cryptoWalletIntraUserActor.setSelected(false);
         }
     }
 
@@ -223,6 +232,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     CryptoCurrency.BITCOIN,
                                     BlockchainNetworkType.DEFAULT);
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
+                            onRefresh();
                         }
 
                     }catch (Exception e){

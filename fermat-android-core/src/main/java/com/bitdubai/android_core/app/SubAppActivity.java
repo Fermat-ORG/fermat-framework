@@ -419,6 +419,16 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         return objects;
     }
 
+    @Override
+    public void onControlledActivityBack(String activityCodeBack) {
+        //TODO: implement in the super class
+    }
+
+    @Override
+    public void setChangeBackActivity(Activities activityCodeBack) {
+
+    }
+
 
     /**
      * Method that loads the UI

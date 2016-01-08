@@ -21,6 +21,7 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
     private ImageView icon;
     private LinearLayout row_container;
     private View navigation_row_divider;
+    View badge;
 
     public NavigationItemMenuViewHolder(View itemView) {
         super(itemView);
@@ -28,6 +29,7 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
         row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
+        badge = (View) itemView.findViewById(R.id.badge);
         navigation_row_divider = (View) itemView.findViewById(R.id.navigation_row_divider);
 
     }
