@@ -14,20 +14,22 @@ import java.util.List;
  */
 public class Data {
     public static List<DigitalAsset> getAllDigitalAssets(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
-        List<AssetUserWalletList> balances = moduleManager.getAssetUserWalletBalances("walletPublicKeyTest");
+        List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances("walletPublicKeyTest");
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
-        for (AssetUserWalletList balance : balances) {
+
+        for (AssetUserWalletList asset : assets) {
             digitalAsset = new DigitalAsset();
-            digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
-            digitalAsset.setName(balance.getDigitalAsset().getName());
-            digitalAsset.setAvailableBalance(balance.getQuantityAvailableBalance());
-            digitalAsset.setBookBalance(balance.getQuantityBookBalance());
-            digitalAsset.setBitcoinAmount((double) balance.getDigitalAsset().getGenesisAmount() / 100000000);
-            digitalAsset.setExpDate((Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue()); //TODO get from asset
+            digitalAsset.setAssetPublicKey(asset.getDigitalAsset().getPublicKey());
+            digitalAsset.setName(asset.getDigitalAsset().getName());
+            digitalAsset.setAvailableBalanceQuantity(asset.getQuantityAvailableBalance());
+            digitalAsset.setBookBalanceQuantity(asset.getQuantityBookBalance());
+            digitalAsset.setAvailableBalance(asset.getDigitalAsset().getGenesisAmount());
+            digitalAsset.setExpDate((Timestamp) asset.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+
             digitalAssets.add(digitalAsset);
 
-            List<Resource> resources = balance.getDigitalAsset().getResources();
+            List<Resource> resources = asset.getDigitalAsset().getResources();
             if (resources != null && !resources.isEmpty()) {
                 digitalAsset.setImage(resources.get(0).getResourceBinayData());
             }

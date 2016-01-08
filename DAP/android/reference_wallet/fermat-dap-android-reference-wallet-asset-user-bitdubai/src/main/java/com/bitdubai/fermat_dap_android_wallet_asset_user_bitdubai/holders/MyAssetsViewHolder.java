@@ -59,16 +59,17 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     }
 
     public void bind(final DigitalAsset digitalAsset) {
-        if (digitalAsset.getImage() == null) {
-            image.setImageDrawable(res.getDrawable(R.drawable.img_asset_without_image));
-        } else {
+        if (digitalAsset.getImage() != null) {
             image.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+        } else {
+            image.setImageDrawable(res.getDrawable(R.drawable.img_asset_without_image));
         }
         nameText.setText(digitalAsset.getName());
-        //TODO format this fields
-        availableText.setText(String.valueOf(digitalAsset.getAvailableBalance()));
-        bookText.setText(String.valueOf(digitalAsset.getBookBalance()));
-        btcText.setText(digitalAsset.getBitcoinAmount() + " BTC");
+
+        nameText.setText(digitalAsset.getName());
+        availableText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
+        bookText.setText(digitalAsset.getBookBalanceQuantity()+"");
+        btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
         expDateText.setText(digitalAsset.getFormattedExpDate());
 
         redeemTempButton.setOnClickListener(new View.OnClickListener() {
