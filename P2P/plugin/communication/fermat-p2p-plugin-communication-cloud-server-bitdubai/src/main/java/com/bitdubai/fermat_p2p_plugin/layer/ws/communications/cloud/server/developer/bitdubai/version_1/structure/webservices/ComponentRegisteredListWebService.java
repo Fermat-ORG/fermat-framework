@@ -23,6 +23,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.restlet.data.CharacterSet;
+import org.restlet.ext.gson.GsonRepresentation;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
@@ -127,7 +128,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
 
         String jsonString = gson.toJson(jsonObjectRespond);
 
-        JsonRepresentation jsonRepresentationRespond = new JsonRepresentation(jsonString.trim());
+        GsonRepresentation jsonRepresentationRespond = new GsonRepresentation(jsonString.trim());
         jsonRepresentationRespond.setCharacterSet(CharacterSet.UTF_8);
 
         LOG.info("jsonString.length() = " + jsonString.length());
