@@ -75,6 +75,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
     }
 
+
     @Override
     public void onClick(View view) {
         StringBuilder location = new StringBuilder();
@@ -99,10 +100,17 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         if (location.length() > 0) {
             List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
-            locations.add(location.toString());
-
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
-
+            int pos = locations.size()-1;
+            if(locations.get(pos).equals("settings")){
+                locations.remove(pos);
+                locations.add(location.toString());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+            }
+            if(locations.get(pos).equals("wizard")){
+                locations.remove(pos);
+                locations.add(location.toString());
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+            }
         } else {
             Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
         }
@@ -116,4 +124,15 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         return data;
     }
+
+    /*@Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
+        int pos = locations.size()-1;
+        if(locations.get(pos).equals("settings") || locations.get(pos).equals("wizard")){
+            locations.remove(pos);
+        }
+    }*/
+
 }

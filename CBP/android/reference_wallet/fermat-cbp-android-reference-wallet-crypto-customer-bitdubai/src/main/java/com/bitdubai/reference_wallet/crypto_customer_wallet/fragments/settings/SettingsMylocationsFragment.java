@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,6 +15,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -27,12 +29,14 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Created by nelson on 22/12/15.
+ * Created by memo on 06/01/16.
  */
-public class WizardPageSetLocationsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String> {
+public class SettingsMylocationsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String>  {
+
     // Constants
-    private static final String TAG = "WizardPageSetLocations";
+    private static final String TAG = "settingsMyLocations";
 
     // Data
     private List<String> locationList;
@@ -47,8 +51,8 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     private ErrorManager errorManager;
 
 
-    public static WizardPageSetLocationsFragment newInstance() {
-        return new WizardPageSetLocationsFragment();
+    public static SettingsMylocationsFragment newInstance() {
+        return new SettingsMylocationsFragment();
     }
 
     @Override
@@ -76,7 +80,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
@@ -85,7 +89,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View layout = inflater.inflate(R.layout.ccw_wizard_step_set_locations, container, false);
+        View layout = inflater.inflate(R.layout.ccw_settings_my_locations, container, false);
 
         adapter = new LocationsAdapter(getActivity(), locationList);
         adapter.setDeleteButtonListener(this);
@@ -100,8 +104,9 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                locationList.add("wizard");
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD, appSession.getAppPublicKey());
+
+                locationList.add("settings");
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS, appSession.getAppPublicKey());
             }
         });
 
@@ -156,12 +161,14 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
 
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
             }
         }
 
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
 
     private void showOrHideRecyclerView() {
