@@ -71,7 +71,7 @@ public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCusto
     @Override
     public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationships(UUID relationshipId) throws CantGetCustomerIdentiyWalletRelationshipException{
         try {
-            return databaseDao.getAllRegisterCustomerIdentityWalletRelationships(relationshipId);
+            return databaseDao.getRegisterCustomerIdentityWalletRelationships(relationshipId);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
             throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
@@ -82,7 +82,7 @@ public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCusto
     @Override
     public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationshipsByIdentity(String identityPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
         try {
-            return databaseDao.getAllRegisterCustomerIdentityWalletRelationshipsByIdentity(identityPublicKey);
+            return databaseDao.getRegisterCustomerIdentityWalletRelationshipsByIdentity(identityPublicKey);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
             throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){
@@ -93,7 +93,7 @@ public class CryptoCustomerIdentityWalletRelationshipImpl implements CryptoCusto
     @Override
     public CryptoCustomerIdentityWalletRelationshipRecord getCustomerIdentityWalletRelationshipsByWallet(String walletPublicKey) throws CantGetCustomerIdentiyWalletRelationshipException{
         try {
-            return databaseDao.getAllRegisterCustomerIdentityWalletRelationshipsByIdentity(walletPublicKey);
+            return databaseDao.getRegisterCustomerIdentityWalletRelationshipsByIdentity(walletPublicKey);
         } catch (CantRegisterCryptoCustomerIdentityWalletRelationshipException e){
             throw new CantGetCustomerIdentiyWalletRelationshipException("CRYPTO CUSTOMER ACTOR", e, "CAN'T GET RELATIONSHIP IDENTITY WALLET CRYPTO CUSTOMER ACTOR", "");
         } catch (Exception e){

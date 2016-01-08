@@ -271,7 +271,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
     }
     /*END PRIVATE METHOD*/
 
-    /*TEST MOCK*/
+    /*TEST MOCK RELATIONSHIP*/
     private void createCustomerIdentityWalletRelationshipTest(boolean sw){
 
         if(sw) {
@@ -302,11 +302,11 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
         if(sw) {
             try {
                 
-                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. CREATE RELATIONSHIP ****\n");
+                System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP ****\n");
                 
                 CryptoCustomerIdentityWalletRelationshipRecord relationshipRecord = null;
                 
-                UUID id = UUID.fromString("7d884ad6-6eda-401b-b5e8-c2406b93de68");
+                UUID id = UUID.fromString("8130fdf2-b5b6-4424-b8f5-00c56d8b108b");
                 
                 relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.updateCustomerIdentityWalletRelationship(id, "walletPublicKey2", "identityPublicKey2");
                 System.out.print("\n- RELATIONSHIP DATE " +
@@ -320,7 +320,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
             }
 
         }else{
-            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. ERROR UPDATE REGISTER. OFF****\n");
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. UPDATE RELATIONSHIP. OFF****\n");
         }
         
     }
@@ -352,7 +352,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
                 System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ALL RELATIONSHIP. ERROR GET ALL REGISTER. ****\n");
             }
         }else{
-            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ALL RELATIONSHIP. ERROR GET ALL REGISTER. OFF****\n");
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET ALL RELATIONSHIP. OFF****\n");
         }
     }
 
@@ -369,33 +369,39 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements
 
                 //GET BY ID
                 relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationships(id);
-                System.out.print("\n- RELATIONSHIP BY ID DATE " +
-                                "\n- ID: " + relationshipRecord.getRelationship() +
-                                "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
-                                "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
-                );
+                if(relationshipRecord != null) {
+                    System.out.print("\n- RELATIONSHIP BY ID DATE " +
+                                    "\n- ID: " + relationshipRecord.getRelationship() +
+                                    "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                    "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                    );
+                }else{ System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. ERROR GET REGISTER IS NULL BY ID. ****\n"); }
 
                 //GET BY WALLET
                 relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationshipsByWallet("walletPublicKey");
-                System.out.print("\n- RELATIONSHIP BY WALLET DATE " +
-                                "\n- ID: " + relationshipRecord.getRelationship() +
-                                "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
-                                "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
-                );
+                if(relationshipRecord != null) {
+                    System.out.print("\n- RELATIONSHIP BY WALLET DATE " +
+                                    "\n- ID: " + relationshipRecord.getRelationship() +
+                                    "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                    "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                    );
+                }else{ System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. ERROR GET REGISTER IS NULL BY WALLET. ****\n"); }
 
                 //GET BY WALLET
-                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationshipsByWallet("identityPublicKey2");
-                System.out.print("\n- RELATIONSHIP BY IDENTITY DATE " +
-                                "\n- ID: " + relationshipRecord.getRelationship() +
-                                "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
-                                "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
-                );
+                relationshipRecord = cryptoCustomerIdentityWalletRelationshipImpl.getCustomerIdentityWalletRelationshipsByIdentity("identityPublicKey2");
+                if(relationshipRecord != null) {
+                    System.out.print("\n- RELATIONSHIP BY IDENTITY DATE " +
+                                    "\n- ID: " + relationshipRecord.getRelationship() +
+                                    "\n- WalletPublicKey: " + relationshipRecord.getWalletPublicKey() +
+                                    "\n- IdentityPublicKey : " + relationshipRecord.getIdentityPublicKey()
+                    );
+                }else{ System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. ERROR GET REGISTER IS NULL BY IDENTITY. ****\n"); }
 
             }catch (CantGetCustomerIdentiyWalletRelationshipException e){
                 System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. ERROR GET REGISTER. ****\n");
             }
         }else{
-            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. ERROR GET REGISTER. OFF****\n");
+            System.out.print("\n**** MOCK CRYPTO CUSTOMER ACTOR. GET RELATIONSHIP. OFF****\n");
         }
     }
     /*END TEST*/
