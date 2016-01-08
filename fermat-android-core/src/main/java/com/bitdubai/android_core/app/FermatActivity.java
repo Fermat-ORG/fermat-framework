@@ -124,6 +124,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
@@ -611,8 +612,8 @@ public abstract class FermatActivity extends AppCompatActivity
      * @param title
      */
     protected void setActionBarProperties(String title, Activity activity) {
-        SpannableString s = new SpannableString(title);
-
+        if(title!=null) {
+            SpannableString s = new SpannableString(title);
 
 
 //        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "Roboto-Regular.ttf"), 0, s.length(),
@@ -637,6 +638,7 @@ public abstract class FermatActivity extends AppCompatActivity
 //                collapsingToolbarLayout.setBackgroundDrawable(ld);
 //            }
 //        }
+        }
     }
 
     /**
@@ -891,7 +893,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.clear();
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -1039,7 +1040,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 tabLayout.removeAllViewsInLayout();
             }
 
-            invalidateOptionsMenu();
+
             removecallbacks();
             onRestart();
         } catch (Exception e) {
@@ -1706,7 +1707,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this,fermatSession);
                 try {
                     appsConnections.setActiveIdentity(getModuleManager(appsConnections.getPluginVersionReference()).getSelectedActorIdentity());
-                } catch (CantGetSelectedActorIdentityException e) {
+                } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
                 paintSideMenu(activity,activity.getSideMenu(),appsConnections);

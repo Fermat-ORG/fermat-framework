@@ -433,7 +433,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-        mSearchView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+//        mSearchView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
 
         mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
@@ -523,7 +523,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
                     CryptoWalletWalletContact cryptoWalletWalletContact;
 
-                    System.out.println(adapterView.getItemAtPosition(position).toString());
+                    //System.out.println(adapterView.getItemAtPosition(position).toString());
 
                     if(position == 1)
                         referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact)adapterView.getItemAtPosition(position));

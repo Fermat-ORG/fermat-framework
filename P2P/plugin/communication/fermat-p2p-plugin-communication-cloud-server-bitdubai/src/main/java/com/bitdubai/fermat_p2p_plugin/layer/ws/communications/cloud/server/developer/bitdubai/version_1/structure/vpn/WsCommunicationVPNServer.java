@@ -30,7 +30,6 @@ import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -71,9 +70,19 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     private List<PlatformComponentProfile> registeredParticipants;
 
     /**
+     * Holds all the participants identity by connection
+     */
+    private Map<Integer, String> participantsIdentityByConnection;
+
+    /**
      * Holds all the participants connections
      */
     private Map<String, WebSocket> participantsConnections;
+
+    /**
+     * Holds all the participants profile by connections
+     */
+    private Map<Integer, PlatformComponentProfile> profileParticipantsByConnections;
 
     /**
      * Holds all the vpnClientIdentity By Participants
@@ -96,6 +105,16 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     private Map<Integer, Boolean> pendingPongMessageByConnection;
 
     /**
+     * Represent the participantPendingToReconnect
+     */
+    private Boolean participantPendingToReconnect;
+
+    /**
+     * Represent the clientIdentityToReconnect
+     */
+    private String clientIdentityToReconnect;
+
+    /**
      * Constructor with parameters
      *
      * @param address
@@ -103,17 +122,22 @@ public class WsCommunicationVPNServer extends WebSocketServer{
      */
     public WsCommunicationVPNServer(InetSocketAddress address, List<PlatformComponentProfile> registeredParticipants, WsCommunicationCloudServer wsCommunicationCloudServer, NetworkServiceType networkServiceTypeApplicant) {
         super(address);
-        this.vpnServerIdentity               = new ECCKeyPair();
-        this.registeredParticipants          = registeredParticipants;
-        this.participantsConnections         = new ConcurrentHashMap<>();
-        this.vpnClientIdentityByParticipants = new ConcurrentHashMap<>();
-        this.wsCommunicationCloudServer      = wsCommunicationCloudServer;
-        this.networkServiceTypeApplicant     = networkServiceTypeApplicant;
-        this.pendingPongMessageByConnection  = new ConcurrentHashMap<>();
+        this.vpnServerIdentity                = new ECCKeyPair();
+        this.registeredParticipants           = registeredParticipants;
+        this.participantsIdentityByConnection = new ConcurrentHashMap<>();
+        this.participantsConnections          = new ConcurrentHashMap<>();
+        this.vpnClientIdentityByParticipants  = new ConcurrentHashMap<>();
+        this.wsCommunicationCloudServer       = wsCommunicationCloudServer;
+        this.networkServiceTypeApplicant      = networkServiceTypeApplicant;
+        this.pendingPongMessageByConnection   = new ConcurrentHashMap<>();
+        this.profileParticipantsByConnections = new ConcurrentHashMap<>();
+        this.participantPendingToReconnect    = Boolean.FALSE;
 
+        participantsIdentityByConnection.clear();
         participantsConnections.clear();
         vpnClientIdentityByParticipants.clear();
         vpnClientIdentityByParticipants.clear();
+        profileParticipantsByConnections.clear();
     }
 
     /**
@@ -150,9 +174,6 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         }
     }
 
-
-
-
     /**
      * (non-javadoc)
      * @see WebSocketServer#onOpen(WebSocket, ClientHandshake)
@@ -169,7 +190,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
          * Validate is a handshake valid
          */
         if (handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI)     != null &&
-                handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI) != ""     ){
+                handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI) != "" ){
 
             boolean isRegistered = Boolean.FALSE;
 
@@ -186,39 +207,59 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             String participantIdentity =  respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
             String vpnClientIdentity   =  respond.get(JsonAttNamesConstants.CLIENT_IDENTITY_VPN).getAsString();
 
-            for (PlatformComponentProfile registeredParticipant : registeredParticipants) {
+            if (!participantPendingToReconnect) {
 
-                //Validate if registered
-                if (registeredParticipant.getIdentityPublicKey().equals(participantIdentity)) {
-                    isRegistered = Boolean.TRUE;
+                for (PlatformComponentProfile registeredParticipant : registeredParticipants) {
+
+                    //Validate if registered
+                    if (registeredParticipant.getIdentityPublicKey().equals(participantIdentity)) {
+                        isRegistered = Boolean.TRUE;
+                        profileParticipantsByConnections.put(clientConnection.hashCode(), registeredParticipant);
+                    }
+
                 }
 
-            }
+                //If not registered close the connection
+                if (!isRegistered){
+                    clientConnection.closeConnection(404, "NOT A PARTICIPANT REGISTER FOR THIS VPN");
+                }else {
+                    participantsIdentityByConnection.put(clientConnection.hashCode(), participantIdentity);
+                    participantsConnections.put(participantIdentity, clientConnection);
+                    vpnClientIdentityByParticipants.put(participantIdentity, vpnClientIdentity);
+                }
 
-            //If not registered close the connection
-            if (!isRegistered){
-                clientConnection.closeConnection(404, "NOT A PARTICIPANT REGISTER FOR THIS VPN");
+                LOG.info("All participant are connected = " + (Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0));
+
+                //Validate if all participantsConnections register are connect
+                if(Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0){
+
+                    PlatformComponentProfile peer1 = registeredParticipants.get(0);
+                    PlatformComponentProfile peer2 = registeredParticipants.get((registeredParticipants.size()-1));
+
+                    sendNotificationPacketConnectionComplete(peer1, peer2);
+                    sendNotificationPacketConnectionComplete(peer2, peer1);
+
+                }
+
             }else {
-                participantsConnections.put(participantIdentity, clientConnection);
-                vpnClientIdentityByParticipants.put(participantIdentity, vpnClientIdentity);
-            }
 
-            LOG.info("registeredParticipants.size() = " + registeredParticipants.size());
-            LOG.info("participantsConnections.size() = " + participantsConnections.size());
-            LOG.info("Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0 = " + (Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0));
+                /*
+                 * Validate if the client
+                 */
+               if (vpnClientIdentity.equals(clientIdentityToReconnect)){
 
-            //Validate if all participantsConnections register are connect
-            if(Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0){
-
-                PlatformComponentProfile peer1 = registeredParticipants.get(0);
-                PlatformComponentProfile peer2 = registeredParticipants.get((registeredParticipants.size()-1));
-
-                sendNotificationPacketConnectionComplete(peer1, peer2);
-                sendNotificationPacketConnectionComplete(peer2, peer1);
+                   //Notify to the remote the participant already connecting again
+                   sendNotificationPacketReconnected(clientConnection);
+                   participantsIdentityByConnection.put(clientConnection.hashCode(), participantIdentity);
+                   participantsConnections.put(participantIdentity, clientConnection);
+                   vpnClientIdentityByParticipants.put(participantIdentity, vpnClientIdentity);
+                   clientIdentityToReconnect = null;
+                   participantPendingToReconnect = Boolean.FALSE;
+               }
 
             }
 
-        }else {
+        } else {
             clientConnection.closeConnection(404, "DENIED, NOT VALID HANDSHAKE");
         }
 
@@ -265,6 +306,45 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     }
 
 
+    /**
+     * Construct a packet whit the information that a participant of a vpn is already reconnect
+     */
+    private void sendNotificationPacketReconnected(WebSocket clientConnection){
+
+        LOG.info("sendNotificationPacketReconnected");
+
+        Iterator<WebSocket> iterator = connections().iterator();
+        while (iterator.hasNext()){
+            WebSocket conn = iterator.next();
+            if (conn != clientConnection){
+
+                /*
+                 * Construct the content of the msj
+                 */
+                Gson gson = new Gson();
+                JsonObject packetContent = new JsonObject();
+                packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, profileParticipantsByConnections.get(clientConnection.hashCode()).getIdentityPublicKey());
+                packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
+                packetContent.addProperty(JsonAttNamesConstants.RECONNECTED, Boolean.TRUE);
+
+                /*
+                * Construct a notification
+                */
+                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(participantsIdentityByConnection.get(conn.hashCode()), //Destination
+                                                                                                                            vpnServerIdentity.getPublicKey(),                      //Sender
+                                                                                                                            gson.toJson(packetContent),                            //Message Content
+                                                                                                                            FermatPacketType.MESSAGE_TRANSMIT,                     //Packet type
+                                                                                                                            vpnServerIdentity.getPrivateKey());                    //Sender private key
+
+                /*
+                 * Send notification
+                 */
+                conn.send(FermatPacketEncoder.encode(fermatPacketRespond));
+                break;
+            }
+        }
+
+    }
 
     /**
      * (non-javadoc)
@@ -277,15 +357,96 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         LOG.info("Starting method onClose");
         LOG.info(clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
 
-        Iterator<WebSocket> iterator = connections().iterator();
-        while (iterator.hasNext()){
-            WebSocket conn = iterator.next();
-            conn.closeConnection(505, " All participantsConnections close her connections ");
-        }
 
-        participantsConnections.clear();
-        vpnClientIdentityByParticipants.clear();
-        registeredParticipants.clear();
+        switch (code){
+
+            case 1000: {
+
+                    String msg = null;
+
+                    if (remote){
+                        msg = "The remote participant close the vpn connection";
+                    }else {
+                        msg = "The vpn server close the vpn connection";
+                    }
+
+                    Iterator<WebSocket> iterator = connections().iterator();
+                    while (iterator.hasNext()){
+                        WebSocket conn = iterator.next();
+                        if (conn != clientConnection){
+                            conn.closeConnection(code, msg);
+                        }
+                    }
+
+                    participantsConnections.clear();
+                    vpnClientIdentityByParticipants.clear();
+                    registeredParticipants.clear();
+                    profileParticipantsByConnections.clear();
+
+                }
+
+
+                break;
+
+            case 1006:
+
+                    if (remote){
+
+                        this.participantPendingToReconnect    = Boolean.TRUE;
+                        this.clientIdentityToReconnect = vpnClientIdentityByParticipants.get(participantsIdentityByConnection.get(clientConnection.hashCode()));
+
+                        /*
+                         * Notify the other participant for the problem
+                         */
+                        Iterator<WebSocket> iterator = connections().iterator();
+                        while (iterator.hasNext()){
+                            WebSocket conn = iterator.next();
+                            if (conn != clientConnection){
+
+                                /*
+                                 * Construct the packet
+                                 */
+                                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(participantsIdentityByConnection.get(conn.hashCode())), //Destination
+                                        vpnServerIdentity.getPublicKey(),                         //Sender
+                                        clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote,    //Message Content
+                                        FermatPacketType.VPN_REMOTE_PARTICIPANT_DISCONNECTED,     //Packet type
+                                        vpnServerIdentity.getPrivateKey());                       //Sender private key
+
+
+                                /*
+                                 * Send notification
+                                 */
+                                conn.send(FermatPacketEncoder.encode(fermatPacketRespond));
+                                break;
+                            }
+                        }
+
+                        /*
+                         * Start waiting time to close all connection if no reconnect
+                         */
+
+                    }
+
+                break;
+
+            default:
+
+                Iterator<WebSocket> iterator = connections().iterator();
+                while (iterator.hasNext()){
+                    WebSocket conn = iterator.next();
+                    if (conn != clientConnection){
+                        conn.closeConnection(code, reason);
+                    }
+                }
+
+                participantsConnections.clear();
+                vpnClientIdentityByParticipants.clear();
+                registeredParticipants.clear();
+                profileParticipantsByConnections.clear();
+
+                break;
+
+        }
 
     }
 
@@ -333,7 +494,6 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             WebSocket clientConnectionDestination = participantsConnections.get(fermatMessage.getReceiver());
 
 
-
             /*
              * If the connection to client destination available
              */
@@ -370,18 +530,6 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
     }
 
-    public void closeAllConnections(){
-
-        LOG.info("Starting method closeAllConnections");
-        /*
-         * Close all the connection
-         */
-        Iterator<WebSocket> iterator = connections().iterator();
-        while (iterator.hasNext()){
-            WebSocket conn = iterator.next();
-            conn.closeConnection(404, " - VPN participants are disconnect");
-        }
-    }
 
     public void closeAllConnections(Exception ex){
 
@@ -393,12 +541,10 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
         while (iterator.hasNext()){
             WebSocket conn = iterator.next();
-            conn.closeConnection(505, " - VPN ERROR :" + ex.getLocalizedMessage());
+            conn.closeConnection(1011, " - VPN ERROR :" + ex.getLocalizedMessage());
         }
 
     }
-
-
 
     /**
      * Indicate is active this vpn
