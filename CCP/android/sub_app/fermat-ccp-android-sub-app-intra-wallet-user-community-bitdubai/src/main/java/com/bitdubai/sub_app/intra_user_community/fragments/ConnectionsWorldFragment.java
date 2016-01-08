@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -105,6 +106,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private android.support.v7.widget.Toolbar toolbar;
     private EditText search;
     private List<IntraUserInformation> dataSetFiltered;
+    private ImageView closeSearch;
+    private LinearLayout searchEmptyView;
 
     /**
      * Create a new instance of this fragment
@@ -148,7 +151,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         }
     }
 
-
     /**
      * Fragment Class implementation.
      */
@@ -173,6 +175,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             setUpScreen(inflater);
             logo = inflater.inflate(R.layout.search_edit_text, null);
             search = (EditText) logo.findViewById(R.id.search);
+            closeSearch = (ImageView) logo.findViewById(R.id.close_search);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -185,6 +188,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
             dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
             SharedPreferences pref = getActivity().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
             if (intraUserWalletSettings.isPresentationHelpEnabled()) {
@@ -224,19 +228,27 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
                                 try {
-                                    showEmpty(false, emptyView);
-                                    lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                                    if (!moduleManager.getCacheSuggestionsToContact(MAX, offset).isEmpty()) {
+                                        lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                                        showEmpty(false, emptyView);
+                                        showEmpty(false, searchEmptyView);
+                                    } else {
+                                        showEmpty(true, emptyView);
+                                        showEmpty(false, searchEmptyView);
+                                    }
                                 } catch (CantGetIntraUsersListException e) {
                                     e.printStackTrace();
                                 }
 
                             } else {
                                 showEmpty(false, emptyView);
+                                showEmpty(false, searchEmptyView);
                             }
                         }
                     } else {
                         try {
                             showEmpty(false, emptyView);
+                            showEmpty(false, searchEmptyView);
                             lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
                         } catch (CantGetIntraUsersListException e) {
                             e.printStackTrace();
@@ -268,16 +280,26 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             final MenuItem searchItem = menu.findItem(R.id.action_search);
             menu.findItem(R.id.action_help).setVisible(true);
             menu.findItem(R.id.action_search).setVisible(true);
-            menu.findItem(R.id.action_close).setVisible(false);
             searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     menu.findItem(R.id.action_help).setVisible(false);
-                    menu.findItem(R.id.action_close).setVisible(true);
                     menu.findItem(R.id.action_search).setVisible(false);
                     toolbar = getToolbar();
                     toolbar.setTitle("");
                     toolbar.addView(logo);
+                    if (closeSearch != null)
+                        closeSearch.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                menu.findItem(R.id.action_help).setVisible(true);
+                                menu.findItem(R.id.action_search).setVisible(true);
+                                toolbar = getToolbar();
+                                toolbar.removeView(logo);
+                                toolbar.setTitle("Cripto wallet users");
+                                onRefresh();
+                            }
+                        });
                     if (search != null)
                         search.addTextChangedListener(new TextWatcher() {
                             @Override
@@ -287,49 +309,67 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
                             @Override
                             public void onTextChanged(final CharSequence s, int start, int before, int count) {
-                                worker = new FermatWorker() {
-                                    @Override
-                                    protected Object doInBackground() throws Exception {
-                                        return getQueryData(s);
-                                    }
-                                };
-                                worker.setContext(getActivity());
-                                worker.setCallBack(new FermatWorkerCallBack() {
-                                    @SuppressWarnings("unchecked")
-                                    @Override
-                                    public void onPostExecute(Object... result) {
-                                        isRefreshing = false;
-                                        if (swipeRefresh != null)
-                                            swipeRefresh.setRefreshing(false);
-                                        if (result != null &&
-                                                result.length > 0) {
-                                            if (getActivity() != null && adapter != null) {
-                                                dataSetFiltered = (ArrayList<IntraUserInformation>) result[0];
-                                                adapter.changeDataSet(dataSetFiltered);
-                                                if (dataSetFiltered.isEmpty()) {
-                                                    showEmpty(true, emptyView);
-
-                                                } else {
-                                                    showEmpty(false, emptyView);
-                                                }
-                                            }
-                                        } else {
-                                            showEmpty(true, emptyView);
+                                if (s.length() > 0) {
+                                    worker = new FermatWorker() {
+                                        @Override
+                                        protected Object doInBackground() throws Exception {
+                                            return getQueryData(s);
                                         }
-                                    }
+                                    };
+                                    worker.setContext(getActivity());
+                                    worker.setCallBack(new FermatWorkerCallBack() {
+                                        @SuppressWarnings("unchecked")
+                                        @Override
+                                        public void onPostExecute(Object... result) {
+                                            isRefreshing = false;
+                                            if (swipeRefresh != null)
+                                                swipeRefresh.setRefreshing(false);
+                                            if (result != null &&
+                                                    result.length > 0) {
+                                                if (getActivity() != null && adapter != null) {
+                                                    dataSetFiltered = (ArrayList<IntraUserInformation>) result[0];
+                                                    adapter.changeDataSet(dataSetFiltered);
+                                                    if (dataSetFiltered != null) {
+                                                        if (dataSetFiltered.isEmpty()) {
+                                                            showEmpty(true, searchEmptyView);
+                                                            showEmpty(false, emptyView);
 
-                                    @Override
-                                    public void onErrorOccurred(Exception ex) {
-                                        isRefreshing = false;
-                                        if (swipeRefresh != null)
-                                            swipeRefresh.setRefreshing(false);
-                                        if (getActivity() != null)
-                                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                                        ex.printStackTrace();
+                                                        } else {
+                                                            showEmpty(false, searchEmptyView);
+                                                            showEmpty(false, emptyView);
+                                                        }
+                                                    } else {
+                                                        showEmpty(true, searchEmptyView);
+                                                        showEmpty(false, emptyView);
+                                                    }
+                                                }
+                                            } else {
+                                                showEmpty(true, searchEmptyView);
+                                                showEmpty(false, emptyView);
+                                            }
+                                        }
 
-                                    }
-                                });
-                                worker.execute();
+                                        @Override
+                                        public void onErrorOccurred(Exception ex) {
+                                            isRefreshing = false;
+                                            if (swipeRefresh != null)
+                                                swipeRefresh.setRefreshing(false);
+                                            showEmpty(true, searchEmptyView);
+                                            if (getActivity() != null)
+                                                Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                            ex.printStackTrace();
+
+                                        }
+                                    });
+                                    worker.execute();
+                                } else {
+                                    menu.findItem(R.id.action_help).setVisible(true);
+                                    menu.findItem(R.id.action_search).setVisible(true);
+                                    toolbar = getToolbar();
+                                    toolbar.removeView(logo);
+                                    toolbar.setTitle("Cripto wallet users");
+                                    onRefresh();
+                                }
                             }
 
                             @Override
@@ -337,18 +377,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
                             }
                         });
-                    return false;
-                }
-            });
-            menu.findItem(R.id.action_close).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    menu.findItem(R.id.action_help).setVisible(true);
-                    menu.findItem(R.id.action_close).setVisible(false);
-                    menu.findItem(R.id.action_search).setVisible(true);
-                    toolbar = getToolbar();
-                    toolbar.removeView(logo);
-                    toolbar.setTitle("Cripto wallet users");
                     return false;
                 }
             });
@@ -420,6 +448,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         }
         return dataSet;
     }
+
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {

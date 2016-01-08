@@ -12,10 +12,5 @@
         android:icon="@drawable/help_icon"
         android:title="help"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_close"
-        android:icon="@drawable/ic_action_search"
-        android:title="close"
-        app:showAsAction="ifRoom" />
 </menu>
 
