@@ -600,8 +600,8 @@ public final class AssetFactoryMiddlewareManager {
     public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException {
         try {
             AssetFactory assetFactory = getAssetFactoryByAssetPublicKey(publicKey);
-            if (assetFactory.getState().getCode().equals(State.DRAFT.getCode()))
-                throw new CantDeleteAsserFactoryException(null, "Error delete Asset Factory", "Asset Factory in DRAFT");
+            if (assetFactory.getState() != State.DRAFT)
+                throw new CantDeleteAsserFactoryException(null, "Error delete Asset Factory", "Asset Factory is not DRAFT");
             else
                 getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory);
         } catch (Exception exception) {

@@ -424,7 +424,9 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     private void saveAsset() {
         //asset.setPublicKey("asset-factory-public-key");//// TODO: 02/10/15 set public key
-        asset.setFactoryId(UUID.randomUUID().toString());
+        if (asset.getFactoryId() == null) {
+            asset.setFactoryId(UUID.randomUUID().toString());
+        }
         asset.setName(nameView.getText().toString().trim());
         asset.setDescription(descriptionView.getText().toString().trim());
         asset.setQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
